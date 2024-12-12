@@ -3,22 +3,12 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.testing;
-
-import org.jmock.Mockery;
+package gov.nist.secauto.metaschema.core.testing.model.mocking;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IMockFactory {
-  /**
-   * Get the mocking context.
-   *
-   * @return the mocking context
-   */
-  @NonNull
-  Mockery getContext();
-
   /**
    * Create a mock for the given class.
    * <p>

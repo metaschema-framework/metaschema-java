@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.model.xml.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
@@ -63,8 +64,10 @@ public final class ModelFactory {
   }
 
   @NonNull
-  private static String target(@Nullable String target) {
-    return target == null ? IConstraint.DEFAULT_TARGET_METAPATH : target;
+  private static IMetapathExpression metapath(@Nullable String target, @NonNull ISource source) {
+    return target == null
+        ? IConstraint.DEFAULT_TARGET_METAPATH
+        : IMetapathExpression.lazyCompile(target, source.getStaticContext());
   }
 
   @NonNull
@@ -145,7 +148,7 @@ public final class ModelFactory {
   public static IAllowedValuesConstraint newAllowedValuesConstraint(
       @NonNull TargetedAllowedValuesConstraintType xmlObject,
       @NonNull ISource source) {
-    return newAllowedValuesConstraint(xmlObject, target(xmlObject.getTarget()), source);
+    return newAllowedValuesConstraint(xmlObject, metapath(xmlObject.getTarget(), source), source);
   }
 
   /**
@@ -167,7 +170,7 @@ public final class ModelFactory {
   @NonNull
   private static IAllowedValuesConstraint newAllowedValuesConstraint(
       @NonNull AllowedValuesType xmlObject,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull ISource source) {
 
     IAllowedValuesConstraint.Builder builder = IAllowedValuesConstraint.builder();
@@ -192,7 +195,7 @@ public final class ModelFactory {
   @NonNull
   private static <T extends AbstractConstraintBuilder<T, ?>> T applyToBuilder(
       @NonNull ConstraintType xmlObject,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull ISource source,
       @NonNull T builder) {
 
@@ -218,7 +221,7 @@ public final class ModelFactory {
   public static IMatchesConstraint newMatchesConstraint(
       @NonNull TargetedMatchesConstraintType xmlObject,
       @NonNull ISource source) {
-    return newMatchesConstraint(xmlObject, target(xmlObject.getTarget()), source);
+    return newMatchesConstraint(xmlObject, metapath(xmlObject.getTarget(), source), source);
   }
 
   /**
@@ -240,7 +243,7 @@ public final class ModelFactory {
   @NonNull
   private static IMatchesConstraint newMatchesConstraint(
       @NonNull MatchesConstraintType xmlObject,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull ISource source) {
     IMatchesConstraint.Builder builder = IMatchesConstraint.builder();
 
@@ -270,10 +273,9 @@ public final class ModelFactory {
       @NonNull ISource source) {
     for (KeyConstraintType.KeyField xmlKeyField : xmlObject.getKeyFieldList()) {
       IKeyField keyField = IKeyField.of(
-          ObjectUtils.requireNonNull(xmlKeyField.getTarget()),
+          metapath(ObjectUtils.requireNonNull(xmlKeyField.getTarget()), source),
           xmlKeyField.isSetPattern() ? xmlKeyField.getPattern() : null, // NOPMD - intentional
-          xmlKeyField.isSetRemarks() ? remarks(ObjectUtils.notNull(xmlKeyField.getRemarks())) : null,
-          source);
+          xmlKeyField.isSetRemarks() ? remarks(ObjectUtils.notNull(xmlKeyField.getRemarks())) : null);
       builder.keyField(keyField);
     }
   }
@@ -293,7 +295,7 @@ public final class ModelFactory {
       @NonNull ISource source) {
     IUniqueConstraint.Builder builder = IUniqueConstraint.builder();
 
-    applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);
+    applyToBuilder(xmlObject, metapath(xmlObject.getTarget(), source), source, builder);
 
     if (xmlObject.isSetMessage()) {
       builder.message(ObjectUtils.notNull(xmlObject.getMessage()));
@@ -323,7 +325,7 @@ public final class ModelFactory {
       @NonNull ISource source) {
     IIndexConstraint.Builder builder = IIndexConstraint.builder(ObjectUtils.requireNonNull(xmlObject.getName()));
 
-    applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);
+    applyToBuilder(xmlObject, metapath(xmlObject.getTarget(), source), source, builder);
 
     if (xmlObject.isSetMessage()) {
       builder.message(ObjectUtils.notNull(xmlObject.getMessage()));
@@ -351,7 +353,7 @@ public final class ModelFactory {
   public static IIndexHasKeyConstraint newIndexHasKeyConstraint(
       @NonNull TargetedIndexHasKeyConstraintType xmlObject,
       @NonNull ISource source) {
-    return newIndexHasKeyConstraint(xmlObject, target(xmlObject.getTarget()), source);
+    return newIndexHasKeyConstraint(xmlObject, metapath(xmlObject.getTarget(), source), source);
   }
 
   /**
@@ -373,7 +375,7 @@ public final class ModelFactory {
   @NonNull
   private static IIndexHasKeyConstraint newIndexHasKeyConstraint(
       @NonNull IndexHasKeyConstraintType xmlObject,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull ISource source) {
     IIndexHasKeyConstraint.Builder builder
         = IIndexHasKeyConstraint.builder(ObjectUtils.requireNonNull(xmlObject.getName()));
@@ -406,7 +408,7 @@ public final class ModelFactory {
   public static IExpectConstraint newExpectConstraint(
       @NonNull TargetedExpectConstraintType xmlObject,
       @NonNull ISource source) {
-    return newExpectConstraint(xmlObject, target(xmlObject.getTarget()), source);
+    return newExpectConstraint(xmlObject, metapath(xmlObject.getTarget(), source), source);
   }
 
   /**
@@ -428,7 +430,7 @@ public final class ModelFactory {
   @NonNull
   private static IExpectConstraint newExpectConstraint(
       @NonNull ExpectConstraintType xmlObject,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull ISource source) {
 
     IExpectConstraint.Builder builder = IExpectConstraint.builder();
@@ -443,7 +445,10 @@ public final class ModelFactory {
       builder.remarks(remarks(ObjectUtils.notNull(xmlObject.getRemarks())));
     }
 
-    builder.test(ObjectUtils.requireNonNull(xmlObject.getTest()));
+    builder.test(
+        IMetapathExpression.lazyCompile(
+            ObjectUtils.requireNonNull(xmlObject.getTest()),
+            source.getStaticContext()));
 
     return builder.build();
   }
@@ -464,7 +469,7 @@ public final class ModelFactory {
 
     ICardinalityConstraint.Builder builder = ICardinalityConstraint.builder();
 
-    applyToBuilder(xmlObject, target(xmlObject.getTarget()), source, builder);
+    applyToBuilder(xmlObject, metapath(xmlObject.getTarget(), source), source, builder);
 
     if (xmlObject.isSetMessage()) {
       builder.message(ObjectUtils.notNull(xmlObject.getMessage()));

@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.AbstractDefinitionTargetedConstraints;
@@ -15,7 +16,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * A set of constraints targeting a {@link IFieldDefinition} based on a target
  * Metapath expression.
  *
- * @see #getTargetExpression()
+ * @see #getTarget()
  */
 public class FieldTargetedConstraints
     extends AbstractDefinitionTargetedConstraints<IFieldDefinition, IValueConstrained> {
@@ -32,7 +33,7 @@ public class FieldTargetedConstraints
    */
   public FieldTargetedConstraints(
       @NonNull ISource source,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull IValueConstrained constraints) {
     super(source, target, constraints);
   }

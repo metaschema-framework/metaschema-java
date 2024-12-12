@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.testing;
+package gov.nist.secauto.metaschema.core.testing.model.mocking;
 
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -14,7 +14,7 @@ import java.util.UUID;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-public class MockFactory implements IMockFactory {
+public class AbstractJMockFactory implements IMockFactory {
 
   @NonNull
   private final Mockery context;
@@ -25,11 +25,11 @@ public class MockFactory implements IMockFactory {
    * @param ctx
    *          the mocking context
    */
-  public MockFactory(@NonNull Mockery ctx) {
+  public AbstractJMockFactory(@NonNull Mockery ctx) {
     this.context = ctx;
   }
 
-  @Override
+  @NonNull
   public Mockery getContext() {
     return context;
   }

@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.xml;
 
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
@@ -66,7 +67,7 @@ public class XmlMetaConstraintLoader
             ObjectUtils.notNull(binding.getPrefix()), ObjectUtils.notNull(binding.getUri())));
     builder.useWildcardWhenNamespaceNotDefaulted(true);
 
-    ISource source = ISource.externalSource(resource);
+    ISource source = ISource.externalSource(builder.build(), true);
 
     List<ITargetedConstraints> targetedConstraints = ObjectUtils.notNull(constraints.getContextList().stream()
         .flatMap(context -> parseContext(ObjectUtils.notNull(context), null, source).getTargetedConstraints().stream())
@@ -151,7 +152,12 @@ public class XmlMetaConstraintLoader
     public List<ITargetedConstraints> getTargetedConstraints() {
       return Stream.concat(
           getMetapaths().stream()
-              .map(metapath -> new MetaTargetedContraints(source, ObjectUtils.notNull(metapath), constraints)),
+              .map(metapath -> new MetaTargetedContraints(
+                  source,
+                  IMetapathExpression.lazyCompile(
+                      ObjectUtils.requireNonNull(metapath),
+                      source.getStaticContext()),
+                  constraints)),
           childContexts.stream()
               .flatMap(child -> child.getTargetedConstraints().stream()))
           .collect(Collectors.toList());
@@ -172,7 +178,7 @@ public class XmlMetaConstraintLoader
 
     protected MetaTargetedContraints(
         @NonNull ISource source,
-        @NonNull String target,
+        @NonNull IMetapathExpression target,
         @NonNull IModelConstrained constraints) {
       super(source, target, constraints);
     }

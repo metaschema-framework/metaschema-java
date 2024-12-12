@@ -28,10 +28,10 @@ public class KindNodeTest
   private final IItemType type;
 
   /**
-   * Construct a new expanded QName-based literal expression.
+   * Construct a new kind test expression.
    *
-   * @param name
-   *          the literal value
+   * @param type
+   *          the expected item type to test against
    */
   public KindNodeTest(@NonNull IItemType type) {
     this.type = type;

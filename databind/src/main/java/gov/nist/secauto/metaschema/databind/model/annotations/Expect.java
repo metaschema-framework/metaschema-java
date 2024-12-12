@@ -71,7 +71,7 @@ public @interface Expect {
    * @return the target metapath
    */
   @NonNull
-  String target() default IConstraint.DEFAULT_TARGET_METAPATH;
+  String target() default ".";
 
   /**
    * An optional set of properties associated with these allowed values.

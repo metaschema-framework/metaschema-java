@@ -23,7 +23,6 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * The base class for all constraint implementations.
@@ -44,7 +43,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
   @NonNull
   private final Map<IAttributable.Key, Set<String>> properties;
   @NonNull
-  private final Lazy<IMetapathExpression> targetMetapath;
+  private final IMetapathExpression target;
 
   /**
    * Construct a new Metaschema constraint.
@@ -73,7 +72,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
       @Nullable MarkupLine description,
       @NonNull ISource source,
       @NonNull Level level,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull Map<IAttributable.Key, Set<String>> properties,
       @Nullable MarkupMultiline remarks) {
     Objects.requireNonNull(target);
@@ -84,10 +83,7 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
     this.level = ObjectUtils.requireNonNull(level, "level");
     this.properties = properties;
     this.remarks = remarks;
-    this.targetMetapath = ObjectUtils.notNull(
-        Lazy.lazy(() -> IMetapathExpression.compile(
-            target,
-            source.getStaticContext())));
+    this.target = target;
   }
 
   @Override
@@ -117,8 +113,8 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
   }
 
   @Override
-  public final String getTarget() {
-    return getTargetMetapath().getPath();
+  public final IMetapathExpression getTarget() {
+    return target;
   }
 
   @Override
@@ -131,21 +127,11 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
     return remarks;
   }
 
-  /**
-   * Get the compiled Metapath expression for the target.
-   *
-   * @return the compiled Metapath expression
-   */
-  @NonNull
-  public final IMetapathExpression getTargetMetapath() {
-    return ObjectUtils.notNull(targetMetapath.get());
-  }
-
   @Override
   @NonNull
   public ISequence<? extends IDefinitionNodeItem<?, ?>> matchTargets(
       @NonNull IDefinitionNodeItem<?, ?> item,
       @NonNull DynamicContext dynamicContext) {
-    return item.hasValue() ? getTargetMetapath().evaluate(item, dynamicContext) : ISequence.empty();
+    return item.hasValue() ? getTarget().evaluate(item, dynamicContext) : ISequence.empty();
   }
 }
