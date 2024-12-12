@@ -87,7 +87,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
             "The cardinality '%d' is below the required minimum '%d' for items matching '%s'.",
             testedItems.size(),
             constraint.getMinOccurs(),
-            constraint.getTarget()))
+            constraint.getTarget().getPath()))
         : constraint.generateMessage(target, dynamicContext);
   }
 
@@ -284,7 +284,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
       @NonNull DynamicContext dynamicContext) {
     return constraint.getMessage() == null
         ? ObjectUtils.notNull(String.format("Expect constraint '%s' did not match the data at path '%s'",
-            constraint.getTest(),
+            constraint.getTest().getPath(),
             toPath(target)))
         : constraint.generateMessage(target, dynamicContext);
   }

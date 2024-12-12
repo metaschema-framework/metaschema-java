@@ -59,7 +59,7 @@ class FnOutermostTest
   @MethodSource("provideValues")
   void test(@NonNull String expectedValueMetapath, @NonNull String actualValuesMetapath) {
     DynamicContext dynamicContext = newDynamicContext();
-    INodeItem node = MockedDocumentGenerator.generateDocumentNodeItem(getContext());
+    INodeItem node = MockedDocumentGenerator.generateDocumentNodeItem();
 
     ISequence<? extends INodeItem> expected
         = IMetapathExpression.compile(expectedValueMetapath, dynamicContext.getStaticContext())

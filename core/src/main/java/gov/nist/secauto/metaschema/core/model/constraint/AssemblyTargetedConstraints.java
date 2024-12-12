@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.AbstractDefinitionTargetedConstraints;
@@ -15,7 +16,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * A set of constraints targeting a {@link IAssemblyDefinition} based on a
  * target Metapath expression.
  *
- * @see #getTargetExpression()
+ * @see #getTarget()
  */
 public class AssemblyTargetedConstraints
     extends AbstractDefinitionTargetedConstraints<IAssemblyDefinition, IModelConstrained>
@@ -33,7 +34,7 @@ public class AssemblyTargetedConstraints
    */
   public AssemblyTargetedConstraints(
       @NonNull ISource source,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull IModelConstrained constraints) {
     super(source, target, constraints);
   }

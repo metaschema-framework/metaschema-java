@@ -24,6 +24,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * <a href="https://www.w3.org/TR/xpath-31/#doc-xpath31-Wildcard">wildcard name
  * test</a>.
  */
+@SuppressWarnings("PMD.TestClassWithoutTestCases")
 public class WildcardNodeTest implements INodeTestExpression {
   @Nullable
   private final Predicate<IDefinitionNodeItem<?, ?>> matcher;

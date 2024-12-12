@@ -160,7 +160,7 @@ public interface IIndex {
       @NonNull INodeItem item,
       @NonNull IKeyField keyField,
       @NonNull DynamicContext dynamicContext) {
-    IMetapathExpression keyMetapath = keyField.getTargetMetapath();
+    IMetapathExpression keyMetapath = keyField.getTarget();
 
     IItem keyItem;
     try {

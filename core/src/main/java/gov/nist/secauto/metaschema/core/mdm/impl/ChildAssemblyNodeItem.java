@@ -6,34 +6,36 @@
 package gov.nist.secauto.metaschema.core.mdm.impl;
 
 import gov.nist.secauto.metaschema.core.mdm.IDMAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
-import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class AssemblyImpl
-    extends AbstractDMAssemblyNodeItem {
+/**
+ * A Metapath assembly node item that is the child of another assembly node
+ * item.
+ */
+public class ChildAssemblyNodeItem
+    extends AbstractDMAssemblyNodeItem
+    implements IFeatureChildNodeItem<IDMAssemblyNodeItem> {
   @NonNull
   private final IAssemblyInstance instance;
   @NonNull
   private final IDMAssemblyNodeItem parent;
-  @NonNull
-  private final IResourceLocation resourceLocation;
 
-  public AssemblyImpl(
+  /**
+   * Construct a new node item.
+   *
+   * @param instance
+   *          the Metaschema module instance associated with this node
+   * @param parent
+   *          the parent node item containing this node item
+   */
+  public ChildAssemblyNodeItem(
       @NonNull IAssemblyInstance instance,
-      @NonNull IDMAssemblyNodeItem parent,
-      @NonNull IResourceLocation resourceLocation) {
+      @NonNull IDMAssemblyNodeItem parent) {
     this.instance = instance;
     this.parent = parent;
-    this.resourceLocation = resourceLocation;
-  }
-
-  @Override
-  public IResourceLocation getLocation() {
-    return resourceLocation;
   }
 
   @Override
@@ -61,10 +63,5 @@ public class AssemblyImpl
   @Override
   public IAssemblyInstance getInstance() {
     return instance;
-  }
-
-  @Override
-  public StaticContext getStaticContext() {
-    return getParentNodeItem().getStaticContext();
   }
 }

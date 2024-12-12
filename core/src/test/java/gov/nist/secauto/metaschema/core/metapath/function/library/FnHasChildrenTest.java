@@ -62,7 +62,7 @@ class FnHasChildrenTest
   void test(boolean expected, @NonNull String metapath) {
     DynamicContext dynamicContext = newDynamicContext();
 
-    INodeItem node = MockedDocumentGenerator.generateDocumentNodeItem(getContext());
+    INodeItem node = MockedDocumentGenerator.generateDocumentNodeItem();
     Boolean result = IMetapathExpression.compile(metapath, dynamicContext.getStaticContext())
         .evaluateAs(node, IMetapathExpression.ResultType.BOOLEAN, dynamicContext);
     assertEquals(expected, result);

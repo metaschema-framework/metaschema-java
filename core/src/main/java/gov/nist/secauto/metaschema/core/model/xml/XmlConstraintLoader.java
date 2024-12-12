@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.xml;
 
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
@@ -173,7 +174,7 @@ public class XmlConstraintLoader
 
     builder.useWildcardWhenNamespaceNotDefaulted(true);
 
-    ISource source = ISource.externalSource(resource);
+    ISource source = ISource.externalSource(builder.build(), false);
 
     for (Scope scope : constraints.getScopeList()) {
       assert scope != null;
@@ -214,7 +215,9 @@ public class XmlConstraintLoader
 
     state.getRight().add(new AssemblyTargetedConstraints(
         source,
-        ObjectUtils.requireNonNull(assembly.getTarget()),
+        IMetapathExpression.lazyCompile(
+            ObjectUtils.requireNonNull(assembly.getTarget()),
+            source.getStaticContext()),
         constraints));
   }
 
@@ -229,7 +232,9 @@ public class XmlConstraintLoader
 
     state.getRight().add(new FieldTargetedConstraints(
         source,
-        ObjectUtils.requireNonNull(field.getTarget()),
+        IMetapathExpression.lazyCompile(
+            ObjectUtils.requireNonNull(field.getTarget()),
+            source.getStaticContext()),
         constraints));
   }
 
@@ -244,7 +249,9 @@ public class XmlConstraintLoader
 
     state.getRight().add(new FlagTargetedConstraints(
         source,
-        ObjectUtils.requireNonNull(flag.getTarget()),
+        IMetapathExpression.lazyCompile(
+            ObjectUtils.requireNonNull(flag.getTarget()),
+            source.getStaticContext()),
         constraints));
   }
 }

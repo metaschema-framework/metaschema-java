@@ -3,18 +3,15 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.withSettings;
 
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.testing.model.mocking.AbstractMockitoFactory;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import org.mockito.Answers;
-import org.mockito.Mockito;
 
 import java.net.URI;
 import java.util.Collections;
@@ -22,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -31,20 +27,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 // TODO: Integrate with classes in gov.nist.secauto.metaschema.core.testing
 @SuppressWarnings("checkstyle:MissingJavadocMethodCheck")
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
-public class MockNodeItemFactory {
-  @SuppressWarnings("null")
-  @NonNull
-  protected <T> T newMock(@NonNull Class<T> clazz, @NonNull String name) {
-    String mockName = new StringBuilder()
-        .append(clazz.getSimpleName())
-        .append('-')
-        .append(name)
-        .append('-')
-        .append(UUID.randomUUID().toString())
-        .toString();
-    return Mockito.mock(clazz, withSettings().name(mockName).defaultAnswer(Answers.CALLS_REAL_METHODS));
-  }
-
+public class MockNodeItemFactory
+    extends AbstractMockitoFactory {
   @NonNull
   public IDocumentNodeItem document(
       URI documentURI,
@@ -52,9 +36,9 @@ public class MockNodeItemFactory {
       List<IFlagNodeItem> flags,
       List<IModelNodeItem<?, ?>> modelItems) {
     String qname = ObjectUtils.requireNonNull(rootName.toString());
-    IDocumentNodeItem document = newMock(IDocumentNodeItem.class, qname);
-    IRootAssemblyNodeItem root = newMock(IRootAssemblyNodeItem.class, qname);
-    IAssemblyDefinition definition = newMock(IAssemblyDefinition.class, qname);
+    IDocumentNodeItem document = mock(IDocumentNodeItem.class, qname);
+    IRootAssemblyNodeItem root = mock(IRootAssemblyNodeItem.class, qname);
+    IAssemblyDefinition definition = mock(IAssemblyDefinition.class, qname);
 
     // doAnswer(invocation -> Stream.of(root)).when(document).modelItems();
     doReturn(root).when(document).getRootAssemblyNodeItem();
@@ -136,8 +120,8 @@ public class MockNodeItemFactory {
 
   @NonNull
   public IFlagNodeItem flag(@NonNull IEnhancedQName name, @NonNull IAnyAtomicItem value) {
-    IFlagNodeItem flag = newMock(IFlagNodeItem.class, ObjectUtils.notNull(name.toString()));
-    IFlagDefinition definition = newMock(IFlagDefinition.class, ObjectUtils.notNull(name.toString()));
+    IFlagNodeItem flag = mock(IFlagNodeItem.class, ObjectUtils.notNull(name.toString()));
+    IFlagDefinition definition = mock(IFlagDefinition.class, ObjectUtils.notNull(name.toString()));
 
     doReturn(name).when(flag).getQName();
     doReturn(true).when(flag).hasValue();
@@ -163,8 +147,8 @@ public class MockNodeItemFactory {
       @NonNull IEnhancedQName name,
       @NonNull IAnyAtomicItem value,
       List<IFlagNodeItem> flags) {
-    IFieldNodeItem field = newMock(IFieldNodeItem.class, ObjectUtils.notNull(name.toString()));
-    IFieldDefinition definition = newMock(IFieldDefinition.class, ObjectUtils.notNull(name.toString()));
+    IFieldNodeItem field = mock(IFieldNodeItem.class, ObjectUtils.notNull(name.toString()));
+    IFieldDefinition definition = mock(IFieldDefinition.class, ObjectUtils.notNull(name.toString()));
 
     doReturn(name).when(field).getQName();
     doReturn(true).when(field).hasValue();
@@ -184,8 +168,8 @@ public class MockNodeItemFactory {
       @NonNull IEnhancedQName name,
       List<IFlagNodeItem> flags,
       List<IModelNodeItem<?, ?>> modelItems) {
-    IAssemblyNodeItem assembly = newMock(IAssemblyNodeItem.class, ObjectUtils.notNull(name.toString()));
-    IAssemblyDefinition definition = newMock(IAssemblyDefinition.class, ObjectUtils.notNull(name.toString()));
+    IAssemblyNodeItem assembly = mock(IAssemblyNodeItem.class, ObjectUtils.notNull(name.toString()));
+    IAssemblyDefinition definition = mock(IAssemblyDefinition.class, ObjectUtils.notNull(name.toString()));
 
     doReturn(name).when(assembly).getQName();
     doReturn(false).when(assembly).hasValue();

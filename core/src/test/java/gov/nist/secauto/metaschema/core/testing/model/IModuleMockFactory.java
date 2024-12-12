@@ -3,25 +3,25 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.testing;
+package gov.nist.secauto.metaschema.core.testing.model;
 
-import org.jmock.Mockery;
+import gov.nist.secauto.metaschema.core.testing.model.mocking.IMockFactory;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a factory used to produce Metaschema module-based definitions and
+ * instances.
+ */
 public interface IModuleMockFactory extends IMockFactory {
-  @Override
-  @NonNull
-  Mockery getContext();
-
   /**
    * Get a new flag builder.
    *
    * @return the builder
    */
   @NonNull
-  default FlagBuilder flag() {
-    return FlagBuilder.builder(getContext());
+  default IFlagBuilder flag() {
+    return IFlagBuilder.builder();
   }
 
   /**
@@ -30,8 +30,8 @@ public interface IModuleMockFactory extends IMockFactory {
    * @return the builder
    */
   @NonNull
-  default FieldBuilder field() {
-    return FieldBuilder.builder(getContext());
+  default IFieldBuilder field() {
+    return IFieldBuilder.builder();
   }
 
   /**
@@ -40,7 +40,7 @@ public interface IModuleMockFactory extends IMockFactory {
    * @return the builder
    */
   @NonNull
-  default AssemblyBuilder assembly() {
-    return AssemblyBuilder.builder(getContext());
+  default IAssemblyBuilder assembly() {
+    return IAssemblyBuilder.builder();
   }
 }

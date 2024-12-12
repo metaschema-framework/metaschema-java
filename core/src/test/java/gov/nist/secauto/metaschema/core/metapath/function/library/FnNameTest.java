@@ -65,7 +65,7 @@ class FnNameTest
 
     IStringItem result = IMetapathExpression.compile(metapath, dynamicContext.getStaticContext())
         .evaluateAs(
-            MockedDocumentGenerator.generateDocumentNodeItem(getContext()),
+            MockedDocumentGenerator.generateDocumentNodeItem(),
             IMetapathExpression.ResultType.ITEM,
             dynamicContext);
     assertNotNull(result);

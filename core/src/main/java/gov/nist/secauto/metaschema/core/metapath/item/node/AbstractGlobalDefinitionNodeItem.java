@@ -13,7 +13,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Represents a node item based on a global definition from a Metaschema.
  *
  * @param <D>
- *          the definition type
+ *          the Java type of the associated Metaschema module definition
+ * @param <I>
+ *          the Java type of the associated Metaschema module instance
  */
 public abstract class AbstractGlobalDefinitionNodeItem<D extends IDefinition, I extends INamedInstance>
     extends AbstractDefinitionNodeItem<D, I> {

@@ -72,7 +72,7 @@ public final class FnOneOrMore {
    */
   @NonNull
   public static ISequence<?> fnOneOrMore(@NonNull ISequence<?> sequence) {
-    if (sequence.size() < 1) {
+    if (sequence.isEmpty()) {
       throw new InvalidArgumentFunctionException(
           InvalidArgumentFunctionException.INVALID_ARGUMENT_ONE_OR_MORE,
           String.format("fn:one-or-more called with the sequence '%s' containing less than one item.",

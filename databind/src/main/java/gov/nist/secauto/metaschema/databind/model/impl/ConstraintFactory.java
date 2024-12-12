@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConfigurableMessageConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
@@ -56,8 +57,12 @@ final class ConstraintFactory {
   }
 
   @NonNull
-  static String toMetapath(@NonNull String metapath) {
-    return metapath.isBlank() ? IConstraint.DEFAULT_TARGET_METAPATH : metapath;
+  static IMetapathExpression toMetapath(
+      @NonNull String metapath,
+      @NonNull ISource source) {
+    return metapath.isBlank()
+        ? IConstraint.DEFAULT_TARGET_METAPATH
+        : IMetapathExpression.lazyCompile(metapath, source.getStaticContext());
   }
 
   @NonNull
@@ -85,8 +90,11 @@ final class ConstraintFactory {
   }
 
   @NonNull
-  static <T extends AbstractConstraintBuilder<T, ?>> T applyTarget(@NonNull T builder, @NonNull String target) {
-    builder.target(toMetapath(target));
+  static <T extends AbstractConstraintBuilder<T, ?>> T applyTarget(
+      @NonNull T builder,
+      @NonNull String target,
+      @NonNull ISource source) {
+    builder.target(toMetapath(target, source));
     return builder;
   }
 
@@ -166,7 +174,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target());
+    applyTarget(builder, constraint.target(), source);
     applyProperties(builder, constraint.properties());
     applyRemarks(builder, constraint.remarks());
 
@@ -186,7 +194,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target());
+    applyTarget(builder, constraint.target(), source);
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
@@ -212,10 +220,9 @@ final class ConstraintFactory {
     for (KeyField keyField : keyFields) {
       @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // ok
       IKeyField field = IKeyField.of(
-          toMetapath(keyField.target()),
+          toMetapath(keyField.target(), source),
           toPattern(keyField.pattern()),
-          toRemarks(keyField.remarks()),
-          source);
+          toRemarks(keyField.remarks()));
       builder.keyField(field);
     }
     return builder;
@@ -230,7 +237,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target());
+    applyTarget(builder, constraint.target(), source);
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
@@ -249,7 +256,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target());
+    applyTarget(builder, constraint.target(), source);
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
@@ -270,7 +277,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target());
+    applyTarget(builder, constraint.target(), source);
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
@@ -289,12 +296,12 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target());
+    applyTarget(builder, constraint.target(), source);
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());
 
-    builder.test(toMetapath(constraint.test()));
+    builder.test(toMetapath(constraint.test(), source));
 
     return builder.build();
   }
@@ -314,7 +321,7 @@ final class ConstraintFactory {
     builder
         .source(source)
         .level(constraint.level());
-    applyTarget(builder, constraint.target());
+    applyTarget(builder, constraint.target(), source);
     applyProperties(builder, constraint.properties());
     applyMessage(builder, constraint.message());
     applyRemarks(builder, constraint.remarks());

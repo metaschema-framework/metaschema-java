@@ -8,12 +8,9 @@ package gov.nist.secauto.metaschema.core.mdm.impl;
 import gov.nist.secauto.metaschema.core.mdm.IDMAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.mdm.IDMFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.AbstractNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
+import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
-import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -27,22 +24,22 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * This abstract Metapath assmebly node item implementation supports creating a
+ * Metaschema module-based data model.
+ */
 public abstract class AbstractDMAssemblyNodeItem
-    extends AbstractNodeItem
+    extends AbstractDMModelNodeItem<IAssemblyDefinition, IAssemblyInstance>
     implements IDMAssemblyNodeItem {
-  @NonNull
-  private final Map<IEnhancedQName, IFlagNodeItem> flags = new ConcurrentHashMap<>();
   @NonNull
   private final Map<IEnhancedQName, List<IDMModelNodeItem<?, ?>>> modelItems
       = new ConcurrentHashMap<>();
 
+  /**
+   * Construct a new node item.
+   */
   protected AbstractDMAssemblyNodeItem() {
-    // nothing to do
-  }
-
-  @Override
-  public Object getValue() {
-    return this;
+    // only allow extending classes to create instances
   }
 
   @Override
@@ -53,26 +50,6 @@ public abstract class AbstractDMAssemblyNodeItem
   @Override
   protected String getValueSignature() {
     return "";
-  }
-
-  @Override
-  public Collection<? extends IFlagNodeItem> getFlags() {
-    return ObjectUtils.notNull(flags.values());
-  }
-
-  @Override
-  public IFlagNodeItem getFlagByName(IEnhancedQName name) {
-    return flags.get(name);
-  }
-
-  @Override
-  public IFlagNodeItem newFlag(
-      @NonNull IFlagInstance instance,
-      @NonNull IResourceLocation resourceLocation,
-      @NonNull IAnyAtomicItem value) {
-    IFlagNodeItem flag = new FlagImpl(instance, this, resourceLocation, value);
-    flags.put(instance.getQName(), flag);
-    return flag;
   }
 
   @Override
@@ -87,21 +64,21 @@ public abstract class AbstractDMAssemblyNodeItem
   }
 
   @Override
-  public IDMFieldNodeItem newField(IFieldInstance instance, IResourceLocation resourceLocation, IAnyAtomicItem value) {
+  public IDMFieldNodeItem newField(IFieldInstance instance, IAnyAtomicItem value) {
     List<IDMModelNodeItem<?, ?>> result = modelItems.computeIfAbsent(
         instance.getQName(),
-        name -> Collections.synchronizedList(new LinkedList<IDMModelNodeItem<?, ?>>()));
-    IDMFieldNodeItem field = new FieldImpl(instance, this, resourceLocation, value);
+        name -> Collections.synchronizedList(new LinkedList<>()));
+    IDMFieldNodeItem field = new ChildFieldNodeItem(instance, this, value);
     result.add(field);
     return field;
   }
 
   @Override
-  public IDMAssemblyNodeItem newAssembly(IAssemblyInstance instance, IResourceLocation resourceLocation) {
+  public IDMAssemblyNodeItem newAssembly(IAssemblyInstance instance) {
     List<IDMModelNodeItem<?, ?>> result = modelItems.computeIfAbsent(
         instance.getQName(),
-        name -> Collections.synchronizedList(new LinkedList<IDMModelNodeItem<?, ?>>()));
-    IDMAssemblyNodeItem assembly = new AssemblyImpl(instance, this, resourceLocation);
+        name -> Collections.synchronizedList(new LinkedList<>()));
+    IDMAssemblyNodeItem assembly = new ChildAssemblyNodeItem(instance, this);
     result.add(assembly);
     return assembly;
   }

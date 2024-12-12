@@ -12,14 +12,12 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Map;
 import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * Represents an expect constraint.
@@ -31,7 +29,7 @@ public final class DefaultExpectConstraint
     extends AbstractConfigurableMessageConstraint
     implements IExpectConstraint {
   @NonNull
-  private final Lazy<IMetapathExpression> testMetapath;
+  private final IMetapathExpression test;
 
   /**
    * Construct a new expect constraint.
@@ -66,30 +64,17 @@ public final class DefaultExpectConstraint
       @Nullable MarkupLine description,
       @NonNull ISource source,
       @NonNull Level level,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull Map<IAttributable.Key, Set<String>> properties,
-      @NonNull String test,
+      @NonNull IMetapathExpression test,
       @Nullable String message,
       @Nullable MarkupMultiline remarks) {
     super(id, formalName, description, source, level, target, properties, message, remarks);
-    this.testMetapath = ObjectUtils.notNull(
-        Lazy.lazy(() -> IMetapathExpression.compile(
-            test,
-            source.getStaticContext())));
-  }
-
-  /**
-   * Get the compiled Metapath expression for the test.
-   *
-   * @return the compiled Metapath expression
-   */
-  @NonNull
-  public IMetapathExpression getTestMetapath() {
-    return ObjectUtils.notNull(testMetapath.get());
+    this.test = test;
   }
 
   @Override
-  public String getTest() {
-    return getTestMetapath().getPath();
+  public IMetapathExpression getTest() {
+    return test;
   }
 }

@@ -93,7 +93,7 @@ public abstract class AbstractGenerationState<WRITER, DATATYPE_MANAGER extends I
         closed = true;
       }
 
-      if (!IMetapathExpression.contextNode().getPath().equals(constraint.getTarget())) {
+      if (!IMetapathExpression.contextNode().getPath().equals(constraint.getTarget().getPath())) {
         values = CollectionUtil.emptyList();
         break;
       }

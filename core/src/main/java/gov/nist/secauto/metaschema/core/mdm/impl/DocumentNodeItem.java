@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
-import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -24,21 +23,30 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class DocumentImpl implements IDMDocumentNodeItem {
+/**
+ * A Metapath document node item that is the top of a document-based data model.
+ */
+public class DocumentNodeItem
+    extends AbstractDMNodeItem
+    implements IDMDocumentNodeItem {
   @NonNull
   private final RootAssembly root;
   @NonNull
-  private final IResourceLocation resourceLocation;
-  @NonNull
   private final ISource source;
 
-  public DocumentImpl(
+  /**
+   * Construct a new node item.
+   *
+   * @param resource
+   *          the Metaschema module instance resource this document is from
+   * @param root
+   *          the root Metaschema module assembly definition that represents the
+   *          root node of this document
+   */
+  public DocumentNodeItem(
       @NonNull URI resource,
-      @NonNull IResourceLocation resourceLocation,
-      @NonNull IAssemblyDefinition root,
-      @NonNull IResourceLocation assemblyLocation) {
-    this.root = new RootAssembly(root, assemblyLocation);
-    this.resourceLocation = resourceLocation;
+      @NonNull IAssemblyDefinition root) {
+    this.root = new RootAssembly(root);
     this.source = ISource.externalSource(resource);
   }
 
@@ -72,11 +80,6 @@ public class DocumentImpl implements IDMDocumentNodeItem {
   }
 
   @Override
-  public IResourceLocation getLocation() {
-    return resourceLocation;
-  }
-
-  @Override
   public String stringValue() {
     return "";
   }
@@ -92,13 +95,8 @@ public class DocumentImpl implements IDMDocumentNodeItem {
   }
 
   @Override
-  public String toSignature() {
-    return ObjectUtils.notNull(new StringBuilder()
-        .append(getType().toSignature())
-        .append('\u2ABB')
-        .append(getMetapath())
-        .append('\u2ABC')
-        .toString());
+  protected String getValueSignature() {
+    return null;
   }
 
   @Override
@@ -111,29 +109,20 @@ public class DocumentImpl implements IDMDocumentNodeItem {
       implements IDMRootAssemblyNodeItem {
     @NonNull
     private final IAssemblyDefinition definition;
-    @NonNull
-    private final IResourceLocation resourceLocation;
 
     public RootAssembly(
-        @NonNull IAssemblyDefinition definition,
-        @NonNull IResourceLocation location) {
+        @NonNull IAssemblyDefinition definition) {
       this.definition = definition;
-      this.resourceLocation = location;
     }
 
     @Override
     public IEnhancedQName getQName() {
-      return definition.getRootQName();
-    }
-
-    @Override
-    public IResourceLocation getLocation() {
-      return resourceLocation;
+      return ObjectUtils.requireNonNull(definition.getRootQName(), "the definition is expected to have a root QName.");
     }
 
     @Override
     public IDocumentNodeItem getDocumentNodeItem() {
-      return DocumentImpl.this;
+      return DocumentNodeItem.this;
     }
 
     @Override

@@ -55,7 +55,7 @@ class FnRootTest
   void test(@NonNull String metapath) {
     DynamicContext dynamicContext = newDynamicContext();
 
-    INodeItem root = MockedDocumentGenerator.generateDocumentNodeItem(getContext());
+    INodeItem root = MockedDocumentGenerator.generateDocumentNodeItem();
     INodeItem result = IMetapathExpression.compile(metapath, dynamicContext.getStaticContext())
         .evaluateAs(root, IMetapathExpression.ResultType.ITEM, dynamicContext);
     INodeItem rootResult

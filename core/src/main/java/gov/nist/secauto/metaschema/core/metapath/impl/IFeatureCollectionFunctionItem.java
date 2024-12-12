@@ -16,6 +16,10 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides default methods for node items that represent collections of
+ * Metapath items and sequences.
+ */
 public interface IFeatureCollectionFunctionItem extends IFunction {
   /**
    * The function properties.

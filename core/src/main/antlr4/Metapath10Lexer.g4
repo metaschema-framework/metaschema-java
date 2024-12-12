@@ -117,7 +117,7 @@ DecimalLiteral   : '.' FragDigits | FragDigits '.' [0-9]*;
 DoubleLiteral    : ('.' FragDigits | FragDigits ('.' [0-9]*)?) [eE] [+-]? FragDigits;
 StringLiteral    : '"' (~["] | FragEscapeQuot)* '"' | '\'' (~['] | FragEscapeApos)* '\'';
 URIQualifiedName : BracedURILiteral NCName;
-BracedURILiteral : 'Q' '{' [^{}]* '}';
+BracedURILiteral : 'Q' '{' ~[{}]* '}';
 // Error in spec: EscapeQuot and EscapeApos are not terminals!
 fragment FragEscapeQuot : '""';
 fragment FragEscapeApos : '\'\'';
