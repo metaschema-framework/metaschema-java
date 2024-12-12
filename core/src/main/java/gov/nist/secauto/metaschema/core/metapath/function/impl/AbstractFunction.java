@@ -259,6 +259,8 @@ public abstract class AbstractFunction implements IFunction {
         result = executeInternal(convertedArguments, dynamicContext, contextItem);
 
         if (callingContext != null) {
+          // ensure the result sequence is list backed
+          result.getValue();
           // add result to cache
           dynamicContext.cacheResult(callingContext, result);
         }

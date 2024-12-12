@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
@@ -95,8 +96,17 @@ public abstract class AbstractConfigurableMessageConstraint
 
     return ObjectUtils.notNull(ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {
       String metapath = ObjectUtils.notNull(match.group(2));
-      IMetapathExpression expr = IMetapathExpression.compile(metapath, context.getStaticContext());
-      return expr.evaluateAs(item, IMetapathExpression.ResultType.STRING, context);
+      try {
+        IMetapathExpression expr = IMetapathExpression.compile(metapath, context.getStaticContext());
+        return expr.evaluateAs(item, IMetapathExpression.ResultType.STRING, context);
+      } catch (MetapathException ex) {
+        throw new MetapathException(
+            String.format("Unable to evaluate the message replacement expression '%s' in constraint '%s'. %s",
+                metapath,
+                IConstraint.getConstraintIdentity(this),
+                ex.getLocalizedMessage()),
+            ex);
+      }
     }).toString());
   }
 }

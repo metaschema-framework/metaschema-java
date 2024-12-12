@@ -676,28 +676,32 @@ public class DefaultConstraintValidator
       @NonNull INodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
       @NonNull DynamicContext dynamicContext) {
-    IMetapathExpression metapath = IMetapathExpression.compile(
-        constraint.getTest(),
-        dynamicContext.getStaticContext());
+    try {
+      IMetapathExpression metapath = IMetapathExpression.compile(
+          constraint.getTest(),
+          dynamicContext.getStaticContext());
 
-    IConstraintValidationHandler handler = getConstraintValidationHandler();
-    targets.stream()
-        .forEachOrdered(item -> {
-          assert item != null;
+      IConstraintValidationHandler handler = getConstraintValidationHandler();
+      targets.stream()
+          .forEachOrdered(item -> {
+            assert item != null;
 
-          if (item.hasValue()) {
-            try {
-              ISequence<?> result = metapath.evaluate(item, dynamicContext);
-              if (FnBoolean.fnBoolean(result).toBoolean()) {
-                handlePass(constraint, node, item, dynamicContext);
-              } else {
-                handler.handleExpectViolation(constraint, node, item, dynamicContext);
+            if (item.hasValue()) {
+              try {
+                ISequence<?> result = metapath.evaluate(item, dynamicContext);
+                if (FnBoolean.fnBoolean(result).toBoolean()) {
+                  handlePass(constraint, node, item, dynamicContext);
+                } else {
+                  handler.handleExpectViolation(constraint, node, item, dynamicContext);
+                }
+              } catch (MetapathException ex) {
+                handleError(constraint, item, ex, dynamicContext);
               }
-            } catch (MetapathException ex) {
-              handleError(constraint, item, ex, dynamicContext);
             }
-          }
-        });
+          });
+    } catch (MetapathException ex) {
+      handleError(constraint, node, ex, dynamicContext);
+    }
   }
 
   /**
