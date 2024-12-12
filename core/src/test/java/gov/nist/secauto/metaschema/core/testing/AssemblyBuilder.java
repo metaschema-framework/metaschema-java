@@ -5,22 +5,28 @@
 
 package gov.nist.secauto.metaschema.core.testing;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
+import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.model.INamedModelElement;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.ModelType;
+import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -34,20 +40,18 @@ public final class AssemblyBuilder
   private List<FlagBuilder> flags;
   private List<? extends IModelInstanceBuilder> modelInstances;
 
-  private AssemblyBuilder(@NonNull Mockery ctx) {
-    super(ctx);
+  private AssemblyBuilder() {
+    // prevent direct instantiation
   }
 
   /**
    * Create a new builder using the provided mocking context.
    *
-   * @param ctx
-   *          the mocking context
    * @return the new builder
    */
   @NonNull
-  public static AssemblyBuilder builder(@NonNull Mockery ctx) {
-    return new AssemblyBuilder(ctx).reset();
+  public static AssemblyBuilder builder() {
+    return new AssemblyBuilder().reset();
   }
 
   @Override
@@ -186,28 +190,50 @@ public final class AssemblyBuilder
             INamedModelInstanceAbsolute::getQName,
             Function.identity()));
 
-    getContext().checking(new Expectations() {
-      {
-        if (rootName != null) {
-          allowing(retval).getRootQName();
-          will(returnValue(IEnhancedQName.of(ObjectUtils.notNull(rootNamespace), ObjectUtils.notNull(rootName))));
-        }
+    if (rootName != null) {
+      doReturn(ModelType.ASSEMBLY).when(retval).getModelType();
 
-        allowing(retval).getFlagInstances();
-        will(returnValue(flags.values()));
-        flags.forEach((key, value) -> {
-          allowing(retval).getFlagInstanceByName(with(key.getIndexPosition()));
-          will(returnValue(value));
-        });
-        allowing(retval).getModelInstances();
-        will(returnValue(modelInstances.values()));
-        modelInstances.forEach((key, value) -> {
-          allowing(retval).getNamedModelInstanceByName(with(key.getIndexPosition()));
-          will(returnValue(value));
-        });
-      }
+      IEnhancedQName rootQName = IEnhancedQName.of(ObjectUtils.notNull(rootNamespace), ObjectUtils.notNull(rootName));
+      doReturn(rootQName).when(retval).getRootQName();
+    }
+
+    doReturn(new AssemblyConstraintSet(source)).when(retval).getConstraintSupport();
+
+    doReturn(flags.values()).when(retval).getFlagInstances();
+    flags.entrySet().forEach(entry -> {
+      assert entry != null;
+      doReturn(entry.getValue()).when(retval).getFlagInstanceByName(eq(entry.getKey().getIndexPosition()));
     });
 
+    doReturn(modelInstances.values()).when(retval).getModelInstances();
+    doReturn(CollectionUtil.emptyMap()).when(retval).getChoiceGroupInstances();
+    doReturn(CollectionUtil.emptyList()).when(retval).getChoiceInstances();
+    modelInstances.forEach((key, value) -> {
+      doReturn(value).when(retval).getNamedModelInstanceByName(eq(key.getIndexPosition()));
+
+      if (value instanceof IAssemblyInstance) {
+        doReturn(value).when(retval).getAssemblyInstanceByName(eq(key.getIndexPosition()));
+      } else if (value instanceof IFieldInstance) {
+        doReturn(value).when(retval).getFieldInstanceByName(eq(key.getIndexPosition()));
+      }
+    });
+    doReturn(
+        modelInstances.values().stream()
+            .flatMap(value -> value instanceof IAssemblyInstance ? Stream.of(value) : null)
+            .collect(Collectors.toList()))
+                .when(retval).getAssemblyInstances();
+    doReturn(
+        modelInstances.values().stream()
+            .flatMap(value -> value instanceof IFieldInstance ? Stream.of(value) : null)
+            .collect(Collectors.toList()))
+                .when(retval).getFieldInstances();
     return retval;
   }
+
+  @Override
+  protected void applyNamed(INamedModelElement element) {
+    super.applyNamed(element);
+    doReturn(ModelType.ASSEMBLY).when(element).getModelType();
+  }
+
 }

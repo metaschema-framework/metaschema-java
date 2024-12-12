@@ -62,7 +62,8 @@ public interface ISource {
     return StaticContextSource.instance(
         StaticContext.builder()
             .baseUri(location)
-            .build());
+            .build(),
+        true);
   }
 
   /**
@@ -76,15 +77,20 @@ public interface ISource {
    * @param staticContext
    *          the static Metapath context to use for compiling Metapath
    *          expressions in this source
+   * @param useCached
+   *          if {@code true} use a previously cached source, otherwise create a
+   *          new one
    *
    * @return the source descriptor
    */
   @NonNull
-  static ISource externalSource(@NonNull StaticContext staticContext) {
+  static ISource externalSource(
+      @NonNull StaticContext staticContext,
+      boolean useCached) {
     if (staticContext.getBaseUri() == null) {
       throw new IllegalArgumentException("The static content must define a baseUri identifing the source resource.");
     }
-    return StaticContextSource.instance(staticContext);
+    return StaticContextSource.instance(staticContext, useCached);
   }
 
   /**

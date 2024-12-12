@@ -148,7 +148,7 @@ parenthesizeditemtype : OP itemtype CP ;
 
 
 // Error in the spec. EQName also includes acceptable keywords.
-eqname : NCName | QName | URIQualifiedName
+eqname : URIQualifiedName | NCName | QName
  | KW_ANCESTOR
  | KW_ANCESTOR_OR_SELF
  | KW_AND

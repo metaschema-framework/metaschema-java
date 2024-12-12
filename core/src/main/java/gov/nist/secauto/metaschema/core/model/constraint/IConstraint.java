@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
@@ -90,10 +91,10 @@ public interface IConstraint extends IAttributable, IDescribable {
   Level DEFAULT_LEVEL = Level.ERROR;
 
   /**
-   * The default target Metapath expression to use if no target is provided.
+   * The compiled default target Metapath to use if no target is provided.
    */
   @NonNull
-  String DEFAULT_TARGET_METAPATH = ".";
+  IMetapathExpression DEFAULT_TARGET_METAPATH = IMetapathExpression.contextNode();
 
   /**
    * Get a string that identifies the provided constraint using the most specific
@@ -111,7 +112,7 @@ public interface IConstraint extends IAttributable, IDescribable {
     } else if (constraint.getFormalName() != null) {
       identity = String.format("with the formal name '%s'", constraint.getFormalName());
     } else {
-      identity = String.format("targeting '%s'", constraint.getTarget());
+      identity = String.format("targeting '%s'", constraint.getTarget().getPath());
     }
     return ObjectUtils.notNull(identity);
   }
@@ -155,7 +156,7 @@ public interface IConstraint extends IAttributable, IDescribable {
    * @return a Metapath expression
    */
   @NonNull
-  String getTarget();
+  IMetapathExpression getTarget();
 
   /**
    * Based on the provided {@code contextNodeItem}, find all nodes matching the

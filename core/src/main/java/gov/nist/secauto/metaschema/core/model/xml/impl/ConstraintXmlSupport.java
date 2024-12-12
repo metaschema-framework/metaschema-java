@@ -438,7 +438,7 @@ public final class ConstraintXmlSupport {
       if (Boolean.compare(IAllowedValuesConstraint.ALLOW_OTHER_DEFAULT, constraint.isAllowedOther()) != 0) {
         bean.setAllowOther(constraint.isAllowedOther());
       }
-      bean.setTarget(constraint.getTarget());
+      bean.setTarget(constraint.getTarget().getPath());
       bean.setExtensible(constraint.getExtensible());
 
       for (Map.Entry<String, ? extends IAllowedValue> entry : constraint.getAllowedValues().entrySet()) {
@@ -494,7 +494,7 @@ public final class ConstraintXmlSupport {
       assert bean != null;
       applyCommonValues(constraint, bean);
 
-      bean.setTest(constraint.getTest());
+      bean.setTest(constraint.getTest().getPath());
 
       String message = constraint.getMessage();
       if (message != null) {
@@ -550,7 +550,7 @@ public final class ConstraintXmlSupport {
         bean.setPattern(pattern);
       }
 
-      bean.setTarget(keyField.getTarget());
+      bean.setTarget(keyField.getTarget().getPath());
 
       MarkupMultiline remarks = keyField.getRemarks();
       if (remarks != null) {

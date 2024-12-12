@@ -24,6 +24,7 @@ public abstract class AbstractConfigurableMessageConstraintBuilder<
     T extends AbstractConfigurableMessageConstraintBuilder<T, R>,
     R extends IConfigurableMessageConstraint>
     extends AbstractConstraintBuilder<T, R> {
+  @Nullable
   private String message;
 
   /**

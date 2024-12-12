@@ -5,18 +5,19 @@
 
 package gov.nist.secauto.metaschema.core.testing;
 
+import static org.mockito.Mockito.doReturn;
+
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelElement;
 import gov.nist.secauto.metaschema.core.model.INamedInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelElement;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.testing.mocking.AbstractMockitoFactory;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 
 import java.net.URI;
 
@@ -29,19 +30,17 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *          the Java type of this builder
  */
 public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
-    extends MockFactory {
+    extends AbstractMockitoFactory {
 
   private String namespace = "";
   private String name;
+  protected ISource source;
 
   /**
-   * Construct a new builder using the provided mocking context.
-   *
-   * @param ctx
-   *          the mocking context
+   * Construct a new builder.
    */
-  protected AbstractModelBuilder(@NonNull Mockery ctx) {
-    super(ctx);
+  protected AbstractModelBuilder() {
+    // allow extending classes to construct
   }
 
   /**
@@ -131,12 +130,17 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
     applyModelElement(definition);
     applyNamed(definition);
     applyAttributable(definition);
-    getContext().checking(new Expectations() {
-      {
-        allowing(definition).getDefinitionQName();
-        will(returnValue(IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name))));
-      }
-    });
+
+    IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name));
+
+    doReturn(qname).when(definition).getDefinitionQName();
+    doReturn(null).when(definition).getRemarks();
+    doReturn(CollectionUtil.emptyMap()).when(definition).getProperties();
+    doReturn(null).when(definition).getInlineInstance();
+
+    // doReturn().when(definition).getConstraintSupport();
+    // doReturn().when(definition).getContainingModule();
+    // doReturn().when(definition).getModelType();
   }
 
   /**
@@ -159,18 +163,11 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
     applyModelElement(instance);
     applyNamed(instance);
     applyAttributable(instance);
-    getContext().checking(new Expectations() {
-      {
-        allowing(instance).getQName();
-        will(returnValue(IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name))));
-        allowing(instance).getDefinition();
-        will(returnValue(definition));
-        allowing(instance).getContainingDefinition();
-        will(returnValue(parent));
-        allowing(instance).getParentContainer();
-        will(returnValue(parent));
-      }
-    });
+
+    doReturn(name).when(instance).getName();
+    doReturn(definition).when(instance).getDefinition();
+    doReturn(parent).when(instance).getContainingDefinition();
+    doReturn(parent).when(instance).getParentContainer();
   }
 
   /**
@@ -181,22 +178,12 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
    *          the named model element to apply mocking expectations for
    */
   protected void applyNamed(@NonNull INamedModelElement element) {
-    getContext().checking(new Expectations() {
-      {
-        allowing(element).getName();
-        will(returnValue(name));
-        allowing(element).getUseName();
-        will(returnValue(null));
-        allowing(element).getQName();
-        will(returnValue(IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name))));
-        allowing(element).getEffectiveName();
-        will(returnValue(name));
-        allowing(element).getFormalName();
-        will(returnValue(null));
-        allowing(element).getDescription();
-        will(returnValue(null));
-      }
-    });
+    IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.notNull(namespace), ObjectUtils.notNull(name));
+
+    doReturn(qname).when(element).getQName();
+    doReturn(name).when(element).getName();
+    doReturn(null).when(element).getFormalName();
+    doReturn(null).when(element).getDescription();
   }
 
   /**
@@ -207,12 +194,7 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
    *          the element to apply mocking expectations for
    */
   protected void applyAttributable(@NonNull IAttributable element) {
-    getContext().checking(new Expectations() {
-      {
-        allowing(element).getProperties();
-        will(returnValue(CollectionUtil.emptyMap()));
-      }
-    });
+    doReturn(CollectionUtil.emptyMap()).when(element).getProperties();
   }
 
   /**
@@ -222,11 +204,6 @@ public abstract class AbstractModelBuilder<T extends AbstractModelBuilder<T>>
    *          the model element to apply mocking expectations for
    */
   protected void applyModelElement(@NonNull IModelElement element) {
-    getContext().checking(new Expectations() {
-      {
-        allowing(element).getRemarks();
-        will(returnValue(null));
-      }
-    });
+    doReturn(null).when(element).getRemarks();
   }
 }

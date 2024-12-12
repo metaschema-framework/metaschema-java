@@ -5,14 +5,17 @@
 
 package gov.nist.secauto.metaschema.core.testing;
 
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
-
-import org.jmock.Expectations;
-import org.jmock.Mockery;
+import gov.nist.secauto.metaschema.core.model.INamedModelElement;
+import gov.nist.secauto.metaschema.core.model.ModelType;
+import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -26,20 +29,18 @@ public final class FlagBuilder
   private Object defaultValue = null;
   private boolean required;
 
-  private FlagBuilder(@NonNull Mockery ctx) {
-    super(ctx);
+  private FlagBuilder() {
+    // prevent direct instantiation
   }
 
   /**
    * Create a new builder using the provided mocking context.
    *
-   * @param ctx
-   *          the mocking context
    * @return the new builder
    */
   @NonNull
-  public static FlagBuilder builder(@NonNull Mockery ctx) {
-    return new FlagBuilder(ctx).reset();
+  public static FlagBuilder builder() {
+    return new FlagBuilder().reset();
   }
 
   @Override
@@ -120,13 +121,7 @@ public final class FlagBuilder
 
     applyNamedInstance(retval, definition, parent);
 
-    getContext().checking(new Expectations() {
-      {
-        allowing(retval).isRequired();
-        will(returnValue(required));
-      }
-    });
-
+    doReturn(required).when(retval).isRequired();
     return retval;
   }
 
@@ -142,14 +137,16 @@ public final class FlagBuilder
     IFlagDefinition retval = mock(IFlagDefinition.class);
     applyDefinition(retval);
 
-    getContext().checking(new Expectations() {
-      {
-        allowing(retval).getJavaTypeAdapter();
-        will(returnValue(dataTypeAdapter));
-        allowing(retval).getDefaultValue();
-        will(returnValue(defaultValue));
-      }
-    });
+    doReturn(new ValueConstraintSet(source)).when(retval).getConstraintSupport();
+    doReturn(dataTypeAdapter).when(retval).getJavaTypeAdapter();
+    doReturn(defaultValue).when(retval).getDefaultValue();
+
     return retval;
+  }
+
+  @Override
+  protected void applyNamed(INamedModelElement element) {
+    super.applyNamed(element);
+    doReturn(ModelType.FLAG).when(element).getModelType();
   }
 }
