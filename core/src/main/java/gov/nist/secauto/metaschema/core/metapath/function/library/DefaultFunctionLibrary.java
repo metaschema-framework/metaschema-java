@@ -180,6 +180,8 @@ public class DefaultFunctionLibrary
     registerFunction(FnSubstring.SIGNATURE_TWO_ARG);
     registerFunction(FnSubstring.SIGNATURE_THREE_ARG);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-string-join
+    registerFunction(FnStringJoin.SIGNATURE_ONE_ARG);
+    registerFunction(FnStringJoin.SIGNATURE_TWO_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-string-length
     registerFunction(FnStringLength.SIGNATURE_NO_ARG);
     registerFunction(FnStringLength.SIGNATURE_ONE_ARG);
