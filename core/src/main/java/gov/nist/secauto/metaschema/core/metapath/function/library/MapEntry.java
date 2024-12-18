@@ -45,7 +45,7 @@ public final class MapEntry {
           .type(IItem.type())
           .zeroOrMore()
           .build())
-      .returnType(IItem.type())
+      .returnType(IMapItem.type())
       .returnOne()
       .functionHandler(MapEntry::execute)
       .build();
