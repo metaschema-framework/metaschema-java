@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
@@ -31,7 +32,7 @@ public interface ITargetedConstraints extends IValueConstrained {
    * @return the uncompiled Metapath expression
    */
   @NonNull
-  String getTargetExpression();
+  IMetapathExpression getTarget();
 
   /**
    * Apply the constraint to the provided definition.

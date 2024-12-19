@@ -1,27 +1,22 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import gov.nist.secauto.metaschema.core.mdm.IDMAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
-import gov.nist.secauto.metaschema.core.model.IFieldInstance;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.testing.MockedModelTestSupport;
+import gov.nist.secauto.metaschema.core.testing.model.MockedModelTestSupport;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import org.hamcrest.FeatureMatcher;
-import org.hamcrest.Matcher;
-import org.jmock.Expectations;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -29,104 +24,41 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 class DefaultNodeItemFactoryTest
     extends MockedModelTestSupport {
   @NonNull
-  private static final URI NS_URI = ObjectUtils.notNull(URI.create("http://example.com/ns"));
-  @NonNull
-  private static final String NS = ObjectUtils.notNull(NS_URI.toASCIIString());
-
-  @Test
-  void testGenerateFlags() {
-    DefaultNodeItemFactory nodeFactory = DefaultNodeItemFactory.instance();
-
-    IAssemblyDefinition parent = assembly()
-        .namespace(NS_URI)
-        .name("assembly1")
-        .toDefinition();
-
-    IFieldInstance fieldInstance = field()
-        .namespace(NS_URI)
-        .name("field1")
-        .flags(List.of(
-            flag().namespace(NS_URI).name("flag1")))
-        .toInstance(parent);
-
-    Object fieldValue = "test value";
-
-    // setup the value calls
-    getContext().checking(new Expectations() {
-      { // NOPMD - intentional
-        allowing(fieldInstance.getDefinition().getFlagInstanceByName(IEnhancedQName.of(NS, "flag1").getIndexPosition()))
-            .getValue(fieldValue);
-        will(returnValue("flag1 value"));
-      }
-    });
-
-    IAssemblyNodeItem parentItem = INodeItemFactory.instance().newAssemblyNodeItem(parent);
-    IFieldNodeItem field = new FieldInstanceNodeItemImpl(fieldInstance, parentItem, 2, fieldValue, nodeFactory);
-
-    Collection<? extends IFlagNodeItem> flagItems = field.getFlags();
-    assertThat(flagItems, containsInAnyOrder(
-        allOf(
-            match("name", IFlagNodeItem::getQName, equalTo(IEnhancedQName.of(NS, "flag1"))),
-            match("value", IFlagNodeItem::getValue, equalTo("flag1 value"))))); // NOPMD
-  }
+  private static final String NS = ObjectUtils.notNull("http://example.com/ns");
 
   @Test
   void testGenerateModelItems() {
     IAssemblyDefinition assembly = assembly()
-        .namespace(NS_URI)
+        .namespace(NS)
         .name("assembly1")
+        .source(ISource.externalSource("http://example.com/module"))
         .flags(List.of(
-            flag().namespace(NS_URI).name("flag1")))
+            flag().namespace(NS).name("flag1")))
         .modelInstances(List.of(
-            field().namespace(NS_URI).name("field1")))
+            field().namespace(NS).name("field1")))
         .toDefinition();
 
-    Object assemblyValue = "assembly value";
-    Object flagValue = "flag1 value";
-    Object fieldValue = "field1 value";
-
     // Setup the value calls
-    getContext().checking(new Expectations() {
-      { // NOPMD - intentional
-        allowing(assembly.getFlagInstanceByName(IEnhancedQName.of(NS, "flag1").getIndexPosition()))
-            .getValue(assemblyValue);
-        will(returnValue(flagValue));
-        allowing(assembly.getNamedModelInstanceByName(IEnhancedQName.of(NS, "field1").getIndexPosition()))
-            .getValue(assemblyValue);
-        will(returnValue(fieldValue));
-        allowing(assembly.getNamedModelInstanceByName(IEnhancedQName.of(NS, "field1").getIndexPosition()))
-            .getItemValues(fieldValue);
-        will(returnValue(List.of(fieldValue)));
-      }
-    });
-
-    IAssemblyNodeItem parentItem = INodeItemFactory.instance().newAssemblyNodeItem(assembly, null, assemblyValue);
+    StaticContext staticContext = StaticContext.instance();
+    IDMAssemblyNodeItem parentItem = IDMAssemblyNodeItem.newInstance(assembly, staticContext);
+    assembly.getFlagInstances()
+        .forEach(flag -> parentItem.newFlag(flag, IStringItem.valueOf(flag.getName() + " value")));
+    assembly.getFieldInstances()
+        .forEach(field -> {
+          parentItem.newField(field, IStringItem.valueOf(field.getName() + " value"));
+        });
 
     Collection<? extends IFlagNodeItem> flagItems = parentItem.getFlags();
     Collection<? extends IModelNodeItem<?, ?>> modelItems = parentItem.modelItems()
         .collect(Collectors.toUnmodifiableList());
     assertAll(
-        () -> assertThat(flagItems, containsInAnyOrder(
-            allOf(
-                match("name", IFlagNodeItem::getQName, equalTo(IEnhancedQName.of(NS, "flag1"))),
-                match("value", IFlagNodeItem::getValue, equalTo("flag1 value"))))),
-        () -> assertThat(modelItems, containsInAnyOrder(
-            allOf(
-                match("name", IModelNodeItem::getQName,
-                    equalTo(IEnhancedQName.of(NS, "field1"))),
-                match("value", IModelNodeItem::getValue,
-                    equalTo("field1 value"))))));
-  }
-
-  private static <T, R> FeatureMatcher<T, R> match(
-      @NonNull String label,
-      @NonNull Function<T, R> lambda,
-      Matcher<R> matcher) {
-    return new FeatureMatcher<>(matcher, label, label) {
-      @Override
-      protected R featureValueOf(T actual) {
-        return lambda.apply(actual);
-      }
-    };
+        () -> assertThat(flagItems).extracting(IFlagNodeItem::getQName)
+            .isEqualTo(List.of(IEnhancedQName.of(NS, "flag1"))),
+        () -> assertThat(flagItems).extracting(flag -> flag.toAtomicItem().asString())
+            .isEqualTo(List.of("flag1 value")),
+        () -> assertThat(modelItems).extracting(IModelNodeItem::getQName)
+            .isEqualTo(List.of(IEnhancedQName.of(NS, "field1"))),
+        () -> assertThat(modelItems).extracting(field -> field.toAtomicItem().asString())
+            .isEqualTo(List.of("field1 value")));
   }
 }

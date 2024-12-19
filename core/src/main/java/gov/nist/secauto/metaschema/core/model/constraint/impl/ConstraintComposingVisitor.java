@@ -68,7 +68,7 @@ public class ConstraintComposingVisitor
             "Invalid target '%s' for constraints targeting '%s' in '%s'. A document node is an" +
                 " invalid constraint target. Constraints can only apply to an assembly, field, or flag definition.",
             item.getMetapath(),
-            context.getTargetExpression(),
+            context.getTarget(),
             context.getSource().getLocationHint()));
 
   }

@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
@@ -154,7 +155,7 @@ public class BindingConstraintLoader
               ObjectUtils.notNull(binding.getPrefix()),
               ObjectUtils.notNull(binding.getUri())));
 
-      ISource source = ISource.externalSource(builder.build());
+      ISource source = ISource.externalSource(builder.build(), false);
 
       List<ITargetedConstraints> targetedConstraints = ObjectUtils.notNull(CollectionUtil.listOrEmpty(obj.getContexts())
           .stream()
@@ -235,7 +236,9 @@ public class BindingConstraintLoader
     ConstraintBindingSupport.parse(constraints, obj, source);
     return new AssemblyTargetedConstraints(
         source,
-        ObjectUtils.requireNonNull(obj.getTarget()),
+        IMetapathExpression.lazyCompile(
+            ObjectUtils.requireNonNull(obj.getTarget()),
+            source.getStaticContext()),
         constraints);
   }
 
@@ -247,7 +250,9 @@ public class BindingConstraintLoader
 
     return new FieldTargetedConstraints(
         source,
-        ObjectUtils.requireNonNull(obj.getTarget()),
+        IMetapathExpression.lazyCompile(
+            ObjectUtils.requireNonNull(obj.getTarget()),
+            source.getStaticContext()),
         constraints);
   }
 
@@ -259,7 +264,9 @@ public class BindingConstraintLoader
 
     return new FlagTargetedConstraints(
         source,
-        ObjectUtils.requireNonNull(obj.getTarget()),
+        IMetapathExpression.lazyCompile(
+            ObjectUtils.requireNonNull(obj.getTarget()),
+            source.getStaticContext()),
         constraints);
   }
 
@@ -268,18 +275,24 @@ public class BindingConstraintLoader
       @Nullable Context parent,
       @NonNull ISource source) {
 
-    List<String> metapaths;
+    List<IMetapathExpression> metapaths;
     if (parent == null) {
       metapaths = ObjectUtils.notNull(CollectionUtil.listOrEmpty(contextObj.getMetapaths()).stream()
           .map(MetaschemaMetapath::getTarget)
+          .map(metapath -> IMetapathExpression.lazyCompile(
+              ObjectUtils.requireNonNull(metapath),
+              source.getStaticContext()))
           .collect(Collectors.toList()));
     } else {
-      List<String> parentMetapaths = parent.getMetapaths().stream()
+      List<IMetapathExpression> parentMetapaths = parent.getMetapaths().stream()
           .collect(Collectors.toList());
       metapaths = ObjectUtils.notNull(CollectionUtil.listOrEmpty(contextObj.getMetapaths()).stream()
           .map(MetaschemaMetapath::getTarget)
           .flatMap(childPath -> parentMetapaths.stream()
-              .map(parentPath -> parentPath + '/' + childPath))
+              .map(parentPath -> parentPath.getPath() + '/' + childPath))
+          .map(metapath -> IMetapathExpression.lazyCompile(
+              ObjectUtils.requireNonNull(metapath),
+              source.getStaticContext()))
           .collect(Collectors.toList()));
     }
 
@@ -301,7 +314,7 @@ public class BindingConstraintLoader
 
   private static class Context {
     @NonNull
-    private final List<String> metapaths;
+    private final List<IMetapathExpression> metapaths;
     @NonNull
     private final List<Context> childContexts = new LinkedList<>();
     @NonNull
@@ -309,13 +322,16 @@ public class BindingConstraintLoader
 
     public Context(
         @NonNull ISource source,
-        @NonNull List<String> metapaths,
+        @NonNull List<IMetapathExpression> metapaths,
         @NonNull IModelConstrained constraints) {
       this.metapaths = metapaths;
       this.targetedConstraints = ObjectUtils.notNull(Lazy.lazy(() -> {
 
         Stream<ITargetedConstraints> paths = getMetapaths().stream()
-            .map(metapath -> new MetaTargetedContraints(source, ObjectUtils.notNull(metapath), constraints));
+            .map(metapath -> new MetaTargetedContraints(
+                source,
+                ObjectUtils.notNull(metapath),
+                constraints));
         Stream<ITargetedConstraints> childPaths = childContexts.stream()
             .flatMap(child -> child.getTargetedConstraints().stream());
 
@@ -334,7 +350,7 @@ public class BindingConstraintLoader
     }
 
     @NonNull
-    public List<String> getMetapaths() {
+    public List<IMetapathExpression> getMetapaths() {
       return metapaths;
     }
   }
@@ -345,7 +361,7 @@ public class BindingConstraintLoader
 
     protected MetaTargetedContraints(
         @NonNull ISource source,
-        @NonNull String target,
+        @NonNull IMetapathExpression target,
         @NonNull IModelConstrained constraints) {
       super(source, target, constraints);
     }

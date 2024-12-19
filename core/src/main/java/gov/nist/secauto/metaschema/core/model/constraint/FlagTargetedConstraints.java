@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.AbstractDefinitionTargetedConstraints;
@@ -15,7 +16,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * A set of constraints targeting a {@link IFlagDefinition} based on a target
  * Metapath expression.
  *
- * @see #getTargetExpression()
+ * @see #getTarget()
  */
 public class FlagTargetedConstraints
     extends AbstractDefinitionTargetedConstraints<IFlagDefinition, IValueConstrained> {
@@ -32,7 +33,7 @@ public class FlagTargetedConstraints
    */
   public FlagTargetedConstraints(
       @NonNull ISource source,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull IValueConstrained constraints) {
     super(source, target, constraints);
   }

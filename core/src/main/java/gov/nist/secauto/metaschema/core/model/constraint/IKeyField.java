@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultKeyField;
 
 import java.util.regex.Pattern;
@@ -33,18 +32,15 @@ public interface IKeyField {
    *          an optional used to extract a portion of the resulting key value
    * @param remarks
    *          optional remarks describing the intent of the constraint
-   * @param source
-   *          the descriptor for the resource containing the constraint
    * @return the new key field
    */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IKeyField of(
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @Nullable Pattern pattern,
-      @Nullable MarkupMultiline remarks,
-      @NonNull ISource source) {
-    return new DefaultKeyField(target, pattern, remarks, source);
+      @Nullable MarkupMultiline remarks) {
+    return new DefaultKeyField(target, pattern, remarks);
   }
 
   /**
@@ -54,15 +50,7 @@ public interface IKeyField {
    * @return the Metapath expression identifying the key value target
    */
   @NonNull
-  String getTarget();
-
-  /**
-   * Get the compiled Metapath expression for the {@link #getTarget()}.
-   *
-   * @return the compiled Metapath expression
-   */
-  @NonNull
-  IMetapathExpression getTargetMetapath();
+  IMetapathExpression getTarget();
 
   /**
    * A pattern to use to retrieve the value. If non-{@code null}, the first

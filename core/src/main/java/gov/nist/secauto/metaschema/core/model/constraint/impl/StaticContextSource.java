@@ -38,10 +38,22 @@ public final class StaticContextSource implements ISource {
    * @param staticContext
    *          the static Metapath context to use for compiling Metapath
    *          expressions in this source
+   * @param useCached
+   *          if {@code true} use a previously cached source, otherwise create a
+   *          new one
    * @return the source
    */
   @NonNull
-  public static ISource instance(@NonNull StaticContext staticContext) {
+  public static ISource instance(
+      @NonNull StaticContext staticContext,
+      boolean useCached) {
+    return useCached
+        ? retrieveFromCache(staticContext)
+        : new StaticContextSource(staticContext);
+  }
+
+  @NonNull
+  private static StaticContextSource retrieveFromCache(@NonNull StaticContext staticContext) {
     SOURCE_LOCK.lock();
     try {
       return ObjectUtils.notNull(sources.computeIfAbsent(

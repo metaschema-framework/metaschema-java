@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.ISource;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -21,7 +22,7 @@ public abstract class AbstractTargetedConstraints<T extends IValueConstrained>
   @NonNull
   private final ISource source;
   @NonNull
-  private final String targetExpression;
+  private final IMetapathExpression target;
   @NonNull
   private final T constraints;
 
@@ -37,10 +38,10 @@ public abstract class AbstractTargetedConstraints<T extends IValueConstrained>
    */
   protected AbstractTargetedConstraints(
       @NonNull ISource source,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull T constraints) {
     this.source = source;
-    this.targetExpression = target;
+    this.target = target;
     this.constraints = constraints;
   }
 
@@ -50,8 +51,8 @@ public abstract class AbstractTargetedConstraints<T extends IValueConstrained>
   }
 
   @Override
-  public String getTargetExpression() {
-    return targetExpression;
+  public IMetapathExpression getTarget() {
+    return target;
   }
 
   @Override
