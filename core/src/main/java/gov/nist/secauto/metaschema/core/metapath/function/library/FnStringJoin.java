@@ -80,20 +80,15 @@ public final class FnStringJoin {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-    ISequence<?> arg1 = arguments.get(0);
+    ISequence<IAnyAtomicItem> arg1 = FunctionUtils.asType(arguments.get(0));
     IStringItem arg2 = arguments.size() == 1 ? IStringItem.valueOf("")
-        : FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
-    String separator = arg2 == null ? "" : arg2.asString();
+        : FunctionUtils.asType(arguments.get(1).getFirstItem(true));
 
     if (arg1.isEmpty()) {
       return ISequence.of(IStringItem.valueOf(""));
     }
 
-    return ISequence.of(stringJoin(ObjectUtils.notNull(arg1.stream()
-        .map(arg -> {
-          assert arg != null;
-          return (IAnyAtomicItem) arg;
-        })), separator));
+    return ISequence.of(fnStringJoin(ObjectUtils.notNull(arg1), arg2));
   }
 
   /**
@@ -101,12 +96,14 @@ public final class FnStringJoin {
    * "https://www.w3.org/TR/xpath-functions-31/#func-string-join">fn:string-join</a>.
    *
    * @param items
-   *          the items to concatenate
+   *          the items to join in string form
+   * @param separator
+   * 		  the optional separator to use between joined items
    * @return the atomized result
    */
   @NonNull
-  public static IStringItem fnStringJoin(IAnyAtomicItem items, String separator) {
-    return fnStringJoin(ObjectUtils.notNull(Arrays.asList(items)), separator);
+  public static IStringItem fnStringJoin(@NonNull List<? extends IAnyAtomicItem> items, IStringItem separator) {
+    return IStringItem.valueOf(stringJoin(ObjectUtils.notNull(items.stream()), separator == null ? "" : separator.asString()));
   }
 
   /**
@@ -114,26 +111,15 @@ public final class FnStringJoin {
    * "https://www.w3.org/TR/xpath-functions-31/#func-string-join">fn:string-join</a>.
    *
    * @param items
-   *          the items to concatenate
+   *          the items to join in string form
+   * @param separator
+   * 		  the optional separator to use between joined items
    * @return the atomized result
    */
   @NonNull
-  public static IStringItem fnStringJoin(@NonNull List<? extends IAnyAtomicItem> items, String separator) {
-    return fnStringJoin(ObjectUtils.notNull(items.stream()), separator);
-  }
-
-  /**
-   * An implementation of XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-string-join">fn:string-join</a>.
-   *
-   * @param items
-   *          the items to concatenate
-   * @return the atomized result
-   */
-  @NonNull
-  public static IStringItem stringJoin(@NonNull Stream<? extends IAnyAtomicItem> items, String separator) {
-    return IStringItem.valueOf(ObjectUtils.notNull(items
+  private static String stringJoin(@NonNull Stream<? extends IAnyAtomicItem> items, String separator) {
+    return ObjectUtils.notNull(items
         .map(item -> item == null ? "" : IStringItem.cast(item).asString())
-        .collect(Collectors.joining(separator))));
+        .collect(Collectors.joining(separator)));
   }
 }
