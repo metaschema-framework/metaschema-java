@@ -105,8 +105,8 @@ public final class FnStringJoin {
    * @return the atomized result
    */
   @NonNull
-  public static IStringItem stringJoinstringJoin(IAnyAtomicItem items, String separator) {
-    return stringJoin(ObjectUtils.notNull(Arrays.asList(items)), separator);
+  public static IStringItem fnStringJoin(IAnyAtomicItem items, String separator) {
+    return fnStringJoin(ObjectUtils.notNull(Arrays.asList(items)), separator);
   }
 
   /**
@@ -118,8 +118,8 @@ public final class FnStringJoin {
    * @return the atomized result
    */
   @NonNull
-  public static IStringItem stringJoin(@NonNull List<? extends IAnyAtomicItem> items, String separator) {
-    return stringJoin(ObjectUtils.notNull(items.stream()), separator);
+  public static IStringItem fnStringJoin(@NonNull List<? extends IAnyAtomicItem> items, String separator) {
+    return fnStringJoin(ObjectUtils.notNull(items.stream()), separator);
   }
 
   /**
