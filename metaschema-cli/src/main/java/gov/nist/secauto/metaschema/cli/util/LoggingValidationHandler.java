@@ -162,6 +162,9 @@ public final class LoggingValidationHandler
     case INFORMATIONAL:
       retval = LOGGER.atInfo();
       break;
+    case DEBUG:
+      retval = LOGGER.isDebugEnabled() ? LOGGER.atDebug() : LOGGER.atInfo();
+      break;
     default:
       throw new IllegalArgumentException("Unknown level: " + finding.getSeverity().name());
     }
@@ -192,6 +195,9 @@ public final class LoggingValidationHandler
       break;
     case INFORMATIONAL:
       ansi = ansi.fgBrightBlue().a("INFO").reset();
+      break;
+    case DEBUG:
+      ansi = ansi.fgBrightCyan().a("DEBUG").reset();
       break;
     default:
       ansi = ansi().fgBright(Color.MAGENTA).a(level.name()).reset();
