@@ -40,7 +40,7 @@ public interface IKeyField {
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IKeyField of(
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @Nullable Pattern pattern,
       @Nullable MarkupMultiline remarks,
       @NonNull ISource source) {
@@ -54,15 +54,7 @@ public interface IKeyField {
    * @return the Metapath expression identifying the key value target
    */
   @NonNull
-  String getTarget();
-
-  /**
-   * Get the compiled Metapath expression for the {@link #getTarget()}.
-   *
-   * @return the compiled Metapath expression
-   */
-  @NonNull
-  IMetapathExpression getTargetMetapath();
+  IMetapathExpression getTarget();
 
   /**
    * A pattern to use to retrieve the value. If non-{@code null}, the first

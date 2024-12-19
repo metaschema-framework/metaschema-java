@@ -5,17 +5,20 @@
 
 package gov.nist.secauto.metaschema.core.testing;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.model.INamedModelElement;
+import gov.nist.secauto.metaschema.core.model.ModelType;
+import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 
 import java.util.List;
 import java.util.Map;
@@ -33,20 +36,18 @@ public final class FieldBuilder
   private Object defaultValue = null;
   private List<FlagBuilder> flags;
 
-  private FieldBuilder(@NonNull Mockery ctx) {
-    super(ctx);
+  private FieldBuilder() {
+    // prevent direct instantiation
   }
 
   /**
    * Create a new builder using the provided mocking context.
    *
-   * @param ctx
-   *          the mocking context
    * @return the new builder
    */
   @NonNull
-  public static FieldBuilder builder(@NonNull Mockery ctx) {
-    return new FieldBuilder(ctx).reset();
+  public static FieldBuilder builder() {
+    return new FieldBuilder().reset();
   }
 
   @Override
@@ -148,21 +149,22 @@ public final class FieldBuilder
             IFlagInstance::getQName,
             Function.identity()));
 
-    getContext().checking(new Expectations() {
-      {
-        allowing(retval).getJavaTypeAdapter();
-        will(returnValue(dataTypeAdapter));
-        allowing(retval).getDefaultValue();
-        will(returnValue(defaultValue));
-        allowing(retval).getFlagInstances();
-        will(returnValue(flags.values()));
-        flags.forEach((key, value) -> {
-          allowing(retval).getFlagInstanceByName(with(key.getIndexPosition()));
-          will(returnValue(value));
-        });
-      }
+    doReturn(new ValueConstraintSet(source)).when(retval).getConstraintSupport();
+    doReturn(dataTypeAdapter).when(retval).getJavaTypeAdapter();
+    doReturn(defaultValue).when(retval).getDefaultValue();
+
+    doReturn(flags.values()).when(retval).getFlagInstances();
+    flags.entrySet().forEach(entry -> {
+      assert entry != null;
+      doReturn(entry.getValue()).when(retval).getFlagInstanceByName(eq(entry.getKey().getIndexPosition()));
     });
 
     return retval;
+  }
+
+  @Override
+  protected void applyNamed(INamedModelElement element) {
+    super.applyNamed(element);
+    doReturn(ModelType.FIELD).when(element).getModelType();
   }
 }

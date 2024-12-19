@@ -5,28 +5,37 @@
 
 package gov.nist.secauto.metaschema.core.mdm.impl;
 
+import gov.nist.secauto.metaschema.core.mdm.IDMFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.AbstractNodeItem;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class FlagImpl
-    extends AbstractDMInstanceNodeItem<IFlagDefinition, IFlagInstance, IModelNodeItem<?, ?>>
-    implements IFlagNodeItem {
+public class ChildFlagNodeItem
+    extends AbstractNodeItem
+    implements IDMFlagNodeItem, IFeatureChildNodeItem<IDMModelNodeItem<?, ?>> {
+  @NonNull
+  private final IFlagInstance instance;
+  @NonNull
+  private final IDMModelNodeItem<?, ?> parent;
   @NonNull
   private IAnyAtomicItem value;
 
-  public FlagImpl(
+  public ChildFlagNodeItem(
       @NonNull IFlagInstance instance,
-      @NonNull IModelNodeItem<?, ?> parent,
-      @NonNull IResourceLocation resourceLocation,
+      @NonNull IDMModelNodeItem<?, ?> parent,
       @NonNull IAnyAtomicItem value) {
-    super(instance, parent, resourceLocation);
+    this.instance = instance;
+    this.parent = parent;
     this.value = value;
+  }
+
+  @Override
+  public IDMModelNodeItem<?, ?> getParentNodeItem() {
+    return parent;
   }
 
   @Override
@@ -47,5 +56,21 @@ public class FlagImpl
   @Override
   protected String getValueSignature() {
     return toAtomicItem().toSignature();
+  }
+
+  @Override
+  public IFlagDefinition getDefinition() {
+    return getInstance().getDefinition();
+  }
+
+  @Override
+  public IFlagInstance getInstance() {
+    return instance;
+  }
+
+  @Override
+  public void setLocation(IResourceLocation location) {
+    // TODO Auto-generated method stub
+
   }
 }

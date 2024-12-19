@@ -14,17 +14,16 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.testing.MockedModelTestSupport;
-
-import org.jmock.Mockery;
 
 import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class MockedDocumentGenerator {
+  @NonNull
+  public static final URI BASE_URI = URI.create("https://example.com/resource");
   @NonNull
   public static final String NS = "http://example.com/ns";
   @NonNull
@@ -38,9 +37,8 @@ public class MockedDocumentGenerator {
   @NonNull
   public static final IEnhancedQName FIELD_FLAG_QNAME = IEnhancedQName.of("field-flag");
 
-  public static IDMDocumentNodeItem generateDocumentNodeItem(@NonNull Mockery context) {
-    MockedModelTestSupport mocking = new MockedModelTestSupport(context);
-    IResourceLocation resourceLocation = mocking.mock(IResourceLocation.class);
+  public static IDMDocumentNodeItem generateDocumentNodeItem() {
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
 
     IAssemblyDefinition rootDefinition = mocking.assembly().qname(ROOT_QNAME).rootQName(ROOT_QNAME).toDefinition();
     IAssemblyInstance assemblyInstance = mocking.assembly().qname(ASSEMBLY_QNAME).toInstance(rootDefinition);
@@ -49,16 +47,13 @@ public class MockedDocumentGenerator {
     IFlagInstance fieldFlag = mocking.flag().qname(FIELD_FLAG_QNAME).toInstance(fieldInstance.getDefinition());
 
     IDMDocumentNodeItem document = IDMDocumentNodeItem.newInstance(
-        URI.create("https://example.com/resource"),
-        resourceLocation,
-        rootDefinition,
-        resourceLocation);
+        BASE_URI,
+        rootDefinition);
     IDMRootAssemblyNodeItem root = document.getRootAssemblyNodeItem();
-    IDMAssemblyNodeItem assembly = root.newAssembly(assemblyInstance, resourceLocation);
-    assembly.newFlag(assemblyFlag, resourceLocation, IStringItem.valueOf("assembly-flag"));
-    IDMFieldNodeItem field = root.newField(fieldInstance, resourceLocation, IStringItem.valueOf("field"));
-    field.newFlag(fieldFlag, resourceLocation, IStringItem.valueOf("field-flag"));
-
+    IDMAssemblyNodeItem assembly = root.newAssembly(assemblyInstance);
+    assembly.newFlag(assemblyFlag, IStringItem.valueOf("assembly-flag"));
+    IDMFieldNodeItem field = root.newField(fieldInstance, IStringItem.valueOf("field"));
+    field.newFlag(fieldFlag, IStringItem.valueOf("field-flag"));
     return document;
   }
 

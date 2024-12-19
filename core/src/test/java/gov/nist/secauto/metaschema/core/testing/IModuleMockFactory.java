@@ -5,15 +5,11 @@
 
 package gov.nist.secauto.metaschema.core.testing;
 
-import org.jmock.Mockery;
+import gov.nist.secauto.metaschema.core.testing.mocking.IMockFactory;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IModuleMockFactory extends IMockFactory {
-  @Override
-  @NonNull
-  Mockery getContext();
-
   /**
    * Get a new flag builder.
    *
@@ -21,7 +17,7 @@ public interface IModuleMockFactory extends IMockFactory {
    */
   @NonNull
   default FlagBuilder flag() {
-    return FlagBuilder.builder(getContext());
+    return FlagBuilder.builder();
   }
 
   /**
@@ -31,7 +27,7 @@ public interface IModuleMockFactory extends IMockFactory {
    */
   @NonNull
   default FieldBuilder field() {
-    return FieldBuilder.builder(getContext());
+    return FieldBuilder.builder();
   }
 
   /**
@@ -41,6 +37,6 @@ public interface IModuleMockFactory extends IMockFactory {
    */
   @NonNull
   default AssemblyBuilder assembly() {
-    return AssemblyBuilder.builder(getContext());
+    return AssemblyBuilder.builder();
   }
 }

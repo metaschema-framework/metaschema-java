@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.AbstractDefinitionTargetedConstraints;
@@ -33,7 +34,7 @@ public class AssemblyTargetedConstraints
    */
   public AssemblyTargetedConstraints(
       @NonNull ISource source,
-      @NonNull String target,
+      @NonNull IMetapathExpression target,
       @NonNull IModelConstrained constraints) {
     super(source, target, constraints);
   }

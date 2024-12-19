@@ -23,22 +23,21 @@ import java.util.Collection;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class DocumentImpl implements IDMDocumentNodeItem {
   @NonNull
   private final RootAssembly root;
-  @NonNull
-  private final IResourceLocation resourceLocation;
+  @Nullable
+  private IResourceLocation resourceLocation;
   @NonNull
   private final ISource source;
 
   public DocumentImpl(
       @NonNull URI resource,
-      @NonNull IResourceLocation resourceLocation,
-      @NonNull IAssemblyDefinition root,
-      @NonNull IResourceLocation assemblyLocation) {
-    this.root = new RootAssembly(root, assemblyLocation);
-    this.resourceLocation = resourceLocation;
+      @NonNull IAssemblyDefinition root) {
+    this.root = new RootAssembly(root);
+    this.resourceLocation = null;
     this.source = ISource.externalSource(resource);
   }
 
@@ -76,6 +75,10 @@ public class DocumentImpl implements IDMDocumentNodeItem {
     return resourceLocation;
   }
 
+  public void setLocation(@NonNull IResourceLocation location) {
+    this.resourceLocation = location;
+  }
+
   @Override
   public String stringValue() {
     return "";
@@ -111,14 +114,10 @@ public class DocumentImpl implements IDMDocumentNodeItem {
       implements IDMRootAssemblyNodeItem {
     @NonNull
     private final IAssemblyDefinition definition;
-    @NonNull
-    private final IResourceLocation resourceLocation;
 
     public RootAssembly(
-        @NonNull IAssemblyDefinition definition,
-        @NonNull IResourceLocation location) {
+        @NonNull IAssemblyDefinition definition) {
       this.definition = definition;
-      this.resourceLocation = location;
     }
 
     @Override
