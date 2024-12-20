@@ -29,11 +29,11 @@ class FnStringJoinTest
             string("123456789"),
             "string-join(1 to 9)"),
         Arguments.of(
-                string("123456789"),
-                "string-join(1 to 9, '')"),
+            string("123456789"),
+            "string-join(1 to 9, '')"),
         Arguments.of(
-                string("123456789"),
-                "string-join(1 to 9, ())"),
+            string("123456789"),
+            "string-join(1 to 9, ())"),
         Arguments.of(
             string("Now is the time ..."),
             "string-join(('Now', 'is', 'the', 'time', '...'), ' ')"),
@@ -42,7 +42,10 @@ class FnStringJoinTest
             "string-join((), 'separator')"),
         Arguments.of(
             string("1, 2, 3, 4, 5"),
-            "string-join(1 to 5, ', ')")
+            "string-join(1 to 5, ', ')"),
+        Arguments.of(
+            string("123"),
+            "string-join((1, '', 2, 3))")
     // Arguments.of(
     // string("xml:id=\"xyz\""),
     // "let $doc := <doc><chap><section xml:id=\"xyz\"/></chap></doc>\n"
