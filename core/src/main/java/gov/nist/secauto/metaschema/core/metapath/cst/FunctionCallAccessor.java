@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.library.ArrayGet;
 import gov.nist.secauto.metaschema.core.metapath.function.library.MapGet;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
@@ -84,7 +85,11 @@ public class FunctionCallAccessor implements IExpression {
               .collect(Collectors.toUnmodifiableList())),
           dynamicContext,
           focus);
-    }
+    } else if (collection instanceof IFunction) {
+    	return ((IFunction) collection).execute(          ObjectUtils.notNull(getArguments().stream()
+                .map(expr -> expr.accept(dynamicContext, focus))
+                .collect(Collectors.toUnmodifiableList())), dynamicContext, focus);
+	}
 
     // the value to find, which will be the key for a map or the index for an array
     IExpression argument = getArguments().stream().findFirst()
