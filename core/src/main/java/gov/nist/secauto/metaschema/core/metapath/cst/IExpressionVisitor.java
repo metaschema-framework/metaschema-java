@@ -483,6 +483,17 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    *          the processing context
    * @return the visitation result or {@code null} if no result was produced
    */
+  RESULT visitNamedFunctionReference(@NonNull NamedFunctionReference expr, @NonNull CONTEXT context);
+
+  /**
+   * Visit the CST node.
+   *
+   * @param expr
+   *          the CST node to visit
+   * @param context
+   *          the processing context
+   * @return the visitation result or {@code null} if no result was produced
+   */
   RESULT visitEmptySequence(@NonNull EmptySequence<?> expr, @NonNull CONTEXT context);
 
   /**

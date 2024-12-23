@@ -18,10 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.FailingErrorListener;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
@@ -33,8 +36,12 @@ import gov.nist.secauto.metaschema.core.metapath.cst.logic.GeneralComparison;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.If;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.ValueComparison;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
+import gov.nist.secauto.metaschema.core.metapath.function.DefaultFunction;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.metapath.function.library.FnString;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUuidItem;
@@ -256,6 +263,29 @@ class BuildCstVisitorTest {
             instanceOf(IFieldNodeItem.class),
             where(IFieldNodeItem::getQName, equalTo(FIELD2))))); // NOPMD
   }
+
+	static Stream<Arguments> testNamedFunctionRef() {
+		return Stream.of(
+				Arguments.of("fn:string#1", "fn:string", null),
+				Arguments.of("fn:string#4", null, "MSPT0017"));
+	}
+
+	@ParameterizedTest
+	@MethodSource
+	void testNamedFunctionRef(@NonNull String metapath, @NonNull String expectedQname, @NonNull Exception expectedExceptionMessage) {
+		StaticContext staticContext = StaticContext.builder().build();
+		DynamicContext dynamicContext = new DynamicContext(staticContext);
+
+		if (expectedQname != null) {
+			IFunction result = IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
+					IMetapathExpression.ResultType.ITEM, dynamicContext);
+			assertEquals(expectedQname, result.getQName().toString());
+		} else if (expectedExceptionMessage != null) {
+			MetapathException thrown = assertThrows(MetapathException.class, () -> IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
+					IMetapathExpression.ResultType.ITEM, dynamicContext));
+			assertTrue(thrown.getMessage().contains("MSPT0017"));
+		}
+	}
 
   static Stream<Arguments> testComparison() {
     return Stream.of(

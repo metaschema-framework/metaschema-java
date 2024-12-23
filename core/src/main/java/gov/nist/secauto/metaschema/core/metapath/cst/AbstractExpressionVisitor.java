@@ -340,6 +340,11 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
   }
 
   @Override
+  public RESULT visitNamedFunctionReference(NamedFunctionReference expr, CONTEXT context) {
+    return visitChildren(expr, context);
+  }
+
+  @Override
   public RESULT visitEmptySequence(EmptySequence<?> expr, CONTEXT context) {
     return defaultResult();
   }

@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.function.CalledContext;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction.FunctionProperty;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
@@ -277,6 +278,11 @@ public class DynamicContext { // NOPMD - intentional data class
           String.format("Variable '%s' not defined in the dynamic context.", name));
     }
     return retval;
+  }
+
+  @NonNull
+  public IFunction getFunction(@NonNull IEnhancedQName name, int arity) {
+    return StaticContext.lookupFunction(name, arity);
   }
 
   /**

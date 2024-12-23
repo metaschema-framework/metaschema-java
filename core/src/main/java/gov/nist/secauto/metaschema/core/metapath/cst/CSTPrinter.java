@@ -322,6 +322,11 @@ public final class CSTPrinter {
     }
 
     @Override
+    public String visitNamedFunctionReference(NamedFunctionReference expr, State context) {
+      return appendNode(expr, super.visitNamedFunctionReference(expr, context), context);
+    }
+
+    @Override
     public String visitVariableReference(VariableReference expr, State context) {
       return appendNode(expr, super.visitVariableReference(expr, context), context);
     }
