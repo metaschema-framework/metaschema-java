@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
+import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.EqnameContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParamContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySequenceConstructor;
@@ -393,7 +394,10 @@ public class BuildCSTVisitor
 
   @Override
   public IExpression visitNamedfunctionref(Metapath10.NamedfunctionrefContext ctx) {
-    throw new UnsupportedOperationException("expression not supported");
+    IEnhancedQName eqname = getContext().parseVariableName(
+        ObjectUtils.notNull(ctx.eqname().getText()));
+    int arity = Integer.parseInt(ObjectUtils.notNull(ctx.IntegerLiteral().getText()));
+    return new NamedFunctionReference(eqname, arity);
   }
 
   // ==============================================
