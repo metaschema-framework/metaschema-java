@@ -29,11 +29,11 @@ class FnStringJoinTest
             string("123456789"),
             "string-join(1 to 9)"),
         Arguments.of(
-                string("123456789"),
-                "string-join(1 to 9, '')"),
+            string("123456789"),
+            "string-join(1 to 9, '')"),
         Arguments.of(
-                string("123456789"),
-                "string-join(1 to 9, ())"),
+            string("123456789"),
+            "string-join(1 to 9, ())"),
         Arguments.of(
             string("Now is the time ..."),
             "string-join(('Now', 'is', 'the', 'time', '...'), ' ')"),
