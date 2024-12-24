@@ -267,13 +267,13 @@ class BuildCstVisitorTest {
   static Stream<Arguments> testNamedFunctionRef() {
     return Stream.of(
         Arguments.of("fn:string#1", "fn:string", null),
-        Arguments.of("fn:string#4", null, "MSPT0017"));
+        Arguments.of("fn:string#4", null, "MPST0017: unable to find function with name 'fn:string' having arity '4'"));
   }
 
   @ParameterizedTest
   @MethodSource
   void testNamedFunctionRef(@NonNull String metapath, @NonNull String expectedQname,
-      @NonNull Exception expectedExceptionMessage) {
+      @NonNull String expectedExceptionMessage) {
     StaticContext staticContext = StaticContext.builder().build();
     DynamicContext dynamicContext = new DynamicContext(staticContext);
 
@@ -285,7 +285,7 @@ class BuildCstVisitorTest {
       MetapathException thrown = assertThrows(MetapathException.class,
           () -> IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
               IMetapathExpression.ResultType.ITEM, dynamicContext));
-      assertTrue(thrown.getMessage().contains("MSPT0017"));
+      assertTrue(thrown.getMessage().contains(expectedExceptionMessage));
     }
   }
 
