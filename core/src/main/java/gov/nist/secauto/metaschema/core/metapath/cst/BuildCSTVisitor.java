@@ -394,10 +394,10 @@ public class BuildCSTVisitor
 
   @Override
   public IExpression visitNamedfunctionref(Metapath10.NamedfunctionrefContext ctx) {
-    IEnhancedQName eqname = getContext().parseVariableName(
+    IEnhancedQName qname = getContext().parseVariableName(
         ObjectUtils.notNull(ctx.eqname().getText()));
     int arity = Integer.parseInt(ObjectUtils.notNull(ctx.IntegerLiteral().getText()));
-    return new NamedFunctionReference(eqname, arity);
+    return new NamedFunctionReference(qname, arity);
   }
 
   // ==============================================

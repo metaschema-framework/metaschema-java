@@ -264,28 +264,30 @@ class BuildCstVisitorTest {
             where(IFieldNodeItem::getQName, equalTo(FIELD2))))); // NOPMD
   }
 
-	static Stream<Arguments> testNamedFunctionRef() {
-		return Stream.of(
-				Arguments.of("fn:string#1", "fn:string", null),
-				Arguments.of("fn:string#4", null, "MSPT0017"));
-	}
+  static Stream<Arguments> testNamedFunctionRef() {
+    return Stream.of(
+        Arguments.of("fn:string#1", "fn:string", null),
+        Arguments.of("fn:string#4", null, "MSPT0017"));
+  }
 
-	@ParameterizedTest
-	@MethodSource
-	void testNamedFunctionRef(@NonNull String metapath, @NonNull String expectedQname, @NonNull Exception expectedExceptionMessage) {
-		StaticContext staticContext = StaticContext.builder().build();
-		DynamicContext dynamicContext = new DynamicContext(staticContext);
+  @ParameterizedTest
+  @MethodSource
+  void testNamedFunctionRef(@NonNull String metapath, @NonNull String expectedQname,
+      @NonNull Exception expectedExceptionMessage) {
+    StaticContext staticContext = StaticContext.builder().build();
+    DynamicContext dynamicContext = new DynamicContext(staticContext);
 
-		if (expectedQname != null) {
-			IFunction result = IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
-					IMetapathExpression.ResultType.ITEM, dynamicContext);
-			assertEquals(expectedQname, result.getQName().toString());
-		} else if (expectedExceptionMessage != null) {
-			MetapathException thrown = assertThrows(MetapathException.class, () -> IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
-					IMetapathExpression.ResultType.ITEM, dynamicContext));
-			assertTrue(thrown.getMessage().contains("MSPT0017"));
-		}
-	}
+    if (expectedQname != null) {
+      IFunction result = IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
+          IMetapathExpression.ResultType.ITEM, dynamicContext);
+      assertEquals(expectedQname, result.getQName().toString());
+    } else if (expectedExceptionMessage != null) {
+      MetapathException thrown = assertThrows(MetapathException.class,
+          () -> IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
+              IMetapathExpression.ResultType.ITEM, dynamicContext));
+      assertTrue(thrown.getMessage().contains("MSPT0017"));
+    }
+  }
 
   static Stream<Arguments> testComparison() {
     return Stream.of(
