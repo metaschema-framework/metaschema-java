@@ -98,12 +98,13 @@ public final class FnStringJoin {
    * @param items
    *          the items to join in string form
    * @param separator
-   * 		  the optional separator to use between joined items
+   *          the optional separator to use between joined items
    * @return the atomized result
    */
   @NonNull
   public static IStringItem fnStringJoin(@NonNull List<? extends IAnyAtomicItem> items, IStringItem separator) {
-    return IStringItem.valueOf(stringJoin(ObjectUtils.notNull(items.stream()), separator == null ? "" : separator.asString()));
+    return IStringItem
+        .valueOf(stringJoin(ObjectUtils.notNull(items.stream()), separator == null ? "" : separator.asString()));
   }
 
   /**
@@ -113,7 +114,7 @@ public final class FnStringJoin {
    * @param items
    *          the items to join in string form
    * @param separator
-   * 		  the optional separator to use between joined items
+   *          the optional separator to use between joined items
    * @return the atomized result
    */
   @NonNull
