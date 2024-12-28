@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.EqnameContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParamContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySequenceConstructor;
@@ -394,9 +393,10 @@ public class BuildCSTVisitor
 
   @Override
   public IExpression visitNamedfunctionref(Metapath10.NamedfunctionrefContext ctx) {
-    IEnhancedQName qname = getContext().parseVariableName(
-        ObjectUtils.notNull(ctx.eqname().getText()));
-    int arity = Integer.parseInt(ObjectUtils.notNull(ctx.IntegerLiteral().getText()));
+    // Ensure that the default function namespace is used, if needed
+    IEnhancedQName qname = getContext().parseFunctionName(ObjectUtils.notNull(ctx.eqname().getText()));
+    int arity = IIntegerItem.valueOf(ObjectUtils.requireNonNull(ctx.IntegerLiteral().getText()))
+        .asInteger().intValueExact();
     return new NamedFunctionReference(qname, arity);
   }
 

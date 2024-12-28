@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -24,7 +23,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class NamedFunctionReference implements IExpression {
   @NonNull
   private IEnhancedQName name;
-  @NonNull
   private final int arity;
 
   /**
@@ -33,7 +31,7 @@ public class NamedFunctionReference implements IExpression {
    * @param name
    *          the variable name
    */
-  public NamedFunctionReference(@NonNull IEnhancedQName name, @NonNull int arity) {
+  public NamedFunctionReference(@NonNull IEnhancedQName name, int arity) {
     this.name = name;
     this.arity = arity;
   }

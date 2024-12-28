@@ -385,7 +385,7 @@ public final class StaticContext {
   }
 
   @NonNull
-  private IEnhancedQName parseFunctionName(@NonNull String name) {
+  public IEnhancedQName parseFunctionName(@NonNull String name) {
     return EQNameFactory.instance().parseName(
         name,
         this::resolveFunctionPrefix);
