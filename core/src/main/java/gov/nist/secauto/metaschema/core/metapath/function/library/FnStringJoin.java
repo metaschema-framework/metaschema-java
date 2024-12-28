@@ -16,12 +16,12 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Implements the XPath 3.1 <a href=
@@ -47,6 +47,7 @@ public final class FnStringJoin {
       .functionHandler(FnStringJoin::execute)
       .build();
 
+  @NonNull
   static final IFunction SIGNATURE_TWO_ARG = IFunction.builder()
       .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
@@ -72,7 +73,7 @@ public final class FnStringJoin {
     // disable construction
   }
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings({ "unused", "PMD.OnlyOneReturn" })
   @NonNull
   private static ISequence<IStringItem> execute(
       @NonNull IFunction function,
@@ -80,9 +81,9 @@ public final class FnStringJoin {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-    ISequence<IAnyAtomicItem> arg1 = FunctionUtils.asType(arguments.get(0));
+    ISequence<IAnyAtomicItem> arg1 = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
     IStringItem arg2 = arguments.size() == 1 ? IStringItem.valueOf("")
-        : FunctionUtils.asType(arguments.get(1).getFirstItem(true));
+        : FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
 
     if (arg1.isEmpty()) {
       return ISequence.of(IStringItem.valueOf(""));
@@ -102,10 +103,12 @@ public final class FnStringJoin {
    * @return the atomized result
    */
   @NonNull
-  public static IStringItem fnStringJoin(@NonNull List<? extends IAnyAtomicItem> items, IStringItem separator) {
-    return IStringItem
-        .valueOf(stringJoin(items.stream().map(item -> item == null ? "" : IStringItem.cast(item).asString()),
-            separator == null ? "" : separator.asString()));
+  public static IStringItem fnStringJoin(
+      @NonNull List<? extends IAnyAtomicItem> items,
+      @Nullable IStringItem separator) {
+    return IStringItem.valueOf(stringJoin(
+        ObjectUtils.notNull(items.stream().map(item -> item == null ? "" : IStringItem.cast(item).asString())),
+        separator == null ? "" : separator.asString()));
   }
 
   /**
@@ -119,7 +122,9 @@ public final class FnStringJoin {
    * @return the atomized result
    */
   @NonNull
-  private static String stringJoin(@NonNull Stream<String> items, String separator) {
+  private static String stringJoin(
+      @NonNull Stream<String> items,
+      @NonNull String separator) {
     return ObjectUtils.notNull(items.collect(Collectors.joining(separator)));
   }
 }

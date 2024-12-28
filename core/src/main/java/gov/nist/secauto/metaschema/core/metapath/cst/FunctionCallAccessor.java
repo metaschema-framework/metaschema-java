@@ -85,11 +85,12 @@ public class FunctionCallAccessor implements IExpression {
               .collect(Collectors.toUnmodifiableList())),
           dynamicContext,
           focus);
-    } else if (collection instanceof IFunction) {
-    	return ((IFunction) collection).execute(          ObjectUtils.notNull(getArguments().stream()
-                .map(expr -> expr.accept(dynamicContext, focus))
-                .collect(Collectors.toUnmodifiableList())), dynamicContext, focus);
-	}
+    }
+    if (collection instanceof IFunction) {
+      return ((IFunction) collection).execute(ObjectUtils.notNull(getArguments().stream()
+          .map(expr -> expr.accept(dynamicContext, focus))
+          .collect(Collectors.toUnmodifiableList())), dynamicContext, focus);
+    }
 
     // the value to find, which will be the key for a map or the index for an array
     IExpression argument = getArguments().stream().findFirst()
