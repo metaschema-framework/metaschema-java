@@ -12,54 +12,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * A collection of utilities for checking and managing Java objects.
+ */
 public final class ObjectUtils {
   private ObjectUtils() {
     // disable construction
-  }
-
-  /**
-   * Require a non-empty string value.
-   *
-   * @param string
-   *          the object reference to check for emptiness
-   * @return {@code string} if not {@code null} or empty
-   * @throws NullPointerException
-   *           if {@code string} is {@code null}
-   * @throws IllegalArgumentException
-   *           if {@code string} is empty
-   */
-  @NonNull
-  @SuppressWarnings("null")
-  @SuppressFBWarnings("NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE")
-  public static String requireNonEmpty(@Nullable String string) {
-    if (string.isEmpty()) {
-      throw new IllegalArgumentException("String is empty.");
-    }
-    return string;
-  }
-
-  /**
-   * Require a non-empty string value.
-   *
-   * @param string
-   *          the object reference to check for emptiness
-   * @param message
-   *          detail message to be used in the event that an {@code
-   *                IllegalArgumentException} is thrown
-   * @return {@code string} if not {@code null} or empty
-   * @throws NullPointerException
-   *           if {@code string} is {@code null}
-   * @throws IllegalArgumentException
-   *           if {@code string} is empty
-   */
-  @NonNull
-  @SuppressWarnings("null")
-  @SuppressFBWarnings("NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE")
-  public static String requireNonEmpty(@Nullable String string, @NonNull String message) {
-    if (string.isEmpty()) {
-      throw new IllegalArgumentException(message);
-    }
-    return string;
   }
 
   /**

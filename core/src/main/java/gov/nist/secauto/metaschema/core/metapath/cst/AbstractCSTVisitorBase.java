@@ -28,6 +28,10 @@ import javax.xml.namespace.QName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides utility methods for processing Metapath abstract syntax tree (AST)
+ * nodes to produce a compact syntax tree (CST).
+ */
 @SuppressWarnings({
     "PMD.CouplingBetweenObjects"
 })

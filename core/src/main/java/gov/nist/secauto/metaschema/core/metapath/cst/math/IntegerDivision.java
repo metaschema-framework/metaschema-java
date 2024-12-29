@@ -46,9 +46,9 @@ public class IntegerDivision
   @Override
   public ISequence<? extends IIntegerItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     INumericItem dividend = FunctionUtils.toNumericOrNull(
-        getFirstDataItem(getLeft().accept(dynamicContext, focus), true));
+        ISequence.of(getLeft().accept(dynamicContext, focus).atomize()).getFirstItem(true));
     INumericItem divisor = FunctionUtils.toNumericOrNull(
-        getFirstDataItem(getRight().accept(dynamicContext, focus), true));
+        ISequence.of(getRight().accept(dynamicContext, focus).atomize()).getFirstItem(true));
 
     return resultOrEmpty(dividend, divisor);
   }

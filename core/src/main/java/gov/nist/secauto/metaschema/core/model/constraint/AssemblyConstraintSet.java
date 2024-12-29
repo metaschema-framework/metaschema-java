@@ -34,7 +34,7 @@ public class AssemblyConstraintSet
    * Construct a new constraint set.
    *
    * @param source
-   *          information about the resource the constraints were sources from
+   *          information about the resource the constraints were loaded from
    */
   public AssemblyConstraintSet(@NonNull ISource source) {
     super(source);
@@ -42,7 +42,7 @@ public class AssemblyConstraintSet
 
   @Override
   public List<IIndexConstraint> getIndexConstraints() {
-    Lock readLock = instanceLock.readLock();
+    Lock readLock = getLock().readLock();
     readLock.lock();
     try {
       return CollectionUtil.unmodifiableList(indexConstraints);
@@ -53,7 +53,7 @@ public class AssemblyConstraintSet
 
   @Override
   public List<IUniqueConstraint> getUniqueConstraints() {
-    Lock readLock = instanceLock.readLock();
+    Lock readLock = getLock().readLock();
     readLock.lock();
     try {
       return CollectionUtil.unmodifiableList(uniqueConstraints);
@@ -64,7 +64,7 @@ public class AssemblyConstraintSet
 
   @Override
   public List<ICardinalityConstraint> getHasCardinalityConstraints() {
-    Lock readLock = instanceLock.readLock();
+    Lock readLock = getLock().readLock();
     readLock.lock();
     try {
       return CollectionUtil.unmodifiableList(cardinalityConstraints);
@@ -75,10 +75,10 @@ public class AssemblyConstraintSet
 
   @Override
   public final void addConstraint(@NonNull IIndexConstraint constraint) {
-    Lock writeLock = instanceLock.writeLock();
+    Lock writeLock = getLock().writeLock();
     writeLock.lock();
     try {
-      constraints.add(constraint);
+      getConstraintsInternal().add(constraint);
       indexConstraints.add(constraint);
     } finally {
       writeLock.unlock();
@@ -87,10 +87,10 @@ public class AssemblyConstraintSet
 
   @Override
   public final void addConstraint(@NonNull IUniqueConstraint constraint) {
-    Lock writeLock = instanceLock.writeLock();
+    Lock writeLock = getLock().writeLock();
     writeLock.lock();
     try {
-      constraints.add(constraint);
+      getConstraintsInternal().add(constraint);
       uniqueConstraints.add(constraint);
     } finally {
       writeLock.unlock();
@@ -99,10 +99,10 @@ public class AssemblyConstraintSet
 
   @Override
   public final void addConstraint(@NonNull ICardinalityConstraint constraint) {
-    Lock writeLock = instanceLock.writeLock();
+    Lock writeLock = getLock().writeLock();
     writeLock.lock();
     try {
-      constraints.add(constraint);
+      getConstraintsInternal().add(constraint);
       cardinalityConstraints.add(constraint);
     } finally {
       writeLock.unlock();

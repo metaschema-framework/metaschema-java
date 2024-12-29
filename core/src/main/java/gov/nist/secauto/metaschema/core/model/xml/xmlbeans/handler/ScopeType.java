@@ -7,6 +7,12 @@ package gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler;
 
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 
+/**
+ * Supports reading and writing Metaschema constraint scope behavior strings
+ * based on the
+ * {@link gov.nist.secauto.metaschema.core.model.IDefinition.ModuleScope}
+ * enumeration.
+ */
 public final class ScopeType {
   private ScopeType() {
     // disable construction

@@ -9,6 +9,10 @@ import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * Supports reading and writing Metaschema JSON grouping behavior strings based
+ * on the {@link JsonGroupAsBehavior} enumeration.
+ */
 public final class JsonGroupAsBehaviorType {
   private JsonGroupAsBehaviorType() {
     // disable construction

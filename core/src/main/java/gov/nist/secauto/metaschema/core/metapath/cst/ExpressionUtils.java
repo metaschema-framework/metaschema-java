@@ -13,6 +13,10 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A collection of utilities supporting the static and dynamic evaluation of
+ * Metapath expressions.
+ */
 public final class ExpressionUtils {
   private ExpressionUtils() {
     // disable

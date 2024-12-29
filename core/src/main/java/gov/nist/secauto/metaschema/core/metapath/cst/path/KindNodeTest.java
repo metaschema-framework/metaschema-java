@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
@@ -22,6 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 @SuppressWarnings("PMD.TestClassWithoutTestCases")
 public class KindNodeTest
+    extends AbstractExpression
     implements INodeTestExpression {
 
   @NonNull

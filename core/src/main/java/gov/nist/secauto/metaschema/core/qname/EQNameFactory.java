@@ -77,7 +77,7 @@ public final class EQNameFactory {
    */
   @NonNull
   public IEnhancedQName newQName(@NonNull String namespace, @NonNull String localName) {
-    return cache.of(namespace, localName);
+    return cache.newCachedQName(namespace, localName);
   }
 
   /**
@@ -130,7 +130,7 @@ public final class EQNameFactory {
 
   @NonNull
   private IEnhancedQName newUriQualifiedName(@NonNull Matcher matcher) {
-    return cache.of(
+    return cache.newCachedQName(
         ObjectUtils.notNull(matcher.group(1)),
         ObjectUtils.notNull(matcher.group(2)));
   }
@@ -172,7 +172,7 @@ public final class EQNameFactory {
               prefix,
               name));
     }
-    return cache.of(namespace, ObjectUtils.notNull(matcher.group(2)));
+    return cache.newCachedQName(namespace, ObjectUtils.notNull(matcher.group(2)));
   }
 
   /**

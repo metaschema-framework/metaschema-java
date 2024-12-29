@@ -55,6 +55,10 @@ import gov.nist.secauto.metaschema.core.metapath.cst.type.Treat;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Supports the generation of a human-readable representation of a Metapath
+ * compact syntax tree (CST).
+ */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class CSTPrinter {
   private CSTPrinter() {

@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.ExpressionUtils;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
@@ -23,7 +24,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * with the evaluation of a series of predicate expressions that filter the
  * result of the evaluation.
  */
-public class Step implements IExpression { // NOPMD - intentional
+@SuppressWarnings("PMD.ShortClassName")
+public class Step
+    extends AbstractExpression {
 
   @NonNull
   private final Axis axisExpression;

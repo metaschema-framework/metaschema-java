@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind.model.impl;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.util.ModuleUtils;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -80,6 +81,11 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
   @NonNull
   public IBoundModule getContainingModule() {
     return module;
+  }
+
+  @Override
+  public ISource getSource() {
+    return getContainingModule().getSource();
   }
 
   @Override

@@ -8,6 +8,10 @@ package gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler;
 import gov.nist.secauto.metaschema.core.model.IGroupable;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 
+/**
+ * Supports reading and writing Metaschema XML grouping behavior strings based
+ * on the {@link XmlGroupAsBehavior} enumeration.
+ */
 public final class XmlGroupAsBehaviorType {
   private XmlGroupAsBehaviorType() {
     // disable construction

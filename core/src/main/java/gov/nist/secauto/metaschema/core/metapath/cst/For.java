@@ -22,7 +22,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * expression</a> supporting variable-based iteration.
  */
 @SuppressWarnings("PMD.ShortClassName")
-public class For implements IExpression {
+public class For
+    extends AbstractExpression {
   @NonNull
   private final Let.VariableDeclaration variable;
   @NonNull

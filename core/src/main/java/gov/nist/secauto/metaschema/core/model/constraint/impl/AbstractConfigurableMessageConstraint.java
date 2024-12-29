@@ -17,7 +17,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializatio
 import gov.nist.secauto.metaschema.core.model.constraint.IConfigurableMessageConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.core.util.ReplacementScanner;
+import gov.nist.secauto.metaschema.core.util.StringUtils;
 
 import java.util.Map;
 import java.util.Set;
@@ -94,7 +94,7 @@ public abstract class AbstractConfigurableMessageConstraint
               getSource().getLocationHint()));
     }
 
-    return ObjectUtils.notNull(ReplacementScanner.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {
+    return ObjectUtils.notNull(StringUtils.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {
       String metapath = ObjectUtils.notNull(match.group(2));
       try {
         IMetapathExpression expr = IMetapathExpression.compile(

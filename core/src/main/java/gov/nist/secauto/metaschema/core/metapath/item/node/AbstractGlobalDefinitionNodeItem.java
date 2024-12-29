@@ -22,6 +22,14 @@ public abstract class AbstractGlobalDefinitionNodeItem<D extends IDefinition, I 
   @NonNull
   private final IModuleNodeItem metaschemaNodeItem;
 
+  /**
+   * Construct a new Metaschema definition-based node item.
+   *
+   * @param definition
+   *          the Metaschema definition the node item is an instance of
+   * @param metaschemaNodeItem
+   *          the Metaschema module containing this definition
+   */
   protected AbstractGlobalDefinitionNodeItem(
       @NonNull D definition,
       @NonNull IModuleNodeItem metaschemaNodeItem) {
@@ -29,25 +37,30 @@ public abstract class AbstractGlobalDefinitionNodeItem<D extends IDefinition, I 
     this.metaschemaNodeItem = metaschemaNodeItem;
   }
 
+  /**
+   * Get the parent module containing this item.
+   *
+   * @return the module node item
+   */
   @NonNull
-  protected IModuleNodeItem getMetaschemaNodeItem() {
+  protected IModuleNodeItem getModuleNodeItem() {
     return metaschemaNodeItem;
   }
 
   @Override
   @NonNull
   public IModuleNodeItem getParentNodeItem() {
-    return getMetaschemaNodeItem();
+    return getModuleNodeItem();
   }
 
   @Override
   public URI getBaseUri() {
-    return getMetaschemaNodeItem().getDocumentUri();
+    return getModuleNodeItem().getDocumentUri();
   }
 
   @Override
   public StaticContext getStaticContext() {
-    return getMetaschemaNodeItem().getStaticContext();
+    return getModuleNodeItem().getStaticContext();
   }
 
   @Override

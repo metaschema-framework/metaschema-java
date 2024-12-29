@@ -48,8 +48,8 @@ public class ValueComparison
 
   @Override
   public ISequence<? extends IBooleanItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    IAnyAtomicItem left = getFirstDataItem(getLeft().accept(dynamicContext, focus), false);
-    IAnyAtomicItem right = getFirstDataItem(getRight().accept(dynamicContext, focus), false);
+    IAnyAtomicItem left = ISequence.of(getLeft().accept(dynamicContext, focus).atomize()).getFirstItem(false);
+    IAnyAtomicItem right = ISequence.of(getRight().accept(dynamicContext, focus).atomize()).getFirstItem(false);
 
     return resultOrEmpty(left, right);
   }

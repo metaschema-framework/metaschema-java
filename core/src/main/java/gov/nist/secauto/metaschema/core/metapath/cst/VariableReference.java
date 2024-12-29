@@ -20,7 +20,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href="https://www.w3.org/TR/xpath-31/#id-variables">variable
  * reference</a>.
  */
-public class VariableReference implements IExpression {
+public class VariableReference
+    extends AbstractExpression {
   @NonNull
   private final IEnhancedQName name;
 

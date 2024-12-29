@@ -17,9 +17,15 @@ import java.util.UUID;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A mocking factory that uses Mockito to produce mock objects.
+ */
 public class AbstractMockitoFactory
     implements IMockFactory {
 
+  /**
+   * Construct a new mocking factory.
+   */
   protected AbstractMockitoFactory() {
     // allow construction by extending classes
   }

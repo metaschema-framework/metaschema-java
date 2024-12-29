@@ -24,11 +24,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-// TODO: Integrate with classes in gov.nist.secauto.metaschema.core.testing
+/**
+ * Generates mock node item objects.
+ */
+// FIXME: Integrate with classes in gov.nist.secauto.metaschema.core.testing
 @SuppressWarnings("checkstyle:MissingJavadocMethodCheck")
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
 public class MockNodeItemFactory
     extends AbstractMockitoFactory {
+  /**
+   * Construct a new mocked document node item.
+   *
+   * @param documentURI
+   *          the URI representing document's resource location.
+   * @param rootName
+   *          the qualified name of the document's root node item
+   * @param flags
+   *          the root node item's child flag node items
+   * @param modelItems
+   *          the root node item's child model node items
+   * @return the mocked document node item
+   */
   @NonNull
   public IDocumentNodeItem document(
       URI documentURI,
@@ -54,14 +70,26 @@ public class MockNodeItemFactory
     doReturn(definition).when(root).getDefinition();
     doReturn(rootName).when(definition).getDefinitionQName();
 
-    handleChildren(document, CollectionUtil.emptyList(), CollectionUtil.singletonList(root));
-    handleChildren(root, flags, modelItems);
+    handleModelChildren(document, CollectionUtil.emptyList(), CollectionUtil.singletonList(root));
+    handleModelChildren(root, flags, modelItems);
 
     return document;
   }
 
+  /**
+   * Generate mock calls for methods related to the node item's children nodes.
+   *
+   * @param <T>
+   *          the Java type of the node item
+   * @param item
+   *          the node item to mock
+   * @param flags
+   *          the node item's child flag node items
+   * @param modelItems
+   *          the node item's child model node items
+   */
   @SuppressWarnings("null")
-  protected <T extends INodeItem> void handleChildren(
+  protected <T extends INodeItem> void handleModelChildren(
       @NonNull T item,
       List<IFlagNodeItem> flags,
       List<IModelNodeItem<?, ?>> modelItems) {
@@ -118,6 +146,15 @@ public class MockNodeItemFactory
     return CollectionUtil.unmodifiableMap(retval);
   }
 
+  /**
+   * Construct a new mocked flag node item.
+   *
+   * @param name
+   *          the qualified name of the flag node item
+   * @param value
+   *          the flag's value
+   * @return the mocked flag node item
+   */
   @NonNull
   public IFlagNodeItem flag(@NonNull IEnhancedQName name, @NonNull IAnyAtomicItem value) {
     IFlagNodeItem flag = mock(IFlagNodeItem.class, ObjectUtils.notNull(name.toString()));
@@ -132,16 +169,36 @@ public class MockNodeItemFactory
     doReturn(name).when(definition).getDefinitionQName();
     doReturn(value.getJavaTypeAdapter()).when(definition).getJavaTypeAdapter();
 
-    handleChildren(flag, CollectionUtil.emptyList(), CollectionUtil.emptyList());
+    handleModelChildren(flag, CollectionUtil.emptyList(), CollectionUtil.emptyList());
 
     return flag;
   }
 
+  /**
+   * Construct a new mocked field node item with no child flags.
+   *
+   * @param name
+   *          the qualified name of the field node item
+   * @param value
+   *          the field's value
+   * @return the mocked field node item
+   */
   @NonNull
   public IFieldNodeItem field(@NonNull IEnhancedQName name, @NonNull IAnyAtomicItem value) {
     return field(name, value, CollectionUtil.emptyList());
   }
 
+  /**
+   * Construct a new mocked field node item with no child flags.
+   *
+   * @param name
+   *          the qualified name of the field node item
+   * @param value
+   *          the field's value
+   * @param flags
+   *          the node item's child flag node items
+   * @return the mocked field node item
+   */
   @NonNull
   public IFieldNodeItem field(
       @NonNull IEnhancedQName name,
@@ -159,10 +216,21 @@ public class MockNodeItemFactory
     doReturn(name).when(definition).getDefinitionQName();
     doReturn(value.getJavaTypeAdapter()).when(definition).getJavaTypeAdapter();
 
-    handleChildren(field, ObjectUtils.requireNonNull(flags), CollectionUtil.emptyList());
+    handleModelChildren(field, ObjectUtils.requireNonNull(flags), CollectionUtil.emptyList());
     return field;
   }
 
+  /**
+   * Construct a new mocked field node item with no child flags.
+   *
+   * @param name
+   *          the qualified name of the field node item
+   * @param flags
+   *          the node item's child flag node items
+   * @param modelItems
+   *          the node item's child model node items
+   * @return the mocked field node item
+   */
   @NonNull
   public IAssemblyNodeItem assembly(
       @NonNull IEnhancedQName name,
@@ -178,7 +246,7 @@ public class MockNodeItemFactory
     doReturn(definition).when(assembly).getDefinition();
     doReturn(name).when(definition).getDefinitionQName();
 
-    handleChildren(assembly, ObjectUtils.requireNonNull(flags), ObjectUtils.requireNonNull(modelItems));
+    handleModelChildren(assembly, ObjectUtils.requireNonNull(flags), ObjectUtils.requireNonNull(modelItems));
 
     return assembly;
   }

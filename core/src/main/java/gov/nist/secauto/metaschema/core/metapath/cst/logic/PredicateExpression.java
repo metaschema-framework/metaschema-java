@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst.logic;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathEvaluationFeature;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.IntegerLiteral;
@@ -25,7 +26,8 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class PredicateExpression implements IExpression {
+public class PredicateExpression
+    extends AbstractExpression {
   @NonNull
   private final IExpression base;
   @NonNull
@@ -82,10 +84,7 @@ public class PredicateExpression implements IExpression {
       AtomicInteger index = new AtomicInteger();
 
       Stream<? extends IItem> stream = ObjectUtils.notNull(
-          retval.stream().map(item -> {
-            // build a positional index of the items
-            return Map.entry(BigInteger.valueOf(index.incrementAndGet()), item);
-          }).filter(entry -> {
+          retval.stream().map(item -> Map.entry(BigInteger.valueOf(index.incrementAndGet()), item)).filter(entry -> {
             @SuppressWarnings("null")
             @NonNull
             IItem item = entry.getValue();

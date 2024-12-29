@@ -128,7 +128,7 @@ public final class ModelSupport {
       retval = MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE;
     } else {
       IEnhancedQName qname = IEnhancedQName.of(MetapathConstants.NS_METAPATH, dataType);
-      IAtomicOrUnionType type;
+      IAtomicOrUnionType<?> type;
       try {
         source.getStaticContext();
         type = StaticContext.lookupAtomicType(qname);

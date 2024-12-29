@@ -81,6 +81,14 @@ public final class AutoCloser<T, E extends Exception> implements AutoCloseable {
     closeLambda.close(getResource());
   }
 
+  /**
+   * A callback interface representing a close operation.
+   *
+   * @param <T>
+   *          the Java type of the object being closed
+   * @param <E>
+   *          the Java type of the exception that can be thrown when closing
+   */
   @FunctionalInterface
   public interface Closer<T, E extends Exception> {
     /**

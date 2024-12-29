@@ -21,10 +21,11 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ExpressionTestBase {
+  /**
+   * A Metaschema model namespace for use in unit tests.
+   */
   @NonNull
-  protected static final URI NS_URI = ObjectUtils.notNull(URI.create("http://example.com/ns"));
-  @NonNull
-  protected static final String NS = ObjectUtils.notNull(NS_URI.toASCIIString());
+  protected static final String NS = "http://example.com/ns";
 
   @SuppressWarnings("exports")
   @NonNull
@@ -52,7 +53,7 @@ public class ExpressionTestBase {
 
     return new DynamicContext(StaticContext.builder()
         .baseUri(baseUri)
-        .defaultModelNamespace(NS_URI)
+        .defaultModelNamespace(NS)
         .build());
   }
 

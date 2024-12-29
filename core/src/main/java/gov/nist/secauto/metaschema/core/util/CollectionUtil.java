@@ -24,6 +24,11 @@ import java.util.stream.StreamSupport;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides a collection of utilities for handling Java collections and
+ * iterators.
+ */
+// FIXME: Rename to CollectionUtils
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class CollectionUtil {
   /**

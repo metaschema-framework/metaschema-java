@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A variety of collector and other stream utilities.
+ * Provides a variety of collector and other stream utilities.
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class CustomCollectors {
@@ -268,7 +268,6 @@ public final class CustomCollectors {
   @NonNull
   public static <ITEM_TYPE extends IItem> Collector<ITEM_TYPE, ?, ISequence<ITEM_TYPE>> toSequence() {
     return new Collector<ITEM_TYPE, List<ITEM_TYPE>, ISequence<ITEM_TYPE>>() {
-
       @Override
       public Supplier<List<ITEM_TYPE>> supplier() {
         return ArrayList::new;

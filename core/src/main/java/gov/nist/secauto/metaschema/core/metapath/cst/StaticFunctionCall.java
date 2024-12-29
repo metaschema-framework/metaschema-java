@@ -33,7 +33,8 @@ import nl.talsmasoftware.lazy4j.Lazy;
  */
 // FIXME: Change compilation to error when a non-existant function is called.
 // Manage this error where the compilation is requested
-public class StaticFunctionCall implements IExpression {
+public class StaticFunctionCall
+    extends AbstractExpression {
   @NonNull
   private final Lazy<IFunction> functionSupplier;
   @NonNull

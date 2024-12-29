@@ -14,12 +14,28 @@ import java.util.Collection;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * This behavioral interface represents an instance that supports grouped
+ * values.
+ */
 public interface IGroupable extends IInstance {
 
+  /**
+   * The default Metaschema grouping minimum occurrence.
+   */
   int DEFAULT_GROUP_AS_MIN_OCCURS = 0;
+  /**
+   * The default Metaschema grouping maximum occurrence.
+   */
   int DEFAULT_GROUP_AS_MAX_OCCURS = 1;
+  /**
+   * The default Metaschema grouping behavior for JSON data.
+   */
   @NonNull
   JsonGroupAsBehavior DEFAULT_JSON_GROUP_AS_BEHAVIOR = JsonGroupAsBehavior.SINGLETON_OR_LIST;
+  /**
+   * The default Metaschema grouping behavior for XML data.
+   */
   @NonNull
   XmlGroupAsBehavior DEFAULT_XML_GROUP_AS_BEHAVIOR = XmlGroupAsBehavior.UNGROUPED;
 

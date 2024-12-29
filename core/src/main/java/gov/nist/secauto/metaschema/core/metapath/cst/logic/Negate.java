@@ -55,7 +55,7 @@ public class Negate
   @Override
   public ISequence<? extends INumericItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
     INumericItem item = FunctionUtils.toNumericOrNull(
-        getFirstDataItem(getChild().accept(dynamicContext, focus), true));
+        ISequence.of(getChild().accept(dynamicContext, focus).atomize()).getFirstItem(true));
     if (item != null) {
       item = OperationFunctions.opNumericUnaryMinus(item);
     }

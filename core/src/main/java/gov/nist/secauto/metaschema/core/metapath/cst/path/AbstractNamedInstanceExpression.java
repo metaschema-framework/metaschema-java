@@ -3,18 +3,21 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst;
+package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
-import gov.nist.secauto.metaschema.core.metapath.cst.path.AbstractPathExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.INodeTestExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.NameNodeTest;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.WildcardNodeTest;
+import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A path expression that references a named instance.
+ *
+ * @param <RESULT_TYPE>
+ *          the Java type of the referenced node item
+ */
 public abstract class AbstractNamedInstanceExpression<RESULT_TYPE extends INodeItem>
     extends AbstractPathExpression<RESULT_TYPE> {
   @NonNull

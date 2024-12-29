@@ -30,7 +30,7 @@ public class ValueConstraintSet implements IValueConstrained {
   @NonNull
   private final Map<IEnhancedQName, ILet> lets = new LinkedHashMap<>();
   @NonNull
-  protected final List<IConstraint> constraints = new LinkedList<>();
+  private final List<IConstraint> constraints = new LinkedList<>();
   @NonNull
   private final List<IAllowedValuesConstraint> allowedValuesConstraints = new LinkedList<>();
   @NonNull
@@ -40,15 +40,48 @@ public class ValueConstraintSet implements IValueConstrained {
   @NonNull
   private final List<IExpectConstraint> expectConstraints = new LinkedList<>();
   @NonNull
-  protected final ReadWriteLock instanceLock = new ReentrantReadWriteLock();
+  private final ReadWriteLock instanceLock = new ReentrantReadWriteLock();
 
+  /**
+   * Construct a new constraint set.
+   *
+   * @param source
+   *          information about the resource the constraints were loaded from
+   */
   public ValueConstraintSet(@NonNull ISource source) {
     this.source = source;
   }
 
-  @NonNull
+  @Override
   public ISource getSource() {
     return source;
+  }
+
+  /**
+   * Get the read-write lock used to manage access to the underlying constraint
+   * collections.
+   * <p>
+   * This can be used by extending classes to control read/write access to
+   * constraint data, supporting multi-threaded access.
+   *
+   * @return the lock
+   */
+  @NonNull
+  protected ReadWriteLock getLock() {
+    return instanceLock;
+  }
+
+  /**
+   * Get the underlying constraint collection.
+   * <p>
+   * Access to the returned collection is not thread safe. Callers should use
+   * {@link #getLock()} to get the read/write lock for managing access.
+   *
+   * @return the constraint collection
+   */
+  @NonNull
+  protected List<IConstraint> getConstraintsInternal() {
+    return constraints;
   }
 
   @Override

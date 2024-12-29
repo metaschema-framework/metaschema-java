@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IKeySpecifier;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
@@ -20,7 +20,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Provides support for various types of key- and index-based lookups related to
  * {@link IMapItem} and {@link IArrayItem} objects.
  */
-public abstract class AbstractLookup implements IExpression {
+public abstract class AbstractLookup
+    extends AbstractExpression {
   @NonNull
   private final IKeySpecifier keySpecifier;
 

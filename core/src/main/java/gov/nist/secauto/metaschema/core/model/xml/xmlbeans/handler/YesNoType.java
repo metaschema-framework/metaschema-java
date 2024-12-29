@@ -5,6 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler;
 
+/**
+ * Supports parsing {@code "yes"} and {@code "no"} strings as boolean values.
+ * <p>
+ * The string value {@code "yes"} will be parsed as {@code true}, while any
+ * other value will be parsed as {@code false}.
+ */
 public final class YesNoType {
   private YesNoType() {
     // disable

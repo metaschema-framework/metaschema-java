@@ -23,7 +23,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * determine the function and multiple argument expressions that are used to
  * determine the function arguments.
  */
-public class DynamicFunctionCall implements IExpression {
+public class DynamicFunctionCall
+    extends AbstractExpression {
   @NonNull
   private final IExpression functionIdentifier;
   @NonNull

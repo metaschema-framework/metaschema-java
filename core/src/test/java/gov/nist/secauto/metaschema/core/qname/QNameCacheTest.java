@@ -31,14 +31,14 @@ class QNameCacheTest {
   void test(@NonNull String namespace, @NonNull String localName) {
     QNameCache cache = QNameCache.instance();
 
-    IEnhancedQName qname = cache.of(namespace, localName);
+    IEnhancedQName qname = cache.newCachedQName(namespace, localName);
     IEnhancedQName lookup = cache.get(namespace, localName);
 
     assertAll(
-        () -> assertNotNull(lookup),
+        () -> assertNotNull(lookup, "Expected qualified name to be found in cache"),
         () -> assertEquals(qname, lookup, "Expected to retrieve the same QName record"),
-        () -> assertEquals(namespace, lookup == null ? null : lookup.getNamespace()),
-        () -> assertEquals(localName, lookup == null ? null : lookup.getLocalName()));
+        () -> assertEquals(namespace, lookup == null ? null : lookup.getNamespace(), "Expected namespace to be equal"),
+        () -> assertEquals(localName, lookup == null ? null : lookup.getLocalName(), "Expected localName to be equal"));
   }
 
 }

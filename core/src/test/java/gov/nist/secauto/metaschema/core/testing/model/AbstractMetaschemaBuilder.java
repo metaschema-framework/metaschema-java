@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.testing.model.mocking.AbstractMockitoFactory;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.StringUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -92,7 +93,7 @@ abstract class AbstractMetaschemaBuilder<T extends IMetaschemaBuilder<T>>
    * information is provided.
    */
   protected void validate() {
-    ObjectUtils.requireNonEmpty(name, "name");
+    StringUtils.requireNonEmpty(name, "name");
     ObjectUtils.requireNonNull(source, "source");
   }
 

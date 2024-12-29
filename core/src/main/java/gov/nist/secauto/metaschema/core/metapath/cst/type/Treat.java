@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst.type;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
@@ -23,7 +24,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href="https://www.w3.org/TR/xpath-31/#id-cast">"cast as" operator</a>.
  */
 @SuppressWarnings("PMD.ShortClassName")
-public class Treat implements IExpression {
+public class Treat
+    extends AbstractExpression {
   @NonNull
   private final IExpression value;
   @NonNull

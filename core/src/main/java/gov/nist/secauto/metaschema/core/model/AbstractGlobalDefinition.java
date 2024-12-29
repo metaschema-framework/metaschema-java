@@ -47,6 +47,11 @@ public abstract class AbstractGlobalDefinition<MODULE extends IModule, INSTANCE 
     return module;
   }
 
+  @Override
+  public ISource getSource() {
+    return getContainingModule().getSource();
+  }
+
   @SuppressWarnings("null")
   @Override
   public final IEnhancedQName getQName() {

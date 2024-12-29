@@ -25,7 +25,8 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class FunctionCallAccessor implements IExpression {
+public class FunctionCallAccessor
+    extends AbstractExpression {
   @NonNull
   private final IExpression base;
   @NonNull

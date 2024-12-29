@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
@@ -21,7 +22,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href="https://www.w3.org/TR/xpath-31/#id-array-constructors">Array Square
  * Constructor</a> supporting the creation of a Metapath {@link IArrayItem}.
  */
-public class ArraySquareConstructor implements IExpression {
+public class ArraySquareConstructor
+    extends AbstractExpression {
   @NonNull
   private final List<IExpression> children;
 

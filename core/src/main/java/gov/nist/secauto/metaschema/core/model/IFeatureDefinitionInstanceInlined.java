@@ -79,6 +79,11 @@ public interface IFeatureDefinitionInstanceInlined<
     return getDefaultValue();
   }
 
+  @Override
+  default ISource getSource() {
+    return getContainingModule().getSource();
+  }
+
   /**
    * Generates a "coordinate" string for the provided inline definition instance.
    *

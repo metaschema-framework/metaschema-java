@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
@@ -27,7 +28,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href="https://www.w3.org/TR/xpath-31/#id-map-constructors">Map
  * Constructor</a> supporting the creation of a Metapath {@link IMapItem}.
  */
-public class MapConstructor implements IExpression {
+public class MapConstructor
+    extends AbstractExpression {
   @NonNull
   private final List<MapConstructor.Entry> entries;
 
@@ -74,7 +76,8 @@ public class MapConstructor implements IExpression {
   /**
    * A map entry expression used to produce an entry in a {@link IMapItem}.
    */
-  public static class Entry implements IExpression {
+  public static class Entry
+      extends AbstractExpression {
     @NonNull
     private final IExpression keyExpression;
     @NonNull

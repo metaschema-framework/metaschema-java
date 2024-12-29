@@ -21,7 +21,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * expression</a> supporting variable value binding.
  */
 @SuppressWarnings("PMD.ShortClassName")
-public class Let implements IExpression {
+public class Let
+    extends AbstractExpression {
   @NonNull
   private final VariableDeclaration variable;
   @NonNull

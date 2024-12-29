@@ -5,6 +5,11 @@
 
 package gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler;
 
+/**
+ * Supports reading and writing Metaschema XML element wrapping behavior strings
+ * as a boolean value where {@code true} indicates that wrapping is requires,
+ * and {@code false} that wrapping is not allowed.
+ */
 public final class InXmlWrappedType {
   private InXmlWrappedType() {
     // disable construction
