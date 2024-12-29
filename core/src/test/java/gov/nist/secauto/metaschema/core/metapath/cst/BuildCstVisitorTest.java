@@ -41,6 +41,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUuidItem;
@@ -307,6 +308,24 @@ class BuildCstVisitorTest {
             ? ((StaticMetapathException) cause).getCode()
             : null);
   }
+
+  static Stream<Arguments> testNamedFunctionRefCall() {
+    return Stream.of(
+        Arguments.of("fn:string#1(1)", string(String.valueOf(1))));
+  }
+
+  @ParameterizedTest
+  @MethodSource("testNamedFunctionRefCall")
+  void testNamedFunctionRefCall(
+    @NonNull String metapath,
+    @NonNull IItem expectedResult) {
+  StaticContext staticContext = StaticContext.builder().build();
+  DynamicContext dynamicContext = new DynamicContext(staticContext);
+
+  IItem result = IMetapathExpression.compile(metapath, staticContext)
+      .evaluateAs(null, IMetapathExpression.ResultType.ITEM, dynamicContext);
+  assertEquals(expectedResult, result);
+}
 
   static Stream<Arguments> testComparison() {
     return Stream.of(
