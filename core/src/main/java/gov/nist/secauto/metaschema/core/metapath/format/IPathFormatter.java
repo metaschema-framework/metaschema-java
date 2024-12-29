@@ -5,13 +5,13 @@
 
 package gov.nist.secauto.metaschema.core.metapath.format;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyInstanceGroupedNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IRootAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IAssemblyInstanceGroupedNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IFieldNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IFlagNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IModuleNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IRootAssemblyNodeItem;
 
 import java.util.stream.Collectors;
 

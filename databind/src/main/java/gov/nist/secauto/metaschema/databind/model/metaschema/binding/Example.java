@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
+import gov.nist.secauto.metaschema.core.datatype.StringAdapter;
+import gov.nist.secauto.metaschema.core.datatype.UriReferenceAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLineAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;

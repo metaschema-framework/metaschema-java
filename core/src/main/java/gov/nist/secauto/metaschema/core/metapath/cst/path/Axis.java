@@ -6,12 +6,12 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.ItemUtils;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -113,8 +113,8 @@ public enum Axis implements IExpression {
    * This axis is not supported.
    */
   NAMESPACE(focus -> {
-    throw new StaticMetapathException(
-        StaticMetapathException.AXIS_NAMESPACE_UNSUPPORTED,
+    throw new StaticMetapathError(
+        StaticMetapathError.AXIS_NAMESPACE_UNSUPPORTED,
         "The 'namespace' axis is not supported");
   });
 
@@ -166,7 +166,7 @@ public enum Axis implements IExpression {
       retval = ISequence.empty();
     } else {
       retval = ISequence.of(ObjectUtils.notNull(outerFocus.stream()
-          .map(ItemUtils::checkItemIsNodeItemForStep)
+          .map(ItemUtils::checkItemIsNodeItem)
           .flatMap(item -> {
             assert item != null;
             return execute(item);

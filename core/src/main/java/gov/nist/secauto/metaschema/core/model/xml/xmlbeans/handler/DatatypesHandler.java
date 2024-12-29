@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler;
 import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 

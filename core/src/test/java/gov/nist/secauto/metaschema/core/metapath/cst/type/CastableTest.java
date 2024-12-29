@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
@@ -48,25 +48,25 @@ class CastableTest
 
   @Test
   void testInvalidTypePrefix() {
-    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
+    StaticMetapathError ex = assertThrows(StaticMetapathError.class, () -> {
       IMetapathExpression.compile("'a' castable as foo:bar");
     });
-    assertEquals(StaticMetapathException.PREFIX_NOT_EXPANDABLE, ex.getCode());
+    assertEquals(StaticMetapathError.PREFIX_NOT_EXPANDABLE, ex.getErrorCode().getCode());
   }
 
   @Test
   void testInvalidType() {
-    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
+    StaticMetapathError ex = assertThrows(StaticMetapathError.class, () -> {
       IMetapathExpression.compile("'a' castable as meta:bar");
     });
-    assertEquals(StaticMetapathException.CAST_UNKNOWN_TYPE, ex.getCode());
+    assertEquals(StaticMetapathError.CAST_UNKNOWN_TYPE, ex.getErrorCode().getCode());
   }
 
   @Test
   void testAnyAtomicType() {
-    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
+    StaticMetapathError ex = assertThrows(StaticMetapathError.class, () -> {
       IMetapathExpression.compile("'a' castable as meta:any-atomic-type");
     });
-    assertEquals(StaticMetapathException.CAST_ANY_ATOMIC, ex.getCode());
+    assertEquals(StaticMetapathError.CAST_ANY_ATOMIC, ex.getErrorCode().getCode());
   }
 }

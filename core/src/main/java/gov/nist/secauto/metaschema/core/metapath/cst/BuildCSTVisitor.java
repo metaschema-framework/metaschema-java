@@ -5,11 +5,15 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
+import gov.nist.secauto.metaschema.core.metapath.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.ISequenceType;
+import gov.nist.secauto.metaschema.core.metapath.Occurrence;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParamContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySequenceConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySquareConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.DecimalLiteral;
@@ -62,13 +66,8 @@ import gov.nist.secauto.metaschema.core.metapath.cst.type.Treat;
 import gov.nist.secauto.metaschema.core.metapath.cst.type.TypeTestSupport;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
-import gov.nist.secauto.metaschema.core.metapath.impl.AbstractKeySpecifier;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IKeySpecifier;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
-import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
-import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
+import gov.nist.secauto.metaschema.core.metapath.function.IKeySpecifier;
+import gov.nist.secauto.metaschema.core.metapath.function.impl.AbstractKeySpecifier;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -381,7 +380,7 @@ public class BuildCSTVisitor
             .collect(Collectors.toUnmodifiableList()));
 
     return new StaticFunctionCall(
-        () -> getContext().lookupFunction(
+        getContext().lookupFunction(
             ObjectUtils.notNull(ctx.eqname().getText()),
             arguments.size()),
         arguments);
@@ -411,7 +410,7 @@ public class BuildCSTVisitor
             2,
             (ctx, idx) -> {
               int pos = (idx - 1) / 2;
-              ParamContext tree = ctx.param(pos);
+              Metapath10.ParamContext tree = ctx.param(pos);
               return IArgument.of(
                   getContext().parseVariableName(ObjectUtils.notNull(tree.eqname().getText())),
                   tree.typedeclaration() == null
@@ -1150,16 +1149,16 @@ public class BuildCSTVisitor
     IAtomicOrUnionType<?> type;
     try {
       type = getContext().lookupAtomicType(name);
-    } catch (StaticMetapathException ex) {
-      if (StaticMetapathException.UNKNOWN_TYPE == ex.getCode()) {
-        throw new StaticMetapathException(StaticMetapathException.CAST_UNKNOWN_TYPE, ex);
+    } catch (StaticMetapathError ex) {
+      if (StaticMetapathError.UNKNOWN_TYPE == ex.getErrorCode().getCode()) {
+        throw new StaticMetapathError(StaticMetapathError.CAST_UNKNOWN_TYPE, ex);
       }
       throw ex;
     }
 
     if (IItemType.anyAtomic().equals(type)) {
-      throw new StaticMetapathException(
-          StaticMetapathException.CAST_ANY_ATOMIC,
+      throw new StaticMetapathError(
+          StaticMetapathError.CAST_ANY_ATOMIC,
           String.format("Type cannot be '%s',", IItemType.anyAtomic()));
     }
     return type;
@@ -1238,7 +1237,7 @@ public class BuildCSTVisitor
         if (arrowCtx.eqname() != null) {
           // named function
           return new StaticFunctionCall(
-              () -> getContext().lookupFunction(ObjectUtils.notNull(arrowCtx.eqname().getText()), arguments.size()),
+              getContext().lookupFunction(ObjectUtils.notNull(arrowCtx.eqname().getText()), arguments.size()),
               arguments);
         }
 
@@ -1251,8 +1250,8 @@ public class BuildCSTVisitor
           // function expression
           result = visit(arrowCtx.parenthesizedexpr().expr());
         } else {
-          throw new StaticMetapathException(
-              StaticMetapathException.INVALID_PATH_GRAMMAR,
+          throw new StaticMetapathError(
+              StaticMetapathError.INVALID_PATH_GRAMMAR,
               String.format("Unable to get function name using arrow specifier '%s'.", arrowCtx.getText()));
         }
 

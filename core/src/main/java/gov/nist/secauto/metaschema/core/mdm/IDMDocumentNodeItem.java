@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.mdm;
 
 import gov.nist.secauto.metaschema.core.mdm.impl.DocumentNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 
 import java.net.URI;

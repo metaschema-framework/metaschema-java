@@ -6,14 +6,14 @@
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.datatype.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
+import gov.nist.secauto.metaschema.core.metapath.node.IAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
@@ -132,7 +132,7 @@ public final class ModelSupport {
       try {
         source.getStaticContext();
         type = StaticContext.lookupAtomicType(qname);
-      } catch (StaticMetapathException ex) {
+      } catch (StaticMetapathError ex) {
         throw new IllegalStateException("Unrecognized data type: " + qname, ex);
 
       }

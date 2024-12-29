@@ -6,8 +6,8 @@
 package gov.nist.secauto.metaschema.core.mdm.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 

@@ -6,16 +6,16 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.IItem;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.function.IndexOutOfBoundsArrayMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -78,12 +78,12 @@ public final class ArrayGet {
    * @param positionItem
    *          the integer position of the item to retrieve
    * @return the retrieved item
-   * @throws ArrayException
+   * @throws IndexOutOfBoundsArrayMetapathException
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
   public static <T extends ICollectionValue> T get(
-      @NonNull List<T> target,
+      @NonNull IArrayItem<T> target,
       @NonNull IIntegerItem positionItem) {
     return get(target, positionItem.asInteger().intValue());
   }
@@ -99,18 +99,18 @@ public final class ArrayGet {
    * @param position
    *          the integer position of the item to retrieve
    * @return the retrieved item
-   * @throws ArrayException
+   * @throws IndexOutOfBoundsArrayMetapathException
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
   public static <T extends ICollectionValue> T get(
-      @NonNull List<T> target,
+      @NonNull IArrayItem<T> target,
       int position) {
     try {
       return ObjectUtils.requireNonNull(target.get(position - 1));
     } catch (IndexOutOfBoundsException ex) {
-      throw new ArrayException(
-          ArrayException.INDEX_OUT_OF_BOUNDS,
+      throw new IndexOutOfBoundsArrayMetapathException(
+          target,
           String.format("The index %d is outside the range of values for the array size '%d'.",
               position,
               target.size()),

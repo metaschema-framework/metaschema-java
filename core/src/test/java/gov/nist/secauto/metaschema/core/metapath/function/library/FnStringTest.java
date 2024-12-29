@@ -12,14 +12,14 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -58,7 +58,7 @@ class FnStringTest
 
   @Test
   void testNoFocus() {
-    DynamicMetapathException throwable = assertThrows(DynamicMetapathException.class,
+    assertThrows(ContextAbsentDynamicMetapathException.class,
         () -> {
           try {
             FunctionTestBase.executeFunction(
@@ -70,7 +70,6 @@ class FnStringTest
             throw ex.getCause();
           }
         });
-    assertEquals(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, throwable.getCode());
   }
 
   @Test
@@ -107,6 +106,6 @@ class FnStringTest
             throw ex.getCause();
           }
         });
-    assertEquals(InvalidTypeFunctionException.ARGUMENT_TO_STRING_IS_FUNCTION, throwable.getCode());
+    assertEquals(InvalidTypeFunctionException.ARGUMENT_TO_STRING_IS_FUNCTION, throwable.getErrorCode().getCode());
   }
 }

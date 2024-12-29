@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
-import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
+import gov.nist.secauto.metaschema.core.model.json.JsonUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;

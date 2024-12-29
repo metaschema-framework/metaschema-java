@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.DefaultChoiceModelBuilder;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceAbsolute;

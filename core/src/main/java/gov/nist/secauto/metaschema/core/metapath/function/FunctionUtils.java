@@ -5,13 +5,13 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
-import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.IItem;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.TypeMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IDecimalItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigInteger;
@@ -97,11 +97,11 @@ public final class FunctionUtils {
    * @param sequence
    *          a Metapath sequence containing the value to convert
    * @param requireSingleton
-   *          if {@code true} then a {@link TypeMetapathException} is thrown if
-   *          the sequence contains more than one item
+   *          if {@code true} then a {@link TypeMetapathError} is thrown if the
+   *          sequence contains more than one item
    * @return the numeric item value, or {@code null} if the result is an empty
    *         sequence
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the sequence contains more than one item, or the item cannot be
    *           cast to a numeric value
    *
@@ -118,7 +118,7 @@ public final class FunctionUtils {
    * @param item
    *          the value to convert
    * @return the numeric item value
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the sequence contains more than one item, or the item cannot be
    *           cast to a numeric value
    */
@@ -138,7 +138,7 @@ public final class FunctionUtils {
    * @param item
    *          the value to convert
    * @return the numeric item value
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the item cannot be cast to a numeric value
    */
   @NonNull
@@ -157,7 +157,7 @@ public final class FunctionUtils {
    * @param item
    *          the value to convert
    * @return the numeric item value
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the item cannot be cast to a numeric value
    */
   @Nullable

@@ -6,16 +6,17 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.IItem;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.function.IndexOutOfBoundsArrayMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.function.NegativeLengthArrayMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -120,8 +121,8 @@ public final class ArraySubarray {
    * @param startItem
    *          the integer position of the item to start with (inclusive)
    * @return a new array item consisting of the items in the identified range
-   * @throws ArrayException
-   *           if the position is not in the range of 1 to array:size
+   * @throws IndexOutOfBoundsArrayMetapathException
+   *           if the start position is not in the range of 1 to array:size
    */
   @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
@@ -145,9 +146,10 @@ public final class ArraySubarray {
    *          the integer count of items to include starting with the item at the
    *          start position
    * @return a new array item consisting of the items in the identified range
-   * @throws ArrayException
-   *           if the length is negative or the position is not in the range of 1
-   *           to array:size
+   * @throws NegativeLengthArrayMetapathException
+   *           if the length is negative
+   * @throws IndexOutOfBoundsArrayMetapathException
+   *           if the start position is not in the range of 1 to array:size
    */
   @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
@@ -169,9 +171,8 @@ public final class ArraySubarray {
    * @param start
    *          the integer position of the item to start with (inclusive)
    * @return a new array item consisting of the items in the identified range
-   * @throws ArrayException
-   *           if the length is negative or the position is not in the range of 1
-   *           to array:size
+   * @throws IndexOutOfBoundsArrayMetapathException
+   *           if the start position is not in the range of 1 to array:size
    */
   @NonNull
   public static <T extends ICollectionValue> IArrayItem<T> subarray(
@@ -194,9 +195,10 @@ public final class ArraySubarray {
    *          the integer count of items to include starting with the item at the
    *          start position
    * @return a new array item consisting of the items in the identified range
-   * @throws ArrayException
-   *           if the length is negative or the position is not in the range of 1
-   *           to array:size
+   * @throws NegativeLengthArrayMetapathException
+   *           if the length is negative
+   * @throws IndexOutOfBoundsArrayMetapathException
+   *           if the start position is not in the range of 1 to array:size
    */
   @NonNull
   public static <T extends ICollectionValue> IArrayItem<T> subarray(
@@ -204,16 +206,17 @@ public final class ArraySubarray {
       int start,
       int length) {
     if (length < 0) {
-      throw new ArrayException(
-          ArrayException.NEGATIVE_ARRAY_LENGTH, String.format("The length '%d' is negative.", length));
+      throw new NegativeLengthArrayMetapathException(
+          array,
+          String.format("The length '%d' is negative.", length));
     }
 
     List<T> copy;
     try {
       copy = array.subList(start - 1, start - 1 + length);
     } catch (IndexOutOfBoundsException ex) {
-      throw new ArrayException(
-          ArrayException.INDEX_OUT_OF_BOUNDS,
+      throw new IndexOutOfBoundsArrayMetapathException(
+          array,
           String.format("The start + length (%d + %d) exceeds the array length '%d'.",
               start,
               length,

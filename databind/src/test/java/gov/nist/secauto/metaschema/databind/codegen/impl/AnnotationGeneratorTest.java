@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.codegen.impl;
 import com.squareup.javapoet.AnnotationSpec;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
@@ -38,7 +39,7 @@ class AnnotationGeneratorTest {
 
     ILet let = ILet.of(
         IEnhancedQName.of(variable),
-        expression,
+        IMetapathExpression.compile(expression, source.getStaticContext()),
         source,
         remarks);
 

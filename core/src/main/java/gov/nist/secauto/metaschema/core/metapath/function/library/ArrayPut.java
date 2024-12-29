@@ -6,16 +6,17 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.IItem;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
+import gov.nist.secauto.metaschema.core.metapath.function.IndexOutOfBoundsArrayMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.function.NegativeLengthArrayMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -92,7 +93,9 @@ public final class ArrayPut {
    * @param member
    *          the Metapath item to replace the identified array member with
    * @return a new array containing the modification
-   * @throws ArrayException
+   * @throws NegativeLengthArrayMetapathException
+   *           if the position is negative
+   * @throws IndexOutOfBoundsArrayMetapathException
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
@@ -116,7 +119,9 @@ public final class ArrayPut {
    * @param member
    *          the Metapath item to replace the identified array member with
    * @return a new array containing the modification
-   * @throws ArrayException
+   * @throws NegativeLengthArrayMetapathException
+   *           if the position is negative
+   * @throws IndexOutOfBoundsArrayMetapathException
    *           if the position is not in the range of 1 to array:size
    */
   @NonNull
@@ -128,8 +133,8 @@ public final class ArrayPut {
     try {
       copy.set(position - 1, member);
     } catch (IndexOutOfBoundsException ex) {
-      throw new ArrayException(
-          ArrayException.INDEX_OUT_OF_BOUNDS,
+      throw new IndexOutOfBoundsArrayMetapathException(
+          array,
           String.format("The position %d is outside the range of values for the array of size '%d'.",
               position,
               copy.size()),

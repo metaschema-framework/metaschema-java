@@ -20,15 +20,15 @@ import static org.mockito.Mockito.mock;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
-import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.MockNodeItemFactory;
+import gov.nist.secauto.metaschema.core.metapath.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.testing.node.MockNodeItemFactory;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -60,6 +60,8 @@ class DefaultConstraintValidatorTest {
 
     ISource source = mock(ISource.class);
 
+    StaticContext staticContext = StaticContext.builder().build();
+
     IAllowedValuesConstraint allowedValues = IAllowedValuesConstraint.builder()
         .source(source)
         .allowedValue(IAllowedValue.of(
@@ -82,7 +84,7 @@ class DefaultConstraintValidatorTest {
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
     DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext();
+    DynamicContext dynamicContext = new DynamicContext(staticContext);
     validator.validate(flag, dynamicContext);
     validator.finalizeValidation(dynamicContext);
 

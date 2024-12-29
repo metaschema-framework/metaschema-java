@@ -6,16 +6,16 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IItem;
+import gov.nist.secauto.metaschema.core.metapath.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -67,8 +67,8 @@ public final class FnFunctionLookup {
       matchingFunction = dynamicContext.getStaticContext().lookupFunction(
           name.asString(),
           arity.asInteger().intValueExact());
-    } catch (StaticMetapathException ex) {
-      if (ex.getCode() != StaticMetapathException.NO_FUNCTION_MATCH) {
+    } catch (StaticMetapathError ex) {
+      if (ex.getErrorCode().getCode() != StaticMetapathError.NO_FUNCTION_MATCH) {
         throw ex;
       }
     }

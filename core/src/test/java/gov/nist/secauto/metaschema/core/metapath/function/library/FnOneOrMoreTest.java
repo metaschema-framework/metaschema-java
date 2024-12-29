@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -59,7 +59,7 @@ class FnOneOrMoreTest
           () -> assertEquals(
               InvalidArgumentFunctionException.INVALID_ARGUMENT_ONE_OR_MORE,
               cause instanceof InvalidArgumentFunctionException
-                  ? ((InvalidArgumentFunctionException) cause).getCode()
+                  ? ((InvalidArgumentFunctionException) cause).getErrorCode().getCode()
                   : null));
     }
   }

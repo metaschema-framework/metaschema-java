@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.databind.model.annotations;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.datatype.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;

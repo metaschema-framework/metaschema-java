@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.model.util;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.ModelInitializationException;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -32,7 +32,7 @@ public final class ModuleUtils {
       @NonNull String name) {
     try {
       return module.getModuleStaticContext().parseFlagName(name);
-    } catch (StaticMetapathException ex) {
+    } catch (StaticMetapathError ex) {
       throw new ModelInitializationException(ex);
     }
   }
@@ -55,7 +55,7 @@ public final class ModuleUtils {
       @NonNull String name) {
     try {
       return module.getModuleStaticContext().parseModelName(name);
-    } catch (StaticMetapathException ex) {
+    } catch (StaticMetapathError ex) {
       throw new ModelInitializationException(ex);
     }
   }

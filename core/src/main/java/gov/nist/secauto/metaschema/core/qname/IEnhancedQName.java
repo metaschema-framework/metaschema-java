@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.qname;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -135,7 +136,7 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
    * Generate a qualified name for this QName.
    * <p>
    * This method uses prefixes associated with well-known namespaces, or will
-   * prepending the namespace if no prefix can be resolved.
+   * prepend the namespace if no prefix can be resolved.
    *
    * @param resolver
    *          the resolver to use to lookup the prefix
@@ -157,7 +158,7 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
   @NonNull
   default String toEQName(@Nullable NamespaceToPrefixResolver resolver) {
     String namespace = getNamespace();
-    String prefix = namespace.isEmpty() ? null : StaticContext.getWellKnownPrefixForUri(namespace);
+    String prefix = namespace.isEmpty() ? null : WellKnown.getWellKnownPrefixForUri(namespace);
     if (prefix == null && resolver != null) {
       prefix = resolver.resolve(namespace);
     }
@@ -166,7 +167,7 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
 
   /**
    * Generate a qualified name for this QName, use a prefix resolved from the
-   * provided static context, or by prepending the namespace if no prefix can be
+   * provided static context, or prepend the namespace if no prefix can be
    * resolved.
    *
    * @param staticContext
@@ -237,5 +238,24 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
      */
     @Nullable
     String resolve(@NonNull String namespace);
+  }
+
+  /**
+   * Provides a callback for resolving namespace prefixes.
+   */
+  @FunctionalInterface
+  interface PrefixToNamespaceResolver {
+    /**
+     * Get the URI string for the provided namespace prefix.
+     *
+     * @param name
+     *          the name to resolve
+     * @return the URI string or {@code null} if the prefix is unbound
+     * @throws StaticMetapathError
+     *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+     *           a non-empty prefix is provided
+     */
+    @NonNull
+    IEnhancedQName resolve(@NonNull String name);
   }
 }

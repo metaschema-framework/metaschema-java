@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
 

@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.databind.io.xml;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
+import gov.nist.secauto.metaschema.core.model.xml.XmlEventUtil;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.AbstractProblemHandler;

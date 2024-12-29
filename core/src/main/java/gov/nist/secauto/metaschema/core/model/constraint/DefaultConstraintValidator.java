@@ -11,16 +11,16 @@ import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.node.AbstractNodeItemVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.AbstractNodeItemVisitor;
+import gov.nist.secauto.metaschema.core.metapath.node.IAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDefinitionNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IFieldNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IFlagNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IModuleNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
@@ -676,29 +676,25 @@ public class DefaultConstraintValidator
       @NonNull INodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
       @NonNull DynamicContext dynamicContext) {
-    try {
-      IMetapathExpression metapath = constraint.getTest();
-      IConstraintValidationHandler handler = getConstraintValidationHandler();
-      targets.stream()
-          .forEachOrdered(item -> {
-            assert item != null;
+    IMetapathExpression test = constraint.getTest();
+    IConstraintValidationHandler handler = getConstraintValidationHandler();
+    targets.stream()
+        .forEachOrdered(item -> {
+          assert item != null;
 
-            if (item.hasValue()) {
-              try {
-                ISequence<?> result = metapath.evaluate(item, dynamicContext);
-                if (FnBoolean.fnBoolean(result).toBoolean()) {
-                  handlePass(constraint, node, item, dynamicContext);
-                } else {
-                  handler.handleExpectViolation(constraint, node, item, dynamicContext);
-                }
-              } catch (MetapathException ex) {
-                handleError(constraint, item, ex, dynamicContext);
+          if (item.hasValue()) {
+            try {
+              ISequence<?> result = test.evaluate(item, dynamicContext);
+              if (FnBoolean.fnBoolean(result).toBoolean()) {
+                handlePass(constraint, node, item, dynamicContext);
+              } else {
+                handler.handleExpectViolation(constraint, node, item, dynamicContext);
               }
+            } catch (MetapathException ex) {
+              handleError(constraint, item, ex, dynamicContext);
             }
-          });
-    } catch (MetapathException ex) {
-      handleError(constraint, node, ex, dynamicContext);
-    }
+          }
+        });
   }
 
   /**

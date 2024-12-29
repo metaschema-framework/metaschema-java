@@ -5,10 +5,13 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndex;
+import gov.nist.secauto.metaschema.core.model.constraint.IIndexConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IIndexHasKeyConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
+import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.ArrayList;
@@ -19,6 +22,11 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * The default implementation of an index that can support the
+ * {@link IIndexConstraint}, {@link IIndexHasKeyConstraint}, and
+ * {@link IUniqueConstraint}.
+ */
 public class DefaultIndex implements IIndex {
   @NonNull
   private final List<IKeyField> keyFields;

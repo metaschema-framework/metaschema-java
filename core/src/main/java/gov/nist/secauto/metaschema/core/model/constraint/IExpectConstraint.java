@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultExpectConstraint;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -63,6 +64,8 @@ public interface IExpectConstraint extends IConfigurableMessageConstraint {
      * @param test
      *          the test metapath expression to use
      * @return this builder
+     * @throws MetapathException
+     *           if an error occurred while compiling the Metapath expression
      */
     @NonNull
     public Builder test(@NonNull IMetapathExpression test) {

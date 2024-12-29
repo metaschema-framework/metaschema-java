@@ -5,9 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
+import gov.nist.secauto.metaschema.core.metapath.IItem;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.function.impl.ImmutableCollections;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Iterator;

@@ -12,8 +12,7 @@ import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.function.CalledContext;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction.FunctionProperty;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IUriResolver;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -160,16 +159,14 @@ public class DynamicContext { // NOPMD - intentional data class
    * Get the document loader assigned to this dynamic context.
    *
    * @return the loader
-   * @throws DynamicMetapathException
-   *           with an error code
-   *           {@link DynamicMetapathException#DYNAMIC_CONTEXT_ABSENT} if a
-   *           document loader is not configured for this dynamic context
+   * @throws ContextAbsentDynamicMetapathException
+   *           if a document loader is not configured for this dynamic context
    */
   @NonNull
   public IDocumentLoader getDocumentLoader() {
     IDocumentLoader retval = sharedState.documentLoader;
     if (retval == null) {
-      throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT,
+      throw new ContextAbsentDynamicMetapathException(
           "No document loader configured for the dynamic context.");
     }
     return retval;
@@ -272,8 +269,8 @@ public class DynamicContext { // NOPMD - intentional data class
       if (letVariableMap.containsKey(name.getIndexPosition())) {
         throw new MetapathException(String.format("Variable '%s' has null contents.", name));
       }
-      throw new StaticMetapathException(
-          StaticMetapathException.NOT_DEFINED,
+      throw new StaticMetapathError(
+          StaticMetapathError.NOT_DEFINED,
           String.format("Variable '%s' not defined in the dynamic context.", name));
     }
     return retval;

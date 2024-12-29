@@ -5,13 +5,17 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * FORG: Exceptions related to argument types.
  */
 public class InvalidArgumentFunctionException
-    extends AbstractCodedMetapathException {
+    extends FunctionMetapathError {
+  @NonNull
+  private static final String PREFIX = "FORG";
 
   /**
    * <a href=
@@ -82,7 +86,7 @@ public class InvalidArgumentFunctionException
    *          the original exception cause
    */
   public InvalidArgumentFunctionException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -95,7 +99,7 @@ public class InvalidArgumentFunctionException
    *          the exception message
    */
   public InvalidArgumentFunctionException(int code, String message) {
-    super(code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -108,11 +112,6 @@ public class InvalidArgumentFunctionException
    *          the original exception cause
    */
   public InvalidArgumentFunctionException(int code, Throwable cause) {
-    super(code, cause);
-  }
-
-  @Override
-  public String getCodePrefix() {
-    return "FORG";
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

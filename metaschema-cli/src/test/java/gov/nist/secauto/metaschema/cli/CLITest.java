@@ -212,7 +212,8 @@ public class CLITest {
       };
       CLI.runCli(cliArgs);
       assertThat(captor.getErrorLogs().toString())
-          .contains("expect-default-non-zero: Expect constraint '. > 0' did not match the data",
+          .contains(
+              "expect-default-non-zero: Expect constraint '. > 0' did not match the data",
               "expect-custom-non-zero: No default message, custom error message for expect-custom-non-zero constraint.",
               "matches-default-regex-letters-only: Value '1' did not match the pattern",
               "matches-custom-regex-letters-only: No default message, custom error message for" +

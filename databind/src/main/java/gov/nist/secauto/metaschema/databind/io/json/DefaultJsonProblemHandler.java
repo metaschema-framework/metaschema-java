@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.databind.io.json;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
+import gov.nist.secauto.metaschema.core.model.json.JsonUtil;
 import gov.nist.secauto.metaschema.databind.io.AbstractProblemHandler;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 

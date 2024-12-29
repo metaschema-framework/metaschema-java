@@ -5,16 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression.ConversionFunction;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
 import gov.nist.secauto.metaschema.core.metapath.impl.LazyCompilationMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
-import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.impl.MetapathExpression;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -82,7 +78,7 @@ public interface IMetapathExpression {
      * @param sequence
      *          the Metapath result sequence to convert
      * @return the converted sequence as the expected type
-     * @throws TypeMetapathException
+     * @throws TypeMetapathError
      *           if the provided sequence is incompatible with the expected result
      *           type
      */
@@ -92,11 +88,17 @@ public interface IMetapathExpression {
         return ObjectUtils.asNullableType(converter.convert(sequence));
       } catch (ClassCastException ex) {
         throw new InvalidTypeMetapathException(null,
-            String.format("Unable to cast to expected result type '%s' using expected type '%s'.",
-                name(),
-                expectedClass().getName()),
+            String.format("Unable to cast type '%s' to expected result type '%s'.",
+                expectedClass().getName(),
+                name()),
             ex);
       }
+    }
+
+    @FunctionalInterface
+    interface ConversionFunction {
+      @Nullable
+      Object convert(@NonNull ISequence<?> sequence);
     }
   }
 
@@ -107,7 +109,7 @@ public interface IMetapathExpression {
    */
   @NonNull
   static IMetapathExpression contextNode() {
-    return MetapathExpression.CONTEXT_NODE;
+    return MetapathExpression.CONTEXT_METAPATH;
   }
 
   /**
@@ -121,7 +123,7 @@ public interface IMetapathExpression {
    */
   @NonNull
   static IMetapathExpression compile(@NonNull String path) {
-    return MetapathExpression.compile(path, StaticContext.instance());
+    return compile(path, StaticContext.instance());
   }
 
   /**
@@ -182,7 +184,7 @@ public interface IMetapathExpression {
    * @param resultType
    *          the type of result to produce
    * @return the converted result
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the provided sequence is incompatible with the requested result
    *           type
    * @throws MetapathException
@@ -206,7 +208,7 @@ public interface IMetapathExpression {
    * @param resultType
    *          the type of result to produce
    * @return the converted result
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the provided sequence is incompatible with the requested result
    *           type
    * @throws MetapathException
@@ -237,7 +239,7 @@ public interface IMetapathExpression {
    * @param dynamicContext
    *          the dynamic context to use for evaluation
    * @return the converted result
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the provided sequence is incompatible with the requested result
    *           type
    * @throws MetapathException
@@ -308,4 +310,5 @@ public interface IMetapathExpression {
   <T extends IItem> ISequence<T> evaluate(
       @Nullable IItem focus,
       @NonNull DynamicContext dynamicContext);
+
 }

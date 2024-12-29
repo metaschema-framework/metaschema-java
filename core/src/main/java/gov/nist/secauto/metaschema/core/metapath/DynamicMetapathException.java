@@ -5,12 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * MPDY: Exceptions related to the Metapath dynamic context and dynamic
  * evaluation.
  */
 public class DynamicMetapathException
-    extends AbstractCodedMetapathException {
+    extends DynamicMetapathError {
+  @NonNull
+  private static final String PREFIX = "MPDY";
 
   /**
    * the serial version UID.
@@ -25,7 +29,7 @@ public class DynamicMetapathException
    * context</a> that is
    * <a href="https://www.w3.org/TR/xpath-datamodel-31/#dt-absent">absent</a>.
    */
-  public static final int DYNAMIC_CONTEXT_ABSENT = 2;
+  protected static final int DYNAMIC_CONTEXT_ABSENT = 2;
 
   /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPDY0050">err:MPDY0050</a>: It
@@ -40,7 +44,7 @@ public class DynamicMetapathException
    * "/" or "//" in a path expression is an abbreviation for an initial step that
    * includes the clause <code>treat as document-node()</code>.
    */
-  public static final int TREAT_DOES_NOT_MATCH_TYPE = 50;
+  protected static final int TREAT_DOES_NOT_MATCH_TYPE = 50;
 
   /**
    * Constructs a new exception with the provided {@code code}, {@code message},
@@ -52,7 +56,7 @@ public class DynamicMetapathException
    *          the exception message
    */
   public DynamicMetapathException(int code, String message) {
-    super(code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -67,7 +71,7 @@ public class DynamicMetapathException
    *          the original exception cause
    */
   public DynamicMetapathException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -80,11 +84,6 @@ public class DynamicMetapathException
    *          the original exception cause
    */
   public DynamicMetapathException(int code, Throwable cause) {
-    super(code, cause);
-  }
-
-  @Override
-  public String getCodePrefix() {
-    return "MPDY";
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

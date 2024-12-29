@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.validation;
 
-import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
+import gov.nist.secauto.metaschema.core.model.json.JsonUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.json.JSONObject;

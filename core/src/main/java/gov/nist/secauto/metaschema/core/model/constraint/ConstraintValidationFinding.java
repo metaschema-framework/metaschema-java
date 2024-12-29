@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding;
@@ -182,6 +182,9 @@ public class ConstraintValidationFinding implements IValidationFinding { // NOPM
     return new Builder(CollectionUtil.singletonList(constraint), node);
   }
 
+  /**
+   * Implements a builder pattern for creating constraint findings.
+   */
   public static final class Builder {
     @NonNull
     private final List<? extends IConstraint> constraints;

@@ -10,13 +10,13 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ class FnStringLengthTest
 
   @Test
   void testNoFocus() {
-    DynamicMetapathException throwable = assertThrows(DynamicMetapathException.class,
+    assertThrows(ContextAbsentDynamicMetapathException.class,
         () -> {
           try {
             FunctionTestBase.executeFunction(
@@ -73,6 +73,5 @@ class FnStringLengthTest
             throw ex.getCause();
           }
         });
-    assertEquals(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, throwable.getCode());
   }
 }

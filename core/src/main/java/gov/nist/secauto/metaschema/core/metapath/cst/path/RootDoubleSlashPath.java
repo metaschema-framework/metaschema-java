@@ -6,9 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -32,8 +33,10 @@ public class RootDoubleSlashPath
   }
 
   @Override
-  public ISequence<?> accept(
-      DynamicContext dynamicContext, ISequence<?> context) {
-    return ISequence.of(search(getExpression(), dynamicContext, context));
+  public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+    return ISequence.of(search(
+        getExpression(),
+        dynamicContext,
+        ItemUtils.getDocumentNodeItems(focus)));
   }
 }

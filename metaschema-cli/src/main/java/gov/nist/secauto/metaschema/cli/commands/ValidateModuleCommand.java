@@ -10,7 +10,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionExcepti
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
+import gov.nist.secauto.metaschema.core.model.json.JsonUtil;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;

@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyUriItem;
 
 import org.junit.jupiter.api.Test;
 

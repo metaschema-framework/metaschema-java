@@ -5,14 +5,18 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnResolveUri;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * FONS: Exceptions related to function namespaces.
  */
 public class UriFunctionException
-    extends AbstractCodedMetapathException {
+    extends FunctionMetapathError {
+  @NonNull
+  private static final String PREFIX = "FONS";
   /**
    * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFONS0004">err:FONS0004</a>:
@@ -45,7 +49,7 @@ public class UriFunctionException
    *          the exception message
    */
   public UriFunctionException(int code, String message) {
-    super(code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -60,7 +64,7 @@ public class UriFunctionException
    *          the original exception cause
    */
   public UriFunctionException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -73,12 +77,6 @@ public class UriFunctionException
    *          the original exception cause
    */
   public UriFunctionException(int code, Throwable cause) {
-    super(code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
   }
-
-  @Override
-  public String getCodePrefix() {
-    return "FONS";
-  }
-
 }

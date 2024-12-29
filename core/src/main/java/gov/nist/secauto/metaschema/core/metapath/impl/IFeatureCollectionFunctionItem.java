@@ -5,10 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.ISequenceType;
+import gov.nist.secauto.metaschema.core.metapath.Occurrence;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
-import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.EnumSet;

@@ -8,9 +8,9 @@ package gov.nist.secauto.metaschema.core.model.constraint;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IDescribable;
 import gov.nist.secauto.metaschema.core.model.ISource;
@@ -91,7 +91,10 @@ public interface IConstraint extends IAttributable, IDescribable {
   Level DEFAULT_LEVEL = Level.ERROR;
 
   /**
-   * The compiled default target Metapath to use if no target is provided.
+   * <<<<<<< HEAD The compiled default target Metapath to use if no target is
+   * provided. ======= The default target Metapath to use if no target is
+   * provided. >>>>>>> a9987e63a (Cleaned up Metapath compilation in constraint
+   * implementations. Metapaths are now directly compiled at parse time.)
    */
   @NonNull
   IMetapathExpression DEFAULT_TARGET_METAPATH = IMetapathExpression.contextNode();

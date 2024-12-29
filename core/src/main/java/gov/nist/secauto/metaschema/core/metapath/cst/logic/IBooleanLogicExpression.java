@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.logic;
 
+import gov.nist.secauto.metaschema.core.metapath.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 
 public interface IBooleanLogicExpression extends IExpression {
   @Override

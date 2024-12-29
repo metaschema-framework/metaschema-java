@@ -5,13 +5,17 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Represents an error that occurred while performing mathematical operations.
  */
 public class ArithmeticFunctionException
-    extends AbstractCodedMetapathException {
+    extends FunctionMetapathError {
+  @NonNull
+  private static final String PREFIX = "FOAR";
   /**
    * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFOAR0001">err:FOAR0001</a>:
@@ -43,7 +47,7 @@ public class ArithmeticFunctionException
    *          the exception message
    */
   public ArithmeticFunctionException(int code, String message) {
-    super(code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -58,7 +62,7 @@ public class ArithmeticFunctionException
    *          the original exception cause
    */
   public ArithmeticFunctionException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -71,12 +75,6 @@ public class ArithmeticFunctionException
    *          the original exception cause
    */
   public ArithmeticFunctionException(int code, Throwable cause) {
-    super(code, cause);
+    super(IErrorCode.of(PREFIX, code), cause);
   }
-
-  @Override
-  public String getCodePrefix() {
-    return "FOAR";
-  }
-
 }

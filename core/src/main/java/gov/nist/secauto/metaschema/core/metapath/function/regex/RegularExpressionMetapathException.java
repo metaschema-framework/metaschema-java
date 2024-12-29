@@ -5,10 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.regex;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+@SuppressWarnings("PMD.DataClass")
 public class RegularExpressionMetapathException
-    extends AbstractCodedMetapathException {
+    extends DynamicMetapathError {
+  @NonNull
+  private static final String PREFIX = "MPRX";
   /**
    * the serial version UID.
    */
@@ -65,7 +71,7 @@ public class RegularExpressionMetapathException
    *          the original exception cause
    */
   public RegularExpressionMetapathException(int code, String message, Throwable cause) {
-    super(code, message, cause);
+    super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
   /**
@@ -78,7 +84,7 @@ public class RegularExpressionMetapathException
    *          the exception message
    */
   public RegularExpressionMetapathException(int code, String message) {
-    super(code, message);
+    super(IErrorCode.of(PREFIX, code), message);
   }
 
   /**
@@ -91,11 +97,6 @@ public class RegularExpressionMetapathException
    *          the original exception cause
    */
   public RegularExpressionMetapathException(int code, Throwable cause) {
-    super(code, cause);
-  }
-
-  @Override
-  public String getCodePrefix() {
-    return "MPRX";
+    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

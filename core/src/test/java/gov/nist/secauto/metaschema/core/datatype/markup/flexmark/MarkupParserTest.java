@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.ctc.wstx.stax.WstxInputFactory;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.datatype.markup.XmlMarkupParser;
 import gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.AstCollectingVisitor;
-import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
+import gov.nist.secauto.metaschema.core.datatype.markup.impl.XmlMarkupParser;
+import gov.nist.secauto.metaschema.core.model.xml.XmlEventUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.logging.log4j.LogManager;

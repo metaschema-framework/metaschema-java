@@ -10,14 +10,13 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -78,7 +77,7 @@ class ArrowExpressionTest
         MetapathException.class,
         () -> IMetapathExpression.compile("() => $ex:undefined()", staticContext)
             .evaluate(null, dynamicContext));
-    assertEquals(StaticMetapathException.NOT_DEFINED,
-        ObjectUtils.requireNonNull((AbstractCodedMetapathException) ex.getCause()).getCode());
+    assertEquals(StaticMetapathError.NOT_DEFINED,
+        ObjectUtils.requireNonNull((StaticMetapathError) ex.getCause()).getErrorCode().getCode());
   }
 }

@@ -12,7 +12,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.datatype.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;

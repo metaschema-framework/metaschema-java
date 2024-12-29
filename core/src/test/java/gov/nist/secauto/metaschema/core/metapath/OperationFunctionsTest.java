@@ -9,9 +9,9 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.decimal;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import gov.nist.secauto.metaschema.core.metapath.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

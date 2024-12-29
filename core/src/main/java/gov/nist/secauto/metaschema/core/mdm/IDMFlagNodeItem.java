@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.mdm;
 
-import gov.nist.secauto.metaschema.core.metapath.item.node.IAtomicValuedNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IAtomicValuedNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.node.IFlagNodeItem;
 
 /**
  * Represents a Metapath flag node item that is backed by a simple Metaschema

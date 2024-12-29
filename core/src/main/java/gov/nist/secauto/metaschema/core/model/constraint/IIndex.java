@@ -6,11 +6,11 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IItem;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
-import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultIndex;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -24,6 +24,10 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents an index that can support the {@link IIndexConstraint},
+ * {@link IIndexHasKeyConstraint}, and {@link IUniqueConstraint}.
+ */
 public interface IIndex {
 
   /**

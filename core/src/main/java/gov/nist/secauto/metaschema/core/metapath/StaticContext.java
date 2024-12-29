@@ -6,15 +6,15 @@
 package gov.nist.secauto.metaschema.core.metapath;
 
 import gov.nist.secauto.metaschema.core.datatype.DataTypeService;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionService;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
-import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunctionResolver;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.qname.NamespaceCache;
+import gov.nist.secauto.metaschema.core.qname.WellKnown;
+import gov.nist.secauto.metaschema.core.qname.impl.NamespaceCache;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -22,58 +22,20 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-// add support for default namespace
 /**
- * The implementation of a Metapath
+ * An implementation of the Metapath
  * <a href="https://www.w3.org/TR/xpath-31/#static_context">static context</a>.
  */
-// FIXME: refactor well-known into a new class
 public final class StaticContext {
-  @NonNull
-  private static final Map<String, String> WELL_KNOWN_NAMESPACES;
-  @NonNull
-  private static final Map<String, String> WELL_KNOWN_URI_TO_PREFIX;
-
-  static {
-    Map<String, String> knownNamespaces = new ConcurrentHashMap<>();
-    knownNamespaces.put(
-        MetapathConstants.PREFIX_METAPATH,
-        MetapathConstants.NS_METAPATH);
-    knownNamespaces.put(
-        MetapathConstants.PREFIX_METAPATH_FUNCTIONS,
-        MetapathConstants.NS_METAPATH_FUNCTIONS);
-    knownNamespaces.put(
-        MetapathConstants.PREFIX_METAPATH_FUNCTIONS_MATH,
-        MetapathConstants.NS_METAPATH_FUNCTIONS_MATH);
-    knownNamespaces.put(
-        MetapathConstants.PREFIX_METAPATH_FUNCTIONS_ARRAY,
-        MetapathConstants.NS_METAPATH_FUNCTIONS_ARRAY);
-    knownNamespaces.put(
-        MetapathConstants.PREFIX_METAPATH_FUNCTIONS_MAP,
-        MetapathConstants.NS_METAPATH_FUNCTIONS_MAP);
-    WELL_KNOWN_NAMESPACES = CollectionUtil.unmodifiableMap(knownNamespaces);
-
-    WELL_KNOWN_NAMESPACES.forEach(
-        (prefix, namespace) -> NamespaceCache.instance().indexOf(ObjectUtils.notNull(namespace)));
-
-    WELL_KNOWN_URI_TO_PREFIX = ObjectUtils.notNull(WELL_KNOWN_NAMESPACES.entrySet().stream()
-        .collect(Collectors.toUnmodifiableMap(
-            (Function<? super Entry<String, String>, ? extends String>) Entry::getValue,
-            Map.Entry::getKey,
-            (v1, v2) -> v1)));
-  }
 
   @Nullable
   private final URI baseUri;
@@ -86,44 +48,8 @@ public final class StaticContext {
   @Nullable
   private final String defaultFunctionNamespace;
   private final boolean useWildcardWhenNamespaceNotDefaulted;
-
-  /**
-   * Get the mapping of prefix to namespace URI for all well-known namespaces
-   * provided by default to the static context.
-   * <p>
-   * These namespaces can be overridden using the
-   * {@link Builder#namespace(String, URI)} method.
-   *
-   * @return the mapping of prefix to namespace URI for all well-known namespaces
-   */
-  @SuppressFBWarnings("MS_EXPOSE_REP")
-  public static Map<String, String> getWellKnownNamespacesMap() {
-    return WELL_KNOWN_NAMESPACES;
-  }
-
-  /**
-   * Get the mapping of namespace URIs to prefixes for all well-known namespaces
-   * provided by default to the static context.
-   *
-   * @return the mapping of namespace URI to prefix for all well-known namespaces
-   */
-  @SuppressFBWarnings("MS_EXPOSE_REP")
-  public static Map<String, String> getWellKnownURIToPrefixMap() {
-    return WELL_KNOWN_URI_TO_PREFIX;
-  }
-
-  /**
-   * Get the namespace prefix associated with the provided URI, if the URI is
-   * well-known.
-   *
-   * @param uri
-   *          the URI to get the prefix for
-   * @return the prefix or {@code null} if the provided URI is not well-known
-   */
-  @Nullable
-  public static String getWellKnownPrefixForUri(@NonNull String uri) {
-    return WELL_KNOWN_URI_TO_PREFIX.get(uri);
-  }
+  @NonNull
+  private final IFunctionResolver functionResolver;
 
   /**
    * Create a new static context instance using default values.
@@ -147,6 +73,7 @@ public final class StaticContext {
     this.defaultModelNamespace = builder.defaultModelNamespace;
     this.defaultFunctionNamespace = builder.defaultFunctionNamespace;
     this.useWildcardWhenNamespaceNotDefaulted = builder.useWildcardWhenNamespaceNotDefaulted;
+    this.functionResolver = builder.functionResolver;
   }
 
   /**
@@ -184,7 +111,7 @@ public final class StaticContext {
     String retval = knownPrefixToNamespace.get(prefix);
     if (retval == null) {
       // fall back to well-known namespaces
-      retval = WELL_KNOWN_NAMESPACES.get(prefix);
+      retval = WellKnown.getWellKnownUriForPrefix(prefix);
     }
     return retval;
   }
@@ -194,7 +121,7 @@ public final class StaticContext {
     String retval = knownNamespacesToPrefix.get(namespace);
     if (retval == null) {
       // fall back to well-known namespaces
-      retval = WELL_KNOWN_URI_TO_PREFIX.get(namespace);
+      retval = WellKnown.getWellKnownPrefixForUri(namespace);
     }
     return retval;
   }
@@ -271,9 +198,9 @@ public final class StaticContext {
    * @param name
    *          the name
    * @return the parsed qualified name
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-   *           if a non-empty prefix is provided
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+   *           a non-empty prefix is provided
    */
   @NonNull
   public IEnhancedQName parseAtomicTypeName(@NonNull String name) {
@@ -296,24 +223,24 @@ public final class StaticContext {
    * Lookup the atomic type with the provided name in the static context.
    * <p>
    * This method will first attempt to expand the namespace prefix for a lexical
-   * QName. A {@link StaticMetapathException} with the code
-   * {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE} if the prefix is not
-   * know to the static context.
+   * QName. A {@link StaticMetapathError} with the code
+   * {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if the prefix is not know
+   * to the static context.
    * <p>
    * Once the qualified name has been produced, the atomic type will be retrieved
    * from the available atomic types. If the atomic type was not found, a
-   * {@link StaticMetapathException} with the code
-   * {@link StaticMetapathException#UNKNOWN_TYPE} will be thrown. Otherwise, the
-   * type information is returned for the matching atomic type.
+   * {@link StaticMetapathError} with the code
+   * {@link StaticMetapathError#UNKNOWN_TYPE} will be thrown. Otherwise, the type
+   * information is returned for the matching atomic type.
    *
    * @param name
    *          the namespace qualified or lexical name of the data type.
    * @return the data type information
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-   *           if the lexical name was not able to be expanded or the code
-   *           {@link StaticMetapathException#NO_FUNCTION_MATCH} if a matching
-   *           type was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+   *           the lexical name was not able to be expanded or the code
+   *           {@link StaticMetapathError#NO_FUNCTION_MATCH} if a matching type
+   *           was not found
    */
   @NonNull
   public IAtomicOrUnionType<?> lookupAtomicType(@NonNull String name) {
@@ -327,16 +254,16 @@ public final class StaticContext {
    * @param qname
    *          the qualified name
    * @return the type
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#UNKNOWN_TYPE} if the
-   *           type was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#UNKNOWN_TYPE} if the type
+   *           was not found
    */
   @NonNull
   public static IAtomicOrUnionType<?> lookupAtomicType(@NonNull IEnhancedQName qname) {
     IAtomicOrUnionType<?> retval = DataTypeService.instance().getAtomicTypeByQNameIndex(qname.getIndexPosition());
     if (retval == null) {
-      throw new StaticMetapathException(
-          StaticMetapathException.UNKNOWN_TYPE,
+      throw new StaticMetapathError(
+          StaticMetapathError.UNKNOWN_TYPE,
           String.format("The atomic type named '%s' was not found.", qname));
     }
     return retval;
@@ -348,16 +275,16 @@ public final class StaticContext {
    * @param clazz
    *          the item class associated with the atomic type
    * @return the type
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#UNKNOWN_TYPE} if the
-   *           type was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#UNKNOWN_TYPE} if the type
+   *           was not found
    */
   @NonNull
   public static <T extends IAnyAtomicItem> IAtomicOrUnionType<T> lookupAtomicType(Class<T> clazz) {
     IAtomicOrUnionType<T> retval = DataTypeService.instance().getAtomicTypeByItemClass(clazz);
     if (retval == null) {
-      throw new StaticMetapathException(
-          StaticMetapathException.UNKNOWN_TYPE,
+      throw new StaticMetapathError(
+          StaticMetapathError.UNKNOWN_TYPE,
           String.format("The atomic type for item class '%s' was not found.", clazz.getName()));
     }
     return retval;
@@ -369,16 +296,16 @@ public final class StaticContext {
    * @param clazz
    *          the item class associated with the atomic type
    * @return the type
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#UNKNOWN_TYPE} if the
-   *           type was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#UNKNOWN_TYPE} if the type
+   *           was not found
    */
   @NonNull
   public static IItemType lookupItemType(Class<? extends IItem> clazz) {
     IItemType retval = DataTypeService.instance().getItemTypeByItemClass(clazz);
     if (retval == null) {
-      throw new StaticMetapathException(
-          StaticMetapathException.UNKNOWN_TYPE,
+      throw new StaticMetapathError(
+          StaticMetapathError.UNKNOWN_TYPE,
           String.format("The item type for item class '%s' was not found.", clazz.getName()));
     }
     return retval;
@@ -408,14 +335,14 @@ public final class StaticContext {
    *
    * @param prefix
    *          the lexical prefix to check
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-   *           if a non-empty prefix is provided
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+   *           a non-empty prefix is provided
    */
   private static void checkForUnknownPrefix(@NonNull String prefix) {
     if (!prefix.isEmpty()) {
-      throw new StaticMetapathException(
-          StaticMetapathException.PREFIX_NOT_EXPANDABLE,
+      throw new StaticMetapathError(
+          StaticMetapathError.PREFIX_NOT_EXPANDABLE,
           String.format("The namespace prefix '%s' is not expandable.",
               prefix));
     }
@@ -425,25 +352,25 @@ public final class StaticContext {
    * Lookup a known Metapath function based on the function's name and arity.
    * <p>
    * This method will first attempt to expand the namespace prefix for a lexical
-   * QName. A {@link StaticMetapathException} with the code
-   * {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE} if the prefix is not
-   * know to the static context.
+   * QName. A {@link StaticMetapathError} with the code
+   * {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if the prefix is not know
+   * to the static context.
    * <p>
    * Once the qualified name has been produced, the function will be retrieved
    * from the available functions. If the function was not found, a
-   * {@link StaticMetapathException} with the code
-   * {@link StaticMetapathException#UNKNOWN_TYPE} will be thrown. Otherwise, the
-   * data type information is returned for the matching data type.
+   * {@link StaticMetapathError} with the code
+   * {@link StaticMetapathError#UNKNOWN_TYPE} will be thrown. Otherwise, the data
+   * type information is returned for the matching data type.
    *
    * @param name
    *          the qualified or lexical name of the function
    * @param arity
    *          the number of arguments
    * @return the type
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-   *           if the lexical name was not able to be expanded or the code
-   *           {@link StaticMetapathException#NO_FUNCTION_MATCH} if a matching
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+   *           the lexical name was not able to be expanded or the code
+   *           {@link StaticMetapathError#NO_FUNCTION_MATCH} if a matching
    *           function was not found
    */
   @NonNull
@@ -460,13 +387,13 @@ public final class StaticContext {
    * @param arity
    *          the number of arguments
    * @return the type
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#NO_FUNCTION_MATCH} if
-   *           a matching function was not found
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#NO_FUNCTION_MATCH} if a
+   *           matching function was not found
    */
   @NonNull
-  public static IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
-    return FunctionService.getInstance().getFunction(
+  public IFunction lookupFunction(@NonNull IEnhancedQName qname, int arity) {
+    return functionResolver.getFunction(
         Objects.requireNonNull(qname, "name"),
         arity);
   }
@@ -491,9 +418,9 @@ public final class StaticContext {
    * @param name
    *          the name
    * @return the parsed qualified name
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-   *           if a non-empty prefix is provided
+   * @throws StaticMetapathError
+   *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
+   *           a non-empty prefix is provided
    */
   @NonNull
   public IEnhancedQName parseFlagName(@NonNull String name) {
@@ -627,6 +554,8 @@ public final class StaticContext {
     private String defaultModelNamespace;
     @Nullable
     private String defaultFunctionNamespace = MetapathConstants.NS_METAPATH_FUNCTIONS;
+    @NonNull
+    private IFunctionResolver functionResolver = FunctionService.instance();
 
     private Builder() {
       // avoid direct construction
@@ -656,7 +585,7 @@ public final class StaticContext {
      * {@link StaticContext#lookupNamespaceForPrefix(String)} method.
      * <p>
      * Well-known namespace bindings are used by default, which can be retrieved
-     * using the {@link StaticContext#getWellKnownNamespacesMap()} method.
+     * using the {@link WellKnown#getWellKnownUriForPrefix(String)} method.
      *
      * @param prefix
      *          the prefix to associate with the namespace, which may be
@@ -664,7 +593,7 @@ public final class StaticContext {
      *          the namespace URI
      * @return this builder
      * @see StaticContext#lookupNamespaceForPrefix(String)
-     * @see StaticContext#getWellKnownNamespacesMap()
+     * @see WellKnown#getWellKnownUriForPrefix(String)
      */
     @NonNull
     public Builder namespace(@NonNull String prefix, @NonNull URI uri) {
@@ -682,7 +611,7 @@ public final class StaticContext {
      * @throws IllegalArgumentException
      *           if the provided prefix or URI is invalid
      * @see StaticContext#lookupNamespaceForPrefix(String)
-     * @see StaticContext#getWellKnownNamespacesMap()
+     * @see WellKnown#getWellKnownUriForPrefix(String)
      */
     @NonNull
     public Builder namespace(@NonNull String prefix, @NonNull String uri) {
@@ -775,8 +704,25 @@ public final class StaticContext {
      *          {@code true} if on or {@code false} otherwise
      * @return this builder
      */
+    @NonNull
     public Builder useWildcardWhenNamespaceNotDefaulted(boolean value) {
       this.useWildcardWhenNamespaceNotDefaulted = value;
+      return this;
+    }
+
+    /**
+     * Set the function resolver used to lookup function implementations.
+     * <p>
+     * By default, the {@link FunctionService} is used to load function
+     * implementations using the service provider interface.
+     *
+     * @param resolver
+     *          the resolver to use instead of the default resolver
+     * @return this builder
+     */
+    @NonNull
+    public Builder functionResolver(@NonNull IFunctionResolver resolver) {
+      this.functionResolver = resolver;
       return this;
     }
 
@@ -789,24 +735,5 @@ public final class StaticContext {
     public StaticContext build() {
       return new StaticContext(this);
     }
-  }
-
-  /**
-   * Provides a callback for resolving namespace prefixes.
-   */
-  @FunctionalInterface
-  public interface EQNameResolver {
-    /**
-     * Get the URI string for the provided namespace prefix.
-     *
-     * @param name
-     *          the name to resolve
-     * @return the URI string or {@code null} if the prefix is unbound
-     * @throws StaticMetapathException
-     *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
-     *           if a non-empty prefix is provided
-     */
-    @NonNull
-    IEnhancedQName resolve(@NonNull String name);
   }
 }

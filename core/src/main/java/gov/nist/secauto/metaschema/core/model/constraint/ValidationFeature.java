@@ -9,6 +9,13 @@ import gov.nist.secauto.metaschema.core.configuration.AbstractConfigurationFeatu
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A set of configurable features that adjust Metaschema constraint validation
+ * behavior.
+ *
+ * @param <V>
+ *          the Java type of the configuration value
+ */
 @SuppressWarnings("PMD.DataClass") // not a data class
 public final class ValidationFeature<V>
     extends AbstractConfigurationFeature<V> {

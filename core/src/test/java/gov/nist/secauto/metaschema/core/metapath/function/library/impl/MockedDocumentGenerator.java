@@ -9,7 +9,7 @@ import gov.nist.secauto.metaschema.core.mdm.IDMAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.mdm.IDMDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.mdm.IDMFieldNodeItem;
 import gov.nist.secauto.metaschema.core.mdm.IDMRootAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
