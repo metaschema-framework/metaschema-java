@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 import static com.github.seregamorph.hamcrest.MoreMatchers.where;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.bool;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.qname;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -26,6 +27,7 @@ import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.FailingErrorListener;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
@@ -36,12 +38,9 @@ import gov.nist.secauto.metaschema.core.metapath.cst.logic.GeneralComparison;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.If;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.ValueComparison;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
-import gov.nist.secauto.metaschema.core.metapath.function.DefaultFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.function.library.FnString;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUuidItem;
@@ -266,27 +265,47 @@ class BuildCstVisitorTest {
 
   static Stream<Arguments> testNamedFunctionRef() {
     return Stream.of(
-        Arguments.of("fn:string#1", "fn:string", null),
-        Arguments.of("fn:string#4", null, "MPST0017: unable to find function with name 'fn:string' having arity '4'"));
+        Arguments.of("fn:string#1", qname(MetapathConstants.NS_METAPATH_FUNCTIONS, "string"), 1));
   }
 
   @ParameterizedTest
   @MethodSource
-  void testNamedFunctionRef(@NonNull String metapath, @NonNull String expectedQname,
-      @NonNull String expectedExceptionMessage) {
+  void testNamedFunctionRef(
+      @NonNull String metapath,
+      @NonNull IEnhancedQName expectedQname,
+      int expectedArity) {
     StaticContext staticContext = StaticContext.builder().build();
     DynamicContext dynamicContext = new DynamicContext(staticContext);
 
-    if (expectedQname != null) {
-      IFunction result = IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
-          IMetapathExpression.ResultType.ITEM, dynamicContext);
-      assertEquals(expectedQname, result.getQName().toString());
-    } else if (expectedExceptionMessage != null) {
-      MetapathException thrown = assertThrows(MetapathException.class,
-          () -> IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
-              IMetapathExpression.ResultType.ITEM, dynamicContext));
-      assertTrue(thrown.getMessage().contains(expectedExceptionMessage));
-    }
+    IFunction result = IMetapathExpression.compile(metapath, staticContext)
+        .evaluateAs(null, IMetapathExpression.ResultType.ITEM, dynamicContext);
+    assertAll(
+        () -> assertEquals(expectedQname, result == null ? null : result.getQName()),
+        () -> assertEquals(expectedArity, result == null ? null : result.arity()));
+  }
+
+  static Stream<Arguments> testNamedFunctionRefNotFound() {
+    return Stream.of(
+        Arguments.of("fn:string#4"));
+  }
+
+  @ParameterizedTest
+  @MethodSource("testNamedFunctionRefNotFound")
+  void testNamedFunctionRefNotFound(
+      @NonNull String metapath) {
+    StaticContext staticContext = StaticContext.builder().build();
+    DynamicContext dynamicContext = new DynamicContext(staticContext);
+
+    MetapathException thrown = assertThrows(MetapathException.class,
+        () -> IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
+            IMetapathExpression.ResultType.ITEM, dynamicContext));
+    Throwable cause = thrown.getCause();
+
+    assertEquals(
+        StaticMetapathException.NO_FUNCTION_MATCH,
+        cause instanceof StaticMetapathException
+            ? ((StaticMetapathException) cause).getCode()
+            : null);
   }
 
   static Stream<Arguments> testComparison() {

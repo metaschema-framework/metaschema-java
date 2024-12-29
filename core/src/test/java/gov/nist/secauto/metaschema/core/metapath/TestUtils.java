@@ -22,6 +22,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationI
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -265,6 +266,11 @@ public final class TestUtils {
   @NonNull
   public static IDayTimeDurationItem dayTimeDuration(@NonNull String value) {
     return IDayTimeDurationItem.valueOf(value);
+  }
+
+  @NonNull
+  public static IEnhancedQName qname(@NonNull String namespace, @NonNull String localname) {
+    return IEnhancedQName.of(namespace, localname);
   }
 
   private TestUtils() {

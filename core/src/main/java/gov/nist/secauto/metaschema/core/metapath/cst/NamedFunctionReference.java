@@ -22,14 +22,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class NamedFunctionReference implements IExpression {
   @NonNull
-  private IEnhancedQName name;
+  private final IEnhancedQName name;
   private final int arity;
 
   /**
    * Construct a new Metapath variable reference CST node.
    *
    * @param name
-   *          the variable name
+   *          the function name
+   * @param arity
+   *          the number of function arguments
    */
   public NamedFunctionReference(@NonNull IEnhancedQName name, int arity) {
     this.name = name;
@@ -46,6 +48,11 @@ public class NamedFunctionReference implements IExpression {
     return name;
   }
 
+  /**
+   * Get the expected number of function arguments for this lookup.
+   *
+   * @return the number of arguments
+   */
   public int getArity() {
     return arity;
   }
