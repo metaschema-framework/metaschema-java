@@ -26,6 +26,9 @@ public class ArithmeticFunctionException
    */
   public static final int OVERFLOW_UNDERFLOW_ERROR = 2;
 
+  /**
+   * Error message associated with {@link #DIVISION_BY_ZERO}.
+   */
   public static final String DIVISION_BY_ZERO_MESSAGE = "Division by zero";
 
   /**

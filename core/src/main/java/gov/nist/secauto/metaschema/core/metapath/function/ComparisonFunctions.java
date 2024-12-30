@@ -27,6 +27,13 @@ import java.util.Locale;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A collection of comparison functions supporting value an general comparisons.
+ * <p>
+ * Based on the XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-comparisons">comparison
+ * expressions</a> syntax.
+ */
 @SuppressWarnings({ "PMD.GodClass", "PMD.CyclomaticComplexity" })
 public final class ComparisonFunctions {
   /**
