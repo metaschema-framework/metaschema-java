@@ -29,10 +29,36 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-quantified-expressions">quanified
+ * expression</a>.
+ */
 public class Quantified
     extends AbstractExpression {
+  /**
+   * The quantified expression qualifier.
+   */
   public enum Quantifier {
+    /**
+     * The quantified expression is {@code true} if at least one evaluation of the
+     * test expression has the
+     * <a href="https://www.w3.org/TR/xpath-31/#dt-ebv">effective boolean value</a>
+     * {@code true}; otherwise the quantified expression is {@code false}.
+     * <p>
+     * This rule implies that, if the in-clauses generate zero binding tuples, the
+     * value of the quantified expression is {@code false}.
+     */
     SOME,
+    /**
+     * the quantified expression is {@code true} if every evaluation of the test
+     * expression has the <a href="https://www.w3.org/TR/xpath-31/#dt-ebv">effective
+     * boolean value</a> {@code true}; otherwise the quantified expression is
+     * {@code false}.
+     * <p>
+     * This rule implies that, if the in-clauses generate zero binding tuples, the
+     * value of the quantified expression is {@code true}.
+     */
     EVERY;
   }
 

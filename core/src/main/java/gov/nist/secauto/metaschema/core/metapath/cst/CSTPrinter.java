@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.items.MapConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.PostfixLookup;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.Quantified;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.Range;
+import gov.nist.secauto.metaschema.core.metapath.cst.items.SequenceExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.SimpleMap;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.StringConcat;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.StringLiteral;
@@ -24,7 +25,6 @@ import gov.nist.secauto.metaschema.core.metapath.cst.logic.And;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.Except;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.GeneralComparison;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.If;
-import gov.nist.secauto.metaschema.core.metapath.cst.logic.Negate;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.Or;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.PredicateExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.ValueComparison;
@@ -33,6 +33,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Division;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.IntegerDivision;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Modulo;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Multiplication;
+import gov.nist.secauto.metaschema.core.metapath.cst.math.Negate;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
@@ -226,7 +227,7 @@ public final class CSTPrinter {
     }
 
     @Override
-    public String visitMetapath(Metapath expr, State context) {
+    public String visitMetapath(SequenceExpression expr, State context) {
       return appendNode(expr, super.visitMetapath(expr, context), context);
     }
 

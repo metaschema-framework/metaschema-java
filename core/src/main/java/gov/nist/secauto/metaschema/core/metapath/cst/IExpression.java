@@ -13,6 +13,9 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * The common interface of all Metapath expression nodes.
+ */
 public interface IExpression {
   /**
    * Retrieve the child expressions associated with this expression.

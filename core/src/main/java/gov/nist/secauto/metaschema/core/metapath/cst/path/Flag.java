@@ -5,10 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -43,41 +40,15 @@ public class Flag // NOPMD - intentional name
   }
 
   @Override
-  public ISequence<? extends IFlagNodeItem> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> focus) {
-    return ISequence.of(ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
-        .flatMap(item -> {
-          assert item != null;
-          return match(item);
-        })));
+  protected Stream<? extends IFlagNodeItem> getFocusedChildren(INodeItem focusedItem) {
+    return focusedItem.flags();
   }
 
-  /**
-   * Get a stream of matching child node items for the provided {@code context}.
-   *
-   * @param focusedItem
-   *          the node item to match child items of
-   * @return the stream of matching node items
-   */
-  @SuppressWarnings("null")
-  @NonNull
-  protected Stream<? extends IFlagNodeItem> match(@NonNull INodeItem focusedItem) {
-    Stream<? extends IFlagNodeItem> retval;
-
-    INodeTestExpression test = getTest();
-    if (test instanceof NameNodeTest) {
-      IEnhancedQName name = ((NameNodeTest) getTest()).getName();
-
-      IFlagNodeItem item = focusedItem.getFlagByName(name);
-      retval = item == null ? Stream.empty() : Stream.of(item);
-    } else if (test instanceof WildcardNodeTest) {
-      // match all items
-      retval = ((WildcardNodeTest) test).matchStream(focusedItem.flags());
-    } else {
-      throw new UnsupportedOperationException(test.getClass().getName());
-    }
-    return retval;
+  @Override
+  protected Stream<? extends IFlagNodeItem> getFocusedChildrenWithName(
+      INodeItem focusedItem,
+      IEnhancedQName name) {
+    IFlagNodeItem item = focusedItem.getFlagByName(name);
+    return ObjectUtils.notNull(item == null ? Stream.empty() : Stream.of(item));
   }
 }

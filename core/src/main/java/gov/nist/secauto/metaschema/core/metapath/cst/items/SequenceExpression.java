@@ -3,9 +3,13 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst;
+package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractNAryExpression;
+import gov.nist.secauto.metaschema.core.metapath.cst.ExpressionUtils;
+import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -15,7 +19,12 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class Metapath
+/**
+ * An implementation of the XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#doc-xpath31-Expr">sequence
+ * expression</a>.
+ */
+public class SequenceExpression
     extends AbstractNAryExpression {
 
   @NonNull
@@ -27,7 +36,7 @@ public class Metapath
    * @param expressions
    *          the expressions to evaluate
    */
-  public Metapath(@NonNull List<IExpression> expressions) {
+  public SequenceExpression(@NonNull List<IExpression> expressions) {
     super(expressions);
     this.staticResultType = ExpressionUtils.analyzeStaticResultType(IItem.class, expressions);
   }

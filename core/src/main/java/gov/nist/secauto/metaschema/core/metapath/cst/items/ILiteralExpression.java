@@ -13,6 +13,16 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A common interface for all Metapath
+ * <a href="https://www.w3.org/TR/xpath-31/#id-literals">literal value
+ * expressions</a>.
+ *
+ * @param <RESULT_TYPE>
+ *          the Java type of the literal result
+ * @param <VALUE>
+ *          the Java type of the wrapped literal values
+ */
 public interface ILiteralExpression<RESULT_TYPE extends IAnyAtomicItem, VALUE> extends IExpression {
   /**
    * Get the literal value.

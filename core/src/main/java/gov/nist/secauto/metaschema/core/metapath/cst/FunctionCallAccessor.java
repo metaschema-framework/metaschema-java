@@ -18,6 +18,11 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An implementation of the XPATH 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-eval-function-call">function call
+ * accessor</a>.
+ */
 public class FunctionCallAccessor
     extends AbstractExpression {
   @NonNull
@@ -72,7 +77,7 @@ public class FunctionCallAccessor
     ISequence<?> target = getBase().accept(dynamicContext, focus);
     IItem collection = target.getFirstItem(true);
 
-    if (collection == null || !(collection instanceof IFunction)) {
+    if (!(collection instanceof IFunction)) {
       throw new InvalidTypeMetapathException(collection, "The base expression did not evaluate to a function.");
     }
 

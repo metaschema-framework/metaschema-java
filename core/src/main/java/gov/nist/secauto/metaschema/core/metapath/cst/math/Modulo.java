@@ -16,6 +16,11 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * An XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
+ * expression</a> supporting modulo.
+ */
 public class Modulo
     extends AbstractArithmeticExpression<INumericItem> {
 

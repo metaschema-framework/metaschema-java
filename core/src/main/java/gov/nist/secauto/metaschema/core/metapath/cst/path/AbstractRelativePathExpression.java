@@ -14,13 +14,11 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public abstract class AbstractRelativePathExpression
-    extends AbstractPathExpression<INodeItem> {
+    extends AbstractSearchPathExpression {
   @NonNull
   private final IExpression left;
   @NonNull
   private final IExpression right;
-  @NonNull
-  private final Class<? extends INodeItem> staticResultType;
 
   /**
    * Construct a new relative path expression of "left/right".
@@ -32,9 +30,9 @@ public abstract class AbstractRelativePathExpression
    */
   @SuppressWarnings("null")
   public AbstractRelativePathExpression(@NonNull IExpression left, @NonNull IExpression right) {
+    super(ExpressionUtils.analyzeStaticResultType(INodeItem.class, List.of(left, right)));
     this.left = left;
     this.right = right;
-    this.staticResultType = ExpressionUtils.analyzeStaticResultType(getBaseResultType(), List.of(left, right));
   }
 
   /**
@@ -61,16 +59,5 @@ public abstract class AbstractRelativePathExpression
   @Override
   public List<? extends IExpression> getChildren() {
     return List.of(left, right);
-  }
-
-  @Override
-  public final @NonNull
-  Class<INodeItem> getBaseResultType() {
-    return INodeItem.class;
-  }
-
-  @Override
-  public Class<? extends INodeItem> getStaticResultType() {
-    return staticResultType;
   }
 }

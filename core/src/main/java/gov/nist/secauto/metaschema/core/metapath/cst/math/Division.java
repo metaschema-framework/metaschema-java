@@ -18,6 +18,11 @@ import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathExcepti
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
+ * expression</a> supporting division.
+ */
 public class Division
     extends AbstractBasicArithmeticExpression {
 

@@ -17,6 +17,14 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-paren-expressions">empty
+ * parenthesized expression</a>.
+ *
+ * @param <RESULT_TYPE>
+ *          the Java type of the literal result
+ */
 public final class EmptySequence<RESULT_TYPE extends IItem>
     extends AbstractExpression {
   @NonNull

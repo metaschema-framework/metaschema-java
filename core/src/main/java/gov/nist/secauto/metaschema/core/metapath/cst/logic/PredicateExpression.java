@@ -26,6 +26,15 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-filter-expression">filter
+ * expression</a> or a
+ * <a href="https://www.w3.org/TR/xpath-31/#id-predicate">predicate
+ * expression</a> in the case where the previous expression is an
+ * <a href="https://www.w3.org/TR/xpath-31/#doc-xpath31-AxisStep">axis step</a>
+ * expression.
+ */
 public class PredicateExpression
     extends AbstractExpression {
   @NonNull

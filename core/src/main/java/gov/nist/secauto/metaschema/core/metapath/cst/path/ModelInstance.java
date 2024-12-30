@@ -5,16 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -45,44 +41,14 @@ public class ModelInstance
   }
 
   @Override
-  public ISequence<? extends IModelNodeItem<?, ?>> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> focus) {
-    return ISequence.of(ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
-        .flatMap(item -> {
-          assert item != null;
-          return match(dynamicContext, item);
-        })));
+  protected Stream<? extends IModelNodeItem<?, ?>> getFocusedChildren(INodeItem focusedItem) {
+    return focusedItem.modelItems();
   }
 
-  /**
-   * Get a stream of matching child node items for the provided {@code context}.
-   *
-   * @param dynamicContext
-   *          the evaluation context
-   * @param focusedItem
-   *          the node item to match child items of
-   * @return the stream of matching node items
-   */
-  @SuppressWarnings("null")
-  @NonNull
-  protected Stream<? extends IModelNodeItem<?, ?>> match(
-      @NonNull DynamicContext dynamicContext,
-      @NonNull INodeItem focusedItem) {
-    Stream<? extends IModelNodeItem<?, ?>> retval;
-
-    INodeTestExpression test = getTest();
-    if (test instanceof NameNodeTest) {
-      IEnhancedQName name = ((NameNodeTest) getTest()).getName();
-      List<? extends IModelNodeItem<?, ?>> items = focusedItem.getModelItemsByName(name);
-      retval = items.stream();
-    } else if (test instanceof WildcardNodeTest) {
-      // match all items
-      retval = ((WildcardNodeTest) test).matchStream(focusedItem.modelItems());
-    } else {
-      throw new UnsupportedOperationException(test.getClass().getName());
-    }
-    return retval;
+  @Override
+  protected Stream<? extends IModelNodeItem<?, ?>> getFocusedChildrenWithName(
+      INodeItem focusedItem,
+      IEnhancedQName name) {
+    return ObjectUtils.notNull(focusedItem.getModelItemsByName(name).stream());
   }
 }

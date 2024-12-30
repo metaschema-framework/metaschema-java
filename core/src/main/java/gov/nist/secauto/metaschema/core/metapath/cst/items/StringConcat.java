@@ -18,6 +18,11 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-string-concat-expr">string
+ * concatenation expression</a>.
+ */
 public class StringConcat
     extends AbstractNAryExpression {
 

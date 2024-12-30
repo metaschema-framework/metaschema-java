@@ -14,11 +14,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public abstract class AbstractRootPathExpression
-    extends AbstractPathExpression<INodeItem> {
+    extends AbstractSearchPathExpression {
   @NonNull
   private final IExpression expression;
-  @NonNull
-  private final Class<? extends INodeItem> staticResultType;
 
   /**
    * Construct a new relative path expression of "/expression".
@@ -28,8 +26,8 @@ public abstract class AbstractRootPathExpression
    */
   @SuppressWarnings("null")
   public AbstractRootPathExpression(@NonNull IExpression expression) {
+    super(ExpressionUtils.analyzeStaticResultType(INodeItem.class, List.of(expression)));
     this.expression = expression;
-    this.staticResultType = ExpressionUtils.analyzeStaticResultType(INodeItem.class, List.of(expression));
   }
 
   /**
@@ -40,16 +38,6 @@ public abstract class AbstractRootPathExpression
   @NonNull
   public IExpression getExpression() {
     return expression;
-  }
-
-  @Override
-  public Class<INodeItem> getBaseResultType() {
-    return INodeItem.class;
-  }
-
-  @Override
-  public Class<? extends INodeItem> getStaticResultType() {
-    return staticResultType;
   }
 
   @SuppressWarnings("null")
