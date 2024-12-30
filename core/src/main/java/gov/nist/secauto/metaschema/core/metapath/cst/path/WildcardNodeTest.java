@@ -57,27 +57,16 @@ public class WildcardNodeTest implements INodeTestExpression {
   }
 
   /**
-   * Check the provided items to determine if each item matches the wildcard. All
-   * items that match are returned.
+   * {@inheritDoc}
    * <p>
-   * This is an intermediate stream operation.
-   *
-   * @param <T>
-   *          the item Java type
-   * @param items
-   *          the items to check if they match
-   * @return the matching items
+   * If no matcher is provided, this method is a no-op.
    */
+  @Override
   @NonNull
-  public <T extends INodeItem> Stream<T> matchStream(@SuppressWarnings("resource") @NonNull Stream<T> items) {
+  public <T extends INodeItem> Stream<T> filterStream(@NonNull Stream<T> items) {
     Stream<T> nodes = items;
     if (matcher != null) {
-      Predicate<IDefinitionNodeItem<?, ?>> test = matcher;
-      nodes = ObjectUtils.notNull(nodes.filter(item -> {
-        assert matcher != null;
-        return !(item instanceof IDefinitionNodeItem) ||
-            test.test((IDefinitionNodeItem<?, ?>) item);
-      }));
+      nodes = INodeTestExpression.super.filterStream(nodes);
     }
     return nodes;
   }
@@ -89,7 +78,8 @@ public class WildcardNodeTest implements INodeTestExpression {
    *          the item to check for a match
    * @return {@code true} if the item matches or {@code false} otherwise
    */
-  private boolean match(@NonNull INodeItem item) {
+  @Override
+  public boolean match(@NonNull INodeItem item) {
     assert matcher != null;
     Predicate<IDefinitionNodeItem<?, ?>> test = matcher;
     return !(item instanceof IDefinitionNodeItem) ||
@@ -101,5 +91,4 @@ public class WildcardNodeTest implements INodeTestExpression {
   public String toASTString() {
     return String.format("%s[%s]", getClass().getName(), matcher == null ? "*:*" : matcher.toString());
   }
-
 }

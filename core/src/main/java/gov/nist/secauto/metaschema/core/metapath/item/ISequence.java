@@ -18,7 +18,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -50,18 +49,41 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
     return AbstractSequence.empty();
   }
 
-  @Override
-  default Iterator<ITEM> iterator() {
-    return getValue().listIterator();
-  }
-
   /**
    * Get the items in this sequence as a {@link List}.
    *
    * @return a list containing all the items of the sequence
    */
+  @Deprecated(since = "2.2.0", forRemoval = true)
   @NonNull
   List<ITEM> getValue();
+
+  /**
+   * Ensure the sequence is able to be iterated over multiple times.
+   * <p>
+   * This method can be used to ensure that the sequence can be streamed or
+   * iterated over multiple times. Implementations should make sure that when this
+   * method is called, the resulting stream is supported by an underlying list.
+   *
+   * @return a sequence with the same contents, which may be the same sequence
+   */
+  @NonNull
+  default ISequence<ITEM> reusable() {
+    return this;
+  }
+
+  /**
+   * Get a stream guaranteed to be backed by a list.
+   * <p>
+   * This call ensures that the sequence is backed by a List and not a stream, so
+   * the underlying collection can be reused.
+   *
+   * @return the stream
+   */
+  @NonNull
+  default Stream<ITEM> safeStream() {
+    return ObjectUtils.notNull(reusable().stream());
+  }
 
   /**
    * Get the items in this sequence as a {@link Stream}.
@@ -185,25 +207,17 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
     return retval;
   }
 
-  /**
-   * Get a stream guaranteed to be backed by a list.
-   * <p>
-   * This call ensures that the sequence is backed by a List and not a stream, so
-   * the underlying collection can be reused.
-   *
-   * @return the stream
-   */
-  @NonNull
-  default Stream<ITEM> safeStream() {
-    return ObjectUtils.notNull(getValue().stream());
-  }
-
   @Override
   default Stream<? extends IItem> flatten() {
     // TODO: Is a safe stream needed here?
     return safeStream();
   }
 
+  /**
+   * Get this sequence.
+   *
+   * @return this sequence
+   */
   @Override
   default ISequence<ITEM> toSequence() {
     return this;

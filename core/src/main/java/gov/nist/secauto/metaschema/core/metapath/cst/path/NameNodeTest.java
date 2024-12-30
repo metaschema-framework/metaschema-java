@@ -55,13 +55,13 @@ public class NameNodeTest
 
   @Override
   public ISequence<? extends INodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
-        .filter(this::match)));
+    return ISequence.of(filterStream(ObjectUtils.notNull(focus.stream()
+        .map(ItemUtils::checkItemIsNodeItemForStep))));
   }
 
+  @Override
   @SuppressWarnings("PMD.UnusedPrivateMethod")
-  private boolean match(INodeItem item) {
+  public boolean match(INodeItem item) {
     return item instanceof IDefinitionNodeItem
         && getName().equals(((IDefinitionNodeItem<?, ?>) item).getQName());
   }

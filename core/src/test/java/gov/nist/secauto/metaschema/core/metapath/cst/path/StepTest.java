@@ -313,7 +313,7 @@ class StepTest
     ISequence<?> actual = IMetapathExpression.compile("flag::*", dynamicContext.getStaticContext())
         .evaluate(nodeB, dynamicContext);
 
-    Assertions.assertThat(actual.getValue())
+    Assertions.assertThat(actual)
         .hasOnlyElementsOfType(IFlagNodeItem.class)
         .map(flag -> ObjectUtils.requireNonNull(flag).toAtomicItem().asString())
         .containsExactly("flag-2-b-v1", "flag-2-b-v2", "flag-2-b-v3");
@@ -332,7 +332,7 @@ class StepTest
         = IMetapathExpression.compile("ancestor::*", dynamicContext.getStaticContext())
             .evaluate(nodeB, dynamicContext);
 
-    Assertions.assertThat(actual.getValue()).isEqualTo(List.of(
+    Assertions.assertThat(actual).isEqualTo(List.of(
         document,
         document.getRootAssemblyNodeItem(),
         document.getRootAssemblyNodeItem()
@@ -353,7 +353,7 @@ class StepTest
         = IMetapathExpression.compile("ancestor-or-self::*", dynamicContext.getStaticContext())
             .evaluate(nodeB, dynamicContext);
 
-    Assertions.assertThat(actual.getValue()).isEqualTo(List.of(
+    Assertions.assertThat(actual).isEqualTo(List.of(
         document,
         document.getRootAssemblyNodeItem(),
         document.getRootAssemblyNodeItem()
@@ -376,7 +376,7 @@ class StepTest
         = IMetapathExpression.compile("child::*", dynamicContext.getStaticContext())
             .evaluate(nodeB, dynamicContext);
 
-    Assertions.assertThat(actual.getValue()).isEqualTo(
+    Assertions.assertThat(actual).isEqualTo(
         List.of(
             ObjectUtils.requireNonNull(nodeB.getModelItemsByName(IEnhancedQName.of(NS, "x"))).iterator().next(),
             ObjectUtils.requireNonNull(nodeB.getModelItemsByName(IEnhancedQName.of(NS, "y"))).iterator().next(),
@@ -404,7 +404,7 @@ class StepTest
     IModelNodeItem<?, ?> nodeC
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(IEnhancedQName.of(NS, "c"))).iterator().next();
 
-    Assertions.assertThat(actual.getValue()).isEqualTo(
+    Assertions.assertThat(actual).isEqualTo(
         List.of(
             nodeA,
             ObjectUtils.requireNonNull(nodeA.getModelItemsByName(IEnhancedQName.of(NS, "x"))).iterator().next(),
@@ -441,7 +441,7 @@ class StepTest
     IModelNodeItem<?, ?> nodeC
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(IEnhancedQName.of(NS, "c"))).iterator().next();
 
-    Assertions.assertThat(actual.getValue()).isEqualTo(
+    Assertions.assertThat(actual).isEqualTo(
         List.of(
             node2,
             nodeA,
@@ -476,7 +476,7 @@ class StepTest
         .getModelItemsByName(IEnhancedQName.of(NS, "node-2"))
         .iterator().next();
 
-    Assertions.assertThat(actual.getValue()).isEqualTo(
+    Assertions.assertThat(actual).isEqualTo(
         List.of(ObjectUtils.requireNonNull(node2.getModelItemsByName(IEnhancedQName.of(NS, "c"))).iterator().next()));
   }
 
@@ -498,7 +498,7 @@ class StepTest
         .getModelItemsByName(IEnhancedQName.of(NS, "node-2"))
         .iterator().next();
 
-    Assertions.assertThat(actual.getValue()).isEqualTo(
+    Assertions.assertThat(actual).isEqualTo(
         List.of(ObjectUtils.requireNonNull(node2.getModelItemsByName(IEnhancedQName.of(NS, "a"))).iterator().next()));
   }
 
@@ -523,7 +523,7 @@ class StepTest
     IModelNodeItem<?, ?> nodeC
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(IEnhancedQName.of(NS, "c"))).iterator().next();
 
-    Assertions.assertThat(actual.getValue()).isEqualTo(
+    Assertions.assertThat(actual).isEqualTo(
         List.of(
             nodeC,
             ObjectUtils.requireNonNull(nodeC.getModelItemsByName(IEnhancedQName.of(NS, "x"))).iterator().next(),
@@ -552,7 +552,7 @@ class StepTest
     IModelNodeItem<?, ?> nodeA
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(IEnhancedQName.of(NS, "a"))).iterator().next();
 
-    Assertions.assertThat(actual.getValue()).isEqualTo(
+    Assertions.assertThat(actual).isEqualTo(
         List.of(
             nodeA,
             ObjectUtils.requireNonNull(nodeA.getModelItemsByName(IEnhancedQName.of(NS, "x"))).iterator().next(),

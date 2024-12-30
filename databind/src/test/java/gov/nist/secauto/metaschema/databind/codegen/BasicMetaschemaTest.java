@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Iterator;
@@ -181,7 +180,7 @@ class BasicMetaschemaTest
   }
 
   @Test
-  void testExistsWithVariable() throws IOException, URISyntaxException, MetaschemaException {
+  void testExistsWithVariable() throws IOException, MetaschemaException {
     IBindingContext bindingContext = newBindingContext();
 
     IBindingMetaschemaModule module = bindingContext.loadMetaschema(
@@ -208,9 +207,7 @@ class BasicMetaschemaTest
         "recurse-depth(/METASCHEMA,'for $import in ./import return doc(resolve-uri($import/@href))/METASCHEMA')",
         staticContext);
 
-    ISequence<?> allImports = allImportsExpression.evaluate(moduleItem, dynamicContext);
-    allImports.getValue();
-
+    ISequence<?> allImports = allImportsExpression.evaluate(moduleItem, dynamicContext).reusable();
     IMetapathExpression path = IMetapathExpression.compile("exists($all-imports/define-assembly/root-name)",
         staticContext);
 

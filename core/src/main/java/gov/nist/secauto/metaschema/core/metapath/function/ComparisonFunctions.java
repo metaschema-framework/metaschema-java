@@ -98,9 +98,9 @@ public final class ComparisonFunctions {
       @NonNull ISequence<? extends IAnyAtomicItem> rightItems) {
 
     IBooleanItem retval = IBooleanItem.FALSE;
-    for (IAnyAtomicItem left : leftItems.getValue()) {
+    for (IAnyAtomicItem left : leftItems) {
       assert left != null;
-      for (IAnyAtomicItem right : rightItems.getValue()) {
+      for (IAnyAtomicItem right : rightItems) {
         assert right != null;
         IAnyAtomicItem leftCast;
         IAnyAtomicItem rightCast;

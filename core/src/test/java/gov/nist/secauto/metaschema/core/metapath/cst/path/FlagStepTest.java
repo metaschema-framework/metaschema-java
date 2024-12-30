@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class FlagTest
+class FlagStepTest
     extends ExpressionTestBase {
   @Test
   void testFlagWithName() {
@@ -57,7 +57,7 @@ class FlagTest
       }
     });
 
-    Flag expr = new Flag(new NameNodeTest(flagName));
+    FlagStep expr = new FlagStep(new NameNodeTest(flagName));
 
     ISequence<?> result = expr.accept(dynamicContext, ISequence.of(focusItem));
     assertEquals(ISequence.of(flagNode), result, "Sequence does not match");

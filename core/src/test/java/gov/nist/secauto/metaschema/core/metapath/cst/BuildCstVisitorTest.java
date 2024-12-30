@@ -141,7 +141,7 @@ class BuildCstVisitorTest {
 
     // evaluate
     ISequence<IFieldNodeItem> result = expr.evaluate(field);
-    assertThat(result.getValue(), contains(
+    assertThat(result, contains(
         allOf(
             where(IFieldNodeItem::getQName, equalTo(FIELD2))))); // NOPMD
   }
@@ -213,7 +213,7 @@ class BuildCstVisitorTest {
 
     // evaluate
     ISequence<IAssemblyNodeItem> result = expr.evaluate(document);
-    assertThat(result.getValue(), contains(
+    assertThat(result, contains(
         allOf(
             instanceOf(IRootAssemblyNodeItem.class),
             where(IAssemblyNodeItem::getQName, equalTo(ROOT))))); // NOPMD
@@ -234,7 +234,7 @@ class BuildCstVisitorTest {
 
     // evaluate
     ISequence<IFlagNodeItem> result = expr.evaluate(field);
-    assertThat(result.getValue(), contains(
+    assertThat(result, contains(
         allOf(
             instanceOf(IFlagNodeItem.class),
             where(IFlagNodeItem::getQName, equalTo(FLAG)))));
@@ -255,7 +255,7 @@ class BuildCstVisitorTest {
 
     // evaluate
     ISequence<IFieldNodeItem> result = expr.evaluate(root);
-    assertThat(result.getValue(), contains(
+    assertThat(result, contains(
         allOf(
             instanceOf(IFieldNodeItem.class),
             where(IFieldNodeItem::getQName, equalTo(FIELD1))), // NOPMD

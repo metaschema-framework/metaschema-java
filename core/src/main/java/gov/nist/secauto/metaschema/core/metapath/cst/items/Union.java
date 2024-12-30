@@ -53,14 +53,14 @@ public class Union
 
   @Override
   public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    // ensure the sequence is backed by a list
-    focus.getValue();
-
     // now process the union
     @NonNull
     Stream<? extends IItem> retval = ObjectUtils.notNull(getChildren().stream()
         .flatMap(child -> {
-          ISequence<?> result = child.accept(dynamicContext, focus);
+          ISequence<?> result = child.accept(
+              dynamicContext,
+              // ensure the sequence is backed by a list
+              focus.reusable());
           return result.stream();
         }).distinct());
     return ISequence.of(retval);

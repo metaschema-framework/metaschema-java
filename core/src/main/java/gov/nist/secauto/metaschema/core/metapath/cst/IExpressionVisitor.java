@@ -37,9 +37,9 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Negate;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.Flag;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.FlagStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.KindNodeTest;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstance;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstanceStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.NameNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeSlashPath;
@@ -187,7 +187,7 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    *          the processing context
    * @return the visitation result or {@code null} if no result was produced
    */
-  RESULT visitFlag(@NonNull Flag expr, @NonNull CONTEXT context);
+  RESULT visitFlagStep(@NonNull FlagStep expr, @NonNull CONTEXT context);
 
   /**
    * Visit the CST node.
@@ -286,7 +286,7 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    *          the processing context
    * @return the visitation result or {@code null} if no result was produced
    */
-  RESULT visitModelInstance(@NonNull ModelInstance expr, @NonNull CONTEXT context);
+  RESULT visitModelInstanceStep(@NonNull ModelInstanceStep expr, @NonNull CONTEXT context);
 
   /**
    * Visit the CST node.

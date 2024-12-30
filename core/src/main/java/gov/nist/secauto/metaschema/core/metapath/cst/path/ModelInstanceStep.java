@@ -16,8 +16,8 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("rawtypes")
-public class ModelInstance
-    extends AbstractNamedInstanceExpression<IModelNodeItem> {
+public class ModelInstanceStep
+    extends AbstractStepExpression<IModelNodeItem> {
 
   /**
    * Construct a new expression that finds any child {@link IModelNodeItem} that
@@ -26,7 +26,7 @@ public class ModelInstance
    * @param test
    *          the test to use to match
    */
-  public ModelInstance(@NonNull INodeTestExpression test) {
+  public ModelInstanceStep(@NonNull INodeTestExpression test) {
     super(test);
   }
 
@@ -37,18 +37,18 @@ public class ModelInstance
 
   @Override
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitModelInstance(this, context);
+    return visitor.visitModelInstanceStep(this, context);
   }
 
   @Override
-  protected Stream<? extends IModelNodeItem<?, ?>> getFocusedChildren(INodeItem focusedItem) {
-    return focusedItem.modelItems();
+  protected Stream<? extends IModelNodeItem<?, ?>> getChildNodes(INodeItem focus) {
+    return focus.modelItems();
   }
 
   @Override
-  protected Stream<? extends IModelNodeItem<?, ?>> getFocusedChildrenWithName(
-      INodeItem focusedItem,
+  protected Stream<? extends IModelNodeItem<?, ?>> getChildNodesWithName(
+      INodeItem focus,
       IEnhancedQName name) {
-    return ObjectUtils.notNull(focusedItem.getModelItemsByName(name).stream());
+    return ObjectUtils.notNull(focus.getModelItemsByName(name).stream());
   }
 }

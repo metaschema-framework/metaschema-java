@@ -106,7 +106,7 @@ public final class FnMinMax {
     ISequence<? extends IAnyAtomicItem> sequence = FunctionUtils.asType(
         ObjectUtils.requireNonNull(arguments.get(0)));
 
-    return ISequence.of(min(sequence.getValue()));
+    return ISequence.of(min(sequence));
   }
 
   @SuppressWarnings("unused")
@@ -119,7 +119,7 @@ public final class FnMinMax {
     ISequence<? extends IAnyAtomicItem> sequence = FunctionUtils.asType(
         ObjectUtils.requireNonNull(arguments.get(0)));
 
-    return ISequence.of(max(sequence.getValue()));
+    return ISequence.of(max(sequence));
   }
 
   /**

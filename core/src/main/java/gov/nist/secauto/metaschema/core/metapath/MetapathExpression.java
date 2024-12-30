@@ -188,7 +188,7 @@ class MetapathExpression implements IMetapathExpression {
       @Nullable IItem focus,
       @NonNull DynamicContext dynamicContext) {
     try {
-      return ObjectUtils.asType(getASTNode().accept(dynamicContext, ISequence.of(focus)));
+      return ObjectUtils.asType(getASTNode().accept(dynamicContext, ISequence.of(focus)).reusable());
     } catch (MetapathException ex) {
       throw new MetapathException(
           String.format("An error occurred while evaluating the expression '%s'. %s",

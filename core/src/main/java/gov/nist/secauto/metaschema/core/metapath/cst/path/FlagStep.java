@@ -15,8 +15,8 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class Flag // NOPMD - intentional name
-    extends AbstractNamedInstanceExpression<IFlagNodeItem> {
+public class FlagStep // NOPMD - intentional name
+    extends AbstractStepExpression<IFlagNodeItem> {
 
   /**
    * Construct a new expression that finds any child {@link IFlagNodeItem} that
@@ -25,7 +25,7 @@ public class Flag // NOPMD - intentional name
    * @param test
    *          the test to use to match
    */
-  public Flag(@NonNull INodeTestExpression test) {
+  public FlagStep(@NonNull INodeTestExpression test) {
     super(test);
   }
 
@@ -36,19 +36,18 @@ public class Flag // NOPMD - intentional name
 
   @Override
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitFlag(this, context);
+    return visitor.visitFlagStep(this, context);
   }
 
   @Override
-  protected Stream<? extends IFlagNodeItem> getFocusedChildren(INodeItem focusedItem) {
-    return focusedItem.flags();
+  protected Stream<? extends IFlagNodeItem> getChildNodes(INodeItem focus) {
+    return focus.flags();
   }
 
   @Override
-  protected Stream<? extends IFlagNodeItem> getFocusedChildrenWithName(
-      INodeItem focusedItem,
+  protected Stream<? extends IFlagNodeItem> getChildNodesWithName(
+      INodeItem focus,
       IEnhancedQName name) {
-    IFlagNodeItem item = focusedItem.getFlagByName(name);
-    return ObjectUtils.notNull(item == null ? Stream.empty() : Stream.of(item));
+    return ObjectUtils.notNull(Stream.ofNullable(focus.getFlagByName(name)));
   }
 }

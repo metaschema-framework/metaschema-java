@@ -27,7 +27,6 @@ public interface ICollectionValue {
    *
    * @return the resulting sequence
    */
-  // TODO: rename to toSequence and resolve conflicting methods?
   @NonNull
   default ISequence<?> toSequence() {
     return this instanceof ISequence
@@ -45,15 +44,14 @@ public interface ICollectionValue {
    * type:
    * <ul>
    * <li>{@link IArrayItem} or {@link IMapItem}: the contents of the returned
-   * sequence are the items of the array. Any member values that are a sequence
-   * are flattened.</li>
+   * sequence are the items of the array or map. Any member values that are a
+   * sequence are flattened.</li>
    * <li>Any other item: A singleton sequence is returned containing the
    * item.</li>
    * </ul>
    *
    * @return the resulting sequence
    */
-  // TODO: rename to toSequence and resolve conflicting methods?
   @NonNull
   ISequence<?> contentsAsSequence();
 

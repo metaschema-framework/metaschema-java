@@ -37,9 +37,9 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Negate;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.Flag;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.FlagStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.KindNodeTest;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstance;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstanceStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.NameNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeSlashPath;
@@ -206,7 +206,7 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
   }
 
   @Override
-  public RESULT visitFlag(Flag expr, CONTEXT context) {
+  public RESULT visitFlagStep(FlagStep expr, CONTEXT context) {
     return visitChildren(expr, context);
   }
 
@@ -251,7 +251,7 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
   }
 
   @Override
-  public RESULT visitModelInstance(ModelInstance expr, CONTEXT context) {
+  public RESULT visitModelInstanceStep(ModelInstanceStep expr, CONTEXT context) {
     return visitChildren(expr, context);
   }
 

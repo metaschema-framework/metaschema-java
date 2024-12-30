@@ -101,7 +101,7 @@ public class FindingCollectingConstraintValidationHandler
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
         .target(target)
-        .subjects(testedItems.getValue())
+        .subjects(testedItems)
         .message(newCardinalityMinimumViolationMessage(constraint, target, testedItems, dynamicContext))
         .build());
   }
@@ -116,7 +116,7 @@ public class FindingCollectingConstraintValidationHandler
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
         .target(target)
-        .subjects(testedItems.getValue())
+        .subjects(testedItems)
         .message(newCardinalityMaximumViolationMessage(constraint, target, testedItems, dynamicContext))
         .build());
   }

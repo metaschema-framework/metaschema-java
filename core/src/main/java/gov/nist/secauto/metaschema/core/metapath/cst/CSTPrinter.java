@@ -37,9 +37,9 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Negate;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.Flag;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.FlagStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.KindNodeTest;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstance;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstanceStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.NameNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeSlashPath;
@@ -192,8 +192,8 @@ public final class CSTPrinter {
     }
 
     @Override
-    public String visitFlag(Flag expr, State context) {
-      return appendNode(expr, super.visitFlag(expr, context), context);
+    public String visitFlagStep(FlagStep expr, State context) {
+      return appendNode(expr, super.visitFlagStep(expr, context), context);
     }
 
     @Override
@@ -237,8 +237,8 @@ public final class CSTPrinter {
     }
 
     @Override
-    public String visitModelInstance(ModelInstance expr, State context) {
-      return appendNode(expr, super.visitModelInstance(expr, context), context);
+    public String visitModelInstanceStep(ModelInstanceStep expr, State context) {
+      return appendNode(expr, super.visitModelInstanceStep(expr, context), context);
     }
 
     @Override

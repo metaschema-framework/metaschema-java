@@ -36,7 +36,7 @@ public class SingletonSequence<ITEM extends IItem>
   }
 
   @Override
-  public List<ITEM> getValue() {
+  public List<ITEM> asList() {
     return CollectionUtil.singletonList(item);
   }
 

@@ -6,111 +6,80 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.MockNodeItemFactory;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.stream.Stream;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
 class PredicateExpressionTest
     extends ExpressionTestBase {
 
+  @SuppressWarnings("null")
   @Test
   void testPredicateWithValues() {
     DynamicContext dynamicContext = newDynamicContext();
-    Mockery context = getContext();
 
-    @SuppressWarnings("null")
-    @NonNull
-    IExpression stepExpr = context.mock(IExpression.class);
-    ISequence<?> stepResult = context.mock(ISequence.class, "stepResult");
-    @SuppressWarnings("null")
-    @NonNull
-    IAssemblyNodeItem item = context.mock(IAssemblyNodeItem.class);
-    @SuppressWarnings({ "unchecked", "null" })
-    @NonNull
-    List<IExpression> predicates = context.mock(List.class, "predicates");
+    MockNodeItemFactory mockFactory = new MockNodeItemFactory();
 
-    context.checking(new Expectations() {
-      { // NOPMD - intentional
-        allowing(stepExpr).getStaticResultType();
-        will(returnValue(IAssemblyNodeItem.class));
-        oneOf(stepExpr).accept(dynamicContext, ISequence.of(item));
-        will(returnValue(stepResult));
+    IAssemblyNodeItem item = mockFactory.assembly(
+        IEnhancedQName.of("assembly", NS),
+        CollectionUtil.emptyList(),
+        CollectionUtil.emptyList());
+    List<IExpression> predicates = List.of();
 
-        atMost(1).of(stepResult).stream();
-        will(returnValue(Stream.of(item)));
-        atMost(1).of(stepResult).getValue();
-        will(returnValue(CollectionUtil.singletonList(item)));
+    ISequence<?> focus = ISequence.of(item).reusable();
 
-        allowing(item).getNodeItem();
-        will(returnValue(item));
-
-        atMost(1).of(predicates).stream();
-        will(returnValue(Stream.empty()));
-        atMost(1).of(predicates).iterator();
-        will(returnValue(Stream.empty()));
-      }
-    });
+    // setup step expression
+    IExpression stepExpr = mockFactory.mock(IExpression.class);
+    doReturn(focus).when(stepExpr).accept(dynamicContext, focus);
 
     PredicateExpression expr = new PredicateExpression(stepExpr, predicates);
 
-    ISequence<?> result = expr.accept(dynamicContext, ISequence.of(item));
-    assertEquals(ISequence.of(item), result, "Sequence does not match");
+    ISequence<?> result = expr.accept(dynamicContext, focus);
+
+    assertEquals(ISequence.of(item).reusable(), result, "Sequence must match");
   }
 
   @Test
   void testPredicateWithoutValues() {
     DynamicContext dynamicContext = newDynamicContext().disablePredicateEvaluation();
-    Mockery context = getContext();
+    MockNodeItemFactory mockFactory = new MockNodeItemFactory();
 
-    @SuppressWarnings("null")
-    @NonNull
-    IExpression stepExpr = context.mock(IExpression.class);
-    ISequence<?> stepResult = context.mock(ISequence.class, "stepResult");
-    @SuppressWarnings("null")
-    @NonNull
-    IAssemblyNodeItem item = context.mock(IAssemblyNodeItem.class);
-    @SuppressWarnings({ "unchecked", "null" })
-    @NonNull
-    List<IExpression> predicates = context.mock(List.class, "predicates");
+    IAssemblyNodeItem item = mockFactory.assembly(
+        IEnhancedQName.of("assembly", NS),
+        CollectionUtil.emptyList(),
+        CollectionUtil.emptyList());
+    @SuppressWarnings("unchecked")
+    List<IExpression> predicates = mockFactory.mock(List.class);
 
-    context.checking(new Expectations() {
-      { // NOPMD - intentional
-        allowing(stepExpr).getStaticResultType();
-        will(returnValue(IAssemblyNodeItem.class));
-        oneOf(stepExpr).accept(dynamicContext, ISequence.of(item));
-        will(returnValue(stepResult));
+    ISequence<?> focus = ISequence.of(item).reusable();
 
-        atMost(1).of(stepResult).stream();
-        will(returnValue(Stream.of(item)));
-        atMost(1).of(stepResult).getValue();
-        will(returnValue(CollectionUtil.singletonList(item)));
-
-        allowing(item).getNodeItem();
-        will(returnValue(item));
-
-        never(predicates).stream();
-        never(predicates).iterator();
-      }
-    });
+    // setup step expression
+    IExpression stepExpr = mockFactory.mock(IExpression.class);
+    doReturn(focus).when(stepExpr).accept(dynamicContext, focus);
 
     PredicateExpression expr = new PredicateExpression(stepExpr, predicates);
 
     ISequence<?> result = expr.accept(dynamicContext, ISequence.of(item));
-    assertEquals(ISequence.of(item), result, "Sequence does not match");
+
+    verify(predicates, never()).stream();
+    verify(predicates, never()).iterator();
+
+    assertEquals(ISequence.of(item), result, "Sequence must match");
   }
 }

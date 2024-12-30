@@ -622,8 +622,7 @@ public class DefaultConstraintValidator
       indexNameToKeyRefMap.put(indexName, keyRefItems);
     }
 
-    KeyRef keyRef = new KeyRef(constraint, node, new ArrayList<>(targets.getValue()));
-    keyRefItems.add(keyRef);
+    keyRefItems.add(new KeyRef(constraint, node, new ArrayList<>(targets)));
   }
 
   /**
@@ -972,11 +971,10 @@ public class DefaultConstraintValidator
         for (ILet let : lets) {
           IEnhancedQName name = let.getName();
           ISequence<?> result = let.getValueExpression().evaluate(focus, subContext);
-
-          // ensure the sequence is list backed
-          result.getValue();
-
-          subContext.bindVariableValue(name, result);
+          subContext.bindVariableValue(
+              name,
+              // ensure the sequence is list backed
+              result.reusable());
         }
         retval = subContext;
       }

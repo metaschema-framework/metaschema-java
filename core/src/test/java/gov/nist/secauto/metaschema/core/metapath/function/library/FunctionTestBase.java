@@ -70,8 +70,8 @@ public class FunctionTestBase
     assertAll(
         () -> assertEquals(expectedResult, result),
         () -> assertEquals(
-            FunctionUtils.getTypes(expectedResult.getValue()),
-            FunctionUtils.getTypes(result.getValue())));
+            FunctionUtils.getTypes(expectedResult),
+            FunctionUtils.getTypes(result)));
 
   }
 

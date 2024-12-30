@@ -46,14 +46,18 @@ public class KindNodeTest
 
   @Override
   public ISequence<? extends INodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
-        .filter(type::isInstance)));
+    return ISequence.of(filterStream(ObjectUtils.notNull(focus.stream()
+        .map(ItemUtils::checkItemIsNodeItemForStep))));
   }
 
   @SuppressWarnings("null")
   @Override
   public String toASTString() {
     return String.format("%s[kind=%s]", getClass().getName(), type.toSignature());
+  }
+
+  @Override
+  public boolean match(INodeItem item) {
+    return type.isInstance(item);
   }
 }

@@ -46,7 +46,6 @@ public final class ImmutableCollections {
    */
   public abstract static class AbstractImmutableCollection<T>
       extends AbstractCollection<T> {
-
     @Override
     public final boolean add(T item) {
       throw unsupported();

@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
 import org.junit.jupiter.api.Test;
@@ -145,14 +146,19 @@ public class LookupTest
 
   @Test
   void testUnaryLookupMissingMember() {
-    ArrayException thrown = assertThrows(
-        ArrayException.class,
+    MetapathException thrown = assertThrows(
+        MetapathException.class,
         () -> {
           ISequence<?> result = IMetapathExpression.compile("([1,2,3], [1,2,5], [1,2])[?3 = 5]")
               .evaluate(null, newDynamicContext());
           assertNotNull(result);
           result.safeStream();
         });
-    assertEquals(ArrayException.INDEX_OUT_OF_BOUNDS, thrown.getCode());
+    Throwable cause = thrown.getCause();
+    assertEquals(
+        ArrayException.INDEX_OUT_OF_BOUNDS,
+        cause instanceof ArrayException
+            ? ((ArrayException) cause).getCode()
+            : null);
   }
 }

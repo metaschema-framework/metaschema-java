@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <RESULT_TYPE>
  *          the Java type of the referenced node item
  */
-public abstract class AbstractNamedInstanceExpression<RESULT_TYPE extends INodeItem>
+public abstract class AbstractStepExpression<RESULT_TYPE extends INodeItem>
     extends AbstractPathExpression<RESULT_TYPE> {
   @NonNull
   private final INodeTestExpression test;
@@ -36,7 +36,7 @@ public abstract class AbstractNamedInstanceExpression<RESULT_TYPE extends INodeI
    * @param test
    *          the expression to use to determine a match
    */
-  public AbstractNamedInstanceExpression(@NonNull INodeTestExpression test) {
+  public AbstractStepExpression(@NonNull INodeTestExpression test) {
     this.test = test;
   }
 
@@ -69,35 +69,49 @@ public abstract class AbstractNamedInstanceExpression<RESULT_TYPE extends INodeI
   }
 
   /**
-   * Get a stream of matching child node items for the provided {@code context}.
+   * Get a stream of matching child node items for the provided {@code focus}.
    *
-   * @param focusedItem
-   *          the node item to match child items of
+   * @param focus
+   *          the node item to get child items for
    * @return the stream of matching node items
    */
   @NonNull
-  protected Stream<? extends RESULT_TYPE> match(@NonNull INodeItem focusedItem) {
+  protected Stream<? extends RESULT_TYPE> match(@NonNull INodeItem focus) {
     Stream<? extends RESULT_TYPE> retval;
 
     INodeTestExpression test = getTest();
-    // FIXME: Are kind tests missing here?
     if (test instanceof NameNodeTest) {
       IEnhancedQName name = ((NameNodeTest) getTest()).getName();
-      retval = getFocusedChildrenWithName(focusedItem, name);
-    } else if (test instanceof WildcardNodeTest) {
-      // match all items
-      retval = ((WildcardNodeTest) test).matchStream(getFocusedChildren(focusedItem));
+      retval = getChildNodesWithName(focus, name);
     } else {
-      throw new UnsupportedOperationException(test.getClass().getName());
+      // match all items
+      retval = test.filterStream(getChildNodes(focus));
     }
     return retval;
   }
 
+  /**
+   * Get a stream of child node items for the provided {@code focus} that match
+   * the provided {@code name}.
+   *
+   * @param focus
+   *          the node item to get child items for
+   * @param name
+   *          the qualified name used to match child items
+   * @return the matching child items
+   */
   @NonNull
-  protected abstract Stream<? extends RESULT_TYPE> getFocusedChildrenWithName(
-      @NonNull INodeItem focusedItem,
+  protected abstract Stream<? extends RESULT_TYPE> getChildNodesWithName(
+      @NonNull INodeItem focus,
       @NonNull IEnhancedQName name);
 
+  /**
+   * Get a stream of child node items for the provided {@code focus}.
+   *
+   * @param focus
+   *          the node item to get child items for
+   * @return the child items
+   */
   @NonNull
-  protected abstract Stream<? extends RESULT_TYPE> getFocusedChildren(@NonNull INodeItem focusedItem);
+  protected abstract Stream<? extends RESULT_TYPE> getChildNodes(@NonNull INodeItem focus);
 }

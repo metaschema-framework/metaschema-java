@@ -74,7 +74,7 @@ class FnOutermostTest
         = IMetapathExpression.compile(expectedValueMetapath, dynamicContext.getStaticContext())
             .evaluate(node, dynamicContext);
     // ensure the values are list backed
-    values.getValue();
+    values = values.reusable();
 
     ISequence<? extends INodeItem> alternate
         = IMetapathExpression

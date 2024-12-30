@@ -54,14 +54,14 @@ public abstract class AbstractSearchPathExpression
       @NonNull DynamicContext dynamicContext,
       @NonNull ISequence<?> outerFocus) {
     // ensure the sequence is backed by a list
-    outerFocus.getValue();
+    ISequence<?> focus = outerFocus.reusable();
 
     // check the current focus
     @SuppressWarnings("unchecked")
     Stream<? extends INodeItem> nodeMatches
-        = (Stream<? extends INodeItem>) expression.accept(dynamicContext, outerFocus).stream();
+        = (Stream<? extends INodeItem>) expression.accept(dynamicContext, focus).stream();
 
-    Stream<? extends INodeItem> childMatches = outerFocus.stream()
+    Stream<? extends INodeItem> childMatches = focus.stream()
         .map(ItemUtils::checkItemIsNodeItemForStep)
         .flatMap(focusedNode -> {
 

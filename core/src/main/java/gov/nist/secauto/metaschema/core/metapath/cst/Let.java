@@ -142,11 +142,9 @@ public class Let
         @NonNull ISequence<?> focus,
         @NonNull DynamicContext boundDynamicContext) {
 
-      ISequence<?> result = getBoundExpression().accept(evaluationDynamicContext, focus);
-
-      // ensure this sequence is list backed
-      result.getValue();
-
+      ISequence<?> result = getBoundExpression().accept(evaluationDynamicContext, focus)
+          // ensure this sequence is list backed
+          .reusable();
       boundDynamicContext.bindVariableValue(getName(), result);
     }
   }

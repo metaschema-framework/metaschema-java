@@ -55,7 +55,7 @@ public final class FnOutermost {
       IItem focus) {
     ISequence<? extends INodeItem> nodes = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
 
-    return ISequence.of(fnOutermost(nodes.getValue()));
+    return ISequence.of(fnOutermost(nodes));
   }
 
   /**

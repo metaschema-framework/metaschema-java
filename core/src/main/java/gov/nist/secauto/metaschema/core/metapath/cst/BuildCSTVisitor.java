@@ -43,11 +43,11 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Negate;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.Flag;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.FlagStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.INodeTestExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.IWildcardMatcher;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.KindNodeTest;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstance;
+import gov.nist.secauto.metaschema.core.metapath.cst.path.ModelInstanceStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.NameNodeTest;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeDoubleSlashPath;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.RelativeSlashPath;
@@ -793,10 +793,10 @@ public class BuildCSTVisitor
 
     IExpression retval;
     if (numChildren == 1) {
-      retval = new ModelInstance(parseNodeTest(ctx.nodetest(), false));
+      retval = new ModelInstanceStep(parseNodeTest(ctx.nodetest(), false));
     } else {
       // this is an AT test
-      retval = new Flag(parseNodeTest(ctx.nodetest(), true));
+      retval = new FlagStep(parseNodeTest(ctx.nodetest(), true));
     }
     return retval;
   }

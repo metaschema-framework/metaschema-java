@@ -11,8 +11,6 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class RelativeDoubleSlashPath
@@ -43,7 +41,6 @@ public class RelativeDoubleSlashPath
     ISequence<?> leftResult = getLeft().accept(dynamicContext, focus);
 
     // evaluate the right path in the context of the left
-    Stream<? extends INodeItem> result = search(getRight(), dynamicContext, leftResult);
-    return ISequence.of(result);
+    return ISequence.of(search(getRight(), dynamicContext, leftResult));
   }
 }

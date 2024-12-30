@@ -71,7 +71,7 @@ public class SequenceN<ITEM extends IItem>
   }
 
   @Override
-  public List<ITEM> getValue() {
+  public List<ITEM> asList() {
     return items;
   }
 }
