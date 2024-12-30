@@ -15,7 +15,14 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class FlagStep // NOPMD - intentional name
+/**
+ * A Metapath path expression that that finds any child {@link IFlagNodeItem}
+ * that matches the provided {@code test}.
+ * <p>
+ * Based on the XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-steps">step</a> syntax.
+ */
+public class FlagStep
     extends AbstractStepExpression<IFlagNodeItem> {
 
   /**

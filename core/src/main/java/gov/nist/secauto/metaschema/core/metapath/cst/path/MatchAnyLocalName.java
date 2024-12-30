@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst.type;
+package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
-import gov.nist.secauto.metaschema.core.metapath.cst.path.IWildcardMatcher;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -13,7 +12,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * A wildcard matcher that matches any local name in a specific namespace.
  */
-public class MatchAnyLocalName implements IWildcardMatcher {
+class MatchAnyLocalName implements IWildcardMatcher {
   @NonNull
   private final String namespace;
 

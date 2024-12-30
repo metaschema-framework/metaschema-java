@@ -12,6 +12,14 @@ import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An expression that finds an ancestor of the document root using the
+ * {@code right} expression.
+ * <p>
+ * Based on the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-31/#id-path-operator">path
+ * operator</a>.
+ */
 public class RootDoubleSlashPath
     extends AbstractRootPathExpression {
 

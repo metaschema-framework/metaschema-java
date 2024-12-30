@@ -15,6 +15,13 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath path expression that that finds any child {@link IModelNodeItem}
+ * that matches the provided {@code test}.
+ * <p>
+ * Based on the XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-steps">step</a> syntax.
+ */
 @SuppressWarnings("rawtypes")
 public class ModelInstanceStep
     extends AbstractStepExpression<IModelNodeItem> {

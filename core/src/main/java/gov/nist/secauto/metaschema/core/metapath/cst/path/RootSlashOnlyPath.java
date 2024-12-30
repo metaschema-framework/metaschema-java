@@ -17,6 +17,13 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 
+/**
+ * An expression that gets the document root.
+ * <p>
+ * Based on the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-31/#id-path-operator">path
+ * operator</a>.
+ */
 public class RootSlashOnlyPath
     extends AbstractPathExpression<INodeItem> {
 

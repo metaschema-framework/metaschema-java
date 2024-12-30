@@ -17,11 +17,22 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A base class for Metapath expressions based on the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-31/#id-relative-path-expressions">relative path
+ * expressions</a> that entail searching.
+ */
 public abstract class AbstractSearchPathExpression
     extends AbstractPathExpression<INodeItem> {
   @NonNull
   private final Class<? extends INodeItem> staticResultType;
 
+  /**
+   * Construct a new relative path expression, used for searching.
+   *
+   * @param staticResultType
+   *          the static result type
+   */
   public AbstractSearchPathExpression(@NonNull Class<? extends INodeItem> staticResultType) {
     this.staticResultType = staticResultType;
   }

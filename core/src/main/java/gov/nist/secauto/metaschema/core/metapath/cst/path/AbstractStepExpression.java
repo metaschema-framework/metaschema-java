@@ -19,7 +19,10 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A path expression that references a named instance.
+ * A Metapath path expression that references a named instance.
+ * <p>
+ * Based on the XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-steps">step</a> syntax.
  *
  * @param <RESULT_TYPE>
  *          the Java type of the referenced node item

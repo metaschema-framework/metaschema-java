@@ -14,7 +14,7 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A base class for XPath 3.1 <a href=
+ * A base class for Metapath expressions based on the XPath 3.1 <a href=
  * "https://www.w3.org/TR/xpath-31/#id-relative-path-expressions">relative path
  * expressions</a>.
  */

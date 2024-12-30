@@ -99,6 +99,15 @@ public final class TypeTestSupport {
     return retval;
   }
 
+  /**
+   * Parses a kind test using the provided abstract syntax tree (AST).
+   *
+   * @param tree
+   *          the AST
+   * @param staticContext
+   *          the static context used to resolve types and other information
+   * @return the kind test
+   */
   @NonNull
   public static IItemType parseKindTest(
       @NonNull ParseTree tree,

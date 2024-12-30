@@ -13,6 +13,11 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A base class for Metapath expressions based on the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-31/#id-path-operator">path
+ * operator</a>.
+ */
 public abstract class AbstractRootPathExpression
     extends AbstractSearchPathExpression {
   @NonNull

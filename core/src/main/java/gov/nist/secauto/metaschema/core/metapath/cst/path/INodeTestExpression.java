@@ -15,6 +15,12 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A Metapath path expression that tests a node based on a set of conditions.
+ * <p>
+ * Based on the XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#node-tests">node test</a> syntax.
+ */
 public interface INodeTestExpression extends IExpression {
   @SuppressWarnings("null")
   @Override

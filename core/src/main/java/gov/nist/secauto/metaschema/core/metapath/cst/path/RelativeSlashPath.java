@@ -12,6 +12,15 @@ import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An expression that finds a child of the {@code left} expression using the
+ * {@code right} expression.
+ * <p>
+ * Based on the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-31/#id-relative-path-expressions">relative path
+ * expressions</a>.
+ */
+
 public class RelativeSlashPath
     extends AbstractRelativePathExpression {
 
