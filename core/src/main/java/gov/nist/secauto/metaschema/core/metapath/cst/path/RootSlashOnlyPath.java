@@ -6,13 +6,14 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -23,6 +24,10 @@ import java.util.List;
  * Based on the XPath 3.1
  * <a href= "https://www.w3.org/TR/xpath-31/#id-path-operator">path
  * operator</a>.
+ * <p>
+ * This class handles the root path expression "/", which selects the document
+ * root node when evaluated. The evaluation follows the XPath specification for
+ * absolute paths.
  */
 public class RootSlashOnlyPath
     extends AbstractPathExpression<INodeItem> {
@@ -47,9 +52,17 @@ public class RootSlashOnlyPath
       DynamicContext dynamicContext,
       ISequence<?> focus) {
 
-    return ObjectUtils.notNull(focus.stream()
+    return ISequence.of(ObjectUtils.notNull(focus.stream()
         .map(ItemUtils::checkItemIsNodeItemForStep)
-        .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).findFirst().get())
-        .collect(CustomCollectors.toSequence()));
+        .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item))
+            .findFirst()
+            .orElseThrow(() -> new DynamicMetapathException(DynamicMetapathException.TREAT_DOES_NOT_MATCH_TYPE,
+                "Root node not found")))
+        .peek(item -> {
+          if (!(item instanceof IDocumentNodeItem)) {
+            throw new DynamicMetapathException(DynamicMetapathException.TREAT_DOES_NOT_MATCH_TYPE,
+                "The head of the tree is not a document node.");
+          }
+        })));
   }
 }

@@ -51,7 +51,8 @@ public class StreamSequence<ITEM extends IItem>
     try {
       if (list == null) {
         if (stream == null) {
-          throw new IllegalStateException("stream is already consumed");
+          throw new IllegalStateException(
+              "Unable to collect items into a list because the stream was already consumed.");
         }
         list = stream.collect(Collectors.toUnmodifiableList());
         stream = null;
@@ -79,7 +80,7 @@ public class StreamSequence<ITEM extends IItem>
     try {
       if (list == null) {
         if (stream == null) {
-          throw new IllegalStateException("stream is already consumed");
+          throw new IllegalStateException("The stream is already consumed.");
         }
         assert stream != null;
         retval = stream;

@@ -216,6 +216,7 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
     register(IP_V6_ADDRESS);
     register(NON_NEGATIVE_INTEGER);
     register(POSITIVE_INTEGER);
+    register(TIME);
     register(TOKEN);
     register(URI);
     register(URI_REFERENCE);

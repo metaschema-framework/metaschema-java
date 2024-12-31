@@ -11,6 +11,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * A wildcard matcher that matches a specific local name in any namespace.
+ * <p>
+ * This matcher implements the '*:localName' syntax in path expressions, where
+ * the asterisk matches any namespace while requiring an exact match on the
+ * local name part.
+ *
+ * @since 1.0.0
  */
 class MatchAnyNamespace implements IWildcardMatcher {
   @NonNull

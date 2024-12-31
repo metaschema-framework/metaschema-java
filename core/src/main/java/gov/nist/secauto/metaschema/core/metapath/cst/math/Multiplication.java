@@ -22,6 +22,17 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An XPath 3.1
  * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
  * expression</a> supporting multiplication.
+ * <p>
+ * Supports multiplication between:
+ * <ul>
+ * <li>Numeric values</li>
+ * <li>YearMonthDuration × Numeric</li>
+ * <li>DayTimeDuration × Numeric</li>
+ * </ul>
+ *
+ * <p>
+ * Numeric operands are automatically converted using
+ * {@link FunctionUtils#toNumeric}.
  */
 public class Multiplication
     extends AbstractBasicArithmeticExpression {
@@ -52,6 +63,8 @@ public class Multiplication
    *          the second item to multiply
    * @return the product of both items or an empty {@link ISequence} if either
    *         item is {@code null}
+   * @throws InvalidTypeMetapathException
+   *           for unsupported operand combinations.
    */
   @Override
   @NonNull
@@ -67,9 +80,13 @@ public class Multiplication
    * @param rightItem
    *          the second item to multiply
    * @return the product of both items
+   * @throws InvalidTypeMetapathException
+   *           for unsupported operand combinations.
    */
+  @SuppressWarnings("PMD.CyclomaticComplexity")
   @NonNull
-  public static IAnyAtomicItem multiply(@NonNull IAnyAtomicItem leftItem, // NOPMD - intentional
+  public static IAnyAtomicItem multiply(
+      @NonNull IAnyAtomicItem leftItem,
       @NonNull IAnyAtomicItem rightItem) {
     IAnyAtomicItem retval = null;
     if (leftItem instanceof IYearMonthDurationItem) {
@@ -97,8 +114,9 @@ public class Multiplication
     if (retval == null) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The expression '%s * %s' is not supported", leftItem.getClass().getName(),
-              rightItem.getClass().getName()));
+          String.format("Multiplication between %s and %s is not supported.",
+              leftItem.toSignature(),
+              rightItem.toSignature()));
     }
     return retval;
   }

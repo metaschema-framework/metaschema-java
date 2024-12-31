@@ -33,6 +33,9 @@ public final class EmptySequence<RESULT_TYPE extends IItem>
   /**
    * Get a singleton CST node instance representing an expression that returns an
    * empty sequence.
+   * <p>
+   * This class implements the singleton pattern and is thread-safe. The singleton
+   * instance can be obtained using {@link #instance()}.
    *
    * @param <T>
    *          the Java type of the resulting empty sequence
@@ -64,5 +67,4 @@ public final class EmptySequence<RESULT_TYPE extends IItem>
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
     return visitor.visitEmptySequence(this, context);
   }
-
 }

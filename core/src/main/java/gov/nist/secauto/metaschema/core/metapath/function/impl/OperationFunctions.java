@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.function.impl; // NOPMD - intentional
+package gov.nist.secauto.metaschema.core.metapath.function.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
@@ -22,6 +22,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeWithTimeZoneItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
@@ -30,15 +32,29 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Duration;
+import java.time.OffsetTime;
 import java.time.Period;
 import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-public final class OperationFunctions { // NOPMD - intentional
+/**
+ * Implementations of the XPath 3.1 operation functions.
+ */
+@SuppressWarnings({
+    // FIXME: break out methods into separate classes organized as in XPath
+    "PMD.CouplingBetweenObjects",
+    "PMD.ExcessivePublicCount",
+    "PMD.CyclomaticComplexity"
+})
+public final class OperationFunctions {
+  /**
+   * Identifies the types and substypes that support aggregation.
+   */
   @NonNull
   public static final Set<Class<? extends IAnyAtomicItem>> AGGREGATE_MATH_TYPES = ObjectUtils.notNull(Set.of(
       IDayTimeDurationItem.class,
@@ -197,6 +213,30 @@ public final class OperationFunctions { // NOPMD - intentional
 
   /**
    * Based on XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-add-dayTimeDuration-to-time">op:add-dayTimeDuration-to-time</a>.
+   *
+   * @param instant
+   *          a point in time
+   * @param duration
+   *          the duration to add
+   * @return the result of adding the duration to the date
+   */
+  @NonNull
+  public static ITimeItem opAddDayTimeDurationToTime(
+      @NonNull ITimeItem instant,
+      @NonNull IDayTimeDurationItem duration) {
+    OffsetTime result;
+    try {
+      result = instant.asOffsetTime().plus(duration.asDuration());
+    } catch (ArithmeticException ex) {
+      throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);
+    }
+    assert result != null;
+    return ITimeWithTimeZoneItem.valueOf(result);
+  }
+
+  /**
+   * Based on XPath 3.1 <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dates">op:subtract-dates</a>.
    *
    * @param date1
@@ -207,7 +247,7 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IDayTimeDurationItem opSubtractDates(@NonNull IDateItem date1, @NonNull IDateItem date2) {
-    return between(date1.asZonedDateTime(), date2.asZonedDateTime());
+    return between(date2.asZonedDateTime(), date1.asZonedDateTime());
   }
 
   /**
@@ -248,8 +288,41 @@ public final class OperationFunctions { // NOPMD - intentional
   private static IDateItem subtractDurationFromDate(
       @NonNull ZonedDateTime dateTime,
       @NonNull TemporalAmount duration) {
-    return IDateWithTimeZoneItem.valueOf(
-        ObjectUtils.notNull(dateTime.minus(duration)));
+    return IDateWithTimeZoneItem.valueOf(ObjectUtils.notNull(dateTime.minus(duration)));
+  }
+
+  /**
+   * Based on XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dayTimeDuration-from-time">op:subtract-dayTimeDuration-from-time</a>.
+   *
+   * @param time
+   *          a point in time
+   * @param duration
+   *          the duration to subtract
+   * @return the result of subtracting the duration from the time
+   */
+  @NonNull
+  public static ITimeItem opSubtractDayTimeDurationFromTime(
+      @NonNull ITimeItem time,
+      @NonNull IDayTimeDurationItem duration) {
+    return ITimeWithTimeZoneItem.valueOf(ObjectUtils.notNull(time.asOffsetTime().minus(duration.asDuration())));
+  }
+
+  /**
+   * Based on XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-times">op:subtract-times</a>.
+   *
+   * @param arg1
+   *          the first duration
+   * @param arg2
+   *          the second duration
+   * @return the result of subtracting the second duration from the first
+   */
+  @NonNull
+  public static IDayTimeDurationItem opSubtractTimes(
+      @NonNull ITimeItem arg1,
+      @NonNull ITimeItem arg2) {
+    return between(arg2.asOffsetTime(), arg1.asOffsetTime());
   }
 
   /**
@@ -268,9 +341,7 @@ public final class OperationFunctions { // NOPMD - intentional
       @NonNull IYearMonthDurationItem arg2) {
     Period duration1 = arg1.asPeriod();
     Period duration2 = arg2.asPeriod();
-
-    return IYearMonthDurationItem.valueOf(
-        ObjectUtils.notNull(duration1.minus(duration2)));
+    return IYearMonthDurationItem.valueOf(ObjectUtils.notNull(duration2.minus(duration1)));
   }
 
   /**
@@ -290,8 +361,7 @@ public final class OperationFunctions { // NOPMD - intentional
     Duration duration1 = arg1.asDuration();
     Duration duration2 = arg2.asDuration();
 
-    return IDayTimeDurationItem.valueOf(
-        ObjectUtils.notNull(duration1.minus(duration2)));
+    return IDayTimeDurationItem.valueOf(ObjectUtils.notNull(duration2.minus(duration1)));
   }
 
   /**
@@ -306,12 +376,14 @@ public final class OperationFunctions { // NOPMD - intentional
    */
   @NonNull
   public static IDayTimeDurationItem opSubtractDateTimes(@NonNull IDateTimeItem time1, @NonNull IDateTimeItem time2) {
-    return between(time1.asZonedDateTime(), time2.asZonedDateTime());
+    return between(time2.asZonedDateTime(), time1.asZonedDateTime());
   }
 
   /**
    * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dateTimes">op:subtract-dateTimes</a>.
+   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dateTimes">op:subtract-dateTimes</a>
+   * and <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-times">op:subtract-times</a>.
    *
    * @param time1
    *          the first point in time
@@ -320,9 +392,8 @@ public final class OperationFunctions { // NOPMD - intentional
    * @return the duration the occurred between the two points in time
    */
   @NonNull
-  private static IDayTimeDurationItem between(@NonNull ZonedDateTime time1, @NonNull ZonedDateTime time2) {
-    return IDayTimeDurationItem.valueOf(
-        ObjectUtils.notNull(Duration.between(time1, time2)));
+  private static IDayTimeDurationItem between(@NonNull Temporal time1, @NonNull Temporal time2) {
+    return IDayTimeDurationItem.valueOf(ObjectUtils.notNull(Duration.between(time1, time2)));
   }
 
   /**
@@ -1070,6 +1141,17 @@ public final class OperationFunctions { // NOPMD - intentional
     return IBooleanItem.valueOf(!left && right);
   }
 
+  /**
+   * Based on XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-same-key">op:same-key</a>.
+   *
+   * @param k1
+   *          the first key to compare
+   * @param k2
+   *          the second key to compare
+   * @return {@code true} if the compared keys are the same, or {@code false}
+   *         otherwise
+   */
   public static boolean opSameKey(@NonNull IAnyAtomicItem k1, @NonNull IAnyAtomicItem k2) {
     boolean retval;
     if ((k1 instanceof IStringItem || k1 instanceof IAnyUriItem || k1 instanceof IUntypedAtomicItem)

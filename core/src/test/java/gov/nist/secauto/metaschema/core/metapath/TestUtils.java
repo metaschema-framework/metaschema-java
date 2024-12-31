@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationIte
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
@@ -235,11 +236,23 @@ public final class TestUtils {
    *
    * @param value
    *          the date/time value
-   * @return the date item
+   * @return the date/time item
    */
   @NonNull
   public static IDateTimeItem dateTime(@NonNull String value) {
     return IDateTimeItem.valueOf(value);
+  }
+
+  /**
+   * Create a time item using the provided value.
+   *
+   * @param value
+   *          the time value
+   * @return the time item
+   */
+  @NonNull
+  public static ITimeItem time(@NonNull String value) {
+    return ITimeItem.valueOf(value);
   }
 
   /**

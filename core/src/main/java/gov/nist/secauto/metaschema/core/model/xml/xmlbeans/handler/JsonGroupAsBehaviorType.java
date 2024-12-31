@@ -22,9 +22,9 @@ public final class JsonGroupAsBehaviorType {
    * Sets the value of obj onto the given simple value target.
    *
    * @param obj
-   *          the boolean value to set
+   *          the JSON grouping behavior to encode
    * @param target
-   *          the XML value to cast to a boolean
+   *          the target SimpleValue to store the encoded string
    */
   @SuppressFBWarnings("SF_SWITCH_NO_DEFAULT")
   public static void encodeJsonGroupAsBehaviorType(JsonGroupAsBehavior obj, org.apache.xmlbeans.SimpleValue target) {
@@ -50,8 +50,10 @@ public final class JsonGroupAsBehaviorType {
    * Returns an appropriate Java object from the given simple value.
    *
    * @param obj
-   *          the XML value to cast to a boolean
-   * @return the associated boolean value
+   *          the SimpleValue containing the encoded behavior string
+   * @return the decoded JsonGroupAsBehavior value
+   * @throws UnsupportedOperationException
+   *           if the string value is not recognized
    */
   public static JsonGroupAsBehavior decodeJsonGroupAsBehaviorType(org.apache.xmlbeans.SimpleValue obj) {
     String value = obj.getStringValue();

@@ -15,6 +15,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * The common interface of all Metapath expression nodes.
+ * <p>
+ * Metapath expression nodes represent the different types of expressions that
+ * can appear in a Metapath query, forming a composite structure that can be
+ * traversed and evaluated.
+ *
+ * @since 1.0.0
+ * @see gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor
  */
 public interface IExpression {
   /**

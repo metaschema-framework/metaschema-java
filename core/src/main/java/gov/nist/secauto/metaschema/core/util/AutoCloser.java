@@ -76,7 +76,8 @@ public final class AutoCloser<T, E extends Exception> implements AutoCloseable {
   }
 
   @Override
-  @SuppressFBWarnings("THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION")
+  @SuppressFBWarnings(value = "THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION",
+      justification = "Generic exception is required for flexible resource closing")
   public void close() throws E {
     closeLambda.close(getResource());
   }

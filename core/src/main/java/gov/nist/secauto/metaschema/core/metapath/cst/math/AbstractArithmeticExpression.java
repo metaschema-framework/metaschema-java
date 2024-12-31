@@ -22,7 +22,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * result type.
  *
  * @param <RESULT_TYPE>
- *          the base result of evaluating the arithmetic expression
+ *          the base result type of the arithmetic evaluation, representing the
+ *          atomic value produced by this expression
  */
 public abstract class AbstractArithmeticExpression<RESULT_TYPE extends IAnyAtomicItem>
     extends AbstractBinaryExpression<IExpression, IExpression> {

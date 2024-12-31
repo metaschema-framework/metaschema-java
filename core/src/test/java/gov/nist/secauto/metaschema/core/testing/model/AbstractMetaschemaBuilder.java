@@ -93,7 +93,7 @@ abstract class AbstractMetaschemaBuilder<T extends IMetaschemaBuilder<T>>
    * information is provided.
    */
   protected void validate() {
-    StringUtils.requireNonEmpty(name, "name");
+    StringUtils.requireNonEmpty(ObjectUtils.requireNonNull(name), "name");
     ObjectUtils.requireNonNull(source, "source");
   }
 

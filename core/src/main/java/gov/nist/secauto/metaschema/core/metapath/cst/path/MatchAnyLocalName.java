@@ -11,6 +11,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * A wildcard matcher that matches any local name in a specific namespace.
+ * <p>
+ * This matcher implements the namespace:* pattern where it matches any node
+ * whose namespace exactly matches the specified namespace, regardless of the
+ * local name.
  */
 class MatchAnyLocalName implements IWildcardMatcher {
   @NonNull

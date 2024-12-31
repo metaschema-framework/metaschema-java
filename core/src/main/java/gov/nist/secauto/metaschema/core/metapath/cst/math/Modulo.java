@@ -20,6 +20,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * An XPath 3.1
  * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
  * expression</a> supporting modulo.
+ * <p>
+ * For example: {@code 5 mod 2} evaluates to {@code 1}
  */
 public class Modulo
     extends AbstractArithmeticExpression<INumericItem> {

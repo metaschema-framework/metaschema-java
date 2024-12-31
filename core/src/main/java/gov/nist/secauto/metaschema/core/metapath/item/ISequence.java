@@ -75,8 +75,9 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
   /**
    * Get a stream guaranteed to be backed by a list.
    * <p>
-   * This call ensures that the sequence is backed by a List and not a stream, so
-   * the underlying collection can be reused.
+   * This call ensures that the sequence is backed by a {@link List} and not a
+   * {@link Stream}, so the underlying collection can be reused. This is done by
+   * first calling {@link #reusable()}.
    *
    * @return the stream
    */

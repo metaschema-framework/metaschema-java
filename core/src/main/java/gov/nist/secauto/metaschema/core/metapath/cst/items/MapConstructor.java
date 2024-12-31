@@ -84,7 +84,7 @@ public class MapConstructor
     private final IExpression valueExpression;
 
     /**
-     * Construct a new map entry expression using the provided ket and value
+     * Construct a new map entry expression using the provided key and value
      * expressions.
      *
      * @param keyExpression

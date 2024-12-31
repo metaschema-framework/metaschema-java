@@ -10,8 +10,8 @@ import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySequenceConstruc
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySquareConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.DecimalLiteral;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.EmptySequence;
+import gov.nist.secauto.metaschema.core.metapath.cst.items.Except;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.And;
-import gov.nist.secauto.metaschema.core.metapath.cst.logic.Except;
 import gov.nist.secauto.metaschema.core.metapath.cst.logic.If;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Addition;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;

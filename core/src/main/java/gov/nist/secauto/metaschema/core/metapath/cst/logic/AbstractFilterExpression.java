@@ -60,14 +60,14 @@ public abstract class AbstractFilterExpression
    * A callback used to apply the filter to the result of evaluating the left
    * expression.
    *
-   * @param result
-   *          the set of items to filter
+   * @param source
+   *          the items to filter against
    * @param items
-   *          a list of items to filter with
+   *          the items to filter with
    * @return the filtered result set
    */
   @NonNull
   protected abstract ISequence<?> applyFilterTo(
-      @NonNull ISequence<?> result,
+      @NonNull List<? extends IItem> source,
       @NonNull List<? extends IItem> items);
 }

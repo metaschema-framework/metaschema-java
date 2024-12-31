@@ -38,8 +38,8 @@ public class Intersect
   }
 
   @Override
-  protected ISequence<?> applyFilterTo(@NonNull ISequence<?> result, @NonNull List<? extends IItem> items) {
-    return ISequence.of(ObjectUtils.notNull(result.stream()
+  protected ISequence<?> applyFilterTo(@NonNull List<? extends IItem> source, @NonNull List<? extends IItem> items) {
+    return ISequence.of(ObjectUtils.notNull(source.stream()
         .distinct()
         .filter(items::contains)));
   }

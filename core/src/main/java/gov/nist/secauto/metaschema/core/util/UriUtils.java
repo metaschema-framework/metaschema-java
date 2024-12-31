@@ -17,7 +17,11 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A collection of methods for manipulating uniform resource identifiers (URIs).
+ * A collection of methods for manipulating uniform resource identifiers (URIs),
+ * providing functionality for URI resolution, relativization, and path
+ * manipulation.
+ * <p>
+ * This utility class supports both local file paths and remote URIs.
  */
 public final class UriUtils {
   private static final Pattern URI_SEPERATOR_PATTERN = Pattern.compile("\\/");

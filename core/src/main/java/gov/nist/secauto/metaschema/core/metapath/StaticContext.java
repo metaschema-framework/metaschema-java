@@ -459,7 +459,7 @@ public final class StaticContext {
    *          the qualified name of the function
    * @param arity
    *          the number of arguments
-   * @return the type
+   * @return the function
    * @throws StaticMetapathException
    *           with the code {@link StaticMetapathException#NO_FUNCTION_MATCH} if
    *           a matching function was not found

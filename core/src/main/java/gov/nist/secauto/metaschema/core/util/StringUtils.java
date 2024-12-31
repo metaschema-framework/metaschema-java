@@ -10,8 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Provides a collection of utilities for checking and managing strings.
@@ -33,13 +31,8 @@ public final class StringUtils {
    *           if {@code string} is empty
    */
   @NonNull
-  @SuppressWarnings("null")
-  @SuppressFBWarnings("NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE")
-  public static String requireNonEmpty(@Nullable String string) {
-    if (string.isEmpty()) {
-      throw new IllegalArgumentException("String is empty.");
-    }
-    return string;
+  public static String requireNonEmpty(@NonNull String string) {
+    return requireNonEmpty(string, "String is empty.");
   }
 
   /**
@@ -57,9 +50,7 @@ public final class StringUtils {
    *           if {@code string} is empty
    */
   @NonNull
-  @SuppressWarnings("null")
-  @SuppressFBWarnings("NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE")
-  public static String requireNonEmpty(@Nullable String string, @NonNull String message) {
+  public static String requireNonEmpty(@NonNull String string, @NonNull String message) {
     if (string.isEmpty()) {
       throw new IllegalArgumentException(message);
     }

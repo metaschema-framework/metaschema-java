@@ -8,6 +8,10 @@ package gov.nist.secauto.metaschema.core.metapath.item;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -71,5 +75,31 @@ public final class ItemUtils {
             "The item of type '%s' is not the required type '%s'.",
             item.getClass().getName(),
             clazz.getName()));
+  }
+
+  public static <T> Stream<Class<? extends T>> interfacesFor(
+      @NonNull Class<? extends T> seed,
+      @NonNull Class<T> base) {
+    return ancestorsOrSelf(seed)
+        .flatMap(clazz -> Stream.ofNullable(asSubclassOrNull(clazz, base)))
+        .flatMap(clazz -> Stream.concat(
+            Stream.of(clazz),
+            Arrays.stream(seed.getInterfaces())
+                .flatMap(cls -> Stream.ofNullable(asSubclassOrNull(cls, base)))));
+  }
+
+  private static <T> Stream<Class<? super T>> ancestorsOrSelf(@NonNull Class<T> seed) {
+    return Stream.iterate(seed, Objects::nonNull, Class::getSuperclass);
+  }
+
+  @Nullable
+  private static <T> Class<? extends T> asSubclassOrNull(Class<?> clazz, Class<T> base) {
+    Class<? extends T> retval = null;
+    try {
+      retval = clazz.asSubclass(base);
+    } catch (ClassCastException ex) {
+      // do nothing
+    }
+    return retval;
   }
 }

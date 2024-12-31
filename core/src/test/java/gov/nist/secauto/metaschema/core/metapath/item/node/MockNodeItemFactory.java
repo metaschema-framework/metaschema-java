@@ -221,15 +221,16 @@ public class MockNodeItemFactory
   }
 
   /**
-   * Construct a new mocked field node item with no child flags.
+   * Construct a new mocked assembly node item with the provided child flags and
+   * fields.
    *
    * @param name
-   *          the qualified name of the field node item
+   *          the qualified name of the assembly node item
    * @param flags
    *          the node item's child flag node items
    * @param modelItems
    *          the node item's child model node items
-   * @return the mocked field node item
+   * @return the mocked assembly node item
    */
   @NonNull
   public IAssemblyNodeItem assembly(

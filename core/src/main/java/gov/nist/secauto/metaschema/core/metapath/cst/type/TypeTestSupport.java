@@ -107,13 +107,19 @@ public final class TypeTestSupport {
    * @param staticContext
    *          the static context used to resolve types and other information
    * @return the kind test
+   * @throws IllegalArgumentException
+   *           if the tree structure contains an unsupported kind test type
    */
   @NonNull
   public static IItemType parseKindTest(
       @NonNull ParseTree tree,
       @NonNull StaticContext staticContext) {
     ParseTree child = ObjectUtils.requireNonNull(tree.getChild(0));
-    return KIND_TEST_HANDLER_MAP.get(child.getClass()).parse(child, staticContext);
+    ParseTreeParser<? extends IKindTest<?>> handler = KIND_TEST_HANDLER_MAP.get(child.getClass());
+    if (handler == null) {
+      throw new IllegalArgumentException("Unsupported kind test type: " + child.getClass());
+    }
+    return handler.parse(child, staticContext);
   }
 
   @NonNull
