@@ -415,7 +415,7 @@ public class BuildCSTVisitor
             0,
             2,
             (ctx, idx) -> {
-              int pos = (idx - 1) / 2;
+              int pos = idx / 2;
               ParamContext tree = ctx.param(pos);
               return IArgument.of(
                   getContext().parseVariableName(ObjectUtils.notNull(tree.eqname().getText())),

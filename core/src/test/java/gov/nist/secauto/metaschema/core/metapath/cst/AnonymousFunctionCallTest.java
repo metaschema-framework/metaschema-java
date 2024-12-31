@@ -7,9 +7,12 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.qname;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression.ResultType;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +54,15 @@ class AnonymousFunctionCallTest {
 
   @Test
   void testMultipleParameters() {
-    // FIXME: Add test for function with multiple parameters
+	    StaticContext staticContext = StaticContext.builder()
+	            .namespace("ex", NS)
+	            .build();
+	    DynamicContext dynamicContext = new DynamicContext(staticContext);
+	    String metapath = "function ($argument1 as meta:string, $argument2 as meta:string) as meta:string { $argument2 }";
+	    dynamicContext.bindVariableValue(qname(NS, "boom"), 
+	    		IMetapathExpression.compile(metapath, staticContext).evaluate(null, dynamicContext));    
+	    String result = IMetapathExpression.compile("$ex:boom('a', 'b')", staticContext).evaluateAs(null, ResultType.STRING , dynamicContext);
+	    assertEquals(result, "b");
   }
 
   @Test
