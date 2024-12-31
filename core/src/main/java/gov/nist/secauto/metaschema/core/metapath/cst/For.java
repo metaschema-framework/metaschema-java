@@ -30,7 +30,7 @@ public class For
   private final IExpression returnExpression;
 
   /**
-   * Construct a new let expression using the provided variable and return clause.
+   * Construct a new for expression using the provided variable and return clause.
    *
    * @param variable
    *          the variable declaration

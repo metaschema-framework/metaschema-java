@@ -20,7 +20,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://www.w3.org/TR/xpath-31/#id-relative-path-expressions">relative path
  * expressions</a>.
  */
-
 public class RelativeSlashPath
     extends AbstractRelativePathExpression {
 

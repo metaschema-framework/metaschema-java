@@ -22,6 +22,19 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An XPath 3.1
  * <a href="https://www.w3.org/TR/xpath-31/#id-string-concat-expr">string
  * concatenation expression</a>.
+ *
+ * <p>
+ * Concatenates the string values of its operands in left to right order. Each
+ * operand is atomized and converted to a string value before concatenation.
+ *
+ * <p>
+ * Example Metapath usage:
+ * <p>
+ * {@code "abc" || "def"} -> {@code "abcdef"}
+ * <p>
+ * {@code 123 || "456"} -> {@code "123456"}
+ * <p>
+ * {@code () || "xyz" || "abc"} -> {@code "xyzabc"}
  */
 public class StringConcat
     extends AbstractNAryExpression {

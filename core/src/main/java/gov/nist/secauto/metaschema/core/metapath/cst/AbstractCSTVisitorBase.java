@@ -31,6 +31,20 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * Provides utility methods for processing Metapath abstract syntax tree (AST)
  * nodes to produce a compact syntax tree (CST).
+ * <p>
+ * This base class implements common visitor patterns for transforming AST nodes
+ * into a more compact representation. The CST is optimized for efficient
+ * evaluation of Metapath expressions.
+ * <p>
+ * Key utility methods include:
+ * <ul>
+ * <li>{@link #nairyToList} - Processes n-ary expressions into a list</li>
+ * <li>{@link #nairyToCollection} - Processes n-ary expressions into a
+ * collection</li>
+ * <li>{@link #handleNAiryCollection} - Handles n-ary expressions with
+ * operators</li>
+ * <li>{@link #handleGroupedNAiry} - Processes grouped n-ary expressions</li>
+ * </ul>
  */
 @SuppressWarnings({
     "PMD.CouplingBetweenObjects"

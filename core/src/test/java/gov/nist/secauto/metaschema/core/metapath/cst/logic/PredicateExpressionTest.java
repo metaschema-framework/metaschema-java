@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst.logic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
@@ -52,6 +53,8 @@ class PredicateExpressionTest
 
     ISequence<?> result = expr.accept(dynamicContext, focus);
 
+    verify(stepExpr, times(1)).accept(dynamicContext, focus);
+
     assertEquals(ISequence.of(item).reusable(), result, "Sequence must match");
   }
 
@@ -77,9 +80,10 @@ class PredicateExpressionTest
 
     ISequence<?> result = expr.accept(dynamicContext, ISequence.of(item));
 
+    assertEquals(ISequence.of(item), result, "Sequence must match");
+
+    verify(stepExpr, times(1)).accept(dynamicContext, focus);
     verify(predicates, never()).stream();
     verify(predicates, never()).iterator();
-
-    assertEquals(ISequence.of(item), result, "Sequence must match");
   }
 }

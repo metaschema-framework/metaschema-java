@@ -23,6 +23,8 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * Provides a cache for managing commonly reused qualified names, represented
  * using the {@link IEnhancedQName} interface.
  * <p>
+ * The cache operations provided by this cache are thread safe.
+ * <p>
  * A unique integer index value is assigned for each namespace and localname
  * pair. This index value can be used to retrieve the qualified name using the
  * {@link #get(int)} method. This allows the index value to be used in place of
@@ -31,6 +33,8 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * The {@link IEnhancedQName#getIndexPosition()} method can be used to get the
  * index value of a given qualified name.
  */
+// FIXME: Consider the implications of this cache in a long running process.
+// Using a global shared instance may result in a very large cache.
 public final class QNameCache {
 
   private static final Comparator<IEnhancedQName> COMPARATOR
@@ -44,6 +48,7 @@ public final class QNameCache {
 
   private final Map<Integer, QNameRecord> indexToQName = new ConcurrentHashMap<>();
   private final Map<Integer, Map<String, QNameRecord>> nsIndexToLocalNameToIndex = new ConcurrentHashMap<>();
+
   /**
    * The next available qualified-name index position.
    */
@@ -87,7 +92,7 @@ public final class QNameCache {
    */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
-  public IEnhancedQName newCachedQName(@NonNull String namespace, @NonNull String name) {
+  public IEnhancedQName cachedQNameFor(@NonNull String namespace, @NonNull String name) {
     int namespacePosition = namespaceCache.indexOf(namespace);
 
     Map<String, QNameRecord> namespaceNames = nsIndexToLocalNameToIndex
@@ -109,11 +114,11 @@ public final class QNameCache {
    *          the namespace for the qualified name
    * @param name
    *          the local name for the qualified name
-   * @return the cached qualified name or {@code null} if the name does not exist
-   *         in the cache
+   * @return an optional containing the cached qualified name or a {@code null}
+   *         value if the name does not exist in the cache
    */
-  @Nullable
-  IEnhancedQName get(@NonNull String namespace, @NonNull String name) {
+  @NonNull
+  Optional<IEnhancedQName> get(@NonNull String namespace, @NonNull String name) {
     Optional<Integer> nsPosition = namespaceCache.get(namespace);
     if (!nsPosition.isPresent()) {
       throw new IllegalArgumentException(
@@ -121,9 +126,10 @@ public final class QNameCache {
     }
 
     Map<String, QNameRecord> namespaceNames = nsIndexToLocalNameToIndex.get(nsPosition.get());
-    return namespaceNames == null
-        ? null
-        : namespaceNames.get(name);
+    return ObjectUtils.notNull(Optional.ofNullable(
+        namespaceNames == null
+            ? null
+            : namespaceNames.get(name)));
   }
 
   /**

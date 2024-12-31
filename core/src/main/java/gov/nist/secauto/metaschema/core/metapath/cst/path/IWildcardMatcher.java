@@ -29,6 +29,8 @@ public interface IWildcardMatcher extends Predicate<IDefinitionNodeItem<?, ?>> {
    */
   @NonNull
   static IWildcardMatcher anyNamespace(@NonNull String localName) {
+    // the grammar should ensure that localName is not empty
+    assert !localName.isEmpty();
     return new MatchAnyNamespace(localName);
   }
 

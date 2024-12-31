@@ -51,7 +51,7 @@ public abstract class AbstractSequence<ITEM extends IItem>
   }
 
   /**
-   * Get the list backing this sequence.
+   * Get the unmodifiable list backing this sequence.
    *
    * @return the underlying list
    */

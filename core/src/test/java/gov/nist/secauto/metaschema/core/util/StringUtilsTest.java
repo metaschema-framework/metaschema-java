@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.regex.Pattern;
 
-class ReplacementScannerTest {
+class StringUtilsTest {
 
   @Test
   void test() {

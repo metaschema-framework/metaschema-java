@@ -14,6 +14,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.stream.Stream;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -21,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href="https://www.w3.org/TR/xpath-31/#dt-expanded-qname">expanded QName
  * name test</a>.
  */
-@SuppressWarnings("PMD.TestClassWithoutTestCases")
+@SuppressWarnings("PMD.TestClassWithoutTestCases") // not a test
 public class NameNodeTest
     implements INodeTestExpression {
 
@@ -55,12 +57,12 @@ public class NameNodeTest
 
   @Override
   public ISequence<? extends INodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(filterStream(ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep))));
+    Stream<INodeItem> nodes = ObjectUtils.notNull(focus.stream()
+        .map(ItemUtils::checkItemIsNodeItemForStep));
+    return ISequence.of(filterStream(nodes));
   }
 
   @Override
-  @SuppressWarnings("PMD.UnusedPrivateMethod")
   public boolean match(INodeItem item) {
     return item instanceof IDefinitionNodeItem
         && getName().equals(((IDefinitionNodeItem<?, ?>) item).getQName());

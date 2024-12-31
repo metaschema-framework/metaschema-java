@@ -30,8 +30,8 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An XPath 3.1
- * <a href="https://www.w3.org/TR/xpath-31/#id-quantified-expressions">quanified
+ * An XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-31/#id-quantified-expressions">quantified
  * expression</a>.
  */
 public class Quantified

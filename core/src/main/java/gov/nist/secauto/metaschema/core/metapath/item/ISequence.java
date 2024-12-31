@@ -164,6 +164,7 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
    *           if the sequence contains more than one item and requireSingleton is
    *           {@code true}
    */
+  // FIXME: 3.0: Consider changing this to use the Java Optional
   @Nullable
   default ITEM getFirstItem(boolean requireSingleton) {
     return getFirstItem(this, requireSingleton);

@@ -13,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -31,14 +32,20 @@ class QNameCacheTest {
   void test(@NonNull String namespace, @NonNull String localName) {
     QNameCache cache = QNameCache.instance();
 
-    IEnhancedQName qname = cache.newCachedQName(namespace, localName);
-    IEnhancedQName lookup = cache.get(namespace, localName);
+    IEnhancedQName qname = cache.cachedQNameFor(namespace, localName);
+    Optional<IEnhancedQName> lookup = cache.get(namespace, localName);
 
     assertAll(
-        () -> assertNotNull(lookup, "Expected qualified name to be found in cache"),
+        () -> assertNotNull(lookup.orElse(null), "Expected qualified name to be found in cache"),
         () -> assertEquals(qname, lookup, "Expected to retrieve the same QName record"),
-        () -> assertEquals(namespace, lookup == null ? null : lookup.getNamespace(), "Expected namespace to be equal"),
-        () -> assertEquals(localName, lookup == null ? null : lookup.getLocalName(), "Expected localName to be equal"));
+        () -> assertEquals(
+            namespace,
+            lookup.map(IEnhancedQName::getNamespace).orElse(null),
+            "Expected namespace to be equal"),
+        () -> assertEquals(
+            localName,
+            lookup.map(IEnhancedQName::getLocalName).orElse(null),
+            "Expected localName to be equal"));
   }
 
 }
