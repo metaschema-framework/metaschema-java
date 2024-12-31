@@ -37,7 +37,7 @@ class QNameCacheTest {
 
     assertAll(
         () -> assertNotNull(lookup.orElse(null), "Expected qualified name to be found in cache"),
-        () -> assertEquals(qname, lookup, "Expected to retrieve the same QName record"),
+        () -> assertEquals(qname, lookup.orElse(null), "Expected to retrieve the same QName record"),
         () -> assertEquals(
             namespace,
             lookup.map(IEnhancedQName::getNamespace).orElse(null),
