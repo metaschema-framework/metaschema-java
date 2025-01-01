@@ -75,7 +75,7 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
       return ISequence.empty(); // NOPMD - readability
     }
 
-    int index = position.asInteger().intValueExact() - 1;
+    int index = position.toIntValueExact() - 1;
     ICollectionValue result = getValue().get(index);
     return result.toSequence();
   }

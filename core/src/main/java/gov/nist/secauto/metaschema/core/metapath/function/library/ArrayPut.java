@@ -100,7 +100,7 @@ public final class ArrayPut {
       @NonNull IArrayItem<T> array,
       @NonNull IIntegerItem positionItem,
       @NonNull T member) {
-    return put(array, positionItem.asInteger().intValueExact(), member);
+    return put(array, positionItem.toIntValueExact(), member);
   }
 
   /**

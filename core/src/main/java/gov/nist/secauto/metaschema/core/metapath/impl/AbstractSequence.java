@@ -200,7 +200,11 @@ public abstract class AbstractSequence<ITEM extends IItem>
     }
     Iterator<?> iter = ((List<?>) other).iterator();
     for (Object element : asList()) {
-      if (!iter.hasNext() || !element.equals(iter.next())) {
+      if (!iter.hasNext()) {
+        return false;
+      }
+      Object otherElement = iter.next();
+      if (element == null ? otherElement != null : !element.equals(otherElement)) {
         return false;
       }
     }

@@ -48,7 +48,7 @@ public final class FunctionUtils {
    *           if the provided value will not exactly fit in an {@code int}
    */
   public static int asInteger(@NonNull INumericItem value) {
-    return asInteger(value.asInteger());
+    return value.toIntValueExact();
   }
 
   /**

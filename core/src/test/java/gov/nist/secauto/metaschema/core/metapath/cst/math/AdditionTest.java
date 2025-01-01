@@ -8,6 +8,8 @@ package gov.nist.secauto.metaschema.core.metapath.cst.math;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.date;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.dateTime;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.dayTimeDuration;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.decimal;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.time;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.yearMonthDuration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,7 +71,19 @@ public class AdditionTest
             "meta:day-time-duration('P1DT3H15M') + meta:time('23:12:00+03:00')"),
         Arguments.of(
             dayTimeDuration("P8DT5M"),
-            "meta:day-time-duration('P2DT12H5M') + meta:day-time-duration('P5DT12H')"));
+            "meta:day-time-duration('P2DT12H5M') + meta:day-time-duration('P5DT12H')"),
+        Arguments.of(
+            integer(2),
+            "1 + 1"),
+        Arguments.of(
+            decimal(2),
+            "1.0 + 1"),
+        Arguments.of(
+            decimal(2),
+            "1 + 1.0"),
+        Arguments.of(
+            decimal(2),
+            "1.0 + 1.0"));
   }
 
   @ParameterizedTest

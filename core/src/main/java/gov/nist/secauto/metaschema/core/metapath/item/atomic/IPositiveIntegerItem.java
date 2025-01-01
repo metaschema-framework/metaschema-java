@@ -75,7 +75,7 @@ public interface IPositiveIntegerItem extends INonNegativeIntegerItem {
    */
   @NonNull
   static IPositiveIntegerItem valueOf(@NonNull INumericItem value) {
-    return valueOf(value.asInteger());
+    return value instanceof IPositiveIntegerItem ? (IPositiveIntegerItem) value : valueOf(value.asInteger());
   }
 
   /**

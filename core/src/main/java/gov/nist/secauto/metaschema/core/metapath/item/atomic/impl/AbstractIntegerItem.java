@@ -45,13 +45,6 @@ public abstract class AbstractIntegerItem
     return getValue();
   }
 
-  @SuppressWarnings("null")
-  @Override
-  public IIntegerItem abs() {
-    BigInteger value = asInteger();
-    return value.signum() > -1 ? this : IIntegerItem.valueOf(value.abs());
-  }
-
   @Override
   public int hashCode() {
     return asInteger().hashCode();

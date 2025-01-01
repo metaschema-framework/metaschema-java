@@ -80,7 +80,7 @@ public final class FnRemove {
   public static <T extends IItem> List<T> fnRemove(
       @NonNull List<T> target,
       @NonNull IIntegerItem positionItem) {
-    int position = positionItem.asInteger().intValue();
+    int position = positionItem.toIntValueExact();
 
     if (position == 0 || position > target.size()) {
       return target;

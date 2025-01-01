@@ -38,12 +38,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * <p>
  * Key utility methods include:
  * <ul>
- * <li>{@link #nairyToList} - Processes n-ary expressions into a list</li>
- * <li>{@link #nairyToCollection} - Processes n-ary expressions into a
+ * <li>{@link #nairyToList} - Processes n-airy expressions into a list</li>
+ * <li>{@link #nairyToCollection} - Processes n-airy expressions into a
  * collection</li>
- * <li>{@link #handleNAiryCollection} - Handles n-ary expressions with
+ * <li>{@link #handleNAiryCollection} - Handles n-airy expressions with
  * operators</li>
- * <li>{@link #handleGroupedNAiry} - Processes grouped n-ary expressions</li>
+ * <li>{@link #handleGroupedNAiry} - Processes grouped n-airy expressions</li>
  * </ul>
  */
 @SuppressWarnings({
@@ -132,7 +132,7 @@ public abstract class AbstractCSTVisitorBase
   }
 
   /**
-   * Parse the provided context as an n-ary phrase.
+   * Parse the provided context as an n-airy phrase.
    *
    * @param <CONTEXT>
    *          the Java type of the antlr context to parse
@@ -171,7 +171,7 @@ public abstract class AbstractCSTVisitorBase
   }
 
   /**
-   * Parse the provided context as an n-ary phrase.
+   * Parse the provided context as an n-airy phrase.
    *
    * @param <CONTEXT>
    *          the Java type of the antlr context to parse
@@ -214,7 +214,7 @@ public abstract class AbstractCSTVisitorBase
   }
 
   /**
-   * Parse the provided context as an n-ary phrase, which will be one of the
+   * Parse the provided context as an n-airy phrase, which will be one of the
    * following.
    * <ol>
    * <li>A single <code>expr</code> for which that expr will be returned</li>
@@ -245,7 +245,7 @@ public abstract class AbstractCSTVisitorBase
   }
 
   /**
-   * Parse the provided context as an n-ary phrase, which will be one of the
+   * Parse the provided context as an n-airy phrase, which will be one of the
    * following.
    * <ol>
    * <li><code>expr</code> for which the expr will be returned.</li>
@@ -310,8 +310,8 @@ public abstract class AbstractCSTVisitorBase
   }
 
   /**
-   * Parse the provided context as a simple n-ary phrase, which will be one of the
-   * following.
+   * Parse the provided context as a simple n-airy phrase, which will be one of
+   * the following.
    * <ol>
    * <li><code>expr</code> for which the expr will be returned</li>
    * <li><code>left (operator right)*</code> for which a collection of the left

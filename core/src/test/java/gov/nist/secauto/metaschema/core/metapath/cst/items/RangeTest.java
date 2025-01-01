@@ -25,6 +25,12 @@ class RangeTest
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
         Arguments.of(
+            ISequence.of(integer(10), integer(1), integer(2), integer(3), integer(4)),
+            "(10, 1 to 4)"),
+        Arguments.of(
+            ISequence.of(integer(10)),
+            "(10 to 10)"),
+        Arguments.of(
             ISequence.of(integer(2), integer(3), integer(4), integer(5)),
             "2 to 5"),
         Arguments.of(

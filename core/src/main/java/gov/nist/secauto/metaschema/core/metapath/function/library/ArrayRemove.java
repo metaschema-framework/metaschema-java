@@ -93,7 +93,7 @@ public final class ArrayRemove {
     return remove(
         array,
         ObjectUtils.notNull(positions.stream()
-            .map(position -> position.asInteger().intValueExact())
+            .map(IIntegerItem::toIntValueExact)
             .collect(Collectors.toSet())));
   }
 

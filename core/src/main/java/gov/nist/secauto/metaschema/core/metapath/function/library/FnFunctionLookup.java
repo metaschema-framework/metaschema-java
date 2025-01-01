@@ -66,7 +66,7 @@ public final class FnFunctionLookup {
     try {
       matchingFunction = dynamicContext.getStaticContext().lookupFunction(
           name.asString(),
-          arity.asInteger().intValueExact());
+          arity.toIntValueExact());
     } catch (StaticMetapathException ex) {
       if (ex.getCode() != StaticMetapathException.NO_FUNCTION_MATCH) {
         throw ex;

@@ -96,7 +96,7 @@ public final class FnSubstring {
 
     IDecimalItem start = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
 
-    int startIndex = start.round().asInteger().intValue();
+    int startIndex = start.round().toIntValueExact();
 
     return ISequence.of(IStringItem.valueOf(
         fnSubstring(
@@ -125,8 +125,8 @@ public final class FnSubstring {
     return ISequence.of(IStringItem.valueOf(
         fnSubstring(
             sourceString.asString(),
-            start.round().asInteger().intValue(),
-            length.round().asInteger().intValue())));
+            start.round().toIntValueExact(),
+            length.round().toIntValueExact())));
   }
 
   /**

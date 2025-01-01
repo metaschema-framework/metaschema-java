@@ -73,7 +73,7 @@ public final class StringUtils {
   public static CharSequence replaceTokens(
       @NonNull CharSequence text,
       @NonNull Pattern pattern,
-      Function<Matcher, CharSequence> replacementFunction) {
+      @NonNull Function<Matcher, CharSequence> replacementFunction) {
     int lastIndex = 0;
     StringBuilder retval = new StringBuilder();
     Matcher matcher = pattern.matcher(text);

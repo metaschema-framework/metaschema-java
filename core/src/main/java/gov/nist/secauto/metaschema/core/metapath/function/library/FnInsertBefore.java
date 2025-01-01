@@ -99,7 +99,7 @@ public final class FnInsertBefore {
       return target;
     }
 
-    int position = positionItem.asInteger().intValue();
+    int position = positionItem.toIntValueExact();
 
     if (position < 1) {
       position = 1;

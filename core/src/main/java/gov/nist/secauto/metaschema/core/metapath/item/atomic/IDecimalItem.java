@@ -6,6 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DecimalItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -169,6 +171,124 @@ public interface IDecimalItem extends INumericItem {
   @Override
   default IIntegerItem floor() {
     return IIntegerItem.valueOf(asDecimal().setScale(0, RoundingMode.FLOOR).toBigIntegerExact());
+  }
+
+  /**
+   * Create a new sum by adding this value to the provided addend value.
+   *
+   * @param addend
+   *          the second value to sum
+   * @return a new value resulting from adding this value to the provided addend
+   *         value
+   */
+  @NonNull
+  default IDecimalItem add(@NonNull IDecimalItem addend) {
+    BigDecimal addendLeft = asDecimal();
+    BigDecimal addendRight = addend.asDecimal();
+    return valueOf(ObjectUtils.notNull(addendLeft.add(addendRight)));
+  }
+
+  /**
+   * Determine the difference by subtracting the provided subtrahend value from
+   * this minuend value.
+   *
+   * @param subtrahend
+   *          the value to subtract
+   * @return a new value resulting from subtracting the subtrahend from the
+   *         minuend
+   */
+  @NonNull
+  default IDecimalItem subtract(@NonNull IDecimalItem subtrahend) {
+    BigDecimal minuendDecimal = asDecimal();
+    BigDecimal subtrahendDecimal = subtrahend.asDecimal();
+    return valueOf(ObjectUtils.notNull(minuendDecimal.subtract(subtrahendDecimal, FunctionUtils.MATH_CONTEXT)));
+  }
+
+  /**
+   * Multiply this multiplicand value by the provided multiplier value.
+   *
+   * @param multiplier
+   *          the value to multiply by
+   * @return a new value resulting from multiplying the multiplicand by the
+   *         multiplier
+   */
+  @NonNull
+  default IDecimalItem multiply(@NonNull IDecimalItem multiplier) {
+    return valueOf(ObjectUtils.notNull(asDecimal().multiply(multiplier.asDecimal(), FunctionUtils.MATH_CONTEXT)));
+  }
+
+  /**
+   * Divide this dividend value by the provided divisor value.
+   *
+   * @param divisor
+   *          the value to divide by
+   * @return a new value resulting from dividing the dividend by the divisor
+   * @throws ArithmeticFunctionException
+   *           with the code {@link ArithmeticFunctionException#DIVISION_BY_ZERO}
+   *           if the divisor is zero
+   */
+  @NonNull
+  default IDecimalItem divide(@NonNull IDecimalItem divisor) {
+    // create a decimal result
+    BigDecimal divisorDecimal = divisor.asDecimal();
+
+    if (BigDecimal.ZERO.compareTo(divisorDecimal) == 0) {
+      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,
+          ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
+    }
+    return valueOf(ObjectUtils.notNull(asDecimal().divide(divisorDecimal, FunctionUtils.MATH_CONTEXT)));
+  }
+
+  /**
+   * Divide this dividend value by the provided divisor value using integer
+   * division.
+   *
+   * @param divisor
+   *          the value to divide by
+   * @return a new value resulting from dividing the dividend by the divisor
+   */
+  @Override
+  @NonNull
+  default IIntegerItem integerDivide(INumericItem divisor) {
+    // create a decimal result
+    BigDecimal decimalDivisor = divisor.asDecimal();
+
+    if (BigDecimal.ZERO.compareTo(decimalDivisor) == 0) {
+      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,
+          ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
+    }
+
+    BigDecimal decimalDividend = asDecimal();
+    return IIntegerItem.valueOf(
+        ObjectUtils.notNull(decimalDividend
+            .divideToIntegralValue(decimalDivisor, FunctionUtils.MATH_CONTEXT).toBigInteger()));
+  }
+
+  /**
+   * Compute the remainder when dividing this dividend value by the provided
+   * divisor value.
+   *
+   * @param divisor
+   *          the value to divide by
+   * @return a new value containing the remainder resulting from dividing the
+   *         dividend by the divisor
+   */
+  @Override
+  @NonNull
+  default IDecimalItem mod(INumericItem divisor) {
+    // create a decimal result
+    BigDecimal decimalDivisor = divisor.asDecimal();
+
+    if (BigDecimal.ZERO.compareTo(decimalDivisor) == 0) {
+      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,
+          ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
+    }
+    return valueOf(ObjectUtils.notNull(asDecimal().remainder(decimalDivisor, FunctionUtils.MATH_CONTEXT)));
+  }
+
+  @Override
+  default IDecimalItem negate() {
+    return valueOf(ObjectUtils.notNull(asDecimal().negate(FunctionUtils.MATH_CONTEXT)));
   }
 
   /**

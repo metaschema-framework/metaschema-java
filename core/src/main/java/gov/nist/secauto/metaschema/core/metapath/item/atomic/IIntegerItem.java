@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.IntegerItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -171,7 +172,10 @@ public interface IIntegerItem extends IDecimalItem {
   }
 
   @Override
-  IIntegerItem abs();
+  default IIntegerItem abs() {
+    BigInteger value = asInteger();
+    return value.signum() > -1 ? this : valueOf(ObjectUtils.notNull(value.abs()));
+  }
 
   @Override
   default IIntegerItem ceiling() {
@@ -181,6 +185,95 @@ public interface IIntegerItem extends IDecimalItem {
   @Override
   default IIntegerItem floor() {
     return this;
+  }
+
+  /**
+   * Create a new sum by adding this value to the provided addend value.
+   *
+   * @param addend
+   *          the second value to sum
+   * @return a new value resulting from adding this value to the provided addend
+   *         value
+   */
+  @NonNull
+  default IIntegerItem add(@NonNull IIntegerItem addend) {
+    BigInteger addendLeft = asInteger();
+    BigInteger addendRight = addend.asInteger();
+    return valueOf(ObjectUtils.notNull(addendLeft.add(addendRight)));
+  }
+
+  /**
+   * Determine the difference by subtracting the provided subtrahend value from
+   * this minuend value.
+   *
+   * @param subtrahend
+   *          the value to subtract
+   * @return a new value resulting from subtracting the subtrahend from the
+   *         minuend
+   */
+  @NonNull
+  default IIntegerItem subtract(@NonNull IIntegerItem subtrahend) {
+    BigInteger minuendInteger = asInteger();
+    BigInteger subtrahendInteger = subtrahend.asInteger();
+    return valueOf(ObjectUtils.notNull(minuendInteger.subtract(subtrahendInteger)));
+  }
+
+  /**
+   * Multiply this multiplicand value by the provided multiplier value.
+   *
+   * @param multiplier
+   *          the value to multiply by
+   * @return a new value resulting from multiplying the multiplicand by the
+   *         multiplier
+   */
+  @NonNull
+  default IIntegerItem multiply(@NonNull IIntegerItem multiplier) {
+    return valueOf(ObjectUtils.notNull(asInteger().multiply(multiplier.asInteger())));
+  }
+
+  /**
+   * Divide this dividend value by the provided divisor value using integer
+   * division.
+   *
+   * @param divisor
+   *          the value to divide by
+   * @return a new value resulting from dividing the dividend by the divisor
+   */
+  @NonNull
+  default IIntegerItem integerDivide(IIntegerItem divisor) {
+    BigInteger divisorInteger = divisor.asInteger();
+
+    if (BigInteger.ZERO.equals(divisorInteger)) {
+      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,
+          ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
+    }
+    return valueOf(ObjectUtils.notNull(asInteger().divide(divisorInteger)));
+  }
+
+  /**
+   * Compute the remainder when dividing this dividend value by the provided
+   * divisor value.
+   *
+   * @param divisor
+   *          the value to divide by
+   * @return a new value containing the remainder resulting from dividing the
+   *         dividend by the divisor
+   */
+  @NonNull
+  default IIntegerItem mod(IIntegerItem divisor) {
+    BigInteger divisorInteger = divisor.asInteger();
+
+    if (BigInteger.ZERO.equals(divisorInteger)) {
+      throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,
+          ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
+    }
+
+    return valueOf(ObjectUtils.notNull(asInteger().remainder(divisorInteger)));
+  }
+
+  @Override
+  default IIntegerItem negate() {
+    return valueOf(ObjectUtils.notNull(asInteger().negate()));
   }
 
   @Override

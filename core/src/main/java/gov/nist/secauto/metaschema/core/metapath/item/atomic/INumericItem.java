@@ -6,8 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.function.CastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.type.impl.TypeConstants;
@@ -77,6 +79,19 @@ public interface INumericItem extends IAnyAtomicItem {
    */
   @NonNull
   BigInteger asInteger();
+
+  // FIXME: Create specialized methods for integer and decimal
+  default int toIntValueExact() {
+    try {
+      return asInteger().intValueExact();
+    } catch (ArithmeticException ex) {
+      throw new CastFunctionException(
+          CastFunctionException.INPUT_VALUE_TOO_LARGE,
+          this,
+          String.format("Input value '%s' is out of range for a Java int.", asString()),
+          ex);
+    }
+  }
 
   /**
    * Get the effective boolean value of this item based on
@@ -193,5 +208,94 @@ public interface INumericItem extends IAnyAtomicItem {
       retval = IIntegerItem.valueOf(ObjectUtils.notNull(roundedValue));
     }
     return retval;
+  }
+
+  /**
+   * Create a new sum by adding this value to the provided addend value.
+   *
+   * @param addend
+   *          the second value to sum
+   * @return a new value resulting from adding this value to the provided addend
+   *         value
+   */
+  @NonNull
+  default INumericItem add(@NonNull INumericItem addend) {
+    return OperationFunctions.opNumericAdd(this, addend);
+  }
+
+  /**
+   * Determine the difference by subtracting the provided subtrahend value from
+   * this minuend value.
+   *
+   * @param subtrahend
+   *          the value to subtract
+   * @return a new value resulting from subtracting the subtrahend from the
+   *         minuend
+   */
+  @NonNull
+  default INumericItem subtract(@NonNull INumericItem subtrahend) {
+    return OperationFunctions.opNumericSubtract(this, subtrahend);
+  }
+
+  /**
+   * Multiply this multiplicand value by the provided multiplier value.
+   *
+   * @param multiplier
+   *          the value to multiply by
+   * @return a new value resulting from multiplying the multiplicand by the
+   *         multiplier
+   */
+  @NonNull
+  default INumericItem multiply(@NonNull INumericItem multiplier) {
+    return OperationFunctions.opNumericMultiply(this, multiplier);
+  }
+
+  /**
+   * Divide this dividend value by the provided divisor value.
+   *
+   * @param divisor
+   *          the value to divide by
+   * @return a new value resulting from dividing the dividend by the divisor
+   */
+  @NonNull
+  default INumericItem divide(@NonNull INumericItem divisor) {
+    return OperationFunctions.opNumericDivide(this, divisor);
+  }
+
+  /**
+   * Divide this dividend value by the provided divisor value using integer
+   * division.
+   *
+   * @param divisor
+   *          the value to divide by
+   * @return a new value resulting from dividing the dividend by the divisor
+   */
+  @NonNull
+  default IIntegerItem integerDivide(@NonNull INumericItem divisor) {
+    return OperationFunctions.opNumericIntegerDivide(this, divisor);
+  }
+
+  /**
+   * Compute the remainder when dividing this dividend value by the provided
+   * divisor value.
+   *
+   * @param divisor
+   *          the value to divide by
+   * @return a new value containing the remainder resulting from dividing the
+   *         dividend by the divisor
+   */
+  @NonNull
+  default INumericItem mod(@NonNull INumericItem divisor) {
+    return OperationFunctions.opNumericMod(this, divisor);
+  }
+
+  /**
+   * Reverse the sign of this value.
+   *
+   * @return a new value with the sign reversed
+   */
+  @NonNull
+  default INumericItem negate() {
+    return OperationFunctions.opNumericUnaryMinus(this);
   }
 }

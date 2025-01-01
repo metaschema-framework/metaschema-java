@@ -99,7 +99,7 @@ public final class ArrayInsertBefore {
       @NonNull IArrayItem<T> array,
       @NonNull IIntegerItem positionItem,
       @NonNull T member) {
-    return insertBefore(array, positionItem.asInteger().intValueExact(), member);
+    return insertBefore(array, positionItem.toIntValueExact(), member);
   }
 
   /**

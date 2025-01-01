@@ -58,7 +58,7 @@ public class Range
       retval = ISequence.empty();
     } else {
 
-      BigInteger min = right.asInteger();
+      BigInteger min = left.asInteger();
       BigInteger max = right.asInteger();
 
       List<IIntegerItem> range = new ArrayList<>(max.subtract(min).add(BigInteger.ONE).intValueExact());

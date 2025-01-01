@@ -163,7 +163,7 @@ public abstract class AbstractKeySpecifier implements IKeySpecifier {
     private final int index;
 
     public IntegerLiteralKeySpecifier(@NonNull IIntegerItem literal) {
-      index = literal.asInteger().intValueExact();
+      index = literal.toIntValueExact();
     }
 
     @Override
@@ -239,7 +239,7 @@ public abstract class AbstractKeySpecifier implements IKeySpecifier {
           .atomize()
           .flatMap(key -> {
             if (key instanceof IIntegerItem) {
-              int index = ((IIntegerItem) key).asInteger().intValueExact();
+              int index = ((IIntegerItem) key).toIntValueExact();
               try {
                 return Stream.ofNullable(ArrayGet.get(targetItem, index));
               } catch (IndexOutOfBoundsException ex) {

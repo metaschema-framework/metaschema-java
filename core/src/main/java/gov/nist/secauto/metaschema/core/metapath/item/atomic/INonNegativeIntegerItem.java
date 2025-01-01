@@ -80,7 +80,7 @@ public interface INonNegativeIntegerItem extends IIntegerItem {
    */
   @NonNull
   static INonNegativeIntegerItem valueOf(@NonNull INumericItem value) {
-    return valueOf(value.asInteger());
+    return value instanceof INonNegativeIntegerItem ? (INonNegativeIntegerItem) value : valueOf(value.asInteger());
   }
 
   /**

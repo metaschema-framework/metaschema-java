@@ -128,7 +128,7 @@ public final class ArraySubarray {
   public static <T extends ICollectionValue> IArrayItem<T> subarray(
       @NonNull IArrayItem<T> array,
       @NonNull IIntegerItem startItem) {
-    return subarray(array, startItem.asInteger().intValueExact());
+    return subarray(array, startItem.toIntValueExact());
   }
 
   /**
@@ -155,7 +155,7 @@ public final class ArraySubarray {
       @NonNull IArrayItem<T> array,
       @NonNull IIntegerItem startItem,
       @NonNull IIntegerItem lengthItem) {
-    return subarray(array, startItem.asInteger().intValueExact(), lengthItem.asInteger().intValueExact());
+    return subarray(array, startItem.toIntValueExact(), lengthItem.toIntValueExact());
   }
 
   /**

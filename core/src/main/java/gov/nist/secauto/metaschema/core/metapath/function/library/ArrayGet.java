@@ -85,7 +85,7 @@ public final class ArrayGet {
   public static <T extends ICollectionValue> T get(
       @NonNull List<T> target,
       @NonNull IIntegerItem positionItem) {
-    return get(target, positionItem.asInteger().intValue());
+    return get(target, positionItem.toIntValueExact());
   }
 
   /**

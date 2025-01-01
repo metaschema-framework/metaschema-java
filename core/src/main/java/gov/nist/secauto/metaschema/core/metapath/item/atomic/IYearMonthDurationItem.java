@@ -119,6 +119,10 @@ public interface IYearMonthDurationItem extends IDurationItem {
   @NonNull
   Period asPeriod();
 
+  default long asMonths() {
+    return asPeriod().toTotalMonths();
+  }
+
   @Override
   default IYearMonthDurationItem castAsType(IAnyAtomicItem item) {
     return cast(item);
