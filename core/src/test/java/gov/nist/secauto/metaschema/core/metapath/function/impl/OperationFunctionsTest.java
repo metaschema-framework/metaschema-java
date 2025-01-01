@@ -37,22 +37,10 @@ class OperationFunctionsTest {
   class Numeric {
     private Stream<Arguments> provideValuesOpNumericAdd() {
       return Stream.of(
-          Arguments.of(
-              integer(2),
-              integer(1),
-              integer(1)),
-          Arguments.of(
-              decimal("2.0"),
-              decimal("1.0"),
-              integer(1)),
-          Arguments.of(
-              decimal("2.0"),
-              integer(1),
-              decimal("1.0")),
-          Arguments.of(
-              decimal("2.0"),
-              decimal("1.0"),
-              decimal("1.0")));
+          Arguments.of(integer(2), integer(1), integer(1)),
+          Arguments.of(decimal("2.0"), decimal("1.0"), integer(1)),
+          Arguments.of(decimal("2.0"), integer(1), decimal("1.0")),
+          Arguments.of(decimal("2.0"), decimal("1.0"), decimal("1.0")));
     }
 
     @ParameterizedTest
@@ -66,22 +54,10 @@ class OperationFunctionsTest {
 
     private Stream<Arguments> provideValuesOpNumericSubtract() {
       return Stream.of(
-          Arguments.of(
-              integer(0),
-              integer(1),
-              integer(1)),
-          Arguments.of(
-              decimal("0"),
-              decimal("1.0"),
-              integer(1)),
-          Arguments.of(
-              decimal("0"),
-              integer(1),
-              decimal("1.0")),
-          Arguments.of(
-              decimal("0"),
-              decimal("1.0"),
-              decimal("1.0")));
+          Arguments.of(integer(0), integer(1), integer(1)),
+          Arguments.of(decimal("0"), decimal("1.0"), integer(1)),
+          Arguments.of(decimal("0"), integer(1), decimal("1.0")),
+          Arguments.of(decimal("0"), decimal("1.0"), decimal("1.0")));
     }
 
     @ParameterizedTest
@@ -95,30 +71,12 @@ class OperationFunctionsTest {
 
     private Stream<Arguments> provideValuesOpNumericMultiply() {
       return Stream.of(
-          Arguments.of(
-              integer(0),
-              integer(1),
-              integer(0)),
-          Arguments.of(
-              integer(1),
-              integer(1),
-              integer(1)),
-          Arguments.of(
-              integer(2),
-              integer(1),
-              integer(2)),
-          Arguments.of(
-              decimal("1.0"),
-              decimal("1.0"),
-              integer(1)),
-          Arguments.of(
-              decimal("1.0"),
-              integer(1),
-              decimal("1.0")),
-          Arguments.of(
-              decimal("1.0"),
-              decimal("1.0"),
-              decimal("1.0")));
+          Arguments.of(integer(0), integer(1), integer(0)),
+          Arguments.of(integer(1), integer(1), integer(1)),
+          Arguments.of(integer(2), integer(1), integer(2)),
+          Arguments.of(decimal("1.0"), decimal("1.0"), integer(1)),
+          Arguments.of(decimal("1.0"), integer(1), decimal("1.0")),
+          Arguments.of(decimal("1.0"), decimal("1.0"), decimal("1.0")));
     }
 
     @ParameterizedTest
@@ -132,30 +90,12 @@ class OperationFunctionsTest {
 
     private Stream<Arguments> provideValuesOpNumericDivide() {
       return Stream.of(
-          Arguments.of(
-              decimal("0"),
-              integer(0),
-              integer(1)),
-          Arguments.of(
-              decimal("1"),
-              integer(1),
-              integer(1)),
-          Arguments.of(
-              decimal("0.5"),
-              integer(1),
-              integer(2)),
-          Arguments.of(
-              decimal("1.0"),
-              decimal("1.0"),
-              integer(1)),
-          Arguments.of(
-              decimal("1.0"),
-              integer(1),
-              decimal("1.0")),
-          Arguments.of(
-              decimal("1.0"),
-              decimal("1.0"),
-              decimal("1.0")));
+          Arguments.of(decimal("0"), integer(0), integer(1)),
+          Arguments.of(decimal("1"), integer(1), integer(1)),
+          Arguments.of(decimal("0.5"), integer(1), integer(2)),
+          Arguments.of(decimal("1.0"), decimal("1.0"), integer(1)),
+          Arguments.of(decimal("1.0"), integer(1), decimal("1.0")),
+          Arguments.of(decimal("1.0"), decimal("1.0"), decimal("1.0")));
     }
 
     @ParameterizedTest
@@ -169,18 +109,10 @@ class OperationFunctionsTest {
 
     private Stream<Arguments> provideValuesOpNumericDivideByZero() {
       return Stream.of(
-          Arguments.of(
-              integer(0),
-              integer(0)),
-          Arguments.of(
-              decimal("1.0"),
-              integer(0)),
-          Arguments.of(
-              integer(1),
-              decimal("0.0")),
-          Arguments.of(
-              integer(1),
-              decimal("0")));
+          Arguments.of(integer(0), integer(0)),
+          Arguments.of(decimal("1.0"), integer(0)),
+          Arguments.of(integer(1), decimal("0.0")),
+          Arguments.of(integer(1), decimal("0")));
     }
 
     @ParameterizedTest
@@ -195,43 +127,15 @@ class OperationFunctionsTest {
     }
 
     private Stream<Arguments> provideValuesOpNumericIntegerDivide() {
-      Arguments.of(
-          integer(1),
-          integer(-3),
-          integer(-2));
       return Stream.of(
-          Arguments.of(
-              integer(3),
-              integer(10),
-              integer(3)),
-          Arguments.of(
-              integer(-1),
-              integer(3),
-              integer(-2)),
-          Arguments.of(
-              integer(-1),
-              integer(-3),
-              integer(2)),
-          Arguments.of(
-              integer(3),
-              decimal("9.0"),
-              integer(3)),
-          Arguments.of(
-              integer(-1),
-              decimal("-3.5"),
-              integer(3)),
-          Arguments.of(
-              integer(0),
-              decimal("3.0"),
-              integer(4)),
-          Arguments.of(
-              integer(5),
-              decimal("3.1E1"),
-              integer(6)),
-          Arguments.of(
-              integer(4),
-              decimal("3.1E1"),
-              integer(7)));
+          Arguments.of(integer(3), integer(10), integer(3)),
+          Arguments.of(integer(-1), integer(3), integer(-2)),
+          Arguments.of(integer(-1), integer(-3), integer(2)),
+          Arguments.of(integer(3), decimal("9.0"), integer(3)),
+          Arguments.of(integer(-1), decimal("-3.5"), integer(3)),
+          Arguments.of(integer(0), decimal("3.0"), integer(4)),
+          Arguments.of(integer(5), decimal("3.1E1"), integer(6)),
+          Arguments.of(integer(4), decimal("3.1E1"), integer(7)));
     }
 
     @ParameterizedTest
@@ -245,18 +149,10 @@ class OperationFunctionsTest {
 
     private Stream<Arguments> provideValuesOpNumericIntegerDivideByZero() {
       return Stream.of(
-          Arguments.of(
-              integer(0),
-              integer(0)),
-          Arguments.of(
-              decimal("1.0"),
-              integer(0)),
-          Arguments.of(
-              integer(1),
-              decimal("0.0")),
-          Arguments.of(
-              integer(1),
-              decimal("0")));
+          Arguments.of(integer(0), integer(0)),
+          Arguments.of(decimal("1.0"), integer(0)),
+          Arguments.of(integer(1), decimal("0.0")),
+          Arguments.of(integer(1), decimal("0")));
     }
 
     @ParameterizedTest
@@ -275,7 +171,11 @@ class OperationFunctionsTest {
           Arguments.of(integer(1), integer(10), integer(3)),
           Arguments.of(decimal(0), integer(6), integer(-2)),
           Arguments.of(decimal(0.9), decimal(4.5), decimal(1.2)),
-          Arguments.of(decimal(3.0E0), decimal(1.23E2), decimal(0.6E1)));
+          Arguments.of(decimal(3.0E0), decimal(1.23E2), decimal(0.6E1)),
+          Arguments.of(integer(2), integer(5), integer(3)),
+          Arguments.of(integer(0), integer(6), integer(-2)),
+          Arguments.of(decimal("0.9"), decimal("4.5"), decimal("1.2")),
+          Arguments.of(integer(3), integer(123), integer(6)));
     }
 
     @ParameterizedTest

@@ -90,10 +90,17 @@ public final class ArrayRemove {
   public static <T extends IItem> IArrayItem<T> removeItems(
       @NonNull IArrayItem<T> array,
       @NonNull Collection<? extends IIntegerItem> positions) {
+    int size = array.size();
     return remove(
         array,
         ObjectUtils.notNull(positions.stream()
             .map(IIntegerItem::toIntValueExact)
+            .peek(position -> {
+              if (position < 1 || position > size) {
+                throw new ArrayException(ArrayException.INDEX_OUT_OF_BOUNDS,
+                    String.format("Index position '%d' is out of bounds for the array of size '%d'.", position, size));
+              }
+            })
             .collect(Collectors.toSet())));
   }
 
