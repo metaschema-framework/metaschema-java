@@ -240,7 +240,7 @@ public interface IIntegerItem extends IDecimalItem {
    * @return a new value resulting from dividing the dividend by the divisor
    */
   @NonNull
-  default IIntegerItem integerDivide(IIntegerItem divisor) {
+  default IIntegerItem integerDivide(@NonNull IIntegerItem divisor) {
     BigInteger divisorInteger = divisor.asInteger();
 
     if (BigInteger.ZERO.equals(divisorInteger)) {
@@ -260,7 +260,7 @@ public interface IIntegerItem extends IDecimalItem {
    *         dividend by the divisor
    */
   @NonNull
-  default IIntegerItem mod(IIntegerItem divisor) {
+  default IIntegerItem mod(@NonNull IIntegerItem divisor) {
     BigInteger divisorInteger = divisor.asInteger();
 
     if (BigInteger.ZERO.equals(divisorInteger)) {

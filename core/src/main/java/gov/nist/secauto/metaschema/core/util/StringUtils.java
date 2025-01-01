@@ -13,6 +13,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Provides a collection of utilities for checking and managing strings.
+ * <p>
+ * This utility class provides methods for string validation and manipulation,
+ * with strict null-safety guarantees. All methods in this class are thread-safe
+ * and throw appropriate exceptions for invalid inputs.
  */
 public final class StringUtils {
   private StringUtils() {
@@ -60,6 +64,9 @@ public final class StringUtils {
   /**
    * Searches for instances of {@code pattern} in {@code text}. Replace each
    * matching occurrence using the {@code replacementFunction}.
+   * <p>
+   * This method builds a new string by efficiently copying unmatched segments and
+   * applying the replacement function only to matched portions.
    *
    * @param text
    *          the text to search

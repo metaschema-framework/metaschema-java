@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.metapath.function;
 
 import gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -72,7 +71,7 @@ public class CastFunctionException
    * @return the associated item
    */
   @NonNull
-  public IItem getItem() {
+  public IAnyAtomicItem getItem() {
     return item;
   }
 

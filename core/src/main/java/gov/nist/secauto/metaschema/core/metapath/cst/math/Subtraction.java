@@ -17,7 +17,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationIte
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -104,34 +103,37 @@ public class Subtraction
       @NonNull IAnyAtomicItem minuend,
       @NonNull IAnyAtomicItem subtrahend) {
     Class<? extends IAnyAtomicItem> minuendClass = minuend.getClass();
-    return ObjectUtils.notNull(
-        // lookup the strategy options using the left's type
-        SUBTRACTION_STRATEGIES.entrySet().stream()
-            // filter strategy options that do not match the left's item type
-            .filter(entry -> entry.getKey().isAssignableFrom(minuendClass))
-            // get the first left match
-            .findFirst()
-            // handle the first left match
-            .map(strategies -> {
-              Class<? extends IAnyAtomicItem> subtrahendClass = subtrahend.getClass();
-              // lookup the strategy options using the right's type
-              return strategies.getValue().entrySet().stream()
-                  // filter strategy options that do not match the rights's item type
-                  .filter(entry -> entry.getKey().isAssignableFrom(subtrahendClass))
-                  // use the first right match
-                  .findFirst()
-                  // process the first left match
-                  .map(strategy -> strategy.getValue().subtract(minuend, subtrahend))
-                  // or throw if no right match
-                  .orElseThrow(() -> new UnsupportedOperationException(
-                      String.format("Subtraction of '%s' by '%s' is not supported.",
-                          minuend.toSignature(),
-                          subtrahend.toSignature())));
-            })
-            // if no left match, fallback to numeric add
-            .orElseGet(() -> numericSubtract(minuend, subtrahend)));
+
+    // Find matching strategy for minuend type
+    Map<Class<?>, SubtractionStrategy> typeStrategies = null;
+    for (Map.Entry<Class<?>, Map<Class<?>, SubtractionStrategy>> entry : SUBTRACTION_STRATEGIES.entrySet()) {
+      if (entry.getKey().isAssignableFrom(minuendClass)) {
+        // this is a matching strategy map
+        typeStrategies = entry.getValue();
+        break;
+      }
+    }
+
+    if (typeStrategies == null) {
+      return numericSubtract(minuend, subtrahend);
+    }
+
+    // Find matching strategy for subtrahend type
+    Class<? extends IAnyAtomicItem> subtrahendClass = subtrahend.getClass();
+    for (Map.Entry<Class<?>, SubtractionStrategy> entry : typeStrategies.entrySet()) {
+      if (entry.getKey().isAssignableFrom(subtrahendClass)) {
+        // this is matching strategy, execute it
+        return entry.getValue().subtract(minuend, subtrahend);
+      }
+    }
+
+    throw new UnsupportedOperationException(
+        String.format("Subtraction of '%s' by '%s' is not supported.",
+            minuend.toSignature(),
+            subtrahend.toSignature()));
   }
 
+  @NonNull
   private static IAnyAtomicItem numericSubtract(
       @NonNull IAnyAtomicItem left,
       @NonNull IAnyAtomicItem right) {

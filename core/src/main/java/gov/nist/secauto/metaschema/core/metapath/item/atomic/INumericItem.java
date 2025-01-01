@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.CastFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -156,8 +155,8 @@ public interface INumericItem extends IAnyAtomicItem {
   default INumericItem round(@NonNull IIntegerItem precisionItem) {
     int precision;
     try {
-      precision = FunctionUtils.asInteger(precisionItem);
-    } catch (ArithmeticException ex) {
+      precision = precisionItem.toIntValueExact();
+    } catch (CastFunctionException ex) {
       throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR,
           "Numeric operation overflow/underflow.", ex);
     }

@@ -784,9 +784,6 @@ public final class OperationFunctions {
   public static IBooleanItem opYearMonthDurationLessThan(
       @NonNull IYearMonthDurationItem arg1,
       @NonNull IYearMonthDurationItem arg2) {
-    Period p1 = arg1.asPeriod();
-    Period p2 = arg2.asPeriod();
-
     // this is only an approximation
     return IBooleanItem.valueOf(arg1.compareTo(arg2) < 0);
   }
@@ -827,6 +824,46 @@ public final class OperationFunctions {
     return IBooleanItem.valueOf(arg1.compareTo(arg2) < 0);
   }
 
+  @NonNull
+  private static <R extends INumericItem> R performArithmeticOperation(
+      @NonNull INumericItem left,
+      @NonNull INumericItem right,
+      @NonNull ArithmeticOperation<IIntegerItem, IIntegerItem, R> integerOp,
+      @NonNull ArithmeticOperation<IDecimalItem, IDecimalItem, R> decimalOp) {
+    R retval;
+    if (left instanceof IIntegerItem && right instanceof IIntegerItem) {
+      retval = integerOp.apply((IIntegerItem) left, (IIntegerItem) right);
+    } else {
+      retval = decimalOp.apply((IDecimalItem) left, (IDecimalItem) right);
+    }
+    return retval;
+  }
+
+  /**
+   * Represents an arithmetic operation performed using two arguments.
+   *
+   * @param <T>
+   *          the Java type of the first argument to the function
+   * @param <U>
+   *          the Java type of the second argument to the function
+   * @param <R>
+   *          the Java type of the result of the function
+   */
+  @FunctionalInterface
+  private interface ArithmeticOperation<T, U, R> {
+    /**
+     * Perform the operation.
+     *
+     * @param left
+     *          the left side of the operation
+     * @param right
+     *          the right side of the operation
+     * @return the operation result
+     */
+    @NonNull
+    R apply(@NonNull T left, @NonNull U right);
+  }
+
   /**
    * Create a new sum by adding first provided addend value to the second provided
    * addend value.
@@ -842,13 +879,11 @@ public final class OperationFunctions {
    */
   @NonNull
   public static INumericItem opNumericAdd(@NonNull INumericItem addend1, @NonNull INumericItem addend2) {
-    INumericItem retval;
-    if (addend1 instanceof IIntegerItem && addend2 instanceof IIntegerItem) {
-      retval = ((IIntegerItem) addend1).add((IIntegerItem) addend2);
-    } else {
-      retval = ((IDecimalItem) addend1).add((IDecimalItem) addend2);
-    }
-    return retval;
+    return performArithmeticOperation(
+        addend1,
+        addend2,
+        IIntegerItem::add,
+        IDecimalItem::add);
   }
 
   /**
@@ -869,13 +904,11 @@ public final class OperationFunctions {
   public static INumericItem opNumericSubtract(
       @NonNull INumericItem minuend,
       @NonNull INumericItem subtrahend) {
-    INumericItem retval;
-    if (minuend instanceof IIntegerItem && subtrahend instanceof IIntegerItem) {
-      retval = ((IIntegerItem) minuend).subtract((IIntegerItem) subtrahend);
-    } else {
-      retval = ((IDecimalItem) minuend).subtract((IDecimalItem) subtrahend);
-    }
-    return retval;
+    return performArithmeticOperation(
+        minuend,
+        subtrahend,
+        IIntegerItem::subtract,
+        IDecimalItem::subtract);
   }
 
   /**
@@ -895,13 +928,11 @@ public final class OperationFunctions {
   public static INumericItem opNumericMultiply(
       @NonNull INumericItem multiplicand,
       @NonNull INumericItem multiplier) {
-    INumericItem retval;
-    if (multiplicand instanceof IIntegerItem && multiplier instanceof IIntegerItem) {
-      retval = ((IIntegerItem) multiplicand).multiply((IIntegerItem) multiplier);
-    } else {
-      retval = ((IDecimalItem) multiplicand).multiply((IDecimalItem) multiplier);
-    }
-    return retval;
+    return performArithmeticOperation(
+        multiplicand,
+        multiplier,
+        IIntegerItem::multiply,
+        IDecimalItem::multiply);
   }
 
   /**
@@ -933,13 +964,11 @@ public final class OperationFunctions {
   public static IIntegerItem opNumericIntegerDivide(
       @NonNull INumericItem dividend,
       @NonNull INumericItem divisor) {
-    IIntegerItem retval;
-    if (dividend instanceof IIntegerItem && divisor instanceof IIntegerItem) {
-      retval = ((IIntegerItem) dividend).integerDivide((IIntegerItem) divisor);
-    } else {
-      retval = ((IDecimalItem) dividend).integerDivide(divisor);
-    }
-    return retval;
+    return performArithmeticOperation(
+        dividend,
+        divisor,
+        IIntegerItem::integerDivide,
+        IDecimalItem::integerDivide);
   }
 
   /**
@@ -954,13 +983,11 @@ public final class OperationFunctions {
    */
   @NonNull
   public static INumericItem opNumericMod(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {
-    INumericItem retval;
-    if (dividend instanceof IIntegerItem && divisor instanceof IIntegerItem) {
-      retval = ((IIntegerItem) dividend).mod((IIntegerItem) divisor);
-    } else {
-      retval = ((IDecimalItem) dividend).mod(divisor);
-    }
-    return retval;
+    return performArithmeticOperation(
+        dividend,
+        divisor,
+        IIntegerItem::mod,
+        IDecimalItem::mod);
   }
 
   /**
