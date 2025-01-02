@@ -7,13 +7,12 @@ package gov.nist.secauto.metaschema.core.metapath.cst.math;
 
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -25,24 +24,27 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
+ * Implements the '+' operator for Metapath addition operations.
+ * <p>
  * An XPath 3.1
  * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
  * expression</a> supporting addition.
  * <p>
- * Implements the '+' operator for XPath arithmetic operations. Supports:
+ * Supports addition operations between:
  * <ul>
- * <li>Numeric addition (numbers)</li>
+ * <li>Numeric values
+ * <li>Date/DateTime + {@link IYearMonthDurationItem}
+ * <li>Date/DateTime/Time + {@link IDayTimeDurationItem}
  * <li>Date/Time arithmetic (adding durations to dates/times)</li>
- * <li>Duration arithmetic (adding durations)</li>
+ * <li>{@link IYearMonthDurationItem} + {@link IYearMonthDurationItem}
+ * <li>{@link IDayTimeDurationItem} + {@link IDayTimeDurationItem}
  * </ul>
- *
  * <p>
- * Example usage:
+ * Example Metapath usage:
  *
  * <pre>
  * // Numeric addition
- * numericValue1 + numericValue2
- *
+ * 1 + 2 → 3
  * // Date/Time arithmetic
  * date + yearMonthDuration
  * dateTime + dayTimeDuration
@@ -52,7 +54,7 @@ public class Addition
     extends AbstractBasicArithmeticExpression {
   @NonNull
   private static final Map<Class<? extends IAnyAtomicItem>,
-      Map<Class<? extends IAnyAtomicItem>, AdditionStrategy>> ADDITION_STRATEGIES = generateStrategies();
+      Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> ADDITION_STRATEGIES = generateStrategies();
 
   /**
    * An expression that sums two atomic data items.
@@ -71,82 +73,35 @@ public class Addition
     return visitor.visitAddition(this, context);
   }
 
-  /**
-   * Get the sum of two atomic items.
-   *
-   * @param left
-   *          the first item to sum
-   * @param right
-   *          the second item to sum
-   * @return the sum of both items or an empty {@link ISequence} if either item is
-   *         {@code null}
-   */
   @Override
-  protected IAnyAtomicItem operation(@NonNull IAnyAtomicItem left, @NonNull IAnyAtomicItem right) {
-    return sum(left, right);
+  protected Map<
+      Class<? extends IAnyAtomicItem>,
+      Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> getStrategies() {
+    return ADDITION_STRATEGIES;
   }
 
-  /**
-   * Get the sum of two atomic items.
-   *
-   * @param left
-   *          the first item to sum
-   * @param right
-   *          the second item to sum
-   * @return the sum of both items
-   */
-  @SuppressWarnings("PMD.OnlyOneReturn")
-  @NonNull
-  public static IAnyAtomicItem sum(
-      @NonNull IAnyAtomicItem left,
-      @NonNull IAnyAtomicItem right) {
-    Class<? extends IAnyAtomicItem> leftClass = left.getClass();
-    return ObjectUtils.notNull(
-        // lookup the strategy options using the left's type
-        ADDITION_STRATEGIES.entrySet().stream()
-            // filter strategy options that do not match the left's item type
-            .filter(entry -> entry.getKey().isAssignableFrom(leftClass))
-            // get the first left match
-            .findFirst()
-            // handle the first left match
-            .map(strategies -> {
-              Class<? extends IAnyAtomicItem> rightClass = right.getClass();
-              // lookup the strategy options using the right's type
-              return strategies.getValue().entrySet().stream()
-                  // filter strategy options that do not match the rights's item type
-                  .filter(entry -> entry.getKey().isAssignableFrom(rightClass))
-                  // use the first right match
-                  .findFirst()
-                  // process the first left match
-                  .map(strategy -> strategy.getValue().add(left, right))
-                  // or throw if no right match
-                  .orElseThrow(() -> new UnsupportedOperationException(
-                      String.format("Addition of '%s' and '%s' is not supported.",
-                          left.toSignature(),
-                          right.toSignature())));
-            })
-            // if no left match, fallback to numeric add
-            .orElseGet(() -> numericAdd(left, right)));
+  @Override
+  protected String unsupportedMessage(String left, String right) {
+    // TODO Auto-generated method stub
+    return ObjectUtils.notNull(String.format("Addition of '%s' and '%s' is not supported.", left, right));
   }
 
-  private static IAnyAtomicItem numericAdd(
-      @NonNull IAnyAtomicItem left,
-      @NonNull IAnyAtomicItem right) {
+  @Override
+  protected INumericItem operationAsNumeric(INumericItem left, INumericItem right) {
     // Default to numeric addition
-    return OperationFunctions.opNumericAdd(
-        FunctionUtils.toNumeric(left),
-        FunctionUtils.toNumeric(right));
+    return OperationFunctions.opNumericAdd(left, right);
   }
 
   @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
-  private static Map<Class<? extends IAnyAtomicItem>, Map<Class<? extends IAnyAtomicItem>, AdditionStrategy>>
-      generateStrategies() {
-    Map<Class<? extends IAnyAtomicItem>, Map<Class<? extends IAnyAtomicItem>, AdditionStrategy>> strategies
+  private static Map<
+      Class<? extends IAnyAtomicItem>,
+      Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> generateStrategies() {
+    Map<Class<? extends IAnyAtomicItem>, Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> strategies
         = new LinkedHashMap<>();
 
     // Date strategies
-    Map<Class<? extends IAnyAtomicItem>, AdditionStrategy> typeStrategies = new LinkedHashMap<>();
+    Map<Class<? extends IAnyAtomicItem>, OperationStrategy> typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(IYearMonthDurationItem.class,
         (left, right) -> OperationFunctions.opAddYearMonthDurationToDate(
             (IDateItem) left,
@@ -214,10 +169,5 @@ public class Addition
     strategies.put(IDayTimeDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
 
     return CollectionUtil.unmodifiableMap(strategies);
-  }
-
-  private interface AdditionStrategy {
-    @NonNull
-    IAnyAtomicItem add(@NonNull IAnyAtomicItem left, @NonNull IAnyAtomicItem right);
   }
 }

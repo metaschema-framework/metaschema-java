@@ -7,14 +7,16 @@ package gov.nist.secauto.metaschema.core.metapath.cst.math;
 
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
-import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -25,6 +27,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class Division
     extends AbstractBasicArithmeticExpression {
+  @NonNull
+  private static final Map<Class<? extends IAnyAtomicItem>,
+      Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> DIVISION_STRATEGIES = generateStrategies();
 
   /**
    * An expression that gets the quotient result by dividing the dividend by the
@@ -44,69 +49,64 @@ public class Division
     return visitor.visitDivision(this, context);
   }
 
-  /**
-   * Get the quotient result by dividing the dividend by the divisor.
-   *
-   * @param dividend
-   *          the item to be divided
-   * @param divisor
-   *          the item to divide by
-   * @return the quotient result or an empty {@link ISequence} if either item is
-   *         {@code null}
-   */
   @Override
-  @NonNull
-  protected IAnyAtomicItem operation(@NonNull IAnyAtomicItem dividend, @NonNull IAnyAtomicItem divisor) {
-    return divide(dividend, divisor);
+  protected Map<
+      Class<? extends IAnyAtomicItem>,
+      Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> getStrategies() {
+    return DIVISION_STRATEGIES;
   }
 
-  /**
-   * Get the quotient result by dividing the dividend by the divisor.
-   *
-   * @param dividend
-   *          the item to be divided
-   * @param divisor
-   *          the item to divide by
-   * @return the quotient result
-   */
+  @Override
+  protected String unsupportedMessage(String dividend, String divisor) {
+    return ObjectUtils.notNull(String.format("Division of '%s' by '%s' is not supported.", dividend, divisor));
+  }
+
+  @Override
+  protected INumericItem operationAsNumeric(INumericItem dividend, INumericItem divisor) {
+    // Default to numeric addition
+    return OperationFunctions.opNumericDivide(dividend, divisor);
+  }
+
+  @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
-  public static IAnyAtomicItem divide(@NonNull IAnyAtomicItem dividend, // NOPMD - intentional
-      @NonNull IAnyAtomicItem divisor) {
-    IAnyAtomicItem retval = null;
-    if (dividend instanceof IYearMonthDurationItem) {
-      IYearMonthDurationItem left = (IYearMonthDurationItem) dividend;
-      if (divisor instanceof INumericItem) {
-        retval = OperationFunctions.opDivideYearMonthDuration(left, (INumericItem) divisor);
-      } else if (divisor instanceof IYearMonthDurationItem) {
-        retval = OperationFunctions.opDivideYearMonthDurationByYearMonthDuration(
-            left,
-            (IYearMonthDurationItem) divisor);
-      }
-    } else if (dividend instanceof IDayTimeDurationItem) {
-      IDayTimeDurationItem left = (IDayTimeDurationItem) dividend;
-      if (divisor instanceof INumericItem) {
-        retval = OperationFunctions.opDivideDayTimeDuration(left, (INumericItem) divisor);
-      } else if (divisor instanceof IDayTimeDurationItem) {
-        retval = OperationFunctions.opDivideDayTimeDurationByDayTimeDuration(left, (IDayTimeDurationItem) divisor);
-      }
-    } else {
-      // handle as numeric
-      INumericItem left = FunctionUtils.toNumeric(dividend);
-      if (divisor instanceof INumericItem) {
-        INumericItem right = FunctionUtils.toNumeric(divisor);
-        retval = OperationFunctions.opNumericDivide(left, right);
-      } else if (divisor instanceof IYearMonthDurationItem) {
-        retval = OperationFunctions.opMultiplyYearMonthDuration((IYearMonthDurationItem) divisor, left);
-      } else if (divisor instanceof IDayTimeDurationItem) {
-        retval = OperationFunctions.opMultiplyDayTimeDuration((IDayTimeDurationItem) divisor, left);
-      }
-    }
-    if (retval == null) {
-      throw new InvalidTypeMetapathException(
-          null,
-          String.format("The expression '%s / %s' is not supported", dividend.getClass().getName(),
-              divisor.getClass().getName()));
-    }
-    return retval;
+  private static Map<
+      Class<? extends IAnyAtomicItem>,
+      Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> generateStrategies() {
+    Map<Class<? extends IAnyAtomicItem>, Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> strategies
+        = new LinkedHashMap<>();
+
+    // IYearMonthDurationItem strategies
+    Map<Class<? extends IAnyAtomicItem>, OperationStrategy> typeStrategies = new LinkedHashMap<>();
+    typeStrategies.put(INumericItem.class,
+        (dividend, divisor) -> OperationFunctions.opDivideYearMonthDuration(
+            (IYearMonthDurationItem) dividend,
+            (INumericItem) divisor));
+    typeStrategies.put(IYearMonthDurationItem.class,
+        (dividend, divisor) -> OperationFunctions.opDivideYearMonthDurationByYearMonthDuration(
+            (IYearMonthDurationItem) dividend,
+            (IYearMonthDurationItem) divisor));
+    strategies.put(IYearMonthDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
+
+    // IDayTimeDurationItem strategies
+    typeStrategies = new LinkedHashMap<>();
+    typeStrategies.put(INumericItem.class,
+        (dividend, divisor) -> OperationFunctions.opDivideDayTimeDuration(
+            (IDayTimeDurationItem) dividend,
+            (INumericItem) divisor));
+    typeStrategies.put(IDayTimeDurationItem.class,
+        (dividend, divisor) -> OperationFunctions.opDivideDayTimeDurationByDayTimeDuration(
+            (IDayTimeDurationItem) dividend,
+            (IDayTimeDurationItem) divisor));
+    strategies.put(IDayTimeDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
+
+    // INumericItem strategies
+    typeStrategies = new LinkedHashMap<>();
+    typeStrategies.put(INumericItem.class,
+        (dividend, divisor) -> OperationFunctions.opNumericDivide(
+            (INumericItem) dividend,
+            (INumericItem) divisor));
+    strategies.put(INumericItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
+
+    return CollectionUtil.unmodifiableMap(strategies);
   }
 }

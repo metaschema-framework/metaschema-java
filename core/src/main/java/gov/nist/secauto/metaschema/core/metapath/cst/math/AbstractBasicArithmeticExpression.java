@@ -7,8 +7,12 @@ package gov.nist.secauto.metaschema.core.metapath.cst.math;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
+
+import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -86,5 +90,70 @@ public abstract class AbstractBasicArithmeticExpression
    * @return the result of the operation
    */
   @NonNull
-  protected abstract IAnyAtomicItem operation(@NonNull IAnyAtomicItem left, @NonNull IAnyAtomicItem right);
+  protected IAnyAtomicItem operation(
+      @NonNull IAnyAtomicItem left,
+      @NonNull IAnyAtomicItem right) {
+
+    Map<
+        Class<? extends IAnyAtomicItem>,
+        Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> strategies = getStrategies();
+    Class<? extends IAnyAtomicItem> leftClass = left.getClass();
+
+    // Find matching strategy for minuend type
+    Map<Class<? extends IAnyAtomicItem>, OperationStrategy> typeStrategies = null;
+    for (Map.Entry<
+        Class<? extends IAnyAtomicItem>,
+        Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> entry : strategies.entrySet()) {
+      if (entry.getKey().isAssignableFrom(leftClass)) {
+        // this is a matching strategy map
+        typeStrategies = entry.getValue();
+        break;
+      }
+    }
+
+    if (typeStrategies == null) {
+      return operationAsNumeric(
+          FunctionUtils.toNumeric(left),
+          FunctionUtils.toNumeric(right));
+    }
+
+    // Find matching strategy for subtrahend type
+    Class<? extends IAnyAtomicItem> rightClass = right.getClass();
+    for (Map.Entry<Class<? extends IAnyAtomicItem>, OperationStrategy> entry : typeStrategies.entrySet()) {
+      if (entry.getKey().isAssignableFrom(rightClass)) {
+        // this is matching strategy, execute it
+        return entry.getValue().execute(left, right);
+      }
+    }
+
+    throw new UnsupportedOperationException(unsupportedMessage(
+        left.toSignature(),
+        right.toSignature()));
+  }
+
+  /**
+   * Provides a mapping of the left class to a mapping of the right class and the
+   * strategy to use to compute the operation.
+   * <p>
+   * This mapping is used to lookup the strategy to use based on the left and
+   * right classes.
+   *
+   * @return the mapping
+   */
+  @NonNull
+  protected abstract Map<
+      Class<? extends IAnyAtomicItem>,
+      Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> getStrategies();
+
+  @NonNull
+  protected abstract String unsupportedMessage(@NonNull String left, @NonNull String right);
+
+  @NonNull
+  protected abstract INumericItem operationAsNumeric(@NonNull INumericItem left, @NonNull INumericItem right);
+
+  @FunctionalInterface
+  protected interface OperationStrategy {
+    @NonNull
+    IAnyAtomicItem execute(@NonNull IAnyAtomicItem left, @NonNull IAnyAtomicItem right);
+  }
 }

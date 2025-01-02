@@ -9,12 +9,16 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -36,6 +40,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class Multiplication
     extends AbstractBasicArithmeticExpression {
+  @NonNull
+  private static final Map<Class<? extends IAnyAtomicItem>,
+      Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> MULTIPLICATION_STRATEGIES = generateStrategies();
 
   /**
    * An expression that gets the product result by multiplying two values.
@@ -54,22 +61,65 @@ public class Multiplication
     return visitor.visitMultiplication(this, context);
   }
 
-  /**
-   * Get the sum of two atomic items.
-   *
-   * @param left
-   *          the first item to multiply
-   * @param right
-   *          the second item to multiply
-   * @return the product of both items or an empty {@link ISequence} if either
-   *         item is {@code null}
-   * @throws InvalidTypeMetapathException
-   *           for unsupported operand combinations.
-   */
   @Override
+  protected Map<
+      Class<? extends IAnyAtomicItem>,
+      Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> getStrategies() {
+    return MULTIPLICATION_STRATEGIES;
+  }
+
+  @Override
+  protected String unsupportedMessage(String dividend, String divisor) {
+    return ObjectUtils.notNull(String.format("Multiplication of '%s' by '%s' is not supported.", dividend, divisor));
+  }
+
+  @Override
+  protected INumericItem operationAsNumeric(INumericItem dividend, INumericItem divisor) {
+    // Default to numeric addition
+    return OperationFunctions.opNumericMultiply(dividend, divisor);
+  }
+
+  @SuppressWarnings("PMD.UseConcurrentHashMap")
   @NonNull
-  protected IAnyAtomicItem operation(@NonNull IAnyAtomicItem left, @NonNull IAnyAtomicItem right) {
-    return multiply(left, right);
+  private static Map<
+      Class<? extends IAnyAtomicItem>,
+      Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> generateStrategies() {
+    Map<Class<? extends IAnyAtomicItem>, Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> strategies
+        = new LinkedHashMap<>();
+
+    // IYearMonthDurationItem strategies
+    Map<Class<? extends IAnyAtomicItem>, OperationStrategy> typeStrategies = new LinkedHashMap<>();
+    typeStrategies.put(INumericItem.class,
+        (dividend, divisor) -> OperationFunctions.opMultiplyYearMonthDuration(
+            (IYearMonthDurationItem) dividend,
+            (INumericItem) divisor));
+    strategies.put(IYearMonthDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
+
+    // IDayTimeDurationItem strategies
+    typeStrategies = new LinkedHashMap<>();
+    typeStrategies.put(INumericItem.class,
+        (dividend, divisor) -> OperationFunctions.opMultiplyDayTimeDuration(
+            (IDayTimeDurationItem) dividend,
+            (INumericItem) divisor));
+    strategies.put(IDayTimeDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
+
+    // INumericItem strategies
+    typeStrategies = new LinkedHashMap<>();
+    typeStrategies.put(INumericItem.class,
+        (dividend, divisor) -> OperationFunctions.opNumericMultiply(
+            (INumericItem) dividend,
+            (INumericItem) divisor));
+    typeStrategies.put(IYearMonthDurationItem.class,
+        (dividend, divisor) -> OperationFunctions.opMultiplyYearMonthDuration(
+            (IYearMonthDurationItem) divisor,
+            (INumericItem) dividend));
+    typeStrategies.put(IDayTimeDurationItem.class,
+        (dividend, divisor) -> OperationFunctions.opMultiplyDayTimeDuration(
+            (IDayTimeDurationItem) divisor,
+            (INumericItem) dividend));
+    strategies.put(INumericItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
+
+    return CollectionUtil.unmodifiableMap(strategies);
   }
 
   /**
