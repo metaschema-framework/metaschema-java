@@ -89,6 +89,7 @@ public abstract class AbstractBasicArithmeticExpression
    *          the second item
    * @return the result of the operation
    */
+  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   protected IAnyAtomicItem operation(
       @NonNull IAnyAtomicItem left,

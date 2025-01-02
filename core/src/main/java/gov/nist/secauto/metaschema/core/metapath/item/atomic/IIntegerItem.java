@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.function.CastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.IntegerItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -185,6 +186,27 @@ public interface IIntegerItem extends IDecimalItem {
   @Override
   default IIntegerItem floor() {
     return this;
+  }
+
+  /**
+   * Convert this integer item to a Java int, precisely.
+   *
+   * @return the int value
+   * @throws CastFunctionException
+   *           if the value does not fit in an int
+   */
+  @Override
+  default int toIntValueExact() {
+    // asInteger() is well-defined for integer items, so this should be safe
+    try {
+      return asInteger().intValueExact();
+    } catch (ArithmeticException ex) {
+      throw new CastFunctionException(
+          CastFunctionException.INPUT_VALUE_TOO_LARGE,
+          this,
+          String.format("Integer value '%s' is out of range for a Java int.", asString()),
+          ex);
+    }
   }
 
   /**

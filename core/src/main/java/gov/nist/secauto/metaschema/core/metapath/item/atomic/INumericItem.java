@@ -79,18 +79,15 @@ public interface INumericItem extends IAnyAtomicItem {
   @NonNull
   BigInteger asInteger();
 
-  // FIXME: Create specialized methods for integer and decimal
-  default int toIntValueExact() {
-    try {
-      return asInteger().intValueExact();
-    } catch (ArithmeticException ex) {
-      throw new CastFunctionException(
-          CastFunctionException.INPUT_VALUE_TOO_LARGE,
-          this,
-          String.format("Input value '%s' is out of range for a Java int.", asString()),
-          ex);
-    }
-  }
+  /**
+   * Convert this numeric item to a Java int, exactly. If the value is not in a
+   * valid int range, an exception is thrown.
+   *
+   * @return the int value
+   * @throws CastFunctionException
+   *           if the value does not fit in an int
+   */
+  int toIntValueExact();
 
   /**
    * Get the effective boolean value of this item based on

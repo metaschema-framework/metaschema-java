@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.function.CastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DecimalItemImpl;
@@ -171,6 +172,29 @@ public interface IDecimalItem extends INumericItem {
   @Override
   default IIntegerItem floor() {
     return IIntegerItem.valueOf(asDecimal().setScale(0, RoundingMode.FLOOR).toBigIntegerExact());
+  }
+
+  /**
+   * Convert this decimal item to a Java int, exactly. If the decimal is not in a
+   * valid int range, an exception is thrown.
+   *
+   * @return the int value
+   * @throws CastFunctionException
+   *           if the value does not fit in an int
+   */
+  @Override
+  default int toIntValueExact() {
+    try {
+      // asDecimal() yields a BigDecimal, so we can call intValueExact().
+      // Throw an exception if it does not fit in a 32-bit int.
+      return asDecimal().intValueExact();
+    } catch (ArithmeticException ex) {
+      throw new CastFunctionException(
+          CastFunctionException.INPUT_VALUE_TOO_LARGE,
+          this,
+          String.format("Decimal value '%s' is out of range for a Java int.", asString()),
+          ex);
+    }
   }
 
   /**
