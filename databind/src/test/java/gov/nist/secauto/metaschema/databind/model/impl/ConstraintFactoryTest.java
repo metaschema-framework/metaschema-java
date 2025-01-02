@@ -49,11 +49,12 @@ class ConstraintFactoryTest {
     });
 
     ILet let = ConstraintFactory.newLetExpression(annotation, source);
+    MarkupMultiline letRemarks = let.getRemarks();
     assertAll(
         () -> assertEquals(IEnhancedQName.of(variable), let.getName()),
         () -> assertEquals(expression, let.getValueExpression().getPath()),
         () -> assertEquals(source, let.getSource()),
-        () -> assertEquals("Test", let.getRemarks().toMarkdown()));
+        () -> assertEquals("Test", letRemarks == null ? null : letRemarks.toMarkdown()));
   }
 
 }

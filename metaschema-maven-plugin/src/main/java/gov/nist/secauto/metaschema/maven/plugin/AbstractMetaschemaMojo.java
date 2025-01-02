@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.maven.plugin;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
@@ -34,6 +35,7 @@ import gov.nist.secauto.metaschema.databind.codegen.ModuleCompilerHelper;
 import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.config.IBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
+import gov.nist.secauto.metaschema.databind.model.metaschema.BindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
@@ -288,14 +290,19 @@ public abstract class AbstractMetaschemaMojo
   }
 
   @NonNull
-  protected IBindingContext newBindingContext() throws IOException, MetaschemaException {
+  protected IModuleLoader.IModulePostProcessor newModulePostProcessor()
+      throws MetaschemaException, IOException {
     List<IConstraintSet> constraints = getConstraints();
+    return new LimitedExternalConstraintsModulePostProcessor(constraints);
+  }
 
+  @NonNull
+  protected IBindingContext newBindingContext() throws IOException, MetaschemaException {
     // generate Java sources based on provided metaschema sources
     return new DefaultBindingContext(
         new PostProcessingModuleLoaderStrategy(
             // ensure that the external constraints do not apply to the built in module
-            CollectionUtil.singletonList(new LimitedExternalConstraintsModulePostProcessor(constraints)),
+            CollectionUtil.singletonList(newModulePostProcessor()),
             new SimpleModuleLoaderStrategy(
                 // this is used instead of the default generator to ensure that plugin classpath
                 // entries are used for compilation
@@ -422,7 +429,17 @@ public abstract class AbstractMetaschemaMojo
   @NonNull
   protected Set<IModule> getModulesToGenerateFor(@NonNull IBindingContext bindingContext)
       throws MetaschemaException, IOException {
-    IBindingModuleLoader loader = bindingContext.newModuleLoader();
+
+    // Don't use the normal loader, since it attempts to register and compile the
+    // module.
+    // We only care about the module content for generating sources and schemas
+    IBindingModuleLoader loader = new BindingModuleLoader(bindingContext, (module, ctx) -> {
+      try {
+        newModulePostProcessor().processModule(module);
+      } catch (IOException | MetaschemaException ex) {
+        throw new IllegalStateException(ex);
+      }
+    });
     loader.allowEntityResolution();
 
     LoggingValidationHandler validationHandler = new LoggingValidationHandler();
@@ -632,10 +649,32 @@ public abstract class AbstractMetaschemaMojo
           .collect(Collectors.toUnmodifiableList()));
 
       JavaCompilerSupport compiler = new JavaCompilerSupport(classDir);
+      compiler.setLogger(new JavaCompilerSupport.Logger() {
+
+        @Override
+        public boolean isDebugEnabled() {
+          return getLog().isDebugEnabled();
+        }
+
+        @Override
+        public boolean isInfoEnabled() {
+          return getLog().isInfoEnabled();
+        }
+
+        @Override
+        public void debug(String msg) {
+          getLog().debug(msg);
+        }
+
+        @Override
+        public void info(String msg) {
+          getLog().info(msg);
+        }
+      });
 
       getClassPath().forEach(compiler::addToClassPath);
 
-      JavaCompilerSupport.CompilationResult result = compiler.compile(classes, null);
+      JavaCompilerSupport.CompilationResult result = compiler.compile(classes);
 
       if (!result.isSuccessful()) {
         DiagnosticCollector<?> diagnostics = new DiagnosticCollector<>();

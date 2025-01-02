@@ -54,15 +54,16 @@ class AnonymousFunctionCallTest {
 
   @Test
   void testMultipleParameters() {
-	    StaticContext staticContext = StaticContext.builder()
-	            .namespace("ex", NS)
-	            .build();
-	    DynamicContext dynamicContext = new DynamicContext(staticContext);
-	    String metapath = "function ($argument1 as meta:string, $argument2 as meta:string) as meta:string { $argument2 }";
-	    dynamicContext.bindVariableValue(qname(NS, "boom"), 
-	    		IMetapathExpression.compile(metapath, staticContext).evaluate(null, dynamicContext));    
-	    String result = IMetapathExpression.compile("$ex:boom('a', 'b')", staticContext).evaluateAs(null, ResultType.STRING , dynamicContext);
-	    assertEquals(result, "b");
+    StaticContext staticContext = StaticContext.builder()
+        .namespace("ex", NS)
+        .build();
+    DynamicContext dynamicContext = new DynamicContext(staticContext);
+    String metapath = "function ($argument1 as meta:string, $argument2 as meta:string) as meta:string { $argument2 }";
+    dynamicContext.bindVariableValue(qname(NS, "boom"),
+        IMetapathExpression.compile(metapath, staticContext).evaluate(null, dynamicContext));
+    String result = IMetapathExpression.compile("$ex:boom('a', 'b')", staticContext).evaluateAs(null, ResultType.STRING,
+        dynamicContext);
+    assertEquals(result, "b");
   }
 
   @Test

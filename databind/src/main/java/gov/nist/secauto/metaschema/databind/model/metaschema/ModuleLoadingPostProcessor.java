@@ -15,6 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *
  * @since 2.0.0
  */
+@FunctionalInterface
 public interface ModuleLoadingPostProcessor {
   /**
    * Post-processes the provided Metaschema module.

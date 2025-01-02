@@ -122,6 +122,28 @@ public final class ModuleCompilerHelper {
 
     // configure the compiler
     JavaCompilerSupport compiler = new JavaCompilerSupport(classDir);
+    compiler.setLogger(new JavaCompilerSupport.Logger() {
+
+      @Override
+      public boolean isInfoEnabled() {
+        return LOGGER.isInfoEnabled();
+      }
+
+      @Override
+      public boolean isDebugEnabled() {
+        return LOGGER.isDebugEnabled();
+      }
+
+      @Override
+      public void info(String msg) {
+        LOGGER.atInfo().log(msg);
+      }
+
+      @Override
+      public void debug(String msg) {
+        LOGGER.atDebug().log(msg);
+      }
+    });
 
     // determine if we need to use the module path
     boolean useModulePath = false;
@@ -138,7 +160,7 @@ public final class ModuleCompilerHelper {
     handleClassAndModulePath(compiler, useModulePath);
 
     // perform compilation
-    JavaCompilerSupport.CompilationResult result = compiler.compile(classes, null);
+    JavaCompilerSupport.CompilationResult result = compiler.compile(classes);
 
     if (!result.isSuccessful()) {
       // log compilation diagnostics

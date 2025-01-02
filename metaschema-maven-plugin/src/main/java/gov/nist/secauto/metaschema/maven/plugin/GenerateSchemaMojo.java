@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 import gov.nist.secauto.metaschema.schemagen.json.JsonSchemaGenerator;
@@ -285,9 +284,6 @@ public class GenerateSchemaMojo
       throw new MojoExecutionException("Failed to create the binding context", ex);
     }
 
-    IBindingModuleLoader loader = bindingContext.newModuleLoader();
-    loader.allowEntityResolution();
-
     // generate schemas based on provided metaschema sources
     Set<IModule> modules;
     try {
@@ -297,6 +293,5 @@ public class GenerateSchemaMojo
     }
 
     generate(modules);
-
   }
 }
