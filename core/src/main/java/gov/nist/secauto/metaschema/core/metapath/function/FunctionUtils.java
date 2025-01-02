@@ -28,11 +28,19 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * A collection of utility functions for use in implementing Metapath functions.
+ * <p>
+ * This class is thread-safe as all methods are stateless and the internal
+ * constant is immutable.
  */
 // FIXME: Remove these methods in favor of direct calls to methods on the item
 // types
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class FunctionUtils {
+  /**
+   * The math context used for decimal arithmetic operations. DECIMAL64 provides a
+   * precision of 16 digits, which is sufficient for most business calculations
+   * while maintaining reasonable performance.
+   */
   public static final MathContext MATH_CONTEXT = MathContext.DECIMAL64;
 
   private FunctionUtils() {

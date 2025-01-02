@@ -75,7 +75,7 @@ public class Multiplication
 
   @Override
   protected INumericItem operationAsNumeric(INumericItem dividend, INumericItem divisor) {
-    // Default to numeric addition
+    // Default to numeric multiplication
     return OperationFunctions.opNumericMultiply(dividend, divisor);
   }
 

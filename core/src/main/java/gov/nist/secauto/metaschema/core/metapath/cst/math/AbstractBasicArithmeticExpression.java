@@ -145,9 +145,27 @@ public abstract class AbstractBasicArithmeticExpression
       Class<? extends IAnyAtomicItem>,
       Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> getStrategies();
 
+  /**
+   * Generates an error message for unsupported operand types.
+   *
+   * @param left
+   *          the string representation of the left operand type
+   * @param right
+   *          the string representation of the right operand type
+   * @return the formatted error message
+   */
   @NonNull
   protected abstract String unsupportedMessage(@NonNull String left, @NonNull String right);
 
+  /**
+   * Performs the arithmetic operation on numeric items.
+   *
+   * @param left
+   *          the first numeric item
+   * @param right
+   *          the second numeric item
+   * @return the result of the numeric operation
+   */
   @NonNull
   protected abstract INumericItem operationAsNumeric(@NonNull INumericItem left, @NonNull INumericItem right);
 

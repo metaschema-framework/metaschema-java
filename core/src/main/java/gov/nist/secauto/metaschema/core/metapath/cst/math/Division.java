@@ -63,7 +63,7 @@ public class Division
 
   @Override
   protected INumericItem operationAsNumeric(INumericItem dividend, INumericItem divisor) {
-    // Default to numeric addition
+    // Default to numeric division
     return OperationFunctions.opNumericDivide(dividend, divisor);
   }
 

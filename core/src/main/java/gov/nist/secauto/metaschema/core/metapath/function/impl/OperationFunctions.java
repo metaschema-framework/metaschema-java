@@ -944,6 +944,9 @@ public final class OperationFunctions {
    * @param divisor
    *          the number to divide by
    * @return the quotient
+   * @throws ArithmeticFunctionException
+   *           with the code {@link ArithmeticFunctionException#DIVISION_BY_ZERO}
+   *           if the divisor is zero
    */
   @NonNull
   public static IDecimalItem opNumericDivide(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {

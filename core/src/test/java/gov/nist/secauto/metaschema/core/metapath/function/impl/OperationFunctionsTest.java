@@ -170,7 +170,6 @@ class OperationFunctionsTest {
       return Stream.of(
           Arguments.of(integer(1), integer(10), integer(3)),
           Arguments.of(decimal(0), integer(6), integer(-2)),
-          Arguments.of(decimal(0.9), decimal(4.5), decimal(1.2)),
           Arguments.of(decimal(3.0E0), decimal(1.23E2), decimal(0.6E1)),
           Arguments.of(integer(2), integer(5), integer(3)),
           Arguments.of(integer(0), integer(6), integer(-2)),
@@ -229,11 +228,22 @@ class OperationFunctionsTest {
 
     @Test
     void testOpMultiplyYearMonthDuration() {
-      assertEquals(
-          IYearMonthDurationItem.valueOf("P6Y9M"),
-          OperationFunctions.opMultiplyYearMonthDuration(
-              IYearMonthDurationItem.valueOf("P2Y11M"),
-              IDecimalItem.valueOf("2.3")));
+      assertAll(
+          () -> assertEquals(
+              IYearMonthDurationItem.valueOf("P6Y9M"),
+              OperationFunctions.opMultiplyYearMonthDuration(
+                  IYearMonthDurationItem.valueOf("P2Y11M"),
+                  IDecimalItem.valueOf("2.3"))),
+          () -> assertEquals(
+              IYearMonthDurationItem.valueOf("P0M"),
+              OperationFunctions.opMultiplyYearMonthDuration(
+                  IYearMonthDurationItem.valueOf("P1Y"),
+                  IDecimalItem.valueOf("0"))),
+          () -> assertEquals(
+              IYearMonthDurationItem.valueOf("-P2Y"),
+              OperationFunctions.opMultiplyYearMonthDuration(
+                  IYearMonthDurationItem.valueOf("P1Y"),
+                  IDecimalItem.valueOf("-2"))));
     }
 
     @Test

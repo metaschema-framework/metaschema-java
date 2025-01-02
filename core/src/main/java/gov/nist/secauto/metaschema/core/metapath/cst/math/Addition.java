@@ -82,7 +82,6 @@ public class Addition
 
   @Override
   protected String unsupportedMessage(String left, String right) {
-    // TODO Auto-generated method stub
     return ObjectUtils.notNull(String.format("Addition of '%s' and '%s' is not supported.", left, right));
   }
 
