@@ -60,7 +60,7 @@
 		<dependency.lazy4j.version>2.0.0</dependency.lazy4j.version>
 		<dependency.log4j2.version>2.24.2</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.10.0</dependency.logcaptor.version>
-		<dependency.mokito.version>5.14.2</dependency.mokito.version>
+		<dependency.mokito.version>5.15.2</dependency.mokito.version>
 		<dependency.moxy.version>4.0.4</dependency.moxy.version>
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
 		<dependency.plexus-utils.version>4.0.2</dependency.plexus-utils.version>
