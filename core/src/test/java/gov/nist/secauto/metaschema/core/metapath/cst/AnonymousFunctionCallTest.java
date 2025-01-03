@@ -78,7 +78,7 @@ class AnonymousFunctionCallTest {
   void testErrorCases() {
     // FIXME: Add test for invalid function definitions
   }
-  
+
   @Test
   void testParameterConversionFlagNodeArgument() {
 	  StaticContext staticContext = StaticContext.builder()
@@ -87,10 +87,9 @@ class AnonymousFunctionCallTest {
 			  .build();
 	  DynamicContext dynamicContext = new DynamicContext(staticContext);
 	  INodeItem document = MockedDocumentGenerator.generateDocumentNodeItem();
-	  INodeItem rootFlagValue = IMetapathExpression.compile("/root/@root-flag", dynamicContext.getStaticContext()).evaluateAs(document, ResultType.ITEM, dynamicContext);
-	  dynamicContext.bindVariableValue(qname(NS, "flag-value"), IMetapathExpression.compile("/root/field/@field-flag", dynamicContext.getStaticContext()).evaluate(document, dynamicContext));
+	  dynamicContext.bindVariableValue(qname(NS, "@flag"), IMetapathExpression.compile("@flag", dynamicContext.getStaticContext()).evaluate(document, dynamicContext));
 	  dynamicContext.bindVariableValue(qname(NS, "should-dereference-param-flag-value"), IMetapathExpression.compile("function($arg as meta:string) as meta:string { $arg }", dynamicContext.getStaticContext()).evaluate(document, dynamicContext));
-	  String result = IMetapathExpression.compile("$should-dereference-param-flag-value(/root/field/@field-flag)", dynamicContext.getStaticContext()).evaluateAs(document, ResultType.STRING, dynamicContext);
-	  assertEquals(result, "field-flag");
+	  String result = IMetapathExpression.compile("$should-dereference-param-flag-value(@field-flag)", dynamicContext.getStaticContext()).evaluateAs(document, ResultType.STRING, dynamicContext);
+	  assertEquals(result, "flag");
   }
 }
