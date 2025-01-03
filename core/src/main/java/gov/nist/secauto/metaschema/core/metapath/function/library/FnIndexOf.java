@@ -98,7 +98,7 @@ public final class FnIndexOf {
           // Offset for Metapath indices that start from 1
           indices.add(IIntegerItem.valueOf(index));
         }
-      } catch (InvalidTypeMetapathException ex) {
+      } catch (@SuppressWarnings("unused") InvalidTypeMetapathException ex) {
         // this is an effective false on the match
       }
     }

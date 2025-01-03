@@ -41,6 +41,7 @@ public final class ContextItem
 
   private ContextItem() {
     // disable construction
+    super(".");
   }
 
   @Override

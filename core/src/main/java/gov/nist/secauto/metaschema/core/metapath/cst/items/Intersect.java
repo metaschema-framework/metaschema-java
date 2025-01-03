@@ -27,14 +27,18 @@ public class Intersect
   /**
    * Construct a new Metapath except expression CST node.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          an expression indicating the items to filter
    * @param right
    *          an expression indicating the items to keep
    */
-
-  public Intersect(@NonNull IExpression left, @NonNull IExpression right) {
-    super(left, right);
+  public Intersect(
+      @NonNull String text,
+      @NonNull IExpression left,
+      @NonNull IExpression right) {
+    super(text, left, right);
   }
 
   @Override

@@ -24,7 +24,7 @@ public abstract class AbstractInlineFlagDefinition<
     DEFINITION extends IFlagDefinition,
     INSTANCE extends IFlagInstance>
     extends AbstractFlagInstance<PARENT, DEFINITION, INSTANCE>
-    implements IFlagInstance, IFlagDefinition,
+    implements IFlagDefinition,
     IFeatureDefinitionInstanceInlined<DEFINITION, INSTANCE> {
 
   /**

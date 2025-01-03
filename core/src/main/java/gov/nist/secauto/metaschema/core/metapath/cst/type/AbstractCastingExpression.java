@@ -31,6 +31,8 @@ public abstract class AbstractCastingExpression
   /**
    * Construct a new cast expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param value
    *          the expression that will produce the item to cast
    * @param type
@@ -40,9 +42,11 @@ public abstract class AbstractCastingExpression
    *          sequence, or {@code false} otherwise
    */
   public AbstractCastingExpression(
+      @NonNull String text,
       @NonNull IExpression value,
       @NonNull IAtomicOrUnionType<?> type,
       boolean allowEmptySequence) {
+    super(text);
     this.value = value;
     this.type = type;
     this.allowEmptySequence = allowEmptySequence;

@@ -43,11 +43,13 @@ public class StringConcat
    * Create a new expression that concatenates the results of evaluating the
    * provided {@code expressions} as strings.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param expressions
    *          the expressions to evaluate
    */
-  public StringConcat(@NonNull List<IExpression> expressions) {
-    super(expressions);
+  public StringConcat(@NonNull String text, @NonNull List<IExpression> expressions) {
+    super(text, expressions);
   }
 
   @Override

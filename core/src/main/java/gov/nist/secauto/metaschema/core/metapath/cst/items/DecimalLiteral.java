@@ -26,11 +26,13 @@ public class DecimalLiteral
   /**
    * Construct a new expression that always returns the same decimal value.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param value
    *          the literal value
    */
-  public DecimalLiteral(@NonNull BigDecimal value) {
-    super(value);
+  public DecimalLiteral(@NonNull String text, @NonNull BigDecimal value) {
+    super(text, value);
   }
 
   @Override

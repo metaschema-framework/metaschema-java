@@ -20,7 +20,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.MockNodeItemFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -35,8 +34,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 class InstanceOfTest
     extends ExpressionTestBase {
 
-  @NonNull
-  private static final String NS = ObjectUtils.notNull("http://example.com/ns");
   @NonNull
   private static final IEnhancedQName ROOT = IEnhancedQName.of(NS, "root");
   @NonNull

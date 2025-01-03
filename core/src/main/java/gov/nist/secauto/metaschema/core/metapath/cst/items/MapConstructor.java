@@ -37,10 +37,13 @@ public class MapConstructor
    * Construct a new map constructor expression that uses the provided entry
    * expressions to initialize the map entries.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param entries
    *          the expressions used to produce the map entries
    */
-  public MapConstructor(@NonNull List<MapConstructor.Entry> entries) {
+  public MapConstructor(@NonNull String text, @NonNull List<MapConstructor.Entry> entries) {
+    super(text);
     this.entries = entries;
   }
 
@@ -87,12 +90,15 @@ public class MapConstructor
      * Construct a new map entry expression using the provided key and value
      * expressions.
      *
+     * @param text
+     *          the parsed text of the expression
      * @param keyExpression
      *          the expression used to get the map entry key
      * @param valueExpression
      *          the expression used to get the map entry value
      */
-    public Entry(@NonNull IExpression keyExpression, @NonNull IExpression valueExpression) {
+    public Entry(@NonNull String text, @NonNull IExpression keyExpression, @NonNull IExpression valueExpression) {
+      super(text);
       this.keyExpression = keyExpression;
       this.valueExpression = valueExpression;
     }

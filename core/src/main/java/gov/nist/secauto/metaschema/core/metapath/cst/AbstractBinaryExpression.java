@@ -29,12 +29,15 @@ public abstract class AbstractBinaryExpression<L extends IExpression, R extends 
   /**
    * Construct a new binary expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          the first sub-expression to evaluate
    * @param right
    *          the second sub-expression to evaluate
    */
-  public AbstractBinaryExpression(@NonNull L left, @NonNull R right) {
+  public AbstractBinaryExpression(@NonNull String text, @NonNull L left, @NonNull R right) {
+    super(text);
     this.left = Objects.requireNonNull(left);
     this.right = Objects.requireNonNull(right);
   }

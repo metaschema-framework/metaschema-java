@@ -31,6 +31,8 @@ public class Let
   /**
    * Construct a new Let CST expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param name
    *          the variable name
    * @param boundExpression
@@ -38,8 +40,12 @@ public class Let
    * @param returnExpression
    *          the inner expression to evaluate with the variable in-scope
    */
-  public Let(@NonNull IEnhancedQName name, @NonNull IExpression boundExpression,
+  public Let(
+      @NonNull String text,
+      @NonNull IEnhancedQName name,
+      @NonNull IExpression boundExpression,
       @NonNull IExpression returnExpression) {
+    super(text);
     this.variable = new VariableDeclaration(name, boundExpression);
     this.returnExpression = returnExpression;
   }

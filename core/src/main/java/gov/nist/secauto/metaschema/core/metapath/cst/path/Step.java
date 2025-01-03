@@ -12,12 +12,15 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * An immutable expression that combines the evaluation of a sub-expression,
@@ -30,24 +33,41 @@ public class Step
 
   @NonNull
   private final Axis axisExpression;
-  @NonNull
+  @Nullable
   private final INodeTestExpression stepExpression;
   @NonNull
   private final Class<? extends IItem> staticResultType;
 
   /**
-   * Construct a new stepExpression expression.
+   * Construct a new step expression expression.
    *
+   * @param text
+   *          the parsed text of the expression
+   * @param axis
+   *          the axis to evaluate against
+   */
+  public Step(@NonNull String text, @NonNull Axis axis) {
+    this(text, axis, null);
+  }
+
+  /**
+   * Construct a new step expression expression.
+   *
+   * @param text
+   *          the parsed text of the expression
    * @param axis
    *          the axis to evaluate against
    * @param step
-   *          the sub-expression to evaluate before filtering with the predicates
+   *          the optional sub-expression to evaluate before filtering with the
+   *          predicates
    */
-  @SuppressWarnings("null")
-  public Step(@NonNull Axis axis, @NonNull INodeTestExpression step) {
+  public Step(@NonNull String text, @NonNull Axis axis, @Nullable INodeTestExpression step) {
+    super(text);
     this.axisExpression = axis;
     this.stepExpression = step;
-    this.staticResultType = ExpressionUtils.analyzeStaticResultType(IItem.class, List.of(step));
+    this.staticResultType = ExpressionUtils.analyzeStaticResultType(IItem.class, step == null
+        ? CollectionUtil.emptyList()
+        : CollectionUtil.singletonList(step));
   }
 
   /**
@@ -63,9 +83,9 @@ public class Step
   /**
    * Get the step expression's sub-expression.
    *
-   * @return the sub-expression
+   * @return the sub-expression or {@code null} if there is no sub-expression
    */
-  @NonNull
+  @Nullable
   public INodeTestExpression getStep() {
     return stepExpression;
   }
@@ -77,7 +97,8 @@ public class Step
 
   @Override
   public List<? extends IExpression> getChildren() {
-    return ObjectUtils.notNull(List.of(getAxis(), getStep()));
+    IExpression step = getStep();
+    return step == null ? CollectionUtil.emptyList() : CollectionUtil.singletonList(step);
   }
 
   @Override
@@ -87,13 +108,29 @@ public class Step
 
   @Override
   public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    ISequence<? extends INodeItem> axisResult = getAxis().accept(dynamicContext, focus);
-    return getStep().accept(dynamicContext, axisResult);
+    Axis axis = getAxis();
+
+    ISequence<? extends INodeItem> axisResult;
+    if (focus.isEmpty()) {
+      axisResult = ISequence.empty();
+    } else {
+      axisResult = ISequence.of(ObjectUtils.notNull(focus.stream()
+          .map(ItemUtils::checkItemIsNodeItemForStep)
+          .flatMap(item -> {
+            assert item != null;
+            return axis.execute(item);
+          }).distinct()));
+    }
+
+    IExpression step = getStep();
+    return step == null ? axisResult : step.accept(dynamicContext, axisResult);
   }
 
   @SuppressWarnings("null")
   @Override
   public String toASTString() {
-    return String.format("%s[axis=%s]", getClass().getName(), getAxis().name());
+    return String.format("%s[axis=%s]",
+        getClass().getName(),
+        getAxis().name());
   }
 }

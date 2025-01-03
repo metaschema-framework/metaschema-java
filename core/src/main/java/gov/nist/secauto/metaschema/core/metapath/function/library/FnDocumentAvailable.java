@@ -113,23 +113,20 @@ public final class FnDocumentAvailable {
           ? documentUri
           // if not absolute or opaque, then resolve it to make it absolute
           : FnResolveUri.fnResolveUri(documentUri, null, context);
-      try {
-        URLConnection connection = uri.asUri().toURL().openConnection();
+      URLConnection connection = uri.asUri().toURL().openConnection();
 
-        if (connection instanceof HttpURLConnection) {
-          HttpURLConnection httpConnection = (HttpURLConnection) connection;
-          httpConnection.setRequestMethod("HEAD");
-          httpConnection.connect();
-          retval = HttpURLConnection.HTTP_OK == httpConnection.getResponseCode();
-          httpConnection.disconnect();
-        } else {
-          connection.connect();
-          retval = true;
-        }
-      } catch (IOException ex) {
-        retval = false;
+      if (connection instanceof HttpURLConnection) {
+        HttpURLConnection httpConnection = (HttpURLConnection) connection;
+        httpConnection.setRequestMethod("HEAD");
+        httpConnection.connect();
+        retval = HttpURLConnection.HTTP_OK == httpConnection.getResponseCode();
+        httpConnection.disconnect();
+      } else {
+        connection.connect();
+        retval = true;
       }
-    } catch (UriFunctionException ex) {
+    } catch (@SuppressWarnings("unused") IOException | UriFunctionException ex) {
+      // an error occurred while retrieving, report false
       retval = false;
     }
     return IBooleanItem.valueOf(retval);

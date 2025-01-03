@@ -27,6 +27,8 @@ public class Castable
   /**
    * Construct a new castable expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param value
    *          the expression that will produce the item to cast
    * @param type
@@ -36,10 +38,11 @@ public class Castable
    *          sequence, or {@code false} otherwise
    */
   public Castable(
+      @NonNull String text,
       @NonNull IExpression value,
       @NonNull IAtomicOrUnionType<?> type,
       boolean allowEmptySequence) {
-    super(value, type, allowEmptySequence);
+    super(text, value, type, allowEmptySequence);
   }
 
   @Override
@@ -53,7 +56,8 @@ public class Castable
     try {
       cast(focus);
       retval = true;
-    } catch (MetapathException ex) {
+    } catch (@SuppressWarnings("unused") MetapathException ex) {
+      // this exception proves the cast did not work
       retval = false;
     }
     return ISequence.of(IBooleanItem.valueOf(retval));

@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
@@ -25,17 +26,22 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * test</a>.
  */
 @SuppressWarnings("PMD.TestClassWithoutTestCases")
-public class WildcardNodeTest implements INodeTestExpression {
+public class WildcardNodeTest
+    extends AbstractExpression
+    implements INodeTestExpression {
   @Nullable
   private final Predicate<IDefinitionNodeItem<?, ?>> matcher;
 
   /**
    * Construct a new wildcard name test expression using the provided matcher.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param matcher
    *          the matcher used to determine matching nodes
    */
-  public WildcardNodeTest(@Nullable IWildcardMatcher matcher) {
+  public WildcardNodeTest(@NonNull String text, @Nullable IWildcardMatcher matcher) {
+    super(text);
     this.matcher = matcher;
   }
 

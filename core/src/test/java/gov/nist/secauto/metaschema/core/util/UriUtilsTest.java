@@ -53,7 +53,8 @@ class UriUtilsTest {
       assertAll(
           () -> assertEquals(uri.toASCIIString(), expectedLocation),
           () -> assertTrue(expectedResult));
-    } catch (URISyntaxException ex) {
+    } catch (@SuppressWarnings("unused") URISyntaxException ex) {
+      // this resulted in an invalid uri, ensure that the expectation is false
       assertFalse(expectedResult);
     }
   }

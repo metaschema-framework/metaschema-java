@@ -105,7 +105,7 @@ public final class DynamicTypeSupport {
     try {
       IEnhancedQName expectedName = nameResolver.resolve(expected);
       retval = definition.getDefinitionQName().equals(expectedName); // AT is ET
-    } catch (StaticMetapathException ex) {
+    } catch (@SuppressWarnings("unused") StaticMetapathException ex) {
       // fail the definition name test
       retval = false;
     }

@@ -30,10 +30,15 @@ public abstract class AbstractSearchPathExpression
   /**
    * Construct a new relative path expression, used for searching.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param staticResultType
    *          the static result type
    */
-  public AbstractSearchPathExpression(@NonNull Class<? extends INodeItem> staticResultType) {
+  public AbstractSearchPathExpression(
+      @NonNull String text,
+      @NonNull Class<? extends INodeItem> staticResultType) {
+    super(text);
     this.staticResultType = staticResultType;
   }
 

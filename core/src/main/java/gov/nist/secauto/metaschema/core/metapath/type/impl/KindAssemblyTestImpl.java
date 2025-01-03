@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -18,8 +17,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * provided node and type name.
  */
 public class KindAssemblyTestImpl
-    extends AbstractDefinitionTest<IAssemblyNodeItem>
-    implements IKindTest<IAssemblyNodeItem> {
+    extends AbstractDefinitionTest<IAssemblyNodeItem> {
   /**
    * Construct a new test.
    *

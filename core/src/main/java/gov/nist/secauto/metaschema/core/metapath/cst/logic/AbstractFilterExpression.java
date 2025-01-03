@@ -30,14 +30,19 @@ public abstract class AbstractFilterExpression
   /**
    * Construct a new filter expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          an expression indicating the items to filter
    * @param right
    *          an expression indicating the items to use as the filter
    */
   @SuppressWarnings("null")
-  public AbstractFilterExpression(@NonNull IExpression left, @NonNull IExpression right) {
-    super(left, right);
+  public AbstractFilterExpression(
+      @NonNull String text,
+      @NonNull IExpression left,
+      @NonNull IExpression right) {
+    super(text, left, right);
     this.staticResultType = ExpressionUtils.analyzeStaticResultType(IItem.class, List.of(left, right));
   }
 

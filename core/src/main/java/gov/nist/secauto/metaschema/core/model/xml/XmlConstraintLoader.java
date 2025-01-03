@@ -76,6 +76,7 @@ public class XmlConstraintLoader
   private static final XmlObjectParser<Pair<ISource, List<ITargetedConstraints>>> SCOPE_PARSER
       = new XmlObjectParser<>(SCOPE_OBJECT_MAPPING) {
 
+        @SuppressWarnings("synthetic-access")
         @Override
         protected Handler<Pair<ISource, List<ITargetedConstraints>>> identifyHandler(XmlCursor cursor, XmlObject obj) {
           Handler<Pair<ISource, List<ITargetedConstraints>>> retval;

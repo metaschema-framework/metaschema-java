@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
@@ -30,10 +31,13 @@ public class ArraySequenceConstructor
    * Construct a new array constructor expression that uses the provided
    * expression to initialize the array.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param expression
    *          the expression used to produce the array members
    */
-  public ArraySequenceConstructor(@Nullable IExpression expression) {
+  public ArraySequenceConstructor(@NonNull String text, @Nullable IExpression expression) {
+    super(text);
     this.expr = expression;
   }
 

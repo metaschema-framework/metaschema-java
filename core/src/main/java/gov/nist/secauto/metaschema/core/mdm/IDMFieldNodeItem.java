@@ -9,7 +9,6 @@ import gov.nist.secauto.metaschema.core.mdm.impl.DefinitionFieldNodeItem;
 import gov.nist.secauto.metaschema.core.mdm.impl.IDMModelNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IAtomicValuedNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
@@ -26,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * is orphaned from a document model.
  */
 public interface IDMFieldNodeItem
-    extends IFieldNodeItem, IDMModelNodeItem<IFieldDefinition, IFieldInstance>, IAtomicValuedNodeItem, IDMNodeItem {
+    extends IFieldNodeItem, IDMModelNodeItem<IFieldDefinition, IFieldInstance> {
   /**
    * Create new field node item that is detached from a parent node item.
    *

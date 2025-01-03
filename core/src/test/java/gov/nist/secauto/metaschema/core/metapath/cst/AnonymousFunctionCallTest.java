@@ -5,14 +5,13 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.qname;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.qname;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression.ResultType;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 
 import org.junit.jupiter.api.Test;
 

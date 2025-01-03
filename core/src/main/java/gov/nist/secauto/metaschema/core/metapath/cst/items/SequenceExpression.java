@@ -33,11 +33,13 @@ public class SequenceExpression
   /**
    * Create a new internal metapath expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param expressions
    *          the expressions to evaluate
    */
-  public SequenceExpression(@NonNull List<IExpression> expressions) {
-    super(expressions);
+  public SequenceExpression(@NonNull String text, @NonNull List<IExpression> expressions) {
+    super(text, expressions);
     this.staticResultType = ExpressionUtils.analyzeStaticResultType(IItem.class, expressions);
   }
 

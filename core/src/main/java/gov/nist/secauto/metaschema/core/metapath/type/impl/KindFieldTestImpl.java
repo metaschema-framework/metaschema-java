@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -18,8 +17,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * node and type name.
  */
 public class KindFieldTestImpl
-    extends AbstractDefinitionTest<IFieldNodeItem>
-    implements IKindTest<IFieldNodeItem> {
+    extends AbstractDefinitionTest<IFieldNodeItem> {
 
   /**
    * Construct a new test.

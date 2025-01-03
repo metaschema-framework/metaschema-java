@@ -32,10 +32,13 @@ public class KindNodeTest
   /**
    * Construct a new kind test expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param type
    *          the expected item type to test against
    */
-  public KindNodeTest(@NonNull IItemType type) {
+  public KindNodeTest(@NonNull String text, @NonNull IItemType type) {
+    super(text);
     this.type = type;
   }
 

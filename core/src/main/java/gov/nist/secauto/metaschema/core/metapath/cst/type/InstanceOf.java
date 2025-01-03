@@ -37,14 +37,18 @@ public class InstanceOf
   /**
    * Construct a new instance of expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param value
    *          the expression that will produce the item to test
    * @param sequenceType
    *          the sequence type to test with
    */
   public InstanceOf(
+      @NonNull String text,
       @NonNull IExpression value,
       @NonNull ISequenceType sequenceType) {
+    super(text);
     this.value = value;
     this.sequenceType = sequenceType;
   }

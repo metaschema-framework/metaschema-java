@@ -384,6 +384,26 @@ public final class StaticContext {
     return retval;
   }
 
+  /**
+   * Parse a function name.
+   * <p>
+   * This method will attempt to identify the namespace corresponding to a given
+   * prefix.
+   * <p>
+   * The prefix will be resolved using the following lookup order, advancing to
+   * the next when a {@code null} value is returned:
+   * <ol>
+   * <li>Lookup the prefix using the namespaces registered with the static
+   * context.</li>
+   * <li>Lookup the prefix in the well-known namespaces.</li>
+   * </ol>
+   * If an empty prefix is provided, the
+   * {@link Builder#defaultFunctionNamespace(String)} namespace will be used.</li>
+   *
+   * @param name
+   *          the name
+   * @return the parsed qualified name
+   */
   @NonNull
   public IEnhancedQName parseFunctionName(@NonNull String name) {
     return EQNameFactory.instance().parseName(

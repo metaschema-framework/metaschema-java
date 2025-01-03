@@ -27,13 +27,18 @@ public class SimpleMap
   /**
    * Construct a simple map expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          the expression used to generate the right sequence
    * @param right
    *          the expression used to evaluate each item in the right sequence
    */
-  public SimpleMap(@NonNull IExpression left, @NonNull IExpression right) {
-    super(left, right);
+  public SimpleMap(
+      @NonNull String text,
+      @NonNull IExpression left,
+      @NonNull IExpression right) {
+    super(text, left, right);
   }
 
   @Override

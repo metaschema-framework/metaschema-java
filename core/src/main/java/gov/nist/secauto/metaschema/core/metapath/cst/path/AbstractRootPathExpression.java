@@ -26,12 +26,16 @@ public abstract class AbstractRootPathExpression
   /**
    * Construct a new relative path expression of "/expression".
    *
+   * @param text
+   *          the parsed text of the expression
    * @param expression
    *          the path expression to evaluate from the root
    */
   @SuppressWarnings("null")
-  public AbstractRootPathExpression(@NonNull IExpression expression) {
-    super(ExpressionUtils.analyzeStaticResultType(INodeItem.class, List.of(expression)));
+  public AbstractRootPathExpression(
+      @NonNull String text,
+      @NonNull IExpression expression) {
+    super(text, ExpressionUtils.analyzeStaticResultType(INodeItem.class, List.of(expression)));
     this.expression = expression;
   }
 

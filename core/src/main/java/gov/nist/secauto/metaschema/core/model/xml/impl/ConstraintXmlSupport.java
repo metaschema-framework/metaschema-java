@@ -78,6 +78,7 @@ public final class ConstraintXmlSupport {
               Map.entry(XmlModuleConstants.MATCHES_CONSTRAINT_QNAME, ConstraintXmlSupport::handleMatches),
               Map.entry(XmlModuleConstants.EXPECT_CONSTRAINT_QNAME, ConstraintXmlSupport::handleExpect)))) {
 
+        @SuppressWarnings("synthetic-access")
         @Override
         protected Handler<IValueConstrained> identifyHandler(XmlCursor cursor, XmlObject obj) {
           Handler<IValueConstrained> retval;
@@ -107,6 +108,7 @@ public final class ConstraintXmlSupport {
           Map.entry(XmlModuleConstants.MATCHES_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedMatches),
           Map.entry(XmlModuleConstants.EXPECT_CONSTRAINT_QNAME, ConstraintXmlSupport::handleScopedExpect)))) {
 
+        @SuppressWarnings("synthetic-access")
         @Override
         protected Handler<IValueConstrained> identifyHandler(XmlCursor cursor, XmlObject obj) {
           Handler<IValueConstrained> retval;
@@ -140,6 +142,7 @@ public final class ConstraintXmlSupport {
           Map.entry(XmlModuleConstants.HAS_CARDINALITY_CONSTRAINT_QNAME,
               ConstraintXmlSupport::handleScopedHasCardinality)))) {
 
+        @SuppressWarnings("synthetic-access")
         @Override
         protected Handler<IModelConstrained> identifyHandler(XmlCursor cursor, XmlObject obj) {
           Handler<IModelConstrained> retval;

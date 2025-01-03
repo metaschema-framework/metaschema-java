@@ -25,6 +25,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public interface IExpression {
   /**
+   * Get the text for the expression.
+   *
+   * @return the expression text
+   */
+  @NonNull
+  String getText();
+
+  /**
    * Retrieve the child expressions associated with this expression.
    *
    * @return a list of expressions, which may be empty

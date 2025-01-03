@@ -26,11 +26,13 @@ public class IntegerLiteral
   /**
    * Construct a new expression that always returns the same integer value.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param value
    *          the literal value
    */
-  public IntegerLiteral(@NonNull BigInteger value) {
-    super(value);
+  public IntegerLiteral(@NonNull String text, @NonNull BigInteger value) {
+    super(text, value);
   }
 
   @Override

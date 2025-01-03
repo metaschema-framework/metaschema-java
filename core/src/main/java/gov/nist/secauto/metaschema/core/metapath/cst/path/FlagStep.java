@@ -29,11 +29,13 @@ public class FlagStep
    * Construct a new expression that finds any child {@link IFlagNodeItem} that
    * matches the provided {@code test}.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param test
    *          the test to use to match
    */
-  public FlagStep(@NonNull INodeTestExpression test) {
-    super(test);
+  public FlagStep(@NonNull String text, @NonNull INodeTestExpression test) {
+    super(text, test);
   }
 
   @Override

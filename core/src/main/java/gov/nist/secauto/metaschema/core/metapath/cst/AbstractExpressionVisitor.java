@@ -35,7 +35,6 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Modulo;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Multiplication;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Negate;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.FlagStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.KindNodeTest;
@@ -162,11 +161,6 @@ public abstract class AbstractExpressionVisitor<RESULT, CONTEXT> implements IExp
 
   @Override
   public RESULT visitAnd(And expr, CONTEXT context) {
-    return visitChildren(expr, context);
-  }
-
-  @Override
-  public RESULT visitAxis(@NonNull Axis expr, @NonNull CONTEXT context) {
     return visitChildren(expr, context);
   }
 

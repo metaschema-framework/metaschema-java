@@ -53,6 +53,7 @@ public final class XmlAssemblyModelContainerSupport {
               Map.entry(XmlModuleConstants.CHOICE_QNAME, XmlAssemblyModelContainerSupport::handleChoice),
               Map.entry(XmlModuleConstants.CHOICE_GROUP_QNAME, XmlAssemblyModelContainerSupport::handleChoiceGroup)))) {
 
+        @SuppressWarnings("synthetic-access")
         @Override
         protected Handler<Pair<IAssemblyDefinition, ModelBuilder>>
             identifyHandler(XmlCursor cursor, XmlObject obj) {

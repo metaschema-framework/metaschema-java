@@ -26,7 +26,7 @@ public interface IFeatureContainerModelAbsolute<
     NMI extends INamedModelInstanceAbsolute,
     FI extends IFieldInstanceAbsolute,
     AI extends IAssemblyInstanceAbsolute>
-    extends IContainerModelAbsolute, IContainerModel {
+    extends IContainerModelAbsolute {
   /**
    * Get the model container implementation instance.
    *

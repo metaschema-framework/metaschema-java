@@ -33,11 +33,13 @@ public class Union
    * Create a new expression that gets the union of the results of evaluating the
    * provided {@code expressions}.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param expressions
    *          the expressions to evaluate
    */
-  public Union(@NonNull List<IExpression> expressions) {
-    super(expressions);
+  public Union(@NonNull String text, @NonNull List<IExpression> expressions) {
+    super(text, expressions);
     this.staticResultType = ExpressionUtils.analyzeStaticResultType(IItem.class, expressions);
   }
 

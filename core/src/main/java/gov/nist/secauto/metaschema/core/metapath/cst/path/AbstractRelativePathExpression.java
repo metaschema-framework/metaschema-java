@@ -28,14 +28,19 @@ public abstract class AbstractRelativePathExpression
   /**
    * Construct a new relative path expression of "left/right".
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          the left part of the path
    * @param right
    *          the right part of the path
    */
   @SuppressWarnings("null")
-  public AbstractRelativePathExpression(@NonNull IExpression left, @NonNull IExpression right) {
-    super(ExpressionUtils.analyzeStaticResultType(INodeItem.class, List.of(left, right)));
+  public AbstractRelativePathExpression(
+      @NonNull String text,
+      @NonNull IExpression left,
+      @NonNull IExpression right) {
+    super(text, ExpressionUtils.analyzeStaticResultType(INodeItem.class, List.of(left, right)));
     this.left = left;
     this.right = right;
   }

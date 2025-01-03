@@ -83,7 +83,8 @@ public final class FnDistinctValues {
     int retval;
     try {
       retval = item1.compareTo(item2);
-    } catch (InvalidTypeFunctionException | InvalidValueForCastFunctionException ex) {
+    } catch (@SuppressWarnings("unused") InvalidTypeFunctionException | InvalidValueForCastFunctionException ex) {
+      // the items are not comparable
       retval = 1;
     }
     return retval;

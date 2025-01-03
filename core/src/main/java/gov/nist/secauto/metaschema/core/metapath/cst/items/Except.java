@@ -28,13 +28,18 @@ public class Except
    * Construct a except filter expression, which removes the items resulting from
    * the filter expression from the items expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param itemsExpression
    *          an expression indicating the items to filter
    * @param filterExpression
    *          an expression indicating the items to omit
    */
-  public Except(@NonNull IExpression itemsExpression, @NonNull IExpression filterExpression) {
-    super(itemsExpression, filterExpression);
+  public Except(
+      @NonNull String text,
+      @NonNull IExpression itemsExpression,
+      @NonNull IExpression filterExpression) {
+    super(text, itemsExpression, filterExpression);
   }
 
   @Override

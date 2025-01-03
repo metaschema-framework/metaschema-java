@@ -30,14 +30,19 @@ public class Range
   /**
    * Construct a new range expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param start
    *          the expressions representing the start of the range
    * @param end
    *          the expressions representing the end of the range
    *
    */
-  public Range(@NonNull IExpression start, @NonNull IExpression end) {
-    super(start, end);
+  public Range(
+      @NonNull String text,
+      @NonNull IExpression start,
+      @NonNull IExpression end) {
+    super(text, start, end);
   }
 
   @Override

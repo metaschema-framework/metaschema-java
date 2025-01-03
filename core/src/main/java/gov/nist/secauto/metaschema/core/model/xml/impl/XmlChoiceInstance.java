@@ -59,6 +59,7 @@ class XmlChoiceInstance
               Map.entry(XmlModuleConstants.FIELD_QNAME, XmlChoiceInstance::handleField),
               Map.entry(XmlModuleConstants.DEFINE_FIELD_QNAME, XmlChoiceInstance::handleDefineField)))) {
 
+        @SuppressWarnings("synthetic-access")
         @Override
         protected Handler<Pair<IChoiceInstance, ModelBuilder>> identifyHandler(
             XmlCursor cursor,

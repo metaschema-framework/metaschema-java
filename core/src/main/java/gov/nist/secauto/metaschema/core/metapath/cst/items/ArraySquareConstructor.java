@@ -34,10 +34,13 @@ public class ArraySquareConstructor
    * Each resulting array member contains the value of the corresponding argument
    * expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param children
    *          the expressions used to produce the array members
    */
-  public ArraySquareConstructor(@NonNull List<IExpression> children) {
+  public ArraySquareConstructor(@NonNull String text, @NonNull List<IExpression> children) {
+    super(text);
     this.children = children;
   }
 

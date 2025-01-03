@@ -45,12 +45,18 @@ public class PredicateExpression
   /**
    * Construct a new predicate expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param base
    *          the base to evaluate against
    * @param predicates
    *          the expression(s) to apply as a filter
    */
-  public PredicateExpression(@NonNull IExpression base, @NonNull List<IExpression> predicates) {
+  public PredicateExpression(
+      @NonNull String text,
+      @NonNull IExpression base,
+      @NonNull List<IExpression> predicates) {
+    super(text);
     this.base = base;
     this.predicates = predicates;
   }

@@ -20,7 +20,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href="https://www.w3.org/TR/xpath-31/#id-named-function-ref">variable
  * reference</a>.
  */
-public class NamedFunctionReference implements IExpression {
+public class NamedFunctionReference
+    extends AbstractExpression {
   @NonNull
   private final IEnhancedQName name;
   private final int arity;
@@ -28,12 +29,17 @@ public class NamedFunctionReference implements IExpression {
   /**
    * Construct a new Metapath variable reference CST node.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param name
    *          the function name
    * @param arity
    *          the number of function arguments
    */
-  public NamedFunctionReference(@NonNull IEnhancedQName name, int arity) {
+  public NamedFunctionReference(
+      @NonNull String text,
+      @NonNull IEnhancedQName name, int arity) {
+    super(text);
     this.name = name;
     this.arity = arity;
   }

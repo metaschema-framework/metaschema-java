@@ -13,7 +13,7 @@ public interface IFeatureContainerModelGrouped<
     NMI extends INamedModelInstanceGrouped,
     FI extends IFieldInstanceGrouped,
     AI extends IAssemblyInstanceGrouped>
-    extends IContainerModelGrouped, IContainerModel {
+    extends IContainerModelGrouped {
   /**
    * Get the model container implementation instance.
    *

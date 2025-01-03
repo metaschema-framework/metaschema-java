@@ -28,13 +28,15 @@ public class RootSlashPath
 
   /**
    * Construct a new expression that finds a child of the document root using the
-   * {@code right} expression.
+   * {@code node} expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param node
    *          the path to evaluate relative to the document root
    */
-  public RootSlashPath(@NonNull IExpression node) {
-    super(node);
+  public RootSlashPath(@NonNull String text, @NonNull IExpression node) {
+    super(text, node);
   }
 
   @Override

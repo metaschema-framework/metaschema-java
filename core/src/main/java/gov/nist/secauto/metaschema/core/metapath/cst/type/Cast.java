@@ -25,6 +25,8 @@ public class Cast
   /**
    * Construct a new cast expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param value
    *          the expression that will produce the item to cast
    * @param type
@@ -34,10 +36,11 @@ public class Cast
    *          sequence, or {@code false} otherwise
    */
   public Cast(
+      @NonNull String text,
       @NonNull IExpression value,
       @NonNull IAtomicOrUnionType<?> type,
       boolean allowEmptySequence) {
-    super(value, type, allowEmptySequence);
+    super(text, value, type, allowEmptySequence);
   }
 
   @Override

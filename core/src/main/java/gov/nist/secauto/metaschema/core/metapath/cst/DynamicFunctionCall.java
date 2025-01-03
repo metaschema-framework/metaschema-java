@@ -33,13 +33,19 @@ public class DynamicFunctionCall
   /**
    * Construct a new function call expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param functionIdentifier
    *          the function expression, identifying either a function or function
    *          name
    * @param arguments
    *          the expressions used to provide arguments to the function call
    */
-  public DynamicFunctionCall(@NonNull IExpression functionIdentifier, @NonNull List<IExpression> arguments) {
+  public DynamicFunctionCall(
+      @NonNull String text,
+      @NonNull IExpression functionIdentifier,
+      @NonNull List<IExpression> arguments) {
+    super(text);
     this.functionIdentifier = functionIdentifier;
     this.arguments = arguments;
   }

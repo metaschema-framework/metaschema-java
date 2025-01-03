@@ -34,6 +34,8 @@ public abstract class AbstractArithmeticExpression<RESULT_TYPE extends IAnyAtomi
   /**
    * Construct a new arithmetic expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          the left side of the arithmetic operation
    * @param right
@@ -42,9 +44,12 @@ public abstract class AbstractArithmeticExpression<RESULT_TYPE extends IAnyAtomi
    *          the base result type of the expression result
    */
   @SuppressWarnings("null")
-  public AbstractArithmeticExpression(@NonNull IExpression left, @NonNull IExpression right,
+  public AbstractArithmeticExpression(
+      @NonNull String text,
+      @NonNull IExpression left,
+      @NonNull IExpression right,
       @NonNull Class<RESULT_TYPE> baseType) {
-    super(left, right);
+    super(text, left, right);
     this.staticResultType = ExpressionUtils.analyzeStaticResultType(baseType, List.of(left, right));
   }
 

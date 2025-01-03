@@ -59,6 +59,7 @@ class XmlChoiceGroupInstance
               Map.entry(XmlModuleConstants.FIELD_QNAME, XmlChoiceGroupInstance::handleField),
               Map.entry(XmlModuleConstants.DEFINE_FIELD_QNAME, XmlChoiceGroupInstance::handleDefineField)))) {
 
+        @SuppressWarnings("synthetic-access")
         @Override
         protected Handler<Pair<IChoiceGroupInstance, ModelBuilder>>
             identifyHandler(XmlCursor cursor, XmlObject obj) {

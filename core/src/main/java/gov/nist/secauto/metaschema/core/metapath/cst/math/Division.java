@@ -35,13 +35,18 @@ public class Division
    * An expression that gets the quotient result by dividing the dividend by the
    * divisor.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param dividend
    *          the expression whose result is to be divided
    * @param divisor
    *          the expression whose result is to divide by
    */
-  public Division(@NonNull IExpression dividend, @NonNull IExpression divisor) {
-    super(dividend, divisor);
+  public Division(
+      @NonNull String text,
+      @NonNull IExpression dividend,
+      @NonNull IExpression divisor) {
+    super(text, dividend, divisor);
   }
 
   @Override

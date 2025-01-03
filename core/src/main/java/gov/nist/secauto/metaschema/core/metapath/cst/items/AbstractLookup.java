@@ -28,10 +28,13 @@ public abstract class AbstractLookup
   /**
    * Construct a new lookup expression that uses the provided key specifier.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param keySpecifier
    *          the key specifier that identifies how to lookup entries
    */
-  protected AbstractLookup(@NonNull IKeySpecifier keySpecifier) {
+  protected AbstractLookup(@NonNull String text, @NonNull IKeySpecifier keySpecifier) {
+    super(text);
     this.keySpecifier = keySpecifier;
   }
 

@@ -34,13 +34,18 @@ public abstract class AbstractBasicArithmeticExpression
   /**
    * An expression that represents a basic arithmetic operation on two values.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          the first item
    * @param right
    *          the second item
    */
-  public AbstractBasicArithmeticExpression(@NonNull IExpression left, @NonNull IExpression right) {
-    super(left, right, IAnyAtomicItem.class);
+  public AbstractBasicArithmeticExpression(
+      @NonNull String text,
+      @NonNull IExpression left,
+      @NonNull IExpression right) {
+    super(text, left, right, IAnyAtomicItem.class);
   }
 
   @Override
@@ -102,8 +107,7 @@ public abstract class AbstractBasicArithmeticExpression
 
     // Find matching strategy for minuend type
     Map<Class<? extends IAnyAtomicItem>, OperationStrategy> typeStrategies = null;
-    for (Map.Entry<
-        Class<? extends IAnyAtomicItem>,
+    for (Map.Entry<Class<? extends IAnyAtomicItem>,
         Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> entry : strategies.entrySet()) {
       if (entry.getKey().isAssignableFrom(leftClass)) {
         // this is a matching strategy map
@@ -170,8 +174,20 @@ public abstract class AbstractBasicArithmeticExpression
   @NonNull
   protected abstract INumericItem operationAsNumeric(@NonNull INumericItem left, @NonNull INumericItem right);
 
+  /**
+   * Provides a callback for resolving arithmetic operations.
+   */
   @FunctionalInterface
   protected interface OperationStrategy {
+    /**
+     * Called to execute an arithmetic operation.
+     *
+     * @param left
+     *          the left side of the arithmetic operation
+     * @param right
+     *          the right side of the arithmetic operation
+     * @return the arithmetic result
+     */
     @NonNull
     IAnyAtomicItem execute(@NonNull IAnyAtomicItem left, @NonNull IAnyAtomicItem right);
   }

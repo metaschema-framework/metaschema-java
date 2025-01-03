@@ -29,6 +29,8 @@ public abstract class AbstractComparison // NOPMD - unavoidable
    * expression with the result of the {@code left} expression using the specified
    * {@code operator}.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          the expression to compare against
    * @param operator
@@ -36,9 +38,12 @@ public abstract class AbstractComparison // NOPMD - unavoidable
    * @param right
    *          the expression to compare with
    */
-  public AbstractComparison(@NonNull IExpression left, @NonNull ComparisonFunctions.Operator operator,
+  public AbstractComparison(
+      @NonNull String text,
+      @NonNull IExpression left,
+      @NonNull ComparisonFunctions.Operator operator,
       @NonNull IExpression right) {
-    super(left, right);
+    super(text, left, right);
     this.operator = ObjectUtils.requireNonNull(operator, "operator");
   }
 

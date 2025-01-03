@@ -38,13 +38,15 @@ public class PostfixLookup
    * Construct a new postfix lookup expression that uses the provided key
    * specifier.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param base
    *          the base expression used to get the target of the lookup
    * @param keySpecifier
    *          the key specifier used to determine matching entries
    */
-  public PostfixLookup(@NonNull IExpression base, @NonNull IKeySpecifier keySpecifier) {
-    super(keySpecifier);
+  public PostfixLookup(@NonNull String text, @NonNull IExpression base, @NonNull IKeySpecifier keySpecifier) {
+    super(text, keySpecifier);
     this.base = base;
   }
 

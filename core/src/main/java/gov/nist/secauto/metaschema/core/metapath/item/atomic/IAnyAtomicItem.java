@@ -136,7 +136,7 @@ public interface IAnyAtomicItem extends IAtomicValuedItem {
       retval = other instanceof IAnyAtomicItem
           && ComparisonFunctions.valueCompairison(this, ComparisonFunctions.Operator.EQ, (IAnyAtomicItem) other)
               .toBoolean();
-    } catch (InvalidTypeMetapathException ex) {
+    } catch (@SuppressWarnings("unused") InvalidTypeMetapathException ex) {
       // incompatible types are a non-match
       retval = false;
     }

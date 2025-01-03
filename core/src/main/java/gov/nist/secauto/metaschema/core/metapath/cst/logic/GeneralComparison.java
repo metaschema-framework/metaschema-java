@@ -26,6 +26,8 @@ public class GeneralComparison
   /**
    * Create a new value comparison expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          the expression to compare against
    * @param operator
@@ -34,10 +36,11 @@ public class GeneralComparison
    *          the expression to compare with
    */
   public GeneralComparison(
+      @NonNull String text,
       @NonNull IExpression left,
       @NonNull ComparisonFunctions.Operator operator,
       @NonNull IExpression right) {
-    super(left, operator, right);
+    super(text, left, operator, right);
   }
 
   @Override

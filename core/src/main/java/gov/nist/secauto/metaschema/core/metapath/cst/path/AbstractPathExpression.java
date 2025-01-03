@@ -8,6 +8,8 @@ package gov.nist.secauto.metaschema.core.metapath.cst.path;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * The base class for all Metapath expressions that select node items based on
  * the XPath 3.1
@@ -19,6 +21,17 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
  */
 public abstract class AbstractPathExpression<RESULT_TYPE extends INodeItem>
     extends AbstractExpression {
+
+  /**
+   * Construct a new path expression.
+   *
+   * @param text
+   *          the parsed text of the expression
+   */
+  public AbstractPathExpression(@NonNull String text) {
+    super(text);
+  }
+
   @Override
   public abstract Class<RESULT_TYPE> getBaseResultType();
 

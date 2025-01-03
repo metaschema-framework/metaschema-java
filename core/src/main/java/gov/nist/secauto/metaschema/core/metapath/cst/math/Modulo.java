@@ -30,13 +30,18 @@ public class Modulo
    * Create an expression that gets the numeric remainder from dividing the
    * dividend by the divisor, also called the "modulo operation".
    *
+   * @param text
+   *          the parsed text of the expression
    * @param dividend
    *          the item to be divided
    * @param divisor
    *          the item to divide by
    */
-  public Modulo(@NonNull IExpression dividend, @NonNull IExpression divisor) {
-    super(dividend, divisor, INumericItem.class);
+  public Modulo(
+      @NonNull String text,
+      @NonNull IExpression dividend,
+      @NonNull IExpression divisor) {
+    super(text, dividend, divisor, INumericItem.class);
   }
 
   @Override

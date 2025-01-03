@@ -28,19 +28,14 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * expression that is declared inline within a Metapath expression.
  */
 public class AnonymousFunctionCall
-    extends AbstractFunction
-    implements IExpression, IFunction {
-  @NonNull
-  private static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(EnumSet.of(
-      FunctionProperty.DETERMINISTIC));
-  @NonNull
-  private final ISequenceType result;
-  @NonNull
-  private final IExpression body;
+    extends AbstractExpression {
+  private final AnonymousFunction function;
 
   /**
    * Construct a new function call expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param arguments
    *          the parameter declarations for the function call
    * @param result
@@ -49,17 +44,26 @@ public class AnonymousFunctionCall
    *          the Metapath expression that implements the logic of the function
    */
   public AnonymousFunctionCall(
+      @NonNull String text,
       @NonNull List<IArgument> arguments,
       @NonNull ISequenceType result,
       @NonNull IExpression body) {
-    super("(anonymous)-" + UUID.randomUUID().toString(), "", arguments);
-    this.result = result;
-    this.body = body;
+    super(text);
+    this.function = new AnonymousFunction(arguments, result, body);
+  }
+
+  /**
+   * Get the function associated with this Metapath expression.
+   *
+   * @return the function
+   */
+  protected AnonymousFunction getFunction() {
+    return function;
   }
 
   @Override
   public List<IExpression> getChildren() {
-    return ObjectUtils.notNull(List.of(body));
+    return ObjectUtils.notNull(List.of(getFunction().getBody()));
   }
 
   @Override
@@ -74,49 +78,75 @@ public class AnonymousFunctionCall
 
   @Override
   public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(this);
+    return ISequence.of(getFunction());
   }
 
   @SuppressWarnings("null")
   @Override
   public String toASTString() {
+    IFunction function = getFunction();
     return String.format("%s[arguments=%s,return=%s]",
-        getClass().getName(), getName(),
-        getArguments(),
-        result.toSignature());
+        getClass().getName(),
+        function.getArguments(),
+        function.getResult().toSignature());
   }
 
-  @Override
-  public Set<FunctionProperty> getProperties() {
-    return PROPERTIES;
-  }
+  private static final class AnonymousFunction
+      extends AbstractFunction {
+    @NonNull
+    private static final Set<FunctionProperty> PROPERTIES = ObjectUtils.notNull(EnumSet.of(
+        FunctionProperty.DETERMINISTIC));
+    @NonNull
+    private final ISequenceType result;
+    @NonNull
+    private final IExpression body;
 
-  @Override
-  public ISequenceType getResult() {
-    return result;
-  }
-
-  @Override
-  @NonNull
-  protected ISequence<?> executeInternal(
-      @NonNull List<ISequence<?>> arguments,
-      @NonNull DynamicContext dynamicContext,
-      @Nullable IItem focus) {
-
-    DynamicContext subContext = dynamicContext.subContext();
-    if (arguments.size() != getArguments().size()) {
-      throw new IllegalArgumentException("Number of arguments does not match the number of parameters.");
+    public AnonymousFunction(
+        @NonNull List<IArgument> arguments,
+        @NonNull ISequenceType result,
+        @NonNull IExpression body) {
+      super("(anonymous)-" + UUID.randomUUID().toString(), "", arguments);
+      this.result = result;
+      this.body = body;
     }
 
-    Iterator<? extends ISequence<?>> args = arguments.iterator();
-    Iterator<IArgument> params = getArguments().iterator();
-    while (args.hasNext() && params.hasNext()) {
-      ISequence<?> sequence = args.next();
-      IArgument param = params.next();
-
-      subContext.bindVariableValue(param.getName(), ObjectUtils.notNull(sequence));
+    @Override
+    public ISequenceType getResult() {
+      return result;
     }
 
-    return body.accept(subContext, ISequence.of(focus));
+    @NonNull
+    protected IExpression getBody() {
+      return body;
+    }
+
+    @Override
+    public Set<FunctionProperty> getProperties() {
+      return PROPERTIES;
+    }
+
+    @Override
+    @NonNull
+    protected ISequence<?> executeInternal(
+        @NonNull List<ISequence<?>> arguments,
+        @NonNull DynamicContext dynamicContext,
+        @Nullable IItem focus) {
+
+      DynamicContext subContext = dynamicContext.subContext();
+      if (arguments.size() != getArguments().size()) {
+        throw new IllegalArgumentException("Number of arguments does not match the number of parameters.");
+      }
+
+      Iterator<? extends ISequence<?>> args = arguments.iterator();
+      Iterator<IArgument> params = getArguments().iterator();
+      while (args.hasNext() && params.hasNext()) {
+        ISequence<?> sequence = args.next();
+        IArgument param = params.next();
+
+        subContext.bindVariableValue(param.getName(), ObjectUtils.notNull(sequence));
+      }
+
+      return body.accept(subContext, ISequence.of(focus));
+    }
   }
 }

@@ -29,13 +29,18 @@ public class IntegerDivision
    * Create an expression that gets the whole number quotient result by dividing
    * the dividend by the divisor.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param dividend
    *          the expression whose item result will be divided
    * @param divisor
    *          the expression whose item result will be divided by
    */
-  public IntegerDivision(@NonNull IExpression dividend, @NonNull IExpression divisor) {
-    super(dividend, divisor, IIntegerItem.class);
+  public IntegerDivision(
+      @NonNull String text,
+      @NonNull IExpression dividend,
+      @NonNull IExpression divisor) {
+    super(text, dividend, divisor, IIntegerItem.class);
   }
 
   @Override

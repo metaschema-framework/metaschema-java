@@ -33,13 +33,16 @@ public class FunctionCallAccessor
   /**
    * Construct a new functional call accessor.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param base
    *          the expression whose result is used as the map or array to perform
    *          the lookup on
    * @param arguments
    *          the function call argument expressions
    */
-  public FunctionCallAccessor(@NonNull IExpression base, @NonNull List<IExpression> arguments) {
+  public FunctionCallAccessor(@NonNull String text, @NonNull IExpression base, @NonNull List<IExpression> arguments) {
+    super(text);
     this.base = base;
     this.arguments = arguments;
   }

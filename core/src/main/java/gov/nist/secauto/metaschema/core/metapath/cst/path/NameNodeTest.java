@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
@@ -25,6 +26,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 @SuppressWarnings("PMD.TestClassWithoutTestCases") // not a test
 public class NameNodeTest
+    extends AbstractExpression
     implements INodeTestExpression {
 
   @NonNull
@@ -33,10 +35,13 @@ public class NameNodeTest
   /**
    * Construct a new expanded QName-based literal expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param name
    *          the literal value
    */
-  public NameNodeTest(@NonNull IEnhancedQName name) {
+  public NameNodeTest(@NonNull String text, @NonNull IEnhancedQName name) {
+    super(text);
     this.name = name;
   }
 

@@ -97,8 +97,8 @@ public final class ItemUtils {
     Class<? extends T> retval = null;
     try {
       retval = clazz.asSubclass(base);
-    } catch (ClassCastException ex) {
-      // do nothing
+    } catch (@SuppressWarnings("unused") ClassCastException ex) {
+      // not a subclass, do nothing
     }
     return retval;
   }

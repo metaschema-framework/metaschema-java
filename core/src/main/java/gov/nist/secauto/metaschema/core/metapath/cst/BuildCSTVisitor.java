@@ -138,7 +138,7 @@ public class BuildCSTVisitor
   protected IExpression handleExpr(Metapath10.ExprContext ctx) {
     return handleNAiryCollection(ctx, children -> {
       assert children != null;
-      return new SequenceExpression(children);
+      return new SequenceExpression(ObjectUtils.notNull(ctx.getText()), children);
     });
   }
 
@@ -149,21 +149,24 @@ public class BuildCSTVisitor
   @Override
   protected IExpression handleStringLiteral(Metapath10.LiteralContext ctx) {
     ParseTree tree = ctx.getChild(0);
-    return new StringLiteral(ObjectUtils.notNull(tree.getText()));
+    return new StringLiteral(ObjectUtils.notNull(ctx.getText()), ObjectUtils.notNull(tree.getText()));
   }
 
   @Override
   protected IExpression handleNumericLiteral(Metapath10.NumericliteralContext ctx) {
     ParseTree tree = ctx.getChild(0);
     Token token = (Token) tree.getPayload();
+
+    String text = ObjectUtils.notNull(ctx.getText());
+
     IExpression retval;
     switch (token.getType()) {
     case Metapath10Lexer.IntegerLiteral:
-      retval = new IntegerLiteral(new BigInteger(token.getText()));
+      retval = new IntegerLiteral(text, new BigInteger(token.getText()));
       break;
     case Metapath10Lexer.DecimalLiteral:
     case Metapath10Lexer.DoubleLiteral:
-      retval = new DecimalLiteral(new BigDecimal(token.getText()));
+      retval = new DecimalLiteral(text, new BigDecimal(token.getText()));
       break;
     default:
       throw new UnsupportedOperationException(token.getText());
@@ -178,6 +181,7 @@ public class BuildCSTVisitor
   @Override
   protected IExpression handleVarref(Metapath10.VarrefContext ctx) {
     return new VariableReference(
+        ObjectUtils.notNull(ctx.getText()),
         getContext().parseVariableName(
             ObjectUtils.notNull(ctx.varname().eqname().getText())));
   }
@@ -212,7 +216,7 @@ public class BuildCSTVisitor
 
       Let.VariableDeclaration variable = new Let.VariableDeclaration(qname, boundExpression);
 
-      retval = new For(variable, retval);
+      retval = new For(ObjectUtils.notNull(ctx.getText()), variable, retval);
     }
     return retval;
   }
@@ -239,7 +243,7 @@ public class BuildCSTVisitor
       IEnhancedQName varName = getContext().parseVariableName(
           ObjectUtils.notNull(simpleCtx.varname().eqname().getText()));
 
-      retval = new Let(varName, boundExpression, retval); // NOPMD intended
+      retval = new Let(ObjectUtils.notNull(simpleCtx.getText()), varName, boundExpression, retval); // NOPMD intended
     }
     return retval;
   }
@@ -250,9 +254,10 @@ public class BuildCSTVisitor
 
   @Override
   protected MapConstructor handleMapConstructor(Metapath10.MapconstructorContext context) {
+    String text = ObjectUtils.notNull(context.getText());
     return context.getChildCount() == 3
         // empty
-        ? new MapConstructor(CollectionUtil.emptyList())
+        ? new MapConstructor(text, CollectionUtil.emptyList())
         // with members
         : nairyToCollection(context, 3, 2,
             (ctx, idx) -> {
@@ -260,12 +265,13 @@ public class BuildCSTVisitor
               Metapath10.MapconstructorentryContext entry = ctx.mapconstructorentry(pos);
               assert entry != null;
               return new MapConstructor.Entry(
+                  ObjectUtils.notNull(entry.getText()),
                   ObjectUtils.notNull(entry.mapkeyexpr().accept(this)),
                   ObjectUtils.notNull(entry.mapvalueexpr().accept(this)));
             },
             children -> {
               assert children != null;
-              return new MapConstructor(children);
+              return new MapConstructor(text, children);
             });
   }
 
@@ -275,9 +281,10 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleArrayConstructor(Metapath10.SquarearrayconstructorContext context) {
+    String text = ObjectUtils.notNull(context.getText());
     return context.getChildCount() == 2
         // empty
-        ? new ArraySquareConstructor(CollectionUtil.emptyList())
+        ? new ArraySquareConstructor(text, CollectionUtil.emptyList())
         // with members
         : nairyToCollection(context, 1, 2,
             (ctx, idx) -> {
@@ -287,13 +294,13 @@ public class BuildCSTVisitor
             },
             children -> {
               assert children != null;
-              return new ArraySquareConstructor(children);
+              return new ArraySquareConstructor(text, children);
             });
   }
 
   @Override
   protected IExpression handleArrayConstructor(Metapath10.CurlyarrayconstructorContext ctx) {
-    return new ArraySequenceConstructor(visit(ctx.enclosedexpr()));
+    return new ArraySequenceConstructor(ObjectUtils.notNull(ctx.getText()), visit(ctx.enclosedexpr()));
   }
 
   // ===============================================
@@ -323,7 +330,9 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleUnarylookup(Metapath10.UnarylookupContext ctx) {
-    return new UnaryLookup(toKeySpecifier(ObjectUtils.requireNonNull(ctx.keyspecifier())));
+    return new UnaryLookup(
+        ObjectUtils.notNull(ctx.getText()),
+        toKeySpecifier(ObjectUtils.requireNonNull(ctx.keyspecifier())));
   }
 
   // ====================================================
@@ -382,6 +391,7 @@ public class BuildCSTVisitor
             .collect(Collectors.toUnmodifiableList()));
 
     return new StaticFunctionCall(
+        ObjectUtils.notNull(ctx.getText()),
         () -> getContext().lookupFunction(
             ObjectUtils.notNull(ctx.eqname().getText()),
             arguments.size()),
@@ -398,7 +408,7 @@ public class BuildCSTVisitor
     IEnhancedQName qname = getContext().parseFunctionName(ObjectUtils.notNull(ctx.eqname().getText()));
     int arity = IIntegerItem.valueOf(ObjectUtils.requireNonNull(ctx.IntegerLiteral().getText()))
         .toIntValueExact();
-    return new NamedFunctionReference(qname, arity);
+    return new NamedFunctionReference(ObjectUtils.notNull(ctx.getText()), qname, arity);
   }
 
   // ==============================================
@@ -436,7 +446,7 @@ public class BuildCSTVisitor
     // parse the function body
     IExpression body = visit(context.functionbody().enclosedexpr());
 
-    return new AnonymousFunctionCall(parameters, resultSequenceType, body);
+    return new AnonymousFunctionCall(ObjectUtils.notNull(context.getText()), parameters, resultSequenceType, body);
   }
 
   // =========================================================================
@@ -493,6 +503,7 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handlePostfixexpr(Metapath10.PostfixexprContext context) {
+    String text = ObjectUtils.notNull(context.getText());
     return handleGroupedNAiry(
         context,
         0,
@@ -505,15 +516,18 @@ public class BuildCSTVisitor
           if (tree instanceof Metapath10.ArgumentlistContext) {
             // map or array access using function call syntax
             result = new FunctionCallAccessor(
+                text,
                 left,
                 ObjectUtils.notNull(parseArgumentList((Metapath10.ArgumentlistContext) tree)
                     .collect(Collectors.toUnmodifiableList())));
           } else if (tree instanceof Metapath10.PredicateContext) {
             result = new PredicateExpression(
+                text,
                 left,
                 CollectionUtil.singletonList(parsePredicate((Metapath10.PredicateContext) tree)));
           } else if (tree instanceof Metapath10.LookupContext) {
             result = new PostfixLookup(
+                text,
                 left,
                 toKeySpecifier(ObjectUtils.notNull(((Metapath10.LookupContext) tree).keyspecifier())));
           } else {
@@ -544,20 +558,21 @@ public class BuildCSTVisitor
     IExpression retval;
     ParseTree tree = ctx.getChild(0);
     if (tree instanceof TerminalNode) {
+      String text = ObjectUtils.notNull(ctx.getText());
       int type = ((TerminalNode) tree).getSymbol().getType();
       switch (type) {
       case Metapath10Lexer.SLASH:
         // a slash expression with optional path
         if (numChildren == 2) {
           // the optional path
-          retval = new RootSlashPath(visit(ctx.getChild(1)));
+          retval = new RootSlashPath(text, visit(ctx.getChild(1)));
         } else {
-          retval = new RootSlashOnlyPath();
+          retval = new RootSlashOnlyPath(text);
         }
         break;
       case Metapath10Lexer.SS:
         // a double slash expression with path
-        retval = new RootDoubleSlashPath(visit(ctx.getChild(1)));
+        retval = new RootDoubleSlashPath(text, visit(ctx.getChild(1)));
         break;
       default:
         throw new UnsupportedOperationException(((TerminalNode) tree).getSymbol().getText());
@@ -576,6 +591,7 @@ public class BuildCSTVisitor
 
   @Override
   protected IExpression handleRelativepathexpr(Metapath10.RelativepathexprContext context) {
+    String text = ObjectUtils.notNull(context.getText());
     return handleGroupedNAiry(context, 0, 2, (ctx, idx, left) -> {
       assert left != null;
 
@@ -587,10 +603,10 @@ public class BuildCSTVisitor
       IExpression retval;
       switch (type) {
       case Metapath10Lexer.SLASH:
-        retval = new RelativeSlashPath(left, right);
+        retval = new RelativeSlashPath(text, left, right);
         break;
       case Metapath10Lexer.SS:
-        retval = new RelativeDoubleSlashPath(left, right);
+        retval = new RelativeDoubleSlashPath(text, left, right);
         break;
       default:
         throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());
@@ -606,7 +622,7 @@ public class BuildCSTVisitor
   @Override
   protected IExpression handleForwardstep(Metapath10.ForwardstepContext ctx) {
     Metapath10.AbbrevforwardstepContext abbrev = ctx.abbrevforwardstep();
-
+    String text = ObjectUtils.notNull(ctx.getText());
     Step retval;
     if (abbrev == null) {
       assert ctx.getChildCount() == 2;
@@ -639,12 +655,9 @@ public class BuildCSTVisitor
       default:
         throw new UnsupportedOperationException(token.getText());
       }
-      retval = new Step(axis,
-          parseNodeTest(ctx.nodetest(), false));
+      retval = new Step(text, axis, parseNodeTest(ctx.nodetest(), false));
     } else {
-      retval = new Step(
-          Axis.CHILDREN,
-          parseNodeTest(ctx.nodetest(), abbrev.AT() != null));
+      retval = new Step(text, Axis.CHILDREN, parseNodeTest(ctx.nodetest(), abbrev.AT() != null));
     }
     return retval;
   }
@@ -652,7 +665,6 @@ public class BuildCSTVisitor
   @Override
   protected IExpression handleReversestep(Metapath10.ReversestepContext ctx) {
     assert ctx.getChildCount() == 2;
-
     Token token = (Token) ctx.reverseaxis().getChild(0).getPayload();
 
     Axis axis;
@@ -675,7 +687,7 @@ public class BuildCSTVisitor
     default:
       throw new UnsupportedOperationException(token.getText());
     }
-    return new Step(axis, parseNodeTest(ctx.nodetest(), false));
+    return new Step(ObjectUtils.notNull(ctx.getText()), axis, parseNodeTest(ctx.nodetest(), false));
   }
 
   // =======================================================
@@ -698,7 +710,7 @@ public class BuildCSTVisitor
       IItemType itemType = TypeTestSupport.parseKindTest(
           ObjectUtils.notNull(ctx.kindtest()),
           getContext());
-      retval = new KindNodeTest(itemType);
+      retval = new KindNodeTest(ObjectUtils.notNull(ctx.getText()), itemType);
     } else {
       Metapath10.NametestContext nameTestCtx = ctx.nametest();
       retval = parseNameTest(nameTestCtx, flag);
@@ -728,13 +740,14 @@ public class BuildCSTVisitor
           ? staticContext.parseFlagName(name)
           : staticContext.parseModelName(name);
 
+      String text = ObjectUtils.notNull(ctx.getText());
       if (!flag
           && qname.getNamespace().isEmpty()
           && staticContext.isUseWildcardWhenNamespaceNotDefaulted()) {
         // Use a wildcard namespace
-        retval = new WildcardNodeTest(IWildcardMatcher.anyNamespace(ObjectUtils.notNull(qname.getLocalName())));
+        retval = new WildcardNodeTest(text, IWildcardMatcher.anyNamespace(ObjectUtils.notNull(qname.getLocalName())));
       } else {
-        retval = new NameNodeTest(qname);
+        retval = new NameNodeTest(text, qname);
       }
     } else { // wildcard
       retval = handleWildcard((Metapath10.WildcardContext) testType);
@@ -765,7 +778,7 @@ public class BuildCSTVisitor
       }
     } // star needs no matcher: any prefix, any local-name
 
-    return new WildcardNodeTest(matcher);
+    return new WildcardNodeTest(ObjectUtils.notNull(ctx.getText()), matcher);
   }
 
   // ======================================================================
@@ -780,7 +793,7 @@ public class BuildCSTVisitor
 
     List<IExpression> predicates = parsePredicates(predicateTree, 0);
 
-    return predicates.isEmpty() ? step : new PredicateExpression(step, predicates);
+    return predicates.isEmpty() ? step : new PredicateExpression(ObjectUtils.notNull(ctx.getText()), step, predicates);
   }
 
   // ===========================================================
@@ -791,19 +804,20 @@ public class BuildCSTVisitor
   protected IExpression handleAbbrevforwardstep(Metapath10.AbbrevforwardstepContext ctx) {
     int numChildren = ctx.getChildCount();
 
+    String text = ObjectUtils.notNull(ctx.getText());
     IExpression retval;
     if (numChildren == 1) {
-      retval = new ModelInstanceStep(parseNodeTest(ctx.nodetest(), false));
+      retval = new ModelInstanceStep(text, parseNodeTest(ctx.nodetest(), false));
     } else {
       // this is an AT test
-      retval = new FlagStep(parseNodeTest(ctx.nodetest(), true));
+      retval = new FlagStep(text, parseNodeTest(ctx.nodetest(), true));
     }
     return retval;
   }
 
   @Override
   protected IExpression handleAbbrevreversestep(Metapath10.AbbrevreversestepContext ctx) {
-    return Axis.PARENT;
+    return new Step(ObjectUtils.notNull(ctx.getText()), Axis.PARENT);
   }
 
   // ======================================================================
@@ -817,7 +831,7 @@ public class BuildCSTVisitor
     IExpression left = visit(ctx.getChild(0));
     IExpression right = visit(ctx.getChild(2));
 
-    return new Range(left, right);
+    return new Range(ObjectUtils.notNull(ctx.getText()), left, right);
   }
 
   // ========================================================================
@@ -828,7 +842,7 @@ public class BuildCSTVisitor
   protected IExpression handleUnionexpr(Metapath10.UnionexprContext ctx) {
     return handleNAiryCollection(ctx, children -> {
       assert children != null;
-      return new Union(children);
+      return new Union(ObjectUtils.notNull(ctx.getText()), children);
     });
   }
 
@@ -841,14 +855,14 @@ public class BuildCSTVisitor
       IExpression right = visit(ctx.getChild(idx + 1));
 
       int type = ((TerminalNode) operatorTree).getSymbol().getType();
-
+      String text = ObjectUtils.notNull(ctx.getText());
       IExpression retval;
       switch (type) {
       case Metapath10Lexer.KW_INTERSECT:
-        retval = new Intersect(left, right);
+        retval = new Intersect(text, left, right);
         break;
       case Metapath10Lexer.KW_EXCEPT:
-        retval = new Except(left, right);
+        retval = new Except(text, left, right);
         break;
       default:
         throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());
@@ -872,14 +886,15 @@ public class BuildCSTVisitor
       assert right != null;
 
       int type = ((TerminalNode) operatorTree).getSymbol().getType();
+      String text = ObjectUtils.notNull(ctx.getText());
 
       IExpression retval;
       switch (type) {
       case Metapath10Lexer.PLUS:
-        retval = new Addition(left, right);
+        retval = new Addition(text, left, right);
         break;
       case Metapath10Lexer.MINUS:
-        retval = new Subtraction(left, right);
+        retval = new Subtraction(text, left, right);
         break;
       default:
         throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());
@@ -899,19 +914,20 @@ public class BuildCSTVisitor
       assert right != null;
 
       int type = ((TerminalNode) operatorTree).getSymbol().getType();
+      String text = ObjectUtils.notNull(ctx.getText());
       IExpression retval;
       switch (type) {
       case Metapath10Lexer.STAR:
-        retval = new Multiplication(left, right);
+        retval = new Multiplication(text, left, right);
         break;
       case Metapath10Lexer.KW_DIV:
-        retval = new Division(left, right);
+        retval = new Division(text, left, right);
         break;
       case Metapath10Lexer.KW_IDIV:
-        retval = new IntegerDivision(left, right);
+        retval = new IntegerDivision(text, left, right);
         break;
       case Metapath10Lexer.KW_MOD:
-        retval = new Modulo(left, right);
+        retval = new Modulo(text, left, right);
         break;
       default:
         throw new UnsupportedOperationException(((TerminalNode) operatorTree).getSymbol().getText());
@@ -942,7 +958,7 @@ public class BuildCSTVisitor
 
     IExpression retval = visit(ctx.getChild(idx));
     if (negateCount % 2 != 0) {
-      retval = new Negate(retval);
+      retval = new Negate(ObjectUtils.notNull(ctx.getText()), retval);
     }
     return retval;
   }
@@ -956,7 +972,7 @@ public class BuildCSTVisitor
   protected IExpression handleStringconcatexpr(Metapath10.StringconcatexprContext ctx) {
     return handleNAiryCollection(ctx, children -> {
       assert children != null;
-      return new StringConcat(children);
+      return new StringConcat(ObjectUtils.notNull(ctx.getText()), children);
     });
   }
 
@@ -974,7 +990,7 @@ public class BuildCSTVisitor
     // the operator
     ParseTree operatorTree = ctx.getChild(1);
     Object payload = operatorTree.getPayload();
-
+    String text = ObjectUtils.notNull(ctx.getText());
     ComparisonFunctions.Operator operator;
     IBooleanLogicExpression retval;
     if (payload instanceof Metapath10.GeneralcompContext) {
@@ -1002,7 +1018,7 @@ public class BuildCSTVisitor
       default:
         throw new UnsupportedOperationException(((TerminalNode) compContext.getChild(0)).getSymbol().getText());
       }
-      retval = new GeneralComparison(left, operator, right);
+      retval = new GeneralComparison(text, left, operator, right);
     } else if (payload instanceof Metapath10.ValuecompContext) {
       Metapath10.ValuecompContext compContext = (Metapath10.ValuecompContext) payload;
       int type = ((TerminalNode) compContext.getChild(0)).getSymbol().getType();
@@ -1028,7 +1044,7 @@ public class BuildCSTVisitor
       default:
         throw new UnsupportedOperationException(((TerminalNode) compContext.getChild(0)).getSymbol().getText());
       }
-      retval = new ValueComparison(left, operator, right);
+      retval = new ValueComparison(text, left, operator, right);
     } else {
       throw new UnsupportedOperationException();
     }
@@ -1043,7 +1059,7 @@ public class BuildCSTVisitor
   protected IExpression handleOrexpr(Metapath10.OrexprContext ctx) {
     return handleNAiryCollection(ctx, children -> {
       assert children != null;
-      return new Or(children);
+      return new Or(ObjectUtils.notNull(ctx.getText()), children);
     });
   }
 
@@ -1051,7 +1067,7 @@ public class BuildCSTVisitor
   protected IExpression handleAndexpr(Metapath10.AndexprContext ctx) {
     return handleNAiryCollection(ctx, children -> {
       assert children != null;
-      return new And(children);
+      return new And(ObjectUtils.notNull(ctx.getText()), children);
     });
   }
 
@@ -1065,7 +1081,7 @@ public class BuildCSTVisitor
     IExpression thenExpr = visit(ctx.exprsingle(0));
     IExpression elseExpr = visit(ctx.exprsingle(1));
 
-    return new If(testExpr, thenExpr, elseExpr);
+    return new If(ObjectUtils.notNull(ctx.getText()), testExpr, thenExpr, elseExpr);
   }
 
   // =========================================================
@@ -1104,12 +1120,12 @@ public class BuildCSTVisitor
 
     IExpression satisfies = visit(ctx.exprsingle(offset));
 
-    return new Quantified(quantifier, vars, satisfies);
+    return new Quantified(ObjectUtils.notNull(ctx.getText()), quantifier, vars, satisfies);
   }
 
   /*
-   * ============================================================
-   * instance of - https://www.w3.org/TR/xpath-31/#id-instance-of
+   * ============================================================ instance of -
+   * https://www.w3.org/TR/xpath-31/#id-instance-of
    * ============================================================
    */
 
@@ -1126,7 +1142,7 @@ public class BuildCSTVisitor
     ISequenceType sequenceType = TypeTestSupport.parseSequenceType(
         ObjectUtils.notNull(ctx.sequencetype()),
         getContext());
-    return new InstanceOf(left, sequenceType);
+    return new InstanceOf(ObjectUtils.notNull(ctx.getText()), left, sequenceType);
   }
 
   // ==============================================
@@ -1143,7 +1159,7 @@ public class BuildCSTVisitor
 
     IAtomicOrUnionType<?> type = getTypeForCast(ObjectUtils.notNull(singleType.simpletypename().getText()));
 
-    return new Cast(left, type, allowEmptySequence);
+    return new Cast(ObjectUtils.notNull(ctx.getText()), left, type, allowEmptySequence);
   }
 
   // ==================================================
@@ -1180,7 +1196,7 @@ public class BuildCSTVisitor
 
     IAtomicOrUnionType<?> type = getTypeForCast(ObjectUtils.notNull(singleType.simpletypename().getText()));
 
-    return new Castable(left, type, allowEmptySequence);
+    return new Castable(ObjectUtils.notNull(ctx.getText()), left, type, allowEmptySequence);
   }
 
   // ================================================
@@ -1195,7 +1211,7 @@ public class BuildCSTVisitor
         ObjectUtils.notNull(ctx.sequencetype()),
         getContext());
 
-    return new Treat(left, sequenceType);
+    return new Treat(ObjectUtils.notNull(ctx.getText()), left, sequenceType);
   }
 
   // =========================================================================
@@ -1211,7 +1227,7 @@ public class BuildCSTVisitor
       assert "!".equals(ctx.getChild(idx).getText());
       IExpression right = ObjectUtils.notNull(ctx.getChild(idx + 1).accept(this));
 
-      return new SimpleMap(left, right);
+      return new SimpleMap(ObjectUtils.notNull(ctx.getText()), left, right);
     });
   }
 
@@ -1243,6 +1259,7 @@ public class BuildCSTVisitor
         if (arrowCtx.eqname() != null) {
           // named function
           return new StaticFunctionCall(
+              ObjectUtils.notNull(arrowCtx.getText()),
               () -> getContext().lookupFunction(ObjectUtils.notNull(arrowCtx.eqname().getText()), arguments.size()),
               arguments);
         }
@@ -1250,8 +1267,10 @@ public class BuildCSTVisitor
         IExpression result;
         if (arrowCtx.varref() != null) {
           // function instance or name reference
-          result = new VariableReference(getContext().parseVariableName(
-              ObjectUtils.notNull(arrowCtx.varref().varname().eqname().getText())));
+          result = new VariableReference(
+              ObjectUtils.notNull(arrowCtx.getText()),
+              getContext().parseVariableName(
+                  ObjectUtils.notNull(arrowCtx.varref().varname().eqname().getText())));
         } else if (arrowCtx.parenthesizedexpr() != null) {
           // function expression
           result = visit(arrowCtx.parenthesizedexpr().expr());
@@ -1262,6 +1281,7 @@ public class BuildCSTVisitor
         }
 
         return new DynamicFunctionCall(
+            ObjectUtils.notNull(arrowCtx.getText()),
             result,
             arguments);
       }

@@ -29,10 +29,13 @@ public abstract class AbstractLiteralExpression<RESULT_TYPE extends IAnyAtomicIt
   /**
    * Construct an expression that always returns the same literal value.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param value
    *          the literal value
    */
-  public AbstractLiteralExpression(@NonNull VALUE value) {
+  public AbstractLiteralExpression(@NonNull String text, @NonNull VALUE value) {
+    super(text);
     this.value = value;
   }
 

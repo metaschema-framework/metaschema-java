@@ -25,7 +25,7 @@ class RootSlashOnlyPathTest
     IDocumentNodeItem nodeContext = newDocumentNodeMock();
     assert nodeContext != null;
 
-    RootSlashOnlyPath expr = new RootSlashOnlyPath();
+    RootSlashOnlyPath expr = new RootSlashOnlyPath("test data");
 
     DynamicContext dynamicContext = newDynamicContext();
     ISequence<?> result = expr.accept(dynamicContext, ISequence.of(nodeContext));
@@ -37,7 +37,7 @@ class RootSlashOnlyPathTest
     INodeItem item = newNonDocumentNodeMock("non-document");
     assert item != null;
 
-    RootSlashOnlyPath expr = new RootSlashOnlyPath();
+    RootSlashOnlyPath expr = new RootSlashOnlyPath("test data");
 
     DynamicContext dynamicContext = newDynamicContext();
     DynamicMetapathException thrown = assertThrows(DynamicMetapathException.class, () -> {

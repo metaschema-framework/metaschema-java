@@ -59,13 +59,18 @@ public class Addition
   /**
    * An expression that sums two atomic data items.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          an expression whose result is summed
    * @param right
    *          an expression whose result is summed
    */
-  public Addition(@NonNull IExpression left, @NonNull IExpression right) {
-    super(left, right);
+  public Addition(
+      @NonNull String text,
+      @NonNull IExpression left,
+      @NonNull IExpression right) {
+    super(text, left, right);
   }
 
   @Override

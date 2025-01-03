@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.model.xml.impl;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.model.xml.xmlbeans.ConstraintLetType;
@@ -22,7 +23,6 @@ import java.net.URI;
 
 class ModelFactoryTest {
 
-  @SuppressWarnings("null")
   @Test
   void letTest() throws XmlException {
     ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create("https://example.com/")));
@@ -37,10 +37,11 @@ class ModelFactoryTest {
     letObj.setRemarks(remarks);
 
     ILet let = ModelFactory.newLet(letObj, source);
+    MarkupMultiline letRemarks = let.getRemarks();
     assertAll(
         () -> assertEquals(IEnhancedQName.of(variable), let.getName()),
         () -> assertEquals(expression, let.getValueExpression().getPath()),
         () -> assertEquals(source, let.getSource()),
-        () -> assertEquals("Test", let.getRemarks().toMarkdown()));
+        () -> assertEquals("Test", letRemarks == null ? null : letRemarks.toMarkdown()));
   }
 }

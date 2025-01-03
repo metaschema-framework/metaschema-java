@@ -23,11 +23,13 @@ public class StringLiteral
   /**
    * Construct a new expression that always returns the same string value.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param value
    *          the literal value
    */
-  public StringLiteral(@NonNull String value) {
-    super(removeQuotes(value));
+  public StringLiteral(@NonNull String text, @NonNull String value) {
+    super(text, removeQuotes(value));
   }
 
   @Override

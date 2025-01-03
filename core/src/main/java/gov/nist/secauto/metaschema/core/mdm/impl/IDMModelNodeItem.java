@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.mdm.impl;
 import gov.nist.secauto.metaschema.core.mdm.IDMFlagNodeItem;
 import gov.nist.secauto.metaschema.core.mdm.IDMNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
@@ -33,7 +32,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *          the Java type of the instance associated with a Metaschema module
  */
 public interface IDMModelNodeItem<D extends IModelDefinition, I extends INamedModelInstance>
-    extends IModelNodeItem<D, I>, IDMNodeItem, IDefinitionNodeItem<D, I> {
+    extends IModelNodeItem<D, I>, IDMNodeItem {
   /**
    * Create and add a new flag to the underlying data model.
    *

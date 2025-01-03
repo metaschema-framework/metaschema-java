@@ -5,17 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -26,7 +19,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * axes</a>.
  */
 @SuppressWarnings("PMD.ShortClassName")
-public enum Axis implements IExpression {
+public enum Axis {
   /**
    * The {@code self::} axis, referring to the current context node.
    */
@@ -135,43 +128,5 @@ public enum Axis implements IExpression {
   @NonNull
   public Stream<? extends INodeItem> execute(@NonNull INodeItem focus) {
     return ObjectUtils.notNull(action.apply(focus));
-  }
-
-  @Override
-  public List<? extends IExpression> getChildren() {
-    return CollectionUtil.emptyList();
-  }
-
-  @Override
-  public Class<INodeItem> getBaseResultType() {
-    return INodeItem.class;
-  }
-
-  @Override
-  public Class<INodeItem> getStaticResultType() {
-    return getBaseResultType();
-  }
-
-  @Override
-  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
-    return visitor.visitAxis(this, context);
-  }
-
-  @Override
-  public ISequence<? extends INodeItem> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> outerFocus) {
-    ISequence<? extends INodeItem> retval;
-    if (outerFocus.isEmpty()) {
-      retval = ISequence.empty();
-    } else {
-      retval = ISequence.of(ObjectUtils.notNull(outerFocus.stream()
-          .map(ItemUtils::checkItemIsNodeItemForStep)
-          .flatMap(item -> {
-            assert item != null;
-            return execute(item);
-          }).distinct()));
-    }
-    return retval;
   }
 }

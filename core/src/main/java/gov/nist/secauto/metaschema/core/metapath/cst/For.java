@@ -32,12 +32,18 @@ public class For
   /**
    * Construct a new for expression using the provided variable and return clause.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param variable
    *          the variable declaration
    * @param returnExpr
    *          the return clause that makes use of variables for evaluation
    */
-  public For(@NonNull VariableDeclaration variable, @NonNull IExpression returnExpr) {
+  public For(
+      @NonNull String text,
+      @NonNull VariableDeclaration variable,
+      @NonNull IExpression returnExpr) {
+    super(text);
     this.variable = variable;
     this.returnExpression = returnExpr;
   }

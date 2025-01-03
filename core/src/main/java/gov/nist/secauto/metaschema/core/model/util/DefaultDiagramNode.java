@@ -33,7 +33,7 @@ public class DefaultDiagramNode implements IDiagramNode {
   @NonNull
   private final IModelDefinition definition;
   @NonNull
-  private final String name;
+  private final String identifier;
   @NonNull
   private final List<IDiagramNode.IAttribute> attributes;
   @NonNull
@@ -61,7 +61,7 @@ public class DefaultDiagramNode implements IDiagramNode {
   public DefaultDiagramNode(
       @NonNull IModelDefinition definition) {
     this.definition = definition;
-    this.name = getParentContext(definition);
+    this.identifier = getParentContext(definition);
     this.attributes = ObjectUtils.notNull(Stream.concat(
         definition.getFlagInstances().stream()
             // all flags
@@ -114,7 +114,7 @@ public class DefaultDiagramNode implements IDiagramNode {
   @Override
   @NonNull
   public String getIdentifier() {
-    return name;
+    return identifier;
   }
 
   @Override

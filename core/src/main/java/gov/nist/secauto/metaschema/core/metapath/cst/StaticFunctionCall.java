@@ -31,8 +31,6 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * Static functions are resolved during the parsing phase and must exist in the
  * function registry.
  */
-// FIXME: Change compilation to error when a non-existant function is called.
-// Manage this error where the compilation is requested
 public class StaticFunctionCall
     extends AbstractExpression {
   @NonNull
@@ -43,6 +41,8 @@ public class StaticFunctionCall
   /**
    * Construct a new function call expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param functionSupplier
    *          the function supplier, which is used to lazy fetch the function
    *          allowing the containing Metapaths to parse even if a function does
@@ -50,7 +50,11 @@ public class StaticFunctionCall
    * @param arguments
    *          the expressions used to provide arguments to the function call
    */
-  public StaticFunctionCall(@NonNull Supplier<IFunction> functionSupplier, @NonNull List<IExpression> arguments) {
+  public StaticFunctionCall(
+      @NonNull String text,
+      @NonNull Supplier<IFunction> functionSupplier,
+      @NonNull List<IExpression> arguments) {
+    super(text);
     this.functionSupplier = ObjectUtils.notNull(Lazy.lazy(functionSupplier));
     this.arguments = arguments;
   }

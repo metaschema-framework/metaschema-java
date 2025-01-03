@@ -35,7 +35,6 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Modulo;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Multiplication;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Negate;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.FlagStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.KindNodeTest;
@@ -259,11 +258,6 @@ public final class CSTPrinter {
     @Override
     public String visitOr(Or expr, State context) {
       return appendNode(expr, super.visitOr(expr, context), context);
-    }
-
-    @Override
-    public String visitAxis(Axis expr, State context) {
-      return appendNode(expr, super.visitAxis(expr, context), context);
     }
 
     @Override

@@ -57,7 +57,7 @@ class FlagStepTest
       }
     });
 
-    FlagStep expr = new FlagStep(new NameNodeTest(flagName));
+    FlagStep expr = new FlagStep("test data", new NameNodeTest("test data", flagName));
 
     ISequence<?> result = expr.accept(dynamicContext, ISequence.of(focusItem));
     assertEquals(ISequence.of(flagNode), result, "Sequence does not match");

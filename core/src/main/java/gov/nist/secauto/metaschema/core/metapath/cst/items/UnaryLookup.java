@@ -33,11 +33,13 @@ public class UnaryLookup
   /**
    * Construct a new unary lookup expression that uses the provided key specifier.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param keySpecifier
    *          the key specifier used to determine matching entries
    */
-  public UnaryLookup(@NonNull IKeySpecifier keySpecifier) {
-    super(keySpecifier);
+  public UnaryLookup(@NonNull String text, @NonNull IKeySpecifier keySpecifier) {
+    super(text, keySpecifier);
   }
 
   @SuppressWarnings("null")

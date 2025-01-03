@@ -72,6 +72,8 @@ public class Quantified
   /**
    * Construct a new quantified expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param quantifier
    *          the quantifier operation
    * @param inClauses
@@ -82,9 +84,11 @@ public class Quantified
    *          the variables
    */
   public Quantified(
+      @NonNull String text,
       @NonNull Quantifier quantifier,
       @NonNull Map<IEnhancedQName, IExpression> inClauses,
       @NonNull IExpression satisfies) {
+    super(text);
     this.quantifier = quantifier;
     this.inClauses = inClauses;
     this.satisfies = satisfies;

@@ -63,13 +63,18 @@ public class Subtraction
   /**
    * An expression that gets the difference of two atomic data items.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param minuend
    *          an expression whose result is the value being subtracted from
    * @param subtrahend
    *          an expression whose result is the value being subtracted
    */
-  public Subtraction(@NonNull IExpression minuend, @NonNull IExpression subtrahend) {
-    super(minuend, subtrahend);
+  public Subtraction(
+      @NonNull String text,
+      @NonNull IExpression minuend,
+      @NonNull IExpression subtrahend) {
+    super(text, minuend, subtrahend);
   }
 
   @Override

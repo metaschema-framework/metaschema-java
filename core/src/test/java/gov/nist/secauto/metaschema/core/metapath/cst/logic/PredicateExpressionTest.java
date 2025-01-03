@@ -49,7 +49,7 @@ class PredicateExpressionTest
     IExpression stepExpr = mockFactory.mock(IExpression.class);
     doReturn(focus).when(stepExpr).accept(dynamicContext, focus);
 
-    PredicateExpression expr = new PredicateExpression(stepExpr, predicates);
+    PredicateExpression expr = new PredicateExpression("test data", stepExpr, predicates);
 
     ISequence<?> result = expr.accept(dynamicContext, focus);
 
@@ -76,7 +76,7 @@ class PredicateExpressionTest
     IExpression stepExpr = mockFactory.mock(IExpression.class);
     doReturn(focus).when(stepExpr).accept(dynamicContext, focus);
 
-    PredicateExpression expr = new PredicateExpression(stepExpr, predicates);
+    PredicateExpression expr = new PredicateExpression("test data", stepExpr, predicates);
 
     ISequence<?> result = expr.accept(dynamicContext, ISequence.of(item));
 

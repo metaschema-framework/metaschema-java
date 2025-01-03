@@ -64,7 +64,7 @@ public interface IArgument {
   }
 
   @NonNull
-  private static String resolveArgumentName(@NonNull String prefix) {
+  static String resolveArgumentName(@NonNull String prefix) {
     if (!"".equals(prefix)) {
       throw new UnsupportedOperationException("Lexical qualified names are not allowed.");
     }

@@ -25,7 +25,6 @@ public class DefaultFunctionLibrary
   /**
    * Initialize the built-in function library.
    */
-  @SuppressWarnings("deprecation")
   @SuppressFBWarnings(value = "UWF_UNWRITTEN_FIELD", justification = "Static fields used for initialization")
   public DefaultFunctionLibrary() { // NOPMD - intentional
     // https://www.w3.org/TR/xpath-functions-31/#func-abs

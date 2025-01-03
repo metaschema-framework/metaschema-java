@@ -46,6 +46,7 @@ final class XmlFlagContainerSupport {
               Map.entry(XmlModuleConstants.FLAG_QNAME, XmlFlagContainerSupport::handleFlag),
               Map.entry(XmlModuleConstants.DEFINE_FLAG_QNAME, XmlFlagContainerSupport::handleDefineFlag)))) {
 
+        @SuppressWarnings("synthetic-access")
         @Override
         protected Handler<Pair<IModelDefinition, IFlagContainerBuilder<IFlagInstance>>> identifyHandler(
             XmlCursor cursor,

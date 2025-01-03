@@ -54,8 +54,8 @@ public final class DeleteOnShutdown {
                   return FileVisitResult.CONTINUE;
                 }
               });
-        } catch (IOException ex) {
-          // this is a best effort
+        } catch (@SuppressWarnings("unused") IOException ex) {
+          // this is a best effort, ignore the error
         }
       });
     } finally {

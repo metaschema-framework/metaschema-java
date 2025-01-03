@@ -36,10 +36,13 @@ public abstract class AbstractStepExpression<RESULT_TYPE extends INodeItem>
    * Construct a new expression that finds children that match the provided
    * {@code test} expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param test
    *          the expression to use to determine a match
    */
-  public AbstractStepExpression(@NonNull INodeTestExpression test) {
+  public AbstractStepExpression(@NonNull String text, @NonNull INodeTestExpression test) {
+    super(text);
     this.test = test;
   }
 

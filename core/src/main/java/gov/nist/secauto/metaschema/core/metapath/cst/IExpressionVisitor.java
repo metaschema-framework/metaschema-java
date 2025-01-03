@@ -35,7 +35,6 @@ import gov.nist.secauto.metaschema.core.metapath.cst.math.Modulo;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Multiplication;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Negate;
 import gov.nist.secauto.metaschema.core.metapath.cst.math.Subtraction;
-import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.FlagStep;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.KindNodeTest;
@@ -100,17 +99,6 @@ public interface IExpressionVisitor<RESULT, CONTEXT> {
    * @return the visitation result or {@code null} if no result was produced
    */
   RESULT visitExcept(@NonNull Except expr, @NonNull CONTEXT context);
-
-  /**
-   * Visit the CST node.
-   *
-   * @param expr
-   *          the CST node to visit
-   * @param context
-   *          the processing context
-   * @return the visitation result or {@code null} if no result was produced
-   */
-  RESULT visitAxis(@NonNull Axis expr, @NonNull CONTEXT context);
 
   /**
    * Visit the CST node.

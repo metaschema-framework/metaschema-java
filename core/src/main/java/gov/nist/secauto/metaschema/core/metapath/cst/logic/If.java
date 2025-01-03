@@ -33,6 +33,8 @@ public class If
   /**
    * Construct a new conditional expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param testExpression
    *          the first expression to evaluate
    * @param thenExpression
@@ -41,9 +43,11 @@ public class If
    *          the expression to evaluate if the test is {@code false}
    */
   public If(
+      @NonNull String text,
       @NonNull IExpression testExpression,
       @NonNull IExpression thenExpression,
       @NonNull IExpression elseExpression) {
+    super(text);
     this.testExpression = testExpression;
     this.thenExpression = thenExpression;
     this.elseExpression = elseExpression;

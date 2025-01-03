@@ -38,12 +38,14 @@ public class And // NOPMD - intentional name
   /**
    * Construct a new "and" logical expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param expressions
    *          the expressions to evaluate
    *
    */
-  public And(@NonNull List<IExpression> expressions) {
-    super(expressions);
+  public And(@NonNull String text, @NonNull List<IExpression> expressions) {
+    super(text, expressions);
   }
 
   @Override

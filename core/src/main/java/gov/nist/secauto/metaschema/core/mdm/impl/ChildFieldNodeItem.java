@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.mdm.impl;
 
-import gov.nist.secauto.metaschema.core.mdm.IDMFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
@@ -18,7 +17,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class ChildFieldNodeItem
     extends AbstractDMFieldNodeItem
-    implements IDMFieldNodeItem, IFeatureChildNodeItem<IAssemblyNodeItem> {
+    implements IFeatureChildNodeItem<IAssemblyNodeItem> {
   @NonNull
   private final IFieldInstance instance;
   @NonNull

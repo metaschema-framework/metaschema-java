@@ -60,7 +60,7 @@ class CSTLogicalExpressionsTest
 
     List<IExpression> list = List.of(exp1, exp2);
     assert list != null;
-    And expr = new And(list);
+    And expr = new And("test data", list);
 
     ISequence<?> result = expr.accept(dynamicContext, focus);
     assertEquals(ISequence.of(expectedResult), result);
@@ -104,7 +104,7 @@ class CSTLogicalExpressionsTest
       }
     });
 
-    Or expr = new Or(exp1, exp2);
+    Or expr = new Or("test data", exp1, exp2);
 
     ISequence<?> result = expr.accept(dynamicContext, focus);
     assertEquals(ISequence.of(expectedResult), result, "Sequence does not match");

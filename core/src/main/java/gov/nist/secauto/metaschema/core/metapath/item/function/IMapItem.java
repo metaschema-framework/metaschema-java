@@ -9,7 +9,6 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapItem;
 import gov.nist.secauto.metaschema.core.metapath.impl.MapItemN;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
@@ -28,7 +27,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *          the value type
  */
 public interface IMapItem<VALUE extends ICollectionValue>
-    extends IFunction, IItem, Map<IMapKey, VALUE> {
+    extends IFunction, Map<IMapKey, VALUE> {
   /**
    * Get the type information for this item.
    *

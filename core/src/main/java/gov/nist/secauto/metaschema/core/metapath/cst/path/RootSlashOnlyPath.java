@@ -18,6 +18,8 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * An expression that gets the document root.
  * <p>
@@ -31,6 +33,16 @@ import java.util.List;
  */
 public class RootSlashOnlyPath
     extends AbstractPathExpression<INodeItem> {
+
+  /**
+   * Construct a new path expression.
+   *
+   * @param text
+   *          the parsed text of the expression
+   */
+  public RootSlashOnlyPath(@NonNull String text) {
+    super(text);
+  }
 
   @Override
   public List<? extends IExpression> getChildren() {

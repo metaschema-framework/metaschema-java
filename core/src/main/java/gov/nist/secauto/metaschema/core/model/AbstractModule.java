@@ -177,7 +177,7 @@ public abstract class AbstractModule<
     @NonNull
     private final Map<Integer, A> exportedRootAssemblyDefinitions;
 
-    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
+    @SuppressWarnings({ "PMD.ConstructorCallsOverridableMethod", "synthetic-access" })
     public Exports(@NonNull List<? extends M> importedModules) {
       // Populate the stream with the definitions from this module
       Predicate<IDefinition> filter = IModuleExtended.allNonLocalDefinitions();

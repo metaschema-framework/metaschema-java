@@ -28,10 +28,15 @@ public class VariableReference
   /**
    * Construct a new Metapath variable reference CST node.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param name
    *          the variable name
    */
-  public VariableReference(@NonNull IEnhancedQName name) {
+  public VariableReference(
+      @NonNull String text,
+      @NonNull IEnhancedQName name) {
+    super(text);
     this.name = name;
   }
 

@@ -32,8 +32,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 class ArrowExpressionTest
     extends ExpressionTestBase {
-  private static final String NS = "http://example.com/ns";
-
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
         Arguments.of(ISequence.of(string("ABC")), "'abc' => upper-case()"),

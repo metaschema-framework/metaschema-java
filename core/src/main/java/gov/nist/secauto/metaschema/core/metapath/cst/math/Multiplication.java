@@ -47,13 +47,18 @@ public class Multiplication
   /**
    * An expression that gets the product result by multiplying two values.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          the item to be divided
    * @param right
    *          the item to divide by
    */
-  public Multiplication(@NonNull IExpression left, @NonNull IExpression right) {
-    super(left, right);
+  public Multiplication(
+      @NonNull String text,
+      @NonNull IExpression left,
+      @NonNull IExpression right) {
+    super(text, left, right);
   }
 
   @Override

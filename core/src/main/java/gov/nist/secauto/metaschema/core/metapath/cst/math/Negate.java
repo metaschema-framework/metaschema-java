@@ -33,12 +33,14 @@ public class Negate
   /**
    * Create an expression that gets the complement of a number.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param expr
    *          the expression whose item result will be complemented
    */
   @SuppressWarnings("null")
-  public Negate(@NonNull IExpression expr) {
-    super(expr);
+  public Negate(@NonNull String text, @NonNull IExpression expr) {
+    super(text, expr);
     this.staticResultType = ExpressionUtils.analyzeStaticResultType(INumericItem.class, List.of(expr));
   }
 

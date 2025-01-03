@@ -100,7 +100,7 @@ class ValueComparisonTest
       }
     });
 
-    ValueComparison expr = new ValueComparison(exp1, operator, exp2);
+    ValueComparison expr = new ValueComparison("test data", exp1, operator, exp2);
 
     ISequence<?> result = expr.accept(dynamicContext, focus);
     assertEquals(ISequence.of(expectedResult), result, "Sequence does not match");

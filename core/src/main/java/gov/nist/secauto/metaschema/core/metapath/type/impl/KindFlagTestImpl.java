@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IKindTest;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -18,8 +17,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * node and type name.
  */
 public class KindFlagTestImpl
-    extends AbstractDefinitionTest<IFlagNodeItem>
-    implements IKindTest<IFlagNodeItem> {
+    extends AbstractDefinitionTest<IFlagNodeItem> {
   /**
    * Construct a new test.
    *

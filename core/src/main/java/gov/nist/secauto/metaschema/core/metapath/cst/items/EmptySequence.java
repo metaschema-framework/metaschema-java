@@ -49,6 +49,7 @@ public final class EmptySequence<RESULT_TYPE extends IItem>
 
   private EmptySequence() {
     // disable construction
+    super("()");
   }
 
   @SuppressWarnings("null")

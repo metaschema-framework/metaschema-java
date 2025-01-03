@@ -27,13 +27,18 @@ public class RelativeSlashPath
    * Construct a new expression that finds a child of the {@code left} expression
    * using the {@code right} expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param left
    *          the context path
    * @param right
    *          the path to evaluate in the context of the left
    */
-  public RelativeSlashPath(@NonNull IExpression left, @NonNull IExpression right) {
-    super(left, right);
+  public RelativeSlashPath(
+      @NonNull String text,
+      @NonNull IExpression left,
+      @NonNull IExpression right) {
+    super(text, left, right);
   }
 
   @Override

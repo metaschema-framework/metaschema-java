@@ -39,13 +39,15 @@ public class Or
   /**
    * Construct a new "or" logical expression.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param expressions
    *          the expressions to evaluate
    *
    */
   @SuppressWarnings("null")
-  public Or(@NonNull IExpression... expressions) {
-    this(Arrays.asList(expressions));
+  public Or(@NonNull String text, @NonNull IExpression... expressions) {
+    this(text, Arrays.asList(expressions));
   }
 
   /**
@@ -54,11 +56,13 @@ public class Or
    * {@link FnBoolean#fnBooleanAsPrimitive(ISequence)} to each function's
    * {@link ISequence} result.
    *
+   * @param text
+   *          the parsed text of the expression
    * @param expressions
    *          the list of expressions
    */
-  public Or(@NonNull List<IExpression> expressions) {
-    super(expressions);
+  public Or(@NonNull String text, @NonNull List<IExpression> expressions) {
+    super(text, expressions);
   }
 
   @Override
