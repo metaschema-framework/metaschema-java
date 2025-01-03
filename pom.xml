@@ -56,7 +56,7 @@
 		<dependency.jaxen.version>2.0.0</dependency.jaxen.version>
 		<dependency.jdom2.version>2.0.6.1</dependency.jdom2.version>
 		<dependency.jmock-junit5.version>2.13.1</dependency.jmock-junit5.version>
-		<dependency.json.version>20240303</dependency.json.version>
+		<dependency.json.version>20241224</dependency.json.version>
 		<dependency.lazy4j.version>2.0.0</dependency.lazy4j.version>
 		<dependency.log4j2.version>2.24.2</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.10.0</dependency.logcaptor.version>
