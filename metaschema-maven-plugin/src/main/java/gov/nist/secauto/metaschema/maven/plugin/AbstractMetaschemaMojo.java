@@ -481,6 +481,97 @@ public abstract class AbstractMetaschemaMojo
     }
   }
 
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
+  @Override
+  public void execute() throws MojoExecutionException {
+    File staleFile = getStaleFile();
+    try {
+      staleFile = ObjectUtils.notNull(staleFile.getCanonicalFile());
+    } catch (IOException ex) {
+      if (getLog().isWarnEnabled()) {
+        getLog().warn("Unable to resolve canonical path to stale file. Treating it as not existing.", ex);
+      }
+    }
+
+    boolean generate;
+    if (shouldExecutionBeSkipped()) {
+      if (getLog().isDebugEnabled()) {
+        getLog().debug(String.format("Generation is configured to be skipped. Skipping."));
+      }
+      generate = false;
+    } else if (staleFile.exists()) {
+      generate = isGenerationRequired();
+    } else {
+      if (getLog().isInfoEnabled()) {
+        getLog().info(String.format("Stale file '%s' doesn't exist! Generation is required.", staleFile.getPath()));
+      }
+      generate = true;
+    }
+
+    if (generate) {
+
+      List<File> generatedFiles;
+      try {
+        generatedFiles = performGeneration();
+      } finally {
+        // ensure the stale file is created to ensure that regeneration is only
+        // performed when a
+        // change is made
+        createStaleFile(staleFile);
+      }
+
+      if (getLog().isInfoEnabled()) {
+        getLog().info(String.format("Generated %d files.", generatedFiles.size()));
+      }
+
+      // for m2e
+      for (File file : generatedFiles) {
+        getBuildContext().refresh(file);
+      }
+    }
+  }
+
+  @SuppressWarnings({ "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl" })
+  @NonNull
+  private List<File> performGeneration() throws MojoExecutionException {
+    File outputDir = getOutputDirectory();
+    if (getLog().isDebugEnabled()) {
+      getLog().debug(String.format("Using outputDirectory: %s", outputDir.getPath()));
+    }
+
+    if (!outputDir.exists() && !outputDir.mkdirs()) {
+      throw new MojoExecutionException("Unable to create output directory: " + outputDir);
+    }
+
+    IBindingContext bindingContext;
+    try {
+      bindingContext = newBindingContext();
+    } catch (MetaschemaException | IOException ex) {
+      throw new MojoExecutionException("Failed to create the binding context", ex);
+    }
+
+    // generate Java sources based on provided metaschema sources
+    Set<IModule> modules;
+    try {
+      modules = getModulesToGenerateFor(bindingContext);
+    } catch (Exception ex) {
+      throw new MojoExecutionException("Loading of metaschema modules failed", ex);
+    }
+
+    return generate(modules);
+  }
+
+  /**
+   * Perform the generation operation.
+   *
+   * @return the files generated during the operation
+   *
+   * @throws MojoExecutionException
+   *           if an error occurred while performing the generation operation
+   */
+  @NonNull
+  protected abstract List<File> generate(@NonNull Set<IModule> modules) throws MojoExecutionException;
+
   protected final class LoggingValidationHandler
       extends AbstractValidationResultProcessor {
 
