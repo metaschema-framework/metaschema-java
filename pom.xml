@@ -75,7 +75,7 @@
 		<dependency.xml-apis.version>2.0.2</dependency.xml-apis.version>
 
 		<!-- needed for XMLBeans -->
-		<dependency.javaparser-symbol-solver-core.version>3.26.2</dependency.javaparser-symbol-solver-core.version>
+		<dependency.javaparser-symbol-solver-core.version>3.26.3</dependency.javaparser-symbol-solver-core.version>
 
 		<plugin.antlr4test.version>1.22</plugin.antlr4test.version>
 		<plugin.appassembler.version>2.1.0</plugin.appassembler.version>
@@ -233,7 +233,7 @@
 				<!-- fix for missing xmlbeans runtime dependency -->
 				<groupId>com.github.javaparser</groupId>
 				<artifactId>javaparser-symbol-solver-core</artifactId>
-				<version>3.26.2</version>
+				<version>3.26.3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jdom</groupId>
