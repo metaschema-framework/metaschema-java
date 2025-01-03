@@ -46,7 +46,7 @@
 		<dependency.eclipse-jdt.version>2.3.100</dependency.eclipse-jdt.version>
 		<dependency.everit-json.version>1.14.4</dependency.everit-json.version>
 		<dependency.flexmark.version>0.64.8</dependency.flexmark.version>
-		<dependency.freemarker.version>2.3.33</dependency.freemarker.version>
+		<dependency.freemarker.version>2.3.34</dependency.freemarker.version>
 		<dependency.caffeine.version>3.1.8</dependency.caffeine.version>
 		<dependency.inject-resources-junit-jupiter.version>1.0.0</dependency.inject-resources-junit-jupiter.version>
 		<!-- Downgrade jackson due to https://github.com/FasterXML/jackson-databind/issues/4727 -->
