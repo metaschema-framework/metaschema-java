@@ -76,4 +76,9 @@ public class DefinitionFlagNodeItem
   public StaticContext getStaticContext() {
     return staticContext;
   }
+
+  @Override
+  public Object getValue() {
+    return this;
+  }
 }
