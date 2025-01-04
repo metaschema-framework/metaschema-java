@@ -46,7 +46,7 @@ public final class MapForEach {
           .one()
           .build())
       .returnType(IItem.type())
-      .returnOneOrMore()
+      .returnZeroOrMore()
       .functionHandler(MapForEach::execute)
       .build();
 
