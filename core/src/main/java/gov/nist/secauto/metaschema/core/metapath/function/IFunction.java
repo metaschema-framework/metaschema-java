@@ -70,6 +70,16 @@ public interface IFunction extends IItem {
     UNBOUNDED_ARITY;
   }
 
+  /**
+   * Get the type information for this item.
+   *
+   * @return the type information
+   */
+  @NonNull
+  static IItemType type() {
+    return IItemType.function();
+  }
+
   @Override
   default IItemType getType() {
     // TODO: implement this based on the signature

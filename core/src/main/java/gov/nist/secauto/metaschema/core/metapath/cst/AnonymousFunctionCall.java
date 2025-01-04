@@ -147,7 +147,10 @@ public class AnonymousFunctionCall
         subContext.bindVariableValue(param.getName(), ObjectUtils.notNull(sequence));
       }
 
-      return body.accept(subContext, ISequence.of(focus));
+      // the focus is not present according to
+      // https://www.w3.org/TR/xpath-31/#id-eval-function-call
+      // paragraph 5.b.ii
+      return body.accept(subContext, ISequence.empty());
     }
   }
 }

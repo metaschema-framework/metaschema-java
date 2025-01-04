@@ -268,7 +268,8 @@ public class DefaultFunctionLibrary
     registerFunction(MapEntry.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-map-remove
     registerFunction(MapRemove.SIGNATURE);
-    // P3: https://www.w3.org/TR/xpath-functions-31/#func-map-for-each
+    // https://www.w3.org/TR/xpath-functions-31/#func-map-for-each
+    registerFunction(MapForEach.SIGNATURE);
 
     // metapath casting functions
     DataTypeService.instance().getDataTypes().stream()
