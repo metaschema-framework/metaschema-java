@@ -26,16 +26,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Implements the '+' operator for Metapath addition operations.
  * <p>
- * An XPath 3.1
- * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
- * expression</a> supporting addition.
+ * An XPath 3.1 <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic expression</a>
+ * supporting addition.
  * <p>
  * Supports addition operations between:
  * <ul>
  * <li>Numeric values
  * <li>Date/DateTime + {@link IYearMonthDurationItem}
  * <li>Date/DateTime/Time + {@link IDayTimeDurationItem}
- * <li>Date/Time arithmetic (adding durations to dates/times)</li>
+ * <li>Date/Time arithmetic (adding durations to dates/times)
  * <li>{@link IYearMonthDurationItem} + {@link IYearMonthDurationItem}
  * <li>{@link IDayTimeDurationItem} + {@link IDayTimeDurationItem}
  * </ul>

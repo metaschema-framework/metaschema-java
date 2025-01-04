@@ -365,12 +365,11 @@ public class MetaschemaJsonReader
   }
 
   @Nullable
-  private Object checkMissingFieldValue(Object value) throws IOException {
+  private Object checkMissingFieldValue(Object value) {
     if (value == null && LOGGER.isWarnEnabled()) {
       LOGGER.atWarn().log("Missing property value{}",
           JsonUtil.generateLocationMessage(getReader(), getSource()));
     }
-    // TODO: change nullness annotations to be @Nullable
     return value;
   }
 

@@ -22,8 +22,7 @@ public class CloseDetectingInputStream
   private boolean closed;
 
   /**
-   * Create a new input stream that will proxy calls to the provided
-   * {@code delegate}.
+   * Create a new input stream that will proxy calls to the provided {@code delegate}.
    *
    * @param delegate
    *          the underlying input stream
@@ -35,8 +34,7 @@ public class CloseDetectingInputStream
   /**
    * Indicates if {@link #close()} has been called.
    *
-   * @return {@code true} if {@link #close()} has been called, or {@code false}
-   *         otherwise
+   * @return {@code true} if {@link #close()} has been called, or {@code false} otherwise
    */
   public boolean isClosed() {
     return closed;
@@ -88,11 +86,13 @@ public class CloseDetectingInputStream
     closed = true;
   }
 
+  @SuppressWarnings("sync-override")
   @Override
   public void mark(int readlimit) {
     delegate.mark(readlimit);
   }
 
+  @SuppressWarnings("sync-override")
   @Override
   public void reset() throws IOException {
     delegate.reset();

@@ -29,9 +29,9 @@ class DateTimeAdapterTest {
    * <p>
    * Each argument contains:
    * <ul>
-   * <li>input string to parse</li>
-   * <li>boolean indicating if the datetime is ambiguous (no timezone)</li>
-   * <li>expected ZonedDateTime result</li>
+   * <li>input string to parse
+   * <li>boolean indicating if the datetime is ambiguous (no timezone)
+   * <li>expected ZonedDateTime result
    * </ul>
    *
    * @return Stream of test cases

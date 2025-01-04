@@ -23,9 +23,8 @@ import javax.xml.stream.events.Attribute;
 /**
  * Handles problems identified in the parsed XML.
  * <p>
- * The default problem handler will report unknown attributes, and provide empty
- * collections for multi-valued model items and default values for flags and
- * single valued fields.
+ * The default problem handler will report unknown attributes, and provide empty collections for
+ * multi-valued model items and default values for flags and single valued fields.
  */
 public class DefaultXmlProblemHandler
     extends AbstractProblemHandler
@@ -47,7 +46,7 @@ public class DefaultXmlProblemHandler
       IBoundObject targetObject,
       Attribute attribute,
       IXmlParsingContext parsingContext) {
-    IEnhancedQName qname = IEnhancedQName.of(attribute.getName());
+    IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.requireNonNull(attribute.getName()));
     // check if warning is needed
     if (LOGGER.isWarnEnabled() && !IGNORED_QNAMES.contains(qname)) {
       LOGGER.atWarn().log("Skipping unrecognized attribute '{}'{}.",

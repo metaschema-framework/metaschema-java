@@ -78,8 +78,7 @@ public final class AnnotationGenerator {
    *          the annotation to analyze
    * @param member
    *          the annotation member to analyze
-   * @return the default value for the annotation member or {@code null} if there
-   *         is not default value
+   * @return the default value for the annotation member or {@code null} if there is not default value
    */
   public static Object getDefaultValue(Class<?> annotation, String member) {
     Method method;
@@ -88,11 +87,11 @@ public final class AnnotationGenerator {
     } catch (NoSuchMethodException ex) {
       throw new IllegalArgumentException(ex);
     }
-    Object retval;
+    Object retval = null;
     try {
       retval = method.getDefaultValue();
-    } catch (TypeNotPresentException ex) {
-      retval = null; // NOPMD readability
+    } catch (@SuppressWarnings("unused") TypeNotPresentException ex) {
+      // no default value found
     }
     return retval;
   }

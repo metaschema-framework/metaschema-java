@@ -35,7 +35,7 @@ class MetaschemaModuleMetaschemaTest
 
   @Test
   @Disabled
-  void testMetaschemaMetaschema() throws MetaschemaException, IOException, ClassNotFoundException, BindingException {
+  void testMetaschemaMetaschema() throws MetaschemaException, IOException, ClassNotFoundException {
     runTests(
         ObjectUtils.notNull(METASCHEMA_FILE),
         ObjectUtils.notNull(

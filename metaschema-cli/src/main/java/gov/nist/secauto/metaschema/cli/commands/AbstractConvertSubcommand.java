@@ -68,8 +68,7 @@ public abstract class AbstractConvertSubcommand
   }
 
   /**
-   * Used by implementing classes to provide for execution of a conversion
-   * command.
+   * Used by implementing classes to provide for execution of a conversion command.
    */
   protected abstract static class AbstractConversionCommandExecutor
       extends AbstractCommandExecutor {
@@ -113,6 +112,7 @@ public abstract class AbstractConvertSubcommand
         destination = MetaschemaCommands.handleDestination(ObjectUtils.requireNonNull(extraArgs.get(1)), cmdLine);
       }
 
+      @SuppressWarnings("synthetic-access")
       URI source = MetaschemaCommands.handleSource(
           ObjectUtils.requireNonNull(extraArgs.get(0)),
           ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()));

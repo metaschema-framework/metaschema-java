@@ -29,21 +29,18 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Provides utility methods for processing Metapath abstract syntax tree (AST)
- * nodes to produce a compact syntax tree (CST).
+ * Provides utility methods for processing Metapath abstract syntax tree (AST) nodes to produce a
+ * compact syntax tree (CST).
  * <p>
- * This base class implements common visitor patterns for transforming AST nodes
- * into a more compact representation. The CST is optimized for efficient
- * evaluation of Metapath expressions.
+ * This base class implements common visitor patterns for transforming AST nodes into a more compact
+ * representation. The CST is optimized for efficient evaluation of Metapath expressions.
  * <p>
  * Key utility methods include:
  * <ul>
- * <li>{@link #nairyToList} - Processes n-airy expressions into a list</li>
- * <li>{@link #nairyToCollection} - Processes n-airy expressions into a
- * collection</li>
- * <li>{@link #handleNAiryCollection} - Handles n-airy expressions with
- * operators</li>
- * <li>{@link #handleGroupedNAiry} - Processes grouped n-airy expressions</li>
+ * <li>{@link #nairyToList} - Processes n-airy expressions into a list
+ * <li>{@link #nairyToCollection} - Processes n-airy expressions into a collection
+ * <li>{@link #handleNAiryCollection} - Handles n-airy expressions with operators
+ * <li>{@link #handleGroupedNAiry} - Processes grouped n-airy expressions
  * </ul>
  */
 @SuppressWarnings({
@@ -55,8 +52,7 @@ public abstract class AbstractCSTVisitorBase
   private static final Pattern QUALIFIED_NAME_PATTERN = Pattern.compile("^Q\\{([^}]*)\\}(.+)$");
 
   /**
-   * Get the QName for an
-   * <a href="https://www.w3.org/TR/xpath-31/#dt-expanded-qname">expanded
+   * Get the QName for an <a href="https://www.w3.org/TR/xpath-31/#dt-expanded-qname">expanded
    * QName</a>.
    *
    * @param eqname
@@ -64,12 +60,11 @@ public abstract class AbstractCSTVisitorBase
    * @param context
    *          the Metapath evaluation static context
    * @param requireNamespace
-   *          if {@code true} require the resulting QName to have a namespace, or
-   *          {@code false} otherwise
+   *          if {@code true} require the resulting QName to have a namespace, or {@code false}
+   *          otherwise
    * @return the QName
    * @throws StaticMetapathException
-   *           if the expanded QName prefix is not bound or if the resulting
-   *           namespace is invalid
+   *           if the expanded QName prefix is not bound or if the resulting namespace is invalid
    */
   @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.CognitiveComplexity" })
   @NonNull
@@ -214,13 +209,11 @@ public abstract class AbstractCSTVisitorBase
   }
 
   /**
-   * Parse the provided context as an n-airy phrase, which will be one of the
-   * following.
+   * Parse the provided context as an n-airy phrase, which will be one of the following.
    * <ol>
-   * <li>A single <code>expr</code> for which that expr will be returned</li>
-   * <li><code>left (operator right)*</code> for which a collection of the left
-   * and right members will be returned based on what is provided by the
-   * supplier.</li>
+   * <li>A single <code>expr</code> for which that expr will be returned
+   * <li><code>left (operator right)*</code> for which a collection of the left and right members will
+   * be returned based on what is provided by the supplier.
    * </ol>
    *
    * @param <CONTEXT>
@@ -228,8 +221,7 @@ public abstract class AbstractCSTVisitorBase
    * @param context
    *          the context instance
    * @param supplier
-   *          a supplier that will instantiate an expression based on the provided
-   *          parsed collection
+   *          a supplier that will instantiate an expression based on the provided parsed collection
    * @return the left expression or the supplied expression for a collection
    */
   @NonNull
@@ -245,16 +237,15 @@ public abstract class AbstractCSTVisitorBase
   }
 
   /**
-   * Parse the provided context as an n-airy phrase, which will be one of the
-   * following.
+   * Parse the provided context as an n-airy phrase, which will be one of the following.
    * <ol>
-   * <li><code>expr</code> for which the expr will be returned.</li>
-   * <li><code>left</code> plus a number of additional recurring tokens as defined
-   * by the <em>step</em>.</li>
+   * <li><code>expr</code> for which the expr will be returned.
+   * <li><code>left</code> plus a number of additional recurring tokens as defined by the
+   * <em>step</em>.
    * </ol>
    * <p>
-   * In the second case, the supplier will be used to generate an expression from
-   * the collection of tuples.
+   * In the second case, the supplier will be used to generate an expression from the collection of
+   * tuples.
    *
    * @param <CONTEXT>
    *          the context type to parse
@@ -267,8 +258,7 @@ public abstract class AbstractCSTVisitorBase
    * @param parser
    *          a binary function used to parse the context children
    * @param supplier
-   *          a supplier that will instantiate an expression based on the provided
-   *          collection
+   *          a supplier that will instantiate an expression based on the provided collection
    * @return the left expression or the supplied expression for a collection
    */
   @NonNull
@@ -310,29 +300,27 @@ public abstract class AbstractCSTVisitorBase
   }
 
   /**
-   * Parse the provided context as a simple n-airy phrase, which will be one of
-   * the following.
+   * Parse the provided context as a simple n-airy phrase, which will be one of the following.
    * <ol>
-   * <li><code>expr</code> for which the expr will be returned</li>
-   * <li><code>left (operator right)*</code> for which a collection of the left
-   * and right members will be returned based on what is provided by the supplier.
+   * <li><code>expr</code> for which the expr will be returned
+   * <li><code>left (operator right)*</code> for which a collection of the left and right members will
+   * be returned based on what is provided by the supplier.
    * </ol>
    * <p>
-   * In the second case, the supplier will be used to generate an expression from
-   * the collection of tuples.
+   * In the second case, the supplier will be used to generate an expression from the collection of
+   * tuples.
    *
    * @param <CONTEXT>
    *          the context type to parse
    * @param context
    *          the context instance
    * @param startingIndex
-   *          the index of the first child expression, which must be a
-   *          non-negative value that is less than the number of children
+   *          the index of the first child expression, which must be a non-negative value that is less
+   *          than the number of children
    * @param step
    *          the amount to advance the loop over the context children
    * @param parser
-   *          a trinary function used to parse the context children and supply a
-   *          result
+   *          a trinary function used to parse the context children and supply a result
    * @return the left expression or the supplied expression
    */
   protected <CONTEXT extends ParserRuleContext> IExpression handleGroupedNAiry(

@@ -23,20 +23,18 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An XPath 3.1
- * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
- * expression</a> supporting multiplication.
+ * An XPath 3.1 <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic expression</a>
+ * supporting multiplication.
  * <p>
  * Supports multiplication between:
  * <ul>
- * <li>Numeric values</li>
- * <li>YearMonthDuration × Numeric</li>
- * <li>DayTimeDuration × Numeric</li>
+ * <li>Numeric values
+ * <li>YearMonthDuration × Numeric
+ * <li>DayTimeDuration × Numeric
  * </ul>
  *
  * <p>
- * Numeric operands are automatically converted using
- * {@link FunctionUtils#toNumeric}.
+ * Numeric operands are automatically converted using {@link FunctionUtils#toNumeric}.
  */
 public class Multiplication
     extends AbstractBasicArithmeticExpression {

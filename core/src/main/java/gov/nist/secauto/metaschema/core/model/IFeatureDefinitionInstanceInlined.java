@@ -15,8 +15,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * A trait indicating that the implementation is a localized definition that is
- * declared in-line as an instance.
+ * A trait indicating that the implementation is a localized definition that is declared in-line as
+ * an instance.
  *
  * @param <DEFINITION>
  *          the associated definition Java type
@@ -89,10 +89,10 @@ public interface IFeatureDefinitionInstanceInlined<
    *
    * A coordinate consists of the element's:
    * <ul>
-   * <li>containing Metaschema module's short name</li>
-   * <li>model type</li>
-   * <li>definition name</li>
-   * <li>hash code</li>
+   * <li>containing Metaschema module's short name
+   * <li>model type
+   * <li>definition name
+   * <li>hash code
    * </ul>
    *
    * @return the coordinate

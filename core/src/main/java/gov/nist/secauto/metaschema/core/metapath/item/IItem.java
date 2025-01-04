@@ -40,13 +40,11 @@ public interface IItem extends ICollectionValue {
   /**
    * Get the item's "wrapped" value. This "wrapped" value may be:
    * <ul>
-   * <li>In the case of an Assembly, a Java object representing the fields and
-   * flags of the assembly.</li>
-   * <li>In the case of a Field with flags, a Java object representing the field
-   * value and flags of the field.
+   * <li>In the case of an Assembly, a Java object representing the fields and flags of the assembly.
+   * <li>In the case of a Field with flags, a Java object representing the field value and flags of
+   * the field.
    * <li>In the case of a Field without flags or a flag, a Java type managed by a
-   * {@link IDataTypeAdapter} or a primitive type provided by the Java standard
-   * library.
+   * {@link IDataTypeAdapter} or a primitive type provided by the Java standard library.
    * </ul>
    *
    * @return the value or {@code null} if the item has no available value
@@ -56,8 +54,7 @@ public interface IItem extends ICollectionValue {
   /**
    * Determine if the item has an associated value.
    *
-   * @return {@code true} if the item has a non-{@code null} value or
-   *         {@code false} otherwise
+   * @return {@code true} if the item has a non-{@code null} value or {@code false} otherwise
    */
   default boolean hasValue() {
     return getValue() != null;
@@ -69,18 +66,16 @@ public interface IItem extends ICollectionValue {
   }
 
   /**
-   * Get the atomic value for the item. This may be the same item if the item is
-   * an instance of {@link IAnyAtomicItem}.
+   * Get the atomic value for the item. This may be the same item if the item is an instance of
+   * {@link IAnyAtomicItem}.
    * <p>
-   * An implementation of
-   * <a href="https://www.w3.org/TR/xpath-31/#id-atomization">item
+   * An implementation of <a href="https://www.w3.org/TR/xpath-31/#id-atomization">item
    * atomization</a>.
    *
    * @return the atomic value or {@code null} if the item has no available value
    * @throws InvalidTypeFunctionException
-   *           with code
-   *           {@link InvalidTypeFunctionException#NODE_HAS_NO_TYPED_VALUE} if the
-   *           item does not have a typed value
+   *           with code {@link InvalidTypeFunctionException#NODE_HAS_NO_TYPED_VALUE} if the item does
+   *           not have a typed value
    */
   // FIXME: get rid of the possible null result and throw
   // InvalidTypeFunctionException#NODE_HAS_NO_TYPED_VALUE
@@ -90,9 +85,8 @@ public interface IItem extends ICollectionValue {
    * {@inheritDoc}
    *
    * @throws InvalidTypeFunctionException
-   *           with code
-   *           {@link InvalidTypeFunctionException#NODE_HAS_NO_TYPED_VALUE} if the
-   *           item does not have a typed value
+   *           with code {@link InvalidTypeFunctionException#NODE_HAS_NO_TYPED_VALUE} if the item does
+   *           not have a typed value
    */
   @Override
   default Stream<IAnyAtomicItem> atomize() {

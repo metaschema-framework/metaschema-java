@@ -23,7 +23,6 @@ import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,7 @@ class BasicMetaschemaTest
     extends AbstractMetaschemaTest {
 
   @Test
-  void testSimpleMetaschema() throws MetaschemaException, IOException, ClassNotFoundException, BindingException {
+  void testSimpleMetaschema() throws MetaschemaException, IOException, ClassNotFoundException {
     runTests("simple", "gov.nist.csrc.ns.metaschema.testing.simple.TopLevel", ObjectUtils.notNull(generationDir));
     // runTests("simple", "gov.nist.csrc.ns.metaschema.testing.simple.TopLevel",
     // generationDir, (obj) ->
@@ -56,7 +55,7 @@ class BasicMetaschemaTest
 
   @Test
   void testSimpleUuidMetaschema()
-      throws MetaschemaException, IOException, ClassNotFoundException, BindingException {
+      throws MetaschemaException, IOException, ClassNotFoundException {
     runTests(
         "simple_with_uuid",
         "gov.nist.csrc.ns.metaschema.testing.simple.with.uuid.TopLevel",
@@ -72,7 +71,7 @@ class BasicMetaschemaTest
 
   @Test
   void testSimpleWithFieldMetaschema()
-      throws MetaschemaException, IOException, ClassNotFoundException, BindingException {
+      throws MetaschemaException, IOException, ClassNotFoundException {
     runTests(
         "simple_with_field",
         "gov.nist.csrc.ns.metaschema.testing.simple.with.field.TopLevel",
@@ -85,7 +84,7 @@ class BasicMetaschemaTest
 
   @Test
   void testFieldsWithFlagMetaschema()
-      throws MetaschemaException, IOException, ClassNotFoundException, BindingException {
+      throws MetaschemaException, IOException, ClassNotFoundException {
     runTests(
         "fields_with_flags",
         "gov.nist.csrc.ns.metaschema.testing.fields.with.flags.TopLevel",
@@ -156,7 +155,7 @@ class BasicMetaschemaTest
 
   @Test
   void testAssemblyMetaschema()
-      throws MetaschemaException, IOException, ClassNotFoundException, BindingException {
+      throws MetaschemaException, IOException, ClassNotFoundException {
     runTests(
         "assembly",
         "gov.nist.itl.metaschema.codegen.xml.example.assembly.TopLevel",
@@ -172,7 +171,7 @@ class BasicMetaschemaTest
 
   @Test
   void testLocalDefinitionsMetaschema()
-      throws MetaschemaException, IOException, ClassNotFoundException, BindingException {
+      throws MetaschemaException, IOException, ClassNotFoundException {
     runTests(
         "local-definitions",
         "gov.nist.csrc.ns.metaschema.testing.local.definitions.TopLevel",

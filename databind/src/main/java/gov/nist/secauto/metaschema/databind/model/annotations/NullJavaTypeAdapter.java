@@ -29,10 +29,8 @@ public final class NullJavaTypeAdapter
 
   /**
    * Construct a new adapter.
-   *
-   * @param clazz
-   *          the class to adapt
    */
+  @SuppressWarnings("synthetic-access")
   public NullJavaTypeAdapter() {
     super(Void.class, VoidItem.class, VoidItem::cast);
   }
@@ -65,7 +63,7 @@ public final class NullJavaTypeAdapter
 
   protected static class VoidItem implements IAnyAtomicItem {
 
-    public static VoidItem cast(@NonNull IAnyAtomicItem item) {
+    private static VoidItem cast(@SuppressWarnings("unused") @NonNull IAnyAtomicItem item) {
       throw new UnsupportedOperationException(NOT_VALID);
     }
 
@@ -76,13 +74,13 @@ public final class NullJavaTypeAdapter
 
     @Override
     public @NonNull
-    IAnyAtomicItem toAtomicItem() {
+        IAnyAtomicItem toAtomicItem() {
       throw new UnsupportedOperationException(NOT_VALID);
     }
 
     @Override
     public @NonNull
-    String asString() {
+        String asString() {
       throw new UnsupportedOperationException(NOT_VALID);
     }
 

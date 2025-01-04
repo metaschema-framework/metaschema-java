@@ -97,16 +97,12 @@ public class JavaCompilerSupport {
    *
    * @param classFiles
    *          the files to compile
-   * @param compileOut
-   *          a Writer for additional output from the compiler; use System.err if
-   *          null
    * @return information about the generated classes
    * @throws IOException
    *           if an error occurred while compiling the classes
    * @throws IllegalArgumentException
-   *           if any of the options are invalid, or if any of the given
-   *           compilation units are of other kind than
-   *           {@link javax.tools.JavaFileObject.Kind#SOURCE}
+   *           if any of the options are invalid, or if any of the given compilation units are of
+   *           other kind than {@link javax.tools.JavaFileObject.Kind#SOURCE}
    */
 
   public CompilationResult compile(@NonNull List<Path> classFiles) throws IOException {

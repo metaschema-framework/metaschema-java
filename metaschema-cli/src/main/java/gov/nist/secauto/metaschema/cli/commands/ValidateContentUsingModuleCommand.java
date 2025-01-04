@@ -43,8 +43,8 @@ import javax.xml.transform.stream.StreamSource;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * This command implementation supports validation of a content instance based
- * on a provided Metaschema module.
+ * This command implementation supports validation of a content instance based on a provided
+ * Metaschema module.
  */
 class ValidateContentUsingModuleCommand
     extends AbstractValidateContentCommand {
@@ -92,6 +92,7 @@ class ValidateContentUsingModuleCommand
       return MetaschemaCommands.newBindingContextWithDynamicCompilation(constraintSets);
     }
 
+    @SuppressWarnings("synthetic-access")
     @Override
     protected IModule getModule(
         CommandLine commandLine,

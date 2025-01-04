@@ -23,7 +23,7 @@ public final class ClassIntrospector {
       try {
         Method method = searchClass.getDeclaredMethod(name, parameterTypes);
         retval.add(method);
-      } catch (NoSuchMethodException ex) {
+      } catch (@SuppressWarnings("unused") NoSuchMethodException ex) {
         // do nothing, no matching method was found
       }
     } while ((searchClass = searchClass.getSuperclass()) != null);
@@ -40,7 +40,7 @@ public final class ClassIntrospector {
         retval = searchClass.getDeclaredMethod(name, parameterTypes);
         // stop on first found method
         break;
-      } catch (NoSuchMethodException ex) {
+      } catch (@SuppressWarnings("unused") NoSuchMethodException ex) {
         // do nothing, no matching method was found
       }
     } while ((searchClass = searchClass.getSuperclass()) != null);

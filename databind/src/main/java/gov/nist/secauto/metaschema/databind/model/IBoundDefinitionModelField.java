@@ -14,7 +14,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * <p>
  * Classes and interfaces implementing this interface can be:
  * <ul>
- * <li>"scalar", meaning they have only a scalar field value, or</li>
+ * <li>"scalar", meaning they have only a scalar field value, or
  * <li>"complex", meaning they allow flags and are bound to a Java class.
  * </ul>
  *

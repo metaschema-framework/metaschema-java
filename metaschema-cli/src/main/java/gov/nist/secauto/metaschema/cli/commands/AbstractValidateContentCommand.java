@@ -151,14 +151,12 @@ public abstract class AbstractValidateContentCommand
     /**
      * Get the module to use for validation.
      * <p>
-     * This module is used to generate schemas and as a source of built-in
-     * constraints.
+     * This module is used to generate schemas and as a source of built-in constraints.
      *
      * @param commandLine
      *          the provided command line argument information
      * @param bindingContext
-     *          the context used to access Metaschema module information based on
-     *          Java class bindings
+     *          the context used to access Metaschema module information based on Java class bindings
      * @return the loaded Metaschema module
      * @throws CommandExecutionException
      *           if an error occurred while loading the module
@@ -170,19 +168,17 @@ public abstract class AbstractValidateContentCommand
         throws CommandExecutionException;
 
     /**
-     * Get the schema validation implementation requested based on the provided
-     * command line arguments.
+     * Get the schema validation implementation requested based on the provided command line arguments.
      * <p>
-     * It is typical for this call to result in the dynamic generation of a schema
-     * to use for validation.
+     * It is typical for this call to result in the dynamic generation of a schema to use for
+     * validation.
      *
      * @param module
      *          the Metaschema module to generate the schema from
      * @param commandLine
      *          the provided command line argument information
      * @param bindingContext
-     *          the context used to access Metaschema module information based on
-     *          Java class bindings
+     *          the context used to access Metaschema module information based on Java class bindings
      * @return the provider
      */
     @NonNull
@@ -198,6 +194,7 @@ public abstract class AbstractValidateContentCommand
     @Override
     public void execute() throws CommandExecutionException {
       CommandLine cmdLine = getCommandLine();
+      @SuppressWarnings("synthetic-access")
       URI currentWorkingDirectory = ObjectUtils.notNull(getCurrentWorkingDirectory().toUri());
 
       Set<IConstraintSet> constraintSets = MetaschemaCommands.loadConstraintSets(

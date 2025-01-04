@@ -56,7 +56,7 @@ public class AssemblyDefinitionJsonSchema
             property = new NamedModelInstanceJsonProperty(named, state);
           } else if (instance instanceof IChoiceGroupInstance) {
             IChoiceGroupInstance choice = (IChoiceGroupInstance) instance;
-            property = new ChoiceGroupInstanceJsonProperty(choice, state);
+            property = new ChoiceGroupInstanceJsonProperty(choice);
           } else {
             throw new UnsupportedOperationException(
                 "model instance class not supported: " + instance.getClass().getName());

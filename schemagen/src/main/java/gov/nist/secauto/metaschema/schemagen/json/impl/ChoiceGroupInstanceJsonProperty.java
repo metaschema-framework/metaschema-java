@@ -27,9 +27,7 @@ public class ChoiceGroupInstanceJsonProperty
   private final IModelInstanceBuilder<?> collectionBuilder;
 
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
-  public ChoiceGroupInstanceJsonProperty(
-      @NonNull IChoiceGroupInstance instance,
-      @NonNull IJsonGenerationState state) {
+  public ChoiceGroupInstanceJsonProperty(@NonNull IChoiceGroupInstance instance) {
     super(instance);
     this.collectionBuilder = IModelInstanceBuilder.newCollectionBuilder(instance);
 

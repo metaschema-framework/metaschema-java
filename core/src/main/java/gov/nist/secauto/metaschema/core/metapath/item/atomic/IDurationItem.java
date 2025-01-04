@@ -16,11 +16,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * An atomic Metapath item representing a duration data value.
  * <p>
- * This interface supports both day-time and year-month duration formats
- * following the ISO 8601 standard. Examples of valid durations include:
+ * This interface supports both day-time and year-month duration formats following the ISO 8601
+ * standard. Examples of valid durations include:
  * <ul>
- * <li>P1Y2M (1 year, 2 months)</li>
- * <li>P3DT4H5M (3 days, 4 hours, 5 minutes)</li>
+ * <li>P1Y2M (1 year, 2 months)
+ * <li>P3DT4H5M (3 days, 4 hours, 5 minutes)
  * </ul>
  *
  * @see IDayTimeDurationItem
@@ -42,8 +42,7 @@ public interface IDurationItem extends IAnyAtomicItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item
-   *         cast to this type
+   * @return the original item if it is already this type, otherwise a new item cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */

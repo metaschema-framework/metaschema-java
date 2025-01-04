@@ -3,6 +3,9 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
+/**
+ * Modules used by the Metaschema schema generator.
+ */
 module gov.nist.secauto.metaschema.schemagen {
   // requirements
   requires java.base;

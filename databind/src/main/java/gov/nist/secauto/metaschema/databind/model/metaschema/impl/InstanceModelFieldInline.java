@@ -203,7 +203,7 @@ public class InstanceModelFieldInline
   public IFlagInstance getJsonValueKeyFlagInstance() {
     JsonValueKeyFlag obj = getBinding().getJsonValueKeyFlag();
     String name = obj == null ? null : obj.getFlagRef();
-    String namespace = getContainingModule().getXmlNamespace().toASCIIString();
+    String namespace = ObjectUtils.notNull(getContainingModule().getXmlNamespace().toASCIIString());
     return name == null ? null
         : ObjectUtils.requireNonNull(getFlagInstanceByName(
             IEnhancedQName.of(namespace, name).getIndexPosition()));

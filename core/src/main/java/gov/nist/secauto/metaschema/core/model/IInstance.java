@@ -21,8 +21,7 @@ public interface IInstance extends IModelElement {
   IModelDefinition getContainingDefinition();
 
   /**
-   * Get the parent model definition that serves as the container of this
-   * instance.
+   * Get the parent model definition that serves as the container of this instance.
    *
    * @return the container
    */
@@ -35,16 +34,15 @@ public interface IInstance extends IModelElement {
   // }
 
   /**
-   * Generates a "coordinate" string for the provided information element
-   * instance.
+   * Generates a "coordinate" string for the provided information element instance.
    *
    * A coordinate consists of the element's:
    * <ul>
-   * <li>containing Metaschema module's short name</li>
-   * <li>model type</li>
-   * <li>name</li>
-   * <li>hash code</li>
-   * <li>the hash code of the definition</li>
+   * <li>containing Metaschema module's short name
+   * <li>model type
+   * <li>name
+   * <li>hash code
+   * <li>the hash code of the definition
    * </ul>
    *
    * @return the coordinate

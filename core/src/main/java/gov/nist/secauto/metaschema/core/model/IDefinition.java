@@ -44,8 +44,8 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
   /**
    * The qualified name for the definition.
    * <p>
-   * This name is the combination of the definition's namespace, which is the
-   * module's namespace, and the definition's name.
+   * This name is the combination of the definition's namespace, which is the module's namespace, and
+   * the definition's name.
    *
    * @return the definition's qualified name
    */
@@ -53,14 +53,13 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
   IEnhancedQName getDefinitionQName();
 
   /**
-   * Determine if the definition is defined inline, meaning the definition is
-   * declared where it is used.
+   * Determine if the definition is defined inline, meaning the definition is declared where it is
+   * used.
    * <p>
-   * If this method returns {@code false}, then {@link #getInlineInstance()} must
-   * return {@code null}.
+   * If this method returns {@code false}, then {@link #getInlineInstance()} must return {@code null}.
    *
-   * @return {@code true} if the definition is declared inline or {@code false} if
-   *         the definition is able to be globally referenced
+   * @return {@code true} if the definition is declared inline or {@code false} if the definition is
+   *         able to be globally referenced
    * @see #getInlineInstance()
    */
   default boolean isInline() {
@@ -68,11 +67,9 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
   }
 
   /**
-   * If {@link #isInline()} is {@code true}, return the instance the definition is
-   * inlined for.
+   * If {@link #isInline()} is {@code true}, return the instance the definition is inlined for.
    * <p>
-   * If this method returns {@code null}, then {@link #getInlineInstance()} must
-   * return {@code false}.
+   * If this method returns {@code null}, then {@link #getInlineInstance()} must return {@code false}.
    *
    * @return the instance or {@code null} otherwise
    * @see #isInline()
@@ -80,15 +77,14 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
   INamedInstance getInlineInstance();
 
   /**
-   * Generates a coordinate string for the provided information element
-   * definition.
+   * Generates a coordinate string for the provided information element definition.
    *
    * A coordinate consists of the element's:
    * <ul>
-   * <li>containing Metaschema's short name</li>
-   * <li>model type</li>
-   * <li>name</li>
-   * <li>hash code</li>
+   * <li>containing Metaschema's short name
+   * <li>model type
+   * <li>name
+   * <li>hash code
    * </ul>
    *
    * @return the coordinate

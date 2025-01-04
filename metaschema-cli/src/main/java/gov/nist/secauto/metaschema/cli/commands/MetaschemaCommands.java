@@ -45,19 +45,16 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * This class provides a variety of utility methods for processing
- * Metaschema-related commands.
+ * This class provides a variety of utility methods for processing Metaschema-related commands.
  * <p>
- * These methods handle the errors produced using the
- * {@link CommandExecutionException}, which will return an exceptional result to
- * the command line interface (CLI) processor. This approach keeps the command
- * implementations fairly clean and simple.
+ * These methods handle the errors produced using the {@link CommandExecutionException}, which will
+ * return an exceptional result to the command line interface (CLI) processor. This approach keeps
+ * the command implementations fairly clean and simple.
  */
 @SuppressWarnings("PMD.GodClass")
 public final class MetaschemaCommands {
   /**
-   * A list of the Metaschema-related command pathways, for reuse in this and
-   * other CLI applications.
+   * A list of the Metaschema-related command pathways, for reuse in this and other CLI applications.
    */
   @NonNull
   public static final List<ICommand> COMMANDS = ObjectUtils.notNull(List.of(
@@ -96,8 +93,8 @@ public final class MetaschemaCommands {
           .numberOfArgs(1)
           .build());
   /**
-   * Used by commands to protect existing files from being overwritten, unless
-   * this option is provided.
+   * Used by commands to protect existing files from being overwritten, unless this option is
+   * provided.
    */
   @NonNull
   public static final Option OVERWRITE_OPTION = ObjectUtils.notNull(
@@ -106,8 +103,7 @@ public final class MetaschemaCommands {
           .desc("overwrite the destination if it exists")
           .build());
   /**
-   * Used by commands to identify the target format for a content conversion
-   * operation.
+   * Used by commands to identify the target format for a content conversion operation.
    *
    * @since 2.0.0
    */
@@ -123,8 +119,7 @@ public final class MetaschemaCommands {
           .numberOfArgs(1)
           .build());
   /**
-   * Used by commands to identify the source format for a content-related
-   * operation.
+   * Used by commands to identify the source format for a content-related operation.
    *
    * @since 2.0.0
    */
@@ -140,8 +135,7 @@ public final class MetaschemaCommands {
           .numberOfArgs(1)
           .build());
   /**
-   * Used by commands that produce schemas to identify the schema format to
-   * produce.
+   * Used by commands that produce schemas to identify the schema format to produce.
    *
    * @since 2.0.0
    */
@@ -159,14 +153,12 @@ public final class MetaschemaCommands {
           .build());
 
   /**
-   * Get the provided source path or URI string as an absolute {@link URI} for the
-   * resource.
+   * Get the provided source path or URI string as an absolute {@link URI} for the resource.
    *
    * @param pathOrUri
    *          the resource
    * @param currentWorkingDirectory
-   *          the current working directory the URI will be resolved against to
-   *          ensure it is absolute
+   *          the current working directory the URI will be resolved against to ensure it is absolute
    * @return the absolute URI for the resource
    * @throws CommandExecutionException
    *           if the resulting URI is not a well-formed URI
@@ -189,12 +181,10 @@ public final class MetaschemaCommands {
   }
 
   /**
-   * Get the provided destination path as an absolute {@link Path} for the
-   * resource.
+   * Get the provided destination path as an absolute {@link Path} for the resource.
    * <p>
-   * This method checks if the path exists and if so, if the overwrite option is
-   * set. The method also ensures that the parent directory is created, if it
-   * doesn't already exist.
+   * This method checks if the path exists and if so, if the overwrite option is set. The method also
+   * ensures that the parent directory is created, if it doesn't already exist.
    *
    * @param path
    *          the resource
@@ -245,14 +235,12 @@ public final class MetaschemaCommands {
    * @param commandLine
    *          the provided command line argument information
    * @param option
-   *          the option specifying the format, which must be present on the
-   *          command line
+   *          the option specifying the format, which must be present on the command line
    * @return the format
    * @throws CommandExecutionException
    *           if the format option was not provided or was an invalid choice
    * @since 2.0.0
    */
-  @SuppressWarnings("PMD.PreserveStackTrace")
   @NonNull
   public static Format getFormat(
       @NonNull CommandLine commandLine,
@@ -278,7 +266,8 @@ public final class MetaschemaCommands {
                   : "-" + option.getOpt(),
               Arrays.stream(Format.values())
                   .map(Enum::name)
-                  .collect(CustomCollectors.joiningWithOxfordComma("or"))));
+                  .collect(CustomCollectors.joiningWithOxfordComma("or"))),
+          ex);
     }
   }
 
@@ -288,8 +277,7 @@ public final class MetaschemaCommands {
    * @param commandLine
    *          the provided command line argument information
    * @param option
-   *          the option specifying the format, which must be present on the
-   *          command line
+   *          the option specifying the format, which must be present on the command line
    * @return the format
    * @throws CommandExecutionException
    *           if the format option was not provided or was an invalid choice
@@ -329,16 +317,15 @@ public final class MetaschemaCommands {
   /**
    * Detect the source format for content identified using the provided option.
    * <p>
-   * This method will first check if the source format is explicitly declared on
-   * the command line. If so, this format will be returned.
+   * This method will first check if the source format is explicitly declared on the command line. If
+   * so, this format will be returned.
    * <p>
    * If not, then the content will be analyzed to determine the format.
    *
    * @param commandLine
    *          the provided command line argument information
    * @param option
-   *          the option specifying the format, which must be present on the
-   *          command line
+   *          the option specifying the format, which must be present on the command line
    * @param loader
    *          the content loader to use to load the content instance
    * @param resource
@@ -387,13 +374,11 @@ public final class MetaschemaCommands {
    * @param commandLine
    *          the provided command line argument information
    * @param option
-   *          the option specifying the module to load, which must be present on
-   *          the command line
+   *          the option specifying the module to load, which must be present on the command line
    * @param currentWorkingDirectory
    *          the URI of the current working directory
    * @param bindingContext
-   *          the context used to access Metaschema module information based on
-   *          Java class bindings
+   *          the context used to access Metaschema module information based on Java class bindings
    * @return the loaded module
    * @throws CommandExecutionException
    *           if an error occurred while loading the module
@@ -432,16 +417,15 @@ public final class MetaschemaCommands {
   /**
    * Load a Metaschema module from the provided relative resource path.
    * <p>
-   * This method will resolve the provided resource against the current working
-   * directory to create an absolute URI.
+   * This method will resolve the provided resource against the current working directory to create an
+   * absolute URI.
    *
    * @param moduleResource
    *          the relative path to the module resource to load
    * @param currentWorkingDirectory
    *          the URI of the current working directory
    * @param bindingContext
-   *          the context used to access Metaschema module information based on
-   *          Java class bindings
+   *          the context used to access Metaschema module information based on Java class bindings
    * @return the loaded module
    * @throws CommandExecutionException
    *           if an error occurred while loading the module
@@ -473,8 +457,7 @@ public final class MetaschemaCommands {
    * @param moduleResource
    *          the absolute path to the module resource to load
    * @param bindingContext
-   *          the context used to access Metaschema module information based on
-   *          Java class bindings
+   *          the context used to access Metaschema module information based on Java class bindings
    * @return the loaded module
    * @throws CommandExecutionException
    *           if an error occurred while loading the module
@@ -513,14 +496,12 @@ public final class MetaschemaCommands {
   }
 
   /**
-   * Load a set of external Metaschema module constraints based on the provided
-   * command line option.
+   * Load a set of external Metaschema module constraints based on the provided command line option.
    *
    * @param commandLine
    *          the provided command line argument information
    * @param option
-   *          the option specifying the constraints to load, which must be present
-   *          on the command line
+   *          the option specifying the constraints to load, which must be present on the command line
    * @param currentWorkingDirectory
    *          the URI of the current working directory
    * @return the set of loaded constraints
@@ -559,8 +540,7 @@ public final class MetaschemaCommands {
   }
 
   /**
-   * Create a temporary directory for ephemeral files that will be deleted on
-   * shutdown.
+   * Create a temporary directory for ephemeral files that will be deleted on shutdown.
    *
    * @return the temp directory path
    * @throws IOException
@@ -574,8 +554,7 @@ public final class MetaschemaCommands {
   }
 
   /**
-   * Create a new {@link IBindingContext} that is configured for dynamic
-   * compilation.
+   * Create a new {@link IBindingContext} that is configured for dynamic compilation.
    *
    * @return the binding context
    * @throws CommandExecutionException
@@ -588,12 +567,11 @@ public final class MetaschemaCommands {
   }
 
   /**
-   * Create a new {@link IBindingContext} that is configured for dynamic
-   * compilation and to use the provided constraints.
+   * Create a new {@link IBindingContext} that is configured for dynamic compilation and to use the
+   * provided constraints.
    *
    * @param constraintSets
-   *          the Metaschema module constraints to dynamicly bind to loaded
-   *          modules
+   *          the Metaschema module constraints to dynamicly bind to loaded modules
    * @return the binding context
    * @throws CommandExecutionException
    *           if an error occurred while creating the binding context

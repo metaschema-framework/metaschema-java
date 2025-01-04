@@ -21,9 +21,8 @@ public interface ICollectionValue {
   /**
    * Get the collection value as a sequence.
    * <p>
-   * If the value is already a sequence, the value is returned as a sequence.
-   * Otherwise, if the value is an item, a new sequence will be created containing
-   * only that item.
+   * If the value is already a sequence, the value is returned as a sequence. Otherwise, if the value
+   * is an item, a new sequence will be created containing only that item.
    *
    * @return the resulting sequence
    */
@@ -39,15 +38,12 @@ public interface ICollectionValue {
   /**
    * Get the collection value as a sequence.
    * <p>
-   * If the value is already a sequence, the value is returned as a sequence.
-   * Otherwise, if the value is an item, what is returned depends on the item
-   * type:
+   * If the value is already a sequence, the value is returned as a sequence. Otherwise, if the value
+   * is an item, what is returned depends on the item type:
    * <ul>
-   * <li>{@link IArrayItem} or {@link IMapItem}: the contents of the returned
-   * sequence are the items of the array or map. Any member values that are a
-   * sequence are flattened.</li>
-   * <li>Any other item: A singleton sequence is returned containing the
-   * item.</li>
+   * <li>{@link IArrayItem} or {@link IMapItem}: the contents of the returned sequence are the items
+   * of the array or map. Any member values that are a sequence are flattened.
+   * <li>Any other item: A singleton sequence is returned containing the item.
    * </ul>
    *
    * @return the resulting sequence
@@ -58,8 +54,7 @@ public interface ICollectionValue {
   /**
    * Get the stream of items for the collection value.
    * <p>
-   * If the collection value is a sequence, then the items in the collection are
-   * returned.
+   * If the collection value is a sequence, then the items in the collection are returned.
    *
    * @param value
    *          the collection value
@@ -75,8 +70,7 @@ public interface ICollectionValue {
   /**
    * Produce a stream of atomic items based on the atomic value of these items.
    * <p>
-   * Supports <a href="https://www.w3.org/TR/xpath-31/#id-atomization">item
-   * atomization</a>.
+   * Supports <a href="https://www.w3.org/TR/xpath-31/#id-atomization">item atomization</a>.
    *
    * @return a stream of atomized atomic items.
    */
@@ -97,13 +91,12 @@ public interface ICollectionValue {
    * Determine if this and the other value are deeply equal.
    * <p>
    * Item equality is defined by the
-   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-deep-equal">XPath 3.1
-   * fn:deep-equal</a> specification.
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-deep-equal">XPath 3.1 fn:deep-equal</a>
+   * specification.
    *
    * @param other
    *          the other value to compare to this value to
-   * @return the {@code true} if the two values are equal, or {@code false}
-   *         otherwise
+   * @return the {@code true} if the two values are equal, or {@code false} otherwise
    */
   boolean deepEquals(ICollectionValue other);
 
