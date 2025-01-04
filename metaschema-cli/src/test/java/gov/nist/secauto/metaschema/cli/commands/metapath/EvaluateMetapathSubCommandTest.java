@@ -10,9 +10,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import gov.nist.secauto.metaschema.cli.CLI;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import nl.altindag.log.LogCaptor;
 
+@Execution(value = ExecutionMode.SAME_THREAD, reason = "Log capturing needs to be single threaded")
 class EvaluateMetapathSubCommandTest {
 
   @Test

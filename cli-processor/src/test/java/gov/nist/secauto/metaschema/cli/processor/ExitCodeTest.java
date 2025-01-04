@@ -15,6 +15,8 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.List;
  * Logging solution based on
  * https://stackoverflow.com/questions/24205093/how-to-create-a-custom-appender-in-log4j2.
  */
+@Execution(value = ExecutionMode.SAME_THREAD, reason = "Log capturing needs to be single threaded")
 class ExitCodeTest {
   private static MockedAppender mockedAppender;
   private static Logger logger;

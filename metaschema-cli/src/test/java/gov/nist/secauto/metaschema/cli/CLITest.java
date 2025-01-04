@@ -14,6 +14,8 @@ import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -28,6 +30,7 @@ import nl.altindag.log.LogCaptor;
 /**
  * Unit test for simple CLI.
  */
+@Execution(value = ExecutionMode.SAME_THREAD, reason = "Log capturing needs to be single threaded")
 public class CLITest {
   private static final ExitCode NO_EXCEPTION_CLASS = null;
 

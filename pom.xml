@@ -690,16 +690,39 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
+					 <dependencies>
+						<dependency>
+							<groupId>me.fabriciorby</groupId>
+							<artifactId>maven-surefire-junit5-tree-reporter</artifactId>
+							<version>1.4.0</version>
+						</dependency>
+					</dependencies>
 					<configuration>
-						<forkCount>1.5C</forkCount>
-						<reuseForks>true</reuseForks>
 						<excludedEnvironmentVariables>
 							<excludedEnvironmentVariable>JAVA_TOOL_OPTIONS</excludedEnvironmentVariable>
 						</excludedEnvironmentVariables>
-						<!-- Use of TCP to transmit events to the plugin -->
-						<forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
 						<useModulePath>false</useModulePath>
 						<redirectTestOutputToFile>true</redirectTestOutputToFile>
+						<!-- fork configuration -->
+						<forkCount>1.5C</forkCount>
+						<reuseForks>true</reuseForks>
+						<!-- Use of TCP to transmit events to the plugin -->
+						<forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
+						<!-- Junit5 parallel configuration -->
+						<properties>
+							<configurationParameters>
+								junit.jupiter.execution.parallel.enabled = true
+								junit.jupiter.execution.parallel.mode.default = concurrent
+							</configurationParameters>
+						</properties>
+						<!-- tree reporter configuration -->
+						<reportFormat>plain</reportFormat>
+						<consoleOutputReporter>
+							<disable>true</disable>
+						</consoleOutputReporter>
+						<statelessTestsetInfoReporter
+								implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter">
+						</statelessTestsetInfoReporter>
 					</configuration>
 				</plugin>
 				<plugin>
