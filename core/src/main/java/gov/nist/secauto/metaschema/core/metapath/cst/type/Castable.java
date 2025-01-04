@@ -6,8 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.type;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -51,7 +51,7 @@ public class Castable
   }
 
   @Override
-  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<IBooleanItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     boolean retval;
     try {
       cast(focus);

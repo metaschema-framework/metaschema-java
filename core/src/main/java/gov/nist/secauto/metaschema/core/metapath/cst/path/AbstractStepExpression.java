@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
@@ -63,7 +63,7 @@ public abstract class AbstractStepExpression<RESULT_TYPE extends INodeItem>
   }
 
   @Override
-  public ISequence<? extends RESULT_TYPE> accept(
+  protected ISequence<? extends RESULT_TYPE> evaluate(
       DynamicContext dynamicContext,
       ISequence<?> focus) {
     return ISequence.of(ObjectUtils.notNull(focus.stream()

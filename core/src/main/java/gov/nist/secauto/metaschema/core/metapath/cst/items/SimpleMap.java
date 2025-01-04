@@ -6,8 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractBinaryExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
@@ -42,7 +42,7 @@ public class SimpleMap
   }
 
   @Override
-  public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     ISequence<?> leftResult = getLeft().accept(dynamicContext, focus);
 
     IExpression right = getRight();

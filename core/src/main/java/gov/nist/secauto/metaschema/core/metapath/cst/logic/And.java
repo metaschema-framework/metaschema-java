@@ -6,8 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.logic;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractNAryExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -54,7 +54,7 @@ public class And // NOPMD - intentional name
   }
 
   @Override
-  public ISequence<? extends IBooleanItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<? extends IBooleanItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     boolean retval = true;
     for (IExpression child : getChildren()) {
       ISequence<?> result = child.accept(dynamicContext, focus);

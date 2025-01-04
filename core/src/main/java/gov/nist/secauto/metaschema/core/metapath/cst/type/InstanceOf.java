@@ -6,8 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.type;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -84,9 +84,8 @@ public class InstanceOf
   }
 
   @Override
-  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    return IBooleanItem.valueOf(sequenceType.matches(getValue().accept(dynamicContext, focus)))
-        .toSequence();
+  protected ISequence<IBooleanItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
+    return ISequence.of(IBooleanItem.valueOf(sequenceType.matches(getValue().accept(dynamicContext, focus))));
   }
 
   @Override
@@ -95,7 +94,7 @@ public class InstanceOf
   }
 
   @Override
-  public String toASTString() {
+  public String toCSTString() {
     return ObjectUtils.notNull(String.format("%s[sequenceType=%s]",
         getClass().getName(),
         getSequenceType().toSignature()));

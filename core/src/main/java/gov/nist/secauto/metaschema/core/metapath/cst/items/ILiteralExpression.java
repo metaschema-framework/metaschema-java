@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
 import java.util.Collections;
@@ -20,17 +20,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *
  * @param <RESULT_TYPE>
  *          the Java type of the literal result
- * @param <VALUE>
- *          the Java type of the wrapped literal values
  */
-public interface ILiteralExpression<RESULT_TYPE extends IAnyAtomicItem, VALUE> extends IExpression {
+public interface ILiteralExpression<RESULT_TYPE extends IAnyAtomicItem> extends IExpression {
   /**
    * Get the literal value.
    *
    * @return the value
    */
   @NonNull
-  VALUE getValue();
+  RESULT_TYPE getValue();
 
   @Override
   Class<RESULT_TYPE> getBaseResultType();

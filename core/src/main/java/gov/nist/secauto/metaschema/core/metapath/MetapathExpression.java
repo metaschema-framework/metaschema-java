@@ -11,7 +11,6 @@ import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
 import gov.nist.secauto.metaschema.core.metapath.antlr.ParseTreePrinter;
 import gov.nist.secauto.metaschema.core.metapath.cst.BuildCSTVisitor;
 import gov.nist.secauto.metaschema.core.metapath.cst.CSTPrinter;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.path.ContextItem;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -163,12 +162,12 @@ class MetapathExpression implements IMetapathExpression {
   }
 
   /**
-   * Get the compiled abstract syntax tree (AST) representation of the Metapath.
+   * Get the compiled compact syntax tree (CST) representation of the Metapath.
    *
-   * @return the Metapath AST
+   * @return the Metapath CST
    */
   @NonNull
-  protected IExpression getASTNode() {
+  protected IExpression getCSTNode() {
     return expression;
   }
 
@@ -179,7 +178,7 @@ class MetapathExpression implements IMetapathExpression {
 
   @Override
   public String toString() {
-    return CSTPrinter.toString(getASTNode());
+    return CSTPrinter.toString(getCSTNode());
   }
 
   @Override
@@ -188,7 +187,7 @@ class MetapathExpression implements IMetapathExpression {
       @Nullable IItem focus,
       @NonNull DynamicContext dynamicContext) {
     try {
-      return ObjectUtils.asType(getASTNode().accept(dynamicContext, ISequence.of(focus)).reusable());
+      return ObjectUtils.asType(getCSTNode().accept(dynamicContext, ISequence.of(focus)).reusable());
     } catch (MetapathException ex) {
       throw new MetapathException(
           String.format("An error occurred while evaluating the expression '%s'. %s",

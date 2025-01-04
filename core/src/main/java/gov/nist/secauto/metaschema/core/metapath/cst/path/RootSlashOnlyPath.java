@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
@@ -60,10 +60,7 @@ public class RootSlashOnlyPath
   }
 
   @Override
-  public ISequence<? extends INodeItem> accept(
-      DynamicContext dynamicContext,
-      ISequence<?> focus) {
-
+  protected ISequence<? extends INodeItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     return ISequence.of(ObjectUtils.notNull(focus.stream()
         .map(ItemUtils::checkItemIsNodeItemForStep)
         .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item))

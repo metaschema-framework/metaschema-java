@@ -5,9 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 
 import java.math.BigInteger;
@@ -21,7 +19,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * {@link IIntegerItem}.
  */
 public class IntegerLiteral
-    extends AbstractLiteralExpression<IIntegerItem, BigInteger> {
+    extends AbstractLiteralExpression<IIntegerItem> {
 
   /**
    * Construct a new expression that always returns the same integer value.
@@ -32,7 +30,7 @@ public class IntegerLiteral
    *          the literal value
    */
   public IntegerLiteral(@NonNull String text, @NonNull BigInteger value) {
-    super(text, value);
+    super(text, IIntegerItem.valueOf(value));
   }
 
   @Override
@@ -43,10 +41,5 @@ public class IntegerLiteral
   @Override
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
     return visitor.visitIntegerLiteral(this, context);
-  }
-
-  @Override
-  public ISequence<? extends IIntegerItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(IIntegerItem.valueOf(getValue()));
   }
 }

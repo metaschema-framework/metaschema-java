@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.math;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
@@ -54,7 +54,7 @@ public class IntegerDivision
   }
 
   @Override
-  public ISequence<? extends IIntegerItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<? extends IIntegerItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     INumericItem dividend = FunctionUtils.toNumericOrNull(
         ISequence.of(getLeft().accept(dynamicContext, focus).atomize()).getFirstItem(true));
     INumericItem divisor = FunctionUtils.toNumericOrNull(

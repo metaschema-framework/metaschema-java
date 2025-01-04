@@ -6,8 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractNAryExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnConcat;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -68,7 +68,7 @@ public class StringConcat
   }
 
   @Override
-  public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     return ISequence.of(FnConcat.concat(ObjectUtils.notNull(getChildren().stream()
         .map(child -> child.accept(dynamicContext, focus))
         .flatMap(result -> ObjectUtils.notNull(result).atomize()))));

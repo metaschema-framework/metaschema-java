@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.math;
 
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractBinaryExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.ExpressionUtils;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
 import java.util.List;

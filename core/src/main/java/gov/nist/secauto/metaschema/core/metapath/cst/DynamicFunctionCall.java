@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
@@ -69,7 +70,7 @@ public class DynamicFunctionCall
   }
 
   @Override
-  public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     List<ISequence<?>> arguments = ObjectUtils.notNull(this.arguments.stream()
         .map(expression -> expression.accept(dynamicContext, focus)).collect(Collectors.toList()));
 

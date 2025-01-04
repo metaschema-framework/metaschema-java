@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySequenceConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySquareConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.DecimalLiteral;

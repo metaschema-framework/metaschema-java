@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.library.ArrayGet;
 import gov.nist.secauto.metaschema.core.metapath.function.library.MapGet;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;

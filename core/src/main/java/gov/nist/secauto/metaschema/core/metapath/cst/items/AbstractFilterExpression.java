@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst.logic;
+package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractBinaryExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.ExpressionUtils;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
@@ -52,7 +52,7 @@ public abstract class AbstractFilterExpression
   }
 
   @Override
-  public ISequence<? extends IItem> accept(
+  protected ISequence<?> evaluate(
       @NonNull DynamicContext dynamicContext,
       @NonNull ISequence<?> focus) {
 

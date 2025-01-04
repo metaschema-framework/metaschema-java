@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySequenceConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySquareConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.DecimalLiteral;
@@ -125,7 +126,7 @@ public final class CSTPrinter {
         @NonNull State context) {
       StringBuilder buffer = new StringBuilder();
       buffer.append(context.getIndentation())
-          .append(expr.toASTString());
+          .append(expr.toCSTString());
       if (childResult != null) {
         buffer.append(System.lineSeparator())
             .append(childResult);

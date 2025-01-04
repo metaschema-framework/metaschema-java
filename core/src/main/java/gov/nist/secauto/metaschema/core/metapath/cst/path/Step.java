@@ -6,9 +6,9 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.ExpressionUtils;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -107,7 +107,7 @@ public class Step
   }
 
   @Override
-  public ISequence<?> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     Axis axis = getAxis();
 
     ISequence<? extends INodeItem> axisResult;
@@ -128,7 +128,7 @@ public class Step
 
   @SuppressWarnings("null")
   @Override
-  public String toASTString() {
+  public String toCSTString() {
     return String.format("%s[axis=%s]",
         getClass().getName(),
         getAxis().name());

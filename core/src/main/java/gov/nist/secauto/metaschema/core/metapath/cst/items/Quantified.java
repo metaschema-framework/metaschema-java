@@ -6,8 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
@@ -132,9 +132,8 @@ public class Quantified
         .collect(Collectors.toList()));
   }
 
-  @SuppressWarnings("PMD.SystemPrintln")
   @Override
-  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     Map<IEnhancedQName, ISequence<? extends IItem>> clauses = getInClauses().entrySet().stream()
         .map(entry -> Map.entry(
             entry.getKey(),

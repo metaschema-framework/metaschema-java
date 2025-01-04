@@ -6,9 +6,9 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.math;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractUnaryExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.ExpressionUtils;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
@@ -60,7 +60,7 @@ public class Negate
   }
 
   @Override
-  public ISequence<? extends INumericItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<? extends INumericItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     INumericItem item = FunctionUtils.toNumericOrNull(
         ISequence.of(getChild().accept(dynamicContext, focus).atomize()).getFirstItem(true));
     if (item != null) {

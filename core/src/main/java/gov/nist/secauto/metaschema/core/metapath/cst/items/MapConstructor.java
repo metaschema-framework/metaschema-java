@@ -6,11 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
@@ -53,7 +52,7 @@ public class MapConstructor
   }
 
   @Override
-  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     return IMapItem.ofCollection(
         ObjectUtils.notNull(getChildren().stream()
             .map(item -> {
@@ -62,7 +61,7 @@ public class MapConstructor
                   .getFirstItem(true);
               if (key == null) {
                 throw new InvalidTypeMetapathException(null, String.format(
-                    "The expression '%s' did not result in a single key atomic value.", keyExpression.toASTString()));
+                    "The expression '%s' did not result in a single key atomic value.", keyExpression.toCSTString()));
               }
               ICollectionValue value = item.getValueExpression().accept(dynamicContext, focus).toCollectionValue();
 
@@ -130,7 +129,7 @@ public class MapConstructor
     }
 
     @Override
-    public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+    protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
       throw new UnsupportedOperationException("handled by the map constructor");
     }
 

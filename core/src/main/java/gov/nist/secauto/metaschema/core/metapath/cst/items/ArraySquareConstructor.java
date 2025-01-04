@@ -6,10 +6,9 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 
@@ -50,7 +49,7 @@ public class ArraySquareConstructor
   }
 
   @Override
-  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<IArrayItem<?>> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     return ISequence.of(getChildren().stream()
         .map(expr -> expr.accept(dynamicContext, focus))
         .map(ISequence::toCollectionValue)

@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.ExpressionUtils;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
 import java.util.List;

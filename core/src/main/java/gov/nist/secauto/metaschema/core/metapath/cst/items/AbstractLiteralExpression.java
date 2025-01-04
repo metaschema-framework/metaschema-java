@@ -5,7 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -17,14 +19,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *
  * @param <RESULT_TYPE>
  *          the Java type of the literal result
- * @param <VALUE>
- *          the Java type of the wrapped literal values
  */
-public abstract class AbstractLiteralExpression<RESULT_TYPE extends IAnyAtomicItem, VALUE>
+public abstract class AbstractLiteralExpression<RESULT_TYPE extends IAnyAtomicItem>
     extends AbstractExpression
-    implements ILiteralExpression<RESULT_TYPE, VALUE> {
+    implements ILiteralExpression<RESULT_TYPE> {
   @NonNull
-  private final VALUE value;
+  private final RESULT_TYPE value;
 
   /**
    * Construct an expression that always returns the same literal value.
@@ -34,19 +34,24 @@ public abstract class AbstractLiteralExpression<RESULT_TYPE extends IAnyAtomicIt
    * @param value
    *          the literal value
    */
-  public AbstractLiteralExpression(@NonNull String text, @NonNull VALUE value) {
+  public AbstractLiteralExpression(@NonNull String text, @NonNull RESULT_TYPE value) {
     super(text);
     this.value = value;
   }
 
   @Override
-  public VALUE getValue() {
+  public RESULT_TYPE getValue() {
     return value;
+  }
+
+  @Override
+  protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
+    return ISequence.of(getValue());
   }
 
   @SuppressWarnings("null")
   @Override
-  public String toASTString() {
-    return String.format("%s[value=%s]", getClass().getName(), getValue().toString());
+  public String toCSTString() {
+    return String.format("%s[value=%s]", getClass().getName(), getValue().asString());
   }
 }

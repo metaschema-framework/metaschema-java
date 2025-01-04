@@ -6,9 +6,9 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.logic;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathEvaluationFeature;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.IntegerLiteral;
 import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;
@@ -88,8 +88,7 @@ public class PredicateExpression
   }
 
   @Override
-  public @NonNull
-  ISequence<? extends IItem> accept(@NonNull DynamicContext dynamicContext,
+  protected ISequence<?> evaluate(@NonNull DynamicContext dynamicContext,
       @NonNull ISequence<?> focus) {
 
     ISequence<?> retval = getBase().accept(dynamicContext, focus);
@@ -110,7 +109,7 @@ public class PredicateExpression
                   boolean bool;
                   if (predicateExpr instanceof IntegerLiteral) {
                     // reduce the result to the matching item
-                    BigInteger predicateIndex = ((IntegerLiteral) predicateExpr).getValue();
+                    BigInteger predicateIndex = ((IntegerLiteral) predicateExpr).getValue().asInteger();
 
                     // get the position of the item
                     final BigInteger position = entry.getKey();

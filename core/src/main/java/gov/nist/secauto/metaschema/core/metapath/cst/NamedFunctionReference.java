@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -70,7 +71,7 @@ public class NamedFunctionReference
 
   @SuppressWarnings("null")
   @Override
-  public String toASTString() {
+  public String toCSTString() {
     return String.format("%s[name=%s, arity=%d]", getClass().getName(), name, arity);
   }
 
@@ -80,7 +81,7 @@ public class NamedFunctionReference
   }
 
   @Override
-  public ISequence<IFunction> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     IFunction function = dynamicContext.getFunction(name, arity);
     return ISequence.of(function);
   }

@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.logic;
 
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractBinaryExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -59,7 +59,7 @@ public abstract class AbstractComparison // NOPMD - unavoidable
 
   @SuppressWarnings("null")
   @Override
-  public String toASTString() {
+  public String toCSTString() {
     return String.format("%s[operator=%s]", getClass().getName(), operator);
   }
 

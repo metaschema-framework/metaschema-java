@@ -61,7 +61,7 @@ public class NameNodeTest
   }
 
   @Override
-  public ISequence<? extends INodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<? extends INodeItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     Stream<INodeItem> nodes = ObjectUtils.notNull(focus.stream()
         .map(ItemUtils::checkItemIsNodeItemForStep));
     return ISequence.of(filterStream(nodes));
@@ -75,7 +75,7 @@ public class NameNodeTest
 
   @SuppressWarnings("null")
   @Override
-  public String toASTString() {
+  public String toCSTString() {
     return String.format("%s[name=%s]", getClass().getName(), getName());
   }
 }

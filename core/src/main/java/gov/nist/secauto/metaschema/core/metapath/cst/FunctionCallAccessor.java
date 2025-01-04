@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -74,9 +75,8 @@ public class FunctionCallAccessor
         .collect(Collectors.toUnmodifiableList());
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
-  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     ISequence<?> target = getBase().accept(dynamicContext, focus);
     IItem collection = target.getFirstItem(true);
 

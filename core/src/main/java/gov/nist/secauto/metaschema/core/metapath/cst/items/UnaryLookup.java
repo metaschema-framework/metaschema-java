@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
@@ -49,7 +49,7 @@ public class UnaryLookup
   }
 
   @Override
-  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<? extends IItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     IKeySpecifier specifier = getKeySpecifier();
 
     return ISequence.of(ObjectUtils.notNull(focus.stream()

@@ -5,9 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 
 import java.math.BigDecimal;
@@ -21,7 +19,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * {@link IDecimalItem}.
  */
 public class DecimalLiteral
-    extends AbstractLiteralExpression<IDecimalItem, BigDecimal> {
+    extends AbstractLiteralExpression<IDecimalItem> {
 
   /**
    * Construct a new expression that always returns the same decimal value.
@@ -32,7 +30,7 @@ public class DecimalLiteral
    *          the literal value
    */
   public DecimalLiteral(@NonNull String text, @NonNull BigDecimal value) {
-    super(text, value);
+    super(text, IDecimalItem.valueOf(value));
   }
 
   @Override
@@ -43,11 +41,5 @@ public class DecimalLiteral
   @Override
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
     return visitor.visitDecimalLiteral(this, context);
-  }
-
-  // REFACTOR: store decimal item value as a field of this class
-  @Override
-  public ISequence<? extends IDecimalItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(IDecimalItem.valueOf(getValue()));
   }
 }

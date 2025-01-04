@@ -5,9 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -19,7 +17,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * {@link IStringItem}.
  */
 public class StringLiteral
-    extends AbstractLiteralExpression<IStringItem, String> {
+    extends AbstractLiteralExpression<IStringItem> {
   /**
    * Construct a new expression that always returns the same string value.
    *
@@ -29,7 +27,7 @@ public class StringLiteral
    *          the literal value
    */
   public StringLiteral(@NonNull String text, @NonNull String value) {
-    super(text, removeQuotes(value));
+    super(text, IStringItem.valueOf(removeQuotes(value)));
   }
 
   @Override
@@ -46,10 +44,5 @@ public class StringLiteral
   @Override
   public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
     return visitor.visitStringLiteral(this, context);
-  }
-
-  @Override
-  public ISequence<? extends IStringItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(IStringItem.valueOf(getValue()));
   }
 }

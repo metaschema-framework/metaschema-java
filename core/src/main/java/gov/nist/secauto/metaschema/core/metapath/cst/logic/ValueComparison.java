@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.logic;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -50,10 +50,9 @@ public class ValueComparison
   }
 
   @Override
-  public ISequence<? extends IBooleanItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<? extends IBooleanItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     IAnyAtomicItem left = ISequence.of(getLeft().accept(dynamicContext, focus).atomize()).getFirstItem(false);
     IAnyAtomicItem right = ISequence.of(getRight().accept(dynamicContext, focus).atomize()).getFirstItem(false);
-
     return resultOrEmpty(left, right);
   }
 
@@ -78,5 +77,4 @@ public class ValueComparison
     }
     return retval;
   }
-
 }

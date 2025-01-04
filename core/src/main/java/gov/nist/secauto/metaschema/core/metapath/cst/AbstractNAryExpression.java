@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
+
 import java.util.List;
 import java.util.Objects;
 

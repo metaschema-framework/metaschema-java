@@ -51,7 +51,7 @@ public class WildcardNodeTest
   }
 
   @Override
-  public ISequence<? extends INodeItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<? extends INodeItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     Stream<INodeItem> stream = focus.stream()
         .map(ItemUtils::checkItemIsNodeItemForStep);
 
@@ -94,7 +94,7 @@ public class WildcardNodeTest
 
   @SuppressWarnings("null")
   @Override
-  public String toASTString() {
+  public String toCSTString() {
     return String.format("%s[%s]", getClass().getName(), matcher == null ? "*:*" : matcher.toString());
   }
 }

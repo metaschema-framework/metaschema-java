@@ -6,8 +6,8 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.items;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
@@ -60,7 +60,7 @@ public class ArraySequenceConstructor
   }
 
   @Override
-  public ISequence<IArrayItem<?>> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<IArrayItem<?>> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     ISequence<IArrayItem<?>> retval;
     if (expr != null) {
       IArrayItem<?> array = IArrayItem.ofCollection(expr.accept(dynamicContext, focus));

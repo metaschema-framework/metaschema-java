@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.type;
 
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
-import gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -107,7 +107,7 @@ public abstract class AbstractCastingExpression
   }
 
   @Override
-  public String toASTString() {
+  public String toCSTString() {
     return ObjectUtils.notNull(String.format("%s[type=%s, allowEmpty=%s]",
         getClass().getName(),
         getType().toSignature(),

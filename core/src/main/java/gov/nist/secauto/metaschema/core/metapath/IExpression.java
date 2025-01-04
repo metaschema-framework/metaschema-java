@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.cst;
+package gov.nist.secauto.metaschema.core.metapath;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
@@ -77,7 +77,7 @@ public interface IExpression {
    */
   @SuppressWarnings("null")
   @NonNull
-  default String toASTString() {
+  default String toCSTString() {
     return String.format("%s[]", getClass().getName());
   }
 
