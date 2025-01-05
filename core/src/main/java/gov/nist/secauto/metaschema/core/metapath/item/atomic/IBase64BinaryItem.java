@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
+import gov.nist.secauto.metaschema.core.datatype.adapter.Base64Adapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.Base64BinaryItemImpl;
@@ -34,9 +35,28 @@ public interface IBase64BinaryItem extends IAnyAtomicItem {
     return type();
   }
 
+  static IBase64BinaryItem encode(@NonNull String value) {
+    // Encode the string to Base64
+    return valueOf(Base64Adapter.encodeToByteBuffer(value));
+  }
+
+  @NonNull
+  static IBase64BinaryItem encode(@NonNull byte[] bytes) {
+    return valueOf(Base64Adapter.encodeToByteBuffer(bytes));
+  }
+
+  @NonNull
+  static IBase64BinaryItem encode(@NonNull ByteBuffer buffer) {
+    return valueOf(Base64Adapter.encode(buffer));
+  }
+
+  default IStringItem decodeAsString() {
+    // Encode the string to Base64
+    return IStringItem.valueOf(Base64Adapter.decodeToString(asByteBuffer()));
+  }
+
   /**
-   * Construct a new base64 encoded byte sequence item using the provided string
-   * {@code value}.
+   * Construct a new base64 byte sequence item using the provided base64 encoded string {@code value}.
    *
    * @param value
    *          a string representing base64 encoded data
@@ -59,16 +79,19 @@ public interface IBase64BinaryItem extends IAnyAtomicItem {
   }
 
   /**
-   * Construct a new URI base64 encoded byte sequence using the provided
-   * {@link ByteBuffer} {@code value}.
+   * Construct a new URI base64 encoded byte sequence using the provided {@link ByteBuffer}
+   * {@code value}.
+   * <p>
+   * The provided buffer will be managed by this instance. Make a copy of the buffer to ensure that
+   * the position, limit, and mark of the original are not affect by this.
    *
-   * @param value
+   * @param buffer
    *          a byte buffer
    * @return the new item
    */
   @NonNull
-  static IBase64BinaryItem valueOf(@NonNull ByteBuffer value) {
-    return new Base64BinaryItemImpl(value);
+  static IBase64BinaryItem valueOf(@NonNull ByteBuffer buffer) {
+    return new Base64BinaryItemImpl(buffer);
   }
 
   /**
@@ -76,8 +99,7 @@ public interface IBase64BinaryItem extends IAnyAtomicItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item
-   *         cast to this type
+   * @return the original item if it is already this type, otherwise a new item cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
@@ -116,8 +138,8 @@ public interface IBase64BinaryItem extends IAnyAtomicItem {
    *
    * @param item
    *          the item to compare with this value
-   * @return a negative integer, zero, or a positive integer if this value is less
-   *         than, equal to, or greater than the {@code item}.
+   * @return a negative integer, zero, or a positive integer if this value is less than, equal to, or
+   *         greater than the {@code item}.
    */
   default int compareTo(@NonNull IBase64BinaryItem item) {
     return asByteBuffer().compareTo(item.asByteBuffer());
