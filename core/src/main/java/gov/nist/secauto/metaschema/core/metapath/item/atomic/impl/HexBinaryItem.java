@@ -5,9 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.Base64Adapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.HexBinaryAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IHexBinaryItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
 import java.nio.ByteBuffer;
@@ -18,9 +18,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An implementation of a Metapath atomic item containing a Base64 encoded data
  * value.
  */
-public class Base64BinaryItemImpl
+public class HexBinaryItem
     extends AbstractBinaryItem
-    implements IBase64BinaryItem {
+    implements IHexBinaryItem {
 
   /**
    * Construct a new item with the provided {@code value}.
@@ -28,13 +28,13 @@ public class Base64BinaryItemImpl
    * @param value
    *          the value to wrap
    */
-  public Base64BinaryItemImpl(@NonNull ByteBuffer value) {
+  public HexBinaryItem(@NonNull ByteBuffer value) {
     super(value);
   }
 
   @Override
-  public Base64Adapter getJavaTypeAdapter() {
-    return MetaschemaDataTypeProvider.BASE64;
+  public HexBinaryAdapter getJavaTypeAdapter() {
+    return MetaschemaDataTypeProvider.HEX_BINARY;
   }
 
   @Override
@@ -51,13 +51,13 @@ public class Base64BinaryItemImpl
   @Override
   public boolean equals(Object obj) {
     return this == obj
-        || obj instanceof IBase64BinaryItem && compareTo((IBase64BinaryItem) obj) == 0;
+        || obj instanceof IHexBinaryItem && compareTo((IHexBinaryItem) obj) == 0;
   }
 
   private final class MapKey implements IMapKey {
     @Override
-    public IBase64BinaryItem getKey() {
-      return Base64BinaryItemImpl.this;
+    public IHexBinaryItem getKey() {
+      return HexBinaryItem.this;
     }
 
     @Override

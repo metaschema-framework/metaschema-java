@@ -39,8 +39,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <TYPE>
  *          the raw Java type this adapter supports
  * @param <ITEM_TYPE>
- *          the metapath item type corresponding to the raw Java type supported
- *          by the adapter
+ *          the metapath item type supported by the adapter
  */
 public abstract class AbstractDataTypeAdapter<TYPE, ITEM_TYPE extends IAnyAtomicItem>
     implements IDataTypeAdapter<TYPE> {

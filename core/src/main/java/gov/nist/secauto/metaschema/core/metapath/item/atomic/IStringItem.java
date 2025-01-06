@@ -36,7 +36,8 @@ public interface IStringItem extends IAnyAtomicItem {
    * Construct a new item using the provided string {@code value}.
    *
    * @param value
-   *          a string value that must conform to Metaschema string validation rules
+   *          a string value that must conform to Metaschema string validation
+   *          rules
    * @return the new item
    * @throws InvalidTypeMetapathException
    *           if the value fails string validation
@@ -65,7 +66,8 @@ public interface IStringItem extends IAnyAtomicItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item cast to this type
+   * @return the original item if it is already this type, otherwise a new item
+   *         cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
@@ -92,12 +94,13 @@ public interface IStringItem extends IAnyAtomicItem {
   }
 
   /**
-   * Compares this value with the argument. Ordering is in lexical dictionary order.
+   * Compares this value with the argument. Ordering is in lexical dictionary
+   * order.
    *
    * @param other
    *          the item to compare with this value
-   * @return a negative integer, zero, or a positive integer if this value is less than, equal to, or
-   *         greater than the {@code item}.
+   * @return a negative integer, zero, or a positive integer if this value is less
+   *         than, equal to, or greater than the {@code item}.
    */
   default int compareTo(@NonNull IStringItem other) {
     return asString().compareTo(other.asString());

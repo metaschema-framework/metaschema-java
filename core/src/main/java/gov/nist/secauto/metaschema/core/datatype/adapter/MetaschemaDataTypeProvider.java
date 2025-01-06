@@ -18,6 +18,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public final class MetaschemaDataTypeProvider // NOPMD - Used for service initialization
     extends AbstractDataTypeProvider {
   /**
+   * The Metaschema hex-binary data type instance.
+   */
+  @NonNull
+  public static final HexBinaryAdapter HEX_BINARY = new HexBinaryAdapter();
+  /**
    * The Metaschema <a href=
    * "https://pages.nist.gov/metaschema/specification/datatypes/#base64">base64</a>
    * data type instance.
@@ -210,6 +215,7 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
     register(DAY_TIME_DURATION);
     register(DECIMAL);
     register(EMAIL_ADDRESS);
+    register(HEX_BINARY);
     register(HOSTNAME);
     register(INTEGER);
     register(IP_V4_ADDRESS);

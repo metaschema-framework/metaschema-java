@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.Base64Adapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -30,16 +29,19 @@ class IBase64BinaryItemTest {
 
   @Test
   void testValueOf() {
-    IBase64BinaryItem item = IBase64BinaryItem.valueOf(ObjectUtils.notNull(
-        ByteBuffer.allocate(16).putLong(MIN_LONG).putLong(MAX_LONG)));
+    IBase64BinaryItem item = IBase64BinaryItem.encode(ObjectUtils.notNull(
+        ByteBuffer.allocate(16)
+            .putLong(MIN_LONG)
+            .putLong(MAX_LONG)));
     assertEquals(BASE_64, item.asString());
   }
 
   @Test
   void testCastSame() {
-    ByteBuffer buf
-        = ObjectUtils.notNull(ByteBuffer.allocate(16).putLong(MIN_LONG).putLong(MAX_LONG));
-    IBase64BinaryItem item = IBase64BinaryItem.valueOf(buf);
+    ByteBuffer buf = ObjectUtils.notNull(ByteBuffer.allocate(16)
+        .putLong(MIN_LONG)
+        .putLong(MAX_LONG));
+    IBase64BinaryItem item = IBase64BinaryItem.encode(buf);
     assertEquals(IBase64BinaryItem.cast(item), item);
   }
 
@@ -47,7 +49,7 @@ class IBase64BinaryItemTest {
   void testCastString() {
     ByteBuffer buf
         = ObjectUtils.notNull(ByteBuffer.allocate(16).putLong(MIN_LONG).putLong(MAX_LONG));
-    IBase64BinaryItem expected = IBase64BinaryItem.valueOf(buf);
+    IBase64BinaryItem expected = IBase64BinaryItem.encode(buf);
     IBase64BinaryItem actual = IBase64BinaryItem.cast(IStringItem.valueOf(BASE_64));
     Assertions.assertAll(
         // TODO: use equals method?
@@ -69,20 +71,15 @@ class IBase64BinaryItemTest {
   @MethodSource("provideValuesForEncodeDecode")
   void testEncodeDecodeEncode(@NonNull String expectedDecodedString, @NonNull String expectedEncodedString) {
     // test encode to buffer
-    ByteBuffer encodedBuffer = Base64Adapter.encodeToByteBuffer(expectedDecodedString);
+    ByteBuffer encodedBuffer = MetaschemaDataTypeProvider.BASE64.encodeToByteBuffer(expectedDecodedString);
     encodedBuffer.mark();
-    String encodedString = MetaschemaDataTypeProvider.BASE64.byteBufferToString(encodedBuffer);
+    String encodedString = MetaschemaDataTypeProvider.BASE64.asString(encodedBuffer);
     assertEquals(expectedEncodedString, encodedString);
 
     // test decode from buffer
-    ByteBuffer decodedBuffer = Base64Adapter.decode(encodedBuffer);
+    ByteBuffer decodedBuffer = MetaschemaDataTypeProvider.BASE64.decode(encodedBuffer);
     decodedBuffer.mark();
-    String decodedString = MetaschemaDataTypeProvider.BASE64.byteBufferToString(decodedBuffer);
-    assertEquals(expectedDecodedString, decodedString);
-
-    // test decode from buffer directly to string
-    encodedBuffer.reset();
-    decodedString = Base64Adapter.decodeToString(encodedBuffer);
+    String decodedString = MetaschemaDataTypeProvider.BASE64.asString(decodedBuffer);
     assertEquals(expectedDecodedString, decodedString);
   }
 }

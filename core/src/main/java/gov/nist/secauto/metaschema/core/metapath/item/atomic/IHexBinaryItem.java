@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.Base64BinaryItemImpl;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.HexBinaryItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.IBinaryItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
@@ -19,42 +19,20 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * An atomic Metapath item containing a Base64 encoded data value.
  */
-public interface IBase64BinaryItem extends IBinaryItem {
+public interface IHexBinaryItem extends IBinaryItem {
   /**
    * Get the type information for this item.
    *
    * @return the type information
    */
   @NonNull
-  static IAtomicOrUnionType<IBase64BinaryItem> type() {
-    return MetaschemaDataTypeProvider.BASE64.getItemType();
+  static IAtomicOrUnionType<IHexBinaryItem> type() {
+    return MetaschemaDataTypeProvider.HEX_BINARY.getItemType();
   }
 
   @Override
-  default IAtomicOrUnionType<IBase64BinaryItem> getType() {
+  default IAtomicOrUnionType<IHexBinaryItem> getType() {
     return type();
-  }
-
-  static IBase64BinaryItem encode(@NonNull String value) {
-    return valueOf(MetaschemaDataTypeProvider.BASE64.encodeToByteBuffer(value));
-  }
-
-  @NonNull
-  static IBase64BinaryItem encode(@NonNull byte[] bytes) {
-    return valueOf(MetaschemaDataTypeProvider.BASE64.encodeToByteBuffer(bytes));
-  }
-
-  @NonNull
-  static IBase64BinaryItem encode(@NonNull ByteBuffer buffer) {
-    return valueOf(MetaschemaDataTypeProvider.BASE64.encodeToByteBuffer(buffer));
-  }
-
-  default IHexBinaryItem decode() {
-    return IHexBinaryItem.valueOf(MetaschemaDataTypeProvider.BASE64.decode(asByteBuffer()));
-  }
-
-  default IStringItem decodeAsString() {
-    return IStringItem.valueOf(MetaschemaDataTypeProvider.BASE64.decodeToString(asBytes()));
   }
 
   /**
@@ -68,13 +46,13 @@ public interface IBase64BinaryItem extends IBinaryItem {
    *           if the provided string is not a valid Base64 character sequence
    */
   @NonNull
-  static IBase64BinaryItem valueOf(@NonNull String value) {
+  static IHexBinaryItem valueOf(@NonNull String value) {
     try {
       return valueOf(MetaschemaDataTypeProvider.BASE64.parse(value));
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("The value starting with '%s' is not a valid Base64 character sequence. %s",
+          String.format("The value starting with '%s' is not a valid hex encoded character sequence. %s",
               value.substring(0, Math.min(value.length(), 200)),
               ex.getLocalizedMessage()),
           ex);
@@ -94,8 +72,8 @@ public interface IBase64BinaryItem extends IBinaryItem {
    * @return the new item
    */
   @NonNull
-  static IBase64BinaryItem valueOf(@NonNull ByteBuffer buffer) {
-    return new Base64BinaryItemImpl(buffer);
+  static IHexBinaryItem valueOf(@NonNull ByteBuffer buffer) {
+    return new HexBinaryItem(buffer);
   }
 
   /**
@@ -109,10 +87,10 @@ public interface IBase64BinaryItem extends IBinaryItem {
    *           if the provided {@code item} cannot be cast to this type
    */
   @NonNull
-  static IBase64BinaryItem cast(@NonNull IAnyAtomicItem item) {
+  static IHexBinaryItem cast(@NonNull IAnyAtomicItem item) {
     try {
-      return item instanceof IBase64BinaryItem
-          ? (IBase64BinaryItem) item
+      return item instanceof IHexBinaryItem
+          ? (IHexBinaryItem) item
           : valueOf(item.asString());
     } catch (IllegalStateException | InvalidTypeMetapathException ex) {
       // asString can throw IllegalStateException exception
@@ -121,7 +99,7 @@ public interface IBase64BinaryItem extends IBinaryItem {
   }
 
   @Override
-  default IBase64BinaryItem castAsType(IAnyAtomicItem item) {
+  default IHexBinaryItem castAsType(IAnyAtomicItem item) {
     return cast(item);
   }
 
@@ -138,7 +116,7 @@ public interface IBase64BinaryItem extends IBinaryItem {
    * @return a negative integer, zero, or a positive integer if this value is less
    *         than, equal to, or greater than the {@code item}.
    */
-  default int compareTo(@NonNull IBase64BinaryItem item) {
+  default int compareTo(@NonNull IHexBinaryItem item) {
     return asByteBuffer().compareTo(item.asByteBuffer());
   }
 }

@@ -6,52 +6,50 @@
 package gov.nist.secauto.metaschema.core.datatype.adapter;
 
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IHexBinaryItem;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.BinaryEncoder;
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Maintains a byte buffer backed representation of a byte stream parsed from a
- * BASE64 encoded string.
+ * base64 encoded string.
  * <p>
  * Provides support for the Metaschema <a href=
- * "https://pages.nist.gov/metaschema/specification/datatypes/#BASE64">BASE64</a>
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#base64">base64</a>
  * data type.
  */
-public class Base64Adapter
-    extends AbstractBinaryAdapter<IBase64BinaryItem> {
+public class HexBinaryAdapter
+    extends AbstractBinaryAdapter<IHexBinaryItem> {
   @NonNull
-  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
-      List.of(
-          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "base64"),
-          // for backwards compatibility with original type name
-          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "base64Binary")));
+  private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(List.of(
+      EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "hex-binary")));
 
   @NonNull
-  private static final Base64 BASE64 = ObjectUtils.notNull(Base64.builder().get());
+  private static final Hex HEX = new Hex(StandardCharsets.UTF_8);
 
-  Base64Adapter() {
-    super(IBase64BinaryItem.class, IBase64BinaryItem::cast);
+  HexBinaryAdapter() {
+    super(IHexBinaryItem.class, IHexBinaryItem::cast);
   }
 
   @Override
   protected BinaryEncoder getEncoder() {
-    return BASE64;
+    return HEX;
   }
 
   @Override
   protected BinaryDecoder getDecoder() {
-    return BASE64;
+    return HEX;
   }
 
   @Override
@@ -60,8 +58,8 @@ public class Base64Adapter
   }
 
   @Override
-  public IBase64BinaryItem newItem(Object value) {
+  public IHexBinaryItem newItem(Object value) {
     ByteBuffer item = toValue(value);
-    return IBase64BinaryItem.valueOf(item);
+    return IHexBinaryItem.valueOf(item);
   }
 }
