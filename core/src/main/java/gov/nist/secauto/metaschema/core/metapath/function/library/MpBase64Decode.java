@@ -21,10 +21,11 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Provides a new Metapath function that encodes provided text using base64.
+ * Provides a new Metapath function that decodes provided encoded text using base64.
+ * 
  */
-public final class MpBase64Encode {
-  private static final String NAME = "base64-encode-text";
+public final class MpBase64Decode {
+  private static final String NAME = "base64-decode-text";
 
   @NonNull
   static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
@@ -34,27 +35,28 @@ public final class MpBase64Encode {
       .contextIndependent()
       .focusIndependent()
       .argument(IArgument.builder()
-          .name("text")
-          .type(IStringItem.type())
+          .name("encodedText")
+          .type(IBase64BinaryItem.type())
           .one()
           .build())
-      .returnType(IBase64BinaryItem.type())
+      .returnType(IStringItem.type())
       .returnOne()
-      .functionHandler(MpBase64Encode::executeOneArg)
+      .functionHandler(MpBase64Decode::executeOneArg)
       .build();
 
-  private MpBase64Encode() {
+  private MpBase64Decode() {
     // disable construction
   }
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IBase64BinaryItem> executeOneArg(
+  private static ISequence<IStringItem> executeOneArg(
       @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    IStringItem text = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
-    return ISequence.of(text.encode());
+    IBase64BinaryItem encodedText
+        = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
+    return ISequence.of(encodedText.decodeAsString());
   }
 }

@@ -48,17 +48,41 @@ public abstract class AbstractBinaryAdapter<ITEM_TYPE extends IAnyAtomicItem>
     super(ByteBuffer.class, itemClass, castExecutor);
   }
 
+  /**
+   * Get the binary decoder to use to decode encoded data.
+   *
+   * @return the decoder
+   */
   @NonNull
   protected abstract BinaryDecoder getDecoder();
 
+  /**
+   * Get the binary encoder to use to encode data.
+   *
+   * @return the encoder
+   */
   @NonNull
   protected abstract BinaryEncoder getEncoder();
 
+  /**
+   * Get the raw bytes, encoded as UTF8, for the provided text string.
+   *
+   * @param text
+   *          the text string to get the bytes for
+   * @return the UTF8 encoded bytes for the text string
+   */
   @NonNull
   private static byte[] stringToBytes(@NonNull String text) {
-    return text.getBytes(StandardCharsets.UTF_8);
+    return ObjectUtils.notNull(text.getBytes(StandardCharsets.UTF_8));
   }
 
+  /**
+   * Get a text string based on the provided raw bytes, encoded as UTF8.
+   *
+   * @param bytes
+   *          a byte array encoded as UTF8
+   * @return the decoded text string
+   */
   @NonNull
   private static String bytesToString(@NonNull byte[] bytes) {
     return new String(bytes, StandardCharsets.UTF_8);
@@ -68,6 +92,14 @@ public abstract class AbstractBinaryAdapter<ITEM_TYPE extends IAnyAtomicItem>
     return text.length() <= length ? text : text.substring(0, length) + "…";
   }
 
+  /**
+   * Encode the provided bytes using the encoding supported by this class.
+   *
+   * @param decodedBytes
+   *          the bytes to encode
+   * @return the encoded bytes
+   * @see #getEncoder()
+   */
   @NonNull
   public byte[] encode(@NonNull byte[] decodedBytes) {
     try {
@@ -79,24 +111,58 @@ public abstract class AbstractBinaryAdapter<ITEM_TYPE extends IAnyAtomicItem>
     }
   }
 
+  /**
+   * Encode the provided bytes using the encoding supported by this class.
+   *
+   * @param decodedBuffer
+   *          a buffer containing the bytes to encode
+   * @return a buffer containing the encoded bytes
+   * @see #getEncoder()
+   */
   @NonNull
   public ByteBuffer encodeToByteBuffer(@NonNull ByteBuffer decodedBuffer) {
     byte[] decodedBytes = bufferToBytes(decodedBuffer, false);
     return encodeToByteBuffer(decodedBytes);
   }
 
+  /**
+   * Encode the provided string using the encoding supported by this class.
+   * <p>
+   * The provided string is first encoded as a stream of UTF8 bytes.
+   *
+   * @param decodedText
+   *          the string to encode
+   * @return a buffer containing the encoded bytes
+   * @see #getEncoder()
+   */
   @NonNull
-  public ByteBuffer encodeToByteBuffer(String decodedText) {
+  public ByteBuffer encodeToByteBuffer(@NonNull String decodedText) {
     byte[] decodedBytes = stringToBytes(decodedText);
     return encodeToByteBuffer(decodedBytes);
   }
 
+  /**
+   * Encode the provided bytes using the encoding supported by this class.
+   *
+   * @param decodedBytes
+   *          the bytes to encode
+   * @return a buffer containing the encoded bytes
+   * @see #getEncoder()
+   */
   @NonNull
-  public ByteBuffer encodeToByteBuffer(byte[] decodedBytes) {
+  public ByteBuffer encodeToByteBuffer(@NonNull byte[] decodedBytes) {
     byte[] encodedBytes = encode(decodedBytes);
     return ObjectUtils.notNull(ByteBuffer.wrap(encodedBytes));
   }
 
+  /**
+   * Decode the provided bytes using the encoding supported by this class.
+   *
+   * @param enodedBytes
+   *          the bytes to decode
+   * @return the decoded bytes
+   * @see #getDecoder()
+   */
   @NonNull
   public byte[] decode(@NonNull byte[] enodedBytes) {
     try {
@@ -108,6 +174,14 @@ public abstract class AbstractBinaryAdapter<ITEM_TYPE extends IAnyAtomicItem>
     }
   }
 
+  /**
+   * Decode the provided bytes using the encoding supported by this class.
+   *
+   * @param encodedBuffer
+   *          a buffer containing the the bytes to decode
+   * @return a buffer containing the decoded bytes
+   * @see #getDecoder()
+   */
   @NonNull
   public ByteBuffer decode(@NonNull ByteBuffer encodedBuffer) {
     byte[] encodedBytes = bufferToBytes(encodedBuffer, false);
@@ -115,6 +189,16 @@ public abstract class AbstractBinaryAdapter<ITEM_TYPE extends IAnyAtomicItem>
     return ObjectUtils.notNull(ByteBuffer.wrap(decodedBytes));
   }
 
+  /**
+   * Decode the provided bytes using the encoding supported by this class.
+   * <p>
+   * The decoded bytes are decoded as a stream of UTF8 bytes to produce the string.
+   *
+   * @param encodedBytes
+   *          the bytes to decode
+   * @return the decoded string
+   * @see #getDecoder()
+   */
   @NonNull
   public String decodeToString(@NonNull byte[] encodedBytes) {
     byte[] decodedBytes = decode(encodedBytes);
@@ -169,6 +253,15 @@ public abstract class AbstractBinaryAdapter<ITEM_TYPE extends IAnyAtomicItem>
     return clone;
   }
 
+  /**
+   * Get the array of bytes stored in the buffer.
+   *
+   * @param buffer
+   *          the buffer
+   * @param copy
+   *          if {@code true} ensure the resulting array is a copy
+   * @return the array of bytes
+   */
   @NonNull
   public static byte[] bufferToBytes(@NonNull ByteBuffer buffer, boolean copy) {
     byte[] array;

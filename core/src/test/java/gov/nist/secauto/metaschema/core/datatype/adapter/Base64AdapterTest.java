@@ -3,16 +3,10 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath.item.atomic;
+package gov.nist.secauto.metaschema.core.datatype.adapter;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -22,41 +16,7 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class IBase64BinaryItemTest {
-  private static final long MIN_LONG = -9_223_372_036_854_775_808L;
-  private static final long MAX_LONG = 9_223_372_036_854_775_807L;
-  private static final String BASE_64 = "gAAAAAAAAAB//////////w==";
-
-  @Test
-  void testValueOf() {
-    IBase64BinaryItem item = IBase64BinaryItem.encode(ObjectUtils.notNull(
-        ByteBuffer.allocate(16)
-            .putLong(MIN_LONG)
-            .putLong(MAX_LONG)));
-    assertEquals(BASE_64, item.asString());
-  }
-
-  @Test
-  void testCastSame() {
-    ByteBuffer buf = ObjectUtils.notNull(ByteBuffer.allocate(16)
-        .putLong(MIN_LONG)
-        .putLong(MAX_LONG));
-    IBase64BinaryItem item = IBase64BinaryItem.encode(buf);
-    assertEquals(IBase64BinaryItem.cast(item), item);
-  }
-
-  @Test
-  void testCastString() {
-    ByteBuffer buf
-        = ObjectUtils.notNull(ByteBuffer.allocate(16).putLong(MIN_LONG).putLong(MAX_LONG));
-    IBase64BinaryItem expected = IBase64BinaryItem.encode(buf);
-    IBase64BinaryItem actual = IBase64BinaryItem.cast(IStringItem.valueOf(BASE_64));
-    Assertions.assertAll(
-        // TODO: use equals method?
-        () -> assertArrayEquals(actual.asByteBuffer().array(), expected.asByteBuffer().array()),
-        () -> assertEquals(actual.asString(), expected.asString()));
-  }
-
+class Base64AdapterTest {
   private static Stream<Arguments> provideValuesForEncodeDecode() {
     return Stream.of(
         Arguments.of("The quick brown fox jumps over the lazy dog",
