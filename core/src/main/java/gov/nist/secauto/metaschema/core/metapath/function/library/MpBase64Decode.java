@@ -21,8 +21,9 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Provides a new Metapath function that decodes provided encoded text using base64.
- * 
+ * Provides a new Metapath function that decodes provided encoded text using
+ * base64.
+ *
  */
 public final class MpBase64Decode {
   private static final String NAME = "base64-decode-text";

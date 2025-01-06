@@ -12,6 +12,9 @@ import java.nio.ByteBuffer;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a binary string of bytes.
+ */
 public interface IBinaryItem extends IAnyAtomicItem {
 
   /**
@@ -22,6 +25,11 @@ public interface IBinaryItem extends IAnyAtomicItem {
   @NonNull
   ByteBuffer asByteBuffer();
 
+  /**
+   * Get the underlying bytes for this item.
+   *
+   * @return the array of bytes
+   */
   @NonNull
   default byte[] asBytes() {
     return AbstractBinaryAdapter.bufferToBytes(asByteBuffer(), true);

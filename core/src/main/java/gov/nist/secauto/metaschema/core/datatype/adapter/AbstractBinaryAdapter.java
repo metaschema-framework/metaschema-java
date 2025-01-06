@@ -192,7 +192,8 @@ public abstract class AbstractBinaryAdapter<ITEM_TYPE extends IAnyAtomicItem>
   /**
    * Decode the provided bytes using the encoding supported by this class.
    * <p>
-   * The decoded bytes are decoded as a stream of UTF8 bytes to produce the string.
+   * The decoded bytes are decoded as a stream of UTF8 bytes to produce the
+   * string.
    *
    * @param encodedBytes
    *          the bytes to decode

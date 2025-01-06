@@ -280,5 +280,7 @@ public class DefaultFunctionLibrary
     // extra functions
     registerFunction(MpRecurseDepth.SIGNATURE_ONE_ARG);
     registerFunction(MpRecurseDepth.SIGNATURE_TWO_ARG);
+    registerFunction(MpBase64Decode.SIGNATURE_ONE_ARG);
+    registerFunction(MpBase64Encode.SIGNATURE_ONE_ARG);
   }
 }

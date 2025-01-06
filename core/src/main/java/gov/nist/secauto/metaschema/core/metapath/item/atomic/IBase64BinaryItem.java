@@ -44,6 +44,19 @@ public interface IBase64BinaryItem extends IBinaryItem {
    *          the string to encode
    * @return a base64 item representing the encoded data
    */
+  static IBase64BinaryItem encode(@NonNull IStringItem text) {
+    return encode(text.asString());
+  }
+
+  /**
+   * Base64 encode the provided string.
+   * <p>
+   * The provided string is first encoded as a stream of UTF8 bytes.
+   *
+   * @param text
+   *          the string to encode
+   * @return a base64 item representing the encoded data
+   */
   static IBase64BinaryItem encode(@NonNull String text) {
     return valueOf(MetaschemaDataTypeProvider.BASE64.encodeToByteBuffer(text));
   }
@@ -91,7 +104,8 @@ public interface IBase64BinaryItem extends IBinaryItem {
   }
 
   /**
-   * Construct a new base64 byte sequence item using the provided base64 encoded string {@code value}.
+   * Construct a new base64 byte sequence item using the provided base64 encoded
+   * string {@code value}.
    *
    * @param value
    *          a string representing base64 encoded data
@@ -114,11 +128,12 @@ public interface IBase64BinaryItem extends IBinaryItem {
   }
 
   /**
-   * Construct a new URI base64 encoded byte sequence using the provided {@link ByteBuffer}
-   * {@code value}.
+   * Construct a new URI base64 encoded byte sequence using the provided
+   * {@link ByteBuffer} {@code value}.
    * <p>
-   * The provided buffer will be managed by this instance. Make a copy of the buffer to ensure that
-   * the position, limit, and mark of the original are not affect by this.
+   * The provided buffer will be managed by this instance. Make a copy of the
+   * buffer to ensure that the position, limit, and mark of the original are not
+   * affect by this.
    *
    * @param buffer
    *          a byte buffer
@@ -134,7 +149,8 @@ public interface IBase64BinaryItem extends IBinaryItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item cast to this type
+   * @return the original item if it is already this type, otherwise a new item
+   *         cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
@@ -165,8 +181,8 @@ public interface IBase64BinaryItem extends IBinaryItem {
    *
    * @param item
    *          the item to compare with this value
-   * @return a negative integer, zero, or a positive integer if this value is less than, equal to, or
-   *         greater than the {@code item}.
+   * @return a negative integer, zero, or a positive integer if this value is less
+   *         than, equal to, or greater than the {@code item}.
    */
   default int compareTo(@NonNull IBase64BinaryItem item) {
     return asByteBuffer().compareTo(item.asByteBuffer());
