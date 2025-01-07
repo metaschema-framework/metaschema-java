@@ -101,7 +101,7 @@ public final class ComparisonFunctions {
    * @return a or an empty {@link ISequence} if either item is {@code null}
    */
   @NonNull
-  public static IBooleanItem generalCompairison( // NOPMD - acceptable complexity
+  public static IBooleanItem generalComparison( // NOPMD - acceptable complexity
       @NonNull ISequence<? extends IAnyAtomicItem> leftItems,
       @NonNull Operator operator,
       @NonNull ISequence<? extends IAnyAtomicItem> rightItems) {
