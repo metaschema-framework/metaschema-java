@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -326,7 +327,9 @@ public class DynamicContext { // NOPMD - intentional data class
    */
   public void popExecutionStack(@NonNull IExpression expression) {
     IExpression popped = this.sharedState.executionStack.pop();
-    assert expression.equals(popped);
+    if (!expression.equals(popped)) {
+        throw new IllegalStateException("Popped expression does not match expected expression");
+    }
   }
 
   /**
@@ -337,6 +340,18 @@ public class DynamicContext { // NOPMD - intentional data class
   @NonNull
   public List<IExpression> getExecutionStack() {
     return CollectionUtil.unmodifiableList(new ArrayList<>(this.sharedState.executionStack));
+  }
+
+  /**
+   * Provides a formatted stack trace.
+   *
+   * @return the formatted stack trace
+   */
+  @NonNull
+  public String formatExecutionStackTrace() {
+    return ObjectUtils.notNull(getExecutionStack().stream()
+        .map(IExpression::toCSTString)
+        .collect(Collectors.joining("\n-> ")));
   }
 
   private class CachingLoader implements IDocumentLoader {

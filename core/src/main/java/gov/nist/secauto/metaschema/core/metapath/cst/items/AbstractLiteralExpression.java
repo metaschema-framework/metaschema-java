@@ -13,8 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A base class for all Metapath
- * <a href="https://www.w3.org/TR/xpath-31/#id-literals">literal value
+ * A base class for all Metapath <a href="https://www.w3.org/TR/xpath-31/#id-literals">literal value
  * expressions</a>.
  *
  * @param <RESULT_TYPE>
@@ -45,7 +44,7 @@ public abstract class AbstractLiteralExpression<RESULT_TYPE extends IAnyAtomicIt
   }
 
   @Override
-  protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
+  protected ISequence<RESULT_TYPE> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     return ISequence.of(getValue());
   }
 
