@@ -15,8 +15,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Provides built-in Metapath functions based on the XPath 3.1
- * <a href= "https://www.w3.org/TR/xpath-functions-31/">function
- * specification</a>.
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/">function specification</a>.
  */
 @SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
 public class DefaultFunctionLibrary
@@ -58,6 +57,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-data
     registerFunction(FnData.SIGNATURE_NO_ARG);
     registerFunction(FnData.SIGNATURE_ONE_ARG);
+    // https://www.w3.org/TR/xpath-functions-31/#func-date-time
+    registerFunction(FnDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-day-from-date
     // https://www.w3.org/TR/xpath-functions-31/#func-day-from-dateTime
     // https://www.w3.org/TR/xpath-functions-31/#func-days-from-duration

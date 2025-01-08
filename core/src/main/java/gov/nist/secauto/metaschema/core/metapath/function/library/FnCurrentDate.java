@@ -18,14 +18,16 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Implements the XPath 3.1 <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
+ * Implements the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
  * function.
  */
 public final class FnCurrentDate {
   @NonNull
+  private static final String NAME = "current-date";
+  @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("current-date")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()
@@ -49,8 +51,8 @@ public final class FnCurrentDate {
   }
 
   /**
-   * Implements <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>.
+   * Implements
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>.
    *
    * @param dynamicContext
    *          the dynamic evaluation context

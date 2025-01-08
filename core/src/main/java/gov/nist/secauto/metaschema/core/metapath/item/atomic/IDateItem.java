@@ -22,13 +22,12 @@ import java.time.temporal.ChronoUnit;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item representing a date value in the Metapath system with
- * or without an explicit time zone.
+ * An atomic Metapath item representing a date value in the Metapath system with or without an
+ * explicit time zone.
  * <p>
- * This interface provides functionality for handling date/time values with or
- * without time zone information, supporting parsing, casting, and comparison
- * operations. It works in conjunction with {@link ZonedDateTime} to handle time
- * zone ambiguity.
+ * This interface provides functionality for handling date/time values with or without time zone
+ * information, supporting parsing, casting, and comparison operations. It works in conjunction with
+ * {@link ZonedDateTime} to handle time zone ambiguity.
  */
 public interface IDateItem extends ITemporalItem {
   /**
@@ -70,15 +69,15 @@ public interface IDateItem extends ITemporalItem {
   /**
    * Construct a new date item using the provided {@code value}.
    * <p>
-   * This method handles recording if an explicit timezone was provided using the
-   * {@code hasTimeZone} parameter. The {@link AmbiguousDate#hasTimeZone()} method
-   * can be called to determine if timezone information is present.
+   * This method handles recording if an explicit timezone was provided using the {@code hasTimeZone}
+   * parameter. The {@link AmbiguousDate#hasTimeZone()} method can be called to determine if timezone
+   * information is present.
    *
    * @param value
    *          a date, without time zone information
    * @param hasTimeZone
-   *          {@code true} if the date/time is intended to have an associated time
-   *          zone or {@code false} otherwise
+   *          {@code true} if the date/time is intended to have an associated time zone or
+   *          {@code false} otherwise
    * @return the new item
    * @see AmbiguousDateTime for more details on timezone handling
    */
@@ -123,8 +122,7 @@ public interface IDateItem extends ITemporalItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item
-   *         cast to this type
+   * @return the original item if it is already this type, otherwise a new item cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
@@ -161,5 +159,15 @@ public interface IDateItem extends ITemporalItem {
   @Override
   default int compareTo(IAnyAtomicItem item) {
     return compareTo(cast(item));
+  }
+
+  /**
+   * Get the date as a {@link LocalDate}.
+   *
+   * @return the date
+   */
+  @NonNull
+  default LocalDate asLocalDate() {
+    return ObjectUtils.notNull(asZonedDateTime().toLocalDate());
   }
 }

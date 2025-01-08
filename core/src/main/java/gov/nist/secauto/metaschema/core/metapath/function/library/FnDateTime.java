@@ -1,0 +1,115 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.core.metapath.function.library;
+
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
+import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Objects;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+/**
+ * Implements the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
+ * function.
+ */
+public final class FnDateTime {
+  @NonNull
+  private static final String NAME = "date-time";
+  @NonNull
+  static final IFunction SIGNATURE = IFunction.builder()
+      .name(NAME)
+      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
+      .deterministic()
+      .contextIndependent()
+      .focusIndependent()
+      .argument(IArgument.builder()
+          .name("date")
+          .type(IDateItem.type())
+          .zeroOrOne()
+          .build())
+      .argument(IArgument.builder()
+          .name("time")
+          .type(ITimeItem.type())
+          .zeroOrOne()
+          .build())
+      .returnType(IDateItem.type())
+      .returnOne()
+      .functionHandler(FnDateTime::execute)
+      .build();
+
+  private FnDateTime() {
+    // disable construction
+  }
+
+  @SuppressWarnings("unused")
+  @NonNull
+  private static ISequence<IDateTimeItem> execute(@NonNull IFunction function,
+      @NonNull List<ISequence<?>> arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+    IDateItem date = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
+    ITimeItem time = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
+
+    return ISequence.of(fnDateTime(date, time));
+  }
+
+  /**
+   * Create a date/time item from the provided date and time values.
+   * <p>
+   * Implements the XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
+   * function.
+   */
+  @Nullable
+  public static IDateTimeItem fnDateTime(@Nullable IDateItem date, @Nullable ITimeItem time) {
+    IDateTimeItem retval = null;
+    if (date != null && time != null) {
+      ZoneId timezone = getTimezone(
+          date.hasTimezone() ? date.asZonedDateTime().getZone() : null,
+          time.hasTimezone() ? time.asOffsetTime().getOffset().normalized() : null);
+      ZonedDateTime dateTime = ObjectUtils.notNull(ZonedDateTime.of(
+          date.asLocalDate(),
+          time.asLocalTime(),
+          timezone == null ? ZoneOffset.UTC : timezone));
+      retval = IDateTimeItem.valueOf(dateTime, timezone != null);
+    }
+    return retval;
+  }
+
+  @Nullable
+  private static ZoneId getTimezone(ZoneId dateZoneId, ZoneId timeZoneId) {
+    ZoneId retval;
+    if (Objects.equals(dateZoneId, timeZoneId) || dateZoneId != null && timeZoneId == null) {
+      retval = dateZoneId;
+    } else if (dateZoneId == null && timeZoneId != null) {
+      retval = timeZoneId;
+    } else {
+      throw new InvalidArgumentFunctionException(
+          InvalidArgumentFunctionException.DATE_TIME_INCONSISTENT_TIMEZONE,
+          String.format("The date ('%s') and time ('%s') timezones are inconsistent.",
+              dateZoneId == null ? "<none>" : dateZoneId.getId(),
+              timeZoneId == null ? "<none>" : timeZoneId.getId()));
+    }
+    return retval;
+  }
+}

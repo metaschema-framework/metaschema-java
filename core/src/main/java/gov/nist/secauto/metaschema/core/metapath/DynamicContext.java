@@ -97,6 +97,7 @@ public class DynamicContext { // NOPMD - intentional data class
       Clock clock = Clock.systemDefaultZone();
 
       this.implicitTimeZone = ObjectUtils.notNull(clock.getZone());
+
       this.currentDateTime = ObjectUtils.notNull(ZonedDateTime.now(clock));
       this.availableDocuments = new HashMap<>();
       this.functionResultCache = ObjectUtils.notNull(Caffeine.newBuilder()

@@ -11,7 +11,9 @@ import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFun
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.TimeWithoutTimeZoneItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.time.LocalTime;
 import java.time.OffsetTime;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -19,10 +21,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * An atomic Metapath item representing a time value in the Metapath system.
  * <p>
- * This interface provides functionality for handling time values with and
- * without time zone information, supporting parsing, casting, and comparison
- * operations. It works in conjunction with {@link AmbiguousTime} to properly
- * handle time zone ambiguity.
+ * This interface provides functionality for handling time values with and without time zone
+ * information, supporting parsing, casting, and comparison operations. It works in conjunction with
+ * {@link AmbiguousTime} to properly handle time zone ambiguity.
  */
 public interface ITimeItem extends IAnyAtomicItem {
   /**
@@ -64,15 +65,15 @@ public interface ITimeItem extends IAnyAtomicItem {
   /**
    * Construct a new time item using the provided {@code value}.
    * <p>
-   * This method handles recording if an explicit timezone was provided using the
-   * {@code hasTimeZone} parameter. The {@link AmbiguousTime#hasTimeZone()} method
-   * can be called to determine if timezone information is present.
+   * This method handles recording if an explicit timezone was provided using the {@code hasTimeZone}
+   * parameter. The {@link AmbiguousTime#hasTimeZone()} method can be called to determine if timezone
+   * information is present.
    *
    * @param value
    *          a time, without time zone information
    * @param hasTimeZone
-   *          {@code true} if the date/time is intended to have an associated time
-   *          zone or {@code false} otherwise
+   *          {@code true} if the date/time is intended to have an associated time zone or
+   *          {@code false} otherwise
    * @return the new item
    * @see AmbiguousTime for more details on timezone handling
    */
@@ -87,8 +88,8 @@ public interface ITimeItem extends IAnyAtomicItem {
    * Construct a new time item using the provided {@code value}.
    * <p>
    * This method handles recording if an explicit timezone was provided using the
-   * {@link AmbiguousTime}. The {@link AmbiguousTime#hasTimeZone()} method can be
-   * called to determine if timezone information is present.
+   * {@link AmbiguousTime}. The {@link AmbiguousTime#hasTimeZone()} method can be called to determine
+   * if timezone information is present.
    *
    * @param value
    *          a time, without time zone information
@@ -107,8 +108,7 @@ public interface ITimeItem extends IAnyAtomicItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item
-   *         cast to this type
+   * @return the original item if it is already this type, otherwise a new item cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
@@ -134,8 +134,7 @@ public interface ITimeItem extends IAnyAtomicItem {
   /**
    * Determine if the temporal item has a timezone.
    *
-   * @return {@code true} if the temporal item has a timezone or {@code false}
-   *         otherwise
+   * @return {@code true} if the temporal item has a timezone or {@code false} otherwise
    */
   boolean hasTimezone();
 
@@ -155,5 +154,15 @@ public interface ITimeItem extends IAnyAtomicItem {
   @Override
   default int compareTo(IAnyAtomicItem item) {
     return asOffsetTime().compareTo(cast(item).asOffsetTime());
+  }
+
+  /**
+   * Get the time as a {@link LocalTime}.
+   *
+   * @return the date
+   */
+  @NonNull
+  default LocalTime asLocalTime() {
+    return ObjectUtils.notNull(asOffsetTime().toLocalTime());
   }
 }
