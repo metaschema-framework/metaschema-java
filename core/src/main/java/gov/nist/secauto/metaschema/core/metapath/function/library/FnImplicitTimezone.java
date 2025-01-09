@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.Duration;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -61,10 +62,11 @@ public final class FnImplicitTimezone {
    */
   @NonNull
   public static IDayTimeDurationItem fnImplicitTimezone(@NonNull DynamicContext dynamicContext) {
-    ZonedDateTime now = dynamicContext.getCurrentDateTime();
+    ZoneId timezone = dynamicContext.getImplicitTimeZone();
+    ZonedDateTime now = dynamicContext.getCurrentDateTime().withZoneSameInstant(timezone);
     return IDayTimeDurationItem.valueOf(ObjectUtils.notNull(
         Duration.between(
             now,
-            now.withZoneSameLocal(ZoneId.of("UTC")))));
+            now.withZoneSameLocal(ZoneOffset.UTC))));
   }
 }

@@ -11,9 +11,11 @@ import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.function.CalledContext;
+import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction.FunctionProperty;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IUriResolver;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -23,7 +25,9 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -45,6 +49,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * context</a>.
  */
 public class DynamicContext { // NOPMD - intentional data class
+
   @NonNull
   private final Map<Integer, ISequence<?>> letVariableMap;
   @NonNull
@@ -77,8 +82,6 @@ public class DynamicContext { // NOPMD - intentional data class
     @NonNull
     private final StaticContext staticContext;
     @NonNull
-    private final ZoneId implicitTimeZone;
-    @NonNull
     private final ZonedDateTime currentDateTime;
     @NonNull
     private final Map<URI, IDocumentNodeItem> availableDocuments;
@@ -90,6 +93,8 @@ public class DynamicContext { // NOPMD - intentional data class
     private final IMutableConfiguration<MetapathEvaluationFeature<?>> configuration;
     @NonNull
     private final Deque<IExpression> executionStack = new ArrayDeque<>();
+    @NonNull
+    private ZoneId implicitTimeZone;
 
     public SharedState(@NonNull StaticContext staticContext) {
       this.staticContext = staticContext;
@@ -141,6 +146,51 @@ public class DynamicContext { // NOPMD - intentional data class
   @NonNull
   public ZoneId getImplicitTimeZone() {
     return sharedState.implicitTimeZone;
+  }
+
+  /**
+   * Get the default time zone used for evaluation.
+   *
+   * @return the time zone identifier object
+   */
+  @NonNull
+  public IDayTimeDurationItem getImplicitTimeZoneAsDayTimeDuration() {
+    ZonedDateTime reference = MetapathConstants.REFERENCE_DATE_TIME.atZone(getImplicitTimeZone());
+    ZonedDateTime referenceZ = MetapathConstants.REFERENCE_DATE_TIME.atZone(ZoneOffset.UTC);
+
+    return IDayTimeDurationItem.valueOf(ObjectUtils.notNull(
+        Duration.between(
+            reference,
+            referenceZ)));
+  }
+
+  /**
+   * Set the implicit timezone to the provided value.
+   * <p>
+   * Note: This value should only be adjusted when the context is first create. Once the context is
+   * used, this value is expected to be stable.
+   *
+   * @param timezone
+   *          the timezone to use
+   */
+  public void setImplicitTimeZone(@NonNull ZoneId timezone) {
+    sharedState.implicitTimeZone = timezone;
+  }
+
+  /**
+   * Set the implicit timezone to the provided value.
+   * <p>
+   * Note: This value should only be adjusted when the context is first create. Once the context is
+   * used, this value is expected to be stable.
+   *
+   * @param offset
+   *          the offset which must be >= -PT14H and <= PT13H
+   * @throws DateTimeFunctionException
+   *           with the code {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if the
+   *           offset is < -PT14H or > PT14H
+   */
+  public void setImplicitTimeZone(@NonNull IDayTimeDurationItem offset) {
+    setImplicitTimeZone(offset.asZoneOffset());
   }
 
   /**

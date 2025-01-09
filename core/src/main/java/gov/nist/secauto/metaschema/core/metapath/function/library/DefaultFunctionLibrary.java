@@ -29,6 +29,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-abs
     registerFunction(FnAbs.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-adjust-dateTime-to-timezone
+    registerFunction(FnAdjustDateTimeToTimezone.ONE_ARG_SIGNATURE);
+    registerFunction(FnAdjustDateTimeToTimezone.TWO_ARG_SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-adjust-date-to-timezone
     // https://www.w3.org/TR/xpath-functions-31/#func-adjust-time-to-timezone
     // https://www.w3.org/TR/xpath-functions-31/#func-avg

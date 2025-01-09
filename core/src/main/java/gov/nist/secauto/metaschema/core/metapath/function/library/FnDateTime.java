@@ -34,7 +34,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 public final class FnDateTime {
   @NonNull
-  private static final String NAME = "date-time";
+  private static final String NAME = "dateTime";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
       .name(NAME)
@@ -79,6 +79,13 @@ public final class FnDateTime {
    * Implements the XPath 3.1
    * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
    * function.
+   *
+   * @param date
+   *          the date value to get the year, month, and day from
+   * @param time
+   *          the time value to get the hour, minute, seconds from
+   * @return the data/time value composed of the provided date and time values or {@code null} if
+   *         either date or time value is {@code null}.
    */
   @Nullable
   public static IDateTimeItem fnDateTime(@Nullable IDateItem date, @Nullable ITimeItem time) {

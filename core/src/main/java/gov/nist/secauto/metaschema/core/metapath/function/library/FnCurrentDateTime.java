@@ -23,9 +23,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * function.
  */
 public final class FnCurrentDateTime {
+  private static final String NAME = "current-dateTime";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
-      .name("current-dateTime")
+      .name(NAME)
       .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
       .deterministic()
       .contextDependent()

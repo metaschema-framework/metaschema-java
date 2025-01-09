@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.dateTime;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
@@ -21,6 +20,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 class FnDateTimeTest
     extends ExpressionTestBase {
@@ -29,33 +29,44 @@ class FnDateTimeTest
         Arguments.of(
             dateTime("1999-12-31T12:00:00"),
             false,
-            "fn:date-time(meta:date('1999-12-31'), meta:time('12:00:00'))"),
+            "fn:dateTime(meta:date('1999-12-31'), meta:time('12:00:00'))"),
         Arguments.of(
             dateTime("1999-12-31T00:00:00"),
             false,
-            "fn:date-time(meta:date('1999-12-31'), meta:time('24:00:00'))"),
+            "fn:dateTime(meta:date('1999-12-31'), meta:time('24:00:00'))"),
         Arguments.of(
             dateTime("1999-12-31T12:00:00-02:00"),
             true,
-            "fn:date-time(meta:date('1999-12-31-02:00'), meta:time('12:00:00-02:00'))"),
+            "fn:dateTime(meta:date('1999-12-31-02:00'), meta:time('12:00:00-02:00'))"),
         Arguments.of(
             dateTime("1999-12-31T12:00:00-02:00"),
             true,
-            "fn:date-time(meta:date('1999-12-31-02:00'), meta:time('12:00:00'))"),
+            "fn:dateTime(meta:date('1999-12-31-02:00'), meta:time('12:00:00'))"),
         Arguments.of(
             dateTime("1999-12-31T12:00:00-02:00"),
             true,
-            "fn:date-time(meta:date('1999-12-31'), meta:time('12:00:00-02:00'))"));
+            "fn:dateTime(meta:date('1999-12-31'), meta:time('12:00:00-02:00'))"),
+        Arguments.of(
+            null,
+            false,
+            "fn:dateTime((), meta:time('12:00:00'))"),
+        Arguments.of(
+            null,
+            false,
+            "fn:dateTime(meta:date('1999-12-31'), ())"),
+        Arguments.of(
+            null,
+            false,
+            "fn:dateTime((), ())"));
   }
 
   @ParameterizedTest
   @MethodSource("provideValues")
-  void test(@NonNull IDateTimeItem expected, boolean hasExpectedTimezone, @NonNull String metapath) {
+  void test(@Nullable IDateTimeItem expected, boolean hasExpectedTimezone, @NonNull String metapath) {
     IDateTimeItem result = IMetapathExpression.compile(metapath).evaluateAs(null, IMetapathExpression.ResultType.ITEM,
         newDynamicContext());
     assertAll(
-        () -> assertNotNull(result),
         () -> assertEquals(expected, result),
-        () -> assertEquals(hasExpectedTimezone, result == null ? null : result.hasTimezone()));
+        () -> assertEquals(hasExpectedTimezone, result == null ? false : result.hasTimezone()));
   }
 }
