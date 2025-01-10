@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFun
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DayTimeDurationItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.Duration;
 import java.time.ZoneOffset;
@@ -72,6 +73,28 @@ public interface IDayTimeDurationItem extends IDurationItem {
   }
 
   /**
+   * Get the items wrapped value as a duration.
+   *
+   * @return the wrapped value as a duration
+   */
+  @NonNull
+  Duration asDuration();
+
+  /**
+   * Get the "wrapped" duration value in seconds.
+   *
+   * @return the underlying duration in seconds
+   */
+  default long asSeconds() {
+    return asDuration().toSeconds();
+  }
+
+  @NonNull
+  default IDayTimeDurationItem negate() {
+    return valueOf(ObjectUtils.notNull(asDuration().negated()));
+  }
+
+  /**
    * Cast the provided type to this item type.
    *
    * @param item
@@ -90,23 +113,6 @@ public interface IDayTimeDurationItem extends IDurationItem {
       // asString can throw IllegalStateException exception
       throw new InvalidValueForCastFunctionException(ex);
     }
-  }
-
-  /**
-   * Get the items wrapped value as a duration.
-   *
-   * @return the wrapped value as a duration
-   */
-  @NonNull
-  Duration asDuration();
-
-  /**
-   * Get the "wrapped" duration value in seconds.
-   *
-   * @return the underlying duration in seconds
-   */
-  default long asSeconds() {
-    return asDuration().toSeconds();
   }
 
   @Override

@@ -14,6 +14,10 @@ import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -28,7 +32,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * information, supporting parsing, casting, and comparison operations. It works in conjunction with
  * {@link AmbiguousDateTime} to properly handle time zone ambiguity.
  */
-public interface IDateTimeItem extends ITemporalItem {
+public interface IDateTimeItem extends ICalendarTemporalItem {
   /**
    * Get the type information for this item.
    *
@@ -65,6 +69,16 @@ public interface IDateTimeItem extends ITemporalItem {
     }
   }
 
+  @NonNull
+  static IDateTimeItem valueOf(@NonNull IDateItem date, @NonNull ITimeItem time) {
+    throw new UnsupportedOperationException();
+  }
+
+  @NonNull
+  static IDateTimeItem valueOf(@NonNull ICalendarTemporalItem date) {
+    return valueOf(date.asZonedDateTime(), date.hasTimezone());
+  }
+
   /**
    * Construct a new date/time item using the provided {@code value}.
    * <p>
@@ -87,6 +101,11 @@ public interface IDateTimeItem extends ITemporalItem {
         : valueOf(new AmbiguousDateTime(value, false));
   }
 
+  @NonNull
+  static IDateTimeItem valueOf(@NonNull LocalDateTime value) {
+    return valueOf(new AmbiguousDateTime(value.atZone(ZoneOffset.UTC), false));
+  }
+
   /**
    * Construct a new date/time item using the provided {@code value}.
    * <p>
@@ -104,6 +123,96 @@ public interface IDateTimeItem extends ITemporalItem {
     return value.hasTimeZone()
         ? IDateTimeWithTimeZoneItem.valueOf(value.getValue())
         : new DateTimeWithoutTimeZoneItemImpl(value);
+  }
+
+  @Override
+  default boolean hasDate() {
+    return true;
+  }
+
+  @Override
+  default boolean hasTime() {
+    return true;
+  }
+
+  @Override
+  default int getYear() {
+    return asZonedDateTime().getYear();
+  }
+
+  @Override
+  default int getMonth() {
+    return asZonedDateTime().getMonthValue();
+  }
+
+  @Override
+  default int getDay() {
+    return asZonedDateTime().getDayOfMonth();
+  }
+
+  @Override
+  default int getHour() {
+    return asZonedDateTime().getHour();
+  }
+
+  @Override
+  default int getMinute() {
+    return asZonedDateTime().getMinute();
+  }
+
+  @Override
+  default int getSecond() {
+    return asZonedDateTime().getSecond();
+  }
+
+  @Override
+  default int getNano() {
+    return asZonedDateTime().getNano();
+  }
+
+  /**
+   * Get the date as a {@link LocalDate}.
+   *
+   * @return the date
+   */
+  @NonNull
+  default LocalDateTime asLocalDateTime() {
+    return ObjectUtils.notNull(asZonedDateTime().toLocalDateTime());
+  }
+
+  /**
+   * Get the date as a {@link LocalDate}.
+   *
+   * @return the date
+   */
+  @NonNull
+  default LocalDate asLocalDate() {
+    return ObjectUtils.notNull(asZonedDateTime().toLocalDate());
+  }
+
+  /**
+   * Get the date/time as a {@link LocalDate}.
+   *
+   * @return the date
+   */
+  @NonNull
+  default LocalTime asLocalTime() {
+    return ObjectUtils.notNull(asZonedDateTime().toLocalTime());
+  }
+
+  @NonNull
+  default OffsetTime asOffsetTime() {
+    return ObjectUtils.notNull(OffsetTime.of(getHour(), getMinute(), getSecond(), getDay(), getZoneOffset()));
+  }
+
+  @NonNull
+  default IDateItem asDate() {
+    return IDateItem.valueOf(asZonedDateTime(), hasTimezone());
+  }
+
+  @NonNull
+  default ITimeItem asTime() {
+    return ITimeItem.valueOf(asOffsetTime(), hasTimezone());
   }
 
   /**
@@ -126,22 +235,23 @@ public interface IDateTimeItem extends ITemporalItem {
    * function.
    *
    * @param offset
-   *          the timezone offset to use
+   *          the timezone offset to use or {@code null}
    * @return the adjusted date/time value
    * @throws DateTimeFunctionException
    *           with code {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if the offset
    *           is < -PT14H or > PT14H
    */
+  @Override
   default IDateTimeItem replaceTimezone(@Nullable IDayTimeDurationItem offset) {
     return offset == null
         ? hasTimezone()
-            ? IDateTimeItem.valueOf(ObjectUtils.notNull(asZonedDateTime().withZoneSameLocal(ZoneOffset.UTC)), false)
+            ? valueOf(ObjectUtils.notNull(asZonedDateTime().withZoneSameLocal(ZoneOffset.UTC)), false)
             : this
         : hasTimezone()
-            ? IDateTimeItem.valueOf(
+            ? valueOf(
                 ObjectUtils.notNull(asZonedDateTime().withZoneSameInstant(offset.asZoneOffset())),
                 true)
-            : IDateTimeItem.valueOf(
+            : valueOf(
                 ObjectUtils.notNull(asZonedDateTime().withZoneSameLocal(offset.asZoneOffset())),
                 true);
   }

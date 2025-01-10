@@ -21,9 +21,8 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An XPath 3.1
- * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
- * expression</a> supporting division.
+ * An XPath 3.1 <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic expression</a>
+ * supporting division.
  */
 public class Division
     extends AbstractBasicArithmeticExpression {
@@ -32,8 +31,7 @@ public class Division
       Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> DIVISION_STRATEGIES = generateStrategies();
 
   /**
-   * An expression that gets the quotient result by dividing the dividend by the
-   * divisor.
+   * An expression that gets the quotient result by dividing the dividend by the divisor.
    *
    * @param text
    *          the parsed text of the expression
@@ -83,11 +81,11 @@ public class Division
     // IYearMonthDurationItem strategies
     Map<Class<? extends IAnyAtomicItem>, OperationStrategy> typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(INumericItem.class,
-        (dividend, divisor) -> OperationFunctions.opDivideYearMonthDuration(
+        (dividend, divisor, dynamicContext) -> OperationFunctions.opDivideYearMonthDuration(
             (IYearMonthDurationItem) dividend,
             (INumericItem) divisor));
     typeStrategies.put(IYearMonthDurationItem.class,
-        (dividend, divisor) -> OperationFunctions.opDivideYearMonthDurationByYearMonthDuration(
+        (dividend, divisor, dynamicContext) -> OperationFunctions.opDivideYearMonthDurationByYearMonthDuration(
             (IYearMonthDurationItem) dividend,
             (IYearMonthDurationItem) divisor));
     strategies.put(IYearMonthDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -95,11 +93,11 @@ public class Division
     // IDayTimeDurationItem strategies
     typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(INumericItem.class,
-        (dividend, divisor) -> OperationFunctions.opDivideDayTimeDuration(
+        (dividend, divisor, dynamicContext) -> OperationFunctions.opDivideDayTimeDuration(
             (IDayTimeDurationItem) dividend,
             (INumericItem) divisor));
     typeStrategies.put(IDayTimeDurationItem.class,
-        (dividend, divisor) -> OperationFunctions.opDivideDayTimeDurationByDayTimeDuration(
+        (dividend, divisor, dynamicContext) -> OperationFunctions.opDivideDayTimeDurationByDayTimeDuration(
             (IDayTimeDurationItem) dividend,
             (IDayTimeDurationItem) divisor));
     strategies.put(IDayTimeDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -107,7 +105,7 @@ public class Division
     // INumericItem strategies
     typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(INumericItem.class,
-        (dividend, divisor) -> OperationFunctions.opNumericDivide(
+        (dividend, divisor, dynamicContext) -> OperationFunctions.opNumericDivide(
             (INumericItem) dividend,
             (INumericItem) divisor));
     strategies.put(INumericItem.class, CollectionUtil.unmodifiableMap(typeStrategies));

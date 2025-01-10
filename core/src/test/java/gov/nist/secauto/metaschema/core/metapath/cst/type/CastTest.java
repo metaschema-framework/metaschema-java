@@ -59,7 +59,7 @@ class CastTest
         Arguments.of(date("2024-02-15Z"), "meta:date", date("2024-02-15Z")),
         Arguments.of(date("2024-02-15Z"), "meta:date", date("2024-02-15Z")),
         Arguments.of(string("2024-02-15"), "meta:date", date("2024-02-15")),
-        Arguments.of(string("2024-02-15Z"), "meta:date", date("2024-02-15")),
+        Arguments.of(string("2024-02-15Z"), "meta:date", date("2024-02-15Z")),
         Arguments.of(string("2024-02-15Z"), "meta:date", date("2024-02-15Z")),
         Arguments.of(dateTime("2024-02-15T06:12:34"), "meta:date", date("2024-02-15")),
         Arguments.of(dateTime("2024-02-15T06:12:34Z"), "meta:date", date("2024-02-15Z")),

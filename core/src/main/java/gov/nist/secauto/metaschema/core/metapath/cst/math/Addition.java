@@ -106,11 +106,11 @@ public class Addition
     // Date strategies
     Map<Class<? extends IAnyAtomicItem>, OperationStrategy> typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(IYearMonthDurationItem.class,
-        (left, right) -> OperationFunctions.opAddYearMonthDurationToDate(
+        (left, right, dynamicContext) -> OperationFunctions.opAddYearMonthDurationToDate(
             (IDateItem) left,
             (IYearMonthDurationItem) right));
     typeStrategies.put(IDayTimeDurationItem.class,
-        (left, right) -> OperationFunctions.opAddDayTimeDurationToDate(
+        (left, right, dynamicContext) -> OperationFunctions.opAddDayTimeDurationToDate(
             (IDateItem) left,
             (IDayTimeDurationItem) right));
     strategies.put(IDateItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -118,11 +118,11 @@ public class Addition
     // DateTime strategies
     typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(IYearMonthDurationItem.class,
-        (left, right) -> OperationFunctions.opAddYearMonthDurationToDateTime(
+        (left, right, dynamicContext) -> OperationFunctions.opAddYearMonthDurationToDateTime(
             (IDateTimeItem) left,
             (IYearMonthDurationItem) right));
     typeStrategies.put(IDayTimeDurationItem.class,
-        (left, right) -> OperationFunctions.opAddDayTimeDurationToDateTime(
+        (left, right, dynamicContext) -> OperationFunctions.opAddDayTimeDurationToDateTime(
             (IDateTimeItem) left,
             (IDayTimeDurationItem) right));
     strategies.put(IDateTimeItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -130,7 +130,7 @@ public class Addition
     // time strategies
     typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(IDayTimeDurationItem.class,
-        (left, right) -> OperationFunctions.opAddDayTimeDurationToTime(
+        (left, right, dynamicContext) -> OperationFunctions.opAddDayTimeDurationToTime(
             (ITimeItem) left,
             (IDayTimeDurationItem) right));
     strategies.put(ITimeItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -138,15 +138,15 @@ public class Addition
     // YearMonthDuration strategies
     typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(IDateItem.class,
-        (left, right) -> OperationFunctions.opAddYearMonthDurationToDate(
+        (left, right, dynamicContext) -> OperationFunctions.opAddYearMonthDurationToDate(
             (IDateItem) right,
             (IYearMonthDurationItem) left));
     typeStrategies.put(IDateTimeItem.class,
-        (left, right) -> OperationFunctions.opAddYearMonthDurationToDateTime(
+        (left, right, dynamicContext) -> OperationFunctions.opAddYearMonthDurationToDateTime(
             (IDateTimeItem) right,
             (IYearMonthDurationItem) left));
     typeStrategies.put(IYearMonthDurationItem.class,
-        (left, right) -> OperationFunctions.opAddYearMonthDurations(
+        (left, right, dynamicContext) -> OperationFunctions.opAddYearMonthDurations(
             (IYearMonthDurationItem) left,
             (IYearMonthDurationItem) right));
     strategies.put(IYearMonthDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -154,19 +154,19 @@ public class Addition
     // DayTimeDuration strategies
     typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(IDateItem.class,
-        (left, right) -> OperationFunctions.opAddDayTimeDurationToDate(
+        (left, right, dynamicContext) -> OperationFunctions.opAddDayTimeDurationToDate(
             (IDateItem) right,
             (IDayTimeDurationItem) left));
     typeStrategies.put(IDateTimeItem.class,
-        (left, right) -> OperationFunctions.opAddDayTimeDurationToDateTime(
+        (left, right, dynamicContext) -> OperationFunctions.opAddDayTimeDurationToDateTime(
             (IDateTimeItem) right,
             (IDayTimeDurationItem) left));
     typeStrategies.put(ITimeItem.class,
-        (left, right) -> OperationFunctions.opAddDayTimeDurationToTime(
+        (left, right, dynamicContext) -> OperationFunctions.opAddDayTimeDurationToTime(
             (ITimeItem) right,
             (IDayTimeDurationItem) left));
     typeStrategies.put(IDayTimeDurationItem.class,
-        (left, right) -> OperationFunctions.opAddDayTimeDurations(
+        (left, right, dynamicContext) -> OperationFunctions.opAddDayTimeDurations(
             (IDayTimeDurationItem) left,
             (IDayTimeDurationItem) right));
     strategies.put(IDayTimeDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));

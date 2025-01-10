@@ -57,6 +57,7 @@ public abstract class AbstractTemporalItem<TYPE>
     @SuppressWarnings("PMD.OnlyOneReturn")
     @Override
     public boolean equals(Object obj) {
+      // FIXME: ensure implicit timezone is not used and that comparison is performed correctly
       if (this == obj) {
         return true;
       }

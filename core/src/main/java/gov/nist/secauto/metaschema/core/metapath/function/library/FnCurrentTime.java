@@ -59,6 +59,7 @@ public final class FnCurrentTime {
    */
   @NonNull
   public static ITimeItem fnCurrentTime(@NonNull DynamicContext dynamicContext) {
+    // FIXME: support implicit timezone
     return ITimeWithTimeZoneItem.valueOf(dynamicContext.getCurrentDateTime());
   }
 }

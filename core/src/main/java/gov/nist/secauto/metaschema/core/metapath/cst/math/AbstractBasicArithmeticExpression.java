@@ -20,13 +20,11 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * An immutable binary expression that supports basic arithmetic evaluation.
  * <p>
- * The result type is determined through static analysis of the sub-expressions,
- * which may result in a more specific type that is a sub-class of the base
- * result type.
+ * The result type is determined through static analysis of the sub-expressions, which may result in
+ * a more specific type that is a sub-class of the base result type.
  * <p>
- * The arithmetic operation method
- * {@link #operation(IAnyAtomicItem, IAnyAtomicItem)} must be implemented by
- * extending classes to provide the evaluation logic.
+ * The arithmetic operation method {@link #operation(IAnyAtomicItem, IAnyAtomicItem)} must be
+ * implemented by extending classes to provide the evaluation logic.
  */
 public abstract class AbstractBasicArithmeticExpression
     extends AbstractArithmeticExpression<IAnyAtomicItem> {
@@ -58,7 +56,7 @@ public abstract class AbstractBasicArithmeticExpression
     IAnyAtomicItem leftItem = ISequence.of(getLeft().accept(dynamicContext, focus).atomize()).getFirstItem(true);
     IAnyAtomicItem rightItem = ISequence.of(getRight().accept(dynamicContext, focus).atomize()).getFirstItem(true);
 
-    return resultOrEmpty(leftItem, rightItem);
+    return resultOrEmpty(leftItem, rightItem, dynamicContext);
   }
 
   /**
@@ -68,18 +66,18 @@ public abstract class AbstractBasicArithmeticExpression
    *          the first item
    * @param rightItem
    *          the second item
-   * @return the result of the operation or an empty {@link ISequence} if either
-   *         item is {@code null}
+   * @return the result of the operation or an empty {@link ISequence} if either item is {@code null}
    */
   @NonNull
   protected ISequence<? extends IAnyAtomicItem> resultOrEmpty(
       @Nullable IAnyAtomicItem leftItem,
-      @Nullable IAnyAtomicItem rightItem) {
+      @Nullable IAnyAtomicItem rightItem,
+      @NonNull DynamicContext dynamicContext) {
     ISequence<? extends IAnyAtomicItem> retval;
     if (leftItem == null || rightItem == null) {
       retval = ISequence.empty();
     } else {
-      IAnyAtomicItem result = operation(leftItem, rightItem);
+      IAnyAtomicItem result = operation(leftItem, rightItem, dynamicContext);
       retval = ISequence.of(result);
     }
     return retval;
@@ -98,7 +96,8 @@ public abstract class AbstractBasicArithmeticExpression
   @NonNull
   protected IAnyAtomicItem operation(
       @NonNull IAnyAtomicItem left,
-      @NonNull IAnyAtomicItem right) {
+      @NonNull IAnyAtomicItem right,
+      @NonNull DynamicContext dynamicContext) {
 
     Map<
         Class<? extends IAnyAtomicItem>,
@@ -127,7 +126,7 @@ public abstract class AbstractBasicArithmeticExpression
     for (Map.Entry<Class<? extends IAnyAtomicItem>, OperationStrategy> entry : typeStrategies.entrySet()) {
       if (entry.getKey().isAssignableFrom(rightClass)) {
         // this is matching strategy, execute it
-        return entry.getValue().execute(left, right);
+        return entry.getValue().execute(left, right, dynamicContext);
       }
     }
 
@@ -137,11 +136,10 @@ public abstract class AbstractBasicArithmeticExpression
   }
 
   /**
-   * Provides a mapping of the left class to a mapping of the right class and the
-   * strategy to use to compute the operation.
+   * Provides a mapping of the left class to a mapping of the right class and the strategy to use to
+   * compute the operation.
    * <p>
-   * This mapping is used to lookup the strategy to use based on the left and
-   * right classes.
+   * This mapping is used to lookup the strategy to use based on the left and right classes.
    *
    * @return the mapping
    */
@@ -186,9 +184,14 @@ public abstract class AbstractBasicArithmeticExpression
      *          the left side of the arithmetic operation
      * @param right
      *          the right side of the arithmetic operation
+     * @param dynamicContext
+     *          the evaluation dynamic context
      * @return the arithmetic result
      */
     @NonNull
-    IAnyAtomicItem execute(@NonNull IAnyAtomicItem left, @NonNull IAnyAtomicItem right);
+    IAnyAtomicItem execute(
+        @NonNull IAnyAtomicItem left,
+        @NonNull IAnyAtomicItem right,
+        @NonNull DynamicContext dynamicContext);
   }
 }

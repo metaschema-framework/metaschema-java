@@ -12,7 +12,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Implements the XPath 3.1
  * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-dateTime">fn:dateTime</a> function.
  */
-public final class FnAdjustDateTimeToTimezone {
+public final class FnAdjustDateToTimezone {
   private static final String NAME = "adjust-dateTime-to-timezone";
   @NonNull
   static final IFunction ONE_ARG_SIGNATURE = IFunction.builder()
@@ -34,12 +34,12 @@ public final class FnAdjustDateTimeToTimezone {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
-          .type(IDateTimeItem.type())
+          .type(IDateItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IDateTimeItem.type())
+      .returnType(IDateItem.type())
       .returnZeroOrOne()
-      .functionHandler(FnAdjustDateTimeToTimezone::executeOneArg)
+      .functionHandler(FnAdjustDateToTimezone::executeOneArg)
       .build();
   @NonNull
   static final IFunction TWO_ARG_SIGNATURE = IFunction.builder()
@@ -50,7 +50,7 @@ public final class FnAdjustDateTimeToTimezone {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg")
-          .type(IDateTimeItem.type())
+          .type(IDateItem.type())
           .zeroOrOne()
           .build())
       .argument(IArgument.builder()
@@ -58,23 +58,23 @@ public final class FnAdjustDateTimeToTimezone {
           .type(IDayTimeDurationItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IDateTimeItem.type())
+      .returnType(IDateItem.type())
       .returnZeroOrOne()
-      .functionHandler(FnAdjustDateTimeToTimezone::executeTwoArg)
+      .functionHandler(FnAdjustDateToTimezone::executeTwoArg)
       .build();
 
-  private FnAdjustDateTimeToTimezone() {
+  private FnAdjustDateToTimezone() {
     // disable construction
   }
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IDateTimeItem> executeOneArg(
+  private static ISequence<IDateItem> executeOneArg(
       @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    IDateTimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
+    IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     // get the implicit timezone
     IDayTimeDurationItem timezone = dynamicContext.getImplicitTimeZoneAsDayTimeDuration();
     return arg == null ? ISequence.empty() : ISequence.of(arg.replaceTimezone(timezone));
@@ -82,12 +82,12 @@ public final class FnAdjustDateTimeToTimezone {
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IDateTimeItem> executeTwoArg(
+  private static ISequence<IDateItem> executeTwoArg(
       @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    IDateTimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
+    IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     IDayTimeDurationItem timezone = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
     return arg == null ? ISequence.empty() : ISequence.of(arg.replaceTimezone(timezone));
   }

@@ -7,6 +7,8 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousTime;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.TimeWithoutTimeZoneItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -15,8 +17,10 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.LocalTime;
 import java.time.OffsetTime;
+import java.time.ZoneOffset;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * An atomic Metapath item representing a time value in the Metapath system.
@@ -25,7 +29,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * information, supporting parsing, casting, and comparison operations. It works in conjunction with
  * {@link AmbiguousTime} to properly handle time zone ambiguity.
  */
-public interface ITimeItem extends IAnyAtomicItem {
+public interface ITimeItem extends ITemporalItem {
   /**
    * Get the type information for this item.
    *
@@ -103,6 +107,109 @@ public interface ITimeItem extends IAnyAtomicItem {
         : new TimeWithoutTimeZoneItemImpl(value);
   }
 
+  @Override
+  default boolean hasDate() {
+    return false;
+  }
+
+  @Override
+  default boolean hasTime() {
+    return true;
+  }
+
+  @Override
+  boolean hasTimezone();
+
+  @Override
+  default int getYear() {
+    return 0;
+  }
+
+  @Override
+  default int getMonth() {
+    return 0;
+  }
+
+  @Override
+  default int getDay() {
+    return 0;
+  }
+
+  @Override
+  default int getHour() {
+    return asOffsetTime().getHour();
+  }
+
+  @Override
+  default int getMinute() {
+    return asOffsetTime().getMinute();
+  }
+
+  @Override
+  default int getSecond() {
+    return asOffsetTime().getSecond();
+  }
+
+  @Override
+  default int getNano() {
+    return asOffsetTime().getNano();
+  }
+
+  @Override
+  @Nullable
+  default ZoneOffset getZoneOffset() {
+    return hasTimezone() ? asOffsetTime().getOffset() : null;
+  }
+
+  /**
+   * Get the underlying time value.
+   *
+   * @return the time value
+   */
+  @NonNull
+  OffsetTime asOffsetTime();
+
+  /**
+   * Adjusts an xs:dateTime value to a specific timezone, or to no timezone at all.
+   * <p>
+   * This method does one of the following things based on the arguments.
+   * <ol>
+   * <li>If the provided offset is {@code null} and the provided date/time value has a timezone, the
+   * timezone is maked absent.
+   * <li>If the provided offset is {@code null} and the provided date/time value has an absent
+   * timezone, the date/time value is returned.
+   * <li>If the provided offset is not {@code null} and the provided date/time value has an absent
+   * timezone, the date/time value is returned with the new timezone applied.
+   * <li>Otherwise, the provided timezone is applied to the date/time value adjusting the time
+   * instant.
+   * </ol>
+   * <p>
+   * Implements the XPath 3.1 <a
+   * href="https://www.w3.org/TR/xpath-functions-31/#func-adjust-dateTime-to-timezone>fn:adjust-dateTime-to-timezone</a>
+   * function.
+   *
+   * @param offset
+   *          the timezone offset to use or {@code null}
+   * @return the adjusted date/time value
+   * @throws DateTimeFunctionException
+   *           with code {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if the offset
+   *           is < -PT14H or > PT14H
+   */
+  @Override
+  default ITimeItem replaceTimezone(@Nullable IDayTimeDurationItem offset) {
+    return offset == null
+        ? hasTimezone()
+            ? valueOf(ObjectUtils.notNull(asOffsetTime().withOffsetSameLocal(ZoneOffset.UTC)), false)
+            : this
+        : hasTimezone()
+            ? valueOf(IDateTimeItem.valueOf(MetapathConstants.REFERENCE_DATE_ITEM, this)
+                .replaceTimezone(offset).asOffsetTime(),
+                true)
+            : valueOf(
+                ObjectUtils.notNull(asOffsetTime().withOffsetSameLocal(offset.asZoneOffset())),
+                true);
+  }
+
   /**
    * Cast the provided type to this item type.
    *
@@ -130,21 +237,6 @@ public interface ITimeItem extends IAnyAtomicItem {
     }
     return retval;
   }
-
-  /**
-   * Determine if the temporal item has a timezone.
-   *
-   * @return {@code true} if the temporal item has a timezone or {@code false} otherwise
-   */
-  boolean hasTimezone();
-
-  /**
-   * Get the underlying time value.
-   *
-   * @return the time value
-   */
-  @NonNull
-  OffsetTime asOffsetTime();
 
   @Override
   default ITimeItem castAsType(IAnyAtomicItem item) {

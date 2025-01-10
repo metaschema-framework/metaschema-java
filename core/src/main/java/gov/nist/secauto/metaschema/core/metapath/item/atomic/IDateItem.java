@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDate;
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
+import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateWithoutTimeZoneItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -20,6 +21,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * An atomic Metapath item representing a date value in the Metapath system with or without an
@@ -29,7 +31,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * information, supporting parsing, casting, and comparison operations. It works in conjunction with
  * {@link ZonedDateTime} to handle time zone ambiguity.
  */
-public interface IDateItem extends ITemporalItem {
+public interface IDateItem extends ICalendarTemporalItem {
   /**
    * Get the type information for this item.
    *
@@ -117,6 +119,110 @@ public interface IDateItem extends ITemporalItem {
         : new DateWithoutTimeZoneItemImpl(value);
   }
 
+  @Override
+  default boolean hasDate() {
+    return true;
+  }
+
+  @Override
+  default boolean hasTime() {
+    return false;
+  }
+
+  @Override
+  default int getYear() {
+    return asZonedDateTime().getYear();
+  }
+
+  @Override
+  default int getMonth() {
+    return asZonedDateTime().getMonthValue();
+  }
+
+  @Override
+  default int getDay() {
+    return asZonedDateTime().getDayOfMonth();
+  }
+
+  @Override
+  default int getHour() {
+    return 0;
+  }
+
+  @Override
+  default int getMinute() {
+    return 0;
+  }
+
+  @Override
+  default int getSecond() {
+    return 0;
+  }
+
+  @Override
+  default int getNano() {
+    return 0;
+  }
+
+  @NonNull
+  default IDateTimeItem asDateTime() {
+    return IDateTimeItem.valueOf(this);
+  }
+
+  @Override
+  @NonNull
+  ZonedDateTime asZonedDateTime();
+
+  /**
+   * Get the date as a {@link LocalDate}.
+   *
+   * @return the date
+   */
+  @NonNull
+  default LocalDate asLocalDate() {
+    return ObjectUtils.notNull(asZonedDateTime().toLocalDate());
+  }
+
+  /**
+   * Adjusts an xs:dateTime value to a specific timezone, or to no timezone at all.
+   * <p>
+   * This method does one of the following things based on the arguments.
+   * <ol>
+   * <li>If the provided offset is {@code null} and the provided date/time value has a timezone, the
+   * timezone is maked absent.
+   * <li>If the provided offset is {@code null} and the provided date/time value has an absent
+   * timezone, the date/time value is returned.
+   * <li>If the provided offset is not {@code null} and the provided date/time value has an absent
+   * timezone, the date/time value is returned with the new timezone applied.
+   * <li>Otherwise, the provided timezone is applied to the date/time value adjusting the time
+   * instant.
+   * </ol>
+   * <p>
+   * Implements the XPath 3.1 <a
+   * href="https://www.w3.org/TR/xpath-functions-31/#func-adjust-dateTime-to-timezone>fn:adjust-dateTime-to-timezone</a>
+   * function.
+   *
+   * @param offset
+   *          the timezone offset to use or {@code null}
+   * @return the adjusted date/time value
+   * @throws DateTimeFunctionException
+   *           with code {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if the offset
+   *           is < -PT14H or > PT14H
+   */
+  @Override
+  default IDateItem replaceTimezone(@Nullable IDayTimeDurationItem offset) {
+    return offset == null
+        ? hasTimezone()
+            ? valueOf(ObjectUtils.notNull(asZonedDateTime().withZoneSameLocal(ZoneOffset.UTC)), false)
+            : this
+        : hasTimezone()
+            ? valueOf(IDateTimeItem.valueOf(this).replaceTimezone(offset).asZonedDateTime(),
+                true)
+            : valueOf(
+                ObjectUtils.notNull(asZonedDateTime().withZoneSameLocal(offset.asZoneOffset())),
+                true);
+  }
+
   /**
    * Cast the provided type to this item type.
    *
@@ -146,7 +252,7 @@ public interface IDateItem extends ITemporalItem {
       }
     } else {
       throw new InvalidValueForCastFunctionException(
-          String.format("unsupported item type '%s'", item.getClass().getName()));
+          String.format("Unsupported item type '%s'", item.getClass().getName()));
     }
     return retval;
   }
@@ -159,15 +265,5 @@ public interface IDateItem extends ITemporalItem {
   @Override
   default int compareTo(IAnyAtomicItem item) {
     return compareTo(cast(item));
-  }
-
-  /**
-   * Get the date as a {@link LocalDate}.
-   *
-   * @return the date
-   */
-  @NonNull
-  default LocalDate asLocalDate() {
-    return ObjectUtils.notNull(asZonedDateTime().toLocalDate());
   }
 }

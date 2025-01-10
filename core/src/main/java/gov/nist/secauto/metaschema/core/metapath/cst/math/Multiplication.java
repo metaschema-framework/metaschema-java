@@ -93,7 +93,7 @@ public class Multiplication
     // IYearMonthDurationItem strategies
     Map<Class<? extends IAnyAtomicItem>, OperationStrategy> typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(INumericItem.class,
-        (dividend, divisor) -> OperationFunctions.opMultiplyYearMonthDuration(
+        (dividend, divisor, dynamicContext) -> OperationFunctions.opMultiplyYearMonthDuration(
             (IYearMonthDurationItem) dividend,
             (INumericItem) divisor));
     strategies.put(IYearMonthDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -101,7 +101,7 @@ public class Multiplication
     // IDayTimeDurationItem strategies
     typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(INumericItem.class,
-        (dividend, divisor) -> OperationFunctions.opMultiplyDayTimeDuration(
+        (dividend, divisor, dynamicContext) -> OperationFunctions.opMultiplyDayTimeDuration(
             (IDayTimeDurationItem) dividend,
             (INumericItem) divisor));
     strategies.put(IDayTimeDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -109,15 +109,15 @@ public class Multiplication
     // INumericItem strategies
     typeStrategies = new LinkedHashMap<>();
     typeStrategies.put(INumericItem.class,
-        (dividend, divisor) -> OperationFunctions.opNumericMultiply(
+        (dividend, divisor, dynamicContext) -> OperationFunctions.opNumericMultiply(
             (INumericItem) dividend,
             (INumericItem) divisor));
     typeStrategies.put(IYearMonthDurationItem.class,
-        (dividend, divisor) -> OperationFunctions.opMultiplyYearMonthDuration(
+        (dividend, divisor, dynamicContext) -> OperationFunctions.opMultiplyYearMonthDuration(
             (IYearMonthDurationItem) divisor,
             (INumericItem) dividend));
     typeStrategies.put(IDayTimeDurationItem.class,
-        (dividend, divisor) -> OperationFunctions.opMultiplyDayTimeDuration(
+        (dividend, divisor, dynamicContext) -> OperationFunctions.opMultiplyDayTimeDuration(
             (IDayTimeDurationItem) divisor,
             (INumericItem) dividend));
     strategies.put(INumericItem.class, CollectionUtil.unmodifiableMap(typeStrategies));

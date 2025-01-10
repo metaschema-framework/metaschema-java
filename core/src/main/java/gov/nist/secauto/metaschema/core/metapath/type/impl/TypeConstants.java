@@ -10,7 +10,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIPAddressItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITemporalItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 
@@ -58,16 +57,6 @@ public final class TypeConstants {
           INumericItem.class,
           INumericItem::cast,
           EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "numeric"));
-  /**
-   * The Metaschema data type that represents all temporal types that work with
-   * dates and times.
-   */
-  @NonNull
-  public static final IAtomicOrUnionType<ITemporalItem> TEMPORAL_TYPE
-      = IAtomicOrUnionType.of(
-          ITemporalItem.class,
-          ITemporalItem::cast,
-          EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "temporal"));
 
   private TypeConstants() {
     // disable construction

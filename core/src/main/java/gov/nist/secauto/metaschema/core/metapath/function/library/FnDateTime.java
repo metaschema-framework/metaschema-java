@@ -70,7 +70,28 @@ public final class FnDateTime {
     IDateItem date = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     ITimeItem time = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
 
-    return ISequence.of(fnDateTime(date, time));
+    return ISequence.of(fnDateTimeOfNullable(date, time));
+  }
+
+  /**
+   * Create a date/time item from the provided date and time values.
+   * <p>
+   * Implements the XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
+   * function.
+   *
+   * @param date
+   *          the date value to get the year, month, and day from or {@code null}
+   * @param time
+   *          the time value to get the hour, minute, seconds from or {@code null}
+   * @return the data/time value composed of the provided date and time values or {@code null} if
+   *         either date or time value is {@code null}
+   */
+  @Nullable
+  public static IDateTimeItem fnDateTimeOfNullable(@Nullable IDateItem date, @Nullable ITimeItem time) {
+    return date == null || time == null
+        ? null
+        : fnDateTime(date, time);
   }
 
   /**
@@ -84,23 +105,18 @@ public final class FnDateTime {
    *          the date value to get the year, month, and day from
    * @param time
    *          the time value to get the hour, minute, seconds from
-   * @return the data/time value composed of the provided date and time values or {@code null} if
-   *         either date or time value is {@code null}.
+   * @return the data/time value composed of the provided date and time values
    */
-  @Nullable
-  public static IDateTimeItem fnDateTime(@Nullable IDateItem date, @Nullable ITimeItem time) {
-    IDateTimeItem retval = null;
-    if (date != null && time != null) {
-      ZoneId timezone = getTimezone(
-          date.hasTimezone() ? date.asZonedDateTime().getZone() : null,
-          time.hasTimezone() ? time.asOffsetTime().getOffset().normalized() : null);
-      ZonedDateTime dateTime = ObjectUtils.notNull(ZonedDateTime.of(
-          date.asLocalDate(),
-          time.asLocalTime(),
-          timezone == null ? ZoneOffset.UTC : timezone));
-      retval = IDateTimeItem.valueOf(dateTime, timezone != null);
-    }
-    return retval;
+  @NonNull
+  public static IDateTimeItem fnDateTime(@NonNull IDateItem date, @NonNull ITimeItem time) {
+    ZoneId timezone = getTimezone(
+        date.hasTimezone() ? date.asZonedDateTime().getZone() : null,
+        time.hasTimezone() ? time.asOffsetTime().getOffset().normalized() : null);
+    ZonedDateTime dateTime = ObjectUtils.notNull(ZonedDateTime.of(
+        date.asLocalDate(),
+        time.asLocalTime(),
+        timezone == null ? ZoneOffset.UTC : timezone));
+    return IDateTimeItem.valueOf(dateTime, timezone != null);
   }
 
   @Nullable

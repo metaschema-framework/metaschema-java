@@ -62,6 +62,7 @@ public final class FnImplicitTimezone {
    */
   @NonNull
   public static IDayTimeDurationItem fnImplicitTimezone(@NonNull DynamicContext dynamicContext) {
+    // FIXME: support implicit timezone
     ZoneId timezone = dynamicContext.getImplicitTimeZone();
     ZonedDateTime now = dynamicContext.getCurrentDateTime().withZoneSameInstant(timezone);
     return IDayTimeDurationItem.valueOf(ObjectUtils.notNull(

@@ -18,12 +18,12 @@ import java.time.ZonedDateTime;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item representing a time value in the Metapath system with
- * an explicit time zone.
+ * An atomic Metapath item representing a time value in the Metapath system with an explicit time
+ * zone.
  * <p>
- * This interface provides functionality for handling time values with time zone
- * information, supporting parsing, casting, and comparison operations. It works
- * in conjunction with {@link ZonedDateTime} to eliminate time zone ambiguity.
+ * This interface provides functionality for handling time values with time zone information,
+ * supporting parsing, casting, and comparison operations. It works in conjunction with
+ * {@link ZonedDateTime} to eliminate time zone ambiguity.
  */
 public interface ITimeWithTimeZoneItem extends ITimeItem {
   /**
@@ -65,9 +65,8 @@ public interface ITimeWithTimeZoneItem extends ITimeItem {
   /**
    * Construct a new time item using the provided {@code value}.
    * <p>
-   * This method handles dates with explicit timezone information using
-   * ZonedDateTime. The timezone is preserved as specified in the input and is
-   * significant for time operations and comparisons.
+   * This method handles dates with explicit timezone information using ZonedDateTime. The timezone is
+   * preserved as specified in the input and is significant for time operations and comparisons.
    *
    * @param value
    *          a time, with time zone information
@@ -81,9 +80,8 @@ public interface ITimeWithTimeZoneItem extends ITimeItem {
   /**
    * Construct a new time item using the provided {@code value}.
    * <p>
-   * This method handles dates with explicit timezone information using
-   * ZonedDateTime. The timezone is preserved as specified in the input and is
-   * significant for time operations and comparisons.
+   * This method handles dates with explicit timezone information using ZonedDateTime. The timezone is
+   * preserved as specified in the input and is significant for time operations and comparisons.
    *
    * @param value
    *          a time, with time zone information
@@ -99,8 +97,7 @@ public interface ITimeWithTimeZoneItem extends ITimeItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item
-   *         cast to this type
+   * @return the original item if it is already this type, otherwise a new item cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
@@ -133,8 +130,19 @@ public interface ITimeWithTimeZoneItem extends ITimeItem {
           String.format("Unable to cast the temporal value '%s', since it lacks timezone information.",
               temporal.asString()));
     }
+    if (!temporal.hasTime()) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(
+          String.format("Unable to cast the temporal value '%s', since it lacks date information.",
+              temporal.asString()));
+    }
     // get the time
-    return valueOf(ObjectUtils.notNull(temporal.asZonedDateTime().toOffsetDateTime().toOffsetTime()));
+    return new TimeWithTimeZoneItemImpl(ObjectUtils.notNull(OffsetTime.of(
+        temporal.getHour(),
+        temporal.getMinute(),
+        temporal.getSecond(),
+        temporal.getNano(),
+        temporal.getZoneOffset())));
   }
 
   @Override

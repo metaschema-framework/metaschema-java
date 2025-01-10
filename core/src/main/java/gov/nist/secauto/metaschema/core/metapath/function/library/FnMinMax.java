@@ -35,18 +35,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Implements the XPath 3.1
- * <a href="https://www.w3.org/TR/xpath-functions-31/#func-min">fn:min</a> and
- * <a href="https://www.w3.org/TR/xpath-functions-31/#func-max">fn:max</a>
- * functions.
+ * Implements the XPath 3.1 <a href="https://www.w3.org/TR/xpath-functions-31/#func-min">fn:min</a>
+ * and <a href="https://www.w3.org/TR/xpath-functions-31/#func-max">fn:max</a> functions.
  */
 public final class FnMinMax {
   private static final String NAME_MIN = "min";
   private static final String NAME_MAX = "max";
   /**
-   * Defines the set of primitive atomic item types supported by the min/max
-   * functions. This set is used for type validation and normalization during
-   * comparison operations.
+   * Defines the set of primitive atomic item types supported by the min/max functions. This set is
+   * used for type validation and normalization during comparison operations.
    */
   @NonNull
   private static final Set<Class<? extends IAnyAtomicItem>> PRIMITIVE_ITEM_TYPES = ObjectUtils.notNull(Set.of(
@@ -132,6 +129,7 @@ public final class FnMinMax {
    */
   @Nullable
   public static IAnyAtomicItem min(@NonNull List<? extends IAnyAtomicItem> items) {
+    // FIXME: support implicit timezone
     return normalize(items)
         .min((item1, item2) -> {
           assert item2 != null;
@@ -150,6 +148,7 @@ public final class FnMinMax {
    */
   @Nullable
   public static IAnyAtomicItem max(@NonNull List<? extends IAnyAtomicItem> items) {
+    // FIXME: support implicit timezone
     return normalize(items)
         .max((item1, item2) -> {
           assert item2 != null;

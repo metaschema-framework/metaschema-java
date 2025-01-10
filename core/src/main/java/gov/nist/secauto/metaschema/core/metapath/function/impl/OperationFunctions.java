@@ -5,17 +5,17 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.CastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.function.library.FnDateTime;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeWithTimeZoneItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateWithTimeZoneItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
@@ -23,18 +23,18 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeWithTimeZoneItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.OffsetTime;
 import java.time.Period;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
 import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -50,6 +50,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     "PMD.CyclomaticComplexity"
 })
 public final class OperationFunctions {
+  @NonNull
+  private static final IDateItem DATE_1972_12_31 = IDateItem.valueOf(ObjectUtils.notNull(LocalDate.of(1972, 12, 31)));
+
   /**
    * Identifies the types and substypes that support aggregation.
    */
@@ -76,7 +79,7 @@ public final class OperationFunctions {
   @NonNull
   public static IDateItem opAddYearMonthDurationToDate(@NonNull IDateItem instant,
       @NonNull IYearMonthDurationItem duration) {
-    return addDurationToDate(instant.asZonedDateTime(), duration.asPeriod());
+    return opAddYearMonthDurationToDateTime(instant.asDateTime(), duration).asDate();
   }
 
   /**
@@ -92,19 +95,7 @@ public final class OperationFunctions {
   @NonNull
   public static IDateItem opAddDayTimeDurationToDate(@NonNull IDateItem instant,
       @NonNull IDayTimeDurationItem duration) {
-    return addDurationToDate(instant.asZonedDateTime(), duration.asDuration());
-  }
-
-  @NonNull
-  private static IDateItem addDurationToDate(@NonNull ZonedDateTime dateTime, @NonNull TemporalAmount duration) {
-    ZonedDateTime result;
-    try {
-      result = dateTime.plus(duration);
-    } catch (ArithmeticException ex) {
-      throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);
-    }
-    assert result != null;
-    return IDateWithTimeZoneItem.valueOf(result);
+    return opAddDayTimeDurationToDateTime(instant.asDateTime(), duration).asDate();
   }
 
   /**
@@ -182,7 +173,8 @@ public final class OperationFunctions {
       throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);
     }
     assert result != null;
-    return IDateTimeWithTimeZoneItem.valueOf(result);
+    // preserve the same timezone "presence"
+    return IDateTimeItem.valueOf(result, instant.hasTimezone());
   }
 
   /**
@@ -206,7 +198,8 @@ public final class OperationFunctions {
       throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);
     }
     assert result != null;
-    return IDateTimeWithTimeZoneItem.valueOf(result);
+    // preserve the same timezone "presence"
+    return IDateTimeItem.valueOf(result, instant.hasTimezone());
   }
 
   /**
@@ -230,22 +223,31 @@ public final class OperationFunctions {
       throw new ArithmeticFunctionException(ArithmeticFunctionException.OVERFLOW_UNDERFLOW_ERROR, ex);
     }
     assert result != null;
-    return ITimeWithTimeZoneItem.valueOf(result);
+    // preserve the same timezone "presence"
+    return ITimeItem.valueOf(result, instant.hasTimezone());
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dates">op:subtract-dates</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dates">op:subtract-dates</a>.
    *
    * @param date1
    *          the first point in time
    * @param date2
    *          the second point in time
+   * @param dynamicContext
+   *          the dynamic context used to provide the implicit timezone
    * @return the elapsed time between the starting instant and ending instant
    */
   @NonNull
-  public static IDayTimeDurationItem opSubtractDates(@NonNull IDateItem date1, @NonNull IDateItem date2) {
-    return between(date2.asZonedDateTime(), date1.asZonedDateTime());
+  public static IDayTimeDurationItem opSubtractDates(
+      @NonNull IDateItem date1,
+      @NonNull IDateItem date2,
+      @NonNull DynamicContext dynamicContext) {
+    return opSubtractDateTimes(
+        date1.asDateTime(),
+        date2.asDateTime(),
+        dynamicContext);
   }
 
   /**
@@ -262,7 +264,7 @@ public final class OperationFunctions {
   public static IDateItem opSubtractYearMonthDurationFromDate(
       @NonNull IDateItem date,
       @NonNull IYearMonthDurationItem duration) {
-    return subtractDurationFromDate(date.asZonedDateTime(), duration.asPeriod());
+    return opAddYearMonthDurationToDate(date, duration.negate());
   }
 
   /**
@@ -279,14 +281,7 @@ public final class OperationFunctions {
   public static IDateItem opSubtractDayTimeDurationFromDate(
       @NonNull IDateItem date,
       @NonNull IDayTimeDurationItem duration) {
-    return subtractDurationFromDate(date.asZonedDateTime(), duration.asDuration());
-  }
-
-  @NonNull
-  private static IDateItem subtractDurationFromDate(
-      @NonNull ZonedDateTime dateTime,
-      @NonNull TemporalAmount duration) {
-    return IDateWithTimeZoneItem.valueOf(ObjectUtils.notNull(dateTime.minus(duration)));
+    return opAddDayTimeDurationToDate(date, duration.negate());
   }
 
   /**
@@ -303,24 +298,30 @@ public final class OperationFunctions {
   public static ITimeItem opSubtractDayTimeDurationFromTime(
       @NonNull ITimeItem time,
       @NonNull IDayTimeDurationItem duration) {
-    return ITimeWithTimeZoneItem.valueOf(ObjectUtils.notNull(time.asOffsetTime().minus(duration.asDuration())));
+    return opAddDayTimeDurationToTime(time, duration.negate());
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-times">op:subtract-times</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-subtract-times">op:subtract-times</a>.
    *
    * @param arg1
    *          the first duration
    * @param arg2
    *          the second duration
+   * @param dynamicContext
+   *          the dynamic context used to provide the implicit timezone
    * @return the result of subtracting the second duration from the first
    */
   @NonNull
   public static IDayTimeDurationItem opSubtractTimes(
       @NonNull ITimeItem arg1,
-      @NonNull ITimeItem arg2) {
-    return between(arg2.asOffsetTime(), arg1.asOffsetTime());
+      @NonNull ITimeItem arg2,
+      @NonNull DynamicContext dynamicContext) {
+    return opSubtractDateTimes(
+        FnDateTime.fnDateTime(DATE_1972_12_31, arg1),
+        FnDateTime.fnDateTime(DATE_1972_12_31, arg2),
+        dynamicContext);
   }
 
   /**
@@ -383,18 +384,24 @@ public final class OperationFunctions {
    *          the first point in time
    * @param time2
    *          the second point in time
+   * @param dynamicContext
+   *          the dynamic context used to provide the implicit timezone
    * @return the duration the occurred between the two points in time
    */
   @NonNull
-  public static IDayTimeDurationItem opSubtractDateTimes(@NonNull IDateTimeItem time1, @NonNull IDateTimeItem time2) {
-    return between(time2.asZonedDateTime(), time1.asZonedDateTime());
+  public static IDayTimeDurationItem opSubtractDateTimes(
+      @NonNull IDateTimeItem time1,
+      @NonNull IDateTimeItem time2,
+      @NonNull DynamicContext dynamicContext) {
+    return between(
+        normalizeOffset(time2, dynamicContext).asZonedDateTime(),
+        normalizeOffset(time1, dynamicContext).asZonedDateTime());
   }
 
   /**
    * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dateTimes">op:subtract-dateTimes</a>
-   * and <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-times">op:subtract-times</a>.
+   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dateTimes">op:subtract-dateTimes</a> and
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-subtract-times">op:subtract-times</a>.
    *
    * @param time1
    *          the first point in time
@@ -421,8 +428,7 @@ public final class OperationFunctions {
   public static IDateTimeItem opSubtractYearMonthDurationFromDateTime(
       @NonNull IDateTimeItem moment,
       @NonNull IYearMonthDurationItem duration) {
-    return IDateTimeWithTimeZoneItem.valueOf(
-        ObjectUtils.notNull(moment.asZonedDateTime().minus(duration.asPeriod())));
+    return opAddYearMonthDurationToDateTime(moment, duration.negate());
   }
 
   /**
@@ -439,8 +445,8 @@ public final class OperationFunctions {
   public static IDateTimeItem opSubtractDayTimeDurationFromDateTime(
       @NonNull IDateTimeItem moment,
       @NonNull IDayTimeDurationItem duration) {
-    return IDateTimeWithTimeZoneItem.valueOf(
-        ObjectUtils.notNull(moment.asZonedDateTime().minus(duration.asDuration())));
+    // preserve the same timezone "presence"
+    return opAddDayTimeDurationToDateTime(moment, duration.negate());
   }
 
   /**
@@ -451,12 +457,10 @@ public final class OperationFunctions {
    *          the duration value
    * @param arg2
    *          the number to multiply by
-   * @return the result of multiplying a {@link IYearMonthDurationItem} by a
-   *         number
+   * @return the result of multiplying a {@link IYearMonthDurationItem} by a number
    * @throws DateTimeFunctionException
-   *           with the code
-   *           {@link DateTimeFunctionException#DURATION_OVERFLOW_UNDERFLOW_ERROR}
-   *           if arithmetic overflow occurs
+   *           with the code {@link DateTimeFunctionException#DURATION_OVERFLOW_UNDERFLOW_ERROR} if
+   *           arithmetic overflow occurs
    */
   @NonNull
   public static IYearMonthDurationItem opMultiplyYearMonthDuration(
@@ -527,8 +531,7 @@ public final class OperationFunctions {
    *          the first duration value
    * @param arg2
    *          the second duration value
-   * @return the result of dividing a the first duration value by the second
-   *         duration value
+   * @return the result of dividing a the first duration value by the second duration value
    */
   @NonNull
   public static IDecimalItem opDivideYearMonthDurationByYearMonthDuration(
@@ -569,8 +572,7 @@ public final class OperationFunctions {
    *          the first duration value
    * @param arg2
    *          the second duration value
-   * @return the ratio of two {@link IDayTimeDurationItem} values, as a decimal
-   *         number
+   * @return the ratio of two {@link IDayTimeDurationItem} values, as a decimal number
    */
   @NonNull
   public static IDecimalItem opDivideDayTimeDurationByDayTimeDuration(
@@ -583,15 +585,15 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-date-equal">op:date-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-date-equal">op:date-equal</a>.
    *
    * @param arg1
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is the same instant in time as the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is the same instant in time as the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateEqual(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {
@@ -599,15 +601,15 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-dateTime-equal">op:dateTime-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-dateTime-equal">op:dateTime-equal</a>.
    *
    * @param arg1
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is the same instant in time as the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is the same instant in time as the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateTimeEqual(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {
@@ -615,15 +617,15 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-duration-equal">op:duration-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-duration-equal">op:duration-equal</a>.
    *
    * @param arg1
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is the same duration as the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is the same duration as the second, or {@code false}
+   *         otherwise
    */
   @NonNull
   public static IBooleanItem opDurationEqual(@NonNull IDurationItem arg1, @NonNull IDurationItem arg2) {
@@ -638,8 +640,7 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is equal to the second, or
-   *         {@code false} otherwise
+   * @return {@code true} if the first argument is equal to the second, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBase64BinaryEqual(@NonNull IBase64BinaryItem arg1, @NonNull IBase64BinaryItem arg2) {
@@ -654,8 +655,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a later instant in time than
-   *         the second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a later instant in time than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateGreaterThan(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {
@@ -670,8 +671,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a later instant in time than
-   *         the second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a later instant in time than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateTimeGreaterThan(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {
@@ -686,8 +687,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a longer duration than the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a longer duration than the second, or {@code false}
+   *         otherwise
    */
   @NonNull
   public static IBooleanItem opYearMonthDurationGreaterThan(
@@ -705,8 +706,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a longer duration than the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a longer duration than the second, or {@code false}
+   *         otherwise
    */
   @NonNull
   public static IBooleanItem opDayTimeDurationGreaterThan(
@@ -723,8 +724,7 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is greater than the second, or
-   *         {@code false} otherwise
+   * @return {@code true} if the first argument is greater than the second, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBase64BinaryGreaterThan(
@@ -734,15 +734,15 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-date-less-than">op:date-less-than</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-date-less-than">op:date-less-than</a>.
    *
    * @param arg1
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is an earlier instant in time than
-   *         the second, or {@code false} otherwise
+   * @return {@code true} if the first argument is an earlier instant in time than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateLessThan(
@@ -759,8 +759,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is an earlier instant in time than
-   *         the second, or {@code false} otherwise
+   * @return {@code true} if the first argument is an earlier instant in time than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateTimeLessThan(
@@ -777,8 +777,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a shorter duration than the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a shorter duration than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opYearMonthDurationLessThan(
@@ -796,8 +796,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a shorter duration than the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a shorter duration than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDayTimeDurationLessThan(
@@ -814,8 +814,7 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is less than the second, or
-   *         {@code false} otherwise
+   * @return {@code true} if the first argument is less than the second, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBase64BinaryLessThan(
@@ -865,11 +864,10 @@ public final class OperationFunctions {
   }
 
   /**
-   * Create a new sum by adding first provided addend value to the second provided
-   * addend value.
+   * Create a new sum by adding first provided addend value to the second provided addend value.
    * <p>
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-add">op:numeric-add</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-numeric-add">op:numeric-add</a>.
    *
    * @param addend1
    *          the first addend
@@ -887,8 +885,8 @@ public final class OperationFunctions {
   }
 
   /**
-   * Determine the difference by subtracting the provided subtrahend value from
-   * the provided minuend value.
+   * Determine the difference by subtracting the provided subtrahend value from the provided minuend
+   * value.
    * <p>
    * Based on XPath 3.1 <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-subtract">op:numeric-subtract</a>.
@@ -897,8 +895,7 @@ public final class OperationFunctions {
    *          the value to subtract from
    * @param subtrahend
    *          the value to subtract
-   * @return a new value resulting from subtracting the subtrahend from the
-   *         minuend
+   * @return a new value resulting from subtracting the subtrahend from the minuend
    */
   @NonNull
   public static INumericItem opNumericSubtract(
@@ -921,8 +918,7 @@ public final class OperationFunctions {
    *          the value to multiply
    * @param multiplier
    *          the value to multiply by
-   * @return a new value resulting from multiplying the multiplicand by the
-   *         multiplier
+   * @return a new value resulting from multiplying the multiplicand by the multiplier
    */
   @NonNull
   public static INumericItem opNumericMultiply(
@@ -936,8 +932,8 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-divide">op:numeric-divide</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-numeric-divide">op:numeric-divide</a>.
    *
    * @param dividend
    *          the number to be divided
@@ -945,8 +941,8 @@ public final class OperationFunctions {
    *          the number to divide by
    * @return the quotient
    * @throws ArithmeticFunctionException
-   *           with the code {@link ArithmeticFunctionException#DIVISION_BY_ZERO}
-   *           if the divisor is zero
+   *           with the code {@link ArithmeticFunctionException#DIVISION_BY_ZERO} if the divisor is
+   *           zero
    */
   @NonNull
   public static IDecimalItem opNumericDivide(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {
@@ -975,8 +971,8 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-mod">op:numeric-mod</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-numeric-mod">op:numeric-mod</a>.
    *
    * @param dividend
    *          the number to be divided
@@ -1015,15 +1011,14 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-equal">op:numeric-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-numeric-equal">op:numeric-equal</a>.
    *
    * @param arg1
    *          the first number to check for equality
    * @param arg2
    *          the second number to check for equality
-   * @return {@code true} if the numbers are numerically equal or {@code false}
-   *         otherwise
+   * @return {@code true} if the numbers are numerically equal or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opNumericEqual(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {
@@ -1046,8 +1041,8 @@ public final class OperationFunctions {
    *          the first number to check
    * @param arg2
    *          the second number to check
-   * @return {@code true} if the first number is greater than or equal to the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first number is greater than or equal to the second, or {@code false}
+   *         otherwise
    */
   @NonNull
   public static IBooleanItem opNumericGreaterThan(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {
@@ -1072,8 +1067,8 @@ public final class OperationFunctions {
    *          the first number to check
    * @param arg2
    *          the second number to check
-   * @return {@code true} if the first number is less than or equal to the second,
-   *         or {@code false} otherwise
+   * @return {@code true} if the first number is less than or equal to the second, or {@code false}
+   *         otherwise
    */
   @NonNull
   public static IBooleanItem opNumericLessThan(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {
@@ -1091,15 +1086,14 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-boolean-equal">op:boolean-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-boolean-equal">op:boolean-equal</a>.
    *
    * @param arg1
    *          the first boolean to check
    * @param arg2
    *          the second boolean to check
-   * @return {@code true} if the first boolean is equal to the second, or
-   *         {@code false} otherwise
+   * @return {@code true} if the first boolean is equal to the second, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBooleanEqual(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {
@@ -1117,8 +1111,8 @@ public final class OperationFunctions {
    *          the first boolean to check
    * @param arg2
    *          the second boolean to check
-   * @return {@code true} if the first argument is {@link IBooleanItem#TRUE} and
-   *         the second is {@link IBooleanItem#FALSE}, or {@code false} otherwise
+   * @return {@code true} if the first argument is {@link IBooleanItem#TRUE} and the second is
+   *         {@link IBooleanItem#FALSE}, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBooleanGreaterThan(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {
@@ -1136,8 +1130,8 @@ public final class OperationFunctions {
    *          the first boolean to check
    * @param arg2
    *          the second boolean to check
-   * @return {@code true} if the first argument is {@link IBooleanItem#FALSE} and
-   *         the second is {@link IBooleanItem#TRUE}, or {@code false} otherwise
+   * @return {@code true} if the first argument is {@link IBooleanItem#FALSE} and the second is
+   *         {@link IBooleanItem#TRUE}, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBooleanLessThan(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {
@@ -1148,15 +1142,14 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-same-key">op:same-key</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-same-key">op:same-key</a>.
    *
    * @param k1
    *          the first key to compare
    * @param k2
    *          the second key to compare
-   * @return {@code true} if the compared keys are the same, or {@code false}
-   *         otherwise
+   * @return {@code true} if the compared keys are the same, or {@code false} otherwise
    */
   public static boolean opSameKey(@NonNull IAnyAtomicItem k1, @NonNull IAnyAtomicItem k2) {
     boolean retval;
@@ -1169,5 +1162,15 @@ public final class OperationFunctions {
       retval = k1.deepEquals(k2);
     }
     return retval;
+  }
+
+  @NonNull
+  private static IDateTimeItem normalizeOffset(@NonNull IDateTimeItem item, @NonNull DynamicContext dynamicContext) {
+    IDateTimeItem result = item.hasTimezone()
+        ? item
+        : item.replaceTimezone(dynamicContext.getImplicitTimeZoneAsDayTimeDuration());
+    return IDateTimeItem.valueOf(
+        ObjectUtils.notNull(result.asZonedDateTime().withZoneSameInstant(ZoneOffset.UTC)),
+        true);
   }
 }

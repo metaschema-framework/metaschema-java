@@ -20,12 +20,10 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-deep-equal">fn:deep-equal</a>
- * functions.
+ * /** Implements
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-deep-equal">fn:deep-equal</a> functions.
  * <p>
- * This implementation does not implement the three-arg variant with collation
- * at this time.
+ * This implementation does not implement the three-arg variant with collation at this time.
  */
 public final class FnDeepEqual {
   @NonNull
@@ -61,6 +59,7 @@ public final class FnDeepEqual {
     ISequence<?> parameter1 = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
     ISequence<?> parameter2 = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));
 
+    // FIXME: support implicit timezone
     return ISequence.of(IBooleanItem.valueOf(parameter1.deepEquals(parameter2)));
   }
 

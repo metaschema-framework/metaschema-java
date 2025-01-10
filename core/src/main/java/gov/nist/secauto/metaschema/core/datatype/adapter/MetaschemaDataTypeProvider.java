@@ -11,8 +11,7 @@ import gov.nist.secauto.metaschema.core.metapath.type.impl.TypeConstants;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Provides runtime discovery of built-in implementations of the core Metaschema
- * data types.
+ * Provides runtime discovery of built-in implementations of the core Metaschema data types.
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class MetaschemaDataTypeProvider // NOPMD - Used for service initialization
@@ -23,23 +22,23 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
   @NonNull
   public static final HexBinaryAdapter HEX_BINARY = new HexBinaryAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#base64">base64</a>
-   * data type instance.
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#base64">base64</a> data type
+   * instance.
    */
   @NonNull
   public static final Base64Adapter BASE64 = new Base64Adapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#boolean">boolean</a>
-   * data type instance.
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#boolean">boolean</a> data
+   * type instance.
    */
   @NonNull
   public static final BooleanAdapter BOOLEAN = new BooleanAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#date">date</a>
-   * data type instance.
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#date">date</a> data type
+   * instance.
    */
   @NonNull
   public static final DateAdapter DATE = new DateAdapter();
@@ -51,8 +50,8 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
   @NonNull
   public static final DateWithTZAdapter DATE_WITH_TZ = new DateWithTZAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#date-time">date-time</a>
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#date-time">date-time</a>
    * data type instance.
    */
   @NonNull
@@ -66,36 +65,35 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
   public static final DateTimeWithTZAdapter DATE_TIME_WITH_TZ = new DateTimeWithTZAdapter();
   /**
    * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#ip-v4-address">ip-v4-address</a>
-   * data type instance.
+   * "https://pages.nist.gov/metaschema/specification/datatypes/#ip-v4-address">ip-v4-address</a> data
+   * type instance.
    */
   @NonNull
   public static final IPv4AddressAdapter IP_V4_ADDRESS = new IPv4AddressAdapter();
   /**
    * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#ip-v6-address">ip-v6-address</a>
-   * data type instance.
+   * "https://pages.nist.gov/metaschema/specification/datatypes/#ip-v6-address">ip-v6-address</a> data
+   * type instance.
    */
   @NonNull
   public static final IPv6AddressAdapter IP_V6_ADDRESS = new IPv6AddressAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#uri">uri</a> data
-   * type instance.
+   * The Metaschema <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#uri">uri</a>
+   * data type instance.
    */
   @NonNull
   public static final UriAdapter URI = new UriAdapter();
   /**
    * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#uri-reference">uri-reference</a>
-   * data type instance.
+   * "https://pages.nist.gov/metaschema/specification/datatypes/#uri-reference">uri-reference</a> data
+   * type instance.
    */
   @NonNull
   public static final UriReferenceAdapter URI_REFERENCE = new UriReferenceAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#uuid">uuid</a>
-   * data type instance.
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#uuid">uuid</a> data type
+   * instance.
    */
   @NonNull
   public static final UuidAdapter UUID = new UuidAdapter();
@@ -114,16 +112,16 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
   @NonNull
   public static final YearMonthAdapter YEAR_MONTH_DURATION = new YearMonthAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#decimal">decimal</a>
-   * data type instance.
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#decimal">decimal</a> data
+   * type instance.
    */
   @NonNull
   public static final DecimalAdapter DECIMAL = new DecimalAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#integer">integer</a>
-   * data type instance.
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#integer">integer</a> data
+   * type instance.
    */
   @NonNull
   public static final IntegerAdapter INTEGER = new IntegerAdapter();
@@ -143,30 +141,30 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
   public static final PositiveIntegerAdapter POSITIVE_INTEGER = new PositiveIntegerAdapter();
   /**
    * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#email-address">email-address</a>
-   * data type instance.
+   * "https://pages.nist.gov/metaschema/specification/datatypes/#email-address">email-address</a> data
+   * type instance.
    */
   @NonNull
   public static final EmailAddressAdapter EMAIL_ADDRESS = new EmailAddressAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#hostname">hostname</a>
-   * data type instance.
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#hostname">hostname</a> data
+   * type instance.
    */
   @NonNull
   public static final HostnameAdapter HOSTNAME = new HostnameAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#ncname">ncname</a>
-   * data type instance.
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#ncname">ncname</a> data type
+   * instance.
    */
   @Deprecated(since = "0.7.0")
   @NonNull
   public static final NcNameAdapter NCNAME = new NcNameAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#string">string</a>
-   * data type instance.
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#string">string</a> data type
+   * instance.
    */
   @NonNull
   public static final StringAdapter STRING = new StringAdapter();
@@ -183,15 +181,14 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
   @NonNull
   public static final TimeWithTZAdapter TIME_WITH_TZ = new TimeWithTZAdapter();
   /**
-   * The Metaschema <a href=
-   * "https://pages.nist.gov/metaschema/specification/datatypes/#token">token</a>
-   * data type instance.
+   * The Metaschema
+   * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#token">token</a> data type
+   * instance.
    */
   @NonNull
   public static final TokenAdapter TOKEN = new TokenAdapter();
   /**
-   * The default Metaschema data type instance to use when no data type is defined
-   * on a field or flag.
+   * The default Metaschema data type instance to use when no data type is defined on a field or flag.
    */
   @NonNull
   public static final StringAdapter DEFAULT_DATA_TYPE = STRING;
@@ -235,6 +232,5 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
     register(TypeConstants.DURATION_TYPE);
     register(TypeConstants.IP_ADDRESS_TYPE);
     register(TypeConstants.NUMERIC_TYPE);
-    register(TypeConstants.TEMPORAL_TYPE);
   }
 }

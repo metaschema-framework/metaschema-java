@@ -18,8 +18,7 @@ import java.time.temporal.ChronoUnit;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item containing a date data value that has an explicit
- * timezone.
+ * An atomic Metapath item containing a date data value that has an explicit timezone.
  */
 public interface IDateWithTimeZoneItem extends IDateItem {
   /**
@@ -77,8 +76,7 @@ public interface IDateWithTimeZoneItem extends IDateItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item
-   *         cast to this type
+   * @return the original item if it is already this type, otherwise a new item cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
@@ -111,8 +109,22 @@ public interface IDateWithTimeZoneItem extends IDateItem {
           String.format("Unable to cast the temporal value '%s', since it lacks timezone information.",
               temporal.asString()));
     }
+    if (!temporal.hasDate()) {
+      // asString can throw IllegalStateException exception
+      throw new InvalidValueForCastFunctionException(
+          String.format("Unable to cast the temporal value '%s', since it lacks date information.",
+              temporal.asString()));
+    }
     // get the time at midnight
-    return valueOf(ObjectUtils.notNull(temporal.asZonedDateTime().truncatedTo(ChronoUnit.DAYS)));
+    return new DateWithTimeZoneItemImpl(ObjectUtils.notNull(ZonedDateTime.of(
+        temporal.getYear(),
+        temporal.getMonth(),
+        temporal.getDay(),
+        0,
+        0,
+        0,
+        0,
+        temporal.getZoneOffset())));
   }
 
   @Override
@@ -124,5 +136,4 @@ public interface IDateWithTimeZoneItem extends IDateItem {
   default int compareTo(IAnyAtomicItem item) {
     return compareTo(cast(item));
   }
-
 }

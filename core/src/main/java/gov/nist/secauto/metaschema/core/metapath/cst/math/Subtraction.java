@@ -26,9 +26,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Implements the '-' operator for Metapath subtraction operations.
  * <p>
- * An XPath 3.1
- * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
- * expression</a> supporting subtraction.
+ * An XPath 3.1 <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic expression</a>
+ * supporting subtraction.
  * <p>
  * Supports subtraction operations between:
  * <ul>
@@ -107,15 +106,16 @@ public class Subtraction
     // Date strategies
     Map<Class<? extends IAnyAtomicItem>, OperationStrategy> typeStrategies = new HashMap<>();
     typeStrategies.put(IDateItem.class,
-        (minuend, subtrahend) -> OperationFunctions.opSubtractDates(
+        (minuend, subtrahend, dynamicContext) -> OperationFunctions.opSubtractDates(
             (IDateItem) minuend,
-            (IDateItem) subtrahend));
+            (IDateItem) subtrahend,
+            dynamicContext));
     typeStrategies.put(IYearMonthDurationItem.class,
-        (minuend, subtrahend) -> OperationFunctions.opSubtractYearMonthDurationFromDate(
+        (minuend, subtrahend, dynamicContext) -> OperationFunctions.opSubtractYearMonthDurationFromDate(
             (IDateItem) minuend,
             (IYearMonthDurationItem) subtrahend));
     typeStrategies.put(IDayTimeDurationItem.class,
-        (minuend, subtrahend) -> OperationFunctions.opSubtractDayTimeDurationFromDate(
+        (minuend, subtrahend, dynamicContext) -> OperationFunctions.opSubtractDayTimeDurationFromDate(
             (IDateItem) minuend,
             (IDayTimeDurationItem) subtrahend));
     Map<
@@ -126,15 +126,16 @@ public class Subtraction
     // DateTime strategies
     typeStrategies = new HashMap<>();
     typeStrategies.put(IDateTimeItem.class,
-        (minuend, subtrahend) -> OperationFunctions.opSubtractDateTimes(
+        (minuend, subtrahend, dynamicContext) -> OperationFunctions.opSubtractDateTimes(
             (IDateTimeItem) minuend,
-            (IDateTimeItem) subtrahend));
+            (IDateTimeItem) subtrahend,
+            dynamicContext));
     typeStrategies.put(IYearMonthDurationItem.class,
-        (minuend, subtrahend) -> OperationFunctions.opSubtractYearMonthDurationFromDateTime(
+        (minuend, subtrahend, dynamicContext) -> OperationFunctions.opSubtractYearMonthDurationFromDateTime(
             (IDateTimeItem) minuend,
             (IYearMonthDurationItem) subtrahend));
     typeStrategies.put(IDayTimeDurationItem.class,
-        (minuend, subtrahend) -> OperationFunctions.opSubtractDayTimeDurationFromDateTime(
+        (minuend, subtrahend, dynamicContext) -> OperationFunctions.opSubtractDayTimeDurationFromDateTime(
             (IDateTimeItem) minuend,
             (IDayTimeDurationItem) subtrahend));
     strategies.put(IDateTimeItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -142,11 +143,12 @@ public class Subtraction
     // Time strategies
     typeStrategies = new HashMap<>();
     typeStrategies.put(ITimeItem.class,
-        (minuend, subtrahend) -> OperationFunctions.opSubtractTimes(
+        (minuend, subtrahend, dynamicContext) -> OperationFunctions.opSubtractTimes(
             (ITimeItem) minuend,
-            (ITimeItem) subtrahend));
+            (ITimeItem) subtrahend,
+            dynamicContext));
     typeStrategies.put(IDayTimeDurationItem.class,
-        (minuend, subtrahend) -> OperationFunctions.opSubtractDayTimeDurationFromTime(
+        (minuend, subtrahend, dynamicContext) -> OperationFunctions.opSubtractDayTimeDurationFromTime(
             (ITimeItem) minuend,
             (IDayTimeDurationItem) subtrahend));
     strategies.put(ITimeItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -154,7 +156,7 @@ public class Subtraction
     // YearMonthDuration strategies
     typeStrategies = new HashMap<>();
     typeStrategies.put(IYearMonthDurationItem.class,
-        (minuend, subtrahend) -> OperationFunctions.opSubtractYearMonthDurations(
+        (minuend, subtrahend, dynamicContext) -> OperationFunctions.opSubtractYearMonthDurations(
             (IYearMonthDurationItem) minuend,
             (IYearMonthDurationItem) subtrahend));
     strategies.put(IYearMonthDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));
@@ -162,7 +164,7 @@ public class Subtraction
     // DayTimeDuration strategies
     typeStrategies = new HashMap<>();
     typeStrategies.put(IDayTimeDurationItem.class,
-        (minuend, subtrahend) -> OperationFunctions.opSubtractDayTimeDurations(
+        (minuend, subtrahend, dynamicContext) -> OperationFunctions.opSubtractDayTimeDurations(
             (IDayTimeDurationItem) minuend,
             (IDayTimeDurationItem) subtrahend));
     strategies.put(IDayTimeDurationItem.class, CollectionUtil.unmodifiableMap(typeStrategies));

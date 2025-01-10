@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.time.Clock;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -155,8 +156,9 @@ public class DynamicContext { // NOPMD - intentional data class
    */
   @NonNull
   public IDayTimeDurationItem getImplicitTimeZoneAsDayTimeDuration() {
-    ZonedDateTime reference = MetapathConstants.REFERENCE_DATE_TIME.atZone(getImplicitTimeZone());
-    ZonedDateTime referenceZ = MetapathConstants.REFERENCE_DATE_TIME.atZone(ZoneOffset.UTC);
+    LocalDateTime referenceDateTime = MetapathConstants.REFERENCE_DATE_TIME.asLocalDateTime();
+    ZonedDateTime reference = referenceDateTime.atZone(getImplicitTimeZone());
+    ZonedDateTime referenceZ = referenceDateTime.atZone(ZoneOffset.UTC);
 
     return IDayTimeDurationItem.valueOf(ObjectUtils.notNull(
         Duration.between(
