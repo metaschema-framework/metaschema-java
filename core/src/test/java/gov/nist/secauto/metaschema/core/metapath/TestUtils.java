@@ -16,6 +16,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
@@ -256,8 +257,21 @@ public final class TestUtils {
   }
 
   /**
-   * Create a duration item using the provided value indicating the years, months,
-   * and days of the duration.
+   * Create a duration item using the provided value indicating the years, months, and days of the
+   * duration.
+   *
+   * @param value
+   *          the duration value
+   * @return the duration item
+   */
+  @NonNull
+  public static IDurationItem duration(@NonNull String value) {
+    return IDurationItem.valueOf(value);
+  }
+
+  /**
+   * Create a duration item using the provided value indicating the years, months, and days of the
+   * duration.
    *
    * @param value
    *          the duration value
@@ -269,8 +283,8 @@ public final class TestUtils {
   }
 
   /**
-   * Create a duration item using the provided value indicating the seconds and
-   * nanoseconds of the duration.
+   * Create a duration item using the provided value indicating the seconds and nanoseconds of the
+   * duration.
    *
    * @param value
    *          the duration value

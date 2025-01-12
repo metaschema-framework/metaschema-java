@@ -18,7 +18,8 @@ import java.time.temporal.ChronoUnit;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item containing a date data value that has an explicit timezone.
+ * An atomic Metapath item containing a date data value that has an explicit
+ * timezone.
  */
 public interface IDateWithTimeZoneItem extends IDateItem {
   /**
@@ -76,7 +77,8 @@ public interface IDateWithTimeZoneItem extends IDateItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item cast to this type
+   * @return the original item if it is already this type, otherwise a new item
+   *         cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */

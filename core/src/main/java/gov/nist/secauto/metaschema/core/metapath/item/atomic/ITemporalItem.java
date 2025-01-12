@@ -10,7 +10,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.Duration;
 import java.time.ZoneOffset;
-import java.util.Comparator;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -50,7 +49,8 @@ public interface ITemporalItem extends IAnyAtomicItem {
   // *
   // * @param item
   // * the item to cast
-  // * @return the original item if it is already this type, otherwise a new item cast to this type
+  // * @return the original item if it is already this type, otherwise a new item
+  // cast to this type
   // * @throws InvalidValueForCastFunctionException
   // * if the provided {@code item} cannot be cast to this type
   // */
@@ -74,8 +74,10 @@ public interface ITemporalItem extends IAnyAtomicItem {
   // try {
   // retval = IDateItem.valueOf(value);
   // } catch (IllegalStateException ex2) {
-  // InvalidValueForCastFunctionException newEx = new InvalidValueForCastFunctionException(
-  // String.format("Value '%s' cannot be parsed as either a date or date/time value", value),
+  // InvalidValueForCastFunctionException newEx = new
+  // InvalidValueForCastFunctionException(
+  // String.format("Value '%s' cannot be parsed as either a date or date/time
+  // value", value),
   // ex2);
   // newEx.addSuppressed(ex);
   // throw newEx; // NOPMD context as suppressed
@@ -117,15 +119,5 @@ public interface ITemporalItem extends IAnyAtomicItem {
    * @return a negative integer, zero, or a positive integer if this value is less than, equal to, or
    *         greater than the {@code item}.
    */
-  default int compareTo(@NonNull ITemporalItem item) {
-    return Comparator.comparing(ITemporalItem::getYear)
-        .thenComparing(ITemporalItem::getMonth)
-        .thenComparing(ITemporalItem::getDay)
-        .thenComparing(ITemporalItem::getHour)
-        .thenComparing(ITemporalItem::getMinute)
-        .thenComparing(ITemporalItem::getSecond)
-        .thenComparing(ITemporalItem::getNano)
-        .thenComparing(ITemporalItem::getZoneOffset, Comparator.nullsFirst(Comparator.naturalOrder()))
-        .compare(this, item);
-  }
+  int compareTo(@NonNull ITemporalItem item);
 }

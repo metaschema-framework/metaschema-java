@@ -68,7 +68,8 @@ public abstract class AbstractConvertSubcommand
   }
 
   /**
-   * Used by implementing classes to provide for execution of a conversion command.
+   * Used by implementing classes to provide for execution of a conversion
+   * command.
    */
   protected abstract static class AbstractConversionCommandExecutor
       extends AbstractCommandExecutor {

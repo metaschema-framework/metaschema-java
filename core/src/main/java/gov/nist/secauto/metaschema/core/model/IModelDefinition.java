@@ -12,12 +12,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Represents a Metaschema definition for a complex object that may contain flags.
+ * Represents a Metaschema definition for a complex object that may contain
+ * flags.
  */
 public interface IModelDefinition extends IDefinition, IContainer {
   /**
-   * Tests if the provided definition represents complex data. The data is complex if one of the
-   * following is true:
+   * Tests if the provided definition represents complex data. The data is complex
+   * if one of the following is true:
    * <ul>
    * <li>The instance is a {@link IAssemblyDefinition}.
    * <li>The instance is a {@link IFieldDefinition} that has flags.
@@ -44,18 +45,20 @@ public interface IModelDefinition extends IDefinition, IContainer {
   }
 
   /**
-   * Retrieves a flag instance, by the flag's effective name-based qualified name index.
+   * Retrieves a flag instance, by the flag's effective name-based qualified name
+   * index.
    *
    * @param index
    *          the flag's name-based qualified name index
-   * @return the matching flag instance, or {@code null} if there is no flag matching the specified
-   *         name
+   * @return the matching flag instance, or {@code null} if there is no flag
+   *         matching the specified name
    */
   @Nullable
   IFlagInstance getFlagInstanceByName(@NonNull Integer index);
 
   /**
-   * Retrieves the flag instances for all flags defined on the containing definition.
+   * Retrieves the flag instances for all flags defined on the containing
+   * definition.
    *
    * @return the flags
    */
@@ -63,10 +66,11 @@ public interface IModelDefinition extends IDefinition, IContainer {
   Collection<? extends IFlagInstance> getFlagInstances();
 
   /**
-   * Retrieves the flag instance to use as as the property name for the containing object in JSON
-   * who's value will be the object containing the flag.
+   * Retrieves the flag instance to use as as the property name for the containing
+   * object in JSON who's value will be the object containing the flag.
    *
-   * @return the flag instance if a JSON key is configured, or {@code null} otherwise
+   * @return the flag instance if a JSON key is configured, or {@code null}
+   *         otherwise
    */
   // TODO: remove once moved to the instance side
   @Nullable

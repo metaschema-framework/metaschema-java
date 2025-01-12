@@ -52,9 +52,8 @@ public interface IYearMonthDurationItem extends IDurationItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("Invalid year/month duration value '%s'. %s",
-              value,
-              ex.getLocalizedMessage()),
+          String.format("Invalid year/month duration value '%s'.",
+              value),
           ex);
     }
   }

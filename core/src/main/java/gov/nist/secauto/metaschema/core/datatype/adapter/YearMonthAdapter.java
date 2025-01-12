@@ -5,9 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.datatype.adapter;
 
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
-
-import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
@@ -15,8 +12,9 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.Period;
-import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -26,11 +24,18 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * data type.
  */
 public class YearMonthAdapter
-    extends AbstractDataTypeAdapter<Period, IYearMonthDurationItem> {
+    extends AbstractDurationAdapter<Period, IYearMonthDurationItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
           EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "year-month-duration")));
+
+  private static final Pattern YEAR_MONTH_DURATION_PATTERN = Pattern.compile(
+      "^(?<sign>-)?"
+          + "P"
+          + "(?:(?<year>[0-9]+)Y)?"
+          + "(?:(?<month>[0-9]+)M)?"
+          + "$");
 
   YearMonthAdapter() {
     super(Period.class, IYearMonthDurationItem.class, IYearMonthDurationItem::cast);
@@ -42,24 +47,23 @@ public class YearMonthAdapter
   }
 
   @Override
-  public JsonFormatTypes getJsonRawType() {
-    return JsonFormatTypes.STRING;
-  }
-
-  @Override
   public Period copy(Object obj) {
     // value in immutable
     return (Period) obj;
   }
 
-  @SuppressWarnings("null")
   @Override
   public Period parse(String value) {
-    try {
-      return Period.parse(value);
-    } catch (DateTimeParseException ex) {
-      throw new IllegalArgumentException(ex.getLocalizedMessage(), ex);
+    Matcher matcher = YEAR_MONTH_DURATION_PATTERN.matcher(value);
+
+    if (!matcher.matches()) {
+      throw new IllegalArgumentException(
+          String.format("String duration '%s' is not a year/month duration.", value));
     }
+
+    String year = matcher.group(2);
+    String month = matcher.group(3);
+    return parsePeriod(matcher.group(1) != null, year, month);
   }
 
   @Override
@@ -67,5 +71,4 @@ public class YearMonthAdapter
     Period item = toValue(value);
     return IYearMonthDurationItem.valueOf(item);
   }
-
 }

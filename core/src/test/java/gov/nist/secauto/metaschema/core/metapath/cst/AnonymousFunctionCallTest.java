@@ -20,15 +20,15 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for anonymous function calls in Metapath expressions.
  * <p>
- * These tests validate the compilation and execution of anonymous functions as defined in the
- * Metaschema specification.
+ * These tests validate the compilation and execution of anonymous functions as
+ * defined in the Metaschema specification.
  */
 class AnonymousFunctionCallTest {
   private static final String NS = "http://example.com/ns";
 
   /**
-   * Tests the basic functionality of anonymous function definition and execution. This test
-   * validates:
+   * Tests the basic functionality of anonymous function definition and execution.
+   * This test validates:
    * <ul>
    * <li>Function definition using the 'let' syntax
    * <li>Function execution with string parameters

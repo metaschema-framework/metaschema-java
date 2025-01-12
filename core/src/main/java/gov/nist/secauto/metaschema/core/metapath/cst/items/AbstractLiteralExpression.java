@@ -13,7 +13,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A base class for all Metapath <a href="https://www.w3.org/TR/xpath-31/#id-literals">literal value
+ * A base class for all Metapath
+ * <a href="https://www.w3.org/TR/xpath-31/#id-literals">literal value
  * expressions</a>.
  *
  * @param <RESULT_TYPE>

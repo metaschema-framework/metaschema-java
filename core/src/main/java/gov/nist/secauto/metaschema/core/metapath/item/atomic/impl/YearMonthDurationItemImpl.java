@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.adapter.YearMonthAdapter;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
@@ -17,11 +16,10 @@ import java.util.Objects;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An implementation of a Metapath atomic item containing a duration data value
- * in years and months.
+ * An implementation of a Metapath atomic item containing a duration data value in years and months.
  */
 public class YearMonthDurationItemImpl
-    extends AbstractAnyAtomicItem<Period>
+    extends AbstractDurationItem<Period>
     implements IYearMonthDurationItem {
 
   /**
@@ -54,11 +52,6 @@ public class YearMonthDurationItemImpl
   public boolean equals(Object obj) {
     return this == obj
         || obj instanceof IYearMonthDurationItem && compareTo((IYearMonthDurationItem) obj) == 0;
-  }
-
-  @Override
-  protected String getValueSignature() {
-    return "'" + asString() + "'";
   }
 
   @Override

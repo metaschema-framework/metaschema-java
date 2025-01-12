@@ -123,8 +123,8 @@ public class MetaschemaXmlReader
   /**
    * Parses XML into a bound object based on the provided {@code definition}.
    * <p>
-   * Parses the {@link XMLStreamConstants#START_DOCUMENT}, any processing instructions, and the
-   * element.
+   * Parses the {@link XMLStreamConstants#START_DOCUMENT}, any processing
+   * instructions, and the element.
    *
    * @param <CLASS>
    *          the returned object type
@@ -171,8 +171,8 @@ public class MetaschemaXmlReader
   }
 
   /**
-   * Read the XML attribute data described by the {@code targetDefinition} and apply it to the
-   * provided {@code targetObject}.
+   * Read the XML attribute data described by the {@code targetDefinition} and
+   * apply it to the provided {@code targetObject}.
    *
    * @param targetDefinition
    *          the Module definition that describes the syntax of the data to read
@@ -234,8 +234,8 @@ public class MetaschemaXmlReader
   }
 
   /**
-   * Read the XML element data described by the {@code targetDefinition} and apply it to the provided
-   * {@code targetObject}.
+   * Read the XML element data described by the {@code targetDefinition} and apply
+   * it to the provided {@code targetObject}.
    *
    * @param targetDefinition
    *          the Module definition that describes the syntax of the data to read
@@ -283,7 +283,8 @@ public class MetaschemaXmlReader
    *
    * @param targetInstance
    *          the model instance that describes the syntax of the data to read
-   * @return {@code true} if the Module instance needs to be parsed, or {@code false} otherwise
+   * @return {@code true} if the Module instance needs to be parsed, or
+   *         {@code false} otherwise
    * @throws XMLStreamException
    *           if an error occurred while parsing XML events
    */
@@ -306,15 +307,15 @@ public class MetaschemaXmlReader
   }
 
   /**
-   * Read the data associated with the {@code instance} and apply it to the provided
-   * {@code parentObject}.
+   * Read the data associated with the {@code instance} and apply it to the
+   * provided {@code parentObject}.
    *
    * @param instance
    *          the instance to parse data for
    * @param parentObject
    *          the Java object that data parsed by this method will be stored in
-   * @return {@code true} if the instance was parsed, or {@code false} if the data did not contain
-   *         information for this instance
+   * @return {@code true} if the instance was parsed, or {@code false} if the data
+   *         did not contain information for this instance
    * @throws IOException
    *           if an error occurred while parsing the input
    */

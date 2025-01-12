@@ -18,15 +18,16 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * The CST node for a Metapath <a href="https://www.w3.org/TR/xpath-31/#combining_seq">except
+ * The CST node for a Metapath
+ * <a href="https://www.w3.org/TR/xpath-31/#combining_seq">except
  * expression</a>.
  */
 public class Except
     extends AbstractFilterExpression {
 
   /**
-   * Construct a except filter expression, which removes the items resulting from the filter
-   * expression from the items expression.
+   * Construct a except filter expression, which removes the items resulting from
+   * the filter expression from the items expression.
    *
    * @param text
    *          the parsed text of the expression

@@ -20,20 +20,22 @@ import java.lang.annotation.Target;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Identifies that the annotation target is a bound property that references a Module field.
+ * Identifies that the annotation target is a bound property that references a
+ * Module field.
  * <p>
- * For XML serialization, the {@link #useName()} identifies the name of the element to use for this
- * element.
+ * For XML serialization, the {@link #useName()} identifies the name of the
+ * element to use for this element.
  * <p>
- * For JSON and YAML serializations, the {@link #useName()} identifies the property/item name to
- * use.
+ * For JSON and YAML serializations, the {@link #useName()} identifies the
+ * property/item name to use.
  * <p>
  * The field must be either:
  * <ol>
- * <li>A Module data type or a collection whose item value is Module data type, with a non-null
- * {@link #typeAdapter()}.
+ * <li>A Module data type or a collection whose item value is Module data type,
+ * with a non-null {@link #typeAdapter()}.
  * <li>A type or a collection whose item value is a type based on a class with a
- * {@link MetaschemaField} annotation, with a property annotated with {@link BoundFieldValue}.
+ * {@link MetaschemaField} annotation, with a property annotated with
+ * {@link BoundFieldValue}.
  * </ol>
  */
 @Documented
@@ -43,7 +45,8 @@ public @interface BoundField {
   /**
    * Get the documentary formal name of the field.
    * <p>
-   * If the value is "##none", then the description will be considered {@code null}.
+   * If the value is "##none", then the description will be considered
+   * {@code null}.
    *
    * @return a markdown string or {@code "##none"} if no formal name is provided
    */
@@ -53,7 +56,8 @@ public @interface BoundField {
   /**
    * Get the documentary description of the field.
    * <p>
-   * If the value is "##none", then the description will be considered {@code null}.
+   * If the value is "##none", then the description will be considered
+   * {@code null}.
    *
    * @return a markdown string or {@code "##none"} if no description is provided
    */
@@ -61,10 +65,12 @@ public @interface BoundField {
   String description() default ModelUtil.NO_STRING_VALUE;
 
   /**
-   * The model name to use for JSON/YAML singleton values and associated XML elements.
+   * The model name to use for JSON/YAML singleton values and associated XML
+   * elements.
    * <p>
-   * If the value is "##none", then the use name will be provided by the definition or by the field
-   * name if the item value class is missing the {@link MetaschemaField} annotation.
+   * If the value is "##none", then the use name will be provided by the
+   * definition or by the field name if the item value class is missing the
+   * {@link MetaschemaField} annotation.
    *
    * @return the name
    */
@@ -91,7 +97,8 @@ public @interface BoundField {
   /**
    * The default value of the field represented as a string.
    * <p>
-   * The value {@link ModelUtil#NULL_VALUE} is used to indicate if no default value is provided.
+   * The value {@link ModelUtil#NULL_VALUE} is used to indicate if no default
+   * value is provided.
    *
    * @return the default value
    */
@@ -99,14 +106,16 @@ public @interface BoundField {
   String defaultValue() default ModelUtil.NULL_VALUE;
 
   /**
-   * If the data type allows it, determines if the field's value must be wrapped with an XML element.
+   * If the data type allows it, determines if the field's value must be wrapped
+   * with an XML element.
    *
    * @return {@code true} if the field must be wrapped, or {@code false} otherwise
    */
   boolean inXmlWrapped() default IFieldInstance.DEFAULT_FIELD_IN_XML_WRAPPED;
 
   /**
-   * A non-negative number that indicates the minimum occurrence of the model instance.
+   * A non-negative number that indicates the minimum occurrence of the model
+   * instance.
    *
    * @return a non-negative number
    */
@@ -137,16 +146,18 @@ public @interface BoundField {
   /**
    * Used to provide grouping information.
    * <p>
-   * This annotation is required when the value of {@link #maxOccurs()} is greater than 1.
+   * This annotation is required when the value of {@link #maxOccurs()} is greater
+   * than 1.
    *
-   * @return the configured {@link GroupAs} or the default value with a {@code null}
-   *         {@link GroupAs#name()}
+   * @return the configured {@link GroupAs} or the default value with a
+   *         {@code null} {@link GroupAs#name()}
    */
   @NonNull
   GroupAs groupAs() default @GroupAs(name = ModelUtil.NULL_VALUE);
 
   /**
-   * Get the value constraints defined for this Metaschema field inline definition.
+   * Get the value constraints defined for this Metaschema field inline
+   * definition.
    *
    * @return the value constraints
    */

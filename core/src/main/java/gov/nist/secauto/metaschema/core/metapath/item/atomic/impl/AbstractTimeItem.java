@@ -5,21 +5,19 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An abstract implementation of a Metapath atomic item containing a date/time
- * data value.
+ * An abstract implementation of a Metapath atomic item containing a date/time data value.
  *
  * @param <TYPE>
  *          the Java type of the wrapped value
  */
 public abstract class AbstractTimeItem<TYPE>
-    extends AbstractAnyAtomicItem<TYPE>
+    extends AbstractTemporalItem<TYPE>
     implements ITimeItem {
   /**
    * Construct a new item with the provided {@code value}.
@@ -29,11 +27,6 @@ public abstract class AbstractTimeItem<TYPE>
    */
   protected AbstractTimeItem(@NonNull TYPE value) {
     super(value);
-  }
-
-  @Override
-  protected String getValueSignature() {
-    return "'" + asString() + "'";
   }
 
   @Override

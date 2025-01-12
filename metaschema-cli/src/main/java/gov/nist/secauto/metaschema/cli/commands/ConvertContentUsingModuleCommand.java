@@ -36,8 +36,8 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * This command implementation supports the conversion of a content instance between supported
- * formats based on a provided Metaschema module.
+ * This command implementation supports the conversion of a content instance
+ * between supported formats based on a provided Metaschema module.
  */
 class ConvertContentUsingModuleCommand
     extends AbstractConvertSubcommand {

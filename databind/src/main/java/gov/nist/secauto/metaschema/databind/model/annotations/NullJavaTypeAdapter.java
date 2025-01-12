@@ -74,13 +74,13 @@ public final class NullJavaTypeAdapter
 
     @Override
     public @NonNull
-        IAnyAtomicItem toAtomicItem() {
+    IAnyAtomicItem toAtomicItem() {
       throw new UnsupportedOperationException(NOT_VALID);
     }
 
     @Override
     public @NonNull
-        String asString() {
+    String asString() {
       throw new UnsupportedOperationException(NOT_VALID);
     }
 

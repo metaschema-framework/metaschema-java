@@ -5,16 +5,22 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.impl;
 
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.bool;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.dayTimeDuration;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.decimal;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.duration;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.yearMonthDuration;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
@@ -186,6 +192,33 @@ class OperationFunctionsTest {
   }
 
   @Nested
+  @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+  class Duration {
+    private Stream<Arguments> provideValuesDurationEqual() {
+      return Stream.of(
+          Arguments.of(bool(true), duration("P1Y"), duration("P12M")),
+          Arguments.of(bool(true), duration("PT24H"), duration("P1D")),
+          Arguments.of(bool(false), duration("P1Y"), duration("P365D")),
+          Arguments.of(bool(true), duration("P0Y"), duration("P0D")),
+          Arguments.of(bool(true), yearMonthDuration("P0Y"), dayTimeDuration("P0D")),
+          Arguments.of(bool(false), yearMonthDuration("P1Y"), dayTimeDuration("P365D")),
+          Arguments.of(bool(true), yearMonthDuration("P2Y"), yearMonthDuration("P24M")),
+          Arguments.of(bool(true), dayTimeDuration("P10D"), dayTimeDuration("PT240H")),
+          Arguments.of(bool(true), duration("P2Y0M0DT0H0M0S"), yearMonthDuration("P24M")),
+          Arguments.of(bool(true), duration("P0Y0M10D"), dayTimeDuration("PT240H")));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValuesDurationEqual")
+    void testOpDurationEqual(
+        @NonNull IBooleanItem expected,
+        @NonNull IDurationItem arg1,
+        @NonNull IDurationItem arg2) {
+      assertEquals(expected, OperationFunctions.opDurationEqual(arg1, arg2));
+    }
+  }
+
+  @Nested
   class YearMonthDuration {
 
     @Test
@@ -220,7 +253,7 @@ class OperationFunctionsTest {
     void testOpSubtractYearMonthDurationsOverflow() {
       DateTimeFunctionException thrown = assertThrows(DateTimeFunctionException.class, () -> {
         OperationFunctions.opSubtractYearMonthDurations(
-            IYearMonthDurationItem.valueOf("P-" + Integer.MAX_VALUE + "Y"),
+            IYearMonthDurationItem.valueOf("-P" + Integer.MAX_VALUE + "Y"),
             IYearMonthDurationItem.valueOf("P" + Integer.MAX_VALUE + "Y"));
       });
       assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getCode());
@@ -291,8 +324,9 @@ class OperationFunctionsTest {
     void testOpAddDayTimeDurationsOverflow() {
       DateTimeFunctionException thrown = assertThrows(DateTimeFunctionException.class, () -> {
         OperationFunctions.opAddDayTimeDurations(
-            IDayTimeDurationItem.valueOf("PT" + Long.MAX_VALUE + "S"),
-            IDayTimeDurationItem.valueOf("PT" + Long.MAX_VALUE + "S"));
+            // subtracting 807 ensures the long doesn't overflow
+            IDayTimeDurationItem.valueOf("PT" + (Long.MAX_VALUE - 807) + "S"),
+            IDayTimeDurationItem.valueOf("PT" + (Long.MAX_VALUE - 807) + "S"));
       });
       assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getCode());
     }
@@ -310,8 +344,8 @@ class OperationFunctionsTest {
     void testOpSubtractDayTimeDurationsOverflow() {
       DateTimeFunctionException thrown = assertThrows(DateTimeFunctionException.class, () -> {
         OperationFunctions.opSubtractDayTimeDurations(
-            IDayTimeDurationItem.valueOf("PT-" + Long.MAX_VALUE + "S"),
-            IDayTimeDurationItem.valueOf("PT" + Long.MAX_VALUE + "S"));
+            IDayTimeDurationItem.valueOf("-PT" + (Long.MAX_VALUE - 807) + "S"),
+            IDayTimeDurationItem.valueOf("PT" + (Long.MAX_VALUE - 807) + "S"));
       });
       assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getCode());
     }
@@ -329,8 +363,8 @@ class OperationFunctionsTest {
     void testOpMultiplyDayTimeDurationsOverflow() {
       DateTimeFunctionException thrown = assertThrows(DateTimeFunctionException.class, () -> {
         OperationFunctions.opMultiplyDayTimeDuration(
-            IDayTimeDurationItem.valueOf("PT" + Long.MAX_VALUE + "S"),
-            IDecimalItem.valueOf("2.5"));
+            IDayTimeDurationItem.valueOf("PT" + Long.MAX_VALUE / 2 + "S"),
+            IDecimalItem.valueOf("5"));
       });
       assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getCode());
     }

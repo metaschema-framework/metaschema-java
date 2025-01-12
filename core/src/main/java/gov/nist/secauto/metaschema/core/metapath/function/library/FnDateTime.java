@@ -28,8 +28,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Implements the XPath 3.1
- * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
  * function.
  */
 public final class FnDateTime {
@@ -76,16 +76,16 @@ public final class FnDateTime {
   /**
    * Create a date/time item from the provided date and time values.
    * <p>
-   * Implements the XPath 3.1
-   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
+   * Implements the XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
    * function.
    *
    * @param date
    *          the date value to get the year, month, and day from or {@code null}
    * @param time
    *          the time value to get the hour, minute, seconds from or {@code null}
-   * @return the data/time value composed of the provided date and time values or {@code null} if
-   *         either date or time value is {@code null}
+   * @return the data/time value composed of the provided date and time values or
+   *         {@code null} if either date or time value is {@code null}
    */
   @Nullable
   public static IDateTimeItem fnDateTimeOfNullable(@Nullable IDateItem date, @Nullable ITimeItem time) {
@@ -97,8 +97,8 @@ public final class FnDateTime {
   /**
    * Create a date/time item from the provided date and time values.
    * <p>
-   * Implements the XPath 3.1
-   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
+   * Implements the XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
    * function.
    *
    * @param date

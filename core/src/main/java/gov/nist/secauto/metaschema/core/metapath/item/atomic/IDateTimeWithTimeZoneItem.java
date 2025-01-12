@@ -17,12 +17,13 @@ import java.time.ZonedDateTime;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item representing a date/time value in the Metapath system with an explicit
- * time zone.
+ * An atomic Metapath item representing a date/time value in the Metapath system
+ * with an explicit time zone.
  * <p>
- * This interface provides functionality for handling date/time values with time zone information,
- * supporting parsing, casting, and comparison operations. It works in conjunction with
- * {@link ZonedDateTime} to eliminate time zone ambiguity.
+ * This interface provides functionality for handling date/time values with time
+ * zone information, supporting parsing, casting, and comparison operations. It
+ * works in conjunction with {@link ZonedDateTime} to eliminate time zone
+ * ambiguity.
  */
 public interface IDateTimeWithTimeZoneItem extends IDateTimeItem {
   /**
@@ -64,8 +65,9 @@ public interface IDateTimeWithTimeZoneItem extends IDateTimeItem {
   /**
    * Construct a new date/time item using the provided {@code value}.
    * <p>
-   * This method handles dates with explicit timezone information using ZonedDateTime. The timezone is
-   * preserved as specified in the input and is significant for date/time operations and comparisons.
+   * This method handles dates with explicit timezone information using
+   * ZonedDateTime. The timezone is preserved as specified in the input and is
+   * significant for date/time operations and comparisons.
    *
    * @param value
    *          a date/time, with time zone information
@@ -81,7 +83,8 @@ public interface IDateTimeWithTimeZoneItem extends IDateTimeItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item cast to this type
+   * @return the original item if it is already this type, otherwise a new item
+   *         cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */

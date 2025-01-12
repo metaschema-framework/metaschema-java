@@ -24,12 +24,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * An atomic Metapath item representing a date value in the Metapath system with or without an
- * explicit time zone.
+ * An atomic Metapath item representing a date value in the Metapath system with
+ * or without an explicit time zone.
  * <p>
- * This interface provides functionality for handling date/time values with or without time zone
- * information, supporting parsing, casting, and comparison operations. It works in conjunction with
- * {@link ZonedDateTime} to handle time zone ambiguity.
+ * This interface provides functionality for handling date/time values with or
+ * without time zone information, supporting parsing, casting, and comparison
+ * operations. It works in conjunction with {@link ZonedDateTime} to handle time
+ * zone ambiguity.
  */
 public interface IDateItem extends ICalendarTemporalItem {
   /**
@@ -71,15 +72,15 @@ public interface IDateItem extends ICalendarTemporalItem {
   /**
    * Construct a new date item using the provided {@code value}.
    * <p>
-   * This method handles recording if an explicit timezone was provided using the {@code hasTimeZone}
-   * parameter. The {@link AmbiguousDate#hasTimeZone()} method can be called to determine if timezone
-   * information is present.
+   * This method handles recording if an explicit timezone was provided using the
+   * {@code hasTimeZone} parameter. The {@link AmbiguousDate#hasTimeZone()} method
+   * can be called to determine if timezone information is present.
    *
    * @param value
    *          a date, without time zone information
    * @param hasTimeZone
-   *          {@code true} if the date/time is intended to have an associated time zone or
-   *          {@code false} otherwise
+   *          {@code true} if the date/time is intended to have an associated time
+   *          zone or {@code false} otherwise
    * @return the new item
    * @see AmbiguousDateTime for more details on timezone handling
    */
@@ -184,18 +185,20 @@ public interface IDateItem extends ICalendarTemporalItem {
   }
 
   /**
-   * Adjusts an xs:dateTime value to a specific timezone, or to no timezone at all.
+   * Adjusts an xs:dateTime value to a specific timezone, or to no timezone at
+   * all.
    * <p>
    * This method does one of the following things based on the arguments.
    * <ol>
-   * <li>If the provided offset is {@code null} and the provided date/time value has a timezone, the
-   * timezone is maked absent.
-   * <li>If the provided offset is {@code null} and the provided date/time value has an absent
-   * timezone, the date/time value is returned.
-   * <li>If the provided offset is not {@code null} and the provided date/time value has an absent
-   * timezone, the date/time value is returned with the new timezone applied.
-   * <li>Otherwise, the provided timezone is applied to the date/time value adjusting the time
-   * instant.
+   * <li>If the provided offset is {@code null} and the provided date/time value
+   * has a timezone, the timezone is maked absent.
+   * <li>If the provided offset is {@code null} and the provided date/time value
+   * has an absent timezone, the date/time value is returned.
+   * <li>If the provided offset is not {@code null} and the provided date/time
+   * value has an absent timezone, the date/time value is returned with the new
+   * timezone applied.
+   * <li>Otherwise, the provided timezone is applied to the date/time value
+   * adjusting the time instant.
    * </ol>
    * <p>
    * Implements the XPath 3.1 <a
@@ -206,8 +209,9 @@ public interface IDateItem extends ICalendarTemporalItem {
    *          the timezone offset to use or {@code null}
    * @return the adjusted date/time value
    * @throws DateTimeFunctionException
-   *           with code {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if the offset
-   *           is < -PT14H or > PT14H
+   *           with code
+   *           {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if
+   *           the offset is < -PT14H or > PT14H
    */
   @Override
   default IDateItem replaceTimezone(@Nullable IDayTimeDurationItem offset) {
@@ -228,7 +232,8 @@ public interface IDateItem extends ICalendarTemporalItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item cast to this type
+   * @return the original item if it is already this type, otherwise a new item
+   *         cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */

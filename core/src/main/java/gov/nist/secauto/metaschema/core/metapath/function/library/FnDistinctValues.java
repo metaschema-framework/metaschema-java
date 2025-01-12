@@ -25,10 +25,10 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements
- * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-distinct-values">fn:distinct-values</a>
- * functions. This implementation does not implement the two-arg variant with collation at this
- * time.
+ * /** Implements <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-distinct-values">fn:distinct-values</a>
+ * functions. This implementation does not implement the two-arg variant with
+ * collation at this time.
  */
 public final class FnDistinctValues {
   @NonNull
@@ -64,8 +64,8 @@ public final class FnDistinctValues {
   /**
    * Get the first occurrence of each distinct value in the provided list.
    * <p>
-   * Based on the XPath 3.1
-   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-distinct-values">fn:distinct-values</a>
+   * Based on the XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-distinct-values">fn:distinct-values</a>
    * function.
    *
    * @param values

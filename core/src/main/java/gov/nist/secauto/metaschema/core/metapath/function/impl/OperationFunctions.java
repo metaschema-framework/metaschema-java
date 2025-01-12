@@ -694,8 +694,7 @@ public final class OperationFunctions {
   public static IBooleanItem opYearMonthDurationGreaterThan(
       @NonNull IYearMonthDurationItem arg1,
       @NonNull IYearMonthDurationItem arg2) {
-    // this is only an approximation
-    return IBooleanItem.valueOf(arg1.compareTo(arg2) > 0);
+    return opYearMonthDurationLessThan(arg2, arg1);
   }
 
   /**
@@ -713,7 +712,7 @@ public final class OperationFunctions {
   public static IBooleanItem opDayTimeDurationGreaterThan(
       @NonNull IDayTimeDurationItem arg1,
       @NonNull IDayTimeDurationItem arg2) {
-    return IBooleanItem.valueOf(arg1.compareTo(arg2) > 0);
+    return opDayTimeDurationLessThan(arg2, arg1);
   }
 
   /**
@@ -784,8 +783,7 @@ public final class OperationFunctions {
   public static IBooleanItem opYearMonthDurationLessThan(
       @NonNull IYearMonthDurationItem arg1,
       @NonNull IYearMonthDurationItem arg2) {
-    // this is only an approximation
-    return IBooleanItem.valueOf(arg1.compareTo(arg2) < 0);
+    return IBooleanItem.valueOf(arg1.asMonths() < arg2.asMonths());
   }
 
   /**
@@ -803,7 +801,7 @@ public final class OperationFunctions {
   public static IBooleanItem opDayTimeDurationLessThan(
       @NonNull IDayTimeDurationItem arg1,
       @NonNull IDayTimeDurationItem arg2) {
-    return IBooleanItem.valueOf(arg1.compareTo(arg2) < 0);
+    return IBooleanItem.valueOf(arg1.asSeconds() < arg2.asSeconds());
   }
 
   /**

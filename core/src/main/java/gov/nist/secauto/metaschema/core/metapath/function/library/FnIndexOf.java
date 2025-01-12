@@ -25,9 +25,10 @@ import java.util.ListIterator;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements <a href= "https://www.w3.org/TR/xpath-functions-31/#func-index-of">fn:index-of</a>
- * functions. This implementation does not implement the three-arg variant with collation at this
- * time.
+ * /** Implements <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-index-of">fn:index-of</a>
+ * functions. This implementation does not implement the three-arg variant with
+ * collation at this time.
  */
 public final class FnIndexOf {
   @NonNull
@@ -67,17 +68,19 @@ public final class FnIndexOf {
   }
 
   /**
-   * Determine if the string provided in the first argument contains the string in the second argument
-   * as a substring.
+   * Determine if the string provided in the first argument contains the string in
+   * the second argument as a substring.
    * <p>
-   * Based on the XPath 3.1
-   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-index-of">fn:index-of</a> function.
+   * Based on the XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-index-of">fn:index-of</a>
+   * function.
    *
    * @param items
    *          the items to match against
    * @param search
    *          the item to match
-   * @return a list of index numbers indicating the position of matches in the sequence
+   * @return a list of index numbers indicating the position of matches in the
+   *         sequence
    */
   @NonNull
   public static ISequence<IIntegerItem> fnIndexOf(

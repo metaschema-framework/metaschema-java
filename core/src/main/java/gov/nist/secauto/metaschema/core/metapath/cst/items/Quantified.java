@@ -30,7 +30,8 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An XPath 3.1 <a href= "https://www.w3.org/TR/xpath-31/#id-quantified-expressions">quantified
+ * An XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-31/#id-quantified-expressions">quantified
  * expression</a>.
  */
 public class Quantified
@@ -40,21 +41,23 @@ public class Quantified
    */
   public enum Quantifier {
     /**
-     * The quantified expression is {@code true} if at least one evaluation of the test expression has
-     * the <a href="https://www.w3.org/TR/xpath-31/#dt-ebv">effective boolean value</a> {@code true};
-     * otherwise the quantified expression is {@code false}.
+     * The quantified expression is {@code true} if at least one evaluation of the
+     * test expression has the
+     * <a href="https://www.w3.org/TR/xpath-31/#dt-ebv">effective boolean value</a>
+     * {@code true}; otherwise the quantified expression is {@code false}.
      * <p>
-     * This rule implies that, if the in-clauses generate zero binding tuples, the value of the
-     * quantified expression is {@code false}.
+     * This rule implies that, if the in-clauses generate zero binding tuples, the
+     * value of the quantified expression is {@code false}.
      */
     SOME,
     /**
-     * the quantified expression is {@code true} if every evaluation of the test expression has the
-     * <a href="https://www.w3.org/TR/xpath-31/#dt-ebv">effective boolean value</a> {@code true};
-     * otherwise the quantified expression is {@code false}.
+     * the quantified expression is {@code true} if every evaluation of the test
+     * expression has the <a href="https://www.w3.org/TR/xpath-31/#dt-ebv">effective
+     * boolean value</a> {@code true}; otherwise the quantified expression is
+     * {@code false}.
      * <p>
-     * This rule implies that, if the in-clauses generate zero binding tuples, the value of the
-     * quantified expression is {@code true}.
+     * This rule implies that, if the in-clauses generate zero binding tuples, the
+     * value of the quantified expression is {@code true}.
      */
     EVERY;
   }
@@ -74,10 +77,11 @@ public class Quantified
    * @param quantifier
    *          the quantifier operation
    * @param inClauses
-   *          the set of expressions that define the variables to use for determining the Cartesian
-   *          product for evaluation
+   *          the set of expressions that define the variables to use for
+   *          determining the Cartesian product for evaluation
    * @param satisfies
-   *          the expression used for evaluation using the Cartesian product of the variables
+   *          the expression used for evaluation using the Cartesian product of
+   *          the variables
    */
   public Quantified(
       @NonNull String text,
@@ -101,8 +105,8 @@ public class Quantified
   }
 
   /**
-   * Get the set of expressions that define the variables to use for determining the Cartesian product
-   * for evaluation.
+   * Get the set of expressions that define the variables to use for determining
+   * the Cartesian product for evaluation.
    *
    * @return the variable names mapped to the associated Metapath expression
    */
@@ -112,7 +116,8 @@ public class Quantified
   }
 
   /**
-   * Get the expression used for evaluation using the Cartesian product of the variables.
+   * Get the expression used for evaluation using the Cartesian product of the
+   * variables.
    *
    * @return the evaluation expression
    */

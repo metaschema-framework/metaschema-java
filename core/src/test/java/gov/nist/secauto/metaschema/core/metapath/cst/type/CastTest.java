@@ -96,8 +96,8 @@ class CastTest
 
         Arguments.of(string("1"), "meta:integer", integer(1)),
 
-        Arguments.of(yearMonthDuration("P1Y2M3D"), "meta:year-month-duration", yearMonthDuration("P1Y2M3D")),
-        Arguments.of(string("P1Y2M3D"), "meta:year-month-duration", yearMonthDuration("P1Y2M3D")),
+        Arguments.of(yearMonthDuration("P1Y2M"), "meta:year-month-duration", yearMonthDuration("P1Y2M")),
+        Arguments.of(string("P1Y2M"), "meta:year-month-duration", yearMonthDuration("P1Y2M")),
 
         Arguments.of(null, "meta:string?", null));
   }

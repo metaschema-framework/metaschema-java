@@ -57,9 +57,11 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    * <p>
    * A singleton item in a sequence will have a position value of {@code 1}.
    * <p>
-   * The value {@code 1} is used as the starting value to align with the XPath specification.
+   * The value {@code 1} is used as the starting value to align with the XPath
+   * specification.
    *
-   * @return a positive integer value designating this instance's position within a collection
+   * @return a positive integer value designating this instance's position within
+   *         a collection
    */
   default int getPosition() {
     // only model node items have positions other than 1
@@ -67,7 +69,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Generate a path for this node in the directed node graph, using the provided path formatter.
+   * Generate a path for this node in the directed node graph, using the provided
+   * path formatter.
    */
   @Override
   String format(IPathFormatter formatter);
@@ -75,8 +78,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   /**
    * Gets the value of the provided node item.
    * <p>
-   * If the provided node item is a document, this method get the first child node item's value, since
-   * a document doesn't have a value.
+   * If the provided node item is a document, this method get the first child node
+   * item's value, since a document doesn't have a value.
    *
    * @param <CLASS>
    *          the type of the bound object to return
@@ -102,15 +105,17 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   /**
    * Retrieve the parent node item if it exists.
    *
-   * @return the parent node item, or {@code null} if this node item has no known parent
+   * @return the parent node item, or {@code null} if this node item has no known
+   *         parent
    */
   INodeItem getParentNodeItem();
 
   /**
-   * Retrieve the parent content node item if it exists. A content node is a non-document node.
+   * Retrieve the parent content node item if it exists. A content node is a
+   * non-document node.
    *
-   * @return the parent content node item, or {@code null} if this node item has no known parent
-   *         content node item
+   * @return the parent content node item, or {@code null} if this node item has
+   *         no known parent content node item
    */
   IModelNodeItem<?, ?> getParentContentNodeItem();
 
@@ -155,8 +160,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get a stream of all ancestors of this node item. The stream is ordered from closest to farthest
-   * ancestor.
+   * Get a stream of all ancestors of this node item. The stream is ordered from
+   * closest to farthest ancestor.
    *
    * @return a stream of ancestor node items
    */
@@ -166,8 +171,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get a stream of this and all ancestors of this node item. The stream is ordered from self, then
-   * closest to farthest ancestor.
+   * Get a stream of this and all ancestors of this node item. The stream is
+   * ordered from self, then closest to farthest ancestor.
    *
    * @return a stream of this node followed by all ancestor node items
    */
@@ -177,8 +182,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get a stream of the ancestors of the provided {@code item}. The stream is ordered from the
-   * farthest ancestor to the closest.
+   * Get a stream of the ancestors of the provided {@code item}. The stream is
+   * ordered from the farthest ancestor to the closest.
    *
    * @param item
    *          the target item to get ancestors for
@@ -192,8 +197,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get a stream of all descendant model items of this node item. The stream is ordered from closest
-   * to farthest descendants in a depth-first order.
+   * Get a stream of all descendant model items of this node item. The stream is
+   * ordered from closest to farthest descendants in a depth-first order.
    *
    * @return a stream of descendant node items
    */
@@ -203,8 +208,9 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get a stream of all descendant model items of the provided {@code item}. The stream is ordered
-   * from closest to farthest descendants in a depth-first order.
+   * Get a stream of all descendant model items of the provided {@code item}. The
+   * stream is ordered from closest to farthest descendants in a depth-first
+   * order.
    *
    * @param item
    *          the target item to get descendants for
@@ -222,8 +228,9 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get a stream of this node, followed by all descendant model items of this node item. The stream
-   * is ordered from closest to farthest descendants in a depth-first order.
+   * Get a stream of this node, followed by all descendant model items of this
+   * node item. The stream is ordered from closest to farthest descendants in a
+   * depth-first order.
    *
    * @return a stream of this node and descendant node items
    */
@@ -233,7 +240,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get the children of this node's parent that occur after this node in a depth-first order.
+   * Get the children of this node's parent that occur after this node in a
+   * depth-first order.
    *
    * @return a stream of nodes
    */
@@ -243,8 +251,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get the children of this node's parent, and their descendants, that occur before this node in a
-   * depth-first order.
+   * Get the children of this node's parent, and their descendants, that occur
+   * before this node in a depth-first order.
    *
    * @return a stream of nodes
    */
@@ -254,8 +262,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get the children of this node's parent, and their descendants, that occur before this node in a
-   * depth-first order.
+   * Get the children of this node's parent, and their descendants, that occur
+   * before this node in a depth-first order.
    *
    * @return a stream of nodes
    */
@@ -264,8 +272,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get the children of this node's parent, and their descendants, that occur after this node in a
-   * depth-first order.
+   * Get the children of this node's parent, and their descendants, that occur
+   * after this node in a depth-first order.
    *
    * @return a stream of nodes
    */
@@ -274,10 +282,11 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get the flags and value data associated this node. The resulting collection is expected to be
-   * ordered, with the results in document order.
+   * Get the flags and value data associated this node. The resulting collection
+   * is expected to be ordered, with the results in document order.
    * <p>
-   * The resulting collection may be modified, but such modification is not thread safe
+   * The resulting collection may be modified, but such modification is not thread
+   * safe
    *
    * @return a collection of flags
    */
@@ -289,7 +298,8 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    *
    * @param name
    *          the effective qualified name of the flag
-   * @return the flag with the matching effective name or {@code null} if no match was found
+   * @return the flag with the matching effective name or {@code null} if no match
+   *         was found
    */
   @Nullable
   IFlagNodeItem getFlagByName(@NonNull IEnhancedQName name);
@@ -306,32 +316,38 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
   }
 
   /**
-   * Get the model items (i.e., fields, assemblies) and value data associated this node. A given model
-   * instance can be multi-valued, so the value of each instance will be a list. The resulting
-   * collection is expected to be ordered, with the results in document order.
+   * Get the model items (i.e., fields, assemblies) and value data associated this
+   * node. A given model instance can be multi-valued, so the value of each
+   * instance will be a list. The resulting collection is expected to be ordered,
+   * with the results in document order.
    * <p>
-   * The resulting collection may be modified, but such modification is not thread safe
+   * The resulting collection may be modified, but such modification is not thread
+   * safe
    *
-   * @return a collection of list(s), with each list containing the items for a given model instance
+   * @return a collection of list(s), with each list containing the items for a
+   *         given model instance
    */
   @NonNull
   Collection<? extends List<? extends IModelNodeItem<?, ?>>> getModelItems();
 
   /**
-   * Get the collection of model items associated with the instance having the provided {@code name}.
+   * Get the collection of model items associated with the instance having the
+   * provided {@code name}.
    * <p>
-   * The resulting collection may be modified, but such modification is not thread safe
+   * The resulting collection may be modified, but such modification is not thread
+   * safe
    *
    * @param name
    *          the instance name to get model items for
-   * @return the sequence of items associated with the named model instance, or an empty list if an
-   *         instance with that name is not present
+   * @return the sequence of items associated with the named model instance, or an
+   *         empty list if an instance with that name is not present
    */
   @NonNull
   List<? extends IModelNodeItem<?, ?>> getModelItemsByName(@NonNull IEnhancedQName name);
 
   /**
-   * Get the model items (i.e., fields, assemblies) and value data associated this node as a stream.
+   * Get the model items (i.e., fields, assemblies) and value data associated this
+   * node as a stream.
    *
    * @return the stream of model items or an empty stream if none exist
    */

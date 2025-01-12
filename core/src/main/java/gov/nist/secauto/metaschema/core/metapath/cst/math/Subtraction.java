@@ -26,8 +26,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Implements the '-' operator for Metapath subtraction operations.
  * <p>
- * An XPath 3.1 <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic expression</a>
- * supporting subtraction.
+ * An XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
+ * expression</a> supporting subtraction.
  * <p>
  * Supports subtraction operations between:
  * <ul>

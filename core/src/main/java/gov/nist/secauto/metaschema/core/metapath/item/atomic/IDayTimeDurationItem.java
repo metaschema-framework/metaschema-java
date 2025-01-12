@@ -53,9 +53,8 @@ public interface IDayTimeDurationItem extends IDurationItem {
     } catch (IllegalArgumentException ex) {
       throw new InvalidTypeMetapathException(
           null,
-          String.format("Invalid day/time value '%s'. %s",
-              value,
-              ex.getLocalizedMessage()),
+          String.format("Invalid day/time value '%s',",
+              value),
           ex);
     }
   }

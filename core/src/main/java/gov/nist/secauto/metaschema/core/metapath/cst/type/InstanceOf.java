@@ -24,7 +24,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 /**
  * A compact syntax tree node that supports the Metapath
- * <a href="https://www.w3.org/TR/xpath-31/#id-instance-of">"instance of" operator</a>.
+ * <a href="https://www.w3.org/TR/xpath-31/#id-instance-of">"instance of"
+ * operator</a>.
  */
 public class InstanceOf
     extends AbstractExpression {

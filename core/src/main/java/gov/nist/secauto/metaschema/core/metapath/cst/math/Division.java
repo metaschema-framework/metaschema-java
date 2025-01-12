@@ -21,8 +21,9 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An XPath 3.1 <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic expression</a>
- * supporting division.
+ * An XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
+ * expression</a> supporting division.
  */
 public class Division
     extends AbstractBasicArithmeticExpression {
@@ -31,7 +32,8 @@ public class Division
       Map<Class<? extends IAnyAtomicItem>, OperationStrategy>> DIVISION_STRATEGIES = generateStrategies();
 
   /**
-   * An expression that gets the quotient result by dividing the dividend by the divisor.
+   * An expression that gets the quotient result by dividing the dividend by the
+   * divisor.
    *
    * @param text
    *          the parsed text of the expression

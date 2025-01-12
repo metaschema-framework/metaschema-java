@@ -20,8 +20,9 @@ import nl.talsmasoftware.lazy4j.Lazy;
 /**
  * A factory that produces qualified names.
  * <p>
- * This implementation uses an underlying integer-based cache to reduce the memory footprint of
- * qualified names and namespaces by reusing instances with the same namespace and local name.
+ * This implementation uses an underlying integer-based cache to reduce the
+ * memory footprint of qualified names and namespaces by reusing instances with
+ * the same namespace and local name.
  */
 public final class EQNameFactory {
   private static final Pattern URI_QUALIFIED_NAME = Pattern.compile("^Q\\{([^{}]*)\\}(.+)$");
@@ -52,7 +53,8 @@ public final class EQNameFactory {
   }
 
   /**
-   * Get an existing qualified name by looking up the cached entry using the provided index value.
+   * Get an existing qualified name by looking up the cached entry using the
+   * provided index value.
    *
    * @param index
    *          the index value to lookup
@@ -83,16 +85,17 @@ public final class EQNameFactory {
    * <p>
    * The name can be:
    * <ul>
-   * <li>A URI qualified name of the form <code>Q{URI}name</code>, where the URI represents the
-   * namespace
-   * <li>A lexical name of the forms <code>prefix:name</code> or <code>name</code>, where the prefix
+   * <li>A URI qualified name of the form <code>Q{URI}name</code>, where the URI
    * represents the namespace
+   * <li>A lexical name of the forms <code>prefix:name</code> or
+   * <code>name</code>, where the prefix represents the namespace
    * </ul>
    *
    * @param name
    *          the name to parse
    * @param resolver
-   *          the prefix resolver to use to determine the namespace for a given prefix
+   *          the prefix resolver to use to determine the namespace for a given
+   *          prefix
    * @return the parsed qualified name
    */
   @NonNull
@@ -108,8 +111,8 @@ public final class EQNameFactory {
   /**
    * Parse a URI qualified name.
    * <p>
-   * The name is expected to be a URI qualified name of the form <code>{URI}name</code>, where the URI
-   * represents the namespace.
+   * The name is expected to be a URI qualified name of the form
+   * <code>{URI}name</code>, where the URI represents the namespace.
    *
    * @param name
    *          the name to parse
@@ -135,13 +138,15 @@ public final class EQNameFactory {
   /**
    * Parse a lexical name as a qualified name.
    * <p>
-   * The name is expected to be a lexical name of the forms <code>prefix:name</code> or
-   * <code>name</code>, where the prefix represents the namespace.
+   * The name is expected to be a lexical name of the forms
+   * <code>prefix:name</code> or <code>name</code>, where the prefix represents
+   * the namespace.
    *
    * @param name
    *          the name to parse
    * @param resolver
-   *          the prefix resolver to use to determine the namespace for a given prefix
+   *          the prefix resolver to use to determine the namespace for a given
+   *          prefix
    * @return the parsed qualified name
    */
   @NonNull

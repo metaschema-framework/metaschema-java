@@ -20,7 +20,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 @SuppressWarnings("PMD.DataClass")
 public final class MetapathConstants {
   /**
-   * The namespace URI for Metapath data types and built-in casting functions, as a string.
+   * The namespace URI for Metapath data types and built-in casting functions, as
+   * a string.
    */
   @NonNull
   public static final String NS_METAPATH = "http://csrc.nist.gov/ns/metaschema/metapath";
@@ -34,14 +35,16 @@ public final class MetapathConstants {
   /**
    * The namespace URI for Metapath math-related built-in functions, as a string.
    *
-   * @see #PREFIX_METAPATH_FUNCTIONS_MATH for the default prefix for this namespace
+   * @see #PREFIX_METAPATH_FUNCTIONS_MATH for the default prefix for this
+   *      namespace
    */
   @NonNull
   public static final String NS_METAPATH_FUNCTIONS_MATH = NS_METAPATH_FUNCTIONS + "/math";
   /**
    * The namespace URI for Metapath array-related built-in functions, as a string.
    *
-   * @see #PREFIX_METAPATH_FUNCTIONS_ARRAY for the default prefix for this namespace
+   * @see #PREFIX_METAPATH_FUNCTIONS_ARRAY for the default prefix for this
+   *      namespace
    */
   @NonNull
   public static final String NS_METAPATH_FUNCTIONS_ARRAY = NS_METAPATH_FUNCTIONS + "/array";
@@ -55,8 +58,9 @@ public final class MetapathConstants {
   /**
    * The namespace URI for Metapath extension built-in functions, as a string.
    * <p>
-   * This is currently an alias for {@link #NS_METAPATH_FUNCTIONS} and can be used when implementing
-   * custom extension functions to distinguish them from core functions.
+   * This is currently an alias for {@link #NS_METAPATH_FUNCTIONS} and can be used
+   * when implementing custom extension functions to distinguish them from core
+   * functions.
    */
   @NonNull
   public static final String NS_METAPATH_FUNCTIONS_EXTENDED = NS_METAPATH_FUNCTIONS;

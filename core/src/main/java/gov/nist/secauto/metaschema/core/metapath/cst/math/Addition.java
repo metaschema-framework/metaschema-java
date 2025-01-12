@@ -26,8 +26,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Implements the '+' operator for Metapath addition operations.
  * <p>
- * An XPath 3.1 <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic expression</a>
- * supporting addition.
+ * An XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
+ * expression</a> supporting addition.
  * <p>
  * Supports addition operations between:
  * <ul>

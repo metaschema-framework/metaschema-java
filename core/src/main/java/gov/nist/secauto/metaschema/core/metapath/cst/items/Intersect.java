@@ -16,7 +16,8 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * The CST node for a Metapath <a href="https://www.w3.org/TR/xpath-31/#combining_seq">intersect
+ * The CST node for a Metapath
+ * <a href="https://www.w3.org/TR/xpath-31/#combining_seq">intersect
  * expression</a>.
  */
 public class Intersect

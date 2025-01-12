@@ -63,6 +63,7 @@ import javax.xml.validation.Validator;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+@Execution(value = ExecutionMode.SAME_THREAD, reason = "FIXME: need to determine why this is blocking.")
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 class CommonmarkConformanceTest {
   private static final String SCHEMA_PATH = "src/test/resources/markup-test.xsd";

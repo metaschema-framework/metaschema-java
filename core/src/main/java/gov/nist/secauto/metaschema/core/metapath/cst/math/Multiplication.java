@@ -23,8 +23,9 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An XPath 3.1 <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic expression</a>
- * supporting multiplication.
+ * An XPath 3.1
+ * <a href="https://www.w3.org/TR/xpath-31/#id-arithmetic">arithmetic
+ * expression</a> supporting multiplication.
  * <p>
  * Supports multiplication between:
  * <ul>
@@ -34,7 +35,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * </ul>
  *
  * <p>
- * Numeric operands are automatically converted using {@link FunctionUtils#toNumeric}.
+ * Numeric operands are automatically converted using
+ * {@link FunctionUtils#toNumeric}.
  */
 public class Multiplication
     extends AbstractBasicArithmeticExpression {

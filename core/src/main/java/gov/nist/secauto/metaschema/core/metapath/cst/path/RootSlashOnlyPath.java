@@ -23,11 +23,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * An expression that gets the document root.
  * <p>
- * Based on the XPath 3.1 <a href= "https://www.w3.org/TR/xpath-31/#id-path-operator">path
+ * Based on the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-31/#id-path-operator">path
  * operator</a>.
  * <p>
- * This class handles the root path expression "/", which selects the document root node when
- * evaluated. The evaluation follows the XPath specification for absolute paths.
+ * This class handles the root path expression "/", which selects the document
+ * root node when evaluated. The evaluation follows the XPath specification for
+ * absolute paths.
  */
 public class RootSlashOnlyPath
     extends AbstractPathExpression<INodeItem> {

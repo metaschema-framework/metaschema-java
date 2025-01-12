@@ -20,11 +20,13 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * An immutable binary expression that supports basic arithmetic evaluation.
  * <p>
- * The result type is determined through static analysis of the sub-expressions, which may result in
- * a more specific type that is a sub-class of the base result type.
+ * The result type is determined through static analysis of the sub-expressions,
+ * which may result in a more specific type that is a sub-class of the base
+ * result type.
  * <p>
- * The arithmetic operation method {@link #operation(IAnyAtomicItem, IAnyAtomicItem)} must be
- * implemented by extending classes to provide the evaluation logic.
+ * The arithmetic operation method
+ * {@link #operation(IAnyAtomicItem, IAnyAtomicItem)} must be implemented by
+ * extending classes to provide the evaluation logic.
  */
 public abstract class AbstractBasicArithmeticExpression
     extends AbstractArithmeticExpression<IAnyAtomicItem> {
@@ -66,7 +68,8 @@ public abstract class AbstractBasicArithmeticExpression
    *          the first item
    * @param rightItem
    *          the second item
-   * @return the result of the operation or an empty {@link ISequence} if either item is {@code null}
+   * @return the result of the operation or an empty {@link ISequence} if either
+   *         item is {@code null}
    */
   @NonNull
   protected ISequence<? extends IAnyAtomicItem> resultOrEmpty(
@@ -136,10 +139,11 @@ public abstract class AbstractBasicArithmeticExpression
   }
 
   /**
-   * Provides a mapping of the left class to a mapping of the right class and the strategy to use to
-   * compute the operation.
+   * Provides a mapping of the left class to a mapping of the right class and the
+   * strategy to use to compute the operation.
    * <p>
-   * This mapping is used to lookup the strategy to use based on the left and right classes.
+   * This mapping is used to lookup the strategy to use based on the left and
+   * right classes.
    *
    * @return the mapping
    */

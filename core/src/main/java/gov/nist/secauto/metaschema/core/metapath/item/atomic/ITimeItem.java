@@ -245,7 +245,7 @@ public interface ITimeItem extends ITemporalItem {
 
   @Override
   default int compareTo(IAnyAtomicItem item) {
-    return asOffsetTime().compareTo(cast(item).asOffsetTime());
+    return compareTo(cast(item));
   }
 
   /**

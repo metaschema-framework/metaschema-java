@@ -23,13 +23,13 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Support for the Metaschema <a href=
- * "https://pages.nist.gov/metaschema/specification/datatypes/#decimal">decimal</a>
- * data type.
+ * Support for the Metaschema
+ * <a href= "https://pages.nist.gov/metaschema/specification/datatypes/#decimal">decimal</a> data
+ * type.
  */
 public class DecimalAdapter
     extends AbstractDataTypeAdapter<BigDecimal, IDecimalItem> {
-  private static final MathContext MATH_CONTEXT = MathContext.DECIMAL64;
+  public static final MathContext MATH_CONTEXT = MathContext.DECIMAL64;
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(

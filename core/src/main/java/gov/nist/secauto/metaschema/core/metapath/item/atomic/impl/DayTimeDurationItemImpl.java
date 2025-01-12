@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 import gov.nist.secauto.metaschema.core.datatype.adapter.DayTimeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -23,7 +22,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * seconds.
  */
 public class DayTimeDurationItemImpl
-    extends AbstractAnyAtomicItem<Duration>
+    extends AbstractDurationItem<Duration>
     implements IDayTimeDurationItem {
   private static final long MIN_OFFSET_SECONDS = -50_400; // -14 hours in seconds
   private static final long MAX_OFFSET_SECONDS = 50_400; // 14 hours in seconds
@@ -70,11 +69,6 @@ public class DayTimeDurationItemImpl
   public boolean equals(Object obj) {
     return this == obj
         || obj instanceof IDayTimeDurationItem && compareTo((IDayTimeDurationItem) obj) == 0;
-  }
-
-  @Override
-  protected String getValueSignature() {
-    return "'" + asString() + "'";
   }
 
   @Override

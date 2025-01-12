@@ -74,8 +74,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Provides information supporting a binding between a set of Module models and corresponding Java
- * classes.
+ * Provides information supporting a binding between a set of Module models and
+ * corresponding Java classes.
  */
 public interface IBindingContext {
   /**
@@ -89,8 +89,8 @@ public interface IBindingContext {
   }
 
   /**
-   * Get a new {@link IBindingContext} instance, which can be used to load information that binds a
-   * model to a set of Java classes.
+   * Get a new {@link IBindingContext} instance, which can be used to load
+   * information that binds a model to a set of Java classes.
    *
    * @return a new binding context
    * @since 2.0.0
@@ -101,8 +101,8 @@ public interface IBindingContext {
   }
 
   /**
-   * Get a new {@link IBindingContext} instance, which can be used to load information that binds a
-   * model to a set of Java classes.
+   * Get a new {@link IBindingContext} instance, which can be used to load
+   * information that binds a model to a set of Java classes.
    *
    * @param strategy
    *          the loader strategy to use when loading Metaschema modules
@@ -115,7 +115,8 @@ public interface IBindingContext {
   }
 
   /**
-   * Get the Metaschema module loader strategy used by this binding context to load modules.
+   * Get the Metaschema module loader strategy used by this binding context to
+   * load modules.
    *
    * @return the strategy instance
    * @since 2.0.0
@@ -124,14 +125,17 @@ public interface IBindingContext {
   IModuleLoaderStrategy getModuleLoaderStrategy();
 
   /**
-   * Get a loader that supports loading a Metaschema module from a specified resource.
+   * Get a loader that supports loading a Metaschema module from a specified
+   * resource.
    * <p>
-   * Modules loaded with this loader are automatically registered with this binding context.
+   * Modules loaded with this loader are automatically registered with this
+   * binding context.
    * <p>
    * Use of this method requires that the binding context is initialized using a
-   * {@link IModuleLoaderStrategy} that supports dynamic bound module loading. This can be
-   * accomplished using the {@link SimpleModuleLoaderStrategy} initialized using the
-   * {@link DefaultModuleBindingGenerator}. * @return the loader
+   * {@link IModuleLoaderStrategy} that supports dynamic bound module loading.
+   * This can be accomplished using the {@link SimpleModuleLoaderStrategy}
+   * initialized using the {@link DefaultModuleBindingGenerator}. * @return the
+   * loader
    *
    * @return the loader
    * @since 2.0.0
@@ -145,9 +149,9 @@ public interface IBindingContext {
    * This method automatically registers the module with this binding context.
    * <p>
    * Use of this method requires that the binding context is initialized using a
-   * {@link IModuleLoaderStrategy} that supports dynamic bound module loading. This can be
-   * accomplished using the {@link SimpleModuleLoaderStrategy} initialized using the
-   * {@link DefaultModuleBindingGenerator}.
+   * {@link IModuleLoaderStrategy} that supports dynamic bound module loading.
+   * This can be accomplished using the {@link SimpleModuleLoaderStrategy}
+   * initialized using the {@link DefaultModuleBindingGenerator}.
    *
    * @param path
    *          the path to load the module from
@@ -157,7 +161,8 @@ public interface IBindingContext {
    * @throws IOException
    *           if an error occurred parsing the resource
    * @throws UnsupportedOperationException
-   *           if this binding context is not configured to support dynamic bound module loading
+   *           if this binding context is not configured to support dynamic bound
+   *           module loading
    * @since 2.0.0
    */
   @NonNull
@@ -171,9 +176,9 @@ public interface IBindingContext {
    * This method automatically registers the module with this binding context.
    * <p>
    * Use of this method requires that the binding context is initialized using a
-   * {@link IModuleLoaderStrategy} that supports dynamic bound module loading. This can be
-   * accomplished using the {@link SimpleModuleLoaderStrategy} initialized using the
-   * {@link DefaultModuleBindingGenerator}.
+   * {@link IModuleLoaderStrategy} that supports dynamic bound module loading.
+   * This can be accomplished using the {@link SimpleModuleLoaderStrategy}
+   * initialized using the {@link DefaultModuleBindingGenerator}.
    *
    * @param url
    *          the URL to load the module from
@@ -183,7 +188,8 @@ public interface IBindingContext {
    * @throws IOException
    *           if an error occurred parsing the resource
    * @throws UnsupportedOperationException
-   *           if this binding context is not configured to support dynamic bound module loading
+   *           if this binding context is not configured to support dynamic bound
+   *           module loading
    * @since 2.0.0
    */
   @NonNull
@@ -192,10 +198,12 @@ public interface IBindingContext {
   }
 
   /**
-   * Get a loader that supports loading Metaschema module constraints from a specified resource.
+   * Get a loader that supports loading Metaschema module constraints from a
+   * specified resource.
    * <p>
-   * Metaschema module constraints loaded this need to be used with a new {@link IBindingContext}
-   * instance to be applied to loaded modules. The new binding context must initialized using the
+   * Metaschema module constraints loaded this need to be used with a new
+   * {@link IBindingContext} instance to be applied to loaded modules. The new
+   * binding context must initialized using the
    * {@link PostProcessingModuleLoaderStrategy} that is initialized with a
    * {@link ExternalConstraintsModulePostProcessor} instance.
    *
@@ -208,10 +216,12 @@ public interface IBindingContext {
   }
 
   /**
-   * Get a loader that supports loading Metaschema module constraints from a specified resource.
+   * Get a loader that supports loading Metaschema module constraints from a
+   * specified resource.
    * <p>
-   * Metaschema module constraints loaded this need to be used with a new {@link IBindingContext}
-   * instance to be applied to loaded modules. The new binding context must initialized using the
+   * Metaschema module constraints loaded this need to be used with a new
+   * {@link IBindingContext} instance to be applied to loaded modules. The new
+   * binding context must initialized using the
    * {@link PostProcessingModuleLoaderStrategy} that is initialized with a
    * {@link ExternalConstraintsModulePostProcessor} instance.
    *
@@ -228,8 +238,8 @@ public interface IBindingContext {
    * <p>
    * Also registers any associated bound classes.
    * <p>
-   * Implementations are expected to return the same IModule instance for multiple calls to this
-   * method with the same class argument.
+   * Implementations are expected to return the same IModule instance for multiple
+   * calls to this method with the same class argument.
    *
    * @param clazz
    *          the class implementing a bound Metaschema module
@@ -241,16 +251,18 @@ public interface IBindingContext {
   /**
    * Registers the provided Metaschema module with this binding context.
    * <p>
-   * If the provided instance is not an instance of {@link IBoundModule}, then annotated Java classes
-   * for this module will be generated, compiled, and loaded based on the provided Module.
+   * If the provided instance is not an instance of {@link IBoundModule}, then
+   * annotated Java classes for this module will be generated, compiled, and
+   * loaded based on the provided Module.
    *
    * @param module
    *          the Module module to generate classes for
-   * @return the registered module, which may be a different instance than what was provided if
-   *         dynamic compilation was performed
+   * @return the registered module, which may be a different instance than what
+   *         was provided if dynamic compilation was performed
    * @throws UnsupportedOperationException
-   *           if this binding context is not configured to support dynamic bound module loading and
-   *           the module instance is not a subclass of {@link IBoundModule}
+   *           if this binding context is not configured to support dynamic bound
+   *           module loading and the module instance is not a subclass of
+   *           {@link IBoundModule}
    * @since 2.0.0
    */
   @NonNull
@@ -263,20 +275,23 @@ public interface IBindingContext {
    *
    * @param definition
    *          the bound class information to register
-   * @return the old bound class information or {@code null} if no binding existed for the associated
-   *         class
+   * @return the old bound class information or {@code null} if no binding existed
+   *         for the associated class
    */
   @Nullable
   IBoundDefinitionModelComplex registerClassBinding(@NonNull IBoundDefinitionModelComplex definition);
 
   /**
-   * Get the {@link IBoundDefinitionModel} instance associated with the provided Java class.
+   * Get the {@link IBoundDefinitionModel} instance associated with the provided
+   * Java class.
    * <p>
-   * Typically the class will have a {@link MetaschemaAssembly} or {@link MetaschemaField} annotation.
+   * Typically the class will have a {@link MetaschemaAssembly} or
+   * {@link MetaschemaField} annotation.
    *
    * @param clazz
    *          the class binding to load
-   * @return the associated class binding instance or {@code null} if the class is not bound
+   * @return the associated class binding instance or {@code null} if the class is
+   *         not bound
    */
   @Nullable
   IBoundDefinitionModelComplex getBoundDefinitionForClass(@NonNull Class<? extends IBoundObject> clazz);
@@ -292,8 +307,8 @@ public interface IBindingContext {
   Class<? extends IBoundObject> getBoundClassForRootXmlQName(@NonNull QName rootQName);
 
   /**
-   * Determine the bound class for the provided JSON/YAML property/item name using any registered
-   * matchers.
+   * Determine the bound class for the provided JSON/YAML property/item name using
+   * any registered matchers.
    *
    * @param rootName
    *          the JSON/YAML property/item name
@@ -303,17 +318,19 @@ public interface IBindingContext {
   Class<? extends IBoundObject> getBoundClassForRootJsonName(@NonNull String rootName);
 
   /**
-   * Get's the {@link IDataTypeAdapter} associated with the specified Java class, which is used to
-   * read and write XML, JSON, and YAML data to and from instances of that class. Thus, this adapter
-   * supports a direct binding between the Java class and structured data in one of the supported
-   * formats. Adapters are used to support bindings for simple data objects (e.g., {@link String},
+   * Get's the {@link IDataTypeAdapter} associated with the specified Java class,
+   * which is used to read and write XML, JSON, and YAML data to and from
+   * instances of that class. Thus, this adapter supports a direct binding between
+   * the Java class and structured data in one of the supported formats. Adapters
+   * are used to support bindings for simple data objects (e.g., {@link String},
    * {@link BigInteger}, {@link ZonedDateTime}, etc).
    *
    * @param <TYPE>
    *          the class type of the adapter
    * @param clazz
    *          the Java {@link Class} for the bound type
-   * @return the adapter instance or {@code null} if the provided class is not bound
+   * @return the adapter instance or {@code null} if the provided class is not
+   *         bound
    */
   @Nullable
   default <TYPE extends IDataTypeAdapter<?>> TYPE getDataTypeAdapterInstance(@NonNull Class<TYPE> clazz) {
@@ -321,11 +338,12 @@ public interface IBindingContext {
   }
 
   /**
-   * Gets a data {@link ISerializer} which can be used to write Java instance data for the provided
-   * class in the requested format.
+   * Gets a data {@link ISerializer} which can be used to write Java instance data
+   * for the provided class in the requested format.
    * <p>
-   * The provided class must be a bound Java class with a {@link MetaschemaAssembly} or
-   * {@link MetaschemaField} annotation for which a {@link IBoundDefinitionModel} exists.
+   * The provided class must be a bound Java class with a
+   * {@link MetaschemaAssembly} or {@link MetaschemaField} annotation for which a
+   * {@link IBoundDefinitionModel} exists.
    *
    * @param <CLASS>
    *          the Java type this serializer can write data from
@@ -335,7 +353,8 @@ public interface IBindingContext {
    *          the Java data object to serialize
    * @return the serializer instance
    * @throws NullPointerException
-   *           if any of the provided arguments, except the configuration, are {@code null}
+   *           if any of the provided arguments, except the configuration, are
+   *           {@code null}
    * @throws IllegalArgumentException
    *           if the provided class is not bound to a Module assembly or field
    * @throws UnsupportedOperationException
@@ -348,11 +367,12 @@ public interface IBindingContext {
       @NonNull Class<CLASS> clazz);
 
   /**
-   * Gets a data {@link IDeserializer} which can be used to read Java instance data for the provided
-   * class from the requested format.
+   * Gets a data {@link IDeserializer} which can be used to read Java instance
+   * data for the provided class from the requested format.
    * <p>
-   * The provided class must be a bound Java class with a {@link MetaschemaAssembly} or
-   * {@link MetaschemaField} annotation for which a {@link IBoundDefinitionModel} exists.
+   * The provided class must be a bound Java class with a
+   * {@link MetaschemaAssembly} or {@link MetaschemaField} annotation for which a
+   * {@link IBoundDefinitionModel} exists.
    *
    * @param <CLASS>
    *          the Java type this deserializer can read data into
@@ -362,7 +382,8 @@ public interface IBindingContext {
    *          the Java data type to serialize
    * @return the deserializer instance
    * @throws NullPointerException
-   *           if any of the provided arguments, except the configuration, are {@code null}
+   *           if any of the provided arguments, except the configuration, are
+   *           {@code null}
    * @throws IllegalArgumentException
    *           if the provided class is not bound to a Module assembly or field
    * @throws UnsupportedOperationException
@@ -484,8 +505,8 @@ public interface IBindingContext {
   }
 
   /**
-   * Load and perform schema and constraint validation on the target. The constraint validation will
-   * only be performed if the schema validation passes.
+   * Load and perform schema and constraint validation on the target. The
+   * constraint validation will only be performed if the schema validation passes.
    *
    * @param target
    *          the target to validate
@@ -515,7 +536,8 @@ public interface IBindingContext {
   }
 
   /**
-   * Load and validate the provided {@code target} using the associated Module module constraints.
+   * Load and validate the provided {@code target} using the associated Module
+   * module constraints.
    *
    * @param target
    *          the file to load and validate
@@ -546,18 +568,18 @@ public interface IBindingContext {
    * <li><b>Registration:</b> The module is registered for use.
    * </ol>
    * <p>
-   * A module will be loaded when either the module or one of its global definitions is accessed the
-   * first time.
+   * A module will be loaded when either the module or one of its global
+   * definitions is accessed the first time.
    */
   interface IModuleLoaderStrategy extends ModuleLoadingPostProcessor {
     /**
      * Load the bound Metaschema module represented by the provided class.
      * <p>
-     * This is the primary entry point for loading an already bound module. This method must ensure that
-     * the loaded module is post-processed and registered.
+     * This is the primary entry point for loading an already bound module. This
+     * method must ensure that the loaded module is post-processed and registered.
      * <p>
-     * Implementations are allowed to return a cached instance if the module has already been loaded by
-     * this method.
+     * Implementations are allowed to return a cached instance if the module has
+     * already been loaded by this method.
      *
      * @param clazz
      *          the Module class
@@ -565,7 +587,8 @@ public interface IBindingContext {
      *          the Metaschema binding context used to load bound resources
      * @return the module
      * @throws IllegalStateException
-     *           if an error occurred while processing the associated module information
+     *           if an error occurred while processing the associated module
+     *           information
      * @since 2.0.0
      */
     @NonNull
@@ -592,21 +615,23 @@ public interface IBindingContext {
     /**
      * Registers the provided Metaschema module.
      * <p>
-     * If this module has not been post-processed, this method is expected to drive post-processing
-     * first.
+     * If this module has not been post-processed, this method is expected to drive
+     * post-processing first.
      * <p>
-     * If the provided instance is not an instance of {@link IBoundModule}, then annotated Java classes
-     * for this module will be generated, compiled, and loaded based on the provided Module.
+     * If the provided instance is not an instance of {@link IBoundModule}, then
+     * annotated Java classes for this module will be generated, compiled, and
+     * loaded based on the provided Module.
      *
      * @param module
      *          the Module module to generate classes for
      * @param bindingContext
      *          the Metaschema binding context used to load bound resources
-     * @return the registered module, which may be a different instance than what was provided if
-     *         dynamic compilation was performed
+     * @return the registered module, which may be a different instance than what
+     *         was provided if dynamic compilation was performed
      * @throws UnsupportedOperationException
-     *           if this binding context is not configured to support dynamic bound module loading and
-     *           the module instance is not a subclass of {@link IBoundModule}
+     *           if this binding context is not configured to support dynamic bound
+     *           module loading and the module instance is not a subclass of
+     *           {@link IBoundModule}
      * @since 2.0.0
      */
     @NonNull
@@ -627,7 +652,8 @@ public interface IBindingContext {
     // definition);
 
     /**
-     * Get the matchers used to identify the bound class associated with the definition's root name.
+     * Get the matchers used to identify the bound class associated with the
+     * definition's root name.
      *
      * @return the matchers
      */
@@ -635,9 +661,11 @@ public interface IBindingContext {
     Collection<IBindingMatcher> getBindingMatchers();
 
     /**
-     * Get the {@link IBoundDefinitionModel} instance associated with the provided Java class.
+     * Get the {@link IBoundDefinitionModel} instance associated with the provided
+     * Java class.
      * <p>
-     * Typically the class will have a {@link MetaschemaAssembly} or {@link MetaschemaField} annotation.
+     * Typically the class will have a {@link MetaschemaAssembly} or
+     * {@link MetaschemaField} annotation.
      *
      * @param clazz
      *          the class binding to load
@@ -645,8 +673,8 @@ public interface IBindingContext {
      *          the Metaschema binding context used to load bound resources
      * @return the associated class binding instance
      * @throws IllegalArgumentException
-     *           if the class is not a bound definition with a {@link MetaschemaAssembly} or
-     *           {@link MetaschemaField} annotation
+     *           if the class is not a bound definition with a
+     *           {@link MetaschemaAssembly} or {@link MetaschemaField} annotation
      */
     @NonNull
     IBoundDefinitionModelComplex getBoundDefinitionForClass(
@@ -655,8 +683,8 @@ public interface IBindingContext {
   }
 
   /**
-   * Enables building a {@link IBindingContext} using common configuration options based on the
-   * builder pattern.
+   * Enables building a {@link IBindingContext} using common configuration options
+   * based on the builder pattern.
    *
    * @since 2.0.0
    */
@@ -683,10 +711,12 @@ public interface IBindingContext {
     }
 
     /**
-     * Enable dynamic code generation and compilation for Metaschema module-based classes.
+     * Enable dynamic code generation and compilation for Metaschema module-based
+     * classes.
      *
      * @param path
-     *          the path to use to generate and compile Metaschema module-based classes
+     *          the path to use to generate and compile Metaschema module-based
+     *          classes
      * @return this builder
      */
     @NonNull
@@ -735,7 +765,8 @@ public interface IBindingContext {
     }
 
     /**
-     * Build a {@link IBindingContext} using the configuration options provided to the builder.
+     * Build a {@link IBindingContext} using the configuration options provided to
+     * the builder.
      *
      * @return a new, configured binding context
      */
@@ -858,8 +889,9 @@ public interface IBindingContext {
   }
 
   /**
-   * Implementations of this interface provide a means by which a bound class can be found that
-   * corresponds to an XML element, JSON property, or YAML item name.
+   * Implementations of this interface provide a means by which a bound class can
+   * be found that corresponds to an XML element, JSON property, or YAML item
+   * name.
    */
   interface IBindingMatcher {
     /**
@@ -884,7 +916,8 @@ public interface IBindingContext {
      *
      * @param rootQName
      *          the root XML element's QName
-     * @return the bound class for the XML qualified name or {@code null} if not recognized
+     * @return the bound class for the XML qualified name or {@code null} if not
+     *         recognized
      */
     Class<? extends IBoundObject> getBoundClassForXmlQName(QName rootQName);
 
@@ -893,7 +926,8 @@ public interface IBindingContext {
      *
      * @param rootName
      *          the JSON/YAML property/item name
-     * @return the bound class for the JSON property name or {@code null} if not recognized
+     * @return the bound class for the JSON property name or {@code null} if not
+     *         recognized
      */
     Class<? extends IBoundObject> getBoundClassForJsonName(String rootName);
   }

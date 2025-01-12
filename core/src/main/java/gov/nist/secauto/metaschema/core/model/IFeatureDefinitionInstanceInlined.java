@@ -15,8 +15,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * A trait indicating that the implementation is a localized definition that is declared in-line as
- * an instance.
+ * A trait indicating that the implementation is a localized definition that is
+ * declared in-line as an instance.
  *
  * @param <DEFINITION>
  *          the associated definition Java type

@@ -5,9 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.datatype.adapter;
 
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
-
-import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
@@ -15,8 +12,9 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.time.Duration;
-import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -26,11 +24,21 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * data type.
  */
 public class DayTimeAdapter
-    extends AbstractDataTypeAdapter<Duration, IDayTimeDurationItem> {
+    extends AbstractDurationAdapter<Duration, IDayTimeDurationItem> {
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
           EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "day-time-duration")));
+
+  private static final Pattern DAY_TIME_DURATION_PATTERN = Pattern.compile(
+      "^(?<sign>-)?"
+          + "P"
+          + "(?:(?<day>[0-9]+)D)?"
+          + "(?:T"
+          + "(?:(?<hour>[0-9]+)H)?"
+          + "(?:(?<minute>[0-9]+)M)?"
+          + "(?:(?<second2>[0-9]+(?:\\.[0-9]+)?)S)?"
+          + ")?$");
 
   DayTimeAdapter() {
     super(Duration.class, IDayTimeDurationItem.class, IDayTimeDurationItem::cast);
@@ -42,24 +50,26 @@ public class DayTimeAdapter
   }
 
   @Override
-  public JsonFormatTypes getJsonRawType() {
-    return JsonFormatTypes.STRING;
-  }
-
-  @Override
   public Duration copy(Object obj) {
     // value in immutable
     return (Duration) obj;
   }
 
-  @SuppressWarnings("null")
   @Override
   public Duration parse(String value) {
-    try {
-      return Duration.parse(value);
-    } catch (DateTimeParseException ex) {
-      throw new IllegalArgumentException(ex.getLocalizedMessage(), ex);
+    Matcher matcher = DAY_TIME_DURATION_PATTERN.matcher(value);
+
+    if (!matcher.matches()) {
+      throw new IllegalArgumentException(
+          String.format("String duration '%s' is not a day/time duration.", value));
     }
+
+    return parseDuration(
+        matcher.group(1) != null,
+        matcher.group(2),
+        matcher.group(3),
+        matcher.group(4),
+        matcher.group(5));
   }
 
   @Override
@@ -67,5 +77,4 @@ public class DayTimeAdapter
     Duration item = toValue(value);
     return IDayTimeDurationItem.valueOf(item);
   }
-
 }

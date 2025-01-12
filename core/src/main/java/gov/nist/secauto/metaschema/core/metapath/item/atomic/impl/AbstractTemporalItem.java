@@ -9,6 +9,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicIt
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITemporalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
+import java.util.Comparator;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -20,6 +22,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public abstract class AbstractTemporalItem<TYPE>
     extends AbstractAnyAtomicItem<TYPE>
     implements ITemporalItem {
+  private static final Comparator<ITemporalItem> COMPARATOR = Comparator.comparing(ITemporalItem::getYear)
+      .thenComparing(ITemporalItem::getMonth)
+      .thenComparing(ITemporalItem::getDay)
+      .thenComparing(ITemporalItem::getHour)
+      .thenComparing(ITemporalItem::getMinute)
+      .thenComparing(ITemporalItem::getSecond)
+      .thenComparing(ITemporalItem::getNano)
+      .thenComparing(ITemporalItem::getZoneOffset, Comparator.nullsFirst(Comparator.naturalOrder()));
 
   /**
    * Construct a new temporal item.
@@ -34,6 +44,11 @@ public abstract class AbstractTemporalItem<TYPE>
   @Override
   protected String getValueSignature() {
     return "'" + asString() + "'";
+  }
+
+  @Override
+  public int compareTo(@NonNull ITemporalItem item) {
+    return COMPARATOR.compare(this, item);
   }
 
   @Override
@@ -57,7 +72,8 @@ public abstract class AbstractTemporalItem<TYPE>
     @SuppressWarnings("PMD.OnlyOneReturn")
     @Override
     public boolean equals(Object obj) {
-      // FIXME: ensure implicit timezone is not used and that comparison is performed correctly
+      // FIXME: ensure implicit timezone is not used and that comparison is performed
+      // correctly
       if (this == obj) {
         return true;
       }

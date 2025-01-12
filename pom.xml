@@ -710,15 +710,18 @@
 						<useModulePath>false</useModulePath>
 						<redirectTestOutputToFile>true</redirectTestOutputToFile>
 						<!-- fork configuration -->
-						<forkCount>1.5C</forkCount>
-						<reuseForks>true</reuseForks>
+						<!--<forkCount>2.0C</forkCount>
+						<reuseForks>true</reuseForks>-->
 						<!-- Use of TCP to transmit events to the plugin -->
 						<forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
 						<!-- Junit5 parallel configuration -->
+						<parallel>all</parallel>
+						<useUnlimitedThreads>true</useUnlimitedThreads>
 						<properties>
 							<configurationParameters>
 								junit.jupiter.execution.parallel.enabled = true
 								junit.jupiter.execution.parallel.mode.default = concurrent
+								junit.jupiter.execution.timeout.default=30 s
 							</configurationParameters>
 						</properties>
 						<!-- tree reporter configuration -->
