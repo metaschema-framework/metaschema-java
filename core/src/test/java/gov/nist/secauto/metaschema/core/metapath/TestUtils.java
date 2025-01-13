@@ -257,8 +257,8 @@ public final class TestUtils {
   }
 
   /**
-   * Create a duration item using the provided value indicating the years, months, and days of the
-   * duration.
+   * Create a duration item using the provided value indicating the years, months,
+   * and days of the duration.
    *
    * @param value
    *          the duration value
@@ -270,8 +270,8 @@ public final class TestUtils {
   }
 
   /**
-   * Create a duration item using the provided value indicating the years, months, and days of the
-   * duration.
+   * Create a duration item using the provided value indicating the years, months,
+   * and days of the duration.
    *
    * @param value
    *          the duration value
@@ -283,8 +283,8 @@ public final class TestUtils {
   }
 
   /**
-   * Create a duration item using the provided value indicating the seconds and nanoseconds of the
-   * duration.
+   * Create a duration item using the provided value indicating the seconds and
+   * nanoseconds of the duration.
    *
    * @param value
    *          the duration value

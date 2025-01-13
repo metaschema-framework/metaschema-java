@@ -19,7 +19,8 @@ import java.time.ZoneOffset;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item containing a duration data value in days, hours, and seconds.
+ * An atomic Metapath item containing a duration data value in days, hours, and
+ * seconds.
  */
 public interface IDayTimeDurationItem extends IDurationItem {
   /**
@@ -38,13 +39,15 @@ public interface IDayTimeDurationItem extends IDurationItem {
   }
 
   /**
-   * Construct a new day time duration item using the provided string {@code value}.
+   * Construct a new day time duration item using the provided string
+   * {@code value}.
    *
    * @param value
    *          a string representing a day time duration
    * @return the new item
    * @throws InvalidTypeMetapathException
-   *           if the provided string value is not a day/time duration value according to ISO 8601
+   *           if the provided string value is not a day/time duration value
+   *           according to ISO 8601
    */
   @NonNull
   static IDayTimeDurationItem valueOf(@NonNull String value) {
@@ -98,7 +101,8 @@ public interface IDayTimeDurationItem extends IDurationItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item cast to this type
+   * @return the original item if it is already this type, otherwise a new item
+   *         cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
@@ -124,8 +128,8 @@ public interface IDayTimeDurationItem extends IDurationItem {
    *
    * @param item
    *          the item to compare with this value
-   * @return a negative integer, zero, or a positive integer if this value is less than, equal to, or
-   *         greater than the {@code item}.
+   * @return a negative integer, zero, or a positive integer if this value is less
+   *         than, equal to, or greater than the {@code item}.
    */
   default int compareTo(@NonNull IDayTimeDurationItem item) {
     return asDuration().compareTo(item.asDuration());
@@ -142,8 +146,9 @@ public interface IDayTimeDurationItem extends IDurationItem {
    *
    * @return the offset
    * @throws DateTimeFunctionException
-   *           with code {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if the offset
-   *           is < -PT14H or > PT14H
+   *           with code
+   *           {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if
+   *           the offset is < -PT14H or > PT14H
    */
   @NonNull
   ZoneOffset asZoneOffset();

@@ -25,8 +25,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * result type.
  * <p>
  * The arithmetic operation method
- * {@link #operation(IAnyAtomicItem, IAnyAtomicItem)} must be implemented by
- * extending classes to provide the evaluation logic.
+ * {@link #operation(IAnyAtomicItem, IAnyAtomicItem, DynamicContext)} must be
+ * implemented by extending classes to provide the evaluation logic.
  */
 public abstract class AbstractBasicArithmeticExpression
     extends AbstractArithmeticExpression<IAnyAtomicItem> {

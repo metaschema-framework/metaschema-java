@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.adapter.YearMonthAdapter;
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractOpaqueMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
@@ -16,7 +17,8 @@ import java.util.Objects;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An implementation of a Metapath atomic item containing a duration data value in years and months.
+ * An implementation of a Metapath atomic item containing a duration data value
+ * in years and months.
  */
 public class YearMonthDurationItemImpl
     extends AbstractDurationItem<Period>
@@ -59,22 +61,11 @@ public class YearMonthDurationItemImpl
     return new MapKey();
   }
 
-  private final class MapKey implements IMapKey {
+  private final class MapKey
+      extends AbstractOpaqueMapKey {
     @Override
     public IYearMonthDurationItem getKey() {
       return YearMonthDurationItemImpl.this;
-    }
-
-    @Override
-    public int hashCode() {
-      return getKey().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      return this == obj ||
-          obj instanceof MapKey
-              && getKey().equals(((MapKey) obj).getKey());
     }
   }
 }

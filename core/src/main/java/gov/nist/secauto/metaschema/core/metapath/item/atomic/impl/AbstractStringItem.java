@@ -55,6 +55,22 @@ public abstract class AbstractStringItem
   }
 
   @Override
+  public IStringItem normalizeSpace() {
+    String value = asString();
+    value = TRIM_START.matcher(value).replaceFirst("");
+    value = TRIM_MIDDLE.matcher(value).replaceAll(" ");
+    value = TRIM_END.matcher(value).replaceFirst("");
+    assert value != null;
+
+    return IStringItem.valueOf(value);
+  }
+
+  @Override
+  protected String getValueSignature() {
+    return "'" + getValue() + "'";
+  }
+
+  @Override
   public int hashCode() {
     return asString().hashCode();
   }
@@ -73,21 +89,11 @@ public abstract class AbstractStringItem
     public IStringItem getKey() {
       return AbstractStringItem.this;
     }
+
+    @Override
+    public String asString() {
+      return getKey().asString();
+    }
   }
 
-  @Override
-  public IStringItem normalizeSpace() {
-    String value = asString();
-    value = TRIM_START.matcher(value).replaceFirst("");
-    value = TRIM_MIDDLE.matcher(value).replaceAll(" ");
-    value = TRIM_END.matcher(value).replaceFirst("");
-    assert value != null;
-
-    return IStringItem.valueOf(value);
-  }
-
-  @Override
-  protected String getValueSignature() {
-    return "'" + getValue() + "'";
-  }
 }

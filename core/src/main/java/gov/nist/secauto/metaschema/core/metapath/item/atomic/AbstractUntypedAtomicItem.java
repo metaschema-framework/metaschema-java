@@ -42,5 +42,10 @@ public abstract class AbstractUntypedAtomicItem<TYPE>
     public IUntypedAtomicItem getKey() {
       return AbstractUntypedAtomicItem.this;
     }
+
+    @Override
+    public String asString() {
+      return getKey().asString();
+    }
   }
 }

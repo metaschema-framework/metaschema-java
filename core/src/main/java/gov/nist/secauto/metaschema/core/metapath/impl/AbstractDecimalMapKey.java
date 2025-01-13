@@ -5,25 +5,25 @@
 
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.item.function.IDecimalMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IStringMapKey;
 
 /**
  * An implementation of a {@link IMapKey} that uses a string-based value.
  */
-public abstract class AbstractStringMapKey
+public abstract class AbstractDecimalMapKey
     extends AbstractMapKey
-    implements IStringMapKey {
+    implements IDecimalMapKey {
 
   @Override
   public int hashCode() {
-    return asString().hashCode();
+    return asDecimal().hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
     return this == obj
         // TODO: implement fn:codepoint-equal per spec
-        || obj instanceof IStringMapKey && getKey().asString().equals(((IStringMapKey) obj).getKey().asString());
+        || obj instanceof IDecimalMapKey && asDecimal().equals(((IDecimalMapKey) obj).asDecimal());
   }
 }

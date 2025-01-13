@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 import gov.nist.secauto.metaschema.core.datatype.adapter.DayTimeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractOpaqueMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -18,8 +19,8 @@ import java.time.ZoneOffset;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An implementation of a Metapath atomic item containing a duration data value in days, hours, and
- * seconds.
+ * An implementation of a Metapath atomic item containing a duration data value
+ * in days, hours, and seconds.
  */
 public class DayTimeDurationItemImpl
     extends AbstractDurationItem<Duration>
@@ -76,22 +77,11 @@ public class DayTimeDurationItemImpl
     return new MapKey();
   }
 
-  private final class MapKey implements IMapKey {
+  private final class MapKey
+      extends AbstractOpaqueMapKey {
     @Override
     public IDayTimeDurationItem getKey() {
       return DayTimeDurationItemImpl.this;
-    }
-
-    @Override
-    public int hashCode() {
-      return getKey().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      return this == obj ||
-          obj instanceof MapKey
-              && getKey().equals(((MapKey) obj).getKey());
     }
   }
 }

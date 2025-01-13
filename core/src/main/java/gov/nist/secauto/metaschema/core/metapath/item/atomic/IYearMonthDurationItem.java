@@ -17,7 +17,8 @@ import java.time.Period;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item containing a duration data value in years, months, and days.
+ * An atomic Metapath item containing a duration data value in years, months,
+ * and days.
  */
 public interface IYearMonthDurationItem extends IDurationItem {
   /**
@@ -36,13 +37,15 @@ public interface IYearMonthDurationItem extends IDurationItem {
   }
 
   /**
-   * Construct a new year month day duration item using the provided string {@code value}.
+   * Construct a new year month day duration item using the provided string
+   * {@code value}.
    *
    * @param value
    *          a string representing a year month day duration
    * @return the new item
    * @throws InvalidTypeMetapathException
-   *           if the provided string value is not a day/time duration value according to ISO 8601
+   *           if the provided string value is not a day/time duration value
+   *           according to ISO 8601
    */
   @NonNull
   static IYearMonthDurationItem valueOf(@NonNull String value) {
@@ -59,7 +62,8 @@ public interface IYearMonthDurationItem extends IDurationItem {
   }
 
   /**
-   * Construct a new year month day duration item using the provided {@code value}.
+   * Construct a new year month day duration item using the provided
+   * {@code value}.
    *
    * @param value
    *          a duration
@@ -106,7 +110,8 @@ public interface IYearMonthDurationItem extends IDurationItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item cast to this type
+   * @return the original item if it is already this type, otherwise a new item
+   *         cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
@@ -137,8 +142,8 @@ public interface IYearMonthDurationItem extends IDurationItem {
    *
    * @param item
    *          the item to compare with this value
-   * @return a negative integer, zero, or a positive integer if this value is less than, equal to, or
-   *         greater than the {@code item}.
+   * @return a negative integer, zero, or a positive integer if this value is less
+   *         than, equal to, or greater than the {@code item}.
    */
   default int compareTo(IYearMonthDurationItem item) {
     Period thisPeriod = asPeriod().normalized();

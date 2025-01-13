@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.HexBinaryAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractOpaqueMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IHexBinaryItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
@@ -54,22 +55,11 @@ public class HexBinaryItem
         || obj instanceof IHexBinaryItem && compareTo((IHexBinaryItem) obj) == 0;
   }
 
-  private final class MapKey implements IMapKey {
+  private final class MapKey
+      extends AbstractOpaqueMapKey {
     @Override
     public IHexBinaryItem getKey() {
       return HexBinaryItem.this;
-    }
-
-    @Override
-    public int hashCode() {
-      return getKey().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      return this == obj ||
-          obj instanceof MapKey
-              && getKey().equals(((MapKey) obj).getKey());
     }
   }
 }

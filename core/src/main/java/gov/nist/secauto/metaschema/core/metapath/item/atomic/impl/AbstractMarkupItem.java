@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.IMarkupString;
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractStringMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IMarkupItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
@@ -19,6 +20,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <TYPE>
  *          the Java type of this markup item
  */
+// FIXME: Should this be a subtype of IStringItem?
 public abstract class AbstractMarkupItem<TYPE extends IMarkupString<TYPE>>
     extends AbstractAnyAtomicItem<TYPE>
     implements IMarkupItem {
@@ -60,30 +62,16 @@ public abstract class AbstractMarkupItem<TYPE extends IMarkupString<TYPE>>
     return new MapKey();
   }
 
-  private final class MapKey implements IMapKey {
+  private final class MapKey
+      extends AbstractStringMapKey {
     @Override
     public IMarkupItem getKey() {
       return AbstractMarkupItem.this;
     }
 
     @Override
-    public int hashCode() {
-      return getKey().asString().hashCode();
-    }
-
-    @SuppressWarnings("PMD.OnlyOneReturn")
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) {
-        return true;
-      }
-
-      if (!(obj instanceof AbstractMarkupItem.MapKey)) {
-        return false;
-      }
-
-      AbstractMarkupItem<?>.MapKey other = (AbstractMarkupItem<?>.MapKey) obj;
-      return getKey().compareTo(other.getKey()) == 0;
+    public String asString() {
+      return getKey().asString();
     }
   }
 }

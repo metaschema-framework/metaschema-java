@@ -9,10 +9,12 @@ import gov.nist.secauto.metaschema.core.metapath.impl.AbstractStringMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * An abstract implementation of a Metapath atomic item containing a URI data
@@ -21,6 +23,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public abstract class AbstractUriItem
     extends AbstractAnyAtomicItem<URI>
     implements IAnyUriItem {
+
+  @SuppressWarnings("synthetic-access")
+  private final Lazy<String> stringValue = Lazy.lazy(super::asString);
 
   /**
    * Construct a new item that wraps the provided value.
@@ -36,6 +41,11 @@ public abstract class AbstractUriItem
   @NonNull
   public URI asUri() {
     return getValue();
+  }
+
+  @Override
+  public String asString() {
+    return ObjectUtils.notNull(stringValue.get());
   }
 
   @Override
@@ -67,6 +77,11 @@ public abstract class AbstractUriItem
     @Override
     public IAnyUriItem getKey() {
       return AbstractUriItem.this;
+    }
+
+    @Override
+    public String asString() {
+      return getKey().asString();
     }
   }
 }

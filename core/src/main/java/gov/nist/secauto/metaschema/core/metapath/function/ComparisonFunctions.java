@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
@@ -194,6 +195,8 @@ public final class ComparisonFunctions {
       retval = dateTimeCompare((IDateTimeItem) left, operator, (IDateTimeItem) right);
     } else if (left instanceof IDateItem && right instanceof IDateItem) {
       retval = dateCompare((IDateItem) left, operator, (IDateItem) right);
+    } else if (left instanceof ITimeItem && right instanceof ITimeItem) {
+      retval = timeCompare((ITimeItem) left, operator, (ITimeItem) right);
     } else if (left instanceof IDurationItem && right instanceof IDurationItem) {
       retval = durationCompare((IDurationItem) left, operator, (IDurationItem) right);
     } else if (left instanceof IBase64BinaryItem && right instanceof IBase64BinaryItem) {
@@ -433,6 +436,54 @@ public final class ComparisonFunctions {
       break;
     case NE:
       retval = FnNot.fnNot(OperationFunctions.opDateEqual(left, right));
+      break;
+    default:
+      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));
+    }
+    return retval;
+  }
+
+  /**
+   * Perform a date-based comparison of the {@code right} item against the
+   * {@code left} item using the specified {@code operator}.
+   *
+   * @param left
+   *          the value to compare against
+   * @param operator
+   *          the comparison operator
+   * @param right
+   *          the value to compare with
+   * @return the comparison result
+   */
+  @NonNull
+  public static IBooleanItem timeCompare(@NonNull ITimeItem left, @NonNull Operator operator,
+      @NonNull ITimeItem right) {
+
+    IBooleanItem retval;
+    switch (operator) {
+    case EQ:
+      retval = OperationFunctions.opTimeEqual(left, right);
+      break;
+    case GE: {
+      IBooleanItem gt = OperationFunctions.opTimeGreaterThan(left, right);
+      IBooleanItem eq = OperationFunctions.opTimeEqual(left, right);
+      retval = IBooleanItem.valueOf(gt.toBoolean() || eq.toBoolean());
+      break;
+    }
+    case GT:
+      retval = OperationFunctions.opTimeGreaterThan(left, right);
+      break;
+    case LE: {
+      IBooleanItem lt = OperationFunctions.opTimeLessThan(left, right);
+      IBooleanItem eq = OperationFunctions.opTimeEqual(left, right);
+      retval = IBooleanItem.valueOf(lt.toBoolean() || eq.toBoolean());
+      break;
+    }
+    case LT:
+      retval = OperationFunctions.opTimeLessThan(left, right);
+      break;
+    case NE:
+      retval = FnNot.fnNot(OperationFunctions.opTimeEqual(left, right));
       break;
     default:
       throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));

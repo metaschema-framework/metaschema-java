@@ -105,7 +105,7 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
 
   @NonNull
   static IDateTimeItem valueOf(@NonNull LocalDateTime value) {
-    return valueOf(new AmbiguousDateTime(value.atZone(ZoneOffset.UTC), false));
+    return valueOf(new AmbiguousDateTime(ObjectUtils.notNull(value.atZone(ZoneOffset.UTC)), false));
   }
 
   /**

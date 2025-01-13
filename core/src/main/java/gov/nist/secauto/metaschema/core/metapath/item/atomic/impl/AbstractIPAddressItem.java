@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractOpaqueMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIPAddressItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
@@ -60,30 +61,11 @@ public abstract class AbstractIPAddressItem<TYPE extends IPAddress>
     return new MapKey();
   }
 
-  private final class MapKey implements IMapKey {
+  private final class MapKey
+      extends AbstractOpaqueMapKey {
     @Override
     public IIPAddressItem getKey() {
       return AbstractIPAddressItem.this;
-    }
-
-    @Override
-    public int hashCode() {
-      return getKey().asIpAddress().hashCode();
-    }
-
-    @SuppressWarnings("PMD.OnlyOneReturn")
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) {
-        return true;
-      }
-
-      if (!(obj instanceof AbstractIPAddressItem.MapKey)) {
-        return false;
-      }
-
-      AbstractIPAddressItem<?>.MapKey other = (AbstractIPAddressItem<?>.MapKey) obj;
-      return getKey().compareTo(other.getKey()) == 0;
     }
   }
 }

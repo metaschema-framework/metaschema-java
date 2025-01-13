@@ -90,7 +90,8 @@ public interface ITemporalItem extends IAnyAtomicItem {
   /**
    * Determine if the temporal item has a timezone.
    *
-   * @return {@code true} if the temporal item has a timezone or {@code false} otherwise
+   * @return {@code true} if the temporal item has a timezone or {@code false}
+   *         otherwise
    */
   boolean hasTimezone();
 
@@ -99,14 +100,16 @@ public interface ITemporalItem extends IAnyAtomicItem {
   boolean hasTime();
 
   /**
-   * Adjusts a temporal item value to a specific timezone, or to no timezone at all.
+   * Adjusts a temporal item value to a specific timezone, or to no timezone at
+   * all.
    *
    * @param offset
    *          the timezone offset to use or {@code null}
    * @return the adjusted temporal value
    * @throws DateTimeFunctionException
-   *           with code {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if the offset
-   *           is < -PT14H or > PT14H
+   *           with code
+   *           {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if
+   *           the offset is < -PT14H or > PT14H
    */
   @NonNull
   ITemporalItem replaceTimezone(@Nullable IDayTimeDurationItem offset);
@@ -116,8 +119,8 @@ public interface ITemporalItem extends IAnyAtomicItem {
    *
    * @param item
    *          the item to compare with this value
-   * @return a negative integer, zero, or a positive integer if this value is less than, equal to, or
-   *         greater than the {@code item}.
+   * @return a negative integer, zero, or a positive integer if this value is less
+   *         than, equal to, or greater than the {@code item}.
    */
   int compareTo(@NonNull ITemporalItem item);
 }

@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractTemporalMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITemporalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
@@ -56,8 +57,8 @@ public abstract class AbstractTemporalItem<TYPE>
     return new MapKey();
   }
 
-  private final class MapKey
-      implements IMapKey {
+  protected final class MapKey
+      extends AbstractTemporalMapKey {
 
     @Override
     public ITemporalItem getKey() {
@@ -65,25 +66,9 @@ public abstract class AbstractTemporalItem<TYPE>
     }
 
     @Override
-    public int hashCode() {
-      return getKey().hashCode();
+    public ITemporalItem asTemporalItem() {
+      return getKey();
     }
 
-    @SuppressWarnings("PMD.OnlyOneReturn")
-    @Override
-    public boolean equals(Object obj) {
-      // FIXME: ensure implicit timezone is not used and that comparison is performed
-      // correctly
-      if (this == obj) {
-        return true;
-      }
-
-      if (!(obj instanceof AbstractTemporalItem.MapKey)) {
-        return false;
-      }
-
-      AbstractTemporalItem<?>.MapKey other = (AbstractTemporalItem<?>.MapKey) obj;
-      return getKey().compareTo(other.getKey()) == 0;
-    }
   }
 }

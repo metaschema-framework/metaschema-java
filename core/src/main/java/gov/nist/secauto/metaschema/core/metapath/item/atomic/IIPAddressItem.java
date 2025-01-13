@@ -16,6 +16,7 @@ import inet.ipaddr.IPAddress;
 /**
  * An atomic Metapath item representing an IP address data value.
  */
+// FIXME: Should this be a subtype of IStringItem?
 public interface IIPAddressItem extends IAnyAtomicItem {
   /**
    * Get the type information for this item.

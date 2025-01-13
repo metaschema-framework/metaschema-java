@@ -21,4 +21,10 @@ public interface IMapKey {
    */
   @NonNull
   IAnyAtomicItem getKey();
+
+  @Override
+  int hashCode();
+
+  @Override
+  boolean equals(Object obj);
 }

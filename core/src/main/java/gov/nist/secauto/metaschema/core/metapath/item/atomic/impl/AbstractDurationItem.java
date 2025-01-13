@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
@@ -12,7 +16,8 @@ import java.util.Comparator;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Provides a common implementation for all atomic types that have an underlying value.
+ * Provides a common implementation for all atomic types that have an underlying
+ * value.
  *
  * @param <TYPE>
  *          the Java type associated with the atomic type.
@@ -32,7 +37,7 @@ public abstract class AbstractDurationItem<TYPE extends TemporalAmount>
               ? ((IDayTimeDurationItem) item).asDuration().getNano()
               : 0);
 
-  protected AbstractDurationItem(TYPE value) {
+  protected AbstractDurationItem(@NonNull TYPE value) {
     super(value);
   }
 

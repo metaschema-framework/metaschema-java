@@ -5,11 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractDecimalMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.math.BigDecimal;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * An abstract implementation of a Metapath atomic item containing a decimal
@@ -22,6 +27,9 @@ public abstract class AbstractDecimalItem<TYPE>
     extends AbstractAnyAtomicItem<TYPE>
     implements IDecimalItem {
 
+  @SuppressWarnings("synthetic-access")
+  private final Lazy<String> stringValue = Lazy.lazy(super::asString);
+
   /**
    * Construct a new item with the provided {@code value}.
    *
@@ -30,6 +38,11 @@ public abstract class AbstractDecimalItem<TYPE>
    */
   protected AbstractDecimalItem(@NonNull TYPE value) {
     super(value);
+  }
+
+  @Override
+  public String asString() {
+    return ObjectUtils.notNull(stringValue.get());
   }
 
   @Override
@@ -43,7 +56,7 @@ public abstract class AbstractDecimalItem<TYPE>
   }
 
   private final class MapKey
-      implements IMapKey {
+      extends AbstractDecimalMapKey {
 
     @Override
     public IDecimalItem getKey() {
@@ -51,15 +64,8 @@ public abstract class AbstractDecimalItem<TYPE>
     }
 
     @Override
-    public int hashCode() {
-      return getKey().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      return this == obj ||
-          obj instanceof AbstractDecimalItem.MapKey
-              && getKey().asDecimal().equals(((AbstractDecimalItem<?>.MapKey) obj).getKey().asDecimal());
+    public BigDecimal asDecimal() {
+      return getKey().asDecimal();
     }
   }
 }
