@@ -52,6 +52,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public final class OperationFunctions {
   @NonNull
   private static final IDateItem DATE_1972_12_31 = IDateItem.valueOf(ObjectUtils.notNull(LocalDate.of(1972, 12, 31)));
+  @NonNull
+  private static final ITimeItem TIME_00_00_00 = ITimeItem.valueOf(OffsetTime.of(0, 0, 0, 0, ZoneOffset.UTC), false);
 
   /**
    * Identifies the types and substypes that support aggregation.
@@ -602,7 +604,9 @@ public final class OperationFunctions {
    */
   @NonNull
   public static IBooleanItem opDateEqual(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {
-    return IBooleanItem.valueOf(arg1.asZonedDateTime().equals(arg2.asZonedDateTime()));
+    IDateTimeItem time1 = IDateTimeItem.valueOf(arg1, TIME_00_00_00);
+    IDateTimeItem time2 = IDateTimeItem.valueOf(arg2, TIME_00_00_00);
+    return opDateTimeEqual(time1, time2);
   }
 
   /**
@@ -618,7 +622,7 @@ public final class OperationFunctions {
    */
   @NonNull
   public static IBooleanItem opDateTimeEqual(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {
-    return IBooleanItem.valueOf(arg1.asZonedDateTime().equals(arg2.asZonedDateTime()));
+    return IBooleanItem.valueOf(arg1.asZonedDateTime().isEqual(arg2.asZonedDateTime()));
   }
 
   /**
@@ -700,7 +704,7 @@ public final class OperationFunctions {
    */
   @NonNull
   public static IBooleanItem opDateTimeGreaterThan(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {
-    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) > 0);
+    return IBooleanItem.valueOf(arg1.asZonedDateTime().isAfter(arg2.asZonedDateTime()));
   }
 
   /**
@@ -828,7 +832,7 @@ public final class OperationFunctions {
   public static IBooleanItem opDateTimeLessThan(
       @NonNull IDateTimeItem arg1,
       @NonNull IDateTimeItem arg2) {
-    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) < 0);
+    return IBooleanItem.valueOf(arg1.asZonedDateTime().isBefore(arg2.asZonedDateTime()));
   }
 
   /**

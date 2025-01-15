@@ -19,6 +19,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 public interface ITemporalItem extends IAnyAtomicItem {
 
+  @NonNull
+  Class<? extends ITemporalItem> getItemBaseType();
+
   int getYear();
 
   int getMonth();
@@ -113,14 +116,4 @@ public interface ITemporalItem extends IAnyAtomicItem {
    */
   @NonNull
   ITemporalItem replaceTimezone(@Nullable IDayTimeDurationItem offset);
-
-  /**
-   * Compares this value with the argument.
-   *
-   * @param item
-   *          the item to compare with this value
-   * @return a negative integer, zero, or a positive integer if this value is less
-   *         than, equal to, or greater than the {@code item}.
-   */
-  int compareTo(@NonNull ITemporalItem item);
 }

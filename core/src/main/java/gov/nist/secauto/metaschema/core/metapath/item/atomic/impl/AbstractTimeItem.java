@@ -5,8 +5,11 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+
+import java.time.ZoneOffset;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -32,18 +35,46 @@ public abstract class AbstractTimeItem<TYPE>
 
   @Override
   public int hashCode() {
-    return asOffsetTime().hashCode();
+    return asOffsetTime().withOffsetSameInstant(ZoneOffset.UTC).hashCode();
   }
 
   @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object obj) {
-    return this == obj
-        || obj instanceof ITimeItem && compareTo((ITimeItem) obj) == 0;
+    if (this == obj) {
+      return true;
+    }
+
+    if (obj instanceof ITimeItem) {
+      ITimeItem that = (ITimeItem) obj;
+      return hasTimezone() == that.hasTimezone() && deepEquals(that);
+    }
+    return false;
   }
 
   @Override
   public IMapKey asMapKey() {
     return new MapKey();
+  }
+
+  protected final class MapKey
+      extends AbstractMapKey {
+
+    @Override
+    public ITimeItem getKey() {
+      return AbstractTimeItem.this;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return this == obj
+          || obj instanceof AbstractTimeItem<?>.MapKey
+              && getKey().equals(((AbstractTimeItem<?>.MapKey) obj).getKey());
+    }
+
+    @Override
+    public int hashCode() {
+      return getKey().hashCode();
+    }
   }
 }

@@ -46,6 +46,11 @@ public interface ITimeItem extends ITemporalItem {
     return type();
   }
 
+  @Override
+  default Class<ITimeItem> getItemBaseType() {
+    return ITimeItem.class;
+  }
+
   /**
    * Construct a new date/time item using the provided string {@code value}.
    *

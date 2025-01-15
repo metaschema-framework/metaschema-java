@@ -26,6 +26,8 @@ import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.io.IOException;
@@ -36,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Execution(value = ExecutionMode.SAME_THREAD,
+    reason = "FIXME: produces output that is not unique to each test: out.xml.")
 class BasicMetaschemaTest
     extends AbstractMetaschemaTest {
 

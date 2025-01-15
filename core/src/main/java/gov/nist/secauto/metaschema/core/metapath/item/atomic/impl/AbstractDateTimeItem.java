@@ -5,7 +5,11 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractCalendarMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+
+import java.time.ZoneOffset;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -31,13 +35,35 @@ public abstract class AbstractDateTimeItem<TYPE>
 
   @Override
   public int hashCode() {
-    return asZonedDateTime().hashCode();
+    int result = asZonedDateTime().withZoneSameInstant(ZoneOffset.UTC).hashCode();
+    result = hasTimezone() ? 31 * result * Boolean.hashCode(hasTimezone()) : result;
+    return 31 * result * getClass().hashCode();
   }
 
   @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object obj) {
-    return this == obj
-        || obj instanceof IDateTimeItem && compareTo((IDateTimeItem) obj) == 0;
+    if (this == obj) {
+      return true;
+    }
+
+    if (obj instanceof IDateTimeItem) {
+      IDateTimeItem that = (IDateTimeItem) obj;
+      return hasTimezone() == that.hasTimezone() && deepEquals(that);
+    }
+    return false;
+  }
+
+  @Override
+  public IMapKey asMapKey() {
+    return new MapKey();
+  }
+
+  private final class MapKey
+      extends AbstractCalendarMapKey {
+    @Override
+    public IDateTimeItem getKey() {
+      return AbstractDateTimeItem.this;
+    }
   }
 }

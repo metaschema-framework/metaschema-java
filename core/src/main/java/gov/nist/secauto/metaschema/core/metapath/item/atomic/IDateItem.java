@@ -48,6 +48,11 @@ public interface IDateItem extends ICalendarTemporalItem {
     return type();
   }
 
+  @Override
+  default Class<IDateItem> getItemBaseType() {
+    return IDateItem.class;
+  }
+
   /**
    * Construct a new date item using the provided string {@code value}.
    *

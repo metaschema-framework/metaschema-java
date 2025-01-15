@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -50,6 +51,11 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
     return type();
   }
 
+  @Override
+  default Class<IDateTimeItem> getItemBaseType() {
+    return IDateTimeItem.class;
+  }
+
   /**
    * Construct a new date/time item using the provided string {@code value}.
    *
@@ -73,12 +79,32 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
 
   @NonNull
   static IDateTimeItem valueOf(@NonNull IDateItem date, @NonNull ITimeItem time) {
-    throw new UnsupportedOperationException();
+    ZonedDateTime zDate = ObjectUtils.notNull(date.asZonedDateTime());
+    ZoneId tzDate = date.hasTimezone() ? zDate.getZone() : null;
+    OffsetTime oTime = ObjectUtils.notNull(time.asOffsetTime());
+    ZoneId tzTime = time.hasTimezone() ? oTime.getOffset() : null;
+
+    if (tzDate != null && tzTime != null && !tzDate.equals(tzTime)) {
+      // exception
+
+    }
+
+    // either both have the same timezone, both are null, or only one has a timezone
+    ZoneId zone = tzDate == null
+        ? tzTime == null ? null : tzTime
+        : tzDate;
+
+    return valueOf(
+        ObjectUtils.notNull(ZonedDateTime.of(
+            zDate.toLocalDate(),
+            oTime.toLocalTime(),
+            zone == null ? ZoneOffset.UTC : zone)),
+        zone != null);
   }
 
   @NonNull
-  static IDateTimeItem valueOf(@NonNull ICalendarTemporalItem date) {
-    return valueOf(date.asZonedDateTime(), date.hasTimezone());
+  static IDateTimeItem valueOf(@NonNull ICalendarTemporalItem item) {
+    return valueOf(item.asZonedDateTime(), item.hasTimezone());
   }
 
   /**

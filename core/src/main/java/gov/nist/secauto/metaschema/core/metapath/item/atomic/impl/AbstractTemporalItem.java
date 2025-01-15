@@ -5,10 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.AbstractTemporalMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITemporalItem;
-import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
 import java.util.Comparator;
 
@@ -45,30 +43,5 @@ public abstract class AbstractTemporalItem<TYPE>
   @Override
   protected String getValueSignature() {
     return "'" + asString() + "'";
-  }
-
-  @Override
-  public int compareTo(@NonNull ITemporalItem item) {
-    return COMPARATOR.compare(this, item);
-  }
-
-  @Override
-  public IMapKey asMapKey() {
-    return new MapKey();
-  }
-
-  protected final class MapKey
-      extends AbstractTemporalMapKey {
-
-    @Override
-    public ITemporalItem getKey() {
-      return AbstractTemporalItem.this;
-    }
-
-    @Override
-    public ITemporalItem asTemporalItem() {
-      return getKey();
-    }
-
   }
 }

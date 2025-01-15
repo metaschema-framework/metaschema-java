@@ -24,6 +24,6 @@ public abstract class AbstractStringMapKey
   public boolean equals(Object obj) {
     return this == obj
         // TODO: implement fn:codepoint-equal per spec
-        || obj instanceof IStringMapKey && getKey().asString().equals(((IStringMapKey) obj).getKey().asString());
+        || obj instanceof IStringMapKey && asString().equals(((IStringMapKey) obj).asString());
   }
 }

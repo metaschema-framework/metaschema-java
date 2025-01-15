@@ -362,7 +362,9 @@ public final class ComparisonFunctions {
    * @return the comparison result
    */
   @NonNull
-  public static IBooleanItem dateTimeCompare(@NonNull IDateTimeItem left, @NonNull Operator operator,
+  public static IBooleanItem dateTimeCompare(
+      @NonNull IDateTimeItem left,
+      @NonNull Operator operator,
       @NonNull IDateTimeItem right) {
     IBooleanItem retval;
     switch (operator) {

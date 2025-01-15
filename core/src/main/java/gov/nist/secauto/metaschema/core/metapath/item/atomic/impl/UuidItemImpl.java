@@ -12,10 +12,12 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicIt
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUuidItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.UUID;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * An implementation of a Metapath atomic item containing a UUID data value.
@@ -23,6 +25,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class UuidItemImpl
     extends AbstractAnyAtomicItem<UUID>
     implements IUuidItem {
+  private final Lazy<String> stringValue = Lazy.lazy(super::asString);
 
   /**
    * Construct a new item with the provided {@code value}.
@@ -37,6 +40,11 @@ public class UuidItemImpl
   @Override
   public UUID asUuid() {
     return getValue();
+  }
+
+  @Override
+  public String asString() {
+    return ObjectUtils.notNull(stringValue.get());
   }
 
   @Override
