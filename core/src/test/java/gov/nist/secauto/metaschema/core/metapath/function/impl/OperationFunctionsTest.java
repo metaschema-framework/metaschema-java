@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
@@ -208,26 +209,145 @@ class OperationFunctionsTest {
         @NonNull INumericItem divisor) {
       assertEquals(expected, OperationFunctions.opNumericMod(dividend, divisor));
     }
-  }
 
-  // TODO: op:numeric-unary-minus
+    private Stream<Arguments> provideValuesOpNumericUnaryMinus() {
+      return Stream.of(
+          Arguments.of(integer(-10), integer(10)),
+          Arguments.of(integer(3), integer(-3)),
+          Arguments.of(decimal(0), integer(-0)),
+          Arguments.of(decimal(3.0E0), decimal(-3.0E0)),
+          Arguments.of(decimal("-0.9"), decimal("0.9")));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValuesOpNumericUnaryMinus")
+    @DisplayName("op:numeric-unary-minus")
+    void testOpNumericUnaryMinus(@Nullable INumericItem expected, @NonNull INumericItem item) {
+      assertEquals(expected, OperationFunctions.opNumericUnaryMinus(item));
+    }
+  }
 
   @Nested
   @DisplayName("Comparison operators on numeric values")
   @TestInstance(TestInstance.Lifecycle.PER_CLASS)
   class NumericComparison {
-    // TODO: op:numeric-equal
-    // TODO: op:numeric-less-than
-    // TODO: op:numeric-greater-than
+
+    private Stream<Arguments> provideValuesOpNumericEqual() {
+      return Stream.of(
+          Arguments.of(bool(false), null, integer(1)),
+          Arguments.of(bool(false), integer(1), null),
+          Arguments.of(bool(false), null, null),
+          Arguments.of(bool(true), integer(1), integer(1)),
+          Arguments.of(bool(true), integer(0), integer(0)),
+          Arguments.of(bool(true), decimal(0), integer(-0)),
+          Arguments.of(bool(true), decimal(3.0E0), decimal(3.0E0)),
+          Arguments.of(bool(false), integer(-10), integer(10)),
+          Arguments.of(bool(false), integer(3), integer(-3)),
+          Arguments.of(bool(false), decimal(3.0E0), decimal(-3.0E0)),
+          Arguments.of(bool(false), decimal("-0.9"), decimal("0.9")));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValuesOpNumericEqual")
+    @DisplayName("op:numeric-equal")
+    void testOpNumericUnaryMinus(
+        @NonNull IBooleanItem expected,
+        @Nullable INumericItem item1,
+        @Nullable INumericItem item2) {
+      assertEquals(expected, OperationFunctions.opNumericEqual(item1, item2));
+    }
+
+    private Stream<Arguments> provideValuesOpNumericLessThan() {
+      return Stream.of(
+          Arguments.of(bool(false), null, integer(1)),
+          Arguments.of(bool(false), integer(1), null),
+          Arguments.of(bool(false), null, null),
+          Arguments.of(bool(false), integer(1), integer(1)),
+          Arguments.of(bool(false), integer(0), integer(0)),
+          Arguments.of(bool(false), decimal(0), integer(-0)),
+          Arguments.of(bool(false), decimal(3.0E0), decimal(3.0E0)),
+          Arguments.of(bool(true), integer(-10), integer(10)),
+          Arguments.of(bool(false), integer(3), integer(-3)),
+          Arguments.of(bool(false), decimal(3.0E0), decimal(-3.0E0)),
+          Arguments.of(bool(true), decimal("-0.9"), decimal("0.9")));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValuesOpNumericLessThan")
+    @DisplayName("op:numeric-less-than and op:numeric-greater-than")
+    void testOpNumericNumericLessThan(
+        @NonNull IBooleanItem expected,
+        @Nullable INumericItem item1,
+        @Nullable INumericItem item2) {
+      assertAll(
+          () -> assertEquals(expected, OperationFunctions.opNumericLessThan(item1, item2)),
+          () -> assertEquals(expected, OperationFunctions.opNumericGreaterThan(item2, item1)));
+    }
   }
 
   @Nested
-  @DisplayName("Comparison operators on numeric values")
+  @DisplayName("Functions and operators on Boolean values")
   @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-  class BooleanComparison {
-    // TODO: op:boolean-equal
-    // TODO: op:boolean-less-than
-    // TODO: op:boolean-greater-than
+  class Boolean {
+
+    @Nested
+    @DisplayName("Operators on Boolean values")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class BooleanComparison {
+      private Stream<Arguments> provideValuesOpBooleanEqual() {
+        return Stream.of(
+            Arguments.of(bool(true), bool(true), bool(true)),
+            Arguments.of(bool(false), bool(true), bool(false)),
+            Arguments.of(bool(false), bool(false), bool(true)),
+            Arguments.of(bool(true), bool(false), bool(false)));
+      }
+
+      @ParameterizedTest
+      @MethodSource("provideValuesOpBooleanEqual")
+      @DisplayName("op:boolean-equal")
+      void testOpBooleanEqual(
+          @Nullable IBooleanItem expected,
+          @NonNull IBooleanItem item1,
+          @NonNull IBooleanItem item2) {
+        assertEquals(expected, OperationFunctions.opBooleanEqual(item1, item2));
+      }
+
+      private Stream<Arguments> provideValuesOpBooleanLessThan() {
+        return Stream.of(
+            Arguments.of(bool(false), bool(true), bool(true)),
+            Arguments.of(bool(false), bool(true), bool(false)),
+            Arguments.of(bool(true), bool(false), bool(true)),
+            Arguments.of(bool(false), bool(false), bool(false)));
+      }
+
+      @ParameterizedTest
+      @MethodSource("provideValuesOpBooleanLessThan")
+      @DisplayName("op:boolean-less-than")
+      void testOpBooleanLessThan(
+          @Nullable IBooleanItem expected,
+          @NonNull IBooleanItem item1,
+          @NonNull IBooleanItem item2) {
+        assertEquals(expected, OperationFunctions.opBooleanLessThan(item1, item2));
+      }
+
+      private Stream<Arguments> provideValuesOpBooleanGreaterThan() {
+        return Stream.of(
+            Arguments.of(bool(false), bool(true), bool(true)),
+            Arguments.of(bool(true), bool(true), bool(false)),
+            Arguments.of(bool(false), bool(false), bool(true)),
+            Arguments.of(bool(false), bool(false), bool(false)));
+      }
+
+      @ParameterizedTest
+      @MethodSource("provideValuesOpBooleanGreaterThan")
+      @DisplayName("op:boolean-greater-than")
+      void testOpBooleanGreaterThan(
+          @Nullable IBooleanItem expected,
+          @NonNull IBooleanItem item1,
+          @NonNull IBooleanItem item2) {
+        assertEquals(expected, OperationFunctions.opBooleanGreaterThan(item1, item2));
+      }
+    }
   }
 
   @Nested
@@ -262,10 +382,56 @@ class OperationFunctionsTest {
         assertEquals(expected, OperationFunctions.opDurationEqual(arg1, arg2));
       }
 
-      // TODO: op:yearMonthDuration-less-than
-      // TODO: op:yearMonthDuration-greater-than
-      // TODO: op:dayTimeDuration-less-than
-      // TODO: op:dayTimeDuration-greater-than
+      private Stream<Arguments> provideValuesYearMonthDurationLessAndGreaterThan() {
+        return Stream.of(
+            Arguments.of(bool(false), yearMonthDuration("P1Y"), yearMonthDuration("P11M")),
+            Arguments.of(bool(true), yearMonthDuration("P2Y"), yearMonthDuration("P25M")),
+            Arguments.of(bool(false), yearMonthDuration("P2Y"), yearMonthDuration("P1Y9M")),
+            Arguments.of(bool(true), yearMonthDuration("P1Y"), yearMonthDuration("P15M")),
+            Arguments.of(bool(false), yearMonthDuration("P3Y"), yearMonthDuration("P1Y15M")),
+            Arguments.of(bool(true), yearMonthDuration("P3Y"), yearMonthDuration("P1Y72M")),
+            Arguments.of(bool(false), yearMonthDuration("P1Y"), yearMonthDuration("P12M")),
+            Arguments.of(bool(false), yearMonthDuration("P2Y"), yearMonthDuration("P24M")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:yearMonthDuration-less-than and op:yearMonthDuration-greater-than")
+      @MethodSource("provideValuesYearMonthDurationLessAndGreaterThan")
+      void testOpYearMonthDurationLessAndGreaterThan(
+          @NonNull IBooleanItem expected,
+          @NonNull IYearMonthDurationItem item1,
+          @NonNull IYearMonthDurationItem item2) {
+        assertAll(
+            () -> assertEquals(expected, OperationFunctions.opYearMonthDurationLessThan(item1, item2)),
+            () -> assertEquals(expected, OperationFunctions.opYearMonthDurationGreaterThan(item2, item1)));
+
+      }
+
+      private Stream<Arguments> provideValuesDayTimeDurationLessAndGreaterThan() {
+        return Stream.of(
+            Arguments.of(bool(false), dayTimeDuration("P1D"), dayTimeDuration("PT24H")),
+            Arguments.of(bool(true), dayTimeDuration("P2D"), dayTimeDuration("P1DT25H")),
+            Arguments.of(bool(true), dayTimeDuration("P2D"), dayTimeDuration("P1DT86401S")),
+            Arguments.of(bool(true), dayTimeDuration("P1D"), dayTimeDuration("P2D")),
+            Arguments.of(bool(true), dayTimeDuration("P3D"), dayTimeDuration("PT4321M")),
+            Arguments.of(bool(false), dayTimeDuration("P1D"), dayTimeDuration("P1D")),
+            Arguments.of(bool(false), dayTimeDuration("PT1H"), dayTimeDuration("PT1H")),
+            Arguments.of(bool(false), dayTimeDuration("PT1M"), dayTimeDuration("PT1M")),
+            Arguments.of(bool(false), dayTimeDuration("PT1S"), dayTimeDuration("PT1S")),
+            Arguments.of(bool(true), dayTimeDuration("PT1S"), dayTimeDuration("PT2S")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:dayTimeDuration-less-than and op:dayTimeDuration-greater-than")
+      @MethodSource("provideValuesDayTimeDurationLessAndGreaterThan")
+      void testOpDayTimeDurationLessAndGreaterThan(
+          @NonNull IBooleanItem expected,
+          @NonNull IDayTimeDurationItem item1,
+          @NonNull IDayTimeDurationItem item2) {
+        assertAll(
+            () -> assertEquals(expected, OperationFunctions.opDayTimeDurationLessThan(item1, item2)),
+            () -> assertEquals(expected, OperationFunctions.opDayTimeDurationGreaterThan(item2, item1)));
+      }
     }
 
     @Nested
@@ -474,6 +640,30 @@ class OperationFunctionsTest {
     @DisplayName("Functions and operators on dates and times")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class DateTimeOperators {
+      private Stream<Arguments> provideValuesDateTimeEqual() {
+        return Stream.of(
+            Arguments.of(bool(true), duration("P1Y"), duration("P12M")),
+            Arguments.of(bool(true), duration("PT24H"), duration("P1D")),
+            Arguments.of(bool(false), duration("P1Y"), duration("P365D")),
+            Arguments.of(bool(true), duration("P0Y"), duration("P0D")),
+            Arguments.of(bool(true), yearMonthDuration("P0Y"), dayTimeDuration("P0D")),
+            Arguments.of(bool(false), yearMonthDuration("P1Y"), dayTimeDuration("P365D")),
+            Arguments.of(bool(true), yearMonthDuration("P2Y"), yearMonthDuration("P24M")),
+            Arguments.of(bool(true), dayTimeDuration("P10D"), dayTimeDuration("PT240H")),
+            Arguments.of(bool(true), duration("P2Y0M0DT0H0M0S"), yearMonthDuration("P24M")),
+            Arguments.of(bool(true), duration("P0Y0M10D"), dayTimeDuration("PT240H")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:dateTime-equal")
+      @MethodSource("provideValuesDateTimeEqual")
+      void testOpDateTimeEqual(
+          @NonNull IBooleanItem expected,
+          @NonNull IDateTimeItem arg1,
+          @NonNull IDateTimeItem arg2) {
+        assertEquals(expected, OperationFunctions.opDateTimeEqual(arg1, arg2));
+      }
+
       // TODO: op:dateTime-equal
       // TODO: op:dateTime-less-than
       // TODO: op:dateTime-greater-than

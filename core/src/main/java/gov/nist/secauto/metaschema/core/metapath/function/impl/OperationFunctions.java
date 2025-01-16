@@ -230,8 +230,8 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dates">op:subtract-dates</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dates">op:subtract-dates</a>.
    *
    * @param date1
    *          the first point in time
@@ -304,8 +304,8 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-times">op:subtract-times</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-subtract-times">op:subtract-times</a>.
    *
    * @param arg1
    *          the first duration
@@ -402,9 +402,8 @@ public final class OperationFunctions {
 
   /**
    * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dateTimes">op:subtract-dateTimes</a>
-   * and <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-times">op:subtract-times</a>.
+   * "https://www.w3.org/TR/xpath-functions-31/#func-subtract-dateTimes">op:subtract-dateTimes</a> and
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-subtract-times">op:subtract-times</a>.
    *
    * @param time1
    *          the first point in time
@@ -460,12 +459,10 @@ public final class OperationFunctions {
    *          the duration value
    * @param arg2
    *          the number to multiply by
-   * @return the result of multiplying a {@link IYearMonthDurationItem} by a
-   *         number
+   * @return the result of multiplying a {@link IYearMonthDurationItem} by a number
    * @throws DateTimeFunctionException
-   *           with the code
-   *           {@link DateTimeFunctionException#DURATION_OVERFLOW_UNDERFLOW_ERROR}
-   *           if arithmetic overflow occurs
+   *           with the code {@link DateTimeFunctionException#DURATION_OVERFLOW_UNDERFLOW_ERROR} if
+   *           arithmetic overflow occurs
    */
   @NonNull
   public static IYearMonthDurationItem opMultiplyYearMonthDuration(
@@ -536,8 +533,7 @@ public final class OperationFunctions {
    *          the first duration value
    * @param arg2
    *          the second duration value
-   * @return the result of dividing a the first duration value by the second
-   *         duration value
+   * @return the result of dividing a the first duration value by the second duration value
    */
   @NonNull
   public static IDecimalItem opDivideYearMonthDurationByYearMonthDuration(
@@ -578,8 +574,7 @@ public final class OperationFunctions {
    *          the first duration value
    * @param arg2
    *          the second duration value
-   * @return the ratio of two {@link IDayTimeDurationItem} values, as a decimal
-   *         number
+   * @return the ratio of two {@link IDayTimeDurationItem} values, as a decimal number
    */
   @NonNull
   public static IDecimalItem opDivideDayTimeDurationByDayTimeDuration(
@@ -592,15 +587,15 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-date-equal">op:date-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-date-equal">op:date-equal</a>.
    *
    * @param arg1
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is the same instant in time as the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is the same instant in time as the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateEqual(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {
@@ -610,15 +605,15 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-dateTime-equal">op:dateTime-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-dateTime-equal">op:dateTime-equal</a>.
    *
    * @param arg1
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is the same instant in time as the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is the same instant in time as the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateTimeEqual(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {
@@ -626,15 +621,15 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-time-equal">op:time-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-time-equal">op:time-equal</a>.
    *
    * @param arg1
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is the same instant in time as the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is the same instant in time as the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opTimeEqual(@NonNull ITimeItem arg1, @NonNull ITimeItem arg2) {
@@ -644,15 +639,15 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-duration-equal">op:duration-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-duration-equal">op:duration-equal</a>.
    *
    * @param arg1
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is the same duration as the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is the same duration as the second, or {@code false}
+   *         otherwise
    */
   @NonNull
   public static IBooleanItem opDurationEqual(@NonNull IDurationItem arg1, @NonNull IDurationItem arg2) {
@@ -667,8 +662,7 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is equal to the second, or
-   *         {@code false} otherwise
+   * @return {@code true} if the first argument is equal to the second, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBase64BinaryEqual(@NonNull IBase64BinaryItem arg1, @NonNull IBase64BinaryItem arg2) {
@@ -683,12 +677,12 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a later instant in time than
-   *         the second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a later instant in time than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateGreaterThan(@NonNull IDateItem arg1, @NonNull IDateItem arg2) {
-    return IBooleanItem.valueOf(arg1.asZonedDateTime().compareTo(arg2.asZonedDateTime()) > 0);
+    return opDateLessThan(arg2, arg1);
   }
 
   /**
@@ -699,12 +693,12 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a later instant in time than
-   *         the second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a later instant in time than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateTimeGreaterThan(@NonNull IDateTimeItem arg1, @NonNull IDateTimeItem arg2) {
-    return IBooleanItem.valueOf(arg1.asZonedDateTime().isAfter(arg2.asZonedDateTime()));
+    return opDateTimeLessThan(arg2, arg1);
   }
 
   /**
@@ -715,8 +709,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a later instant in time than
-   *         the second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a later instant in time than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opTimeGreaterThan(@NonNull ITimeItem arg1, @NonNull ITimeItem arg2) {
@@ -733,8 +727,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a longer duration than the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a longer duration than the second, or {@code false}
+   *         otherwise
    */
   @NonNull
   public static IBooleanItem opYearMonthDurationGreaterThan(
@@ -751,8 +745,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a longer duration than the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a longer duration than the second, or {@code false}
+   *         otherwise
    */
   @NonNull
   public static IBooleanItem opDayTimeDurationGreaterThan(
@@ -769,26 +763,25 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is greater than the second, or
-   *         {@code false} otherwise
+   * @return {@code true} if the first argument is greater than the second, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBase64BinaryGreaterThan(
       @NonNull IBase64BinaryItem arg1,
       @NonNull IBase64BinaryItem arg2) {
-    return IBooleanItem.valueOf(arg1.compareTo(arg2) > 0);
+    return opBase64BinaryLessThan(arg2, arg1);
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-date-less-than">op:date-less-than</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-date-less-than">op:date-less-than</a>.
    *
    * @param arg1
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is an earlier instant in time than
-   *         the second, or {@code false} otherwise
+   * @return {@code true} if the first argument is an earlier instant in time than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateLessThan(
@@ -805,8 +798,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is an earlier instant in time than
-   *         the second, or {@code false} otherwise
+   * @return {@code true} if the first argument is an earlier instant in time than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opTimeLessThan(
@@ -818,15 +811,15 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-time-less-than">op:time-less-than</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-time-less-than">op:time-less-than</a>.
    *
    * @param arg1
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is an earlier instant in time than
-   *         the second, or {@code false} otherwise
+   * @return {@code true} if the first argument is an earlier instant in time than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDateTimeLessThan(
@@ -843,8 +836,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a shorter duration than the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a shorter duration than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opYearMonthDurationLessThan(
@@ -861,8 +854,8 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is a shorter duration than the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first argument is a shorter duration than the second, or
+   *         {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opDayTimeDurationLessThan(
@@ -879,8 +872,7 @@ public final class OperationFunctions {
    *          the first value
    * @param arg2
    *          the second value
-   * @return {@code true} if the first argument is less than the second, or
-   *         {@code false} otherwise
+   * @return {@code true} if the first argument is less than the second, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBase64BinaryLessThan(
@@ -930,11 +922,10 @@ public final class OperationFunctions {
   }
 
   /**
-   * Create a new sum by adding first provided addend value to the second provided
-   * addend value.
+   * Create a new sum by adding first provided addend value to the second provided addend value.
    * <p>
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-add">op:numeric-add</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-numeric-add">op:numeric-add</a>.
    *
    * @param addend1
    *          the first addend
@@ -952,8 +943,8 @@ public final class OperationFunctions {
   }
 
   /**
-   * Determine the difference by subtracting the provided subtrahend value from
-   * the provided minuend value.
+   * Determine the difference by subtracting the provided subtrahend value from the provided minuend
+   * value.
    * <p>
    * Based on XPath 3.1 <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-subtract">op:numeric-subtract</a>.
@@ -962,8 +953,7 @@ public final class OperationFunctions {
    *          the value to subtract from
    * @param subtrahend
    *          the value to subtract
-   * @return a new value resulting from subtracting the subtrahend from the
-   *         minuend
+   * @return a new value resulting from subtracting the subtrahend from the minuend
    */
   @NonNull
   public static INumericItem opNumericSubtract(
@@ -986,8 +976,7 @@ public final class OperationFunctions {
    *          the value to multiply
    * @param multiplier
    *          the value to multiply by
-   * @return a new value resulting from multiplying the multiplicand by the
-   *         multiplier
+   * @return a new value resulting from multiplying the multiplicand by the multiplier
    */
   @NonNull
   public static INumericItem opNumericMultiply(
@@ -1001,8 +990,8 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-divide">op:numeric-divide</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-numeric-divide">op:numeric-divide</a>.
    *
    * @param dividend
    *          the number to be divided
@@ -1010,8 +999,8 @@ public final class OperationFunctions {
    *          the number to divide by
    * @return the quotient
    * @throws ArithmeticFunctionException
-   *           with the code {@link ArithmeticFunctionException#DIVISION_BY_ZERO}
-   *           if the divisor is zero
+   *           with the code {@link ArithmeticFunctionException#DIVISION_BY_ZERO} if the divisor is
+   *           zero
    */
   @NonNull
   public static IDecimalItem opNumericDivide(@NonNull INumericItem dividend, @NonNull INumericItem divisor) {
@@ -1040,8 +1029,8 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-mod">op:numeric-mod</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-numeric-mod">op:numeric-mod</a>.
    *
    * @param dividend
    *          the number to be divided
@@ -1074,21 +1063,20 @@ public final class OperationFunctions {
     } else if (item instanceof IDecimalItem) {
       retval = ((IDecimalItem) item).negate();
     } else {
-      throw new InvalidTypeMetapathException(item);
+      throw new InvalidTypeMetapathException(item, String.format("Unsupported numeric type '%s'.", item.getClass()));
     }
     return retval;
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-numeric-equal">op:numeric-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-numeric-equal">op:numeric-equal</a>.
    *
    * @param arg1
    *          the first number to check for equality
    * @param arg2
    *          the second number to check for equality
-   * @return {@code true} if the numbers are numerically equal or {@code false}
-   *         otherwise
+   * @return {@code true} if the numbers are numerically equal or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opNumericEqual(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {
@@ -1111,22 +1099,12 @@ public final class OperationFunctions {
    *          the first number to check
    * @param arg2
    *          the second number to check
-   * @return {@code true} if the first number is greater than or equal to the
-   *         second, or {@code false} otherwise
+   * @return {@code true} if the first number is greater than or equal to the second, or {@code false}
+   *         otherwise
    */
   @NonNull
   public static IBooleanItem opNumericGreaterThan(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {
-    IBooleanItem retval;
-    if (arg1 == null || arg2 == null) {
-      retval = IBooleanItem.FALSE;
-    } else if (arg1 instanceof IIntegerItem && arg2 instanceof IIntegerItem) {
-      int result = arg1.asInteger().compareTo(arg2.asInteger());
-      retval = IBooleanItem.valueOf(result > 0);
-    } else {
-      int result = arg1.asDecimal().compareTo(arg2.asDecimal());
-      retval = IBooleanItem.valueOf(result > 0);
-    }
-    return retval;
+    return opNumericLessThan(arg2, arg1);
   }
 
   /**
@@ -1137,8 +1115,8 @@ public final class OperationFunctions {
    *          the first number to check
    * @param arg2
    *          the second number to check
-   * @return {@code true} if the first number is less than or equal to the second,
-   *         or {@code false} otherwise
+   * @return {@code true} if the first number is less than or equal to the second, or {@code false}
+   *         otherwise
    */
   @NonNull
   public static IBooleanItem opNumericLessThan(@Nullable INumericItem arg1, @Nullable INumericItem arg2) {
@@ -1156,15 +1134,14 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-boolean-equal">op:boolean-equal</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-boolean-equal">op:boolean-equal</a>.
    *
    * @param arg1
    *          the first boolean to check
    * @param arg2
    *          the second boolean to check
-   * @return {@code true} if the first boolean is equal to the second, or
-   *         {@code false} otherwise
+   * @return {@code true} if the first boolean is equal to the second, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBooleanEqual(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {
@@ -1182,15 +1159,12 @@ public final class OperationFunctions {
    *          the first boolean to check
    * @param arg2
    *          the second boolean to check
-   * @return {@code true} if the first argument is {@link IBooleanItem#TRUE} and
-   *         the second is {@link IBooleanItem#FALSE}, or {@code false} otherwise
+   * @return {@code true} if the first argument is {@link IBooleanItem#TRUE} and the second is
+   *         {@link IBooleanItem#FALSE}, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBooleanGreaterThan(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {
-    boolean left = arg1 != null && arg1.toBoolean();
-    boolean right = arg2 != null && arg2.toBoolean();
-
-    return IBooleanItem.valueOf(left && !right);
+    return opBooleanLessThan(arg2, arg1);
   }
 
   /**
@@ -1201,8 +1175,8 @@ public final class OperationFunctions {
    *          the first boolean to check
    * @param arg2
    *          the second boolean to check
-   * @return {@code true} if the first argument is {@link IBooleanItem#FALSE} and
-   *         the second is {@link IBooleanItem#TRUE}, or {@code false} otherwise
+   * @return {@code true} if the first argument is {@link IBooleanItem#FALSE} and the second is
+   *         {@link IBooleanItem#TRUE}, or {@code false} otherwise
    */
   @NonNull
   public static IBooleanItem opBooleanLessThan(@Nullable IBooleanItem arg1, @Nullable IBooleanItem arg2) {
@@ -1213,15 +1187,14 @@ public final class OperationFunctions {
   }
 
   /**
-   * Based on XPath 3.1 <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-same-key">op:same-key</a>.
+   * Based on XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-same-key">op:same-key</a>.
    *
    * @param k1
    *          the first key to compare
    * @param k2
    *          the second key to compare
-   * @return {@code true} if the compared keys are the same, or {@code false}
-   *         otherwise
+   * @return {@code true} if the compared keys are the same, or {@code false} otherwise
    */
   public static boolean opSameKey(@NonNull IAnyAtomicItem k1, @NonNull IAnyAtomicItem k2) {
     boolean retval;
