@@ -64,7 +64,7 @@ public final class FnIndexOf {
     ISequence<IAnyAtomicItem> seq = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
     IAnyAtomicItem search = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
 
-    return seq.isEmpty() ? ISequence.empty() : fnIndexOf(seq, search);
+    return seq.isEmpty() ? ISequence.empty() : fnIndexOf(seq, search, dynamicContext);
   }
 
   /**
@@ -85,8 +85,8 @@ public final class FnIndexOf {
   @NonNull
   public static ISequence<IIntegerItem> fnIndexOf(
       @NonNull List<IAnyAtomicItem> items,
-      @NonNull IAnyAtomicItem search) {
-    // FIXME: support implicit timezone
+      @NonNull IAnyAtomicItem search,
+      @NonNull DynamicContext dynamicContext) {
     int index = 0;
     ListIterator<IAnyAtomicItem> iterator = items.listIterator();
     List<IIntegerItem> indices = new ArrayList<>();
@@ -96,7 +96,8 @@ public final class FnIndexOf {
       assert item != null;
       // use the "eq" operator
       try {
-        if (ComparisonFunctions.valueCompairison(item, ComparisonFunctions.Operator.EQ, search).toBoolean()) {
+        if (ComparisonFunctions.valueCompairison(item, ComparisonFunctions.Operator.EQ, search, dynamicContext)
+            .toBoolean()) {
           // Offset for Metapath indices that start from 1
           indices.add(IIntegerItem.valueOf(index));
         }

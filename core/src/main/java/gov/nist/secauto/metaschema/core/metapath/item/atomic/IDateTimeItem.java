@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDateTime;
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DateTimeWithoutTimeZoneItemImpl;
@@ -21,7 +22,6 @@ import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -86,7 +86,7 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
 
     if (tzDate != null && tzTime != null && !tzDate.equals(tzTime)) {
       // exception
-
+      throw new RuntimeException();
     }
 
     // either both have the same timezone, both are null, or only one has a timezone
@@ -243,6 +243,22 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
     return ITimeItem.valueOf(asOffsetTime(), hasTimezone());
   }
 
+  @NonNull
+  default IDateTimeItem normalizeOffset(@NonNull DynamicContext dynamicContext) {
+    IDateTimeItem result = hasTimezone()
+        ? this
+        : replaceTimezone(dynamicContext.getImplicitTimeZoneAsDayTimeDuration());
+    return valueOf(
+        ObjectUtils.notNull(result.asZonedDateTime().withZoneSameInstant(ZoneOffset.UTC)),
+        true);
+  }
+
+  default IDateTimeItem asDateTimeZ() {
+    return ZoneOffset.UTC.equals(getZoneOffset())
+        ? this
+        : valueOf(ObjectUtils.notNull(asZonedDateTime().withZoneSameLocal(ZoneOffset.UTC)), hasTimezone());
+  }
+
   /**
    * Adjusts an xs:dateTime value to a specific timezone, or to no timezone at
    * all.
@@ -304,10 +320,7 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
       retval = (IDateTimeItem) item;
     } else if (item instanceof IDateItem) {
       IDateItem date = (IDateItem) item;
-      // get the time at midnight
-      ZonedDateTime zdt = ObjectUtils.notNull(date.asZonedDateTime().truncatedTo(ChronoUnit.DAYS));
-      // pass on the timezone ambiguity
-      retval = valueOf(zdt, date.hasTimezone());
+      retval = valueOf(date.asZonedDateTime(), date.hasTimezone());
     } else if (item instanceof IStringItem || item instanceof IUntypedAtomicItem) {
       try {
         retval = valueOf(item.asString());

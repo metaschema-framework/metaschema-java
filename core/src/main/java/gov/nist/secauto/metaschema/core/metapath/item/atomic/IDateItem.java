@@ -91,9 +91,10 @@ public interface IDateItem extends ICalendarTemporalItem {
    */
   @NonNull
   static IDateItem valueOf(@NonNull ZonedDateTime value, boolean hasTimeZone) {
+    ZonedDateTime truncated = ObjectUtils.notNull(value.truncatedTo(ChronoUnit.DAYS));
     return hasTimeZone
-        ? IDateWithTimeZoneItem.valueOf(value)
-        : valueOf(new AmbiguousDate(value, false));
+        ? IDateWithTimeZoneItem.valueOf(truncated)
+        : valueOf(new AmbiguousDate(truncated, false));
   }
 
   /**
@@ -248,11 +249,7 @@ public interface IDateItem extends ICalendarTemporalItem {
     if (item instanceof IDateItem) {
       retval = (IDateItem) item;
     } else if (item instanceof IDateTimeItem) {
-      IDateTimeItem dateTime = (IDateTimeItem) item;
-      // get the time at midnight
-      ZonedDateTime zdt = ObjectUtils.notNull(dateTime.asZonedDateTime().truncatedTo(ChronoUnit.DAYS));
-      // pass on the timezone ambiguity
-      retval = valueOf(zdt, dateTime.hasTimezone());
+      retval = ((IDateTimeItem) item).asDate();
     } else if (item instanceof IStringItem || item instanceof IUntypedAtomicItem) {
       try {
         retval = valueOf(item.asString());

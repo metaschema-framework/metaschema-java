@@ -53,7 +53,7 @@ public class ValueComparison
   protected ISequence<? extends IBooleanItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     IAnyAtomicItem left = ISequence.of(getLeft().accept(dynamicContext, focus).atomize()).getFirstItem(false);
     IAnyAtomicItem right = ISequence.of(getRight().accept(dynamicContext, focus).atomize()).getFirstItem(false);
-    return resultOrEmpty(left, right);
+    return resultOrEmpty(left, right, dynamicContext);
   }
 
   /**
@@ -63,16 +63,20 @@ public class ValueComparison
    *          the first item to compare
    * @param rightItem
    *          the second item to compare
+   * @param dynamicContext
+   *          used to get the implicit timezone from the evaluation context
    * @return a or an empty {@link ISequence} if either item is {@code null}
    */
   @NonNull
-  protected ISequence<? extends IBooleanItem> resultOrEmpty(@Nullable IAnyAtomicItem leftItem,
-      @Nullable IAnyAtomicItem rightItem) {
+  private ISequence<? extends IBooleanItem> resultOrEmpty(
+      @Nullable IAnyAtomicItem leftItem,
+      @Nullable IAnyAtomicItem rightItem,
+      @NonNull DynamicContext dynamicContext) {
     ISequence<? extends IBooleanItem> retval;
     if (leftItem == null || rightItem == null) {
       retval = ISequence.empty();
     } else {
-      IBooleanItem result = ComparisonFunctions.valueCompairison(leftItem, getOperator(), rightItem);
+      IBooleanItem result = ComparisonFunctions.valueCompairison(leftItem, getOperator(), rightItem, dynamicContext);
       retval = ISequence.of(result);
     }
     return retval;

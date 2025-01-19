@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
@@ -134,7 +135,12 @@ public interface IAnyAtomicItem extends IAtomicValuedItem {
     boolean retval;
     try {
       retval = other instanceof IAnyAtomicItem
-          && ComparisonFunctions.valueCompairison(this, ComparisonFunctions.Operator.EQ, (IAnyAtomicItem) other)
+          && ComparisonFunctions.valueCompairison(
+              this,
+              ComparisonFunctions.Operator.EQ,
+              (IAnyAtomicItem) other,
+              // FIXME: figure out a better way to handle implicit namespaces
+              new DynamicContext())
               .toBoolean();
     } catch (@SuppressWarnings("unused") InvalidTypeMetapathException ex) {
       // incompatible types are a non-match

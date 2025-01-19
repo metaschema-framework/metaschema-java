@@ -6,24 +6,30 @@
 package gov.nist.secauto.metaschema.core.metapath.function.impl;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.bool;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.date;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.dateTime;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.dayTimeDuration;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.decimal;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.duration;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.time;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.yearMonthDuration;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 
 import org.junit.jupiter.api.DisplayName;
@@ -640,41 +646,188 @@ class OperationFunctionsTest {
     @DisplayName("Functions and operators on dates and times")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class DateTimeOperators {
-      private Stream<Arguments> provideValuesDateTimeEqual() {
+      private Stream<Arguments> provideValuesDateTimeCompare() {
         return Stream.of(
-            Arguments.of(bool(true), duration("P1Y"), duration("P12M")),
-            Arguments.of(bool(true), duration("PT24H"), duration("P1D")),
-            Arguments.of(bool(false), duration("P1Y"), duration("P365D")),
-            Arguments.of(bool(true), duration("P0Y"), duration("P0D")),
-            Arguments.of(bool(true), yearMonthDuration("P0Y"), dayTimeDuration("P0D")),
-            Arguments.of(bool(false), yearMonthDuration("P1Y"), dayTimeDuration("P365D")),
-            Arguments.of(bool(true), yearMonthDuration("P2Y"), yearMonthDuration("P24M")),
-            Arguments.of(bool(true), dayTimeDuration("P10D"), dayTimeDuration("PT240H")),
-            Arguments.of(bool(true), duration("P2Y0M0DT0H0M0S"), yearMonthDuration("P24M")),
-            Arguments.of(bool(true), duration("P0Y0M10D"), dayTimeDuration("PT240H")));
+            Arguments.of(
+                bool(true),
+                bool(false),
+                IDateTimeItem.valueOf("2002-04-02T12:00:00-01:00"),
+                IDateTimeItem.valueOf("2002-04-02T17:00:00+04:00")),
+            Arguments.of(
+                bool(true),
+                bool(false),
+                IDateTimeItem.valueOf("2002-04-02T12:00:00"),
+                IDateTimeItem.valueOf("2002-04-02T23:00:00+06:00")),
+            Arguments.of(
+                bool(false),
+                bool(true),
+                IDateTimeItem.valueOf("2002-04-02T12:00:00"),
+                IDateTimeItem.valueOf("2002-04-02T17:00:00")),
+            Arguments.of(
+                bool(true),
+                bool(false),
+                IDateTimeItem.valueOf("2002-04-02T12:00:00"),
+                IDateTimeItem.valueOf("2002-04-02T12:00:00")),
+            Arguments.of(
+                bool(true),
+                bool(false),
+                IDateTimeItem.valueOf("2002-04-02T23:00:00-04:00"),
+                IDateTimeItem.valueOf("2002-04-03T02:00:00-01:00")),
+            Arguments.of(
+                bool(true),
+                bool(false),
+                IDateTimeItem.valueOf("1999-12-31T24:00:00"),
+                IDateTimeItem.valueOf("2000-01-01T00:00:00")),
+            Arguments.of(
+                bool(false),
+                bool(false),
+                IDateTimeItem.valueOf("2005-04-04T24:00:00"),
+                IDateTimeItem.valueOf("2005-04-04T00:00:00")));
       }
 
       @ParameterizedTest
       @DisplayName("op:dateTime-equal")
-      @MethodSource("provideValuesDateTimeEqual")
+      @MethodSource("provideValuesDateTimeCompare")
       void testOpDateTimeEqual(
-          @NonNull IBooleanItem expected,
+          @NonNull IBooleanItem expectedEqual,
+          @NonNull IBooleanItem expectedLessThan,
           @NonNull IDateTimeItem arg1,
           @NonNull IDateTimeItem arg2) {
-        assertEquals(expected, OperationFunctions.opDateTimeEqual(arg1, arg2));
+        DynamicContext dynamicContext = new DynamicContext();
+        dynamicContext.setImplicitTimeZone(IDayTimeDurationItem.valueOf("-PT5H"));
+        assertEquals(expectedEqual, OperationFunctions.opDateTimeEqual(arg1, arg2, dynamicContext));
       }
 
-      // TODO: op:dateTime-equal
-      // TODO: op:dateTime-less-than
-      // TODO: op:dateTime-greater-than
+      @ParameterizedTest
+      @DisplayName("op:dateTime-less-than and op:dateTime-greater-than")
+      @MethodSource("provideValuesDateTimeCompare")
+      void testOpDateTimeLessGreaterThan(
+          @NonNull IBooleanItem expectedEqual,
+          @NonNull IBooleanItem expectedLessThan,
+          @NonNull IDateTimeItem item1,
+          @NonNull IDateTimeItem item2) {
+        DynamicContext dynamicContext = new DynamicContext();
+        dynamicContext.setImplicitTimeZone(IDayTimeDurationItem.valueOf("-PT5H"));
+        assertAll(
+            () -> assertEquals(
+                expectedLessThan,
+                OperationFunctions.opDateTimeLessThan(item1, item2, dynamicContext)),
+            () -> assertEquals(
+                expectedLessThan,
+                OperationFunctions.opDateTimeGreaterThan(item2, item1, dynamicContext)));
+      }
 
-      // TODO: op:date-equal
-      // TODO: op:date-less-than
-      // TODO: op:date-greater-than
+      private Stream<Arguments> provideValuesDateCompare() {
+        return Stream.of(
+            Arguments.of(
+                bool(false),
+                bool(false),
+                date("2004-12-25Z"),
+                date("2004-12-25+07:00")),
+            Arguments.of(
+                bool(true),
+                bool(false),
+                date("2004-12-25-12:00"),
+                date("2004-12-26+12:00")));
+      }
 
-      // TODO: op:time-equal
-      // TODO: op:time-less-than
-      // TODO: op:time-greater-than
+      @ParameterizedTest
+      @DisplayName("op:date-equal")
+      @MethodSource("provideValuesDateCompare")
+      void testOpDateEqual(
+          @NonNull IBooleanItem expectedEqual,
+          @NonNull IBooleanItem expectedLessThan,
+          @NonNull IDateItem arg1,
+          @NonNull IDateItem arg2) {
+        DynamicContext dynamicContext = new DynamicContext();
+        dynamicContext.setImplicitTimeZone(IDayTimeDurationItem.valueOf("-PT5H"));
+        assertEquals(expectedEqual, OperationFunctions.opDateEqual(arg1, arg2, dynamicContext));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:date-less-than and op:date-greater-than")
+      @MethodSource("provideValuesDateCompare")
+      void testOpDateLessGreaterThan(
+          @NonNull IBooleanItem expectedEqual,
+          @NonNull IBooleanItem expectedLessThan,
+          @NonNull IDateItem item1,
+          @NonNull IDateItem item2) {
+        DynamicContext dynamicContext = new DynamicContext();
+        dynamicContext.setImplicitTimeZone(IDayTimeDurationItem.valueOf("-PT5H"));
+        assertAll(
+            () -> assertEquals(
+                expectedLessThan,
+                OperationFunctions.opDateLessThan(item1, item2, dynamicContext)),
+            () -> assertEquals(
+                expectedLessThan,
+                OperationFunctions.opDateGreaterThan(item2, item1, dynamicContext)));
+      }
+
+      private Stream<Arguments> provideValuesTimeCompare() {
+        return Stream.of(
+            Arguments.of(
+                bool(false),
+                bool(true),
+                time("08:00:00+09:00"), // 1972-12-30T23:00:00Z
+                time("17:00:00-06:00")), // 1972-12-31T23:00:00Z
+            Arguments.of(
+                bool(true),
+                bool(false),
+                time("21:30:00+10:30"),
+                time("06:00:00-05:00")),
+            Arguments.of(
+                bool(true),
+                bool(false),
+                time("24:00:00+01:00"),
+                time("00:00:00+01:00")),
+            Arguments.of(
+                bool(true),
+                bool(false),
+                time("12:00:00"),
+                time("23:00:00+06:00")),
+            Arguments.of(
+                bool(false),
+                bool(true),
+                time("11:00:00"),
+                time("17:00:00Z")),
+            Arguments.of(
+                bool(false),
+                bool(false),
+                time("23:59:59"),
+                time("24:00:00")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:time-equal")
+      @MethodSource("provideValuesTimeCompare")
+      void testOpTimeEqual(
+          @NonNull IBooleanItem expectedEqual,
+          @NonNull IBooleanItem expectedLessThan,
+          @NonNull ITimeItem arg1,
+          @NonNull ITimeItem arg2) {
+        DynamicContext dynamicContext = new DynamicContext();
+        dynamicContext.setImplicitTimeZone(IDayTimeDurationItem.valueOf("-PT5H"));
+        assertEquals(expectedEqual, OperationFunctions.opTimeEqual(arg1, arg2, dynamicContext));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:time-less-than and op:time-greater-than")
+      @MethodSource("provideValuesTimeCompare")
+      void testOpTimeLessGreaterThan(
+          @NonNull IBooleanItem expectedEqual,
+          @NonNull IBooleanItem expectedLessThan,
+          @NonNull ITimeItem item1,
+          @NonNull ITimeItem item2) {
+        DynamicContext dynamicContext = new DynamicContext();
+        dynamicContext.setImplicitTimeZone(IDayTimeDurationItem.valueOf("-PT5H"));
+        assertAll(
+            () -> assertEquals(
+                expectedLessThan,
+                OperationFunctions.opTimeLessThan(item1, item2, dynamicContext)),
+            () -> assertEquals(
+                expectedLessThan,
+                OperationFunctions.opTimeGreaterThan(item2, item1, dynamicContext)));
+      }
 
       // TODO: op:gYearMonth-equal
       // TODO: op:gYear-equal
@@ -687,19 +840,295 @@ class OperationFunctionsTest {
     @DisplayName("Arithmetic operators on durations, dates and times")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class DateTimeArithmetic {
-      // TODO: op:subtract-dateTimes
-      // TODO: op:subtract-dates
-      // TODO: op:subtract-times
-      // TODO: op:add-yearMonthDuration-to-dateTime
-      // TODO: op:add-dayTimeDuration-to-dateTime
-      // TODO: op:subtract-yearMonthDuration-from-dateTime
-      // TODO: op:subtract-dayTimeDuration-from-dateTime
+      private Stream<Arguments> provideValuesSubtractDateTimes() {
+        return Stream.of(
+            Arguments.of(
+                dayTimeDuration("P337DT2H12M"),
+                dateTime("2000-10-30T06:12:00"),
+                dateTime("1999-11-28T09:00:00Z")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:subtract-dateTimes")
+      @MethodSource("provideValuesSubtractDateTimes")
+      void testOpSubtractDateTimes(
+          @NonNull IDayTimeDurationItem expected,
+          @NonNull IDateTimeItem item1,
+          @NonNull IDateTimeItem item2) {
+        DynamicContext dynamicContext = new DynamicContext();
+        dynamicContext.setImplicitTimeZone(IDayTimeDurationItem.valueOf("-PT5H"));
+        assertEquals(expected, OperationFunctions.opSubtractDateTimes(item1, item2, dynamicContext));
+      }
+
+      private Stream<Arguments> provideValuesSubtractDates() {
+        return Stream.of(
+            Arguments.of(
+                dayTimeDuration("P337D"),
+                dayTimeDuration("PT0H"),
+                date("2000-10-30"),
+                date("1999-11-28")),
+            Arguments.of(
+                dayTimeDuration("P336DT19H"),
+                dayTimeDuration("PT5H"),
+                date("2000-10-30"),
+                date("1999-11-28Z")),
+            Arguments.of(
+                dayTimeDuration("P5DT7H"),
+                dayTimeDuration("PT5H"),
+                date("2000-10-15-05:00"),
+                date("2000-10-10+02:00")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:subtract-dates")
+      @MethodSource("provideValuesSubtractDates")
+      void testOpSubtractDates(
+          @NonNull IDayTimeDurationItem expected,
+          @NonNull IDayTimeDurationItem offset,
+          @NonNull IDateItem item1,
+          @NonNull IDateItem item2) {
+        DynamicContext dynamicContext = new DynamicContext();
+        dynamicContext.setImplicitTimeZone(offset);
+        assertEquals(expected, OperationFunctions.opSubtractDates(item1, item2, dynamicContext));
+      }
+
+      private Stream<Arguments> provideValuesSubtractTimes() {
+        return Stream.of(
+            Arguments.of(
+                dayTimeDuration("PT2H12M"),
+                dayTimeDuration("-PT5H"),
+                time("11:12:00Z"),
+                time("04:00:00")),
+            Arguments.of(
+                dayTimeDuration("PT0S"),
+                dayTimeDuration("-PT5H"),
+                time("11:00:00-05:00"),
+                time("21:30:00+05:30")),
+            Arguments.of(
+                dayTimeDuration("P1D"),
+                dayTimeDuration("-PT5H"),
+                time("17:00:00-06:00"),
+                time("08:00:00+09:00")),
+            Arguments.of(
+                dayTimeDuration("-PT23H59M59S"),
+                dayTimeDuration("-PT5H"),
+                time("24:00:00"),
+                time("23:59:59")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:subtract-times")
+      @MethodSource("provideValuesSubtractTimes")
+      void testOpSubtractDates(
+          @NonNull IDayTimeDurationItem expected,
+          @NonNull IDayTimeDurationItem offset,
+          @NonNull ITimeItem item1,
+          @NonNull ITimeItem item2) {
+        DynamicContext dynamicContext = new DynamicContext();
+        dynamicContext.setImplicitTimeZone(offset);
+        assertEquals(expected, OperationFunctions.opSubtractTimes(item1, item2, dynamicContext));
+      }
+
+      private Stream<Arguments> provideValuesAddYearMonthDurationToDateTime() {
+        return Stream.of(
+            Arguments.of(
+                dateTime("2001-12-30T11:12:00"),
+                dateTime("2000-10-30T11:12:00"),
+                yearMonthDuration("P1Y2M")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:add-yearMonthDuration-to-dateTime")
+      @MethodSource("provideValuesAddYearMonthDurationToDateTime")
+      void testOpAddYearMonthDurationToDateTime(
+          @NonNull IDateTimeItem expected,
+          @NonNull IDateTimeItem item1,
+          @NonNull IYearMonthDurationItem item2) {
+        assertEquals(expected, OperationFunctions.opAddYearMonthDurationToDateTime(item1, item2));
+      }
+
+      private Stream<Arguments> provideValuesAddDayTimeDurationToDateTime() {
+        return Stream.of(
+            Arguments.of(
+                dateTime("2000-11-02T12:27:00"),
+                dateTime("2000-10-30T11:12:00"),
+                dayTimeDuration("P3DT1H15M")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:add-dayTimeDuration-to-dateTime")
+      @MethodSource("provideValuesAddDayTimeDurationToDateTime")
+      void testOpAddDayTimeDurationToDateTime(
+          @NonNull IDateTimeItem expected,
+          @NonNull IDateTimeItem item1,
+          @NonNull IDayTimeDurationItem item2) {
+        assertEquals(expected, OperationFunctions.opAddDayTimeDurationToDateTime(item1, item2));
+      }
+
+      private Stream<Arguments> provideValuesSubtractYearMonthDurationFromDateTime() {
+        return Stream.of(
+            Arguments.of(
+                dateTime("1999-08-30T11:12:00"),
+                dateTime("2000-10-30T11:12:00"),
+                yearMonthDuration("P1Y2M")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:subtract-yearMonthDuration-from-dateTime")
+      @MethodSource("provideValuesSubtractYearMonthDurationFromDateTime")
+      void testOpSubtractYearMonthDurationFromDateTime(
+          @NonNull IDateTimeItem expected,
+          @NonNull IDateTimeItem item1,
+          @NonNull IYearMonthDurationItem item2) {
+        assertEquals(expected, OperationFunctions.opSubtractYearMonthDurationFromDateTime(item1, item2));
+      }
+
+      private Stream<Arguments> provideValuesSubtractDayTimeDurationFromDateTime() {
+        return Stream.of(
+            Arguments.of(
+                dateTime("2000-10-27T09:57:00"),
+                dateTime("2000-10-30T11:12:00"),
+                dayTimeDuration("P3DT1H15M")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:subtract-dayTimeDuration-from-dateTime")
+      @MethodSource("provideValuesSubtractDayTimeDurationFromDateTime")
+      void testOpSubtractDayTimeDurationFromDateTime(
+          @NonNull IDateTimeItem expected,
+          @NonNull IDateTimeItem item1,
+          @NonNull IDayTimeDurationItem item2) {
+        assertEquals(expected, OperationFunctions.opSubtractDayTimeDurationFromDateTime(item1, item2));
+      }
+
       // TODO: op:add-yearMonthDuration-to-date
       // TODO: op:add-dayTimeDuration-to-date
       // TODO: op:subtract-yearMonthDuration-from-date
       // TODO: op:subtract-dayTimeDuration-from-date
-      // TODO: op:add-dayTimeDuration-to-time
-      // TODO: op:subtract-dayTimeDuration-from-time
+
+      private Stream<Arguments> provideValuesAddYearMonthDurationToDate() {
+        return Stream.of(
+            Arguments.of(
+                date("2001-12-30"),
+                date("2000-10-30"),
+                yearMonthDuration("P1Y2M")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:add-yearMonthDuration-to-date")
+      @MethodSource("provideValuesAddYearMonthDurationToDate")
+      void testOpAddYearMonthDurationToDate(
+          @NonNull IDateItem expected,
+          @NonNull IDateItem item1,
+          @NonNull IYearMonthDurationItem item2) {
+        assertEquals(expected, OperationFunctions.opAddYearMonthDurationToDate(item1, item2));
+      }
+
+      private Stream<Arguments> provideValuesAddDayTimeDurationToDate() {
+        return Stream.of(
+            Arguments.of(
+                date("2004-11-01Z"),
+                date("2004-10-30Z"),
+                dayTimeDuration("P2DT2H30M0S")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:add-dayTimeDuration-to-date")
+      @MethodSource("provideValuesAddDayTimeDurationToDate")
+      void testOpAddDayTimeDurationToDate(
+          @NonNull IDateItem expected,
+          @NonNull IDateItem item1,
+          @NonNull IDayTimeDurationItem item2) {
+        assertEquals(expected, OperationFunctions.opAddDayTimeDurationToDate(item1, item2));
+      }
+
+      private Stream<Arguments> provideValuesSubtractYearMonthDurationFromDate() {
+        return Stream.of(
+            Arguments.of(
+                date("1999-08-30"),
+                date("2000-10-30"),
+                yearMonthDuration("P1Y2M")),
+            Arguments.of(
+                date("1999-02-28Z"),
+                date("2000-02-29Z"),
+                yearMonthDuration("P1Y")),
+            Arguments.of(
+                date("1999-09-30-05:00"),
+                date("2000-10-31-05:00"),
+                yearMonthDuration("P1Y1M")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:subtract-yearMonthDuration-from-date")
+      @MethodSource("provideValuesSubtractYearMonthDurationFromDate")
+      void testOpSubtractYearMonthDurationFromDate(
+          @NonNull IDateItem expected,
+          @NonNull IDateItem item1,
+          @NonNull IYearMonthDurationItem item2) {
+        assertEquals(expected, OperationFunctions.opSubtractYearMonthDurationFromDate(item1, item2));
+      }
+
+      private Stream<Arguments> provideValuesSubtractDayTimeDurationFromDate() {
+        return Stream.of(
+            Arguments.of(
+                date("2000-10-26"),
+                date("2000-10-30"),
+                dayTimeDuration("P3DT1H15M")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:subtract-dayTimeDuration-from-date")
+      @MethodSource("provideValuesSubtractDayTimeDurationFromDate")
+      void testOpSubtractDayTimeDurationFromDate(
+          @NonNull IDateItem expected,
+          @NonNull IDateItem item1,
+          @NonNull IDayTimeDurationItem item2) {
+        assertEquals(expected, OperationFunctions.opSubtractDayTimeDurationFromDate(item1, item2));
+      }
+
+      private Stream<Arguments> provideValuesAddDayTimeDurationToTime() {
+        return Stream.of(
+            Arguments.of(
+                time("12:27:00"),
+                time("11:12:00"),
+                dayTimeDuration("P3DT1H15M")),
+            Arguments.of(
+                time("02:27:00+03:00"),
+                time("23:12:00+03:00"),
+                dayTimeDuration("P1DT3H15M")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:add-dayTimeDuration-to-time")
+      @MethodSource("provideValuesAddDayTimeDurationToTime")
+      void testOpAddDayTimeDurationToTime(
+          @NonNull ITimeItem expected,
+          @NonNull ITimeItem item1,
+          @NonNull IDayTimeDurationItem item2) {
+        assertEquals(expected, OperationFunctions.opAddDayTimeDurationToTime(item1, item2));
+      }
+
+      private Stream<Arguments> provideValuesSubtractDayTimeDurationFromTime() {
+        return Stream.of(
+            Arguments.of(
+                time("09:57:00"),
+                time("11:12:00"),
+                dayTimeDuration("P3DT1H15M")),
+            Arguments.of(
+                time("22:10:00-05:00"),
+                time("08:20:00-05:00"),
+                dayTimeDuration("P23DT10H10M")));
+      }
+
+      @ParameterizedTest
+      @DisplayName("op:subtract-dayTimeDuration-from-time")
+      @MethodSource("provideValuesSubtractDayTimeDurationFromTime")
+      void testOpSubtractDayTimeDurationFromTime(
+          @NonNull ITimeItem expected,
+          @NonNull ITimeItem item1,
+          @NonNull IDayTimeDurationItem item2) {
+        assertEquals(expected, OperationFunctions.opSubtractDayTimeDurationFromTime(item1, item2));
+      }
     }
   }
 
