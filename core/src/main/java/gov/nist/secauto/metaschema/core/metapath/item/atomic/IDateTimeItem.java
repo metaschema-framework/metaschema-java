@@ -77,19 +77,28 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
     }
   }
 
+  /**
+   * Get a date/time item based on the provided date and time item values.
+   * 
+   * @param date
+   *          the date portion of the date/time
+   * @param time
+   *          the time portion of the date/time
+   * @return the date/time item
+   */
   @NonNull
   static IDateTimeItem valueOf(@NonNull IDateItem date, @NonNull ITimeItem time) {
-    ZonedDateTime zDate = ObjectUtils.notNull(date.asZonedDateTime());
-    ZoneId tzDate = date.hasTimezone() ? zDate.getZone() : null;
-    OffsetTime oTime = ObjectUtils.notNull(time.asOffsetTime());
-    ZoneId tzTime = time.hasTimezone() ? oTime.getOffset() : null;
+    ZonedDateTime zdtDate = ObjectUtils.notNull(date.asZonedDateTime());
+    ZoneId tzDate = date.hasTimezone() ? zdtDate.getZone() : null;
+    OffsetTime zdtTime = ObjectUtils.notNull(time.asOffsetTime());
+    ZoneId tzTime = time.hasTimezone() ? zdtTime.getOffset() : null;
 
     if (tzDate != null && tzTime != null && !tzDate.equals(tzTime)) {
-	    throw new InvalidTypeMetapathException(
-	            null,
-	            String.format("The date and time values do not have the same timezone value. date='%s', time='%s'",
-	            		tzDate.toString(),
-	            		tzTime.toString()));
+      throw new InvalidTypeMetapathException(
+          null,
+          String.format("The date and time values do not have the same timezone value. date='%s', time='%s'",
+              tzDate.toString(),
+              tzTime.toString()));
     }
 
     // either both have the same timezone, both are null, or only one has a timezone
@@ -99,15 +108,24 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
 
     return valueOf(
         ObjectUtils.notNull(ZonedDateTime.of(
-            zDate.toLocalDate(),
-            oTime.toLocalTime(),
+            zdtDate.toLocalDate(),
+            zdtTime.toLocalTime(),
             zone == null ? ZoneOffset.UTC : zone)),
         zone != null);
   }
 
+  /**
+   * Get the provided item as a date/time item.
+   * 
+   * @param item
+   *          the item to convert to a date/time
+   * @return the provided value as a date/time
+   */
   @NonNull
   static IDateTimeItem valueOf(@NonNull ICalendarTemporalItem item) {
-    return valueOf(item.asZonedDateTime(), item.hasTimezone());
+    return item instanceof IDateTimeItem
+        ? (IDateTimeItem) item
+        : valueOf(item.asZonedDateTime(), item.hasTimezone());
   }
 
   /**
@@ -132,6 +150,18 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
         : valueOf(new AmbiguousDateTime(value, false));
   }
 
+  /**
+   * Construct a new date/time item using the provided local time {@code value}.
+   * <p>
+   * The timezone is marked as ambiguous, meaning the
+   * {@link AmbiguousDateTime#hasTimeZone()} method will return a result of
+   * {@code false}.
+   * 
+   * @param value
+   *          the local time value to use
+   * @return the new item
+   * @see AmbiguousDateTime for more details on timezone handling
+   */
   @NonNull
   static IDateTimeItem valueOf(@NonNull LocalDateTime value) {
     return valueOf(new AmbiguousDateTime(ObjectUtils.notNull(value.atZone(ZoneOffset.UTC)), false));
@@ -222,30 +252,56 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
   }
 
   /**
-   * Get the date/time as a {@link LocalDate}.
+   * Get the date/time as a {@link LocalTime}.
    *
-   * @return the date
+   * @return the time
    */
   @NonNull
   default LocalTime asLocalTime() {
     return ObjectUtils.notNull(asZonedDateTime().toLocalTime());
   }
 
+  /**
+   * Get the date/time as an {@link OffsetTime}.
+   *
+   * @return the time
+   */
   @NonNull
   default OffsetTime asOffsetTime() {
     return ObjectUtils.notNull(asZonedDateTime().toOffsetDateTime().toOffsetTime());
   }
 
+  /**
+   * Get the date/time as a date item.
+   *
+   * @return the date portion of this date/time
+   */
   @NonNull
   default IDateItem asDate() {
     return IDateItem.valueOf(asZonedDateTime(), hasTimezone());
   }
 
+  /**
+   * Get the date/time as a time item.
+   *
+   * @return the time portion of this date/time
+   */
   @NonNull
   default ITimeItem asTime() {
     return ITimeItem.valueOf(asOffsetTime(), hasTimezone());
   }
 
+  /**
+   * Get a new date/time that has an explicit timezone.
+   * <p>
+   * If this date/time has a timezone, then this timezone is used. Otherwise, the
+   * implicit timezone is used from the dynamic context.
+   * 
+   * @param dynamicContext
+   *          the dynamic context used to get the implicit timezone
+   * 
+   * @return the date/time with the timezone normalized using UTC-based timezone
+   */
   @NonNull
   default IDateTimeItem normalizeOffset(@NonNull DynamicContext dynamicContext) {
     IDateTimeItem result = hasTimezone()
@@ -256,6 +312,11 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
         true);
   }
 
+  /**
+   * Get this date/time in the UTC timezone.
+   * 
+   * @return the date/time in UTC
+   */
   default IDateTimeItem asDateTimeZ() {
     return ZoneOffset.UTC.equals(getZoneOffset())
         ? this

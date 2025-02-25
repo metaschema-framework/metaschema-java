@@ -122,6 +122,7 @@ public final class MapFind {
     return retval;
   }
 
+  @SuppressWarnings("unused")
   @NonNull
   private static Stream<ICollectionValue> find(
       @NonNull ICollectionValue value,

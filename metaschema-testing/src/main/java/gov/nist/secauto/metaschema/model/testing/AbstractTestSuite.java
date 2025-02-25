@@ -251,7 +251,7 @@ public abstract class AbstractTestSuite {
       schemaExtension = ".xsd";
       break;
     default:
-      throw new IllegalStateException();
+      throw new IllegalStateException(String.format("Unhandled content format '%s'.", requiredContentFormat));
     }
 
     // determine what file to use for the schema

@@ -91,6 +91,11 @@ public interface IDayTimeDurationItem extends IDurationItem {
     return asDuration().toSeconds();
   }
 
+  /**
+   * Returns a copy of this duration with the amount negated.
+   * 
+   * @return this duration with the amount negated
+   */
   @NonNull
   default IDayTimeDurationItem negate() {
     return valueOf(ObjectUtils.notNull(asDuration().negated()));

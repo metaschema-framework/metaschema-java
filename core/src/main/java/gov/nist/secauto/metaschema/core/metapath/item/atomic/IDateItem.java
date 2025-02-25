@@ -171,6 +171,11 @@ public interface IDateItem extends ICalendarTemporalItem {
     return 0;
   }
 
+  /**
+   * Get this date as a date/time value at the start of the day.
+   *
+   * @return the date time value
+   */
   @NonNull
   default IDateTimeItem asDateTime() {
     return IDateTimeItem.valueOf(this);

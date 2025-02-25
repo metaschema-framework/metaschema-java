@@ -21,15 +21,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public abstract class AbstractTemporalItem<TYPE>
     extends AbstractAnyAtomicItem<TYPE>
     implements ITemporalItem {
-  private static final Comparator<ITemporalItem> COMPARATOR = Comparator.comparing(ITemporalItem::getYear)
-      .thenComparing(ITemporalItem::getMonth)
-      .thenComparing(ITemporalItem::getDay)
-      .thenComparing(ITemporalItem::getHour)
-      .thenComparing(ITemporalItem::getMinute)
-      .thenComparing(ITemporalItem::getSecond)
-      .thenComparing(ITemporalItem::getNano)
-      .thenComparing(ITemporalItem::getZoneOffset, Comparator.nullsFirst(Comparator.naturalOrder()));
-
   /**
    * Construct a new temporal item.
    *

@@ -22,23 +22,72 @@ public interface ITemporalItem extends IAnyAtomicItem {
   @NonNull
   Class<? extends ITemporalItem> getItemBaseType();
 
+  /**
+   * Get the year value of this temporal.
+   * 
+   * @return the year value
+   */
   int getYear();
 
+  /**
+   * Get the month value of this temporal.
+   * 
+   * @return the month value
+   */
   int getMonth();
 
+  /**
+   * Get the day value of this temporal.
+   * 
+   * @return the day value
+   */
   int getDay();
 
+  /**
+   * Get the hour value of this temporal.
+   * 
+   * @return the hour value
+   */
   int getHour();
 
+  /**
+   * Get the minute value of this temporal.
+   * 
+   * @return the minute value
+   */
   int getMinute();
 
+  /**
+   * Get the whole second value of this temporal.
+   * 
+   * @return the whole second value
+   */
   int getSecond();
 
+  /**
+   * Get the partial nano second value of this temporal.
+   * 
+   * @return the partial nano second value
+   */
   int getNano();
 
+  /**
+   * Get the timezone offset for this temporal.
+   * 
+   * @return the timezone offset if specified or {@code null} if the timezone is
+   *         not known
+   * @see ITemporalItem#hasTimezone()
+   */
   @Nullable
   ZoneOffset getZoneOffset();
 
+  /**
+   * Get the timezone offset as a day/time duration for this temporal.
+   * 
+   * @return the timezone offset if specified or {@code null} if the timezone is
+   *         not known
+   * @see ITemporalItem#hasTimezone()
+   */
   @Nullable
   default IDayTimeDurationItem getOffset() {
     ZoneOffset offset = getZoneOffset();
@@ -98,8 +147,20 @@ public interface ITemporalItem extends IAnyAtomicItem {
    */
   boolean hasTimezone();
 
+  /**
+   * Determine if the temporal has date information.
+   * 
+   * @return {@code true} if the temporal item has date information or
+   *         {@code false} otherwise
+   */
   boolean hasDate();
 
+  /**
+   * Determine if the temporal has time information.
+   * 
+   * @return {@code true} if the temporal item has time information or
+   *         {@code false} otherwise
+   */
   boolean hasTime();
 
   /**

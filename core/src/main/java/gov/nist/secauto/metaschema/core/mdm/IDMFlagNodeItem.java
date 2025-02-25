@@ -5,12 +5,13 @@
 
 package gov.nist.secauto.metaschema.core.mdm;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import gov.nist.secauto.metaschema.core.mdm.impl.DefinitionFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Represents a Metapath flag node item that is backed by a simple Metaschema

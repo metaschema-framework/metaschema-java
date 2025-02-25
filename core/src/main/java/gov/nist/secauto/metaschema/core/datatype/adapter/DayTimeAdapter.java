@@ -64,12 +64,18 @@ public class DayTimeAdapter
           String.format("String duration '%s' is not a day/time duration.", value));
     }
 
-    return parseDuration(
-        matcher.group(1) != null,
-        matcher.group(2),
-        matcher.group(3),
-        matcher.group(4),
-        matcher.group(5));
+    try {
+      return parseDuration(
+          matcher.group(1) != null,
+          matcher.group(2),
+          matcher.group(3),
+          matcher.group(4),
+          matcher.group(5));
+    } catch (ArithmeticException ex) {
+      throw new IllegalArgumentException(
+          String.format("Invalid duration value '%s'.", value),
+          ex);
+    }
   }
 
   @Override

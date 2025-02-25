@@ -37,6 +37,12 @@ public abstract class AbstractDurationItem<TYPE extends TemporalAmount>
               ? ((IDayTimeDurationItem) item).asDuration().getNano()
               : 0);
 
+  /**
+   * Construct a new duration item using the provided value.
+   * 
+   * @param value
+   *          the wrapped duration value
+   */
   protected AbstractDurationItem(@NonNull TYPE value) {
     super(value);
   }
