@@ -27,11 +27,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * An atomic Metapath item representing a date/time value in the Metapath system.
+ * An atomic Metapath item representing a date/time value in the Metapath
+ * system.
  * <p>
- * This interface provides functionality for handling date/time values with and without time zone
- * information, supporting parsing, casting, and comparison operations. It works in conjunction with
- * {@link AmbiguousDateTime} to properly handle time zone ambiguity.
+ * This interface provides functionality for handling date/time values with and
+ * without time zone information, supporting parsing, casting, and comparison
+ * operations. It works in conjunction with {@link AmbiguousDateTime} to
+ * properly handle time zone ambiguity.
  */
 public interface IDateTimeItem extends ICalendarTemporalItem {
   /**
@@ -83,8 +85,11 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
     ZoneId tzTime = time.hasTimezone() ? oTime.getOffset() : null;
 
     if (tzDate != null && tzTime != null && !tzDate.equals(tzTime)) {
-      // exception
-      throw new RuntimeException();
+	    throw new InvalidTypeMetapathException(
+	            null,
+	            String.format("The date and time values do not have the same timezone value. date='%s', time='%s'",
+	            		tzDate.toString(),
+	            		tzTime.toString()));
     }
 
     // either both have the same timezone, both are null, or only one has a timezone
@@ -108,15 +113,15 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
   /**
    * Construct a new date/time item using the provided {@code value}.
    * <p>
-   * This method handles recording if an explicit timezone was provided using the {@code hasTimeZone}
-   * parameter. The {@link AmbiguousDateTime#hasTimeZone()} method can be called to determine if
-   * timezone information is present.
+   * This method handles recording if an explicit timezone was provided using the
+   * {@code hasTimeZone} parameter. The {@link AmbiguousDateTime#hasTimeZone()}
+   * method can be called to determine if timezone information is present.
    *
    * @param value
    *          a date/time, without time zone information
    * @param hasTimeZone
-   *          {@code true} if the date/time is intended to have an associated time zone or
-   *          {@code false} otherwise
+   *          {@code true} if the date/time is intended to have an associated time
+   *          zone or {@code false} otherwise
    * @return the new item
    * @see AmbiguousDateTime for more details on timezone handling
    */
@@ -136,8 +141,8 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
    * Construct a new date/time item using the provided {@code value}.
    * <p>
    * This method handles recording if an explicit timezone was provided using the
-   * {@link AmbiguousDateTime}. The {@link AmbiguousDateTime#hasTimeZone()} method can be called to
-   * determine if timezone information is present.
+   * {@link AmbiguousDateTime}. The {@link AmbiguousDateTime#hasTimeZone()} method
+   * can be called to determine if timezone information is present.
    *
    * @param value
    *          a date/time, without time zone information
@@ -258,18 +263,20 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
   }
 
   /**
-   * Adjusts an xs:dateTime value to a specific timezone, or to no timezone at all.
+   * Adjusts an xs:dateTime value to a specific timezone, or to no timezone at
+   * all.
    * <p>
    * This method does one of the following things based on the arguments.
    * <ol>
-   * <li>If the provided offset is {@code null} and the provided date/time value has a timezone, the
-   * timezone is maked absent.
-   * <li>If the provided offset is {@code null} and the provided date/time value has an absent
-   * timezone, the date/time value is returned.
-   * <li>If the provided offset is not {@code null} and the provided date/time value has an absent
-   * timezone, the date/time value is returned with the new timezone applied.
-   * <li>Otherwise, the provided timezone is applied to the date/time value adjusting the time
-   * instant.
+   * <li>If the provided offset is {@code null} and the provided date/time value
+   * has a timezone, the timezone is maked absent.
+   * <li>If the provided offset is {@code null} and the provided date/time value
+   * has an absent timezone, the date/time value is returned.
+   * <li>If the provided offset is not {@code null} and the provided date/time
+   * value has an absent timezone, the date/time value is returned with the new
+   * timezone applied.
+   * <li>Otherwise, the provided timezone is applied to the date/time value
+   * adjusting the time instant.
    * </ol>
    * <p>
    * Implements the XPath 3.1 <a
@@ -280,8 +287,9 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
    *          the timezone offset to use or {@code null}
    * @return the adjusted date/time value
    * @throws DateTimeFunctionException
-   *           with code {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if the offset
-   *           is < -PT14H or > PT14H
+   *           with code
+   *           {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if
+   *           the offset is < -PT14H or > PT14H
    */
   @Override
   default IDateTimeItem replaceTimezone(@Nullable IDayTimeDurationItem offset) {
@@ -303,7 +311,8 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
    *
    * @param item
    *          the item to cast
-   * @return the original item if it is already this type, otherwise a new item cast to this type
+   * @return the original item if it is already this type, otherwise a new item
+   *         cast to this type
    * @throws InvalidValueForCastFunctionException
    *           if the provided {@code item} cannot be cast to this type
    */
