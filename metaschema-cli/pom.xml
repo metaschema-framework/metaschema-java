@@ -159,6 +159,7 @@
 							<descriptors>
 								<descriptor>src/main/assembly/bin.xml</descriptor>
 							</descriptors>
+							<tarLongFileMode>posix</tarLongFileMode>
 						</configuration>
 					</execution>
 				</executions>
