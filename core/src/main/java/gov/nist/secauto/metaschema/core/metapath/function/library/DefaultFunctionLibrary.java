@@ -32,6 +32,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-adjust-dateTime-to-timezone
     // https://www.w3.org/TR/xpath-functions-31/#func-adjust-date-to-timezone
     // https://www.w3.org/TR/xpath-functions-31/#func-adjust-time-to-timezone
+    // https://www.w3.org/TR/xpath-functions-31/#func-dateTime-equal
+    registerFunction(FnDateTimeEqual.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-avg
     registerFunction(FnAvg.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-base-uri
