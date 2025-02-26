@@ -1,6 +1,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
@@ -79,6 +80,11 @@ public interface IAssemblyNodeItem extends IModelNodeItem<IAssemblyDefinition, I
   @Override
   default boolean deepEquals(ICollectionValue other) {
     return other instanceof IAssemblyNodeItem
-        && NodeComparators.compareNodeItem(this, (IAssemblyNodeItem) other) == 0;
+        && NodeComparators.compareNodeItem(this, (IAssemblyNodeItem) other);
+  }
+
+  @Override
+  default IAssemblyNodeItem normalize(@NonNull DynamicContext dynamicContext) {
+    return this;
   }
 }

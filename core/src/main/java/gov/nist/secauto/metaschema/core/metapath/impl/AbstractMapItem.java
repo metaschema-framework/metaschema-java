@@ -129,6 +129,21 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
   }
 
   @Override
+  public IMapItem<VALUE> normalize(@NonNull DynamicContext dynamicContext) {
+    return ObjectUtils.asType(entrySet().stream()
+        .map(entry -> normalizeEntry(entry, dynamicContext))
+        .collect(IMapItem.toMapItem()));
+  }
+
+  private Map.Entry<IMapKey, VALUE> normalizeEntry(
+      @NonNull Map.Entry<IMapKey, VALUE> entry,
+      @NonNull DynamicContext dynamicContext) {
+    return Map.entry(
+        entry.getKey().getKey().normalize(dynamicContext).asMapKey(),
+        ObjectUtils.asType(entry.getValue().normalize(dynamicContext)));
+  }
+
+  @Override
   public String toSignature() {
     return ObjectUtils.notNull(entrySet().stream()
         .map(entry -> entry.getKey().getKey().toSignature() + "=" + entry.getValue().toSignature())

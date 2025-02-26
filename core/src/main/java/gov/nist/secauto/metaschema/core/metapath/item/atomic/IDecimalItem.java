@@ -326,9 +326,4 @@ public interface IDecimalItem extends INumericItem {
   default int compareTo(@NonNull IDecimalItem item) {
     return asDecimal().compareTo(item.asDecimal());
   }
-
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
-  }
 }

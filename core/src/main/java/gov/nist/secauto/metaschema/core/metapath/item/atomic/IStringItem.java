@@ -58,7 +58,7 @@ public interface IStringItem extends IAnyAtomicItem {
 
   /**
    * Encode this string as base64.
-   * 
+   *
    * @return the base64 encoded text
    */
   default IBase64BinaryItem encode() {
@@ -109,11 +109,6 @@ public interface IStringItem extends IAnyAtomicItem {
    */
   default int compareTo(@NonNull IStringItem other) {
     return asString().compareTo(other.asString());
-  }
-
-  @Override
-  default int compareTo(IAnyAtomicItem other) {
-    return compareTo(other.asStringItem());
   }
 
   /**

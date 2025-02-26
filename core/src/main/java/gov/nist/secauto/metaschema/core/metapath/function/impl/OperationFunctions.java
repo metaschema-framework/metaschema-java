@@ -1139,7 +1139,7 @@ public final class OperationFunctions {
     } else if (arg1 instanceof IIntegerItem && arg2 instanceof IIntegerItem) {
       retval = IBooleanItem.valueOf(arg1.asInteger().equals(arg2.asInteger()));
     } else {
-      retval = IBooleanItem.valueOf(arg1.asDecimal().equals(arg2.asDecimal()));
+      retval = IBooleanItem.valueOf(arg1.asDecimal().compareTo(arg2.asDecimal()) == 0);
     }
     return retval;
   }

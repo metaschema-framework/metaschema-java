@@ -118,6 +118,13 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
   }
 
   @Override
+  public IArrayItem<ITEM> normalize(@NonNull DynamicContext dynamicContext) {
+    return ObjectUtils.asType(stream()
+        .map(item -> item.normalize(dynamicContext))
+        .collect(IArrayItem.toArrayItem()));
+  }
+
+  @Override
   public String toSignature() {
     return ObjectUtils.notNull(stream()
         .map(ICollectionValue::toSignature)

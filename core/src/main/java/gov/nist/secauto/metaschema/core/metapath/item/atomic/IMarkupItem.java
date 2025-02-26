@@ -67,11 +67,6 @@ public interface IMarkupItem extends IAnyAtomicItem {
     return cast(item);
   }
 
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
-  }
-
   /**
    * Compares this value with the argument.
    *

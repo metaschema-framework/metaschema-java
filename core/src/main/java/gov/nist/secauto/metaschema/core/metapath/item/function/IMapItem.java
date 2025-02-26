@@ -15,8 +15,15 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -89,6 +96,48 @@ public interface IMapItem<VALUE extends ICollectionValue>
   default int size() {
     return getValue().size();
 
+  }
+
+  /**
+   * A {@link Collector} implementation to generates a sequence from a stream of
+   * Metapath items.
+   *
+   * @param <T>
+   *          the Java type of the items
+   * @return a collector that will generate a sequence
+   */
+  @NonNull
+  static <T extends ICollectionValue> Collector<Map.Entry<IMapKey, T>, ?, IMapItem<T>> toMapItem() {
+    return new Collector<Map.Entry<IMapKey, T>, Map<IMapKey, T>, IMapItem<T>>() {
+
+      @Override
+      public Supplier<Map<IMapKey, T>> supplier() {
+        return LinkedHashMap::new;
+      }
+
+      @Override
+      public BiConsumer<Map<IMapKey, T>, Map.Entry<IMapKey, T>> accumulator() {
+        return (map, entry) -> map.putIfAbsent(entry.getKey(), entry.getValue());
+      }
+
+      @Override
+      public BinaryOperator<Map<IMapKey, T>> combiner() {
+        return (map1, map2) -> {
+          map1.putAll(map2);
+          return map1;
+        };
+      }
+
+      @Override
+      public Function<Map<IMapKey, T>, IMapItem<T>> finisher() {
+        return map -> ofCollection(ObjectUtils.notNull(map));
+      }
+
+      @Override
+      public Set<Characteristics> characteristics() {
+        return Collections.emptySet();
+      }
+    };
   }
 
   @Override

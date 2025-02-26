@@ -1,6 +1,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
@@ -158,6 +159,11 @@ public interface IFlagNodeItem
   @Override
   default boolean deepEquals(ICollectionValue other) {
     return other instanceof IFlagNodeItem
-        && NodeComparators.compareNodeItem(this, (IFlagNodeItem) other) == 0;
+        && NodeComparators.compareAsFlag(this, (IFlagNodeItem) other);
+  }
+
+  @Override
+  default IFlagNodeItem normalize(@NonNull DynamicContext dynamicContext) {
+    return this;
   }
 }

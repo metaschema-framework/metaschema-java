@@ -95,11 +95,6 @@ public final class NullJavaTypeAdapter
     }
 
     @Override
-    public int compareTo(IAnyAtomicItem item) {
-      throw new UnsupportedOperationException(NOT_VALID);
-    }
-
-    @Override
     public IMapKey asMapKey() {
       throw new UnsupportedOperationException(NOT_VALID);
     }

@@ -120,15 +120,10 @@ public interface IAnyAtomicItem extends IAtomicValuedItem {
   @NonNull
   IAnyAtomicItem castAsType(@NonNull IAnyAtomicItem item);
 
-  /**
-   * Compares this value with the argument. Ordering is item type dependent.
-   *
-   * @param other
-   *          the item to compare with this value
-   * @return a negative integer, zero, or a positive integer if this value is less
-   *         than, equal to, or greater than the {@code item}.
-   */
-  int compareTo(@NonNull IAnyAtomicItem other);
+  @Override
+  default IAnyAtomicItem normalize(@NonNull DynamicContext dynamicContext) {
+    return this;
+  }
 
   @Override
   default boolean deepEquals(ICollectionValue other) {

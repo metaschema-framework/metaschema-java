@@ -39,7 +39,7 @@ public abstract class AbstractDurationItem<TYPE extends TemporalAmount>
 
   /**
    * Construct a new duration item using the provided value.
-   * 
+   *
    * @param value
    *          the wrapped duration value
    */

@@ -46,11 +46,6 @@ public interface ITimeItem extends ITemporalItem {
     return type();
   }
 
-  @Override
-  default Class<ITimeItem> getItemBaseType() {
-    return ITimeItem.class;
-  }
-
   /**
    * Construct a new date/time item using the provided string {@code value}.
    *
@@ -251,11 +246,6 @@ public interface ITimeItem extends ITemporalItem {
   @Override
   default ITimeItem castAsType(IAnyAtomicItem item) {
     return cast(item);
-  }
-
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
   }
 
   /**

@@ -298,11 +298,6 @@ public interface IIntegerItem extends IDecimalItem {
     return valueOf(ObjectUtils.notNull(asInteger().negate()));
   }
 
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
-  }
-
   /**
    * Compares this value with the argument.
    *

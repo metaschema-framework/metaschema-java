@@ -197,6 +197,11 @@ public interface IFunction extends IItem {
     return false;
   }
 
+  @Override
+  default IFunction normalize(@NonNull DynamicContext dynamicContext) {
+    return this;
+  }
+
   /**
    * Execute the function with the provided {@code arguments}, using the provided
    * {@code DynamicContext} and {@code focus}.

@@ -114,9 +114,4 @@ public interface IDurationItem extends IAnyAtomicItem {
    *         than, equal to, or greater than the {@code item}.
    */
   int compareTo(@NonNull IDurationItem item);
-
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
-  }
 }

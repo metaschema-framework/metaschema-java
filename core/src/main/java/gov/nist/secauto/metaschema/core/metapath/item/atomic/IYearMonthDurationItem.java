@@ -132,11 +132,6 @@ public interface IYearMonthDurationItem extends IDurationItem {
     return cast(item);
   }
 
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
-  }
-
   /**
    * Compares this value with the argument.
    *

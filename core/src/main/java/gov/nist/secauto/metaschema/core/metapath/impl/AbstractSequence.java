@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -240,6 +241,12 @@ public abstract class AbstractSequence<ITEM extends IItem>
       }
     }
     return retval;
+  }
+
+  @Override
+  public ISequence<ITEM> normalize(@NonNull DynamicContext dynamicContext) {
+    return ISequence.<ITEM>of(stream()
+        .map(item -> ObjectUtils.asType(item.normalize(dynamicContext))));
   }
 
   @Override

@@ -10,16 +10,13 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -58,7 +55,7 @@ public final class FnDistinctValues {
       IItem focus) {
     ISequence<IAnyAtomicItem> seq = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
 
-    return ISequence.of(fnDistinctValues(seq));
+    return ISequence.of(fnDistinctValues(seq, dynamicContext));
   }
 
   /**
@@ -73,22 +70,11 @@ public final class FnDistinctValues {
    * @return a the list of distinct values
    */
   @NonNull
-  public static Stream<IAnyAtomicItem> fnDistinctValues(@NonNull List<IAnyAtomicItem> values) {
-    // FIXME: support implicit timezone
-    Set<IAnyAtomicItem> distinctValues = new TreeSet<>(FnDistinctValues::compare);
-    distinctValues.addAll(values);
-    return ObjectUtils.notNull(distinctValues.stream());
-  }
-
-  private static int compare(@NonNull IAnyAtomicItem item1, @NonNull IAnyAtomicItem item2) {
-    int retval;
-    try {
-      retval = item1.compareTo(item2);
-    } catch (@SuppressWarnings("unused") InvalidTypeFunctionException | InvalidValueForCastFunctionException ex) {
-      // the items are not comparable
-      retval = 1;
-    }
-    return retval;
+  public static Stream<IAnyAtomicItem> fnDistinctValues(@NonNull List<IAnyAtomicItem> values,
+      @NonNull DynamicContext dynamicContext) {
+    return ObjectUtils.notNull(values.stream()
+        .map(item -> item.normalize(dynamicContext))
+        .filter(ICollectionValue.distinctByDeepEquals(IAnyAtomicItem.class)));
   }
 
   private FnDistinctValues() {

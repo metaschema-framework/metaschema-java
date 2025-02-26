@@ -11,8 +11,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Provides methods for comparing nodes according to the
@@ -21,14 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public final class NodeComparators {
   private static final Comparator<IFlagNodeItem> FLAG_SORT
-      = Comparator.comparing(IFlagNodeItem::getQName, IEnhancedQName::compareTo)
-          .thenComparing(IFlagNodeItem::toAtomicItem, IAnyAtomicItem::compareTo);
-  private static final Comparator<INodeItem> NODE_ITEM
-      = Comparator.comparing(INodeItem::getNodeType)
-          .thenComparing(INodeItem::getFlags, NodeComparators::compareFlags)
-          .thenComparing(INodeItem::getModelItems, NodeComparators::compareModelItems);
-  private static final Comparator<IFieldNodeItem> FIELD_NODE_ITEM
-      = Comparator.comparing(IFieldNodeItem::toAtomicItem, IAnyAtomicItem::compareTo);
+      = Comparator.comparing(IFlagNodeItem::getQName, IEnhancedQName::compareTo);
 
   /**
    * Compare two node items for equality.
@@ -37,11 +32,17 @@ public final class NodeComparators {
    *          the first item to compare
    * @param item2
    *          the second item to compare
-   * @return a negative integer, zero, or a positive integer if the first argument
-   *         is less than, equal to, or greater than the second.
+   * @return {@code true} if both node items are the same type and have the same
+   *         flag and model members, or {@code false} otherwise
    */
-  public static int compareNodeItem(@NonNull INodeItem item1, @NonNull INodeItem item2) {
-    return NODE_ITEM.compare(item1, item2);
+  public static boolean compareNodeItem(@NonNull INodeItem item1, @NonNull INodeItem item2) {
+    return item1.getNodeType().equals(item2.getNodeType())
+        && compareFlags(item1.getFlags(), item2.getFlags())
+        && compareModelItems(item1.getModelItems(), item2.getModelItems());
+  }
+
+  private static boolean compareAtomics(@Nullable IAnyAtomicItem atomic1, @Nullable IAnyAtomicItem atomic2) {
+    return (atomic1 == null && atomic2 == null) || (atomic1 != null && atomic1.deepEquals(atomic2));
   }
 
   /**
@@ -54,33 +55,19 @@ public final class NodeComparators {
    * @return a negative integer, zero, or a positive integer if the first argument
    *         is less than, equal to, or greater than the second.
    */
-  public static int compareNodeItem(@NonNull IFlagNodeItem item1, @NonNull IFlagNodeItem item2) {
-    return FLAG_SORT.compare(item1, item2);
-  }
-
-  /**
-   * Compare two node items for equality.
-   *
-   * @param item1
-   *          the first item to compare
-   * @param item2
-   *          the second item to compare
-   * @return a negative integer, zero, or a positive integer if the first argument
-   *         is less than, equal to, or greater than the second.
-   */
-  public static int compareNodeItem(@NonNull IModelNodeItem<?, ?> item1, @NonNull IModelNodeItem<?, ?> item2) {
-    return getComparator(item1).compare(item1, item2);
+  public static boolean compareModelNodeItem(@NonNull IModelNodeItem<?, ?> item1, @NonNull IModelNodeItem<?, ?> item2) {
+    return getComparator(item1).test(item1, item2);
   }
 
   @SuppressWarnings("PMD.OnlyOneReturn")
-  private static int compareFlags(
+  private static boolean compareFlags(
       @NonNull Collection<? extends IFlagNodeItem> flags1,
       @NonNull Collection<? extends IFlagNodeItem> flags2) {
 
     Comparator<Collection<? extends IFlagNodeItem>> bySize = Comparator.comparingInt(Collection::size);
     int delta = bySize.compare(flags1, flags2);
     if (delta != 0) {
-      return delta;
+      return false;
     }
 
     // sort the collections to compare in an order independent way
@@ -91,18 +78,17 @@ public final class NodeComparators {
 
     // compare the results
     for (int i = 0; i < list1.size(); i++) {
-      int compareResult = compareNodeItem(
+      if (!compareAsFlag(
           ObjectUtils.requireNonNull(list1.get(i)),
-          ObjectUtils.requireNonNull(list2.get(i)));
-      if (compareResult != 0) {
-        return compareResult;
+          ObjectUtils.requireNonNull(list2.get(i)))) {
+        return false;
       }
     }
-    return 0;
+    return true;
   }
 
   @SuppressWarnings("PMD.OnlyOneReturn")
-  private static int compareModelItems(
+  private static boolean compareModelItems(
       @NonNull Collection<? extends List<? extends IModelNodeItem<?, ?>>> items1,
       @NonNull Collection<? extends List<? extends IModelNodeItem<?, ?>>> items2) {
 
@@ -110,7 +96,7 @@ public final class NodeComparators {
         = Comparator.comparingInt(Collection::size);
     int delta = bySize.compare(items1, items2);
     if (delta != 0) {
-      return delta;
+      return false;
     }
 
     Iterator<? extends List<? extends IModelNodeItem<?, ?>>> thisIterator = items1.iterator();
@@ -125,18 +111,18 @@ public final class NodeComparators {
         IModelNodeItem<?, ?> item1 = ObjectUtils.requireNonNull(il1.next());
         IModelNodeItem<?, ?> item2 = ObjectUtils.requireNonNull(il2.next());
 
-        int result = compareNodeItem(item1, item2);
-        if (result != 0) {
-          return result;
+        if (!compareModelNodeItem(item1, item2)) {
+          return false;
         }
       }
     }
-    return 0;
+    return true;
   }
 
   @NonNull
-  private static Comparator<IModelNodeItem<?, ?>> getComparator(@NonNull IModelNodeItem<?, ?> item) {
-    Comparator<IModelNodeItem<?, ?>> retval;
+  private static BiPredicate<IModelNodeItem<?, ?>, IModelNodeItem<?, ?>>
+      getComparator(@NonNull IModelNodeItem<?, ?> item) {
+    BiPredicate<IModelNodeItem<?, ?>, IModelNodeItem<?, ?>> retval;
     if (item instanceof IAssemblyNodeItem) {
       retval = NodeComparators::compareAsAssembly;
     } else if (item instanceof IFieldNodeItem) {
@@ -147,17 +133,29 @@ public final class NodeComparators {
     return retval;
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
-  private static int compareAsField(@NonNull IModelNodeItem<?, ?> item1, @NonNull IModelNodeItem<?, ?> item2) {
-    int result = NODE_ITEM.compare(item1, item2);
-    if (result != 0) {
-      return result;
-    }
-    return FIELD_NODE_ITEM.compare((IFieldNodeItem) item1, (IFieldNodeItem) item2);
+  /**
+   * Compare two flag node items for equality.
+   *
+   * @param item1
+   *          the first item to compare
+   * @param item2
+   *          the second item to compare
+   * @return {@code true} if both flags have the same name and value, or
+   *         {@code false} otherwise
+   */
+  public static boolean compareAsFlag(@NonNull IFlagNodeItem item1, @NonNull IFlagNodeItem item2) {
+    return item1.getQName().equals(item2.getQName())
+        && compareAtomics(item1.toAtomicItem(), item2.toAtomicItem());
   }
 
-  private static int compareAsAssembly(@NonNull IModelNodeItem<?, ?> item1, @NonNull IModelNodeItem<?, ?> item2) {
-    return NODE_ITEM.compare(item1, item2);
+  @SuppressWarnings("PMD.OnlyOneReturn")
+  private static boolean compareAsField(@NonNull IModelNodeItem<?, ?> item1, @NonNull IModelNodeItem<?, ?> item2) {
+    return compareNodeItem(item1, item2)
+        && compareAtomics(item1.toAtomicItem(), item2.toAtomicItem());
+  }
+
+  private static boolean compareAsAssembly(@NonNull IModelNodeItem<?, ?> item1, @NonNull IModelNodeItem<?, ?> item2) {
+    return compareNodeItem(item1, item2);
   }
 
   private NodeComparators() {

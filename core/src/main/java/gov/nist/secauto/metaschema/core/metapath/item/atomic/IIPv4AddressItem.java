@@ -95,9 +95,4 @@ public interface IIPv4AddressItem extends IIPAddressItem {
   default IIPv4AddressItem castAsType(IAnyAtomicItem item) {
     return cast(item);
   }
-
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
-  }
 }

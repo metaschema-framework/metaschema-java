@@ -8,8 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITemporalItem;
 
-import java.util.Comparator;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

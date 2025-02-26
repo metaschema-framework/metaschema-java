@@ -141,11 +141,6 @@ public interface IBooleanItem extends IAnyAtomicItem {
     return this.toBoolean() ? FALSE : TRUE;
   }
 
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(castAsType(item));
-  }
-
   /**
    * Compares this value with the argument.
    *

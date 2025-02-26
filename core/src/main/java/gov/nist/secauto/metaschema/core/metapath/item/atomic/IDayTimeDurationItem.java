@@ -93,7 +93,7 @@ public interface IDayTimeDurationItem extends IDurationItem {
 
   /**
    * Returns a copy of this duration with the amount negated.
-   * 
+   *
    * @return this duration with the amount negated
    */
   @NonNull
@@ -139,11 +139,6 @@ public interface IDayTimeDurationItem extends IDurationItem {
   default int compareTo(@NonNull IDayTimeDurationItem item) {
     return asDuration().compareTo(item.asDuration());
 
-  }
-
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
   }
 
   /**

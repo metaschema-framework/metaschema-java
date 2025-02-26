@@ -51,11 +51,6 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
     return type();
   }
 
-  @Override
-  default Class<IDateTimeItem> getItemBaseType() {
-    return IDateTimeItem.class;
-  }
-
   /**
    * Construct a new date/time item using the provided string {@code value}.
    *
@@ -79,7 +74,7 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
 
   /**
    * Get a date/time item based on the provided date and time item values.
-   * 
+   *
    * @param date
    *          the date portion of the date/time
    * @param time
@@ -116,7 +111,7 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
 
   /**
    * Get the provided item as a date/time item.
-   * 
+   *
    * @param item
    *          the item to convert to a date/time
    * @return the provided value as a date/time
@@ -156,7 +151,7 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
    * The timezone is marked as ambiguous, meaning the
    * {@link AmbiguousDateTime#hasTimeZone()} method will return a result of
    * {@code false}.
-   * 
+   *
    * @param value
    *          the local time value to use
    * @return the new item
@@ -296,10 +291,10 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
    * <p>
    * If this date/time has a timezone, then this timezone is used. Otherwise, the
    * implicit timezone is used from the dynamic context.
-   * 
+   *
    * @param dynamicContext
    *          the dynamic context used to get the implicit timezone
-   * 
+   *
    * @return the date/time with the timezone normalized using UTC-based timezone
    */
   @NonNull
@@ -314,7 +309,7 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
 
   /**
    * Get this date/time in the UTC timezone.
-   * 
+   *
    * @return the date/time in UTC
    */
   default IDateTimeItem asDateTimeZ() {
@@ -402,10 +397,5 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
   @Override
   default IDateTimeItem castAsType(IAnyAtomicItem item) {
     return cast(item);
-  }
-
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
   }
 }

@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractSequence;
 import gov.nist.secauto.metaschema.core.metapath.impl.SequenceN;
 import gov.nist.secauto.metaschema.core.metapath.impl.SingletonSequence;
@@ -595,4 +596,8 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
             ? empty()
             : new SequenceN<>(new ArrayList<>(collection));
   }
+
+  @Override
+  @NonNull
+  ISequence<ITEM> normalize(@NonNull DynamicContext dynamicContext);
 }

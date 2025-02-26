@@ -171,11 +171,6 @@ public interface IBase64BinaryItem extends IBinaryItem {
     return cast(item);
   }
 
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
-  }
-
   /**
    * Compares this value with the argument.
    *

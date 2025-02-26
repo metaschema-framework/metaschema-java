@@ -58,11 +58,14 @@ public final class FnDeepEqual {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    ISequence<?> parameter1 = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
-    ISequence<?> parameter2 = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));
+    ISequence<?> parameter1
+        = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)).normalize(dynamicContext));
+    ISequence<?> parameter2
+        = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)).normalize(dynamicContext));
 
     // FIXME: support implicit timezone
-    return ISequence.of(IBooleanItem.valueOf(parameter1.deepEquals(parameter2)));
+    return ISequence.of(
+        IBooleanItem.valueOf(parameter1.deepEquals(parameter2)));
   }
 
   private FnDeepEqual() {

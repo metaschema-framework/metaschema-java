@@ -17,7 +17,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
@@ -160,7 +159,8 @@ public final class ComparisonFunctions {
    * @return the casted item
    */
   @NonNull
-  private static IAnyAtomicItem applyGeneralComparisonCast(@NonNull IAnyAtomicItem item,
+  private static IAnyAtomicItem applyGeneralComparisonCast(
+      @NonNull IAnyAtomicItem item,
       @NonNull IAnyAtomicItem other) {
     IAnyAtomicItem retval;
     if (item instanceof INumericItem) {
@@ -561,22 +561,5 @@ public final class ComparisonFunctions {
       throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));
     }
     return retval;
-  }
-
-  /**
-   * Compare the {@code right} item with the {@code left} item using the specified
-   * {@code operator}.
-   *
-   * @param left
-   *          the value to compare against
-   * @param right
-   *          the value to compare with
-   * @return the comparison result
-   */
-  @NonNull
-  public static IIntegerItem compareTo(
-      @NonNull IAnyAtomicItem left,
-      @NonNull IAnyAtomicItem right) {
-    return IIntegerItem.valueOf(left.compareTo(right));
   }
 }

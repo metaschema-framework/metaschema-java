@@ -5,11 +5,18 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -107,10 +114,59 @@ public interface ICollectionValue {
   boolean deepEquals(ICollectionValue other);
 
   /**
+   * Normalize the value for comparison using
+   * {@link #deepEquals(ICollectionValue)}.
+   * <p>
+   * This will affect {@link IDateTimeItem}, {@link IDateItem}, and
+   * {@link ITimeItem} values by insuring that those with an implicit timezone use
+   * the timezone from the {@link DynamicContext}. All other types are unaffected.
+   *
+   * @param dynamicContext
+   *          used to get the timezone to use in place of an implicit timezone
+   * @return the normalized value for comparison
+   */
+  @NonNull
+  ICollectionValue normalize(@NonNull DynamicContext dynamicContext);
+
+  /**
    * Get a representation of the value based on its type signature.
    *
    * @return the signature
    */
   @NonNull
   String toSignature();
+
+  /**
+   * Provides a {@link Predicate} which filters items in a stream returning
+   * distinct values based on {@link #deepEquals(ICollectionValue)}.
+   * <p>
+   * These values should be first normalized using
+   * {@link #normalize(DynamicContext)} to ensure their comparison is against
+   * consistent values.
+   *
+   * @return the predicate
+   */
+  static Predicate<? super ICollectionValue> distinctByDeepEquals() {
+    return distinctByDeepEquals(ICollectionValue.class);
+  }
+
+  /**
+   * Provides a {@link Predicate} which filters items in a stream returning
+   * distinct values based on {@link #deepEquals(ICollectionValue)}.
+   * <p>
+   * These values should be first normalized using
+   * {@link #normalize(DynamicContext)} to ensure their comparison is against
+   * consistent values.
+   *
+   * @param clazz
+   *          the Java class for the type handled by the predicate
+   *
+   * @return the predicate
+   */
+  static <T extends ICollectionValue> Predicate<? super T> distinctByDeepEquals(
+      @NonNull Class<T> clazz) {
+    List<T> seen = new LinkedList<>();
+    return item -> !seen.stream().anyMatch(item::deepEquals)
+        && seen.add(item); // true
+  }
 }

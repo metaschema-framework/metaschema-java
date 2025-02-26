@@ -13,12 +13,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -27,6 +30,9 @@ class FnDistinctValuesTest
     extends ExpressionTestBase {
   private static Stream<Arguments> provideValues() {
     return Stream.of(
+        Arguments.of(
+            sequence(decimal(2.0)),
+            "fn:distinct-values((2.0, 2))"),
         Arguments.of(
             sequence(integer(1), decimal(2.0), integer(3)),
             "fn:distinct-values((1, 2.0, 3, 2))"),
@@ -41,7 +47,10 @@ class FnDistinctValuesTest
   @ParameterizedTest
   @MethodSource("provideValues")
   void test(@NonNull ISequence<?> expected, @NonNull String metapath) {
-    assertEquals(expected, IMetapathExpression.compile(metapath)
+    Set<? extends IItem> expectedItems = new HashSet<>(expected);
+    Set<? extends IItem> actualItems = new HashSet<>(IMetapathExpression.compile(metapath)
         .evaluate(null, newDynamicContext()));
+
+    assertEquals(expectedItems, actualItems);
   }
 }

@@ -48,11 +48,6 @@ public interface IDateItem extends ICalendarTemporalItem {
     return type();
   }
 
-  @Override
-  default Class<IDateItem> getItemBaseType() {
-    return IDateItem.class;
-  }
-
   /**
    * Construct a new date item using the provided string {@code value}.
    *
@@ -272,10 +267,5 @@ public interface IDateItem extends ICalendarTemporalItem {
   @Override
   default IDateItem castAsType(IAnyAtomicItem item) {
     return cast(item);
-  }
-
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
   }
 }

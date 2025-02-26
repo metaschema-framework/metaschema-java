@@ -151,11 +151,6 @@ public interface IAnyUriItem extends IAnyAtomicItem {
     return valueOf(ObjectUtils.notNull(asUri().resolve(other.asUri())));
   }
 
-  @Override
-  default int compareTo(IAnyAtomicItem item) {
-    return compareTo(cast(item));
-  }
-
   /**
    * Compares this value with the argument.
    *

@@ -126,9 +126,4 @@ public interface IUuidItem extends IStringItem {
   default int compareTo(@NonNull IUuidItem item) {
     return asUuid().compareTo(item.asUuid());
   }
-
-  @Override
-  default int compareTo(IAnyAtomicItem other) {
-    return compareTo(other.asStringItem());
-  }
 }

@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
@@ -134,11 +135,16 @@ public final class FnMinMax {
   public static IAnyAtomicItem min(@NonNull List<? extends IAnyAtomicItem> items) {
     // FIXME: support implicit timezone
     return normalize(items)
-        .min((item1, item2) -> {
-          assert item2 != null;
-          return item1.compareTo(item2);
-        })
-        .orElse(null);
+        .reduce(null, (item1, item2) -> {
+          // FIXME: figure out a better way to handle implicit namespaces
+          return item1 != null && ComparisonFunctions.valueCompairison(
+              item1,
+              ComparisonFunctions.Operator.LE,
+              item2,
+              new DynamicContext()).toBoolean()
+                  ? item1
+                  : item2;
+        });
   }
 
   /**
@@ -153,11 +159,16 @@ public final class FnMinMax {
   public static IAnyAtomicItem max(@NonNull List<? extends IAnyAtomicItem> items) {
     // FIXME: support implicit timezone
     return normalize(items)
-        .max((item1, item2) -> {
-          assert item2 != null;
-          return item1.compareTo(item2);
-        })
-        .orElse(null);
+        .reduce(null, (item1, item2) -> {
+          // FIXME: figure out a better way to handle implicit namespaces
+          return item1 != null && ComparisonFunctions.valueCompairison(
+              item1,
+              ComparisonFunctions.Operator.GE,
+              item2,
+              new DynamicContext()).toBoolean()
+                  ? item1
+                  : item2;
+        });
   }
 
   @SuppressWarnings("PMD.OnlyOneReturn") // readability
