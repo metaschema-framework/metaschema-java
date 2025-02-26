@@ -7,9 +7,6 @@ package gov.nist.secauto.metaschema.core.metapath.item;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -20,6 +17,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * A data value that can be a value in a Metapath array or map.
@@ -108,25 +106,32 @@ public interface ICollectionValue {
    *
    * @param other
    *          the other value to compare to this value to
+   * @param dynamicContext
+   *          used to provide evaluation information, including the implicit
+   *          timezone
    * @return the {@code true} if the two values are equal, or {@code false}
    *         otherwise
    */
-  boolean deepEquals(ICollectionValue other);
+  boolean deepEquals(@Nullable ICollectionValue other, @NonNull DynamicContext dynamicContext);
 
   /**
-   * Normalize the value for comparison using
-   * {@link #deepEquals(ICollectionValue)}.
+   * Determine if this and the other value are deeply equal.
    * <p>
-   * This will affect {@link IDateTimeItem}, {@link IDateItem}, and
-   * {@link ITimeItem} values by insuring that those with an implicit timezone use
-   * the timezone from the {@link DynamicContext}. All other types are unaffected.
+   * Item equality is defined by the
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-deep-equal">XPath 3.1
+   * fn:deep-equal</a> specification.
    *
-   * @param dynamicContext
-   *          used to get the timezone to use in place of an implicit timezone
-   * @return the normalized value for comparison
+   * @param other
+   *          the other value to compare to this value to
+   * @return the {@code true} if the two values are equal, or {@code false}
+   *         otherwise
    */
-  @NonNull
-  ICollectionValue normalize(@NonNull DynamicContext dynamicContext);
+  default boolean deepEquals(@Nullable ICollectionValue other) {
+    // use a default dynamic context
+    // FIXME: Refactor DynamicContext to be an interface and provide a lightweight
+    // version with the implicit timezone.
+    return deepEquals(other, new DynamicContext());
+  }
 
   /**
    * Get a representation of the value based on its type signature.
@@ -144,10 +149,13 @@ public interface ICollectionValue {
    * {@link #normalize(DynamicContext)} to ensure their comparison is against
    * consistent values.
    *
+   * @param dynamicContext
+   *          used to provide evaluation information, including the implicit
+   *          timezone
    * @return the predicate
    */
-  static Predicate<? super ICollectionValue> distinctByDeepEquals() {
-    return distinctByDeepEquals(ICollectionValue.class);
+  static Predicate<? super ICollectionValue> distinctByDeepEquals(@NonNull DynamicContext dynamicContext) {
+    return distinctByDeepEquals(ICollectionValue.class, dynamicContext);
   }
 
   /**
@@ -160,13 +168,16 @@ public interface ICollectionValue {
    *
    * @param clazz
    *          the Java class for the type handled by the predicate
-   *
+   * @param dynamicContext
+   *          used to provide evaluation information, including the implicit
+   *          timezone
    * @return the predicate
    */
   static <T extends ICollectionValue> Predicate<? super T> distinctByDeepEquals(
-      @NonNull Class<T> clazz) {
+      @NonNull Class<T> clazz,
+      @NonNull DynamicContext dynamicContext) {
     List<T> seen = new LinkedList<>();
-    return item -> !seen.stream().anyMatch(item::deepEquals)
+    return item -> !seen.stream().anyMatch(other -> item.deepEquals(other, dynamicContext))
         && seen.add(item); // true
   }
 }

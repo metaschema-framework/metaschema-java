@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,7 +36,8 @@ class IUuidItemTest {
   @ParameterizedTest
   @MethodSource("provideDeepEqualValues")
   void testDeepEqual(@NonNull IAnyAtomicItem left, @NonNull IAnyAtomicItem right, boolean expected) {
-    boolean actual = left.deepEquals(right);
+    DynamicContext dynamicContext = new DynamicContext();
+    boolean actual = left.deepEquals(right, dynamicContext);
     assertEquals(expected, actual);
   }
 }

@@ -67,6 +67,7 @@ public class UsedDefinitionModelWalker
 
       // get roots from exported
       for (IAssemblyDefinition assembly : module.getExportedAssemblyDefinitions()) {
+        assert assembly != null;
         if (assembly.isRoot()) {
           definitions.add(assembly);
         }

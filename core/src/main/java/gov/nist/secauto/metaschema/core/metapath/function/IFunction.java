@@ -192,14 +192,9 @@ public interface IFunction extends IItem {
   // boolean isSupported(List<IExpression<?>> arguments);
 
   @Override
-  default boolean deepEquals(ICollectionValue other) {
+  default boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     // this is the expected result
     return false;
-  }
-
-  @Override
-  default IFunction normalize(@NonNull DynamicContext dynamicContext) {
-    return this;
   }
 
   /**

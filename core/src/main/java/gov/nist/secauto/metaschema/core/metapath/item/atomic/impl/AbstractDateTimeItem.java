@@ -49,7 +49,8 @@ public abstract class AbstractDateTimeItem<TYPE>
 
     if (obj instanceof IDateTimeItem) {
       IDateTimeItem that = (IDateTimeItem) obj;
-      return hasTimezone() == that.hasTimezone() && deepEquals(that);
+      return hasTimezone() == that.hasTimezone()
+          && deepEquals(that);
     }
     return false;
   }

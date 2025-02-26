@@ -157,13 +157,8 @@ public interface IFlagNodeItem
   }
 
   @Override
-  default boolean deepEquals(ICollectionValue other) {
+  default boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     return other instanceof IFlagNodeItem
-        && NodeComparators.compareAsFlag(this, (IFlagNodeItem) other);
-  }
-
-  @Override
-  default IFlagNodeItem normalize(@NonNull DynamicContext dynamicContext) {
-    return this;
+        && NodeComparators.compareAsFlag(this, (IFlagNodeItem) other, dynamicContext);
   }
 }

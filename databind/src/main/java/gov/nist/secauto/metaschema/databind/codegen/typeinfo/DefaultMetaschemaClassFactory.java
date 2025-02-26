@@ -438,6 +438,8 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
 
     ITypeResolver typeResolver = getTypeResolver();
     for (IFieldDefinition definition : module.getFieldDefinitions()) {
+      assert definition != null;
+
       if (definition.hasChildren()) {
         retval.addMember("fields", "$T.class", typeResolver.getClassName(definition));
       }

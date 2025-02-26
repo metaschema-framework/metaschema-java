@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
@@ -519,9 +521,11 @@ class StepTest
     IModelNodeItem<?, ?> node2 = document.getRootAssemblyNodeItem()
         .getModelItemsByName(IEnhancedQName.of(NS, "node-2"))
         .iterator().next();
+    assertNotNull(node2);
 
     IModelNodeItem<?, ?> nodeC
         = ObjectUtils.requireNonNull(node2.getModelItemsByName(IEnhancedQName.of(NS, "c"))).iterator().next();
+    assertNotNull(nodeC);
 
     Assertions.assertThat(actual).isEqualTo(
         List.of(

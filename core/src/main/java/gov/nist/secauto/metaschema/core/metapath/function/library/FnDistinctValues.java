@@ -70,11 +70,11 @@ public final class FnDistinctValues {
    * @return a the list of distinct values
    */
   @NonNull
-  public static Stream<IAnyAtomicItem> fnDistinctValues(@NonNull List<IAnyAtomicItem> values,
+  public static Stream<IAnyAtomicItem> fnDistinctValues(
+      @NonNull List<IAnyAtomicItem> values,
       @NonNull DynamicContext dynamicContext) {
     return ObjectUtils.notNull(values.stream()
-        .map(item -> item.normalize(dynamicContext))
-        .filter(ICollectionValue.distinctByDeepEquals(IAnyAtomicItem.class)));
+        .filter(ICollectionValue.distinctByDeepEquals(IAnyAtomicItem.class, dynamicContext)));
   }
 
   private FnDistinctValues() {

@@ -89,6 +89,7 @@ public abstract class AbstractGenerationState<WRITER, DATATYPE_MANAGER extends I
     List<IAllowedValue> values = new LinkedList<>();
     boolean closed = false;
     for (IAllowedValuesConstraint constraint : definition.getAllowedValuesConstraints()) {
+      assert constraint != null;
       if (!constraint.isAllowedOther()) {
         closed = true;
       }

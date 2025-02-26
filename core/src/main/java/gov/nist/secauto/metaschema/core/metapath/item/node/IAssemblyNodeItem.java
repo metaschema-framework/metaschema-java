@@ -78,13 +78,8 @@ public interface IAssemblyNodeItem extends IModelNodeItem<IAssemblyDefinition, I
   }
 
   @Override
-  default boolean deepEquals(ICollectionValue other) {
+  default boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     return other instanceof IAssemblyNodeItem
-        && NodeComparators.compareNodeItem(this, (IAssemblyNodeItem) other);
-  }
-
-  @Override
-  default IAssemblyNodeItem normalize(@NonNull DynamicContext dynamicContext) {
-    return this;
+        && NodeComparators.compareNodeItem(this, (IAssemblyNodeItem) other, dynamicContext);
   }
 }

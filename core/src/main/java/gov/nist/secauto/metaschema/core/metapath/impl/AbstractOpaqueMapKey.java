@@ -7,6 +7,10 @@ package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.item.function.IOpaqueMapKey;
 
+/**
+ * Represents a map key with no special handling based on the key value's data
+ * type. In this way the key value is essentially "opaque".
+ */
 public abstract class AbstractOpaqueMapKey
     extends AbstractMapKey
     implements IOpaqueMapKey {
@@ -18,6 +22,7 @@ public abstract class AbstractOpaqueMapKey
   @Override
   public boolean equals(Object obj) {
     return this == obj
-        || obj instanceof IOpaqueMapKey && getKey().deepEquals(((IOpaqueMapKey) obj).getKey());
+        || obj instanceof IOpaqueMapKey
+            && getKey().deepEquals(((IOpaqueMapKey) obj).getKey());
   }
 }

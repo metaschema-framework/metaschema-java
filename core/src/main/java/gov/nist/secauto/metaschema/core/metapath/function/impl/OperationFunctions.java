@@ -1248,10 +1248,15 @@ public final class OperationFunctions {
    *          the first key to compare
    * @param k2
    *          the second key to compare
+   * @param dynamicContext
+   *          used to get the implicit timezone from the evaluation context
    * @return {@code true} if the compared keys are the same, or {@code false}
    *         otherwise
    */
-  public static boolean opSameKey(@NonNull IAnyAtomicItem k1, @NonNull IAnyAtomicItem k2) {
+  public static boolean opSameKey(
+      @NonNull IAnyAtomicItem k1,
+      @NonNull IAnyAtomicItem k2,
+      @NonNull DynamicContext dynamicContext) {
     boolean retval;
     if ((k1 instanceof IStringItem || k1 instanceof IAnyUriItem || k1 instanceof IUntypedAtomicItem)
         && (k2 instanceof IStringItem || k2 instanceof IAnyUriItem || k2 instanceof IUntypedAtomicItem)) {
@@ -1259,7 +1264,7 @@ public final class OperationFunctions {
     } else if (k1 instanceof IDecimalItem && k2 instanceof IDecimalItem) {
       retval = ((IDecimalItem) k1).asDecimal().equals(((IDecimalItem) k2).asDecimal());
     } else {
-      retval = k1.deepEquals(k2);
+      retval = k1.deepEquals(k2, dynamicContext);
     }
     return retval;
   }

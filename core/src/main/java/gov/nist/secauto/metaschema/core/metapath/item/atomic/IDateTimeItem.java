@@ -297,13 +297,13 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
    *
    * @return the date/time with the timezone normalized using UTC-based timezone
    */
-  @Override
-  default IDateTimeItem normalize(DynamicContext dynamicContext) {
-    IDateTimeItem result = hasTimezone()
+  @NonNull
+  default IDateTimeItem normalize(@NonNull DynamicContext dynamicContext) {
+    IDateTimeItem retval = hasTimezone()
         ? this
         : replaceTimezone(dynamicContext.getImplicitTimeZoneAsDayTimeDuration());
     return valueOf(
-        ObjectUtils.notNull(result.asZonedDateTime().withZoneSameInstant(ZoneOffset.UTC)),
+        ObjectUtils.notNull(retval.asZonedDateTime().withZoneSameInstant(ZoneOffset.UTC)),
         true);
   }
 

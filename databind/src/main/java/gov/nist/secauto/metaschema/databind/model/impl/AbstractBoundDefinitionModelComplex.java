@@ -138,6 +138,8 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
   protected void deepCopyItemInternal(@NonNull IBoundObject fromObject, @NonNull IBoundObject toObject)
       throws BindingException {
     for (IBoundInstanceFlag instance : getFlagInstances()) {
+      assert instance != null;
+
       instance.deepCopy(fromObject, toObject);
     }
   }

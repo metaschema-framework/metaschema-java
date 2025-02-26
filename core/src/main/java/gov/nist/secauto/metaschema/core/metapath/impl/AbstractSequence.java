@@ -219,7 +219,7 @@ public abstract class AbstractSequence<ITEM extends IItem>
 
   @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
-  public boolean deepEquals(ICollectionValue other) {
+  public boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     if (!(other instanceof ISequence)) {
       return false;
     }
@@ -235,18 +235,12 @@ public abstract class AbstractSequence<ITEM extends IItem>
     while (thisIterator.hasNext() && otherIterator.hasNext()) {
       IItem i1 = thisIterator.next();
       IItem i2 = otherIterator.next();
-      if (!i1.deepEquals(i2)) {
+      if (!i1.deepEquals(i2, dynamicContext)) {
         retval = false;
         break;
       }
     }
     return retval;
-  }
-
-  @Override
-  public ISequence<ITEM> normalize(@NonNull DynamicContext dynamicContext) {
-    return ISequence.<ITEM>of(stream()
-        .map(item -> ObjectUtils.asType(item.normalize(dynamicContext))));
   }
 
   @Override

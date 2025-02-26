@@ -156,6 +156,8 @@ public final class InstanceModelFieldComplex
           fieldValue.setValue(retval, fieldValueDefault);
 
           for (IBoundInstanceFlag flag : definition.getFlagInstances()) {
+            assert flag != null;
+
             Object flagDefault = flag.getResolvedDefaultValue();
             if (flagDefault != null) {
               flag.setValue(retval, flagDefault);

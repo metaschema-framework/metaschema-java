@@ -53,6 +53,8 @@ public interface IBoundDefinitionModelFieldComplex
 
       // since the field value is non-null, populate the flags
       for (IBoundInstanceFlag flag : definition.getFlagInstances()) {
+        assert flag != null;
+
         Object flagDefault = flag.getResolvedDefaultValue();
         if (flagDefault != null) {
           flag.setValue(retval, flagDefault);

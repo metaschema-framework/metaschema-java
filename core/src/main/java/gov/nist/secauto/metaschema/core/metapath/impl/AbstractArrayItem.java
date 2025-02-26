@@ -93,7 +93,7 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
 
   @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
-  public boolean deepEquals(ICollectionValue other) {
+  public boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     if (!(other instanceof IArrayItem)) {
       return false;
     }
@@ -109,19 +109,12 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
     while (thisIterator.hasNext() && otherIterator.hasNext()) {
       ICollectionValue i1 = thisIterator.next();
       ICollectionValue i2 = otherIterator.next();
-      if (!i1.deepEquals(i2)) {
+      if (!i1.deepEquals(i2, dynamicContext)) {
         retval = false;
         break;
       }
     }
     return retval;
-  }
-
-  @Override
-  public IArrayItem<ITEM> normalize(@NonNull DynamicContext dynamicContext) {
-    return ObjectUtils.asType(stream()
-        .map(item -> item.normalize(dynamicContext))
-        .collect(IArrayItem.toArrayItem()));
   }
 
   @Override

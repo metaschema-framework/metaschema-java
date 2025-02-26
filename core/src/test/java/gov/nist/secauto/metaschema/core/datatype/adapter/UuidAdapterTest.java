@@ -20,21 +20,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 class UuidAdapterTest {
   private static final UuidAdapter ADAPTER = new UuidAdapter();
 
-  /**
-   * Provides test cases for date-time parsing.
-   * <p>
-   * Each argument contains:
-   * <ul>
-   * <li>input string to parse
-   * <li>boolean indicating if the datetime is ambiguous (no timezone)
-   * <li>expected ZonedDateTime result
-   * </ul>
-   *
-   * @return Stream of test cases
-   */
   private static Stream<Arguments> provideValues() {
     return Stream.of(
-        // Cases without timezone (ambiguous)
         Arguments.of(
             "f0b23719-2687-407c-b22f-f4b7ee832571"),
         Arguments.of(
@@ -43,7 +30,7 @@ class UuidAdapterTest {
 
   @ParameterizedTest
   @MethodSource("provideValues")
-  void testSimpleDateTime(@NonNull String expected) {
+  void testParseUUID(@NonNull String expected) {
     UUID uuid = ADAPTER.parse(expected);
     assertAll(
         () -> assertEquals(expected, uuid.toString()),

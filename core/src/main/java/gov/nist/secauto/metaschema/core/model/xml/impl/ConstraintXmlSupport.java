@@ -448,6 +448,7 @@ public final class ConstraintXmlSupport {
         String value = entry.getKey();
         IAllowedValue allowedValue = entry.getValue();
 
+        assert allowedValue != null;
         assert value.equals(allowedValue.getValue());
 
         MarkupLine description = allowedValue.getDescription();

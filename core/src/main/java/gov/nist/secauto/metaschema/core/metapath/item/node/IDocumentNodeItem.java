@@ -70,13 +70,8 @@ public interface IDocumentNodeItem extends IDocumentBasedNodeItem {
   }
 
   @Override
-  default boolean deepEquals(ICollectionValue other) {
+  default boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     return other instanceof IDocumentNodeItem
-        && NodeComparators.compareNodeItem(this, (IDocumentNodeItem) other);
-  }
-
-  @Override
-  default IDocumentNodeItem normalize(@NonNull DynamicContext dynamicContext) {
-    return this;
+        && NodeComparators.compareNodeItem(this, (IDocumentNodeItem) other, dynamicContext);
   }
 }

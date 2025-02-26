@@ -121,12 +121,7 @@ public interface IAnyAtomicItem extends IAtomicValuedItem {
   IAnyAtomicItem castAsType(@NonNull IAnyAtomicItem item);
 
   @Override
-  default IAnyAtomicItem normalize(@NonNull DynamicContext dynamicContext) {
-    return this;
-  }
-
-  @Override
-  default boolean deepEquals(ICollectionValue other) {
+  default boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     boolean retval;
     try {
       retval = other instanceof IAnyAtomicItem
@@ -134,8 +129,7 @@ public interface IAnyAtomicItem extends IAtomicValuedItem {
               this,
               ComparisonFunctions.Operator.EQ,
               (IAnyAtomicItem) other,
-              // FIXME: figure out a better way to handle implicit namespaces
-              new DynamicContext())
+              dynamicContext)
               .toBoolean();
     } catch (@SuppressWarnings("unused") InvalidTypeMetapathException ex) {
       // incompatible types are a non-match

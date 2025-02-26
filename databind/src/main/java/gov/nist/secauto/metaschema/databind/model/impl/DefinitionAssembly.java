@@ -133,6 +133,8 @@ public final class DefinitionAssembly
     super.deepCopyItemInternal(fromObject, toObject);
 
     for (IBoundInstanceModel<?> instance : getModelInstances()) {
+      assert instance != null;
+
       instance.deepCopy(fromObject, toObject);
     }
   }

@@ -102,7 +102,7 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
 
   @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
-  public boolean deepEquals(ICollectionValue other) {
+  public boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     if (!(other instanceof IMapItem)) {
       return false;
     }
@@ -120,27 +120,12 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
       Map.Entry<IMapKey, ? extends ICollectionValue> i2 = otherIterator.next();
 
       retval = i1.getKey().equals(i2.getKey())
-          && i1.getValue().deepEquals(i2.getValue());
+          && i1.getValue().deepEquals(i2.getValue(), dynamicContext);
       if (!retval) {
         break;
       }
     }
     return retval;
-  }
-
-  @Override
-  public IMapItem<VALUE> normalize(@NonNull DynamicContext dynamicContext) {
-    return ObjectUtils.asType(entrySet().stream()
-        .map(entry -> normalizeEntry(entry, dynamicContext))
-        .collect(IMapItem.toMapItem()));
-  }
-
-  private Map.Entry<IMapKey, VALUE> normalizeEntry(
-      @NonNull Map.Entry<IMapKey, VALUE> entry,
-      @NonNull DynamicContext dynamicContext) {
-    return Map.entry(
-        entry.getKey().getKey().normalize(dynamicContext).asMapKey(),
-        ObjectUtils.asType(entry.getValue().normalize(dynamicContext)));
   }
 
   @Override

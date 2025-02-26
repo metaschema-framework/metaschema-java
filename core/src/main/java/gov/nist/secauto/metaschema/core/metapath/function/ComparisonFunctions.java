@@ -391,33 +391,35 @@ public final class ComparisonFunctions {
       @NonNull Operator operator,
       @NonNull IDateTimeItem right,
       @NonNull DynamicContext dynamicContext) {
-    IDateTimeItem leftInstant = left.normalize(dynamicContext);
-    IDateTimeItem rightInstant = right.normalize(dynamicContext);
     IBooleanItem retval;
     switch (operator) {
     case EQ:
-      retval = OperationFunctions.opDateTimeEqual(leftInstant, rightInstant, dynamicContext);
+      retval = OperationFunctions.opDateTimeEqual(left, right, dynamicContext);
       break;
     case GE: {
+      IDateTimeItem leftNormalized = left.normalize(dynamicContext);
+      IDateTimeItem rightNormalized = right.normalize(dynamicContext);
       retval = IBooleanItem.valueOf(
-          OperationFunctions.opDateTimeGreaterThan(leftInstant, rightInstant, dynamicContext).toBoolean()
-              || OperationFunctions.opDateTimeEqual(leftInstant, rightInstant, dynamicContext).toBoolean());
+          OperationFunctions.opDateTimeGreaterThan(leftNormalized, rightNormalized, dynamicContext).toBoolean()
+              || OperationFunctions.opDateTimeEqual(leftNormalized, rightNormalized, dynamicContext).toBoolean());
       break;
     }
     case GT:
-      retval = OperationFunctions.opDateTimeGreaterThan(leftInstant, rightInstant, dynamicContext);
+      retval = OperationFunctions.opDateTimeGreaterThan(left, right, dynamicContext);
       break;
     case LE: {
+      IDateTimeItem leftNormalized = left.normalize(dynamicContext);
+      IDateTimeItem rightNormalized = right.normalize(dynamicContext);
       retval = IBooleanItem.valueOf(
-          OperationFunctions.opDateTimeLessThan(leftInstant, rightInstant, dynamicContext).toBoolean()
-              || OperationFunctions.opDateTimeEqual(leftInstant, rightInstant, dynamicContext).toBoolean());
+          OperationFunctions.opDateTimeLessThan(leftNormalized, rightNormalized, dynamicContext).toBoolean()
+              || OperationFunctions.opDateTimeEqual(leftNormalized, rightNormalized, dynamicContext).toBoolean());
       break;
     }
     case LT:
-      retval = OperationFunctions.opDateTimeLessThan(leftInstant, rightInstant, dynamicContext);
+      retval = OperationFunctions.opDateTimeLessThan(left, right, dynamicContext);
       break;
     case NE:
-      retval = FnNot.fnNot(OperationFunctions.opDateTimeEqual(leftInstant, rightInstant, dynamicContext));
+      retval = FnNot.fnNot(OperationFunctions.opDateTimeEqual(left, right, dynamicContext));
       break;
     default:
       throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));

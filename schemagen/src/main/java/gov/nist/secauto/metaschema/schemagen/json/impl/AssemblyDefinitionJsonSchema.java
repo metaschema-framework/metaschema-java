@@ -167,8 +167,12 @@ public class AssemblyDefinitionJsonSchema
     List<PropertyCollection> retval = propertyChoices;
 
     for (IChoiceInstance choice : choices) {
+      assert choice != null;
+
       List<PropertyCollection> newRetval = new LinkedList<>(); // NOPMD - intentional
       for (INamedModelInstanceAbsolute optionInstance : choice.getNamedModelInstances()) {
+        assert optionInstance != null;
+
         if (ModelType.CHOICE.equals(optionInstance.getModelType())) {
           // recurse
           newRetval.addAll(explodeChoices(

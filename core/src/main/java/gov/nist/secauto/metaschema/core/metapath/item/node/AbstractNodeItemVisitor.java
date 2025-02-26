@@ -64,6 +64,7 @@ public abstract class AbstractNodeItemVisitor<CONTEXT, RESULT> implements INodeI
     RESULT result = defaultResult();
 
     for (List<? extends IModelNodeItem<?, ?>> childItems : item.getModelItems()) {
+      assert childItems != null;
       for (IModelNodeItem<?, ?> childItem : childItems) {
         assert childItem != null;
         if (!shouldVisitNextChild(item, childItem, result, context)) {

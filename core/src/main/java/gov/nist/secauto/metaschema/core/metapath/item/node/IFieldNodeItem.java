@@ -80,13 +80,8 @@ public interface IFieldNodeItem
   }
 
   @Override
-  default boolean deepEquals(ICollectionValue other) {
+  default boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     return other instanceof IFieldNodeItem
-        && NodeComparators.compareNodeItem(this, (IFieldNodeItem) other);
-  }
-
-  @Override
-  default IFieldNodeItem normalize(@NonNull DynamicContext dynamicContext) {
-    return this;
+        && NodeComparators.compareNodeItem(this, (IFieldNodeItem) other, dynamicContext);
   }
 }

@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.metapath.item;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
@@ -105,9 +104,6 @@ public interface IItem extends ICollectionValue {
   default Stream<? extends IItem> flatten() {
     return Stream.of(this);
   }
-
-  @Override
-  IItem normalize(@NonNull DynamicContext dynamicContext);
 
   /**
    * A visitor callback used to visit a variety of Metapath item types.
