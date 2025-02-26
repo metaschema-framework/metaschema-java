@@ -183,7 +183,7 @@ public class DynamicContext { // NOPMD - intentional data class
   /**
    * Set the implicit timezone to the provided value.
    * <p>
-   * Note: This value should only be adjusted when the context is first create.
+   * Note: This value should only be adjusted when the context is first created.
    * Once the context is used, this value is expected to be stable.
    *
    * @param offset

@@ -52,7 +52,7 @@ public final class FnDateTime {
           .type(ITimeItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IDateItem.type())
+      .returnType(IDateTimeItem.type())
       .returnOne()
       .functionHandler(FnDateTime::execute)
       .build();
