@@ -287,18 +287,18 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
   }
 
   /**
-   * Get a new date/time that has an explicit timezone.
+   * Get a date/time that has an explicit timezone.
    * <p>
    * If this date/time has a timezone, then this timezone is used. Otherwise, the
-   * implicit timezone is used from the dynamic context.
+   * implicit timezone is used from the dynamic context to create a new date/time.
    *
    * @param dynamicContext
    *          the dynamic context used to get the implicit timezone
    *
    * @return the date/time with the timezone normalized using UTC-based timezone
    */
-  @NonNull
-  default IDateTimeItem normalizeOffset(@NonNull DynamicContext dynamicContext) {
+  @Override
+  default IDateTimeItem normalize(DynamicContext dynamicContext) {
     IDateTimeItem result = hasTimezone()
         ? this
         : replaceTimezone(dynamicContext.getImplicitTimeZoneAsDayTimeDuration());

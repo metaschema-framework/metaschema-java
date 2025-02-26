@@ -391,8 +391,8 @@ public final class ComparisonFunctions {
       @NonNull Operator operator,
       @NonNull IDateTimeItem right,
       @NonNull DynamicContext dynamicContext) {
-    IDateTimeItem leftInstant = left.normalizeOffset(dynamicContext);
-    IDateTimeItem rightInstant = right.normalizeOffset(dynamicContext);
+    IDateTimeItem leftInstant = left.normalize(dynamicContext);
+    IDateTimeItem rightInstant = right.normalize(dynamicContext);
     IBooleanItem retval;
     switch (operator) {
     case EQ:

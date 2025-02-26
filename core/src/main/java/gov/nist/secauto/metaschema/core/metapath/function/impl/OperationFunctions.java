@@ -397,8 +397,8 @@ public final class OperationFunctions {
       @NonNull IDateTimeItem instant2,
       @NonNull DynamicContext dynamicContext) {
     return between(
-        instant2.normalizeOffset(dynamicContext).asZonedDateTime(),
-        instant1.normalizeOffset(dynamicContext).asZonedDateTime());
+        instant2.normalize(dynamicContext).asZonedDateTime(),
+        instant1.normalize(dynamicContext).asZonedDateTime());
   }
 
   /**
@@ -631,8 +631,8 @@ public final class OperationFunctions {
       @NonNull IDateTimeItem arg1,
       @NonNull IDateTimeItem arg2,
       @NonNull DynamicContext dynamicContext) {
-    IDateTimeItem arg1Normalized = arg1.normalizeOffset(dynamicContext);
-    IDateTimeItem arg2Normalized = arg2.normalizeOffset(dynamicContext);
+    IDateTimeItem arg1Normalized = arg1.normalize(dynamicContext);
+    IDateTimeItem arg2Normalized = arg2.normalize(dynamicContext);
     return IBooleanItem.valueOf(arg1Normalized.asZonedDateTime().isEqual(arg2Normalized.asZonedDateTime()));
   }
 
@@ -871,8 +871,8 @@ public final class OperationFunctions {
       @NonNull IDateTimeItem arg1,
       @NonNull IDateTimeItem arg2,
       @NonNull DynamicContext dynamicContext) {
-    IDateTimeItem arg1Normalized = arg1.normalizeOffset(dynamicContext);
-    IDateTimeItem arg2Normalized = arg2.normalizeOffset(dynamicContext);
+    IDateTimeItem arg1Normalized = arg1.normalize(dynamicContext);
+    IDateTimeItem arg2Normalized = arg2.normalize(dynamicContext);
     return IBooleanItem.valueOf(arg1Normalized.asZonedDateTime().isBefore(arg2Normalized.asZonedDateTime()));
   }
 
