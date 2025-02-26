@@ -7,11 +7,12 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.impl.AbstractOpaqueMapKey;
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAtomicItemBase;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IOpaqueMapKey;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -90,7 +91,8 @@ public class BooleanItemImpl
   }
 
   private final class MapKey
-      extends AbstractOpaqueMapKey {
+      extends AbstractMapKey
+      implements IOpaqueMapKey {
     @Override
     public IBooleanItem getKey() {
       return BooleanItemImpl.this;

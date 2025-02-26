@@ -115,25 +115,6 @@ public interface ICollectionValue {
   boolean deepEquals(@Nullable ICollectionValue other, @NonNull DynamicContext dynamicContext);
 
   /**
-   * Determine if this and the other value are deeply equal.
-   * <p>
-   * Item equality is defined by the
-   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-deep-equal">XPath 3.1
-   * fn:deep-equal</a> specification.
-   *
-   * @param other
-   *          the other value to compare to this value to
-   * @return the {@code true} if the two values are equal, or {@code false}
-   *         otherwise
-   */
-  default boolean deepEquals(@Nullable ICollectionValue other) {
-    // use a default dynamic context
-    // FIXME: Refactor DynamicContext to be an interface and provide a lightweight
-    // version with the implicit timezone.
-    return deepEquals(other, new DynamicContext());
-  }
-
-  /**
    * Get a representation of the value based on its type signature.
    *
    * @return the signature
@@ -143,11 +124,8 @@ public interface ICollectionValue {
 
   /**
    * Provides a {@link Predicate} which filters items in a stream returning
-   * distinct values based on {@link #deepEquals(ICollectionValue)}.
-   * <p>
-   * These values should be first normalized using
-   * {@link #normalize(DynamicContext)} to ensure their comparison is against
-   * consistent values.
+   * distinct values based on
+   * {@link #deepEquals(ICollectionValue, DynamicContext)}.
    *
    * @param dynamicContext
    *          used to provide evaluation information, including the implicit
@@ -160,12 +138,11 @@ public interface ICollectionValue {
 
   /**
    * Provides a {@link Predicate} which filters items in a stream returning
-   * distinct values based on {@link #deepEquals(ICollectionValue)}.
-   * <p>
-   * These values should be first normalized using
-   * {@link #normalize(DynamicContext)} to ensure their comparison is against
-   * consistent values.
+   * distinct values based on
+   * {@link #deepEquals(ICollectionValue, DynamicContext)}.
    *
+   * @param <T>
+   *          the Java type of the values filtered
    * @param clazz
    *          the Java class for the type handled by the predicate
    * @param dynamicContext

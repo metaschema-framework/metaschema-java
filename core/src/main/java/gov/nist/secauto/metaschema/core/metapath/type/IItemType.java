@@ -145,8 +145,6 @@ public interface IItemType {
   /**
    * Get a new kind test that matches any {@link IDocumentNodeItem}.
    *
-   * @param test
-   *          the root node test
    * @return the document kind test
    */
   @NonNull
@@ -325,11 +323,13 @@ public interface IItemType {
   /**
    * Test if the provided item matches this item type.
    *
+   * @param <T>
+   *          the Java type of the item tested
    * @param item
    *          the item to test
    * @return the item if the test passes
-   * @throw InvalidTypeMetapathException if the test fails because the item is not
-   *        the required type
+   * @throws InvalidTypeMetapathException
+   *           if the test fails because the item is not the required type
    */
   @NonNull
   default <T extends IItem> T test(@Nullable T item) {

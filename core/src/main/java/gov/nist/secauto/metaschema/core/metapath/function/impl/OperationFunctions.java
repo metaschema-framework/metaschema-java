@@ -472,7 +472,7 @@ public final class OperationFunctions {
   public static IYearMonthDurationItem opMultiplyYearMonthDuration(
       @NonNull IYearMonthDurationItem arg1,
       @NonNull INumericItem arg2) {
-    IDecimalItem months = IDecimalItem.valueOf(arg1.asMonths());
+    IDecimalItem months = IDecimalItem.valueOf(arg1.asTotalMonths());
     INumericItem result = months.multiply(arg2);
     Period period;
     try {
@@ -522,7 +522,7 @@ public final class OperationFunctions {
   public static IYearMonthDurationItem opDivideYearMonthDuration(
       @NonNull IYearMonthDurationItem arg1,
       @NonNull INumericItem arg2) {
-    IDecimalItem months = IDecimalItem.valueOf(arg1.asMonths());
+    IDecimalItem months = IDecimalItem.valueOf(arg1.asTotalMonths());
     INumericItem result = months.divide(arg2);
 
     Period period = Period.ofMonths(result.round().toIntValueExact());
@@ -544,8 +544,8 @@ public final class OperationFunctions {
   public static IDecimalItem opDivideYearMonthDurationByYearMonthDuration(
       @NonNull IYearMonthDurationItem arg1,
       @NonNull IYearMonthDurationItem arg2) {
-    IIntegerItem totalMonths1 = IIntegerItem.valueOf(arg1.asMonths());
-    IIntegerItem totalMonths2 = IIntegerItem.valueOf(arg2.asMonths());
+    IIntegerItem totalMonths1 = IIntegerItem.valueOf(arg1.asTotalMonths());
+    IIntegerItem totalMonths2 = IIntegerItem.valueOf(arg2.asTotalMonths());
 
     return totalMonths1.divide(totalMonths2);
   }
@@ -630,9 +630,9 @@ public final class OperationFunctions {
   public static IBooleanItem opDateTimeEqual(
       @NonNull IDateTimeItem arg1,
       @NonNull IDateTimeItem arg2,
-      @NonNull DynamicContext dynamicContext) {
-    IDateTimeItem arg1Normalized = arg1.normalize(dynamicContext);
-    IDateTimeItem arg2Normalized = arg2.normalize(dynamicContext);
+      @Nullable DynamicContext dynamicContext) {
+    IDateTimeItem arg1Normalized = dynamicContext == null ? arg1 : arg1.normalize(dynamicContext);
+    IDateTimeItem arg2Normalized = dynamicContext == null ? arg2 : arg2.normalize(dynamicContext);
     return IBooleanItem.valueOf(arg1Normalized.asZonedDateTime().isEqual(arg2Normalized.asZonedDateTime()));
   }
 
@@ -729,7 +729,7 @@ public final class OperationFunctions {
   public static IBooleanItem opDateTimeGreaterThan(
       @NonNull IDateTimeItem arg1,
       @NonNull IDateTimeItem arg2,
-      @NonNull DynamicContext dynamicContext) {
+      @Nullable DynamicContext dynamicContext) {
     return opDateTimeLessThan(arg2, arg1, dynamicContext);
   }
 
@@ -870,9 +870,9 @@ public final class OperationFunctions {
   public static IBooleanItem opDateTimeLessThan(
       @NonNull IDateTimeItem arg1,
       @NonNull IDateTimeItem arg2,
-      @NonNull DynamicContext dynamicContext) {
-    IDateTimeItem arg1Normalized = arg1.normalize(dynamicContext);
-    IDateTimeItem arg2Normalized = arg2.normalize(dynamicContext);
+      @Nullable DynamicContext dynamicContext) {
+    IDateTimeItem arg1Normalized = dynamicContext == null ? arg1 : arg1.normalize(dynamicContext);
+    IDateTimeItem arg2Normalized = dynamicContext == null ? arg2 : arg2.normalize(dynamicContext);
     return IBooleanItem.valueOf(arg1Normalized.asZonedDateTime().isBefore(arg2Normalized.asZonedDateTime()));
   }
 
@@ -891,7 +891,7 @@ public final class OperationFunctions {
   public static IBooleanItem opYearMonthDurationLessThan(
       @NonNull IYearMonthDurationItem arg1,
       @NonNull IYearMonthDurationItem arg2) {
-    return IBooleanItem.valueOf(arg1.asMonths() < arg2.asMonths());
+    return IBooleanItem.valueOf(arg1.asTotalMonths() < arg2.asTotalMonths());
   }
 
   /**

@@ -148,7 +148,7 @@ public interface IDayTimeDurationItem extends IDurationItem {
    * @throws DateTimeFunctionException
    *           with code
    *           {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if
-   *           the offset is < -PT14H or > PT14H
+   *           the offset is &lt; -PT14H or &gt; PT14H
    */
   @NonNull
   ZoneOffset asZoneOffset();

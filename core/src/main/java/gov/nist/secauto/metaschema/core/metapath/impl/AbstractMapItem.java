@@ -119,7 +119,7 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
       Map.Entry<IMapKey, ? extends ICollectionValue> i1 = thisIterator.next();
       Map.Entry<IMapKey, ? extends ICollectionValue> i2 = otherIterator.next();
 
-      retval = i1.getKey().equals(i2.getKey())
+      retval = i1.getKey().isSameKey(ObjectUtils.notNull(i2.getKey()))
           && i1.getValue().deepEquals(i2.getValue(), dynamicContext);
       if (!retval) {
         break;

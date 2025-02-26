@@ -7,9 +7,10 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.datatype.adapter.YearMonthAdapter;
-import gov.nist.secauto.metaschema.core.metapath.impl.AbstractOpaqueMapKey;
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IOpaqueMapKey;
 
 import java.time.Period;
 import java.util.Objects;
@@ -62,7 +63,8 @@ public class YearMonthDurationItemImpl
   }
 
   private final class MapKey
-      extends AbstractOpaqueMapKey {
+      extends AbstractMapKey
+      implements IOpaqueMapKey {
     @Override
     public IYearMonthDurationItem getKey() {
       return YearMonthDurationItemImpl.this;

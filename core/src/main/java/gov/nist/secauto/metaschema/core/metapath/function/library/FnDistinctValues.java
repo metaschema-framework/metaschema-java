@@ -67,6 +67,9 @@ public final class FnDistinctValues {
    *
    * @param values
    *          the items to get destinct values for
+   * @param dynamicContext
+   *          used to provide evaluation information, including the implicit
+   *          timezone
    * @return a the list of distinct values
    */
   @NonNull

@@ -7,7 +7,10 @@ package gov.nist.secauto.metaschema.core.metapath.item.function;
 
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ICalendarTemporalItem;
 
-public interface ICalendarMapKey extends IMapKey {
+/**
+ * An {@link IMapItem} key based on an {@link ICalendarTemporalItem}.
+ */
+public interface ICalendarMapKey extends ITemporalMapKey {
   @Override
   ICalendarTemporalItem getKey();
 }

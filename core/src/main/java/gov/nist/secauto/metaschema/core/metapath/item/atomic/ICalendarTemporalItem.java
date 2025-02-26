@@ -10,6 +10,11 @@ import java.time.ZonedDateTime;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A temporal valued item related to a {@link ZonedDateTime}.
+ * <p>
+ * This may represent a specific point in time or a 24 hour period in time.
+ */
 public interface ICalendarTemporalItem extends ITemporalItem {
 
   /**

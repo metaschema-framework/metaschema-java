@@ -26,7 +26,7 @@ public abstract class AbstractDurationItem<TYPE extends TemporalAmount>
     extends AbstractAnyAtomicItem<TYPE>
     implements IDurationItem {
 
-  public static final Comparator<IDurationItem> COMPARATOR
+  private static final Comparator<IDurationItem> COMPARATOR
       = Comparator.<IDurationItem>comparingLong(item -> item instanceof IYearMonthDurationItem
           ? ((IYearMonthDurationItem) item).asPeriod().toTotalMonths()
           : 0)

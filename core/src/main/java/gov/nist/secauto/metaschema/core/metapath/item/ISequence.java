@@ -176,8 +176,6 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
    * supporting <a href="https://www.w3.org/TR/xpath-31/#id-atomization">item
    * atomization</a>.
    *
-   * @param sequence
-   *          the sequence of items to atomize
    * @return the atomized result
    */
   @Override

@@ -27,6 +27,7 @@ import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathExcepti
 import java.util.Locale;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * A collection of comparison functions supporting value and general
@@ -91,7 +92,7 @@ public final class ComparisonFunctions {
       @NonNull IAnyAtomicItem leftItem,
       @NonNull Operator operator,
       @NonNull IAnyAtomicItem rightItem,
-      @NonNull DynamicContext dynamicContext) {
+      @Nullable DynamicContext dynamicContext) {
     return compare(leftItem, operator, rightItem, dynamicContext);
   }
 
@@ -194,7 +195,7 @@ public final class ComparisonFunctions {
       @NonNull IAnyAtomicItem left,
       @NonNull Operator operator,
       @NonNull IAnyAtomicItem right,
-      @NonNull DynamicContext dynamicContext) {
+      @Nullable DynamicContext dynamicContext) {
     @NonNull
     IBooleanItem retval;
     if (left instanceof IStringItem || right instanceof IStringItem) {
@@ -390,29 +391,31 @@ public final class ComparisonFunctions {
       @NonNull IDateTimeItem left,
       @NonNull Operator operator,
       @NonNull IDateTimeItem right,
-      @NonNull DynamicContext dynamicContext) {
+      @Nullable DynamicContext dynamicContext) {
     IBooleanItem retval;
     switch (operator) {
     case EQ:
       retval = OperationFunctions.opDateTimeEqual(left, right, dynamicContext);
       break;
     case GE: {
-      IDateTimeItem leftNormalized = left.normalize(dynamicContext);
-      IDateTimeItem rightNormalized = right.normalize(dynamicContext);
+      // pre-normalize for efficiency
+      IDateTimeItem leftNormalized = dynamicContext == null ? left : left.normalize(dynamicContext);
+      IDateTimeItem rightNormalized = dynamicContext == null ? right : right.normalize(dynamicContext);
       retval = IBooleanItem.valueOf(
-          OperationFunctions.opDateTimeGreaterThan(leftNormalized, rightNormalized, dynamicContext).toBoolean()
-              || OperationFunctions.opDateTimeEqual(leftNormalized, rightNormalized, dynamicContext).toBoolean());
+          OperationFunctions.opDateTimeGreaterThan(leftNormalized, rightNormalized, null).toBoolean()
+              || OperationFunctions.opDateTimeEqual(leftNormalized, rightNormalized, null).toBoolean());
       break;
     }
     case GT:
       retval = OperationFunctions.opDateTimeGreaterThan(left, right, dynamicContext);
       break;
     case LE: {
-      IDateTimeItem leftNormalized = left.normalize(dynamicContext);
-      IDateTimeItem rightNormalized = right.normalize(dynamicContext);
+      // pre-normalize for efficiency
+      IDateTimeItem leftNormalized = dynamicContext == null ? left : left.normalize(dynamicContext);
+      IDateTimeItem rightNormalized = dynamicContext == null ? right : right.normalize(dynamicContext);
       retval = IBooleanItem.valueOf(
-          OperationFunctions.opDateTimeLessThan(leftNormalized, rightNormalized, dynamicContext).toBoolean()
-              || OperationFunctions.opDateTimeEqual(leftNormalized, rightNormalized, dynamicContext).toBoolean());
+          OperationFunctions.opDateTimeLessThan(leftNormalized, rightNormalized, null).toBoolean()
+              || OperationFunctions.opDateTimeEqual(leftNormalized, rightNormalized, null).toBoolean());
       break;
     }
     case LT:

@@ -207,8 +207,8 @@ public interface IDateItem extends ICalendarTemporalItem {
    * adjusting the time instant.
    * </ol>
    * <p>
-   * Implements the XPath 3.1 <a
-   * href="https://www.w3.org/TR/xpath-functions-31/#func-adjust-dateTime-to-timezone>fn:adjust-dateTime-to-timezone</a>
+   * Implements the XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-adjust-dateTime-to-timezone">fn:adjust-dateTime-to-timezone</a>
    * function.
    *
    * @param offset
@@ -217,7 +217,7 @@ public interface IDateItem extends ICalendarTemporalItem {
    * @throws DateTimeFunctionException
    *           with code
    *           {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if
-   *           the offset is < -PT14H or > PT14H
+   *           the offset is &lt; -PT14H or &gt; PT14H
    */
   @Override
   default IDateItem replaceTimezone(@Nullable IDayTimeDurationItem offset) {

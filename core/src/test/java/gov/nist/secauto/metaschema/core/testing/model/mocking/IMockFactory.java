@@ -8,6 +8,9 @@ package gov.nist.secauto.metaschema.core.testing.model.mocking;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides methods for mocking classes and interfaces for unit testing.
+ */
 public interface IMockFactory {
   /**
    * Create a mock for the given class.

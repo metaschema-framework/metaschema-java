@@ -14,6 +14,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
+/**
+ * Base class for a content validator.
+ */
 public abstract class AbstractContentValidator
     extends AbstractResourceResolver
     implements IContentValidator {

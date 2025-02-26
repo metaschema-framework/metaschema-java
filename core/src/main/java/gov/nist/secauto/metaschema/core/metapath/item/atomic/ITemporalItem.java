@@ -92,49 +92,6 @@ public interface ITemporalItem extends IAnyAtomicItem {
         : IDayTimeDurationItem.valueOf(ObjectUtils.notNull(Duration.ofSeconds(offset.getTotalSeconds())));
   }
 
-  // /**
-  // * Cast the provided type to this item type.
-  // *
-  // * @param item
-  // * the item to cast
-  // * @return the original item if it is already this type, otherwise a new item
-  // cast to this type
-  // * @throws InvalidValueForCastFunctionException
-  // * if the provided {@code item} cannot be cast to this type
-  // */
-  // @NonNull
-  // static ITemporalItem cast(@NonNull IAnyAtomicItem item) {
-  // ITemporalItem retval;
-  // if (item instanceof ITemporalItem) {
-  // retval = (ITemporalItem) item;
-  // } else {
-  // String value;
-  // try {
-  // value = item.asString();
-  // } catch (IllegalStateException ex) {
-  // // asString can throw IllegalStateException exception
-  // throw new InvalidValueForCastFunctionException(ex);
-  // }
-  //
-  // try {
-  // retval = IDateTimeItem.valueOf(value);
-  // } catch (IllegalStateException ex) {
-  // try {
-  // retval = IDateItem.valueOf(value);
-  // } catch (IllegalStateException ex2) {
-  // InvalidValueForCastFunctionException newEx = new
-  // InvalidValueForCastFunctionException(
-  // String.format("Value '%s' cannot be parsed as either a date or date/time
-  // value", value),
-  // ex2);
-  // newEx.addSuppressed(ex);
-  // throw newEx; // NOPMD context as suppressed
-  // }
-  // }
-  // }
-  // return retval;
-  // }
-
   /**
    * Determine if the temporal item has a timezone.
    *
@@ -169,7 +126,7 @@ public interface ITemporalItem extends IAnyAtomicItem {
    * @throws DateTimeFunctionException
    *           with code
    *           {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if
-   *           the offset is < -PT14H or > PT14H
+   *           the offset is &lt; -PT14H or &gt; PT14H
    */
   @NonNull
   ITemporalItem replaceTimezone(@Nullable IDayTimeDurationItem offset);

@@ -6,8 +6,6 @@
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItemVisitor;
@@ -15,12 +13,12 @@ import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
-import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * The interface shared by all atomic items, representing indivisible data
@@ -120,23 +118,23 @@ public interface IAnyAtomicItem extends IAtomicValuedItem {
   @NonNull
   IAnyAtomicItem castAsType(@NonNull IAnyAtomicItem item);
 
-  @Override
-  default boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
-    boolean retval;
-    try {
-      retval = other instanceof IAnyAtomicItem
-          && ComparisonFunctions.valueCompairison(
-              this,
-              ComparisonFunctions.Operator.EQ,
-              (IAnyAtomicItem) other,
-              dynamicContext)
-              .toBoolean();
-    } catch (@SuppressWarnings("unused") InvalidTypeMetapathException ex) {
-      // incompatible types are a non-match
-      retval = false;
-    }
-    return retval;
-  }
+  /**
+   * Determine if this and the other value are deeply equal, without relying on
+   * the dynamic context.
+   * <p>
+   * This is used by {@link IMapKey#isSameKey(IMapKey)} to determine key
+   * equivalence.
+   * <p>
+   * Item equality is defined by the
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-deep-equal">XPath 3.1
+   * fn:deep-equal</a> specification.
+   *
+   * @param other
+   *          the other value to compare to this value to
+   * @return the {@code true} if the two values are equal, or {@code false}
+   *         otherwise
+   */
+  boolean deepEquals(@Nullable ICollectionValue other);
 
   @Override
   default void accept(IItemVisitor visitor) {

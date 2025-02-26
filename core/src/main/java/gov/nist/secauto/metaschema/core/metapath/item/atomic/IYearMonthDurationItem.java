@@ -96,10 +96,20 @@ public interface IYearMonthDurationItem extends IDurationItem {
   @NonNull
   Period asPeriod();
 
-  default long asMonths() {
+  /**
+   * Get the total quantity of months this duration represents.
+   *
+   * @return the total months
+   */
+  default long asTotalMonths() {
     return asPeriod().toTotalMonths();
   }
 
+  /**
+   * Returns a new instance with each amount in this period negated.
+   *
+   * @return the new negated instance
+   */
   @NonNull
   default IYearMonthDurationItem negate() {
     return valueOf(ObjectUtils.notNull(asPeriod().negated()));

@@ -5,6 +5,25 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.function;
 
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITemporalItem;
+
+/**
+ * An {@link IMapItem} key based on an {@link ITemporalItem} value.
+ */
 public interface ITemporalMapKey extends IMapKey {
-  // no additional methods
+
+  @Override
+  ITemporalItem getKey();
+
+  @Override
+  default boolean isSameKey(IMapKey other) {
+    if (!(other instanceof ITemporalMapKey)) {
+      return false;
+    }
+
+    ITemporalItem thisTemporal = getKey();
+    ITemporalItem otherTemporal = ((ITemporalMapKey) other).getKey();
+    return thisTemporal.hasTimezone() == otherTemporal.hasTimezone()
+        && thisTemporal.deepEquals(otherTemporal);
+  }
 }

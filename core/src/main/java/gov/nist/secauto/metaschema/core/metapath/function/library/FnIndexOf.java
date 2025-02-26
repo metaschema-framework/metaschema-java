@@ -79,6 +79,9 @@ public final class FnIndexOf {
    *          the items to match against
    * @param search
    *          the item to match
+   * @param dynamicContext
+   *          used to provide evaluation information, including the implicit
+   *          timezone
    * @return a list of index numbers indicating the position of matches in the
    *         sequence
    */

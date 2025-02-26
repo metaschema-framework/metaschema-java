@@ -68,6 +68,9 @@ public abstract class AbstractBasicArithmeticExpression
    *          the first item
    * @param rightItem
    *          the second item
+   * @param dynamicContext
+   *          used to provide evaluation information, including the implicit
+   *          timezone
    * @return the result of the operation or an empty {@link ISequence} if either
    *         item is {@code null}
    */
@@ -93,6 +96,9 @@ public abstract class AbstractBasicArithmeticExpression
    *          the first item
    * @param right
    *          the second item
+   * @param dynamicContext
+   *          used to provide evaluation information, including the implicit
+   *          timezone
    * @return the result of the operation
    */
   @SuppressWarnings("PMD.OnlyOneReturn")

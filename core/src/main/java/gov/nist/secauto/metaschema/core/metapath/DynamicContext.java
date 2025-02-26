@@ -187,11 +187,11 @@ public class DynamicContext { // NOPMD - intentional data class
    * Once the context is used, this value is expected to be stable.
    *
    * @param offset
-   *          the offset which must be >= -PT14H and <= PT13H
+   *          the offset which must be &gt;= -PT14H and &lt;= PT13H
    * @throws DateTimeFunctionException
    *           with the code
    *           {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if
-   *           the offset is < -PT14H or > PT14H
+   *           the offset is &lt; -PT14H or &gt; PT14H
    */
   public void setImplicitTimeZone(@NonNull IDayTimeDurationItem offset) {
     setImplicitTimeZone(offset.asZoneOffset());

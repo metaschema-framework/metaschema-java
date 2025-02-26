@@ -14,6 +14,10 @@ import java.util.UUID;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides a JMock-based mock factory for use in mocking classes and interfaces
+ * for unit testing.
+ */
 public class AbstractJMockFactory implements IMockFactory {
 
   @NonNull
@@ -29,6 +33,11 @@ public class AbstractJMockFactory implements IMockFactory {
     this.context = ctx;
   }
 
+  /**
+   * Get the mocking context.
+   *
+   * @return the mocking context
+   */
   @NonNull
   public Mockery getContext() {
     return context;

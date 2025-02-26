@@ -5,10 +5,11 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.AbstractOpaqueMapKey;
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIPAddressItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IOpaqueMapKey;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.IPAddress;
@@ -62,7 +63,8 @@ public abstract class AbstractIPAddressItem<TYPE extends IPAddress>
   }
 
   private final class MapKey
-      extends AbstractOpaqueMapKey {
+      extends AbstractMapKey
+      implements IOpaqueMapKey {
     @Override
     public IIPAddressItem getKey() {
       return AbstractIPAddressItem.this;

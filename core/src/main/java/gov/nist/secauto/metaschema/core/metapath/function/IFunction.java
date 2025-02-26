@@ -193,7 +193,7 @@ public interface IFunction extends IItem {
 
   @Override
   default boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
-    // this is the expected result
+    // this is always the expected result
     return false;
   }
 

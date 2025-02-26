@@ -294,7 +294,6 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
    *
    * @param dynamicContext
    *          the dynamic context used to get the implicit timezone
-   *
    * @return the date/time with the timezone normalized using UTC-based timezone
    */
   @NonNull
@@ -335,8 +334,8 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
    * adjusting the time instant.
    * </ol>
    * <p>
-   * Implements the XPath 3.1 <a
-   * href="https://www.w3.org/TR/xpath-functions-31/#func-adjust-dateTime-to-timezone>fn:adjust-dateTime-to-timezone</a>
+   * Implements the XPath 3.1 <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-adjust-dateTime-to-timezone">fn:adjust-dateTime-to-timezone</a>
    * function.
    *
    * @param offset
@@ -345,7 +344,7 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
    * @throws DateTimeFunctionException
    *           with code
    *           {@link DateTimeFunctionException#INVALID_TIME_ZONE_VALUE_ERROR} if
-   *           the offset is < -PT14H or > PT14H
+   *           the offset is &lt; -PT14H or &gt; PT14H
    */
   @Override
   default IDateTimeItem replaceTimezone(@Nullable IDayTimeDurationItem offset) {

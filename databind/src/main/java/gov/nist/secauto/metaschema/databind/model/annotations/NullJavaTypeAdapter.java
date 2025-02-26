@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
@@ -106,6 +108,16 @@ public final class NullJavaTypeAdapter
 
     @Override
     public String toSignature() {
+      throw new UnsupportedOperationException(NOT_VALID);
+    }
+
+    @Override
+    public boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
+      throw new UnsupportedOperationException(NOT_VALID);
+    }
+
+    @Override
+    public boolean deepEquals(ICollectionValue other) {
       throw new UnsupportedOperationException(NOT_VALID);
     }
   }

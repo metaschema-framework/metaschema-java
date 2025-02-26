@@ -25,6 +25,5 @@ public interface IMapKey {
   @Override
   int hashCode();
 
-  @Override
-  boolean equals(Object obj);
+  boolean isSameKey(@NonNull IMapKey other);
 }

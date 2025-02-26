@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.metapath.item.function.ITemporalMapKey;
 
 import java.time.ZoneOffset;
 
@@ -57,24 +58,13 @@ public abstract class AbstractTimeItem<TYPE>
     return new MapKey();
   }
 
-  protected final class MapKey
-      extends AbstractMapKey {
+  private final class MapKey
+      extends AbstractMapKey
+      implements ITemporalMapKey {
 
     @Override
     public ITimeItem getKey() {
       return AbstractTimeItem.this;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      return this == obj
-          || obj instanceof AbstractTimeItem<?>.MapKey
-              && getKey().equals(((AbstractTimeItem<?>.MapKey) obj).getKey());
-    }
-
-    @Override
-    public int hashCode() {
-      return getKey().hashCode();
     }
   }
 }

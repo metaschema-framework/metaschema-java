@@ -7,9 +7,10 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.Base64Adapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.impl.AbstractOpaqueMapKey;
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
+import gov.nist.secauto.metaschema.core.metapath.item.function.IOpaqueMapKey;
 
 import java.nio.ByteBuffer;
 
@@ -56,7 +57,8 @@ public class Base64BinaryItemImpl
   }
 
   private final class MapKey
-      extends AbstractOpaqueMapKey {
+      extends AbstractMapKey
+      implements IOpaqueMapKey {
     @Override
     public IBase64BinaryItem getKey() {
       return Base64BinaryItemImpl.this;

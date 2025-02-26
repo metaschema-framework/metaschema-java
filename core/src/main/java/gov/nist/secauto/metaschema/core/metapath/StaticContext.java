@@ -252,7 +252,6 @@ public final class StaticContext {
 
   /**
    * Parse the name of an atomic type.
-   *
    * <p>
    * This method will attempt to identify the namespace corresponding to a given
    * prefix.
@@ -345,6 +344,8 @@ public final class StaticContext {
   /**
    * Lookup a known Metapath atomic type based on the type's item class.
    *
+   * @param <T>
+   *          the Java type of the item to get the type information for
    * @param clazz
    *          the item class associated with the atomic type
    * @return the type
@@ -574,7 +575,6 @@ public final class StaticContext {
    * <p>
    * The prefix will be resolved using the following lookup order, advancing to
    * the next when a {@code null} value is returned:
-   *
    * <ol>
    * <li>Lookup the prefix using the namespaces registered with the static
    * context.

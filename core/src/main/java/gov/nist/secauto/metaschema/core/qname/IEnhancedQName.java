@@ -137,8 +137,6 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
    * This method uses prefixes associated with well-known namespaces, or will
    * prepending the namespace if no prefix can be resolved.
    *
-   * @param resolver
-   *          the resolver to use to lookup the prefix
    * @return the extended qualified-name
    */
   @NonNull

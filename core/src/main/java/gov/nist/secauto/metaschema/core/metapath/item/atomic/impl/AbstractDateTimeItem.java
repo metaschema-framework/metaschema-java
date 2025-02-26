@@ -5,8 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.impl.AbstractCalendarMapKey;
+import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.function.ICalendarMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 
 import java.time.ZoneOffset;
@@ -61,7 +62,8 @@ public abstract class AbstractDateTimeItem<TYPE>
   }
 
   private final class MapKey
-      extends AbstractCalendarMapKey {
+      extends AbstractMapKey
+      implements ICalendarMapKey {
     @Override
     public IDateTimeItem getKey() {
       return AbstractDateTimeItem.this;

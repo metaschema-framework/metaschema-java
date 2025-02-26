@@ -5,6 +5,15 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.function;
 
+/**
+ * Represents a map key with no special handling based on the key value's data
+ * type. In this way the key value is essentially "opaque".
+ */
 public interface IOpaqueMapKey extends IMapKey {
-
+  @Override
+  default boolean isSameKey(IMapKey other) {
+    return this == other
+        || other instanceof IOpaqueMapKey
+            && getKey().deepEquals(other.getKey());
+  }
 }
