@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dev.metaschema</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>6</version>
+		<version>7</version>
 	</parent>
 
 	<groupId>dev.metaschema.java</groupId>
@@ -37,18 +37,18 @@
 		<mojo.maven.version>3.8.1</mojo.maven.version>
 
 		<dependency.antlr4.version>4.13.2</dependency.antlr4.version>
-		<dependency.assertj.version>3.27.1</dependency.assertj.version>
+		<dependency.assertj.version>3.27.3</dependency.assertj.version>
+		<dependency.caffeine.version>3.2.0</dependency.caffeine.version>
 		<dependency.commons-cli.version>1.9.0</dependency.commons-cli.version>
-		<dependency.commons-codec.version>1.17.1</dependency.commons-codec.version>
-		<dependency.commons-collections4.version>4.4</dependency.commons-collections4.version>
+		<dependency.commons-codec.version>1.18.0</dependency.commons-codec.version>
+		<dependency.commons-collections4.version>4.5.0-M3</dependency.commons-collections4.version>
 		<dependency.commons-io.version>2.18.0</dependency.commons-io.version>
 		<dependency.commons-lang3.version>3.17.0</dependency.commons-lang3.version>
 		<dependency.commons-text.version>1.13.0</dependency.commons-text.version>
 		<dependency.eclipse-jdt.version>2.3.100</dependency.eclipse-jdt.version>
-		<dependency.everit-json.version>1.14.4</dependency.everit-json.version>
+		<dependency.everit-json.version>1.14.5</dependency.everit-json.version>
 		<dependency.flexmark.version>0.64.8</dependency.flexmark.version>
 		<dependency.freemarker.version>2.3.34</dependency.freemarker.version>
-		<dependency.caffeine.version>3.1.8</dependency.caffeine.version>
 		<dependency.inject-resources-junit-jupiter.version>1.0.0</dependency.inject-resources-junit-jupiter.version>
 		<!-- Downgrade jackson due to https://github.com/FasterXML/jackson-databind/issues/4727 -->
 		<dependency.jackson.version>2.18.2</dependency.jackson.version>
@@ -57,10 +57,10 @@
 		<dependency.jaxen.version>2.0.0</dependency.jaxen.version>
 		<dependency.jdom2.version>2.0.6.1</dependency.jdom2.version>
 		<dependency.jmock-junit5.version>2.13.1</dependency.jmock-junit5.version>
-		<dependency.json.version>20240303</dependency.json.version>
+		<dependency.json.version>20250107</dependency.json.version>
 		<dependency.lazy4j.version>2.0.0</dependency.lazy4j.version>
 		<dependency.log4j2.version>2.24.3</dependency.log4j2.version>
-		<dependency.logcaptor.version>2.10.0</dependency.logcaptor.version>
+		<dependency.logcaptor.version>2.10.1</dependency.logcaptor.version>
 		<dependency.mokito.version>5.15.2</dependency.mokito.version>
 		<dependency.moxy.version>4.0.5</dependency.moxy.version>
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
@@ -72,7 +72,7 @@
 		<dependency.woodstox.version>7.1.0</dependency.woodstox.version>
 		<dependency.xmlbeans.version>5.3.0</dependency.xmlbeans.version>
 		<dependency.xmlcalabash.version>1.5.7-120</dependency.xmlcalabash.version>
-		<dependency.xmlresolver.version>6.0.11</dependency.xmlresolver.version>
+		<dependency.xmlresolver.version>6.0.12</dependency.xmlresolver.version>
 		<dependency.xml-apis.version>2.0.2</dependency.xml-apis.version>
 
 		<!-- needed for XMLBeans -->
@@ -487,17 +487,6 @@
 				<scope>test</scope>
 			</dependency>	
 			<dependency>
-				<!-- Remove compile warning -->
-				<groupId>biz.aQute.bnd</groupId>
-				<artifactId>biz.aQute.bndlib</artifactId>
-				<version>6.4.1</version>
-			</dependency>
-			<dependency>
-				<groupId>biz.aQute.bnd</groupId>
-				<artifactId>biz.aQute.bnd.util</artifactId>
-				<version>6.4.1</version>
-			</dependency>
-			<dependency>
 		        <groupId>org.apache.velocity.tools</groupId>
 		        <artifactId>velocity-tools-generic</artifactId>
 		        <version>3.1</version>
@@ -709,9 +698,6 @@
 						</excludedEnvironmentVariables>
 						<useModulePath>false</useModulePath>
 						<redirectTestOutputToFile>true</redirectTestOutputToFile>
-						<!-- fork configuration -->
-						<!--<forkCount>2.0C</forkCount>
-						<reuseForks>true</reuseForks>-->
 						<!-- Use of TCP to transmit events to the plugin -->
 						<forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
 						<!-- Junit5 parallel configuration -->

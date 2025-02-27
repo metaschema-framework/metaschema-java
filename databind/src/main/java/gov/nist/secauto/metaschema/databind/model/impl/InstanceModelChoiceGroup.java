@@ -139,6 +139,7 @@ public final class InstanceModelChoiceGroup
       @NonNull IGroupAs groupAs,
       @NonNull IBoundDefinitionModelAssembly parent) {
     super(parent);
+    FieldSupport.bindField(javaField);
     this.javaField = javaField;
     this.annotation = annotation;
     this.groupAs = groupAs;

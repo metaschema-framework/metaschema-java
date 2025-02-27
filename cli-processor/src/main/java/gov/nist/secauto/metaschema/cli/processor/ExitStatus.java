@@ -39,6 +39,14 @@ public interface ExitStatus {
   void generateMessage(boolean showStackTrace);
 
   /**
+   * Get the associated message, or {@code null} if there is no message.
+   *
+   * @return the message or {@code null}
+   */
+  @Nullable
+  String getMessage();
+
+  /**
    * Associate a throwable with the exit status.
    *
    * @param throwable

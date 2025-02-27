@@ -33,7 +33,7 @@ public class NonMessageExitStatus
    * @return {@code null} as this implementation does not support messages
    */
   @Override
-  protected String getMessage() {
+  public String getMessage() {
     return null;
   }
 }

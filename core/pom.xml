@@ -151,12 +151,6 @@
 			<artifactId>assertj-core</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-        <dependency>
-            <groupId>biz.aQute.bnd</groupId>
-            <artifactId>biz.aQute.bnd.util</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>

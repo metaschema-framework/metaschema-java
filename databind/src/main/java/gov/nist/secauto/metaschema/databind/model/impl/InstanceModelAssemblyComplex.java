@@ -109,6 +109,7 @@ public final class InstanceModelAssemblyComplex
       @NonNull IBoundDefinitionModelAssembly definition,
       @NonNull IBoundDefinitionModelAssembly containingDefinition) {
     super(containingDefinition);
+    FieldSupport.bindField(javaField);
     this.javaField = javaField;
     this.annotation = annotation;
     this.groupAs = groupAs;

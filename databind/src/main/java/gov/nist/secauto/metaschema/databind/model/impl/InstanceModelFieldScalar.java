@@ -118,6 +118,7 @@ public final class InstanceModelFieldScalar
       @NonNull IGroupAs groupAs,
       @NonNull IBoundDefinitionModelAssembly parent) {
     super(parent);
+    FieldSupport.bindField(javaField);
     this.javaField = javaField;
     this.annotation = annotation;
     this.collectionInfo = ObjectUtils.notNull(Lazy.lazy(() -> IModelInstanceCollectionInfo.of(this)));
