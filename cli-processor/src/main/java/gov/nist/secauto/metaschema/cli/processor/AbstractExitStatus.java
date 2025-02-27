@@ -62,14 +62,6 @@ public abstract class AbstractExitStatus implements ExitStatus {
   }
 
   /**
-   * Get the associated message.
-   *
-   * @return the message or {@code null}
-   */
-  @Nullable
-  protected abstract String getMessage();
-
-  /**
    * Determines the appropriate LogBuilder based on the exit code status. For
    * non-positive exit codes (success/info), returns an INFO level builder. For
    * positive exit codes (errors), returns an ERROR level builder.
