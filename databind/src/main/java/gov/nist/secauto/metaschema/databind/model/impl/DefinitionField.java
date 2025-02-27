@@ -127,6 +127,7 @@ public final class DefinitionField
               clazz.getName(),
               BoundFieldValue.class.getName())); // NOPMD false positive
     }
+    FieldSupport.bindField(field);
     this.fieldValue = new FieldValue(field, BoundFieldValue.class, bindingContext);
     this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> new FlagContainerSupport(this, this::handleFlagInstance)));
 
@@ -269,6 +270,7 @@ public final class DefinitionField
         @NonNull Field javaField,
         @NonNull Class<BoundFieldValue> annotationClass,
         @NonNull IBindingContext bindingContext) {
+      FieldSupport.bindField(javaField);
       this.javaField = javaField;
       this.annotation = ModelUtil.getAnnotation(javaField, annotationClass);
       this.javaTypeAdapter = ModelUtil.getDataTypeAdapter(

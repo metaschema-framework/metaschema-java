@@ -71,6 +71,7 @@ public class InstanceFlagInline
       @NonNull Field javaField,
       @NonNull IBoundDefinitionModel<IBoundObject> parent) {
     super(parent);
+    FieldSupport.bindField(javaField);
     this.javaField = javaField;
     this.annotation = ModelUtil.getAnnotation(javaField, BoundFlag.class);
     Class<? extends IDataTypeAdapter<?>> adapterClass = ObjectUtils.notNull(getAnnotation().typeAdapter());
