@@ -40,6 +40,7 @@ import org.schemastore.json.sarif.x210.Tool;
 import org.schemastore.json.sarif.x210.ToolComponent;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -234,37 +235,28 @@ public final class SarifValidationHandler {
   }
 
   /**
-   * Write the collection of findings to the provided output file.
+   * Generate a SARIF document based on the collected findings.
    *
-   * @param outputFile
-   *          the path to the output file to write to
-   * @param bindingContext
-   *          the context used to access Metaschema module information based on
-   *          Java class bindings
+   * @param outputUri
+   *          the URI to use as the base for relative paths in the SARIF document
+   * @return the generated SARIF document
    * @throws IOException
-   *           if an error occurred while writing the SARIF file
+   *           if an error occurred while generating the SARIF document
    */
-  public void write(
-      @NonNull Path outputFile,
-      @NonNull IBindingContext bindingContext) throws IOException {
-
-    URI output = ObjectUtils.notNull(outputFile.toUri());
-
+  @NonNull
+  private Sarif generateSarif(@NonNull URI outputUri) throws IOException {
     Sarif sarif = new Sarif();
     sarif.setVersion("2.1.0");
 
     Run run = new Run();
-
     sarif.addRun(run);
 
     Artifact artifact = new Artifact();
-
-    artifact.setLocation(getArtifactRecord(getSource()).generateArtifactLocation(output));
-
+    artifact.setLocation(getArtifactRecord(getSource()).generateArtifactLocation(outputUri));
     run.addArtifact(artifact);
 
     for (IResult result : results) {
-      result.generateResults(output).forEach(run::addResult);
+      result.generateResults(outputUri).forEach(run::addResult);
     }
 
     IVersionInfo toolVersion = getToolVersion();
@@ -284,6 +276,48 @@ public final class SarifValidationHandler {
       tool.setDriver(driver);
       run.setTool(tool);
     }
+
+    return sarif;
+  }
+
+  /**
+   * Write the collection of findings to a string in SARIF format.
+   *
+   * @param bindingContext
+   *          the context used to access Metaschema module information based on
+   *          Java class bindings
+   * @return the SARIF document as a string
+   * @throws IOException
+   *           if an error occurred while generating the SARIF document
+   */
+  @NonNull
+  public String writeToString(@NonNull IBindingContext bindingContext) throws IOException {
+    bindingContext.registerModule(SarifModule.class);
+    try (StringWriter writer = new StringWriter()) {
+      bindingContext.newSerializer(Format.JSON, Sarif.class)
+          .disableFeature(SerializationFeature.SERIALIZE_ROOT)
+          .serialize(generateSarif(getSource()), writer);
+      return ObjectUtils.notNull(writer.toString());
+    }
+  }
+
+  /**
+   * Write the collection of findings to the provided output file.
+   *
+   * @param outputFile
+   *          the path to the output file to write to
+   * @param bindingContext
+   *          the context used to access Metaschema module information based on
+   *          Java class bindings
+   * @throws IOException
+   *           if an error occurred while writing the SARIF file
+   */
+  public void write(
+      @NonNull Path outputFile,
+      @NonNull IBindingContext bindingContext) throws IOException {
+
+    URI output = ObjectUtils.notNull(outputFile.toUri());
+    Sarif sarif = generateSarif(output);
 
     bindingContext.registerModule(SarifModule.class);
     bindingContext.newSerializer(Format.JSON, Sarif.class)
