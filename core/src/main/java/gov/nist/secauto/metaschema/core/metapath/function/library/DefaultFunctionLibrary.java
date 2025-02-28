@@ -205,8 +205,11 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-tail
     registerFunction(FnTail.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-date
+    registerFunction(FnTimezoneFromDate.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-dateTime
+    registerFunction(FnTimezoneFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-time
+    registerFunction(FnTimezoneFromTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-tokenize
     registerFunction(FnTokenize.SIGNATURE_ONE_ARG);
     registerFunction(FnTokenize.SIGNATURE_TWO_ARG);
