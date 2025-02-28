@@ -139,6 +139,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-month-from-date
     registerFunction(FnMonthFromDate.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-month-from-dateTime
+    registerFunction(FnMonthFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-months-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-name
     registerFunction(FnName.SIGNATURE_NO_ARG);
