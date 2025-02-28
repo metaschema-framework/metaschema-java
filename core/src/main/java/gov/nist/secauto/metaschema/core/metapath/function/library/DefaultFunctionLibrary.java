@@ -67,6 +67,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-date-time
     registerFunction(FnDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-day-from-date
+    registerFunction(FnDayFromDate.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-day-from-dateTime
     registerFunction(FnDayFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-days-from-duration
