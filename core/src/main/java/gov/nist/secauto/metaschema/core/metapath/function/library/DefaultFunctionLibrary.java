@@ -228,6 +228,7 @@ public class DefaultFunctionLibrary
     registerFunction(FnUpperCase.SIGNATURE_ONE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-year-from-date
     // https://www.w3.org/TR/xpath-functions-31/#func-year-from-dateTime
+    registerFunction(FnYearFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-years-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-zero-or-one
     registerFunction(FnZeroOrOne.SIGNATURE);
