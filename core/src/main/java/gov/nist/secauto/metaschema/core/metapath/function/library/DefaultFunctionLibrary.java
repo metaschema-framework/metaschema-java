@@ -139,6 +139,7 @@ public class DefaultFunctionLibrary
     registerFunction(FnMinutesFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-time
+    registerFunction(FnMinutesFromTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-month-from-date
     registerFunction(FnMonthFromDate.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-month-from-dateTime
