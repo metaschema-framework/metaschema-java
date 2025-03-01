@@ -136,6 +136,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-min
     registerFunction(FnMinMax.SIGNATURE_MIN);
     // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-dateTime
+    registerFunction(FnMinutesFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-time
     // https://www.w3.org/TR/xpath-functions-31/#func-month-from-date
