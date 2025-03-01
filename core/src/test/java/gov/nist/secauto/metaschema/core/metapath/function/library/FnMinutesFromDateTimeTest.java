@@ -6,10 +6,12 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,16 +22,22 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class FnHoursFromDurationTest
+class FnMinutesFromDateTimeTest
     extends ExpressionTestBase {
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
         Arguments.of(
-            integer(20),
-            "fn:minutes-from-dateTime(meta:date-time('1999-05-31T13:20:00-05:00'))"),
+            integer(10),
+            "fn:hours-from-duration(meta:day-time-duration('P3DT10H'))"),
         Arguments.of(
-            integer(30),
-            "fn:minutes-from-dateTime(meta:date-time('1999-05-31T13:30:00+05:30'))"));
+            integer(12),
+            "fn:hours-from-duration(meta:day-time-duration('P3DT12H32M12S'))"),
+        Arguments.of(
+            integer(3),
+            "fn:hours-from-duration(meta:day-time-duration('PT123H'))"),
+        Arguments.of(
+            integer(-10),
+            "fn:hours-from-duration(meta:day-time-duration('-P3DT10H'))"));
   }
 
   @ParameterizedTest
