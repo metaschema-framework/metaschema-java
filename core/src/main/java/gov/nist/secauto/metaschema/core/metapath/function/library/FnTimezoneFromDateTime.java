@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Implements the XPath 3.1 <a href=
@@ -56,8 +57,23 @@ public final class FnTimezoneFromDateTime {
       IItem focus) {
     IDateTimeItem arg = FunctionUtils.asTypeOrNull(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
 
-    return arg == null || !arg.hasTimezone()
+    return arg == null
         ? ISequence.empty()
-        : ISequence.of(arg.getOffset());
+        : ISequence.of(fnTimezoneFromDate(arg));
   }
+
+  /**
+   * Implements <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-timezone-from-dateTime">fn:timezone-from-dateTime</a>.
+   *
+   * @param arg
+   *          the meta:date-time item from which to extract the timezone component
+   * @return the timezone component from the date/time or {@code null} if no
+   *         timezone is present
+   */
+  @Nullable
+  public static IDayTimeDurationItem fnTimezoneFromDate(@NonNull IDateTimeItem arg) {
+    return arg.getOffset();
+  }
+
 }
