@@ -1,0 +1,78 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.core.metapath.function.library;
+
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
+import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
+
+import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Implements the XPath 3.1 <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-hours-from-duration">fn:hours-from-duration</a>.
+ * function.
+ */
+public final class FnHoursFromDuration {
+  private static final String NAME = "hours-from-duration";
+  @NonNull
+  static final IFunction SIGNATURE = IFunction.builder()
+      .name(NAME)
+      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
+      .deterministic()
+      .contextIndependent()
+      .focusIndependent()
+      .argument(IArgument.builder()
+          .name("arg")
+          .type(IDurationItem.type())
+          .zeroOrOne()
+          .build())
+      .returnType(IIntegerItem.type())
+      .returnZeroOrOne()
+      .functionHandler(FnHoursFromDuration::execute)
+      .build();
+
+  private FnHoursFromDuration() {
+    // disable construction
+  }
+
+  @SuppressWarnings("unused")
+  @NonNull
+  private static ISequence<IIntegerItem> execute(@NonNull IFunction function,
+      @NonNull List<ISequence<?>> arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+    IDurationItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
+    if(arg instanceof IYearMonthDurationItem) {
+    	return ISequence.of(IIntegerItem.valueOf(0));
+    }
+    return arg == null ? ISequence.empty() : ISequence.of(fnHoursFromDuration((IDayTimeDurationItem)arg));
+  }
+
+  /**
+   * Implements <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#func-hours-from-duration">fn:hours-from-duration</a>.
+   *
+   * @param arg
+   *          the meta:date-time item from which to extract the hour component
+   * @return the hour component from the date as integer item
+   */
+  @NonNull
+  public static IIntegerItem fnHoursFromDuration(IDayTimeDurationItem arg) {
+	  long durationSeconds = arg.asDuration().toSeconds();
+    return IIntegerItem.valueOf((durationSeconds % 86_400)/3_600);
+  }
+}
