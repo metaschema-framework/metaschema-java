@@ -183,6 +183,7 @@ public class DefaultFunctionLibrary
     registerFunction(FnRound.SIGNATURE_WITH_PRECISION);
     // P1: https://www.w3.org/TR/xpath-functions-31/#func-round-half-to-even
     // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-dateTime
+    registerFunction(FnSecondsFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-time
     // https://www.w3.org/TR/xpath-functions-31/#func-starts-with
