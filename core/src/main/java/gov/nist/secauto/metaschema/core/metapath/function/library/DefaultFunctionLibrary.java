@@ -186,6 +186,7 @@ public class DefaultFunctionLibrary
     registerFunction(FnSecondsFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-duration
     // https://www.w3.org/TR/xpath-functions-31/#func-seconds-from-time
+    registerFunction(FnSecondsFromTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-starts-with
     registerFunction(FnStartsWith.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-static-base-uri
