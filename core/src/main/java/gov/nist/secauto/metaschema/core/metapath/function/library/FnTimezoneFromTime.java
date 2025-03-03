@@ -59,7 +59,7 @@ public final class FnTimezoneFromTime {
 
     return arg == null
         ? ISequence.empty()
-        : ISequence.of(fnTimezoneFromDate(arg));
+        : ISequence.of(fnTimezoneFromTime(arg));
   }
 
   /**
@@ -72,7 +72,7 @@ public final class FnTimezoneFromTime {
    *         timezone is present
    */
   @Nullable
-  public static IDayTimeDurationItem fnTimezoneFromDate(@NonNull ITimeItem arg) {
+  public static IDayTimeDurationItem fnTimezoneFromTime(@NonNull ITimeItem arg) {
     return arg.getOffset();
   }
 }
