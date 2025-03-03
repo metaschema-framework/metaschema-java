@@ -53,7 +53,7 @@ public final class FnDayFromDate {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-	IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
+    IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     return arg == null ? ISequence.empty() : ISequence.of(fnDayFromDate(arg));
   }
 
@@ -63,7 +63,7 @@ public final class FnDayFromDate {
    *
    * @param arg
    *          the meta:date item from which to extract the day component
-   * @return the day component from the date as integer item
+   * @return the day component from the date as an integer item
    */
   @NonNull
   public static IIntegerItem fnDayFromDate(IDateItem arg) {

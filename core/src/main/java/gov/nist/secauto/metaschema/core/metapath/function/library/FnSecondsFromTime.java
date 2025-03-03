@@ -13,7 +13,6 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 
 import java.time.Duration;
@@ -56,7 +55,7 @@ public final class FnSecondsFromTime {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     ITimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    return arg == null ? ISequence.empty() : ISequence.of(fnsecondsFromTime(arg));
+    return arg == null ? ISequence.empty() : ISequence.of(fnSecondsFromTime(arg));
   }
 
   /**
@@ -65,11 +64,11 @@ public final class FnSecondsFromTime {
    *
    * @param arg
    *          the meta:time item from which to extract the second component
-   * @return the second component from the date as integer item
+   * @return the second component from the date as a decimal item
    */
   @NonNull
-  public static IDecimalItem fnsecondsFromTime(ITimeItem arg) {
-	Duration duration = Duration.ofSeconds(arg.getSecond(), arg.getNano());
+  public static IDecimalItem fnSecondsFromTime(ITimeItem arg) {
+    Duration duration = Duration.ofSeconds(arg.getSecond(), arg.getNano());
     return IDecimalItem.valueOf(duration.getSeconds() + (duration.getNano() / 1_000_000_000.0));
   }
 }

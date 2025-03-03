@@ -53,7 +53,7 @@ public final class FnMonthFromDate {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-	IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
+    IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     return arg == null ? ISequence.empty() : ISequence.of(fnMonthFromDate(arg));
   }
 
@@ -62,8 +62,8 @@ public final class FnMonthFromDate {
    * "https://www.w3.org/TR/xpath-functions-31/#func-month-from-date">fn:month-from-date</a>.
    *
    * @param arg
-   *          the meta:date item from which to extract the montb component
-   * @return the month component from the date as integer item
+   *          the meta:date item from which to extract the month component
+   * @return the month component from the date as an integer item
    */
   @NonNull
   public static IIntegerItem fnMonthFromDate(IDateItem arg) {

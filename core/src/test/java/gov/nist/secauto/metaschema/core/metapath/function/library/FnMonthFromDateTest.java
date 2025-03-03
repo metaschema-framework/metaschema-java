@@ -37,6 +37,7 @@ class FnMonthFromDateTest
   @ParameterizedTest
   @MethodSource("provideValues")
   void test(@NonNull IIntegerItem expected, @NonNull String metapath) {
-    assertEquals(expected, IMetapathExpression.compile(metapath).evaluateAs(null, IMetapathExpression.ResultType.ITEM, newDynamicContext()));
+    assertEquals(expected, IMetapathExpression.compile(metapath).evaluateAs(null, IMetapathExpression.ResultType.ITEM,
+        newDynamicContext()));
   }
 }

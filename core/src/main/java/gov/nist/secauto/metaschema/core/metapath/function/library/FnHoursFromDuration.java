@@ -56,10 +56,10 @@ public final class FnHoursFromDuration {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDurationItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    if(arg instanceof IYearMonthDurationItem) {
-    	return ISequence.of(IIntegerItem.valueOf(0));
+    if (arg instanceof IYearMonthDurationItem) {
+      return ISequence.of(IIntegerItem.valueOf(0));
     }
-    return arg == null ? ISequence.empty() : ISequence.of(fnHoursFromDuration((IDayTimeDurationItem)arg));
+    return arg == null ? ISequence.empty() : ISequence.of(fnHoursFromDuration((IDayTimeDurationItem) arg));
   }
 
   /**
@@ -67,12 +67,12 @@ public final class FnHoursFromDuration {
    * "https://www.w3.org/TR/xpath-functions-31/#func-hours-from-duration">fn:hours-from-duration</a>.
    *
    * @param arg
-   *          the meta:date-time item from which to extract the hour component
-   * @return the hour component from the date as integer item
+   *          the meta:duration item from which to extract the hour component
+   * @return the hour component from the duration as an integer item
    */
   @NonNull
   public static IIntegerItem fnHoursFromDuration(IDayTimeDurationItem arg) {
-	  long durationSeconds = arg.asDuration().toSeconds();
-    return IIntegerItem.valueOf((durationSeconds % 86_400)/3_600);
+    long durationSeconds = arg.asDuration().toSeconds();
+    return IIntegerItem.valueOf((durationSeconds % 86_400) / 3_600);
   }
 }
