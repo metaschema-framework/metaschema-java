@@ -33,13 +33,14 @@ class FnMonthFromDateTimeTest
             integer(12),
             "fn:month-from-dateTime(meta:date-time('1999-12-31T19:20:00-05:00'))"),
         Arguments.of(
-                integer(1),
-                "fn:month-from-dateTime(fn:adjust-dateTime-to-timezone(meta:date-time('1999-12-31T19:20:00-05:00'), meta:day-time-duration('PT0S')))"));
+            integer(1),
+            "fn:month-from-dateTime(fn:adjust-dateTime-to-timezone(meta:date-time('1999-12-31T19:20:00-05:00'), meta:day-time-duration('PT0S')))"));
   }
 
   @ParameterizedTest
   @MethodSource("provideValues")
   void test(@NonNull IIntegerItem expected, @NonNull String metapath) {
-    assertEquals(expected, IMetapathExpression.compile(metapath).evaluateAs(null, IMetapathExpression.ResultType.ITEM, newDynamicContext()));
+    assertEquals(expected, IMetapathExpression.compile(metapath).evaluateAs(null, IMetapathExpression.ResultType.ITEM,
+        newDynamicContext()));
   }
 }

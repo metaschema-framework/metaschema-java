@@ -58,10 +58,10 @@ public final class FnSecondsFromDuration {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDurationItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    if(arg instanceof IYearMonthDurationItem) {
-    	return ISequence.of(IIntegerItem.valueOf(0));
+    if (arg instanceof IYearMonthDurationItem) {
+      return ISequence.of(IIntegerItem.valueOf(0));
     }
-    return arg == null ? ISequence.empty() : ISequence.of(fnSecondsFromDuration((IDayTimeDurationItem)arg));
+    return arg == null ? ISequence.empty() : ISequence.of(fnSecondsFromDuration((IDayTimeDurationItem) arg));
   }
 
   /**
@@ -70,11 +70,11 @@ public final class FnSecondsFromDuration {
    *
    * @param arg
    *          the meta:duration item from which to extract the second component
-   * @return the second component from the duration as integer item
+   * @return the second component from the duration as a decimal item
    */
   @NonNull
   public static IDecimalItem fnSecondsFromDuration(IDayTimeDurationItem arg) {
-	Duration duration= arg.asDuration();
+    Duration duration = arg.asDuration();
     return IDecimalItem.valueOf((duration.getSeconds() % 60) + (duration.getNano() / 1_000_000_000.0));
   }
 }

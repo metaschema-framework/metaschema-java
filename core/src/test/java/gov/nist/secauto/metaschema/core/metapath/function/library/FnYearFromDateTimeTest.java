@@ -33,19 +33,20 @@ class FnYearFromDateTimeTest
             integer(1999),
             "fn:year-from-dateTime(meta:date-time('1999-05-31T21:30:00-05:00'))"),
         Arguments.of(
-                integer(1999),
-                "fn:year-from-dateTime(meta:date-time('1999-12-31T19:20:00'))"),
+            integer(1999),
+            "fn:year-from-dateTime(meta:date-time('1999-12-31T19:20:00'))"),
         Arguments.of(
-                integer(2000),
-                "fn:year-from-dateTime(meta:date-time('1999-12-31T24:00:00'))"));
-//        Arguments.of(
-//                integer(-2),
-//                "fn:year-from-dateTime(meta:date-time('-0002-06-06T00:00:00'))"));
+            integer(2000),
+            "fn:year-from-dateTime(meta:date-time('1999-12-31T24:00:00'))"));
+    // Arguments.of(
+    // integer(-2),
+    // "fn:year-from-dateTime(meta:date-time('-0002-06-06T00:00:00'))"));
   }
 
   @ParameterizedTest
   @MethodSource("provideValues")
   void test(@NonNull IIntegerItem expected, @NonNull String metapath) {
-    assertEquals(expected, IMetapathExpression.compile(metapath).evaluateAs(null, IMetapathExpression.ResultType.ITEM, newDynamicContext()));
+    assertEquals(expected, IMetapathExpression.compile(metapath).evaluateAs(null, IMetapathExpression.ResultType.ITEM,
+        newDynamicContext()));
   }
 }

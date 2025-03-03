@@ -53,7 +53,7 @@ public final class FnMonthFromDateTime {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-	IDateTimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
+    IDateTimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     return arg == null ? ISequence.empty() : ISequence.of(fnMonthFromDateTime(arg));
   }
 
@@ -63,7 +63,7 @@ public final class FnMonthFromDateTime {
    *
    * @param arg
    *          the meta:date-time item from which to extract the month component
-   * @return the month component from the date as integer item
+   * @return the month component from the date as an integer item
    */
   @NonNull
   public static IIntegerItem fnMonthFromDateTime(IDateTimeItem arg) {

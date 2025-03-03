@@ -63,7 +63,7 @@ public final class FnMinutesFromDateTime {
    *
    * @param arg
    *          the meta:date-time item from which to extract the minutes component
-   * @return the hour component from the date as integer item
+   * @return the minutes component from the time as an integer
    */
   @NonNull
   public static IIntegerItem fnMinutesFromDateTime(IDateTimeItem arg) {

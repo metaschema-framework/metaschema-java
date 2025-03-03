@@ -56,7 +56,7 @@ public final class FnHoursFromTime {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     ITimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    return arg == null ? ISequence.empty() : ISequence.of(fnMinutesFromTime(arg));
+    return arg == null ? ISequence.empty() : ISequence.of(fnHoursFromTime(arg));
   }
 
   /**
@@ -65,10 +65,10 @@ public final class FnHoursFromTime {
    *
    * @param arg
    *          the meta:time item from which to extract the hour component
-   * @return the hour component from the date as integer item
+   * @return the hour component from the time as an integer item
    */
   @NonNull
-  public static IIntegerItem fnMinutesFromTime(ITimeItem arg) {
+  public static IIntegerItem fnHoursFromTime(ITimeItem arg) {
     return IIntegerItem.valueOf(arg.getHour());
   }
 }

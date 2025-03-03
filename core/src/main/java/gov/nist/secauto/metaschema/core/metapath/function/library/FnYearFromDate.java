@@ -53,7 +53,7 @@ public final class FnYearFromDate {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-	IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
+    IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     return arg == null ? ISequence.empty() : ISequence.of(fnYearFromDate(arg));
   }
 
@@ -63,7 +63,7 @@ public final class FnYearFromDate {
    *
    * @param arg
    *          the meta:date item from which to extract the year component
-   * @return the year component from the date as integer item
+   * @return the year component from the date as an integer item
    */
   @NonNull
   public static IIntegerItem fnYearFromDate(IDateItem arg) {

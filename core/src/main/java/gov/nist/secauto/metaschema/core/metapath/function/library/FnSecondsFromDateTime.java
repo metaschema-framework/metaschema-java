@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public final class FnSecondsFromDateTime {
           .type(IDateTimeItem.type())
           .zeroOrOne()
           .build())
-      .returnType(IIntegerItem.type())
+      .returnType(IDecimalItem.type())
       .returnZeroOrOne()
       .functionHandler(FnSecondsFromDateTime::execute)
       .build();
@@ -49,12 +50,12 @@ public final class FnSecondsFromDateTime {
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IIntegerItem> execute(@NonNull IFunction function,
+  private static ISequence<IDecimalItem> execute(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDateTimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    return arg == null ? ISequence.empty() : ISequence.of(fnsecondsFromDateTime(arg));
+    return arg == null ? ISequence.empty() : ISequence.of(fnSecondsFromDateTime(arg));
   }
 
   /**
@@ -63,10 +64,10 @@ public final class FnSecondsFromDateTime {
    *
    * @param arg
    *          the meta:date-time item from which to extract the second component
-   * @return the second component from the date as integer item
+   * @return the second component from the date as a decimal item
    */
   @NonNull
-  public static IIntegerItem fnsecondsFromDateTime(IDateTimeItem arg) {
-    return IIntegerItem.valueOf(arg.getSecond());
+  public static IDecimalItem fnSecondsFromDateTime(IDateTimeItem arg) {
+    return IDecimalItem.valueOf(arg.getSecond() + (arg.getNano() / 1_000_000_000.0));
   }
 }
