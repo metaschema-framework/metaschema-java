@@ -14,10 +14,8 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IQNameItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
-import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -31,7 +29,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public final class FnFunctionName {
   @NonNull
-  private static final String NAME = "function-name";
+  private static final String NAME = "function-lookup";
 
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
@@ -41,23 +39,41 @@ public final class FnFunctionName {
       .contextIndependent()
       .focusIndependent()
       .argument(IArgument.builder()
-          .name("func")
-          .type(IFunction.type())
+          .name("name")
+          .type(IStringItem.type())
           .one()
           .build())
-      .returnType(IQNameItem.type())
+      .argument(IArgument.builder()
+          .name("arity")
+          .type(IIntegerItem.type())
+          .one()
+          .build())
+      .returnType(IItemType.function())
       .returnZeroOrOne()
       .functionHandler(FnFunctionName::execute)
       .build();
 
   @SuppressWarnings("unused")
   @NonNull
-  private static ISequence<IQNameItem> execute(@NonNull IFunction function,
+  private static ISequence<IFunction> execute(@NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    IFunction fn = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
-    return ISequence.of(IQNameItem.valueOf(fn.getQName()));
+    IStringItem name = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
+    IIntegerItem arity = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
+    IFunction matchingFunction = null;
+
+    try {
+      matchingFunction = dynamicContext.getStaticContext().lookupFunction(
+          name.asString(),
+          arity.toIntValueExact());
+    } catch (StaticMetapathException ex) {
+      if (ex.getCode() != StaticMetapathException.NO_FUNCTION_MATCH) {
+        throw ex;
+      }
+    }
+
+    return ISequence.of(matchingFunction);
   }
 
   private FnFunctionName() {
