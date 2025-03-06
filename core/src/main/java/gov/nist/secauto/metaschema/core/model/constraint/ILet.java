@@ -44,7 +44,7 @@ public interface ILet {
     try {
       return of(
           name,
-          IMetapathExpression.compile(valueExpression, source.getStaticContext()),
+          IMetapathExpression.lazyCompile(valueExpression, source.getStaticContext()),
           source,
           remarks);
     } catch (MetapathException ex) {
