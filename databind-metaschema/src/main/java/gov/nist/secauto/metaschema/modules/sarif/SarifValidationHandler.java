@@ -448,7 +448,7 @@ public final class SarifValidationHandler {
 
         Location loc = new Location();
         loc.setPhysicalLocation(physical);
-        loc.setLogicalLocation(logical);
+        loc.addLogicalLocation(logical);
         result.addLocation(loc);
       }
     }
