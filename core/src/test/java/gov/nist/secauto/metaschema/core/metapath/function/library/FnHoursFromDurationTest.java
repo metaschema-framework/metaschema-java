@@ -25,11 +25,17 @@ class FnHoursFromDurationTest
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
         Arguments.of(
-            integer(20),
-            "fn:minutes-from-dateTime(meta:date-time('1999-05-31T13:20:00-05:00'))"),
+            integer(10),
+            "fn:hours-from-duration(meta:day-time-duration('P3DT10H'))"),
         Arguments.of(
-            integer(30),
-            "fn:minutes-from-dateTime(meta:date-time('1999-05-31T13:30:00+05:30'))"));
+            integer(12),
+            "fn:hours-from-duration(meta:day-time-duration('P3DT12H32M12S'))"),
+        Arguments.of(
+            integer(3),
+            "fn:hours-from-duration(meta:day-time-duration('PT123H'))"),
+        Arguments.of(
+            integer(-10),
+            "fn:hours-from-duration(meta:day-time-duration('-P3DT10H'))"));
   }
 
   @ParameterizedTest
