@@ -14,8 +14,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateTimeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -68,6 +68,7 @@ public final class FnSecondsFromDateTime {
    */
   @NonNull
   public static IDecimalItem fnSecondsFromDateTime(IDateTimeItem arg) {
-    return IDecimalItem.valueOf(arg.getSecond() + (arg.getNano() / 1_000_000_000.0));
+    return IDecimalItem.valueOf(BigDecimal.valueOf(arg.getSecond()).add(
+        BigDecimal.valueOf(arg.getNano()).divide(BigDecimal.valueOf(1_000_000_000.0), FunctionUtils.MATH_CONTEXT)));
   }
 }

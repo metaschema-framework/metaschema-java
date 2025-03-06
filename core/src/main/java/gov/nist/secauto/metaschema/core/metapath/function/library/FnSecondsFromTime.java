@@ -15,6 +15,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.Duration;
 import java.util.List;
 
@@ -69,6 +71,7 @@ public final class FnSecondsFromTime {
   @NonNull
   public static IDecimalItem fnSecondsFromTime(ITimeItem arg) {
     Duration duration = Duration.ofSeconds(arg.getSecond(), arg.getNano());
-    return IDecimalItem.valueOf(duration.getSeconds() + (duration.getNano() / 1_000_000_000.0));
+    return IDecimalItem.valueOf(BigDecimal.valueOf(duration.getSeconds()).add(BigDecimal.valueOf(duration.getNano())
+        .divide(BigDecimal.valueOf(1_000_000_000.0), FunctionUtils.MATH_CONTEXT)));
   }
 }
