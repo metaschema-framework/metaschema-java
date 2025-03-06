@@ -29,7 +29,10 @@ class FnSecondsFromDurationTest
             "fn:seconds-from-duration(meta:day-time-duration('P3DT10H12.5S'))"),
         Arguments.of(
             decimal(-16.0),
-            "fn:seconds-from-duration(meta:day-time-duration('-PT256S'))"));
+            "fn:seconds-from-duration(meta:day-time-duration('-PT256S'))"),
+        Arguments.of(
+            decimal(0),
+            "fn:seconds-from-duration(meta:year-month-duration('P1Y'))"));
   }
 
   @ParameterizedTest
