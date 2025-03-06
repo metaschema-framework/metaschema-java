@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
 
@@ -75,6 +76,7 @@ public final class FnSecondsFromDuration {
   @NonNull
   public static IDecimalItem fnSecondsFromDuration(IDayTimeDurationItem arg) {
     Duration duration = arg.asDuration();
-    return IDecimalItem.valueOf((duration.getSeconds() % 60) + (duration.getNano() / 1_000_000_000.0));
+    return IDecimalItem.valueOf(BigDecimal.valueOf(duration.getSeconds() % 60).add(BigDecimal
+        .valueOf(duration.getNano()).divide(BigDecimal.valueOf(1_000_000_000.0), FunctionUtils.MATH_CONTEXT)));
   }
 }
