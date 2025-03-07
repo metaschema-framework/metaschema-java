@@ -54,7 +54,8 @@ public final class FnYearFromDateTime {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDateTimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    return arg == null ? ISequence.empty() : ISequence.of(fnYearFromDateTime(arg));
+    // Per spec, check if arg is null and if so return empty sequence
+    return arg != null ? ISequence.of(fnYearFromDateTime(arg)) : ISequence.empty();
   }
 
   /**

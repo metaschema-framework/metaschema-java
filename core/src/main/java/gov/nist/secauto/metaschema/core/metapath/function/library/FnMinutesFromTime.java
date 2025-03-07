@@ -56,7 +56,8 @@ public final class FnMinutesFromTime {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     ITimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    return arg == null ? ISequence.empty() : ISequence.of(fnminutesFromTime(arg));
+    // Per spec, check if arg is null and if so return empty sequence
+    return arg != null ? ISequence.of(fnminutesFromTime(arg)) : ISequence.empty();
   }
 
   /**

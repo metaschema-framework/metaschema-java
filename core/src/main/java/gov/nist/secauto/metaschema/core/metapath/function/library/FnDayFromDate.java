@@ -54,7 +54,8 @@ public final class FnDayFromDate {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    return arg == null ? ISequence.empty() : ISequence.of(fnDayFromDate(arg));
+    // Per spec, check if arg is null and if so return empty sequence
+    return arg != null ? ISequence.of(fnDayFromDate(arg)) : ISequence.empty();
   }
 
   /**

@@ -78,7 +78,8 @@ public final class FnAdjustDateTimeToTimezone {
     IDateTimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     // get the implicit timezone
     IDayTimeDurationItem timezone = dynamicContext.getImplicitTimeZoneAsDayTimeDuration();
-    return arg == null ? ISequence.empty() : ISequence.of(arg.replaceTimezone(timezone));
+    // Per spec, check if arg is null and if so return empty sequence
+    return arg != null ? ISequence.of(arg.replaceTimezone(timezone)) : ISequence.empty();
   }
 
   @SuppressWarnings("unused")
