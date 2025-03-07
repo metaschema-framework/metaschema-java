@@ -77,7 +77,6 @@ public final class FnRoot {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     INodeItem arg = FunctionUtils.asTypeOrNull(ObjectUtils.requireNonNull(arguments.get(0)).getFirstItem(true));
-
     return arg == null ? ISequence.empty() : ISequence.of(fnRoot(arg));
   }
 

@@ -59,7 +59,8 @@ public final class FnHoursFromDuration {
     if (arg instanceof IYearMonthDurationItem) {
       return ISequence.of(IIntegerItem.valueOf(0));
     }
-    return arg == null ? ISequence.empty() : ISequence.of(fnHoursFromDuration((IDayTimeDurationItem) arg));
+    // Per spec, check if arg is null and if so return empty sequence
+    return arg != null ? ISequence.of(fnHoursFromDuration((IDayTimeDurationItem) arg)) : ISequence.empty();
   }
 
   /**

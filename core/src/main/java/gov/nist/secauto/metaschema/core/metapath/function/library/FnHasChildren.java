@@ -78,7 +78,6 @@ public final class FnHasChildren {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     INodeItem arg = FunctionUtils.asTypeOrNull(ObjectUtils.requireNonNull(arguments.get(0)).getFirstItem(true));
-
     return arg == null ? ISequence.empty() : ISequence.of(IBooleanItem.valueOf(fnHasChildren(arg)));
   }
 
