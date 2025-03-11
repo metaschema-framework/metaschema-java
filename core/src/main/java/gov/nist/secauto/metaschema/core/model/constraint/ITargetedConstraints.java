@@ -10,6 +10,8 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 
+import java.util.List;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -18,12 +20,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public interface ITargetedConstraints extends IValueConstrained {
   /**
-   * Get the Metapath expression used to identify the target of the constraint.
+   * Get the Metapath expressions used to identify the targets of the constraint.
    *
-   * @return the uncompiled Metapath expression
+   * @return the Metapath expressions identifying the targets of the associated
+   *         constraints
    */
   @NonNull
-  IMetapathExpression getTarget();
+  List<IMetapathExpression> getTargets();
 
   /**
    * Apply the constraint to the provided definition.

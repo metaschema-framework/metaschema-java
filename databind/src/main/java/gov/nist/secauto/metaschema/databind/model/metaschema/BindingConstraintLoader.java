@@ -10,12 +10,10 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyTargetedConstraints;
-import gov.nist.secauto.metaschema.core.model.constraint.DefaultConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.DefaultScopedContraints;
 import gov.nist.secauto.metaschema.core.model.constraint.FieldTargetedConstraints;
 import gov.nist.secauto.metaschema.core.model.constraint.FlagTargetedConstraints;
@@ -24,7 +22,8 @@ import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.IScopedContraints;
 import gov.nist.secauto.metaschema.core.model.constraint.ITargetedConstraints;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
-import gov.nist.secauto.metaschema.core.model.constraint.ModelTargetedConstraints;
+import gov.nist.secauto.metaschema.core.model.constraint.MetaConstraintSet;
+import gov.nist.secauto.metaschema.core.model.constraint.ScopedConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -41,18 +40,16 @@ import org.apache.xmlbeans.impl.values.XmlValueNotSupportedException;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * Provides methods to load a constraint set expressed in any supported
@@ -83,13 +80,12 @@ public class BindingConstraintLoader
   @Override
   protected List<IConstraintSet> parseResource(@NonNull URI resource, @NonNull Deque<URI> visitedResources)
       throws IOException {
-
-    Object constraintsDocument = loader.load(resource);
-
     StaticContext.Builder builder = StaticContext.builder()
         .baseUri(resource);
-
     builder.useWildcardWhenNamespaceNotDefaulted(true);
+
+    // parse this set of constraints
+    Object constraintsDocument = loader.load(resource);
 
     List<IConstraintSet> retval;
     if (constraintsDocument instanceof MetaschemaModuleConstraints) {
@@ -98,6 +94,7 @@ public class BindingConstraintLoader
       // now check if this constraint set imports other constraint sets
       List<MetaschemaModuleConstraints.Import> imports = CollectionUtil.listOrEmpty(obj.getImports());
 
+      // handle imports
       @NonNull
       Set<IConstraintSet> importedConstraints;
       if (imports.isEmpty()) {
@@ -115,14 +112,15 @@ public class BindingConstraintLoader
         }
       }
 
+      // handle namespace to prefix bindings
       CollectionUtil.listOrEmpty(obj.getNamespaceBindings()).stream()
           .forEach(binding -> builder.namespace(
               ObjectUtils.notNull(binding.getPrefix()),
               ObjectUtils.notNull(binding.getUri())));
       ISource source = ISource.externalSource(resource);
 
-      // now create this constraint set
-      retval = CollectionUtil.singletonList(new DefaultConstraintSet(
+      // create the constraint set
+      retval = CollectionUtil.singletonList(new ScopedConstraintSet(
           source,
           parseScopedConstraints(obj, source),
           new LinkedHashSet<>(importedConstraints)));
@@ -132,13 +130,13 @@ public class BindingConstraintLoader
       // now check if this constraint set imports other constraint sets
       List<MetaschemaMetaConstraints.Import> imports = CollectionUtil.listOrEmpty(obj.getImports());
 
-      retval = new LinkedList<>();
+      List<IConstraintSet> importedConstraints = new LinkedList<>();
       if (!imports.isEmpty()) {
         try {
           for (MetaschemaMetaConstraints.Import imported : imports) {
             URI importedResource = imported.getHref();
             importedResource = ObjectUtils.notNull(resource.resolve(importedResource));
-            retval.addAll(loadInternal(importedResource, visitedResources));
+            importedConstraints.addAll(loadInternal(importedResource, visitedResources));
           }
         } catch (MetaschemaException ex) {
           throw new IOException(ex);
@@ -152,14 +150,11 @@ public class BindingConstraintLoader
 
       ISource source = ISource.externalSource(builder.build(), false);
 
-      List<ITargetedConstraints> targetedConstraints = ObjectUtils.notNull(CollectionUtil.listOrEmpty(obj.getContexts())
-          .stream()
-          .flatMap(context -> parseContext(ObjectUtils.notNull(context), null, source)
-              .getTargetedConstraints().stream())
-          .collect(Collectors.toList()));
-      retval.add(new MetaConstraintSet(source, targetedConstraints));
-
-      retval = CollectionUtil.unmodifiableList(retval);
+      List<MetaConstraintSet.Context> contexts
+          = ObjectUtils.notNull(CollectionUtil.listOrEmpty(obj.getContexts()).stream()
+              .map(context -> parseContext(ObjectUtils.notNull(context), null, source))
+              .collect(Collectors.toUnmodifiableList()));
+      retval = Collections.singletonList(new MetaConstraintSet(source, importedConstraints, contexts));
     } else {
       throw new UnsupportedOperationException(String.format("Unsupported constraint content '%s'.", resource));
     }
@@ -231,9 +226,9 @@ public class BindingConstraintLoader
     ConstraintBindingSupport.parse(constraints, obj, source);
     return new AssemblyTargetedConstraints(
         source,
-        IMetapathExpression.lazyCompile(
+        () -> Collections.singletonList(IMetapathExpression.lazyCompile(
             ObjectUtils.requireNonNull(obj.getTarget()),
-            source.getStaticContext()),
+            source.getStaticContext())),
         constraints);
   }
 
@@ -245,9 +240,9 @@ public class BindingConstraintLoader
 
     return new FieldTargetedConstraints(
         source,
-        IMetapathExpression.lazyCompile(
+        () -> Collections.singletonList(IMetapathExpression.lazyCompile(
             ObjectUtils.requireNonNull(obj.getTarget()),
-            source.getStaticContext()),
+            source.getStaticContext())),
         constraints);
   }
 
@@ -259,124 +254,44 @@ public class BindingConstraintLoader
 
     return new FlagTargetedConstraints(
         source,
-        IMetapathExpression.lazyCompile(
+        () -> Collections.singletonList(IMetapathExpression.lazyCompile(
             ObjectUtils.requireNonNull(obj.getTarget()),
-            source.getStaticContext()),
+            source.getStaticContext())),
         constraints);
   }
 
-  private Context parseContext(
+  private MetaConstraintSet.Context parseContext(
       @NonNull MetapathContext contextObj,
-      @Nullable Context parent,
+      @Nullable MetaConstraintSet.Context parent,
       @NonNull ISource source) {
 
-    List<IMetapathExpression> metapaths;
-    if (parent == null) {
-      metapaths = ObjectUtils.notNull(CollectionUtil.listOrEmpty(contextObj.getMetapaths()).stream()
-          .map(MetaschemaMetapath::getTarget)
-          .map(metapath -> IMetapathExpression.lazyCompile(
-              ObjectUtils.requireNonNull(metapath),
-              source.getStaticContext()))
-          .collect(Collectors.toList()));
-    } else {
-      List<IMetapathExpression> parentMetapaths = parent.getMetapaths().stream()
-          .collect(Collectors.toList());
-      metapaths = ObjectUtils.notNull(CollectionUtil.listOrEmpty(contextObj.getMetapaths()).stream()
-          .map(MetaschemaMetapath::getTarget)
-          .flatMap(childPath -> parentMetapaths.stream()
-              .map(parentPath -> parentPath.getPath() + '/' + childPath))
-          .map(metapath -> IMetapathExpression.lazyCompile(
-              ObjectUtils.requireNonNull(metapath),
-              source.getStaticContext()))
-          .collect(Collectors.toList()));
-    }
+    // generate the metapaths
+    List<IMetapathExpression> metapaths = ObjectUtils
+        .notNull(CollectionUtil.listOrEmpty(contextObj.getMetapaths()).stream()
+            .map(MetaschemaMetapath::getTarget)
+            .map(metapath -> IMetapathExpression.lazyCompile(
+                ObjectUtils.requireNonNull(metapath),
+                source.getStaticContext())))
+        .collect(Collectors.toUnmodifiableList());
 
+    // parse the constraints
     AssemblyConstraints contextConstraints = contextObj.getConstraints();
     IModelConstrained constraints = new AssemblyConstraintSet(source);
     if (contextConstraints != null) {
       ConstraintBindingSupport.parse(constraints, contextConstraints, source);
     }
-    Context context = new Context(source, metapaths, constraints);
 
-    List<Context> childContexts = ObjectUtils.notNull(CollectionUtil.listOrEmpty(contextObj.getContexts()).stream()
-        .map(childObj -> parseContext(ObjectUtils.notNull(childObj), context, source))
-        .collect(Collectors.toList()));
+    // create the context
+    MetaConstraintSet.Context context = new MetaConstraintSet.Context(parent, source, metapaths, constraints);
+
+    // create the child contexts
+    List<MetaConstraintSet.Context> childContexts
+        = ObjectUtils.notNull(CollectionUtil.listOrEmpty(contextObj.getContexts()).stream()
+            .map(childObj -> parseContext(ObjectUtils.notNull(childObj), context, source))
+            .collect(Collectors.toList()));
 
     context.addAll(childContexts);
 
     return context;
-  }
-
-  private static class Context {
-    @NonNull
-    private final List<IMetapathExpression> metapaths;
-    @NonNull
-    private final List<Context> childContexts = new LinkedList<>();
-    @NonNull
-    private final Lazy<List<ITargetedConstraints>> targetedConstraints;
-
-    public Context(
-        @NonNull ISource source,
-        @NonNull List<IMetapathExpression> metapaths,
-        @NonNull IModelConstrained constraints) {
-      this.metapaths = metapaths;
-      this.targetedConstraints = ObjectUtils.notNull(Lazy.lazy(() -> {
-
-        Stream<ITargetedConstraints> paths = getMetapaths().stream()
-            .map(metapath -> new ModelTargetedConstraints(
-                source,
-                ObjectUtils.notNull(metapath),
-                constraints));
-        Stream<ITargetedConstraints> childPaths = childContexts.stream()
-            .flatMap(child -> child.getTargetedConstraints().stream());
-
-        return Stream.concat(paths, childPaths)
-            .collect(Collectors.toUnmodifiableList());
-      }));
-    }
-
-    @NonNull
-    public List<ITargetedConstraints> getTargetedConstraints() {
-      return ObjectUtils.notNull(targetedConstraints.get());
-    }
-
-    public void addAll(@NonNull Collection<Context> childContexts) {
-      childContexts.addAll(childContexts);
-    }
-
-    @NonNull
-    public List<IMetapathExpression> getMetapaths() {
-      return metapaths;
-    }
-  }
-
-  private static final class MetaConstraintSet implements IConstraintSet {
-    @NonNull
-    private final ISource source;
-    @NonNull
-    private final List<ITargetedConstraints> targetedConstraints;
-
-    private MetaConstraintSet(
-        @NonNull ISource source,
-        @NonNull List<ITargetedConstraints> targetedConstraints) {
-      this.source = source;
-      this.targetedConstraints = targetedConstraints;
-    }
-
-    @Override
-    public ISource getSource() {
-      return source;
-    }
-
-    @Override
-    public Iterable<ITargetedConstraints> getTargetedConstraintsForModule(IModule module) {
-      return targetedConstraints;
-    }
-
-    @Override
-    public Collection<IConstraintSet> getImportedConstraintSets() {
-      return CollectionUtil.emptyList();
-    }
-
   }
 }

@@ -9,17 +9,31 @@ import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ModelTargetedConstraints
     extends AbstractTargetedConstraints<IModelConstrained>
     implements IFeatureModelConstrained {
 
+  /**
+   * Construct a new set of targeted constraints.
+   *
+   * @param source
+   *          information about the resource the constraints were sources from
+   * @param targets
+   *          a supplier to get the Metapath expressions that can be used to find
+   *          matching targets
+   * @param constraints
+   *          the constraints to apply to matching targets
+   */
   public ModelTargetedConstraints(
       @NonNull ISource source,
-      @NonNull IMetapathExpression target,
+      @NonNull Supplier<List<IMetapathExpression>> targets,
       @NonNull IModelConstrained constraints) {
-    super(source, target, constraints);
+    super(source, targets, constraints);
   }
 
   /**

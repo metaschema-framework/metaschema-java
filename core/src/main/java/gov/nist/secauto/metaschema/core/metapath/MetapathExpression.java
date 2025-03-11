@@ -178,7 +178,7 @@ class MetapathExpression implements IMetapathExpression {
 
   @Override
   public String toString() {
-    return CSTPrinter.toString(getCSTNode());
+    return getPath();
   }
 
   @Override

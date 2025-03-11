@@ -9,11 +9,9 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
-import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.ConstraintComposingVisitor;
@@ -25,7 +23,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -78,39 +75,16 @@ public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IMo
 
     for (IConstraintSet set : getRegisteredConstraintSets()) {
       assert set != null;
-      applyConstraints(module, moduleItem, set, visitor, dynamicContext);
+      applyConstraintsForModule(moduleItem, set, visitor, dynamicContext);
     }
   }
 
-  private static void applyConstraints(
-      @NonNull IModule module,
+  private static void applyConstraintsForModule(
       @NonNull IModuleNodeItem moduleItem,
       @NonNull IConstraintSet set,
       @NonNull ConstraintComposingVisitor visitor,
       @NonNull DynamicContext dynamicContext) {
-
-    for (ITargetedConstraints targeted : set.getTargetedConstraintsForModule(module)) {
-      // apply targeted constraints
-      IMetapathExpression metapath = targeted.getTarget();
-      ISequence<?> items = metapath.evaluate(moduleItem, dynamicContext);
-      assert items != null;
-
-      // first build a map to ensure the constraint is only applied once to each
-      // underlying definition
-      Set<IDefinition> definitions = items.stream()
-          .filter(item -> filterNonDefinitionItem(item, metapath))
-          .map(item -> (IDefinitionNodeItem<?, ?>) item)
-          .map(IDefinitionNodeItem::getDefinition)
-          // ensure the definition only gets processed if the module being processed is
-          // the containing module
-          .filter(definition -> definition.getContainingModule().equals(module))
-          .collect(Collectors.toUnmodifiableSet());
-
-      // apply the constraints
-      definitions.forEach(definition -> {
-        definition.accept(visitor, targeted);
-      });
-    }
+    set.applyConstraintsForModule(moduleItem, dynamicContext, visitor);
   }
 
   private static boolean filterNonDefinitionItem(IItem item, @NonNull IMetapathExpression metapath) {

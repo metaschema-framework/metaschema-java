@@ -14,7 +14,6 @@ import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyTargetedConstraints;
-import gov.nist.secauto.metaschema.core.model.constraint.DefaultConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.DefaultScopedContraints;
 import gov.nist.secauto.metaschema.core.model.constraint.FieldTargetedConstraints;
 import gov.nist.secauto.metaschema.core.model.constraint.FlagTargetedConstraints;
@@ -23,6 +22,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.IScopedContraints;
 import gov.nist.secauto.metaschema.core.model.constraint.ITargetedConstraints;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
+import gov.nist.secauto.metaschema.core.model.constraint.ScopedConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.model.xml.impl.ConstraintXmlSupport;
 import gov.nist.secauto.metaschema.core.model.xml.impl.XmlObjectParser;
@@ -121,7 +121,7 @@ public class XmlConstraintLoader
     }
 
     // now create this constraint set
-    return CollectionUtil.singletonList(new DefaultConstraintSet(
+    return CollectionUtil.singletonList(new ScopedConstraintSet(
         ISource.externalSource(resource),
         parseScopedConstraints(xmlObject, resource),
         importedConstraints));
@@ -216,9 +216,9 @@ public class XmlConstraintLoader
 
     state.getRight().add(new AssemblyTargetedConstraints(
         source,
-        IMetapathExpression.lazyCompile(
+        () -> CollectionUtil.singletonList(IMetapathExpression.lazyCompile(
             ObjectUtils.requireNonNull(assembly.getTarget()),
-            source.getStaticContext()),
+            source.getStaticContext())),
         constraints));
   }
 
@@ -233,9 +233,9 @@ public class XmlConstraintLoader
 
     state.getRight().add(new FieldTargetedConstraints(
         source,
-        IMetapathExpression.lazyCompile(
+        () -> CollectionUtil.singletonList(IMetapathExpression.lazyCompile(
             ObjectUtils.requireNonNull(field.getTarget()),
-            source.getStaticContext()),
+            source.getStaticContext())),
         constraints));
   }
 
@@ -250,9 +250,9 @@ public class XmlConstraintLoader
 
     state.getRight().add(new FlagTargetedConstraints(
         source,
-        IMetapathExpression.lazyCompile(
+        () -> CollectionUtil.singletonList(IMetapathExpression.lazyCompile(
             ObjectUtils.requireNonNull(flag.getTarget()),
-            source.getStaticContext()),
+            source.getStaticContext())),
         constraints));
   }
 }
