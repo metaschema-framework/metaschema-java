@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../../../../../core/metaschema/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+	<schema-name>Test Metaschema for use with external constraints.</schema-name>
+	<schema-version>1.0.0</schema-version>
+	<short-name>meta-constraints</short-name>
+	<namespace>http://csrc.nist.gov/ns/test/metaschema/meta-constraints</namespace>
+	<json-base-uri>http://csrc.nist.gov/ns/test/metaschema/meta-constraints</json-base-uri>
+	<define-assembly name="level1">
+		<root-name>level1</root-name>
+        <define-flag name="value" as-type="string"/>
+		<model>
+            <assembly ref="level2">
+            	<use-name>level2a</use-name>
+			</assembly>
+            <assembly ref="level2">
+            	<use-name>level2b</use-name>
+			</assembly>
+		</model>
+	</define-assembly>
+	<define-assembly name="level2">
+        <define-flag name="value" as-type="string"/>
+		<model>
+            <assembly ref="level3"/>
+		</model>
+	</define-assembly>
+	<define-assembly name="level3">
+        <define-flag name="value" as-type="string"/>
+	</define-assembly>
+</METASCHEMA>

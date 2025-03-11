@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../../../../../../metaschema-cli/target/generated-resources/metaschema/schema/json/metaschema-model_schema.json
+metaschema-meta-constraints:
+  contexts:
+  - metapaths:
+    - target: "/level1"
+    constraints:
+      lets:
+      - var: level
+        expression: 'level1'
+      rules:
+      - object-type: expect
+        id: level1-expect
+        target: .
+        test: exists(@value)  
+    contexts:
+    - metapaths:
+      - target: "(level2a|level2b)"
+      constraints:
+        lets:
+        - var: level
+          expression: 'level2'
+        rules:
+        - object-type: expect
+          id: level2-expect
+          target: .
+          test: exists(@value)  
+    - metapaths:
+      - target: ".//level3"
+      constraints:
+        lets:
+        - var: level
+          expression: 'level3'
+        rules:
+        - object-type: expect
+          id: level3-expect
+          target: .
+          test: exists(@value)

@@ -11,6 +11,9 @@ import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -28,16 +31,17 @@ public class AssemblyTargetedConstraints
    *
    * @param source
    *          information about the resource the constraints were sources from
-   * @param target
-   *          the Metapath expression that can be used to find matching targets
+   * @param targets
+   *          a supplier to get the Metapath expressions that can be used to find
+   *          matching targets
    * @param constraints
    *          the constraints to apply to matching targets
    */
   public AssemblyTargetedConstraints(
       @NonNull ISource source,
-      @NonNull IMetapathExpression target,
+      @NonNull Supplier<List<IMetapathExpression>> targets,
       @NonNull IModelConstrained constraints) {
-    super(source, target, constraints);
+    super(source, targets, constraints);
   }
 
   @Override

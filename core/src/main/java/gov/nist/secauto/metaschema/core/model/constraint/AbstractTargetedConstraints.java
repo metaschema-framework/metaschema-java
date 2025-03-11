@@ -11,8 +11,11 @@ import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.function.Supplier;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -28,7 +31,7 @@ public abstract class AbstractTargetedConstraints<T extends IValueConstrained>
   @NonNull
   private final ISource source;
   @NonNull
-  private final IMetapathExpression target;
+  private final Supplier<List<IMetapathExpression>> targets;
   @NonNull
   private final T constraints;
 
@@ -37,17 +40,18 @@ public abstract class AbstractTargetedConstraints<T extends IValueConstrained>
    *
    * @param source
    *          information about the resource the constraints were sources from
-   * @param target
-   *          the Metapath expression that can be used to find matching targets
+   * @param targets
+   *          a supplier to get the Metapath expressions that can be used to find
+   *          matching targets
    * @param constraints
    *          the constraints to apply to matching targets
    */
   protected AbstractTargetedConstraints(
       @NonNull ISource source,
-      @NonNull IMetapathExpression target,
+      @NonNull Supplier<List<IMetapathExpression>> targets,
       @NonNull T constraints) {
     this.source = source;
-    this.target = target;
+    this.targets = targets;
     this.constraints = constraints;
   }
 
@@ -57,8 +61,8 @@ public abstract class AbstractTargetedConstraints<T extends IValueConstrained>
   }
 
   @Override
-  public IMetapathExpression getTarget() {
-    return target;
+  public List<IMetapathExpression> getTargets() {
+    return ObjectUtils.notNull(targets.get());
   }
 
   @Override
@@ -102,11 +106,11 @@ public abstract class AbstractTargetedConstraints<T extends IValueConstrained>
     throw new ConstraintInitializationException(
         String.format(
             "The %s named '%s' from metaschema '%s' is incorrectly targeted by a set of" +
-                " constraints with the target '%s'. Ensure the target expression is correct in '%s'.",
+                " constraints with the target(s) '%s'. Ensure the target expression is correct in '%s'.",
             definition.getModelType().name().toLowerCase(Locale.ROOT),
             definition.getEffectiveName(),
             definition.getContainingModule().getQName().toString(),
-            getTarget(),
+            getTargets(),
             getSource().getLocationHint()));
   }
 }

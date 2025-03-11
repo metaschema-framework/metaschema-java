@@ -5,7 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
-import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
+import gov.nist.secauto.metaschema.core.model.IModelElementVisitor;
 import gov.nist.secauto.metaschema.core.model.ISource;
 
 import java.util.Collection;
@@ -22,20 +24,26 @@ public interface IConstraintSet {
   ISource getSource();
 
   /**
-   * Get the constraints in the constraint set that apply to the provided module.
-   *
-   * @param module
-   *          a Metaschema module
-   * @return an iterator over the constraints that target the module
-   */
-  @NonNull
-  Iterable<ITargetedConstraints> getTargetedConstraintsForModule(@NonNull IModule module);
-
-  /**
    * Get constraint sets imported by this constraint set.
    *
    * @return the imported constraint sets
    */
   @NonNull
-  Collection<IConstraintSet> getImportedConstraintSets();
+  Collection<? extends IConstraintSet> getImportedConstraintSets();
+
+  /**
+   * Apply the constraints associated with this constraint set to the provided
+   * module, if applicable.
+   * 
+   * @param moduleItem
+   *          the module node item to apply applicable constraints to
+   * @param dynamicContext
+   *          used to resolve Metapath targeting expressions
+   * @param visitor
+   *          the visitor used to apply constraints to target definitions
+   */
+  void applyConstraintsForModule(
+      @NonNull IModuleNodeItem moduleItem,
+      @NonNull DynamicContext dynamicContext,
+      @NonNull IModelElementVisitor<ITargetedConstraints, Void> visitor);
 }

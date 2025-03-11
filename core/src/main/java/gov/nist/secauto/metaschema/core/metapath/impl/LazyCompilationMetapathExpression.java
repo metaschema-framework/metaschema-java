@@ -65,4 +65,9 @@ public class LazyCompilationMetapathExpression implements IMetapathExpression {
   public <T extends IItem> ISequence<T> evaluate(IItem focus, DynamicContext dynamicContext) {
     return getCompiledMetapath().evaluate(focus, dynamicContext);
   }
+
+  @Override
+  public String toString() {
+    return getPath();
+  }
 }

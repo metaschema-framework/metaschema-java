@@ -118,7 +118,7 @@ public class ConstraintComposingVisitor
                 " invalid constraint target. Constraints can only apply to an assembly, field, or flag definition.",
             element.getModelType(),
             element instanceof INamedModelElement ? " '" + ((INamedModelElement) element).getQName() + "'" : "",
-            context.getTarget(),
+            context.getTargets(),
             context.getSource().getLocationHint()));
 
   }
