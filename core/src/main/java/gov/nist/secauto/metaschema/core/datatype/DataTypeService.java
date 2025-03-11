@@ -193,6 +193,8 @@ public final class DataTypeService {
   /**
    * Lookup a specific {@link IAtomicOrUnionType} by its item class.
    *
+   * @param <T>
+   *          the Java type of the atomic item handled by this class
    * @param clazz
    *          the adapter class to get the instance for
    * @return the data type or {@code null} if the data type is unknown to the type

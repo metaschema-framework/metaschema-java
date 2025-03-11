@@ -51,6 +51,7 @@ public class ChoiceGroupInstanceJsonProperty
       ObjectNode obj,
       IJsonGenerationState state) {
     getCollectionBuilder().build(obj, state);
+    assert !obj.isEmpty();
   }
 
   @Override

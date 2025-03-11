@@ -56,6 +56,7 @@ public class NamedModelInstanceJsonProperty
     getCollectionBuilder().build(
         obj,
         state);
+    assert !obj.isEmpty();
   }
 
   @Override
