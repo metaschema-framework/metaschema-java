@@ -54,8 +54,10 @@ public final class FnHoursFromDateTime {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDateTimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    // Per spec, check if arg is null and if so return empty sequence
-    return arg != null ? ISequence.of(fnHoursFromDateTime(arg)) : ISequence.empty();
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        : ISequence.of(fnHoursFromDateTime(arg));
   }
 
   /**
@@ -67,7 +69,7 @@ public final class FnHoursFromDateTime {
    * @return the hour component from the date-time as an integer item
    */
   @NonNull
-  public static IIntegerItem fnHoursFromDateTime(IDateTimeItem arg) {
+  public static IIntegerItem fnHoursFromDateTime(@NonNull IDateTimeItem arg) {
     return IIntegerItem.valueOf(arg.getHour());
   }
 }

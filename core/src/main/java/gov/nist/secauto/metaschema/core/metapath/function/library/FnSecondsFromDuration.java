@@ -18,7 +18,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDurationItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
 
@@ -59,11 +58,14 @@ public final class FnSecondsFromDuration {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDurationItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    if (arg instanceof IYearMonthDurationItem) {
-      return ISequence.of(IIntegerItem.valueOf(0));
-    }
-    // Per spec, check if arg is null and if so return empty sequence
-    return arg != null ? ISequence.of(fnSecondsFromDuration((IDayTimeDurationItem) arg)) : ISequence.empty();
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        : arg instanceof IYearMonthDurationItem
+            // year-month durations do not have hour granularity
+            ? ISequence.of(IIntegerItem.ZERO)
+            // get the hours
+            : ISequence.of(fnSecondsFromDuration((IDayTimeDurationItem) arg));
   }
 
   /**
@@ -75,9 +77,12 @@ public final class FnSecondsFromDuration {
    * @return the second component from the duration as a decimal item
    */
   @NonNull
-  public static IDecimalItem fnSecondsFromDuration(IDayTimeDurationItem arg) {
+  public static IDecimalItem fnSecondsFromDuration(@NonNull IDayTimeDurationItem arg) {
     Duration duration = arg.asDuration();
-    return IDecimalItem.valueOf(BigDecimal.valueOf(duration.getSeconds() % 60).add(BigDecimal
-        .valueOf(duration.getNano()).divide(BigDecimal.valueOf(1_000_000_000.0), FunctionUtils.MATH_CONTEXT)));
+    return IDecimalItem.valueOf(duration.getSeconds())
+        // remove the non-second quantity
+        .mod(IIntegerItem.valueOf(60))
+        // add the factional seconds
+        .add(IDecimalItem.valueOf(duration.getNano()).divide(IDecimalItem.valueOf(1_000_000_000)));
   }
 }

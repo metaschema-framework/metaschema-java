@@ -76,9 +76,11 @@ public final class FnAdjustDateToTimezone {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    // get the implicit timezone
-    IDayTimeDurationItem timezone = dynamicContext.getImplicitTimeZoneAsDayTimeDuration();
-    return arg == null ? ISequence.empty() : ISequence.of(arg.replaceTimezone(timezone));
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        // use the implicit timezone
+        : ISequence.of(arg.replaceTimezone(dynamicContext.getImplicitTimeZoneAsDayTimeDuration()));
   }
 
   @SuppressWarnings("unused")
@@ -90,6 +92,10 @@ public final class FnAdjustDateToTimezone {
       IItem focus) {
     IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     IDayTimeDurationItem timezone = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));
-    return arg == null ? ISequence.empty() : ISequence.of(arg.replaceTimezone(timezone));
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        // use the provided timezone
+        : ISequence.of(arg.replaceTimezone(timezone));
   }
 }

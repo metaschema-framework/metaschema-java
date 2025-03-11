@@ -6,12 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,10 +35,10 @@ class FnYearFromDateTimeTest
             "fn:year-from-dateTime(meta:date-time('1999-12-31T19:20:00'))"),
         Arguments.of(
             integer(2000),
-            "fn:year-from-dateTime(meta:date-time('1999-12-31T24:00:00'))"));
-    // Arguments.of(
-    // integer(-2),
-    // "fn:year-from-dateTime(meta:date-time('-0002-06-06T00:00:00'))"));
+            "fn:year-from-dateTime(meta:date-time('1999-12-31T24:00:00'))"),
+        Arguments.of(
+            integer(-2),
+            "fn:year-from-dateTime(meta:date-time('-0002-06-06T00:00:00'))"));
   }
 
   @ParameterizedTest

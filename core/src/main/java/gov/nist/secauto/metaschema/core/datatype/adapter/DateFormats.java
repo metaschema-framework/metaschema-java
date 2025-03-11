@@ -24,21 +24,21 @@ final class DateFormats {
 
   static {
     DATE_WITH_TZ = new DateTimeFormatterBuilder()
-        .appendPattern("yyyy-MM-dd")
+        .appendPattern("uuuu-MM-dd")
         .appendPattern("XXX")
         .toFormatter();
     DATE_WITH_OPTIONAL_TZ = new DateTimeFormatterBuilder()
-        .appendPattern("yyyy-MM-dd")
+        .appendPattern("uuuu-MM-dd")
         .toFormatter();
     DATE_TIME_WITH_TZ = new DateTimeFormatterBuilder()
-        .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
+        .appendPattern("uuuu-MM-dd'T'HH:mm:ss")
         .optionalStart()
         .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
         .optionalEnd()
         .appendPattern("XXX")
         .toFormatter();
     DATE_TIME_WITH_OPTIONAL_TZ = new DateTimeFormatterBuilder()
-        .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
+        .appendPattern("uuuu-MM-dd'T'HH:mm:ss")
         .optionalStart()
         .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
         .optionalEnd()

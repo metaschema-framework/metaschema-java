@@ -54,8 +54,10 @@ public final class FnDayFromDate {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    // Per spec, check if arg is null and if so return empty sequence
-    return arg != null ? ISequence.of(fnDayFromDate(arg)) : ISequence.empty();
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        : ISequence.of(fnDayFromDate(arg));
   }
 
   /**
@@ -67,7 +69,7 @@ public final class FnDayFromDate {
    * @return the day component from the date as an integer item
    */
   @NonNull
-  public static IIntegerItem fnDayFromDate(IDateItem arg) {
+  public static IIntegerItem fnDayFromDate(@NonNull IDateItem arg) {
     return IIntegerItem.valueOf(arg.getDay());
   }
 }
