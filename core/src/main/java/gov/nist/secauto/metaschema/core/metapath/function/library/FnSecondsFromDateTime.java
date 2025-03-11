@@ -55,8 +55,10 @@ public final class FnSecondsFromDateTime {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDateTimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    // Per spec, check if arg is null and if so return empty sequence
-    return arg != null ? ISequence.of(fnSecondsFromDateTime(arg)) : ISequence.empty();
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        : ISequence.of(fnSecondsFromDateTime(arg));
   }
 
   /**
@@ -68,7 +70,7 @@ public final class FnSecondsFromDateTime {
    * @return the second component from the date as a decimal item
    */
   @NonNull
-  public static IDecimalItem fnSecondsFromDateTime(IDateTimeItem arg) {
+  public static IDecimalItem fnSecondsFromDateTime(@NonNull IDateTimeItem arg) {
     return IDecimalItem.valueOf(BigDecimal.valueOf(arg.getSecond()).add(
         BigDecimal.valueOf(arg.getNano()).divide(BigDecimal.valueOf(1_000_000_000.0), FunctionUtils.MATH_CONTEXT)));
   }

@@ -56,8 +56,8 @@ public final class FnTimezoneFromDate {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDateItem arg = FunctionUtils.asTypeOrNull(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
-
     return arg == null
+        // Per spec, return empty sequence if the arg is null
         ? ISequence.empty()
         : ISequence.of(fnTimezoneFromDate(arg));
   }

@@ -16,7 +16,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.time.Duration;
 import java.util.List;
 
@@ -57,8 +56,10 @@ public final class FnSecondsFromTime {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     ITimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    // Per spec, check if arg is null and if so return empty sequence
-    return arg != null ? ISequence.of(fnSecondsFromTime(arg)) : ISequence.empty();
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        : ISequence.of(fnSecondsFromTime(arg));
   }
 
   /**
@@ -70,7 +71,7 @@ public final class FnSecondsFromTime {
    * @return the second component from the date as a decimal item
    */
   @NonNull
-  public static IDecimalItem fnSecondsFromTime(ITimeItem arg) {
+  public static IDecimalItem fnSecondsFromTime(@NonNull ITimeItem arg) {
     Duration duration = Duration.ofSeconds(arg.getSecond(), arg.getNano());
     return IDecimalItem.valueOf(BigDecimal.valueOf(duration.getSeconds()).add(BigDecimal.valueOf(duration.getNano())
         .divide(BigDecimal.valueOf(1_000_000_000.0), FunctionUtils.MATH_CONTEXT)));

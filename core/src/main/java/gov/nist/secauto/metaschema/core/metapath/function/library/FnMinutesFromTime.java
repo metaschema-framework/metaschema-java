@@ -12,11 +12,9 @@ import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 
-import java.time.Duration;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -56,8 +54,10 @@ public final class FnMinutesFromTime {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     ITimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    // Per spec, check if arg is null and if so return empty sequence
-    return arg != null ? ISequence.of(fnminutesFromTime(arg)) : ISequence.empty();
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        : ISequence.of(fnminutesFromTime(arg));
   }
 
   /**
@@ -69,7 +69,7 @@ public final class FnMinutesFromTime {
    * @return the minutes component from the time as an integer item
    */
   @NonNull
-  public static IIntegerItem fnminutesFromTime(ITimeItem arg) {
+  public static IIntegerItem fnminutesFromTime(@NonNull ITimeItem arg) {
     return IIntegerItem.valueOf(arg.getMinute());
   }
 }

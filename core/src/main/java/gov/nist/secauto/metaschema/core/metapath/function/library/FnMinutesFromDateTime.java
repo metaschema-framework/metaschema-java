@@ -54,8 +54,10 @@ public final class FnMinutesFromDateTime {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDateTimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    // Per spec, check if arg is null and if so return empty sequence
-    return arg != null ? ISequence.of(fnMinutesFromDateTime(arg)) : ISequence.empty();
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        : ISequence.of(fnMinutesFromDateTime(arg));
   }
 
   /**
@@ -67,7 +69,7 @@ public final class FnMinutesFromDateTime {
    * @return the minutes component from the time as an integer
    */
   @NonNull
-  public static IIntegerItem fnMinutesFromDateTime(IDateTimeItem arg) {
+  public static IIntegerItem fnMinutesFromDateTime(@NonNull IDateTimeItem arg) {
     return IIntegerItem.valueOf(arg.getMinute());
   }
 }

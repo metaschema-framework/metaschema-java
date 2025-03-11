@@ -56,11 +56,14 @@ public final class FnMinutesFromDuration {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDurationItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    if (arg instanceof IYearMonthDurationItem) {
-      return ISequence.of(IIntegerItem.valueOf(0));
-    }
-    // Per spec, check if arg is null and if so return empty sequence
-    return arg != null ? ISequence.of(fnMinutesFromDuration((IDayTimeDurationItem) arg)) : ISequence.empty();
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        : arg instanceof IYearMonthDurationItem
+            // year-month durations do not have minute granularity
+            ? ISequence.of(IIntegerItem.ZERO)
+            // get the hours
+            : ISequence.of(fnMinutesFromDuration((IDayTimeDurationItem) arg));
   }
 
   /**
@@ -72,7 +75,7 @@ public final class FnMinutesFromDuration {
    * @return the minutes component from the date as an integer
    */
   @NonNull
-  public static IIntegerItem fnMinutesFromDuration(IDayTimeDurationItem arg) {
+  public static IIntegerItem fnMinutesFromDuration(@NonNull IDayTimeDurationItem arg) {
     long durationSeconds = arg.asDuration().toSeconds();
     return IIntegerItem.valueOf((durationSeconds % 3_600) / 60);
   }

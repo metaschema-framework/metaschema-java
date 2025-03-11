@@ -12,11 +12,9 @@ import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITimeItem;
 
-import java.time.Duration;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -56,8 +54,10 @@ public final class FnHoursFromTime {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     ITimeItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    // Per spec, check if arg is null and if so return empty sequence
-    return arg != null ? ISequence.of(fnHoursFromTime(arg)) : ISequence.empty();
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        : ISequence.of(fnHoursFromTime(arg));
   }
 
   /**
@@ -69,7 +69,7 @@ public final class FnHoursFromTime {
    * @return the hour component from the time as an integer item
    */
   @NonNull
-  public static IIntegerItem fnHoursFromTime(ITimeItem arg) {
+  public static IIntegerItem fnHoursFromTime(@NonNull ITimeItem arg) {
     return IIntegerItem.valueOf(arg.getHour());
   }
 }

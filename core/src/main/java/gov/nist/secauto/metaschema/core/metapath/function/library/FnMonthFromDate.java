@@ -54,8 +54,10 @@ public final class FnMonthFromDate {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
     IDateItem arg = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
-    // Per spec, check if arg is null and if so return empty sequence
-    return arg != null ? ISequence.of(fnMonthFromDate(arg)) : ISequence.empty();
+    return arg == null
+        // Per spec, return empty sequence if the arg is null
+        ? ISequence.empty()
+        : ISequence.of(fnMonthFromDate(arg));
   }
 
   /**
@@ -67,7 +69,7 @@ public final class FnMonthFromDate {
    * @return the month component from the date as an integer item
    */
   @NonNull
-  public static IIntegerItem fnMonthFromDate(IDateItem arg) {
+  public static IIntegerItem fnMonthFromDate(@NonNull IDateItem arg) {
     return IIntegerItem.valueOf(arg.getMonth());
   }
 }
