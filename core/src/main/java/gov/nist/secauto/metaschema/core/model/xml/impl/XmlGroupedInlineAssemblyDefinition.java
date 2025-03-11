@@ -53,6 +53,21 @@ public class XmlGroupedInlineAssemblyDefinition
         IChoiceGroupInstance>
     implements IAssemblyInstanceGrouped {
 
+  @NonNull
+  private final GroupedInlineAssemblyDefinitionType xmlObject;
+  @NonNull
+  private final Lazy<IContainerFlagSupport<IFlagInstance>> flagContainer;
+  @NonNull
+  private final Lazy<IContainerModelAssemblySupport<
+      IModelInstanceAbsolute,
+      INamedModelInstanceAbsolute,
+      IFieldInstanceAbsolute,
+      IAssemblyInstanceAbsolute,
+      IChoiceInstance,
+      IChoiceGroupInstance>> modelContainer;
+  @NonNull
+  private final Lazy<IModelConstrained> constraints;
+
   /**
    * A visitor callback.
    *
@@ -74,21 +89,6 @@ public class XmlGroupedInlineAssemblyDefinition
   // ----------------------------------------
   // - Start XmlBeans driven code - CPD-OFF -
   // ----------------------------------------
-
-  @NonNull
-  private final GroupedInlineAssemblyDefinitionType xmlObject;
-  @NonNull
-  private final Lazy<IContainerFlagSupport<IFlagInstance>> flagContainer;
-  @NonNull
-  private final Lazy<IContainerModelAssemblySupport<
-      IModelInstanceAbsolute,
-      INamedModelInstanceAbsolute,
-      IFieldInstanceAbsolute,
-      IAssemblyInstanceAbsolute,
-      IChoiceInstance,
-      IChoiceGroupInstance>> modelContainer;
-  @NonNull
-  private final Lazy<IModelConstrained> constraints;
 
   /**
    * Constructs a new Metaschema field definition from an XML representation bound

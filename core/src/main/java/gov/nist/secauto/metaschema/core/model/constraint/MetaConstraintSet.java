@@ -90,8 +90,6 @@ public class MetaConstraintSet
   }
 
   public static class Context {
-    @Nullable
-    private final Context parent;
     @NonNull
     private final List<IMetapathExpression> metapaths;
     @NonNull
@@ -106,7 +104,6 @@ public class MetaConstraintSet
         @NonNull ISource source,
         @NonNull List<IMetapathExpression> metapaths,
         @NonNull IModelConstrained constraints) {
-      this.parent = parent;
       this.metapaths = metapaths;
       this.contextualizedMetapaths = ObjectUtils.notNull(Lazy.lazy(() -> {
         return concatMetapaths(parent, ObjectUtils.notNull(metapaths.stream()), source)
@@ -116,7 +113,7 @@ public class MetaConstraintSet
         return getMetapaths().stream()
             .map(metapath -> new ModelTargetedConstraints(
                 source,
-                () -> getContextualizedMetapaths(),
+                this::getContextualizedMetapaths,
                 constraints))
             .collect(Collectors.toUnmodifiableList());
       }));

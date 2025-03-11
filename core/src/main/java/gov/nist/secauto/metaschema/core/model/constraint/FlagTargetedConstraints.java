@@ -19,8 +19,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * A set of constraints targeting a {@link IFlagDefinition} based on a target
  * Metapath expression.
- *
- * @see #getTarget()
  */
 public class FlagTargetedConstraints
     extends AbstractTargetedConstraints<IValueConstrained> {

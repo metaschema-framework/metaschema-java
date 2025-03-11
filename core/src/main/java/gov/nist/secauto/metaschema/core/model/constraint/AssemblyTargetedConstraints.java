@@ -19,8 +19,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * A set of constraints targeting a {@link IAssemblyDefinition} based on a
  * target Metapath expression.
- *
- * @see #getTarget()
  */
 public class AssemblyTargetedConstraints
     extends ModelTargetedConstraints
