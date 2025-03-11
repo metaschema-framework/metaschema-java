@@ -6,10 +6,7 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IModule;
@@ -17,9 +14,6 @@ import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.ConstraintComposingVisitor;
 import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +29,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @see ModuleLoader#ModuleLoader(List)
  */
 public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IModulePostProcessor {
-  private static final Logger LOGGER = LogManager.getLogger(ExternalConstraintsModulePostProcessor.class);
   @NonNull
   private final List<IConstraintSet> registeredConstraintSets;
 
@@ -85,16 +78,5 @@ public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IMo
       @NonNull ConstraintComposingVisitor visitor,
       @NonNull DynamicContext dynamicContext) {
     set.applyConstraintsForModule(moduleItem, dynamicContext, visitor);
-  }
-
-  private static boolean filterNonDefinitionItem(IItem item, @NonNull IMetapathExpression metapath) {
-    boolean retval = item instanceof IDefinitionNodeItem;
-    if (!retval) {
-      LOGGER.atError().log(
-          "Found non-definition item '{}' while applying external constraints using target expression '{}'.",
-          item.toString(),
-          metapath.getPath());
-    }
-    return retval;
   }
 }

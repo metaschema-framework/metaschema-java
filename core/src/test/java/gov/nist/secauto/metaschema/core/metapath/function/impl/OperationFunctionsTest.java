@@ -690,7 +690,7 @@ class OperationFunctionsTest {
       @MethodSource("provideValuesDateTimeCompare")
       void testOpDateTimeEqual(
           @NonNull IBooleanItem expectedEqual,
-          @NonNull IBooleanItem expectedLessThan,
+          @SuppressWarnings("unused") @NonNull IBooleanItem expectedLessThan,
           @NonNull IDateTimeItem arg1,
           @NonNull IDateTimeItem arg2) {
         DynamicContext dynamicContext = new DynamicContext();
@@ -702,7 +702,7 @@ class OperationFunctionsTest {
       @DisplayName("op:dateTime-less-than and op:dateTime-greater-than")
       @MethodSource("provideValuesDateTimeCompare")
       void testOpDateTimeLessGreaterThan(
-          @NonNull IBooleanItem expectedEqual,
+          @SuppressWarnings("unused") @NonNull IBooleanItem expectedEqual,
           @NonNull IBooleanItem expectedLessThan,
           @NonNull IDateTimeItem item1,
           @NonNull IDateTimeItem item2) {
@@ -736,7 +736,7 @@ class OperationFunctionsTest {
       @MethodSource("provideValuesDateCompare")
       void testOpDateEqual(
           @NonNull IBooleanItem expectedEqual,
-          @NonNull IBooleanItem expectedLessThan,
+          @SuppressWarnings("unused") @NonNull IBooleanItem expectedLessThan,
           @NonNull IDateItem arg1,
           @NonNull IDateItem arg2) {
         DynamicContext dynamicContext = new DynamicContext();
@@ -748,7 +748,7 @@ class OperationFunctionsTest {
       @DisplayName("op:date-less-than and op:date-greater-than")
       @MethodSource("provideValuesDateCompare")
       void testOpDateLessGreaterThan(
-          @NonNull IBooleanItem expectedEqual,
+          @SuppressWarnings("unused") @NonNull IBooleanItem expectedEqual,
           @NonNull IBooleanItem expectedLessThan,
           @NonNull IDateItem item1,
           @NonNull IDateItem item2) {
@@ -802,7 +802,7 @@ class OperationFunctionsTest {
       @MethodSource("provideValuesTimeCompare")
       void testOpTimeEqual(
           @NonNull IBooleanItem expectedEqual,
-          @NonNull IBooleanItem expectedLessThan,
+          @SuppressWarnings("unused") @NonNull IBooleanItem expectedLessThan,
           @NonNull ITimeItem arg1,
           @NonNull ITimeItem arg2) {
         DynamicContext dynamicContext = new DynamicContext();
@@ -814,7 +814,7 @@ class OperationFunctionsTest {
       @DisplayName("op:time-less-than and op:time-greater-than")
       @MethodSource("provideValuesTimeCompare")
       void testOpTimeLessGreaterThan(
-          @NonNull IBooleanItem expectedEqual,
+          @SuppressWarnings("unused") @NonNull IBooleanItem expectedEqual,
           @NonNull IBooleanItem expectedLessThan,
           @NonNull ITimeItem item1,
           @NonNull ITimeItem item2) {
@@ -919,7 +919,7 @@ class OperationFunctionsTest {
       @ParameterizedTest
       @DisplayName("op:subtract-times")
       @MethodSource("provideValuesSubtractTimes")
-      void testOpSubtractDates(
+      void testOpSubtractTimes(
           @NonNull IDayTimeDurationItem expected,
           @NonNull IDayTimeDurationItem offset,
           @NonNull ITimeItem item1,

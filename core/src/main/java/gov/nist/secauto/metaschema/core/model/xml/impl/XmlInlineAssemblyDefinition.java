@@ -54,6 +54,21 @@ class XmlInlineAssemblyDefinition
         IChoiceGroupInstance>
     implements IAssemblyInstanceAbsolute {
 
+  @NonNull
+  private final InlineAssemblyDefinitionType xmlObject;
+  @NonNull
+  private final Lazy<IContainerFlagSupport<IFlagInstance>> flagContainer;
+  @NonNull
+  private final Lazy<IContainerModelAssemblySupport<
+      IModelInstanceAbsolute,
+      INamedModelInstanceAbsolute,
+      IFieldInstanceAbsolute,
+      IAssemblyInstanceAbsolute,
+      IChoiceInstance,
+      IChoiceGroupInstance>> modelContainer;
+  @NonNull
+  private final Lazy<IModelConstrained> constraints;
+
   /**
    * A visitor callback.
    *
@@ -75,21 +90,6 @@ class XmlInlineAssemblyDefinition
   // ----------------------------------------
   // - Start XmlBeans driven code - CPD-OFF -
   // ----------------------------------------
-
-  @NonNull
-  private final InlineAssemblyDefinitionType xmlObject;
-  @NonNull
-  private final Lazy<IContainerFlagSupport<IFlagInstance>> flagContainer;
-  @NonNull
-  private final Lazy<IContainerModelAssemblySupport<
-      IModelInstanceAbsolute,
-      INamedModelInstanceAbsolute,
-      IFieldInstanceAbsolute,
-      IAssemblyInstanceAbsolute,
-      IChoiceInstance,
-      IChoiceGroupInstance>> modelContainer;
-  @NonNull
-  private final Lazy<IModelConstrained> constraints;
 
   /**
    * Constructs a new Metaschema assembly definition from an XML representation
