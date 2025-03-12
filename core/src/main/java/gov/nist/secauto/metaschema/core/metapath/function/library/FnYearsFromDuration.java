@@ -23,11 +23,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Implements the XPath 3.1 <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-duration">fn:minutes-from-duration</a>.
+ * "https://www.w3.org/TR/xpath-functions-31/#func-years-from-duration">fn:years-from-duration</a>.
  * function.
  */
-public final class FnMinutesFromDuration {
-  private static final String NAME = "minutes-from-duration";
+public final class FnYearsFromDuration {
+  private static final String NAME = "years-from-duration";
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()
       .name(NAME)
@@ -42,10 +42,10 @@ public final class FnMinutesFromDuration {
           .build())
       .returnType(IIntegerItem.type())
       .returnZeroOrOne()
-      .functionHandler(FnMinutesFromDuration::execute)
+      .functionHandler(FnYearsFromDuration::execute)
       .build();
 
-  private FnMinutesFromDuration() {
+  private FnYearsFromDuration() {
     // disable construction
   }
 
@@ -59,24 +59,24 @@ public final class FnMinutesFromDuration {
     return arg == null
         // Per spec, return empty sequence if the arg is null
         ? ISequence.empty()
-        : arg instanceof IYearMonthDurationItem
-            // year-month durations do not have minute granularity
+        : arg instanceof IDayTimeDurationItem
+            // day-time durations do not have year granularity
             ? ISequence.of(IIntegerItem.ZERO)
             // get the hours
-            : ISequence.of(fnMinutesFromDuration((IDayTimeDurationItem) arg));
+            : ISequence.of(fnYearsFromDuration((IYearMonthDurationItem) arg));
   }
 
   /**
    * Implements <a href=
-   * "https://www.w3.org/TR/xpath-functions-31/#func-minutes-from-duration">fn:minutes-from-duration</a>.
+   * "https://www.w3.org/TR/xpath-functions-31/#func-years-from-duration">fn:years-from-duration</a>.
    *
    * @param arg
-   *          the meta:duration item from which to extract the minutes component
-   * @return the minutes component from the date as an integer
+   *          the meta:duration item from which to extract the years component
+   * @return the years component from the duration as an integer item
    */
   @NonNull
-  public static IIntegerItem fnMinutesFromDuration(@NonNull IDayTimeDurationItem arg) {
-    long seconds = arg.asSeconds();
-    return IIntegerItem.valueOf(seconds % 3_600 / 60);
+  public static IIntegerItem fnYearsFromDuration(@NonNull IYearMonthDurationItem arg) {
+    long months = arg.asTotalMonths();
+    return IIntegerItem.valueOf(months / 12);
   }
 }
