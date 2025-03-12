@@ -31,8 +31,8 @@ class FnYearFromDateTest
             integer(2000),
             "fn:year-from-date(meta:date('2000-01-01+05:00'))"),
         Arguments.of(
-            integer(2000),
-            "fn:year-from-dateTime(meta:date-time('-0002-06-01'))"));
+            integer(-2),
+            "fn:year-from-date(meta:date('-0002-06-01'))"));
   }
 
   @ParameterizedTest

@@ -19,6 +19,8 @@ class DateTimeWithTZAdapterTest {
 
   @ParameterizedTest
   @ValueSource(strings = {
+      "-0002-01-20T14:47:48.623-05:00",
+      "-0002-01-20T14:47:48.623Z",
       "2020-12-20T14:47:48.623-05:00",
       "2019-09-28T23:20:50.52Z",
       "2019-09-28T23:20:50.0Z",

@@ -70,23 +70,10 @@ class FnMatchesTest
   @ParameterizedTest
   @MethodSource("provideValues")
   void test(@NonNull IBooleanItem expected, @NonNull String metapath) {
+    DynamicContext dynamicContext = newDynamicContext();
+    dynamicContext.bindVariableValue(IEnhancedQName.of("poem"), ISequence.of(IStringItem.valueOf(POEM)));
     assertEquals(expected, IMetapathExpression.compile(metapath)
-        .evaluateAs(null, IMetapathExpression.ResultType.ITEM,
-            newDynamicContext()));
-  }
-
-  /**
-   * Construct a new dynamic context for testing.
-   *
-   * @return the dynamic context
-   */
-  @NonNull
-  protected static DynamicContext newDynamicContext() {
-    DynamicContext retval = ExpressionTestBase.newDynamicContext();
-
-    retval.bindVariableValue(IEnhancedQName.of("poem"), ISequence.of(IStringItem.valueOf(POEM)));
-
-    return retval;
+        .evaluateAs(null, IMetapathExpression.ResultType.ITEM, dynamicContext));
   }
 
   @Test

@@ -40,6 +40,10 @@ class DateTimeAdapterTest {
     return Stream.of(
         // Cases without timezone (ambiguous)
         Arguments.of(
+            "-0002-01-01T00:00:00",
+            true,
+            ZonedDateTime.of(-2, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)),
+        Arguments.of(
             "2018-01-01T00:00:00",
             true,
             ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)),
