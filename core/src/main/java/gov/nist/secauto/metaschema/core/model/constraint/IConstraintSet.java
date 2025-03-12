@@ -34,7 +34,7 @@ public interface IConstraintSet {
   /**
    * Apply the constraints associated with this constraint set to the provided
    * module, if applicable.
-   * 
+   *
    * @param moduleItem
    *          the module node item to apply applicable constraints to
    * @param dynamicContext
