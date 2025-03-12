@@ -47,6 +47,7 @@ public abstract class AbstractJsonProperty<I extends IInstance>
     generateMetadata(contextObj);
 
     generateBody(contextObj, state);
+    assert !contextObj.isEmpty();
 
     String name = getName();
     properties.addProperty(name, contextObj);

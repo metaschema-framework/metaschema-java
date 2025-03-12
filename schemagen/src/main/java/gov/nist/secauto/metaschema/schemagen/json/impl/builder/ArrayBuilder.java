@@ -22,6 +22,7 @@ public class ArrayBuilder
     if (!getTypes().isEmpty()) {
       ObjectNode items = ObjectUtils.notNull(object.putObject("items"));
       buildInternal(items, state);
+      assert !items.isEmpty();
     }
 
     if (getMinOccurrence() > 1) {

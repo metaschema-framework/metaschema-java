@@ -65,5 +65,6 @@ public class FlagInstanceJsonProperty
     IFlagDefinition definition = instance.getDefinition();
     IDataTypeJsonSchema dataTypeSchema = state.getDataTypeSchemaForDefinition(definition);
     dataTypeSchema.generateSchemaOrRef(obj, state);
+    assert !obj.isEmpty();
   }
 }
