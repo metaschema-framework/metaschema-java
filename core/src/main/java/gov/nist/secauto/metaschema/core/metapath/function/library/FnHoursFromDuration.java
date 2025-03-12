@@ -76,7 +76,7 @@ public final class FnHoursFromDuration {
    */
   @NonNull
   public static IIntegerItem fnHoursFromDuration(@NonNull IDayTimeDurationItem arg) {
-    long durationSeconds = arg.asDuration().toSeconds();
-    return IIntegerItem.valueOf((durationSeconds % 86_400) / 3_600);
+    long seconds = arg.asSeconds();
+    return IIntegerItem.valueOf(seconds % 86_400 / 3_600);
   }
 }

@@ -71,6 +71,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-day-from-dateTime
     registerFunction(FnDayFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-days-from-duration
+    registerFunction(FnDaysFromDuration.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-deep-equal
     registerFunction(FnDeepEqual.SIGNATURE_TWO_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-distinct-values
@@ -147,6 +148,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-month-from-dateTime
     registerFunction(FnMonthFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-months-from-duration
+    registerFunction(FnMonthsFromDuration.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-name
     registerFunction(FnName.SIGNATURE_NO_ARG);
     registerFunction(FnName.SIGNATURE_ONE_ARG);
@@ -240,6 +242,7 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-year-from-dateTime
     registerFunction(FnYearFromDateTime.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-years-from-duration
+    registerFunction(FnYearsFromDuration.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-zero-or-one
     registerFunction(FnZeroOrOne.SIGNATURE);
 
