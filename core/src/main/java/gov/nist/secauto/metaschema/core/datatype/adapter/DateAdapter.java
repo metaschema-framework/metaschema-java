@@ -38,14 +38,13 @@ public class DateAdapter
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
           EQNameFactory.instance().newQName(MetapathConstants.NS_METAPATH, "date")));
+  /**
+   * Provides a coarse means to parse the date from the timezone. Java handles
+   * parsing the rest and raising any temporal errors.
+   */
   @NonNull
   private static final Pattern DATE_TIMEZONE = ObjectUtils.notNull(
-      Pattern.compile("^("
-          + "^(?:(?:2000|2400|2800|(?:19|2[0-9](?:0[48]|[2468][048]|[13579][26])))-02-29)"
-          + "|(?:(?:(?:19|2[0-9])[0-9]{2})-02-(?:0[1-9]|1[0-9]|2[0-8]))"
-          + "|(?:(?:(?:19|2[0-9])[0-9]{2})-(?:0[13578]|10|12)-(?:0[1-9]|[12][0-9]|3[01]))"
-          + "|(?:(?:(?:19|2[0-9])[0-9]{2})-(?:0[469]|11)-(?:0[1-9]|[12][0-9]|30))"
-          + ")"
+      Pattern.compile("^(-?[0-9]{4}-[0-9]{2}-[0-9]{2})"
           + "(Z|[+-][0-9]{2}:[0-9]{2})?$"));
 
   DateAdapter() {
