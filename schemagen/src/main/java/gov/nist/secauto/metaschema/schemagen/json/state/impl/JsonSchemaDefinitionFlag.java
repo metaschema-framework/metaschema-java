@@ -47,6 +47,6 @@ public class JsonSchemaDefinitionFlag
   @Override
   public void generateBody(ObjectNode node, IJsonGenerationState state) {
     IDataTypeJsonSchema schema = state.getDataTypeSchemaForDefinition(getDefinition());
-    schema.generateSchemaOrRef(node, state);
+    schema.generateJsonSchemaOrDefinitionRef(node, state);
   }
 }

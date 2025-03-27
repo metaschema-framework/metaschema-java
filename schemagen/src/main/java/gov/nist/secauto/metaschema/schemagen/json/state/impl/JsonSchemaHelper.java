@@ -243,7 +243,7 @@ public final class JsonSchemaHelper {
       @NonNull IJsonGenerationState state) {
     if (field.getNonValueProperties().isEmpty()) {
       // simple case
-      field.getFieldValue().generateSchemaOrRef(node, state);
+      field.getFieldValue().generateJsonSchemaOrDefinitionRef(node, state);
     } else {
       generateComplexFieldBody(field, node, state);
     }
@@ -283,7 +283,7 @@ public final class JsonSchemaHelper {
 
       additionalPropertiesTypeNode = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());
       // the type of the additional properties must be the datatype of the field value
-      field.getFieldValue().generateSchemaOrRef(additionalPropertiesTypeNode, state);
+      field.getFieldValue().generateJsonSchemaOrDefinitionRef(additionalPropertiesTypeNode, state);
 
       ObjectNode additionalPropertiesNode = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());
       ArrayNode allOf = additionalPropertiesNode.putArray("allOf");
@@ -310,7 +310,7 @@ public final class JsonSchemaHelper {
     List<JsonSchemaHelper.Choice> availableChoices = assembly.getChoices();
 
     if (availableChoices.size() == 1) {
-      JsonSchemaHelper.generateProperties(
+      generateProperties(
           availableChoices.iterator().next().getCombinations(),
           node,
           state);
@@ -320,7 +320,7 @@ public final class JsonSchemaHelper {
       availableChoices.forEach(choice -> {
         ObjectNode schemaNode = oneOf.addObject();
 
-        JsonSchemaHelper.generateProperties(
+        generateProperties(
             choice.getCombinations(),
             schemaNode,
             state);
@@ -349,7 +349,7 @@ public final class JsonSchemaHelper {
 
     @Override
     public void generate(ObjectNode node, IJsonGenerationState state) {
-      field.getFieldValue().generateSchemaOrRef(node.putObject(getName()), state);
+      field.getFieldValue().generateJsonSchemaOrDefinitionRef(node.putObject(getName()), state);
     }
 
     @Override

@@ -16,19 +16,22 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState.AllowedValueCollection;
 import gov.nist.secauto.metaschema.schemagen.json.IDataTypeJsonSchema;
-import gov.nist.secauto.metaschema.schemagen.json.IDefinitionJsonSchema;
 import gov.nist.secauto.metaschema.schemagen.json.IJsonGenerationState;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinable;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinition;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
-import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class DataTypeRestrictionDefinitionJsonSchema
-    extends AbstractDefineableJsonSchema
-    implements IDataTypeJsonSchema, IDefinitionJsonSchema<IValuedDefinition> {
+    implements IDataTypeJsonSchema {
+  @NonNull
+  private final String name;
   @NonNull
   private final IValuedDefinition definition;
   @NonNull
@@ -36,18 +39,14 @@ public class DataTypeRestrictionDefinitionJsonSchema
 
   public DataTypeRestrictionDefinitionJsonSchema(
       @NonNull IValuedDefinition definition,
-      @NonNull AllowedValueCollection allowedValuesCollection) {
+      @NonNull AllowedValueCollection allowedValuesCollection,
+      @NonNull IJsonGenerationState state) {
+    this.name = state.getTypeNameForDefinition(definition, "Value");
     this.definition = definition;
     CollectionUtil.requireNonEmpty(allowedValuesCollection.getValues());
     this.allowedValuesCollection = allowedValuesCollection;
   }
 
-  @Override
-  public IKey getKey() {
-    return IKey.of(definition, null, null, null);
-  }
-
-  @Override
   @NonNull
   public IValuedDefinition getDefinition() {
     return definition;
@@ -65,19 +64,32 @@ public class DataTypeRestrictionDefinitionJsonSchema
 
   @Override
   public boolean isInline(IJsonGenerationState state) {
-    // // inline if the definition is inline
-    // return state.isInline(definition);
     // always inline
     return true;
   }
 
   @Override
-  protected String generateDefinitionName(IJsonGenerationState state) {
-    return state.getTypeNameForDefinition(definition, "Value");
+  public Stream<IJsonSchemaDefinable> collectDefinitions(
+      Set<IJsonSchemaDefinition> visited,
+      IJsonGenerationState state) {
+    // ensure the base datatype is registered
+    state.getSchema(getDataTypeAdapter());
+
+    return Stream.of(this);
   }
 
   @Override
-  public void generateInlineSchema(ObjectNode obj, IJsonGenerationState state) {
+  public String getDefinitionName() {
+    return name;
+  }
+
+  @Override
+  public void generateDefinitionJsonSchema(ObjectNode node, IJsonGenerationState state) {
+    throw new UnsupportedOperationException("not used");
+  }
+
+  @Override
+  public void generateInlineJsonSchema(ObjectNode node, IJsonGenerationState state) {
     // generate a restriction on the built-in type for the enumerated values
     ArrayNode enumArray = JsonNodeFactory.instance.arrayNode();
 
@@ -109,29 +121,17 @@ public class DataTypeRestrictionDefinitionJsonSchema
     ArrayNode ofArray;
     if (allowedValuesCollection.isClosed()) {
       // this restriction is allOf, since both must match
-      ofArray = obj.putArray("allOf");
+      ofArray = node.putArray("allOf");
     } else {
       // this restriction is anyOf, since any can match
-      ofArray = obj.putArray("anyOf");
+      ofArray = node.putArray("anyOf");
     }
 
     // add the data type reference
-    dataTypeSchema.generateSchemaOrRef(ObjectUtils.notNull(ofArray.addObject()), state);
+    dataTypeSchema.generateJsonSchemaOrDefinitionRef(ObjectUtils.notNull(ofArray.addObject()), state);
 
     // add the enumeration
     ofArray.addObject()
         .set("enum", enumArray);
-  }
-
-  @Override
-  public void gatherDefinitions(
-      @NonNull Map<IKey, IDefinitionJsonSchema<?>> gatheredDefinitions,
-      @NonNull IJsonGenerationState state) {
-    // ensure the base datatype is registered
-    state.getSchema(getDataTypeAdapter());
-
-    // Generate a definition if the restricted definition is not inline
-    IKey key = getKey();
-    gatheredDefinitions.put(key, state.getSchema(getKey()));
   }
 }
