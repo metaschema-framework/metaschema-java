@@ -8,10 +8,6 @@ package gov.nist.secauto.metaschema.schemagen.json.impl;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.schemagen.json.IDataTypeJsonSchema;
-import gov.nist.secauto.metaschema.schemagen.json.IJsonGenerationState;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinable;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinition;
 
 import java.util.Set;
 import java.util.stream.Stream;

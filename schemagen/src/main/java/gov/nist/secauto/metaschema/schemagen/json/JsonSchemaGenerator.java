@@ -17,10 +17,10 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
+import gov.nist.secauto.metaschema.schemagen.json.impl.IJsonSchema;
 import gov.nist.secauto.metaschema.schemagen.json.impl.JsonDatatypeManager;
 import gov.nist.secauto.metaschema.schemagen.json.impl.JsonGenerationState;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchema;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaModule;
+import gov.nist.secauto.metaschema.schemagen.json.impl.JsonSchemaModule;
 
 import java.io.IOException;
 import java.io.Writer;

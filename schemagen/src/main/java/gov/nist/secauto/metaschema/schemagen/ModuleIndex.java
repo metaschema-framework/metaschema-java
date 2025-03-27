@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ModuleIndex {
-  private final Map<IDefinition, DefinitionEntry> index = new LinkedHashMap<>();// new ConcurrentHashMap<>();
+  private final Map<IDefinition, DefinitionEntry> index = new LinkedHashMap<>();
 
   @NonNull
   public static ModuleIndex indexDefinitions(@NonNull IModule module, @NonNull IInlineStrategy inlineStrategy) {

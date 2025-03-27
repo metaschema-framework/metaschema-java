@@ -31,25 +31,6 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
-import gov.nist.secauto.metaschema.schemagen.json.IDataTypeJsonSchema;
-import gov.nist.secauto.metaschema.schemagen.json.IJsonGenerationState;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinable;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinition;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinitionAssembly;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaModelDefinition;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaPropertyFlag;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaPropertyGrouped;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaPropertyNamed;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaDefinitionAssembly;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaDefinitionField;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaDefinitionFlag;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaHelper;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyAssembly;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyChoiceGroup;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyField;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyFlag;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyGroupedAssembly;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyGroupedField;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -130,7 +111,7 @@ public class JsonGenerationState
     IJsonSchemaDefinable newSchema
         = definitionNameToJsonSchemaMap.computeIfAbsent(retval.getDefinitionName(), (key) -> retval);
 
-    assert newSchema.equals(retval);
+    assert newSchema.equals(retval) : "Duplicate JSON definition name: " + retval.getDefinitionName();
 
     return retval;
   }

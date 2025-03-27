@@ -15,10 +15,6 @@ import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState.AllowedValueCollection;
-import gov.nist.secauto.metaschema.schemagen.json.IDataTypeJsonSchema;
-import gov.nist.secauto.metaschema.schemagen.json.IJsonGenerationState;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinable;
-import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinition;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
