@@ -528,6 +528,7 @@ public abstract class AbstractTestSuite {
    */
   protected static boolean validateWithSchema(@NonNull IContentValidator validator, @NonNull Path target)
       throws IOException {
+    LOGGER.atError().log("Validating: {}", target);
     IValidationResult schemaValidationResult = validator.validate(target);
     if (!schemaValidationResult.isPassing()) {
       LOGGER.atError().log("Schema validation failed for: {}", target);

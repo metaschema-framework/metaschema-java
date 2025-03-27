@@ -135,7 +135,7 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
    * Generate a qualified name for this QName.
    * <p>
    * This method uses prefixes associated with well-known namespaces, or will
-   * prepending the namespace if no prefix can be resolved.
+   * prepend the namespace if no prefix can be resolved.
    *
    * @return the extended qualified-name
    */

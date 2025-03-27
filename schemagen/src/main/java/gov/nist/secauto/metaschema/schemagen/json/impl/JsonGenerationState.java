@@ -12,27 +12,56 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
+import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceGrouped;
+import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
+import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
+import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 import gov.nist.secauto.metaschema.core.model.IValuedDefinition;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
+import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState;
-import gov.nist.secauto.metaschema.schemagen.ModuleIndex.DefinitionEntry;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 import gov.nist.secauto.metaschema.schemagen.json.IDataTypeJsonSchema;
 import gov.nist.secauto.metaschema.schemagen.json.IDefineableJsonSchema.IKey;
 import gov.nist.secauto.metaschema.schemagen.json.IDefinitionJsonSchema;
 import gov.nist.secauto.metaschema.schemagen.json.IJsonGenerationState;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinable;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinition;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaDefinitionAssembly;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaModelDefinition;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaPropertyFlag;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaPropertyGrouped;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchemaPropertyNamed;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaDefinitionAssembly;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaDefinitionField;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaDefinitionFlag;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaHelper;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyAssembly;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyChoiceGroup;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyField;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyFlag;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyGroupedAssembly;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaPropertyGroupedField;
 
 import java.io.IOException;
-import java.util.Comparator;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -40,7 +69,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public class JsonGenerationState
     extends AbstractGenerationState<JsonGenerator, JsonDatatypeManager>
     implements IJsonGenerationState {
-
   @NonNull
   private final JsonNodeFactory jsonNodeFactory = new JsonNodeFactory(true);
   @NonNull
@@ -50,6 +78,18 @@ public class JsonGenerationState
       = new ConcurrentHashMap<>();
   @NonNull
   private final Map<IDataTypeAdapter<?>, IDataTypeJsonSchema> dataTypeToSchemaMap = new ConcurrentHashMap<>();
+
+  @NonNull
+  private final Map<String, IJsonSchemaDefinable> definitionNameToJsonSchemaMap = new ConcurrentHashMap<>();
+
+  @NonNull
+  private final Map<IDefinition, Map<IEnhancedQName, IJsonSchemaDefinition>> definitionToJsonKeyToJsonSchemaMap
+      = new ConcurrentHashMap<>();
+
+  @NonNull
+  private final Map<GroupedDefinition,
+      Map<IEnhancedQName, IJsonSchemaPropertyGrouped>> groupedInstanceToJsonKeyToJsonSchemaMap
+          = new ConcurrentHashMap<>();
 
   public JsonGenerationState(
       @NonNull IModule module,
@@ -69,6 +109,159 @@ public class JsonGenerationState
     // Function.identity(),
     // (v1, v2) -> v2,
     // ConcurrentHashMap::new)));
+  }
+
+  @Override
+  public IJsonSchemaDefinitionAssembly newRootAssemblyDefinition(IAssemblyDefinition definition) {
+    // TODO: hook up to root collection in this class
+    return getAssemblyDefinition(definition, null);
+  }
+
+  @NonNull
+  private <T extends IJsonSchemaDefinition> T addToCache(
+      @NonNull IDefinition definition,
+      @Nullable IEnhancedQName jsonKeyName,
+      @NonNull Supplier<T> supplier) {
+    // add to definition to JSON key to JsonSchema map
+    Map<IEnhancedQName, IJsonSchemaDefinition> jsonKeyMap
+        = definitionToJsonKeyToJsonSchemaMap.computeIfAbsent(definition, (key) -> new LinkedHashMap<>());
+
+    @SuppressWarnings("unchecked")
+    T retval = (T) jsonKeyMap.computeIfAbsent(jsonKeyName, (key) -> supplier.get());
+
+    assert definition.equals(retval.getDefinition());
+
+    // add to definition to JSON definition name to definition map
+    IJsonSchemaDefinable newSchema
+        = definitionNameToJsonSchemaMap.computeIfAbsent(retval.getDefinitionName(), (key) -> retval);
+
+    assert newSchema.equals(retval);
+
+    return retval;
+  }
+
+  @NonNull
+  private <T extends IJsonSchemaPropertyGrouped> T addToCache(
+      @NonNull INamedModelInstanceGrouped instance,
+      @Nullable IEnhancedQName jsonKeyName,
+      @NonNull Supplier<T> supplier) {
+    GroupedDefinition grouped = new GroupedDefinition(instance);
+
+    // add to definition to JSON key to JsonSchema map
+    Map<IEnhancedQName, IJsonSchemaPropertyGrouped> jsonKeyMap
+        = groupedInstanceToJsonKeyToJsonSchemaMap.computeIfAbsent(grouped, (key) -> new LinkedHashMap<>());
+
+    @SuppressWarnings("unchecked")
+    T retval = (T) jsonKeyMap.computeIfAbsent(jsonKeyName, (key) -> supplier.get());
+
+    assert grouped.equals(new GroupedDefinition(retval.getInstance()));
+
+    // add to definition to JSON definition name to definition map
+    IJsonSchemaDefinable newSchema
+        = definitionNameToJsonSchemaMap.computeIfAbsent(retval.getDefinitionName(), (key) -> retval);
+
+    assert newSchema.equals(retval) : "JSON definition name not unique: " + retval.getDefinitionName();
+
+    return retval;
+  }
+
+  private static class GroupedDefinition {
+    private final IModelDefinition definition;
+    private final String disciminatorProperty;
+    private final String disciminatorValue;
+
+    public GroupedDefinition(@NonNull INamedModelInstanceGrouped instance) {
+      this.definition = instance.getDefinition();
+      this.disciminatorProperty = instance.getParentContainer().getJsonDiscriminatorProperty();
+      this.disciminatorValue = instance.getEffectiveDisciminatorValue();
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(definition, disciminatorProperty, disciminatorValue);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) {
+        return true;
+      }
+      if (obj == null) {
+        return false;
+      }
+      if (getClass() != obj.getClass()) {
+        return false;
+      }
+      GroupedDefinition other = (GroupedDefinition) obj;
+      return Objects.equals(definition, other.definition)
+          && Objects.equals(disciminatorProperty, other.disciminatorProperty)
+          && Objects.equals(disciminatorValue, other.disciminatorValue);
+    }
+  }
+
+  @Override
+  public IJsonSchemaDefinitionAssembly getAssemblyDefinition(
+      IAssemblyDefinition definition,
+      IEnhancedQName jsonKeyName) {
+    return addToCache(definition, jsonKeyName, () -> new JsonSchemaDefinitionAssembly(definition, jsonKeyName, this));
+  }
+
+  @Override
+  public IJsonSchemaModelDefinition getFieldDefinition(IFieldDefinition definition, IEnhancedQName jsonKeyName) {
+    return addToCache(definition, jsonKeyName, () -> new JsonSchemaDefinitionField(definition, jsonKeyName, this));
+  }
+
+  @Override
+  public IJsonSchemaDefinition getFlagDefinition(IFlagDefinition definition) {
+    return addToCache(definition, null, () -> new JsonSchemaDefinitionFlag(definition, this));
+  }
+
+  @Override
+  public IJsonSchemaPropertyFlag getJsonSchemaPropertyFlag(IFlagInstance instance) {
+    return new JsonSchemaPropertyFlag(instance, this);
+  }
+
+  @Override
+  public IJsonSchemaPropertyNamed newJsonSchemaPropertyModel(@NonNull IModelInstanceAbsolute instance) {
+    IJsonSchemaPropertyNamed retval;
+    if (instance instanceof IAssemblyInstanceAbsolute) {
+      retval = new JsonSchemaPropertyAssembly((IAssemblyInstanceAbsolute) instance, this);
+    } else if (instance instanceof IFieldInstanceAbsolute) {
+      retval = new JsonSchemaPropertyField((IFieldInstanceAbsolute) instance, this);
+    } else if (instance instanceof IChoiceGroupInstance) {
+      retval = new JsonSchemaPropertyChoiceGroup((IChoiceGroupInstance) instance, this);
+    } else {
+      throw new UnsupportedOperationException("Unsupported property type: " + instance.getClass());
+    }
+    return retval;
+  }
+
+  @Override
+  public IJsonSchemaPropertyGrouped getJsonSchemaPropertyGrouped(INamedModelInstanceGrouped instance) {
+    return addToCache(instance, null, () -> newJsonSchemaPropertyGrouped(instance));
+  }
+
+  private IJsonSchemaPropertyGrouped newJsonSchemaPropertyGrouped(INamedModelInstanceGrouped instance) {
+    IJsonSchemaPropertyGrouped retval;
+    if (instance instanceof IAssemblyInstanceGrouped) {
+      retval = new JsonSchemaPropertyGroupedAssembly((IAssemblyInstanceGrouped) instance, this);
+    } else if (instance instanceof IFieldInstanceGrouped) {
+      retval = new JsonSchemaPropertyGroupedField((IFieldInstanceGrouped) instance, this);
+    } else {
+      throw new UnsupportedOperationException("Unsupported property type: " + instance.getClass());
+    }
+    return retval;
+  }
+
+  @Override
+  public Collection<IJsonSchemaDefinable> getDefinitionSchemas() {
+    return ObjectUtils.notNull(definitionNameToJsonSchemaMap.values());
+  }
+
+  @Override
+  public IJsonSchemaDefinition getDefinitionSchema(IDefinition definition, IEnhancedQName jsonKeyName) {
+    Map<IEnhancedQName, IJsonSchemaDefinition> jsonKeyMap = definitionToJsonKeyToJsonSchemaMap.get(definition);
+    return jsonKeyMap == null ? null : jsonKeyMap.get(jsonKeyName);
   }
 
   @Override
@@ -172,31 +365,22 @@ public class JsonGenerationState
     return retval;
   }
 
+  @Override
   public ObjectNode generateDefinitions() {
-    @NonNull
-    Map<IKey, IDefinitionJsonSchema<?>> gatheredDefinitions = new HashMap<>();
 
-    getMetaschemaIndex().getDefinitions().stream()
-        .filter(DefinitionEntry::isRoot)
-        .map(DefinitionEntry::getDefinition)
-        .forEachOrdered(def -> {
-          IDefinitionJsonSchema<?> definitionSchema = getSchema(IKey.of(def));
-          assert definitionSchema != null;
-          definitionSchema.gatherDefinitions(gatheredDefinitions, this);
+    ObjectNode definitionsNode = getJsonNodeFactory().objectNode();
+
+    getDefinitionSchemas().stream()
+        .sorted(JsonSchemaHelper.DEFINABLE_NAME_COMPARATOR)
+        .forEach(definition -> {
+          ObjectNode definitionNode = definitionsNode.putObject(definition.getDefinitionName());
+          assert definitionNode != null;
+          definition.generateDefinitionJsonSchema(definitionNode, this);
         });
 
-    ObjectNode definitionsObject = ObjectUtils.notNull(JsonNodeFactory.instance.objectNode());
+    getDatatypeManager().generateDatatypes(definitionsNode);
 
-    gatheredDefinitions.values().stream()
-        .filter(schema -> !isInline(schema.getDefinition()))
-        .sorted(Comparator.comparing(schema -> schema.getDefinitionName(this)))
-        .forEachOrdered(schema -> {
-          schema.generateDefinition(this, definitionsObject);
-        });
-
-    getDatatypeManager().generateDatatypes(definitionsObject);
-
-    return definitionsObject;
+    return definitionsNode;
   }
 
   @Override
@@ -223,6 +407,10 @@ public class JsonGenerationState
       definitionValueToDataTypeSchemaMap.put(definition, retval);
     }
     return retval;
+  }
+
+  public void writeObject(ObjectNode schemaNode) throws IOException {
+    getWriter().writeObject(schemaNode);
   }
 
   @SuppressWarnings("resource")
@@ -254,5 +442,4 @@ public class JsonGenerationState
   public void flushWriter() throws IOException {
     getWriter().flush();
   }
-
 }

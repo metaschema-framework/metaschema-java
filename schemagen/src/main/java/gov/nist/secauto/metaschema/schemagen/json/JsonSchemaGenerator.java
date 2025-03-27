@@ -17,19 +17,18 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractSchemaGenerator;
-import gov.nist.secauto.metaschema.schemagen.ModuleIndex.DefinitionEntry;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 import gov.nist.secauto.metaschema.schemagen.json.IDefineableJsonSchema.IKey;
 import gov.nist.secauto.metaschema.schemagen.json.impl.JsonDatatypeManager;
 import gov.nist.secauto.metaschema.schemagen.json.impl.JsonGenerationState;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.IJsonSchema;
+import gov.nist.secauto.metaschema.schemagen.json.state.impl.JsonSchemaModule;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -75,62 +74,71 @@ public class JsonSchemaGenerator
   @Override
   protected void generateSchema(JsonGenerationState state) {
     IModule module = state.getModule();
+
     try {
-      state.writeStartObject();
+      // state.writeStartObject();
+      //
+      // state.writeField("$schema", "http://json-schema.org/draft-07/schema#");
+      // state.writeField("$id",
+      // String.format("%s/%s-%s-schema.json",
+      // module.getXmlNamespace(),
+      // module.getShortName(),
+      // module.getVersion()));
+      // state.writeField("$comment", module.getName().toMarkdown());
+      // state.writeField("type", "object");
+      //
+      // ObjectNode definitionsObject = state.generateDefinitions();
+      // if (!definitionsObject.isEmpty()) {
+      // state.writeField("definitions", definitionsObject);
+      // }
+      //
+      // List<IAssemblyDefinition> rootAssemblyDefinitions =
+      // state.getMetaschemaIndex().getDefinitions().stream()
+      // .map(DefinitionEntry::getDefinition)
+      // .filter(
+      // definition -> definition instanceof IAssemblyDefinition &&
+      // ((IAssemblyDefinition) definition).isRoot())
+      // .map(definition -> (IAssemblyDefinition) definition)
+      // .collect(Collectors.toUnmodifiableList());
+      //
+      // if (rootAssemblyDefinitions.isEmpty()) {
+      // throw new SchemaGenerationException("No root definitions found");
+      // }
+      //
+      // // generate the properties first to ensure all definitions are identified
+      // List<RootPropertyEntry> rootEntries = rootAssemblyDefinitions.stream()
+      // .map(root -> {
+      // assert root != null;
+      // return new RootPropertyEntry(root, state);
+      // })
+      // .collect(Collectors.toUnmodifiableList());
+      //
+      // @SuppressWarnings("resource")
+      // JsonGenerator writer = state.getWriter(); // NOPMD not owned
+      //
+      // if (rootEntries.size() == 1) {
+      // rootEntries.iterator().next().write(writer);
+      // } else {
+      // writer.writeFieldName("oneOf");
+      // writer.writeStartArray();
+      //
+      // for (RootPropertyEntry root : rootEntries) {
+      // assert root != null;
+      // writer.writeStartObject();
+      // root.write(writer);
+      // writer.writeEndObject();
+      // }
+      //
+      // writer.writeEndArray();
+      // }
+      //
+      // state.writeEndObject();
 
-      state.writeField("$schema", "http://json-schema.org/draft-07/schema#");
-      state.writeField("$id",
-          String.format("%s/%s-%s-schema.json",
-              module.getXmlNamespace(),
-              module.getShortName(),
-              module.getVersion()));
-      state.writeField("$comment", module.getName().toMarkdown());
-      state.writeField("type", "object");
+      IJsonSchema moduleSchema = new JsonSchemaModule(module, state);
+      ObjectNode schemaNode = state.getJsonNodeFactory().objectNode();
+      moduleSchema.generateInlineJsonSchema(schemaNode, state);
 
-      ObjectNode definitionsObject = state.generateDefinitions();
-      if (!definitionsObject.isEmpty()) {
-        state.writeField("definitions", definitionsObject);
-      }
-
-      List<IAssemblyDefinition> rootAssemblyDefinitions = state.getMetaschemaIndex().getDefinitions().stream()
-          .map(DefinitionEntry::getDefinition)
-          .filter(
-              definition -> definition instanceof IAssemblyDefinition && ((IAssemblyDefinition) definition).isRoot())
-          .map(definition -> (IAssemblyDefinition) definition)
-          .collect(Collectors.toUnmodifiableList());
-
-      if (rootAssemblyDefinitions.isEmpty()) {
-        throw new SchemaGenerationException("No root definitions found");
-      }
-
-      // generate the properties first to ensure all definitions are identified
-      List<RootPropertyEntry> rootEntries = rootAssemblyDefinitions.stream()
-          .map(root -> {
-            assert root != null;
-            return new RootPropertyEntry(root, state);
-          })
-          .collect(Collectors.toUnmodifiableList());
-
-      @SuppressWarnings("resource")
-      JsonGenerator writer = state.getWriter(); // NOPMD not owned
-
-      if (rootEntries.size() == 1) {
-        rootEntries.iterator().next().write(writer);
-      } else {
-        writer.writeFieldName("oneOf");
-        writer.writeStartArray();
-
-        for (RootPropertyEntry root : rootEntries) {
-          assert root != null;
-          writer.writeStartObject();
-          root.write(writer);
-          writer.writeEndObject();
-        }
-
-        writer.writeEndArray();
-      }
-
-      state.writeEndObject();
+      state.writeObject(schemaNode);
     } catch (IOException ex) {
       throw new SchemaGenerationException(ex);
     }

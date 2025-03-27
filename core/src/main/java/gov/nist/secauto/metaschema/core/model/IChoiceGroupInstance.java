@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Locale;
 
@@ -17,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * of heterogeneous object types.
  */
 public interface IChoiceGroupInstance
-    extends IModelInstanceAbsolute, IContainerModelGrouped {
+    extends IModelInstanceAbsolute, IContainerModelGrouped, IJsonInstance {
 
   /**
    * The default max-occurs value for a choice group. {@code -1} represents an
@@ -50,6 +51,11 @@ public interface IChoiceGroupInstance
   @Override
   default ModelType getModelType() {
     return ModelType.CHOICE_GROUP;
+  }
+
+  @Override
+  default String getJsonName() {
+    return ObjectUtils.requireNonNull(getGroupAsName(), "Missing group-as name");
   }
 
   /**

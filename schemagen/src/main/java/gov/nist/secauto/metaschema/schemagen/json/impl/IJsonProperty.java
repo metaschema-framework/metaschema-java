@@ -78,10 +78,19 @@ public interface IJsonProperty<I extends IInstance> {
       return Collections.unmodifiableSet(required);
     }
 
+    public void addProperty(@NonNull String name, @NonNull ObjectNode def, boolean required) {
+      properties.put(name, def);
+      if (required) {
+        this.required.add(name);
+      }
+    }
+
+    // TODO: remove this method
     public void addProperty(@NonNull String name, @NonNull ObjectNode def) {
       properties.put(name, def);
     }
 
+    // TODO: remove this method
     public void addRequired(@NonNull String name) {
       required.add(name);
     }
