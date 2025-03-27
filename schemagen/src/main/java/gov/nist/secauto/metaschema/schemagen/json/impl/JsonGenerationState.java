@@ -30,14 +30,15 @@ import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState;
+import gov.nist.secauto.metaschema.schemagen.IGenerationState;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -72,25 +73,6 @@ public class JsonGenerationState
       @NonNull JsonGenerator writer,
       @NonNull IConfiguration<SchemaGenerationFeature<?>> configuration) {
     super(module, writer, configuration, new JsonDatatypeManager());
-
-    // // seed definition schema mapping
-    // this.schemaDefinitions =
-    // ObjectUtils.notNull(getMetaschemaIndex().getDefinitions().stream()
-    // .filter(entry -> !isInline(entry.getDefinition()) &&
-    // entry.isUsedWithoutJsonKey()
-    // && !entry.isChoiceGroupMember())
-    // .map(entry -> newJsonSchema(entry.getDefinition(), null, null, null, this))
-    // .collect(Collectors.toMap(
-    // schema -> schema.getKey(),
-    // Function.identity(),
-    // (v1, v2) -> v2,
-    // ConcurrentHashMap::new)));
-  }
-
-  @Override
-  public IJsonSchemaDefinitionAssembly newRootAssemblyDefinition(IAssemblyDefinition definition) {
-    // TODO: hook up to root collection in this class
-    return getAssemblyDefinition(definition, null);
   }
 
   @NonNull
@@ -107,11 +89,14 @@ public class JsonGenerationState
 
     assert definition.equals(retval.getDefinition());
 
-    // add to definition to JSON definition name to definition map
-    IJsonSchemaDefinable newSchema
-        = definitionNameToJsonSchemaMap.computeIfAbsent(retval.getDefinitionName(), (key) -> retval);
+    if (!isInline(definition)) {
+      // add to definition to JSON definition name to definition map
+      IJsonSchemaDefinable newSchema
+          = definitionNameToJsonSchemaMap.computeIfAbsent(retval.getDefinitionName(), (key) -> retval);
 
-    assert newSchema.equals(retval) : "Duplicate JSON definition name: " + retval.getDefinitionName();
+      assert newSchema.equals(retval) : "Duplicate JSON definition name: "
+          + retval.getDefinitionName();
+    }
 
     return retval;
   }
@@ -132,12 +117,14 @@ public class JsonGenerationState
 
     assert grouped.equals(new GroupedDefinition(retval.getInstance()));
 
-    // add to definition to JSON definition name to definition map
-    IJsonSchemaDefinable newSchema
-        = definitionNameToJsonSchemaMap.computeIfAbsent(retval.getDefinitionName(), (key) -> retval);
+    if (!isInline(instance.getDefinition())) {
+      // add to definition to JSON definition name to definition map
+      IJsonSchemaDefinable newSchema
+          = definitionNameToJsonSchemaMap.computeIfAbsent(retval.getDefinitionName(), (key) -> retval);
 
-    assert newSchema.equals(retval) : "JSON definition name not unique: " + retval.getDefinitionName();
-
+      assert newSchema.equals(retval) : "Duplicate JSON definition name: "
+          + retval.getDefinitionName();
+    }
     return retval;
   }
 
@@ -183,7 +170,7 @@ public class JsonGenerationState
   }
 
   @Override
-  public IJsonSchemaModelDefinition getFieldDefinition(IFieldDefinition definition, IEnhancedQName jsonKeyName) {
+  public IJsonSchemaDefinitionField getFieldDefinition(IFieldDefinition definition, IEnhancedQName jsonKeyName) {
     return addToCache(definition, jsonKeyName, () -> new JsonSchemaDefinitionField(definition, jsonKeyName, this));
   }
 
@@ -230,17 +217,6 @@ public class JsonGenerationState
   }
 
   @Override
-  public Collection<IJsonSchemaDefinable> getDefinitionSchemas() {
-    return ObjectUtils.notNull(definitionNameToJsonSchemaMap.values());
-  }
-
-  @Override
-  public IJsonSchemaDefinition getDefinitionSchema(IDefinition definition, IEnhancedQName jsonKeyName) {
-    Map<IEnhancedQName, IJsonSchemaDefinition> jsonKeyMap = definitionToJsonKeyToJsonSchemaMap.get(definition);
-    return jsonKeyMap == null ? null : jsonKeyMap.get(jsonKeyName);
-  }
-
-  @Override
   @NonNull
   public IDataTypeJsonSchema getSchema(@NonNull IDataTypeAdapter<?> datatype) {
     IDataTypeJsonSchema retval = dataTypeToSchemaMap.get(datatype);
@@ -254,11 +230,11 @@ public class JsonGenerationState
   }
 
   @Override
-  public ObjectNode generateDefinitions() {
-
+  public ObjectNode generateDefinitions(Set<IJsonSchemaDefinable> usedDefinitions) {
     ObjectNode definitionsNode = getJsonNodeFactory().objectNode();
 
-    getDefinitionSchemas().stream()
+    usedDefinitions.stream()
+        .filter(definition -> !definition.isInline(this))
         .sorted(JsonSchemaHelper.DEFINABLE_NAME_COMPARATOR)
         .forEach(definition -> {
           ObjectNode definitionNode = definitionsNode.putObject(definition.getDefinitionName());
@@ -295,6 +271,33 @@ public class JsonGenerationState
       definitionValueToDataTypeSchemaMap.put(definition, retval);
     }
     return retval;
+  }
+
+  @Override
+  public String generateJsonSchemaDefinitionName(
+      @NonNull IDefinition definition,
+      @Nullable String jsonKeyFlagName,
+      @Nullable String discriminatorProperty,
+      @Nullable String discriminatorValue,
+      @Nullable String suffix) {
+    StringBuilder builder = new StringBuilder();
+    if (jsonKeyFlagName != null) {
+      builder
+          .append(IGenerationState.toCamelCase(jsonKeyFlagName))
+          .append("JsonKey");
+    }
+
+    if (discriminatorProperty != null || discriminatorValue != null) {
+      builder
+          .append(IGenerationState.toCamelCase(ObjectUtils.requireNonNull(discriminatorProperty)))
+          .append(IGenerationState.toCamelCase(ObjectUtils.requireNonNull(discriminatorValue)))
+          .append("Choice");
+    }
+
+    if (suffix != null) {
+      builder.append(suffix);
+    }
+    return getTypeNameForDefinition(definition, builder.toString());
   }
 
   public void writeObject(ObjectNode schemaNode) throws IOException {

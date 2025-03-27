@@ -22,7 +22,7 @@ import gov.nist.secauto.metaschema.core.model.IValuedDefinition;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.schemagen.IGenerationState;
 
-import java.util.Collection;
+import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -38,30 +38,55 @@ public interface IJsonGenerationState extends IGenerationState<JsonGenerator> {
   IModule getModule();
 
   /**
-   * Get the schemas for referenced definitions for model objects and data types
-   * used within this module schema.
+   * Get the JSON schema information for the provided definition.
+   * <p>
+   * This will return a cached value. The same instance will be returned if this
+   * method is called multiple times.
    * 
-   * @return the ordered collection of definitions
+   * @param definition
+   *          the flag definition to get the JSON schema information for
+   * @return the JSON schema information
    */
-  @NonNull
-  Collection<IJsonSchemaDefinable> getDefinitionSchemas();
-
-  @Nullable
-  IJsonSchemaDefinition getDefinitionSchema(
-      @NonNull IDefinition definition,
-      @Nullable IEnhancedQName jsonKeyName);
-
-  @NonNull
-  IJsonSchemaDefinitionAssembly newRootAssemblyDefinition(@NonNull IAssemblyDefinition definition);
-
   @NonNull
   IJsonSchemaDefinition getFlagDefinition(@NonNull IFlagDefinition definition);
 
+  /**
+   * Get the JSON schema information for the provided definition.
+   * <p>
+   * This will return a cached value. The same instance will be returned if this
+   * method is called multiple times.
+   * <p>
+   * If a JSON key is provided, a definition that is unique for this JSON key will
+   * be returned.
+   * 
+   * @param definition
+   *          the flag definition to get the JSON schema information for
+   * @param jsonKeyName
+   *          the JSON key to use with the definition or {@code null} if no JSON
+   *          key is used
+   * @return the JSON schema information
+   */
   @NonNull
-  IJsonSchemaModelDefinition getFieldDefinition(
-      @NonNull IFieldDefinition defintion,
+  IJsonSchemaDefinitionField getFieldDefinition(
+      @NonNull IFieldDefinition definition,
       @Nullable IEnhancedQName jsonKeyName);
 
+  /**
+   * Get the JSON schema information for the provided definition.
+   * <p>
+   * This will return a cached value. The same instance will be returned if this
+   * method is called multiple times.
+   * <p>
+   * If a JSON key is provided, a definition that is unique for this JSON key will
+   * be returned.
+   * 
+   * @param definition
+   *          the flag definition to get the JSON schema information for
+   * @param jsonKeyName
+   *          the JSON key to use with the definition or {@code null} if no JSON
+   *          key is used
+   * @return the JSON schema information
+   */
   @NonNull
   IJsonSchemaDefinitionAssembly getAssemblyDefinition(
       @NonNull IAssemblyDefinition defintion,
@@ -77,7 +102,7 @@ public interface IJsonGenerationState extends IGenerationState<JsonGenerator> {
   IJsonSchemaPropertyGrouped getJsonSchemaPropertyGrouped(@NonNull INamedModelInstanceGrouped instance);
 
   @NonNull
-  ObjectNode generateDefinitions();
+  ObjectNode generateDefinitions(@NonNull Set<IJsonSchemaDefinable> usedDefinitions);
 
   @NonNull
   JsonNodeFactory getJsonNodeFactory();
@@ -88,7 +113,24 @@ public interface IJsonGenerationState extends IGenerationState<JsonGenerator> {
   @NonNull
   IDataTypeJsonSchema getDataTypeSchemaForDefinition(@NonNull IValuedDefinition definition);
 
+  @NonNull
   default String toFlagName(@NonNull IEnhancedQName jsonKeyFlagName) {
     return jsonKeyFlagName.toEQName();
   }
+
+  @NonNull
+  default String generateJsonSchemaDefinitionName(
+      @NonNull IDefinition definition,
+      @Nullable String jsonKeyFlagName,
+      @Nullable String suffix) {
+    return generateJsonSchemaDefinitionName(definition, jsonKeyFlagName, null, null, suffix);
+  }
+
+  @NonNull
+  String generateJsonSchemaDefinitionName(
+      @NonNull IDefinition definition,
+      @Nullable String jsonKeyFlagName,
+      @Nullable String discriminatorProperty,
+      @Nullable String discriminatorValue,
+      @Nullable String suffix);
 }

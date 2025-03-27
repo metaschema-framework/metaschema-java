@@ -8,7 +8,9 @@ package gov.nist.secauto.metaschema.schemagen.json.impl;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
@@ -32,47 +34,50 @@ public final class CardinalityBehaviorKeyedObject
 
   @Override
   public void generate(
-      ObjectNode object,
+      ObjectNode node,
       IModelInstanceAbsolute instance,
-      Collection<? extends IJsonSchemaDefinable> types,
+      Collection<? extends IJsonSchemaModelDefinition> types,
       IJsonGenerationState state) {
     int minOccurs = instance.getMinOccurs();
     int maxOccurs = instance.getMaxOccurs();
 
-    object.put("type", "object");
+    node.put("type", "object");
 
     if (minOccurs > 0) {
-      object.put("minProperties", minOccurs);
+      node.put("minProperties", minOccurs);
     }
 
     if (maxOccurs != -1) {
-      object.put("maxProperties", maxOccurs);
+      node.put("maxProperties", maxOccurs);
     }
 
     if (!types.isEmpty()) {
-      ObjectNode propertyNames = ObjectUtils.notNull(object.putObject("propertyNames"));
       if (types.size() == 1) {
-        generatePropertyName(propertyNames, instance, types.iterator().next(), state);
+        generatePropertyName(node, instance, types.iterator().next(), state);
       } else {
-        ArrayNode anyOf = propertyNames.putArray("anyOf");
-        for (IJsonSchemaDefinable type : types) {
+        ArrayNode anyOf = node.putArray("anyOf");
+        for (IJsonSchemaModelDefinition type : types) {
           generatePropertyName(ObjectUtils.notNull(anyOf.objectNode()), instance, type, state);
         }
       }
     }
-
-    if (!types.isEmpty()) {
-      ObjectNode patternProperties = ObjectUtils.notNull(object.putObject("patternProperties"));
-      ObjectNode wildcard = ObjectUtils.notNull(patternProperties.putObject("^.*$"));
-      generateInternal(wildcard, types, state);
-    }
   }
 
   private void generatePropertyName(
-      ObjectNode propertyNames,
+      ObjectNode node,
       IModelInstanceAbsolute instance,
-      IJsonSchemaDefinable type,
+      IJsonSchemaModelDefinition type,
       IJsonGenerationState state) {
-    // TODO: implement
+
+    IFlagInstance flag = type.getJsonKeyFlag();
+    if (flag != null) {
+      IJsonSchemaDefinition flagSchema = state.getFlagDefinition(flag.getDefinition());
+      ObjectNode propertyNames = ObjectUtils.notNull(node.putObject("propertyNames"));
+      flagSchema.generateJsonSchemaOrDefinitionRef(propertyNames, state);
+    }
+
+    ObjectNode patternProperties = ObjectUtils.notNull(node.putObject("patternProperties"));
+    ObjectNode wildcard = ObjectUtils.notNull(patternProperties.putObject("^.*$"));
+    generateInternal(wildcard, CollectionUtil.singleton(type), state);
   }
 }

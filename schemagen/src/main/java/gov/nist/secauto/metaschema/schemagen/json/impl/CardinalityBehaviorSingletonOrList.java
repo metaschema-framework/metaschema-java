@@ -33,7 +33,7 @@ public final class CardinalityBehaviorSingletonOrList
   public void generate(
       ObjectNode node,
       IModelInstanceAbsolute instance,
-      Collection<? extends IJsonSchemaDefinable> types,
+      Collection<? extends IJsonSchemaModelDefinition> types,
       IJsonGenerationState state) {
     ArrayNode oneOf = node.putArray("oneOf");
 

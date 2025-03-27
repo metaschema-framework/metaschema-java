@@ -37,7 +37,7 @@ public class DataTypeRestrictionDefinitionJsonSchema
       @NonNull IValuedDefinition definition,
       @NonNull AllowedValueCollection allowedValuesCollection,
       @NonNull IJsonGenerationState state) {
-    this.name = state.getTypeNameForDefinition(definition, "Value");
+    this.name = state.generateJsonSchemaDefinitionName(definition, null, "Value");
     this.definition = definition;
     CollectionUtil.requireNonEmpty(allowedValuesCollection.getValues());
     this.allowedValuesCollection = allowedValuesCollection;

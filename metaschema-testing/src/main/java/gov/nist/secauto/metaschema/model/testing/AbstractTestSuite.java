@@ -457,7 +457,7 @@ public abstract class AbstractTestSuite {
               contentValidator = lazyContentValidator.get();
             } catch (Exception ex) {
               throw new JUnitException( // NOPMD - cause is relevant, exception is not
-                  "failed to produce the content validator", ex.getCause());
+                  "failed to produce the content validator", ex);
             }
 
             assertEquals(

@@ -36,7 +36,7 @@ public class JsonSchemaModule
       @NonNull IJsonGenerationState state) {
     this.module = module;
     this.roots = module.getExportedRootAssemblyDefinitions().stream()
-        .map(state::newRootAssemblyDefinition)
+        .map(root -> state.getAssemblyDefinition(root, null))
         .collect(Collectors.toUnmodifiableList());
   }
 
@@ -46,6 +46,12 @@ public class JsonSchemaModule
     return true;
   }
 
+  /**
+   * Get the schemas for referenced definitions for model objects and data types
+   * used within this module schema.
+   * 
+   * @return a stream containing the referenced definitions
+   */
   @NonNull
   public Stream<IJsonSchemaDefinable> collectDefinitions(IJsonGenerationState state) {
     return roots.stream()
@@ -68,11 +74,10 @@ public class JsonSchemaModule
     }
 
     // ensure all definitions are recorded
-    // TODO: use this result
-    collectDefinitions(state)
+    Set<IJsonSchemaDefinable> usedDefinitions = collectDefinitions(state)
         .collect(Collectors.toUnmodifiableSet());
 
-    node.set("definitions", state.generateDefinitions());
+    node.set("definitions", state.generateDefinitions(usedDefinitions));
 
     if (roots.size() == 1) {
       generateRoot(node, roots.iterator().next(), state);

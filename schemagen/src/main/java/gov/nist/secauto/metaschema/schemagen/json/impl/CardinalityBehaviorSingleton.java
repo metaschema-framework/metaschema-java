@@ -33,7 +33,7 @@ public final class CardinalityBehaviorSingleton
   public void generate(
       ObjectNode node,
       IModelInstanceAbsolute instance,
-      Collection<? extends IJsonSchemaDefinable> types,
+      Collection<? extends IJsonSchemaModelDefinition> types,
       IJsonGenerationState state) {
     generateInternal(node, types, state);
   }

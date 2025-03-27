@@ -41,7 +41,7 @@ public class JsonSchemaDefinitionFlag
 
   @Override
   public String generateDefinitionName(IJsonGenerationState state) {
-    return state.getTypeNameForDefinition(getDefinition(), null);
+    return state.generateJsonSchemaDefinitionName(getDefinition(), null, null);
   }
 
   @Override

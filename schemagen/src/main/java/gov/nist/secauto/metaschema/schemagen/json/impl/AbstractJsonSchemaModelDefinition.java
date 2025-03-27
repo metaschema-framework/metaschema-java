@@ -4,7 +4,6 @@ package gov.nist.secauto.metaschema.schemagen.json.impl;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.schemagen.IGenerationState;
 
 import java.util.List;
 import java.util.Set;
@@ -49,13 +48,10 @@ public abstract class AbstractJsonSchemaModelDefinition<D extends IModelDefiniti
 
   @Override
   public String generateDefinitionName(IJsonGenerationState state) {
-    StringBuilder builder = new StringBuilder();
-    if (jsonKeyFlagName != null) {
-      builder
-          .append(IGenerationState.toCamelCase(state.toFlagName(jsonKeyFlagName)))
-          .append("JsonKey");
-    }
-    return state.getTypeNameForDefinition(getDefinition(), builder.toString());
+    return state.generateJsonSchemaDefinitionName(
+        getDefinition(),
+        jsonKeyFlagName == null ? null : state.toFlagName(jsonKeyFlagName),
+        null);
   }
 
   @Override
@@ -78,9 +74,16 @@ public abstract class AbstractJsonSchemaModelDefinition<D extends IModelDefiniti
   public Stream<IJsonSchemaDefinable> collectDefinitions(
       Set<IJsonSchemaDefinition> visited,
       IJsonGenerationState state) {
-    return Stream.concat(
+    Stream<IJsonSchemaDefinable> retval = Stream.concat(
         Stream.of(this),
         getFlagProperties().stream()
             .flatMap(property -> property.collectDefinitions(visited, state)));
+
+    IFlagInstance jsonKeyFlag = getJsonKeyFlag();
+    if (jsonKeyFlag != null) {
+      retval = Stream.concat(retval, Stream.of(state.getFlagDefinition(jsonKeyFlag.getDefinition())));
+    }
+
+    return retval;
   }
 }

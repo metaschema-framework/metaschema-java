@@ -46,7 +46,7 @@ public class JsonSchemaPropertyField
     IFieldInstance instance = getInstance();
     MetadataUtils.generateTitle(instance, obj);
     MetadataUtils.generateDescription(instance, obj);
-    // TODO: handle complex case
+    // TODO: handle complex case?
     MetadataUtils.generateDefault(instance, obj);
   }
 

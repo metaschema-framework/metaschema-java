@@ -46,6 +46,6 @@ public interface ICardinalityBehavior {
   void generate(
       @NonNull ObjectNode object,
       @NonNull IModelInstanceAbsolute instance,
-      @NonNull Collection<? extends IJsonSchemaDefinable> types,
+      @NonNull Collection<? extends IJsonSchemaModelDefinition> types,
       @NonNull IJsonGenerationState state);
 }

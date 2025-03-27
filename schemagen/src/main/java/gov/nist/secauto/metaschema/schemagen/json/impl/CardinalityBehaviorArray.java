@@ -33,7 +33,7 @@ public final class CardinalityBehaviorArray
   public void generate(
       ObjectNode node,
       IModelInstanceAbsolute instance,
-      Collection<? extends IJsonSchemaDefinable> types,
+      Collection<? extends IJsonSchemaModelDefinition> types,
       IJsonGenerationState state) {
     int minOccurs = instance.getMinOccurs();
     int maxOccurs = instance.getMaxOccurs();
