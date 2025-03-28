@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
@@ -44,8 +48,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public final class JsonSchemaHelper {
+  /**
+   * Supports comparison of named properties by their property name.
+   */
   public static final Comparator<IJsonSchemaPropertyNamed> INSTANCE_NAME_COMPARATOR
       = Comparator.comparing(IJsonSchemaPropertyNamed::getName);
+  /**
+   * Supports comparison of JSON schema definitions by their definition name.
+   */
   public static final Comparator<IJsonSchemaDefinable> DEFINABLE_NAME_COMPARATOR
       = Comparator.comparing(IJsonSchemaDefinable::getDefinitionName);
 
@@ -96,7 +106,7 @@ public final class JsonSchemaHelper {
   private static JsonNode toJsonValue(
       @Nullable Object defaultValue,
       @NonNull IDataTypeAdapter<?> adapter) {
-    JsonNode retval = null;
+    JsonNode retval = null; // use default conversion by default
     switch (adapter.getJsonRawType()) {
     case BOOLEAN:
       if (defaultValue instanceof Boolean) {
@@ -125,7 +135,6 @@ public final class JsonSchemaHelper {
     case NULL:
       throw new UnsupportedOperationException("Invalid type: " + adapter.getClass());
     case STRING:
-    default:
       // use default conversion
       break;
     }
@@ -136,12 +145,20 @@ public final class JsonSchemaHelper {
     return retval;
   }
 
+  /**
+   * Generate a JSON pointer expression that points to the provided JSON schema
+   * definition for use as a schema reference.
+   *
+   * @param schema
+   *          the JSON schema definition to generate the pointer for
+   * @return the JSON pointer
+   */
   @NonNull
   public static String generateDefinitionJsonPointer(@NonNull IJsonSchemaDefinable schema) {
-    return new StringBuilder()
+    return ObjectUtils.notNull(new StringBuilder()
         .append("#/definitions/")
         .append(schema.getDefinitionName())
-        .toString();
+        .toString());
   }
 
   public static void generateProperties(
@@ -206,11 +223,11 @@ public final class JsonSchemaHelper {
   public static List<IJsonSchemaPropertyNamed> buildModelProperties(
       @NonNull IContainerModelAbsolute definition,
       @NonNull IJsonGenerationState state) {
-    return definition.getModelInstances().stream()
+    return ObjectUtils.notNull(definition.getModelInstances().stream()
         // filter out choice instances, which will be handled separately
         .filter(instance -> !(instance instanceof IChoiceInstance))
-        .map(instance -> state.newJsonSchemaPropertyModel(ObjectUtils.notNull(instance)))
-        .collect(Collectors.toUnmodifiableList());
+        .map(instance -> state.getJsonSchemaPropertyModel(ObjectUtils.notNull(instance)))
+        .collect(Collectors.toUnmodifiableList()));
   }
 
   public static void generateFieldBody(
@@ -279,8 +296,8 @@ public final class JsonSchemaHelper {
 
   public static void generateAssemblyBody(
       @NonNull IJsonSchemaDefinitionAssembly assembly,
-      ObjectNode node,
-      IJsonGenerationState state) {
+      @NonNull ObjectNode node,
+      @NonNull IJsonGenerationState state) {
     node.put("type", "object");
 
     List<JsonSchemaHelper.Choice> availableChoices = assembly.getChoices();
@@ -294,7 +311,7 @@ public final class JsonSchemaHelper {
     } else if (availableChoices.size() > 1) {
       ArrayNode oneOf = node.putArray("anyOf");
       availableChoices.forEach(choice -> {
-        ObjectNode schemaNode = oneOf.addObject();
+        ObjectNode schemaNode = ObjectUtils.notNull(oneOf.addObject());
 
         generateProperties(
             choice.getCombinations(),
@@ -318,14 +335,15 @@ public final class JsonSchemaHelper {
     }
 
     @Override
-    public Stream<IJsonSchemaDefinable> collectDefinitions(Set<IJsonSchemaDefinition> visited,
+    public Stream<IJsonSchemaDefinable> collectDefinitions(
+        Set<IJsonSchemaDefinitionAssembly> visited,
         IJsonGenerationState state) {
-      return Stream.empty();
+      return ObjectUtils.notNull(Stream.empty());
     }
 
     @Override
     public void generate(ObjectNode node, IJsonGenerationState state) {
-      field.getFieldValue().generateJsonSchemaOrDefinitionRef(node.putObject(getName()), state);
+      field.getFieldValue().generateJsonSchemaOrDefinitionRef(ObjectUtils.notNull(node.putObject(getName())), state);
     }
 
     @Override
@@ -341,7 +359,7 @@ public final class JsonSchemaHelper {
       @NonNull IJsonGenerationState state) {
     Stream<Choice> retval = Stream.of(baseChoice);
     for (IChoiceInstance choice : choiceInstances) {
-      List<IJsonSchemaPropertyNamed> newChoices = buildModelProperties(choice, state);
+      List<IJsonSchemaPropertyNamed> newChoices = buildModelProperties(ObjectUtils.notNull(choice), state);
       retval = retval.flatMap(oldChoice -> oldChoice.explode(newChoices));
     }
     return ObjectUtils.notNull(retval);
@@ -362,7 +380,7 @@ public final class JsonSchemaHelper {
 
     @NonNull
     public Stream<Choice> explode(@NonNull List<IJsonSchemaPropertyNamed> newChoices) {
-      return newChoices.isEmpty()
+      return ObjectUtils.notNull(newChoices.isEmpty()
           ? Stream.of(this)
           : newChoices.stream()
               .map(next -> {
@@ -370,7 +388,7 @@ public final class JsonSchemaHelper {
                 retval.addAll(combinations);
                 retval.add(next);
                 return new Choice(CollectionUtil.unmodifiableList(retval));
-              });
+              }));
     }
   }
 

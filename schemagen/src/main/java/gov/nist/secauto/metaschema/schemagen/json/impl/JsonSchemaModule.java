@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
@@ -5,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 
@@ -25,7 +30,7 @@ public class JsonSchemaModule
 
   /**
    * Construct a new JSON schema definition.
-   * 
+   *
    * @param module
    *          the associated Metaschema-based module
    * @param state
@@ -36,7 +41,7 @@ public class JsonSchemaModule
       @NonNull IJsonGenerationState state) {
     this.module = module;
     this.roots = module.getExportedRootAssemblyDefinitions().stream()
-        .map(root -> state.getAssemblyDefinition(root, null))
+        .map(root -> state.getAssemblyDefinition(ObjectUtils.notNull(root), null))
         .collect(Collectors.toUnmodifiableList());
   }
 
@@ -49,13 +54,15 @@ public class JsonSchemaModule
   /**
    * Get the schemas for referenced definitions for model objects and data types
    * used within this module schema.
-   * 
+   *
+   * @param state
+   *          the JSON generation state used for context
    * @return a stream containing the referenced definitions
    */
   @NonNull
-  public Stream<IJsonSchemaDefinable> collectDefinitions(IJsonGenerationState state) {
-    return roots.stream()
-        .flatMap(root -> root.collectDefinitions(Set.of(), state));
+  public Stream<IJsonSchemaDefinable> collectDefinitions(@NonNull IJsonGenerationState state) {
+    return ObjectUtils.notNull(roots.stream()
+        .flatMap(root -> root.collectDefinitions(CollectionUtil.emptySet(), state)));
   }
 
   @Override
@@ -73,14 +80,10 @@ public class JsonSchemaModule
       throw new SchemaGenerationException("No root definitions found");
     }
 
-    // ensure all definitions are recorded
-    Set<IJsonSchemaDefinable> usedDefinitions = collectDefinitions(state)
-        .collect(Collectors.toUnmodifiableSet());
-
-    node.set("definitions", state.generateDefinitions(usedDefinitions));
+    node.set("definitions", generateDefinitions(state));
 
     if (roots.size() == 1) {
-      generateRoot(node, roots.iterator().next(), state);
+      generateRoot(node, ObjectUtils.notNull(roots.iterator().next()), state);
     } else {
       ArrayNode oneOfNode = node.putArray("oneOf");
       roots.forEach(root -> {
@@ -91,6 +94,36 @@ public class JsonSchemaModule
         generateRoot(rootNode, root, state);
       });
     }
+  }
+
+  /**
+   * Generate the referenced JSON schema definitions used in this JSON schema.
+   * 
+   * @param state
+   *          the JSON generation state used for context
+   * @return the definitions JSON schema node
+   */
+  private ObjectNode generateDefinitions(@NonNull IJsonGenerationState state) {
+
+    // ensure all definitions are recorded
+    Set<IJsonSchemaDefinable> usedDefinitions = ObjectUtils.notNull(collectDefinitions(state)
+        .collect(Collectors.toUnmodifiableSet()));
+
+    ObjectNode definitionsNode = ObjectUtils.notNull(state.getJsonNodeFactory().objectNode());
+
+    usedDefinitions.stream()
+        .filter(definition -> !definition.isInline(state))
+        .distinct()
+        .sorted(JsonSchemaHelper.DEFINABLE_NAME_COMPARATOR)
+        .forEach(definition -> {
+          ObjectNode definitionNode = definitionsNode.putObject(definition.getDefinitionName());
+          assert definitionNode != null;
+          definition.generateDefinitionJsonSchema(definitionNode, state);
+        });
+
+    state.generateDataTypeDefinitions(definitionsNode);
+
+    return definitionsNode;
   }
 
   private static void generateRoot(
@@ -105,8 +138,7 @@ public class JsonSchemaModule
 
     String name = schema.getDefinition().getRootJsonName();
 
-    schema.generateJsonSchemaOrDefinitionRef(
-        propertiesObj.putObject(name), state);
+    schema.generateJsonSchemaOrDefinitionRef(ObjectUtils.notNull(propertiesObj.putObject(name)), state);
 
     node.putArray("required")
         .add(name);

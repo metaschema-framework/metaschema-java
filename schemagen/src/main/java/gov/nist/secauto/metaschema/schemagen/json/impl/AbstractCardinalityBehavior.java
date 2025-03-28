@@ -8,10 +8,17 @@ package gov.nist.secauto.metaschema.schemagen.json.impl;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import gov.nist.secauto.metaschema.core.model.IModelInstance;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import java.util.Collection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Supports production of a JSON schema property construction for a Metaschema
+ * instance that has {@link IModelInstance#getJsonGroupAsBehavior()}.
+ */
 public abstract class AbstractCardinalityBehavior
     implements ICardinalityBehavior {
   /**
@@ -37,7 +44,7 @@ public abstract class AbstractCardinalityBehavior
       // build an anyOf of the item type references
       ArrayNode anyOf = node.putArray("anyOf");
       for (IJsonSchemaDefinable definition : definitions) {
-        ObjectNode defNode = anyOf.addObject();
+        ObjectNode defNode = ObjectUtils.notNull(anyOf.addObject());
         definition.generateJsonSchemaOrDefinitionRef(defNode, state);
       }
     }

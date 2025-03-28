@@ -38,7 +38,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -144,6 +143,7 @@ public class JsonGenerationState
       return Objects.hash(definition, disciminatorProperty, disciminatorValue);
     }
 
+    @SuppressWarnings("PMD.OnlyOneReturn")
     @Override
     public boolean equals(Object obj) {
       if (this == obj) {
@@ -185,7 +185,7 @@ public class JsonGenerationState
   }
 
   @Override
-  public IJsonSchemaPropertyNamed newJsonSchemaPropertyModel(@NonNull IModelInstanceAbsolute instance) {
+  public IJsonSchemaPropertyNamed getJsonSchemaPropertyModel(@NonNull IModelInstanceAbsolute instance) {
     IJsonSchemaPropertyNamed retval;
     if (instance instanceof IAssemblyInstanceAbsolute) {
       retval = new JsonSchemaPropertyAssembly((IAssemblyInstanceAbsolute) instance, this);
@@ -229,22 +229,8 @@ public class JsonGenerationState
     return retval;
   }
 
-  @Override
-  public ObjectNode generateDefinitions(Set<IJsonSchemaDefinable> usedDefinitions) {
-    ObjectNode definitionsNode = getJsonNodeFactory().objectNode();
-
-    usedDefinitions.stream()
-        .filter(definition -> !definition.isInline(this))
-        .sorted(JsonSchemaHelper.DEFINABLE_NAME_COMPARATOR)
-        .forEach(definition -> {
-          ObjectNode definitionNode = definitionsNode.putObject(definition.getDefinitionName());
-          assert definitionNode != null;
-          definition.generateDefinitionJsonSchema(definitionNode, this);
-        });
-
-    getDatatypeManager().generateDatatypes(definitionsNode);
-
-    return definitionsNode;
+  public void generateDataTypeDefinitions(@NonNull ObjectNode definitionsNode) {
+    getDatatypeManager().generateDatatypeDefinitions(definitionsNode);
   }
 
   @Override
@@ -274,6 +260,7 @@ public class JsonGenerationState
   }
 
   @Override
+  @SuppressWarnings("PMD.UseObjectForClearerAPI")
   public String generateJsonSchemaDefinitionName(
       @NonNull IDefinition definition,
       @Nullable String jsonKeyFlagName,

@@ -1,9 +1,14 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -15,7 +20,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * A JSON schema for a given Metaschema-based model object based on a module
  * definition that can have flags, which is part of a larger JSON schema.
- * 
+ *
  * @param <D>
  *          the Java type of the Metaschema module definition
  */
@@ -24,12 +29,13 @@ public abstract class AbstractJsonSchemaModelDefinition<D extends IModelDefiniti
     implements IJsonSchemaModelDefinition {
   @Nullable
   private final IEnhancedQName jsonKeyFlagName;
+  @NonNull
   private final List<IJsonSchemaPropertyFlag> flagProperties;
 
   /**
    * Construct a new JSON schema definition based on a Metaschema module
    * model-based definition.
-   * 
+   *
    * @param definition
    *          the Metaschema module definition
    * @param jsonKeyFlagName
@@ -72,7 +78,7 @@ public abstract class AbstractJsonSchemaModelDefinition<D extends IModelDefiniti
 
   @Override
   public Stream<IJsonSchemaDefinable> collectDefinitions(
-      Set<IJsonSchemaDefinition> visited,
+      Set<IJsonSchemaDefinitionAssembly> visited,
       IJsonGenerationState state) {
     Stream<IJsonSchemaDefinable> retval = Stream.concat(
         Stream.of(this),
@@ -84,6 +90,6 @@ public abstract class AbstractJsonSchemaModelDefinition<D extends IModelDefiniti
       retval = Stream.concat(retval, Stream.of(state.getFlagDefinition(jsonKeyFlag.getDefinition())));
     }
 
-    return retval;
+    return ObjectUtils.notNull(retval);
   }
 }

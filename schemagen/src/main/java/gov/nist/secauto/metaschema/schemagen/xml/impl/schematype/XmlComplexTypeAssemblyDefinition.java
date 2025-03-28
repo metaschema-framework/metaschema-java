@@ -112,7 +112,7 @@ public class XmlComplexTypeAssemblyDefinition
     case CHOICE_GROUP:
       generateChoiceGroupInstance((IChoiceGroupInstance) modelInstance, state);
       break;
-    default:
+    case FLAG:
       throw new UnsupportedOperationException(modelInstance.getModelType().toString());
     }
 

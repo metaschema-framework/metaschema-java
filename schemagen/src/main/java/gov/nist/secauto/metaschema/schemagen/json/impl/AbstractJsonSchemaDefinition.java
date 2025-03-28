@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
@@ -10,7 +14,7 @@ import nl.talsmasoftware.lazy4j.Lazy;
 /**
  * A JSON schema for a given Metaschema-based model object based on a module
  * definition, which is part of a larger JSON schema.
- * 
+ *
  * @param <D>
  *          the Java type of the Metaschema module definition
  */
@@ -23,7 +27,7 @@ public abstract class AbstractJsonSchemaDefinition<D extends IDefinition> implem
   /**
    * Construct a new JSON schema definition based on a Metaschema module
    * definition.
-   * 
+   *
    * @param definition
    *          the Metaschema module definition
    * @param state
@@ -48,11 +52,10 @@ public abstract class AbstractJsonSchemaDefinition<D extends IDefinition> implem
 
   /**
    * Generate a unique JSON definition name for this schema.
-   * 
+   *
    * @param state
    *          the generation state used to generate this JSON schema
    * @return the name of the JSON defintiion for this schema
    */
   protected abstract String generateDefinitionName(@NonNull IJsonGenerationState state);
-
 }

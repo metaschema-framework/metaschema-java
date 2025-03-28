@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.schemagen.xml.impl;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.jdom2.Element;
 
@@ -22,8 +23,7 @@ public class XmlProseBaseDatatypeProvider
 
   @Override
   protected InputStream getSchemaResource() {
-    return IModule.class
-        .getResourceAsStream("/schema/xml/metaschema-prose-base.xsd");
+    return ObjectUtils.requireNonNull(IModule.class.getResourceAsStream("/schema/xml/metaschema-prose-base.xsd"));
   }
 
   @Override

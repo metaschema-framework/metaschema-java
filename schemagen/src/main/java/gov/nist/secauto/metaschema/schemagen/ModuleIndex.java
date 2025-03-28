@@ -30,6 +30,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ModuleIndex {
+  // needs to be ordered
+  @SuppressWarnings("PMD.UseConcurrentHashMap")
   private final Map<IDefinition, DefinitionEntry> index = new LinkedHashMap<>();
 
   @NonNull

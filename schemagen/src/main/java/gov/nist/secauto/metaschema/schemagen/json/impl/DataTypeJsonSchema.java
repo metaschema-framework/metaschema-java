@@ -8,12 +8,17 @@ package gov.nist.secauto.metaschema.schemagen.json.impl;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Set;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Supports generation of a JSON schema based on a Metaschema data type, which
+ * can be generated inline or as a JSON schema definition.
+ */
 public class DataTypeJsonSchema
     implements IDataTypeJsonSchema {
   @NonNull
@@ -21,6 +26,14 @@ public class DataTypeJsonSchema
   @NonNull
   private final IDataTypeAdapter<?> dataTypeAdapter;
 
+  /**
+   * Construct a new data type JSON schema.
+   * 
+   * @param name
+   *          the JSON schema definition name
+   * @param dataTypeAdapter
+   *          the Metaschema data type adapter
+   */
   public DataTypeJsonSchema(
       @NonNull String name,
       @NonNull IDataTypeAdapter<?> dataTypeAdapter) {
@@ -46,9 +59,9 @@ public class DataTypeJsonSchema
   }
 
   @Override
-  public Stream<IJsonSchemaDefinable> collectDefinitions(Set<IJsonSchemaDefinition> visited,
+  public Stream<IJsonSchemaDefinable> collectDefinitions(Set<IJsonSchemaDefinitionAssembly> visited,
       IJsonGenerationState state) {
-    return Stream.empty();
+    return ObjectUtils.notNull(Stream.empty());
   }
 
   @Override

@@ -9,7 +9,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.IModelInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -17,12 +20,26 @@ import java.util.Collection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Produces a JSON schema property construction for a Metaschema instance that
+ * has {@link IModelInstance#getJsonGroupAsBehavior()} set to
+ * {@link JsonGroupAsBehavior#KEYED}.
+ * <p>
+ * This construction uses an object to have "keyed" properties for each value.
+ * The key is based on the {@link IFlagInstance} that is identified as the
+ * {@link IModelDefinition#getJsonKey()}.
+ */
 public final class CardinalityBehaviorKeyedObject
     extends AbstractCardinalityBehavior {
 
   @NonNull
   private static final CardinalityBehaviorKeyedObject SINGLETON = new CardinalityBehaviorKeyedObject();
 
+  /**
+   * Get the singleton instance for this behavior.
+   *
+   * @return the singleton instance
+   */
   @NonNull
   public static CardinalityBehaviorKeyedObject instance() {
     return SINGLETON;
@@ -53,21 +70,20 @@ public final class CardinalityBehaviorKeyedObject
 
     if (!types.isEmpty()) {
       if (types.size() == 1) {
-        generatePropertyName(node, instance, types.iterator().next(), state);
+        generatePropertyName(node, ObjectUtils.notNull(types.iterator().next()), state);
       } else {
         ArrayNode anyOf = node.putArray("anyOf");
         for (IJsonSchemaModelDefinition type : types) {
-          generatePropertyName(ObjectUtils.notNull(anyOf.objectNode()), instance, type, state);
+          generatePropertyName(ObjectUtils.notNull(anyOf.objectNode()), ObjectUtils.notNull(type), state);
         }
       }
     }
   }
 
   private void generatePropertyName(
-      ObjectNode node,
-      IModelInstanceAbsolute instance,
-      IJsonSchemaModelDefinition type,
-      IJsonGenerationState state) {
+      @NonNull ObjectNode node,
+      @NonNull IJsonSchemaModelDefinition type,
+      @NonNull IJsonGenerationState state) {
 
     IFlagInstance flag = type.getJsonKeyFlag();
     if (flag != null) {

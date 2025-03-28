@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
@@ -5,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +21,27 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Provides a means to generate a JSON schema based on a Metaschema assembly
+ * definition.
+ */
 public class JsonSchemaDefinitionAssembly
     extends AbstractJsonSchemaModelDefinition<IAssemblyDefinition>
     implements IJsonSchemaDefinitionAssembly {
   private final Lazy<List<JsonSchemaHelper.Choice>> choices;
 
+  /**
+   * Construct a new JSON schema definition based on a Metaschema module
+   * definition.
+   *
+   * @param definition
+   *          the Metaschema module definition
+   * @param jsonKeyFlagName
+   *          the JSON key flag to use with thsi definition or {@code null} if no
+   *          JSON key is used
+   * @param state
+   *          the JSON generation state
+   */
   public JsonSchemaDefinitionAssembly(
       @NonNull IAssemblyDefinition definition,
       @Nullable IEnhancedQName jsonKeyFlagName,
@@ -42,28 +63,29 @@ public class JsonSchemaDefinitionAssembly
 
   @Override
   public List<JsonSchemaHelper.Choice> getChoices() {
-    return choices.get();
+    return ObjectUtils.notNull(choices.get());
   }
 
   @Override
   public Stream<IJsonSchemaDefinable> collectDefinitions(
-      Set<IJsonSchemaDefinition> visited,
+      Set<IJsonSchemaDefinitionAssembly> visited,
       IJsonGenerationState state) {
-    Set<IJsonSchemaDefinition> myVisited
-        = Stream.concat(visited.stream(), Stream.of(this))
-            .collect(Collectors.toUnmodifiableSet());
+    Set<IJsonSchemaDefinitionAssembly> myVisited = ObjectUtils.notNull(Stream.concat(
+        visited.stream(),
+        Stream.of(this))
+        .collect(Collectors.toUnmodifiableSet()));
 
     assert visited.contains(this) || visited.stream()
         .noneMatch(schema -> schema.getDefinition().equals(getDefinition()));
 
-    return visited.contains(this)
+    return ObjectUtils.notNull(visited.contains(this)
         ? Stream.of(this)
         : Stream.concat(
             super.collectDefinitions(myVisited, state),
             choices.get().stream()
                 .flatMap(choice -> choice.getCombinations().stream()
                     .flatMap(property -> property.collectDefinitions(myVisited, state)
-                        .collect(Collectors.toUnmodifiableList()).stream())));
+                        .collect(Collectors.toUnmodifiableList()).stream()))));
   }
 
   @Override

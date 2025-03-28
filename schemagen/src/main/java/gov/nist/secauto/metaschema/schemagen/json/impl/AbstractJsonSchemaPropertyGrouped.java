@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
@@ -16,6 +20,13 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * A JSON schema for a given Metaschema-based definition instance, that is part
+ * of a choice group, which is part of a larger JSON schema.
+ *
+ * @param <I>
+ *          the Java type of the Metaschema definition instance
+ */
 public abstract class AbstractJsonSchemaPropertyGrouped<I extends INamedModelInstanceGrouped>
     extends AbstractJsonSchemaProperty<I>
     implements IJsonSchemaPropertyGrouped {
@@ -25,9 +36,18 @@ public abstract class AbstractJsonSchemaPropertyGrouped<I extends INamedModelIns
   private final List<IJsonSchemaPropertyFlag> flagProperties;
   private final IFlagInstance jsonKey;
 
+  /**
+   * Construct a new JSON schema property based on a Metaschema definition
+   * instance.
+   *
+   * @param instance
+   *          the Metaschema definition instance
+   * @param state
+   *          the generation state used to generate this JSON schema
+   */
   protected AbstractJsonSchemaPropertyGrouped(@NonNull I instance, @NonNull IJsonGenerationState state) {
     super(instance);
-    this.definitionName = Lazy.lazy(() -> getDefinitionName(state));
+    this.definitionName = ObjectUtils.notNull(Lazy.lazy(() -> getDefinitionName(state)));
     this.jsonKey = instance.getJsonKey();
 
     IEnhancedQName jsonKeyName = this.jsonKey == null ? null : this.jsonKey.getQName();
@@ -47,7 +67,7 @@ public abstract class AbstractJsonSchemaPropertyGrouped<I extends INamedModelIns
 
   @Override
   public String getDefinitionName() {
-    return definitionName.get();
+    return ObjectUtils.notNull(definitionName.get());
   }
 
   private String getDefinitionName(IJsonGenerationState state) {
@@ -69,7 +89,7 @@ public abstract class AbstractJsonSchemaPropertyGrouped<I extends INamedModelIns
 
   @Override
   public Stream<IJsonSchemaDefinable> collectDefinitions(
-      Set<IJsonSchemaDefinition> visited,
+      Set<IJsonSchemaDefinitionAssembly> visited,
       IJsonGenerationState state) {
     Stream<IJsonSchemaDefinable> retval = Stream.concat(
         Stream.of(this),
@@ -80,15 +100,19 @@ public abstract class AbstractJsonSchemaPropertyGrouped<I extends INamedModelIns
     if (jsonKeyFlag != null) {
       retval = Stream.concat(retval, Stream.of(state.getFlagDefinition(jsonKeyFlag.getDefinition())));
     }
-    return retval;
+    return ObjectUtils.notNull(retval);
 
   }
 
+  /**
+   * Represents a JSON schema property used to declare the type of a choice group
+   * object.
+   */
   protected class DiscriminatorProperty implements IJsonSchemaPropertyNamed {
     @Override
-    public Stream<IJsonSchemaDefinable> collectDefinitions(Set<IJsonSchemaDefinition> visited,
+    public Stream<IJsonSchemaDefinable> collectDefinitions(Set<IJsonSchemaDefinitionAssembly> visited,
         IJsonGenerationState state) {
-      return Stream.empty();
+      return ObjectUtils.notNull(Stream.empty());
     }
 
     @Override

@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
@@ -13,18 +17,31 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Supports generation of a JSON schema based on a Metaschema
+ * {@link IChoiceGroupInstance}, which can be generated inline or as a JSON
+ * schema definition.
+ */
 public class JsonSchemaPropertyChoiceGroup
     extends AbstractJsonSchemaPropertyNamed<IChoiceGroupInstance> {
-
+  @NonNull
   private final List<IJsonSchemaPropertyGrouped> choiceInstances;
 
+  /**
+   * Construct a new JSON schema property.
+   *
+   * @param instance
+   *          the instance to construct the property for
+   * @param state
+   *          the JSON generation state used to get JSON schema information
+   */
   public JsonSchemaPropertyChoiceGroup(
       @NonNull IChoiceGroupInstance instance,
       @NonNull IJsonGenerationState state) {
     super(instance, instance.getGroupAsName() == null ? "[unknown]" : ObjectUtils.notNull(instance.getGroupAsName()));
-    this.choiceInstances = instance.getNamedModelInstances().stream()
+    this.choiceInstances = ObjectUtils.notNull(instance.getNamedModelInstances().stream()
         .map(state::getJsonSchemaPropertyGrouped)
-        .collect(Collectors.toUnmodifiableList());
+        .collect(Collectors.toUnmodifiableList()));
   }
 
   @Override
@@ -34,10 +51,10 @@ public class JsonSchemaPropertyChoiceGroup
 
   @Override
   public Stream<IJsonSchemaDefinable> collectDefinitions(
-      Set<IJsonSchemaDefinition> visited,
+      Set<IJsonSchemaDefinitionAssembly> visited,
       IJsonGenerationState state) {
-    return choiceInstances.stream()
-        .flatMap(choice -> choice.collectDefinitions(visited, state));
+    return ObjectUtils.notNull(choiceInstances.stream()
+        .flatMap(choice -> choice.collectDefinitions(visited, state)));
   }
 
   @Override

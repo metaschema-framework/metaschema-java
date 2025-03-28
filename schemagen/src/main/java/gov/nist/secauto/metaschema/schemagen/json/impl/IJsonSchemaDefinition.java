@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
@@ -8,8 +12,8 @@ import gov.nist.secauto.metaschema.core.model.IDefinition;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Represents a JSON schema for a given Metaschema-based model object based on a
- * Metaschema module definition, which is part of a larger JSON schema.
+ * Supports generation of a JSON schema based on a Metaschema definition, which
+ * can be generated inline or as a JSON schema definition.
  */
 public interface IJsonSchemaDefinition extends IJsonSchemaDefinable {
   @Override
@@ -17,6 +21,11 @@ public interface IJsonSchemaDefinition extends IJsonSchemaDefinable {
     return state.isInline(getDefinition());
   }
 
+  /**
+   * Get the associated definition.
+   *
+   * @return the definition
+   */
   @NonNull
   IDefinition getDefinition();
 
@@ -24,8 +33,8 @@ public interface IJsonSchemaDefinition extends IJsonSchemaDefinable {
   default void generateDefinitionJsonSchema(ObjectNode node, IJsonGenerationState state) {
     node.put("$id", JsonSchemaHelper.generateDefinitionJsonPointer(this));
 
-    MetadataUtils.generateTitle(getDefinition(), node);
-    MetadataUtils.generateDescription(getDefinition(), node);
+    JsonSchemaHelper.generateTitle(getDefinition(), node);
+    JsonSchemaHelper.generateDescription(getDefinition(), node);
     generateBody(node, state);
   }
 
@@ -38,11 +47,11 @@ public interface IJsonSchemaDefinition extends IJsonSchemaDefinable {
 
   /**
    * Generate the body of the JSON schema.
-   * 
+   *
    * @param node
    *          the JSON node to generate the schema within
    * @param state
    *          the generation state used to generate this JSON schema
    */
-  void generateBody(ObjectNode node, IJsonGenerationState state);
+  void generateBody(@NonNull ObjectNode node, @NonNull IJsonGenerationState state);
 }

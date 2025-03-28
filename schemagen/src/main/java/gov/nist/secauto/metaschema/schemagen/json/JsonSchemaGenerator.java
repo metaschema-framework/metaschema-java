@@ -71,7 +71,7 @@ public class JsonSchemaGenerator
     IModule module = state.getModule();
 
     IJsonSchema moduleSchema = new JsonSchemaModule(module, state);
-    ObjectNode schemaNode = state.getJsonNodeFactory().objectNode();
+    ObjectNode schemaNode = ObjectUtils.notNull(state.getJsonNodeFactory().objectNode());
     moduleSchema.generateInlineJsonSchema(schemaNode, state);
 
     try {

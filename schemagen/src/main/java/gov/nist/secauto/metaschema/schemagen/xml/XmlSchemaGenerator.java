@@ -201,7 +201,7 @@ public class XmlSchemaGenerator
       for (IAssemblyDefinition definition : rootAssemblyDefinitions) {
         IEnhancedQName xmlQName = definition.getRootQName();
         if (xmlQName != null
-            && (xmlQName.getNamespace() == null || state.getDefaultNS().equals(xmlQName.getNamespace()))) {
+            && state.getDefaultNS().equals(xmlQName.getNamespace())) {
           generateRootElement(definition, state);
         }
       }

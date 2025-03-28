@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
@@ -5,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceGrouped;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,20 +17,36 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Supports generation of a JSON schema based on a Metaschema
+ * {@link IFieldInstanceGrouped}, which can be generated inline or as a JSON
+ * schema definition.
+ */
 public class JsonSchemaPropertyGroupedField
     extends AbstractJsonSchemaPropertyGrouped<IFieldInstanceGrouped>
     implements IJsonSchemaDefinitionField {
+  @NonNull
   private final IDataTypeJsonSchema fieldValueDataType;
-
+  @NonNull
   private final List<? extends IJsonSchemaPropertyNamed> nonValueProperties;
 
+  /**
+   * Construct a new JSON schema property.
+   *
+   * @param instance
+   *          the instance to construct the property for
+   * @param state
+   *          the JSON generation state used to get JSON schema information
+   */
   public JsonSchemaPropertyGroupedField(
       @NonNull IFieldInstanceGrouped instance,
       @NonNull IJsonGenerationState state) {
     super(instance, state);
     this.fieldValueDataType = state.getDataTypeSchemaForDefinition(instance.getDefinition());
-    this.nonValueProperties = Stream.concat(getFlagProperties().stream(), Stream.of(new DiscriminatorProperty()))
-        .collect(Collectors.toUnmodifiableList());
+    this.nonValueProperties = ObjectUtils.notNull(Stream.concat(
+        getFlagProperties().stream(),
+        Stream.of(new DiscriminatorProperty()))
+        .collect(Collectors.toUnmodifiableList()));
   }
 
   @Override

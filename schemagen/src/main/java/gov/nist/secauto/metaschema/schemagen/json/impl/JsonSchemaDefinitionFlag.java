@@ -1,9 +1,14 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.schemagen.json.impl;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Set;
 import java.util.stream.Stream;
@@ -11,8 +16,8 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A JSON schema for a given Metaschema {@link IFlagDefinition}, which is part
- * of a larger JSON schema.
+ * Provides a means to generate a JSON schema based on a Metaschema flag
+ * definition.
  */
 public class JsonSchemaDefinitionFlag
     extends AbstractJsonSchemaDefinition<IFlagDefinition> {
@@ -20,7 +25,7 @@ public class JsonSchemaDefinitionFlag
   /**
    * Construct a new JSON schema definition based on a Metaschema module
    * definition.
-   * 
+   *
    * @param definition
    *          the Metaschema module definition
    * @param state
@@ -34,9 +39,9 @@ public class JsonSchemaDefinitionFlag
 
   @Override
   public Stream<IJsonSchemaDefinable> collectDefinitions(
-      Set<IJsonSchemaDefinition> visited,
+      Set<IJsonSchemaDefinitionAssembly> visited,
       IJsonGenerationState state) {
-    return Stream.of(this);
+    return ObjectUtils.notNull(Stream.of(this));
   }
 
   @Override

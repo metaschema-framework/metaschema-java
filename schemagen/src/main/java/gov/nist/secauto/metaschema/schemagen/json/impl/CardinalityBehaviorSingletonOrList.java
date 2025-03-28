@@ -8,18 +8,33 @@ package gov.nist.secauto.metaschema.schemagen.json.impl;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import gov.nist.secauto.metaschema.core.model.IModelInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Produces a JSON schema property construction for a Metaschema instance that
+ * has {@link IModelInstance#getJsonGroupAsBehavior()} set to
+ * {@link JsonGroupAsBehavior#SINGLETON_OR_LIST}.
+ * <p>
+ * This construction allows a single JSON property value or an array of two or
+ * more property values.
+ */
 public final class CardinalityBehaviorSingletonOrList
     extends AbstractCardinalityBehavior {
   @NonNull
   private static final CardinalityBehaviorSingletonOrList SINGLETON = new CardinalityBehaviorSingletonOrList();
 
+  /**
+   * Get the singleton instance for this behavior.
+   *
+   * @return the singleton instance
+   */
   @NonNull
   public static CardinalityBehaviorSingletonOrList instance() {
     return SINGLETON;
