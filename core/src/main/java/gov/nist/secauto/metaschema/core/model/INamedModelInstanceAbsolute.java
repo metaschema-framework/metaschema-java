@@ -10,7 +10,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
-public interface INamedModelInstanceAbsolute extends INamedModelInstance, IModelInstanceAbsolute {
+public interface INamedModelInstanceAbsolute extends INamedModelInstance, IModelInstanceAbsolute, IJsonInstance {
   @Override
   default String getJsonName() {
     @NonNull

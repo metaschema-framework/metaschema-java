@@ -85,7 +85,13 @@ public class JsonDatatypeManager
     return retval;
   }
 
-  public void generateDatatypes(@NonNull ObjectNode definitionsObject) {
+  /**
+   * Generate the JSON schema definitions for all data types used.
+   * 
+   * @param definitionsObject
+   *          the JSON schema definitions node
+   */
+  public void generateDatatypeDefinitions(@NonNull ObjectNode definitionsObject) {
     Set<String> requiredJsonDatatypes = getUsedTypes();
     // resolve dependencies
     for (String datatype : CollectionUtil.toIterable(ObjectUtils.notNull(

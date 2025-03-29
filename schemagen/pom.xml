@@ -63,6 +63,7 @@
 			<artifactId>stax2-api</artifactId>
 		</dependency>
 		<dependency>
+			<!-- Needed for XML schema generation-->
 			<groupId>net.sf.saxon</groupId>
 			<artifactId>Saxon-HE</artifactId>
 		</dependency>

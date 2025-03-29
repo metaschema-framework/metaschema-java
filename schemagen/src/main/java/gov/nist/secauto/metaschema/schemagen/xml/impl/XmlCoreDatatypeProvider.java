@@ -29,7 +29,7 @@ public class XmlCoreDatatypeProvider
 
   @Override
   protected InputStream getSchemaResource() {
-    return IModule.class.getResourceAsStream("/schema/xml/metaschema-datatypes.xsd");
+    return ObjectUtils.requireNonNull(IModule.class.getResourceAsStream("/schema/xml/metaschema-datatypes.xsd"));
   }
 
   @Override

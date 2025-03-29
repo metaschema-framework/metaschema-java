@@ -457,7 +457,7 @@ public abstract class AbstractTestSuite {
               contentValidator = lazyContentValidator.get();
             } catch (Exception ex) {
               throw new JUnitException( // NOPMD - cause is relevant, exception is not
-                  "failed to produce the content validator", ex.getCause());
+                  "failed to produce the content validator", ex);
             }
 
             assertEquals(
@@ -528,6 +528,7 @@ public abstract class AbstractTestSuite {
    */
   protected static boolean validateWithSchema(@NonNull IContentValidator validator, @NonNull Path target)
       throws IOException {
+    LOGGER.atError().log("Validating: {}", target);
     IValidationResult schemaValidationResult = validator.validate(target);
     if (!schemaValidationResult.isPassing()) {
       LOGGER.atError().log("Schema validation failed for: {}", target);

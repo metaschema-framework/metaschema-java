@@ -11,7 +11,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * FOTY: Exceptions related to type errors.
+ * FOCA: Exceptions related to type casting.
  */
 public class CastFunctionException
     extends AbstractCodedMetapathException {

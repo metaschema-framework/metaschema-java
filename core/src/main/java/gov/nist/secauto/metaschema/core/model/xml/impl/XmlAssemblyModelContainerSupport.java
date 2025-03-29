@@ -36,7 +36,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Used to construct the model of an assmebly defintion based on XMLBeans-based
+ * Used to construct the model of an assembly definition based on XMLBeans-based
  * data.
  */
 public final class XmlAssemblyModelContainerSupport {

@@ -143,9 +143,9 @@ public class XmlGenerationState
         break;
       case CHOICE_GROUP:
       case CHOICE:
-      default:
         throw new UnsupportedOperationException(definition.getModelType().toString());
       }
+      assert retval != null : definition.getModelType();
       definitionToTypeMap.put(definition, retval);
     }
     return retval;
