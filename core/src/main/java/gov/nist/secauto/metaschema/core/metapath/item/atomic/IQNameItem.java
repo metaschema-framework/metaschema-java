@@ -16,7 +16,7 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * An atomic Metapath item with a boolean value.
+ * An atomic Metapath item with a namespace qualified name value.
  */
 public interface IQNameItem extends IAnyAtomicItem {
   /**
