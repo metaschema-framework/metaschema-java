@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * /** Implements <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-function-lookup">fn:function-lookup</a>
+ * "https://www.w3.org/TR/xpath-functions-31/#func-function-arity">fn:function-arity</a>
  * functions.
  */
 public final class FnFunctionArity {
