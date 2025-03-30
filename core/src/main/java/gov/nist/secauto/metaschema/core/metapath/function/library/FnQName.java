@@ -64,7 +64,7 @@ public final class FnQName {
     IStringItem paramUri = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
     IStringItem paramQName = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
 
-    if (paramUri.asString() == "") {
+    if (paramUri.length() == 0) {
       throw new CastFunctionException(
           CastFunctionException.INVALID_LEXICAL_VALUE,
           null,
