@@ -190,6 +190,8 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
   @NonNull
   public static final TokenAdapter TOKEN = new TokenAdapter();
   /**
+   * TODO: Update with URL for docs from from metaschema-framework/metaschema#90.
+   * 
    * The Metaschema <a href=
    * "https://pages.nist.gov/metaschema/specification/datatypes/#tbd">TBD</a> data
    * type instance.
