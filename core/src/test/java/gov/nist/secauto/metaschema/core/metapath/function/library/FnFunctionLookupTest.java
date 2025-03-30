@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
@@ -27,8 +27,8 @@ class FnFunctionLookupTest
   private static Stream<Arguments> provideValues() { // NOPMD - false positive
     return Stream.of(
         Arguments.of(
-            integer(2),
-            "fn:function-arity(fn:substring#2)"));
+            string("bcd"),
+            "fn:function-lookup(meta:qname('fn:substring'), 2)('abcd', 2)"));
   }
 
   @ParameterizedTest

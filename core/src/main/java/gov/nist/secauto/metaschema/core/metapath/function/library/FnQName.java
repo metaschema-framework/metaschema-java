@@ -63,33 +63,33 @@ public final class FnQName {
       IItem focus) {
     IStringItem paramUri = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
     IStringItem paramQName = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
-    
+
     if (paramUri.asString() == "") {
-	      throw new CastFunctionException(
-	              CastFunctionException.INVALID_LEXICAL_VALUE,
-	              null,
-	              String.format("paramURI is an empty string and not a valid URI to form a QName."));		
-	}
-    
+      throw new CastFunctionException(
+          CastFunctionException.INVALID_LEXICAL_VALUE,
+          null,
+          String.format("paramURI is an empty string and not a valid URI to form a QName."));
+    }
+
     try {
-        URI uri = URI.create(paramUri.asString());
-	} catch (IllegalArgumentException ex) {
-	      throw new CastFunctionException(
-	              CastFunctionException.INVALID_LEXICAL_VALUE,
-	              paramUri,
-	              String.format("paramURI '%s' is not a valid URI to form a QName.", paramUri.asString()),
-	              ex);
-	}
-    
+      URI uri = URI.create(paramUri.asString());
+    } catch (IllegalArgumentException ex) {
+      throw new CastFunctionException(
+          CastFunctionException.INVALID_LEXICAL_VALUE,
+          paramUri,
+          String.format("paramURI '%s' is not a valid URI to form a QName.", paramUri.asString()),
+          ex);
+    }
+
     try {
-        return ISequence.of(IQNameItem.valueOf(IEnhancedQName.of(paramUri.asString(), paramQName.asString())));
-	} catch (Exception ex) {
-	      throw new CastFunctionException(
-	              CastFunctionException.INVALID_LEXICAL_VALUE,
-	              paramUri,
-	              String.format("paramQName '%s' is not a valid URI to form QName.", paramQName.asString()),
-	              ex);
-	}
+      return ISequence.of(IQNameItem.valueOf(IEnhancedQName.of(paramUri.asString(), paramQName.asString())));
+    } catch (Exception ex) {
+      throw new CastFunctionException(
+          CastFunctionException.INVALID_LEXICAL_VALUE,
+          paramUri,
+          String.format("paramQName '%s' is not a valid URI to form QName.", paramQName.asString()),
+          ex);
+    }
   }
 
   private FnQName() {
