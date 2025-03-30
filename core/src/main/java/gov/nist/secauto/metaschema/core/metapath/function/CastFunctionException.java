@@ -17,6 +17,15 @@ public class CastFunctionException
     extends AbstractCodedMetapathException {
   /**
    * <a href=
+   * "https://www.w3.org/TR/xpath-functions-31/#ERRFOCA0002">err:FOCA0002</a>:
+   * Raised by fn:resolve-QName and fn:QName when a supplied value does not
+   * have the lexical form of a QName or URI respectively; and when casting to
+   * decimal, if the supplied value is NaN or Infinity.
+   */
+  public static final int INVALID_LEXICAL_VALUE = 2;
+
+  /**
+   * <a href=
    * "https://www.w3.org/TR/xpath-functions-31/#ERRFOCA0003">err:FOCA0003</a>:
    * Raised when casting to xs:integer if the supplied value exceeds the
    * implementation-defined limits for the datatype.

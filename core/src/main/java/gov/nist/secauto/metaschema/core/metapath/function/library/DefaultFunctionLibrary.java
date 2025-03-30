@@ -175,6 +175,8 @@ public class DefaultFunctionLibrary
     // https://www.w3.org/TR/xpath-functions-31/#func-path
     registerFunction(FnPath.SIGNATURE_NO_ARG);
     registerFunction(FnPath.SIGNATURE_ONE_ARG);
+    // https://www.w3.org/TR/xpath-functions-31/#func-QName
+    registerFunction(FnQName.SIGNATURE);
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-position
     // https://www.w3.org/TR/xpath-functions-31/#func-remove
     registerFunction(FnRemove.SIGNATURE);

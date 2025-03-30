@@ -182,7 +182,7 @@ public interface IFunction extends IItem {
 
   /**
    * Determine if the function is a named function.
-   * 
+   *
    * @return {@code true} if the function is named or {@code false} if the
    *         function is anonymous
    */
