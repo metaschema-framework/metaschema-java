@@ -17,7 +17,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface IJsonSchemaPropertyGrouped extends IJsonSchemaProperty, IJsonSchemaModelDefinition {
   /**
    * Get the associated Metaschema grouped instance.
-   * 
+   *
    * @return the instance
    */
   @NonNull

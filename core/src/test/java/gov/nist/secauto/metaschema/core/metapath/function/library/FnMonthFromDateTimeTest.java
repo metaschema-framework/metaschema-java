@@ -6,12 +6,10 @@
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,7 +32,8 @@ class FnMonthFromDateTimeTest
             "fn:month-from-dateTime(meta:date-time('1999-12-31T19:20:00-05:00'))"),
         Arguments.of(
             integer(1),
-            "fn:month-from-dateTime(fn:adjust-dateTime-to-timezone(meta:date-time('1999-12-31T19:20:00-05:00'), meta:day-time-duration('PT0S')))"));
+            "fn:month-from-dateTime(fn:adjust-dateTime-to-timezone("
+                + "meta:date-time('1999-12-31T19:20:00-05:00'), meta:day-time-duration('PT0S')))"));
   }
 
   @ParameterizedTest

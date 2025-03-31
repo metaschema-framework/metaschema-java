@@ -75,7 +75,7 @@ public final class MapForEach {
    *          the function to adapt
    * @param dynamicContext
    *          the dynamic context for use in evaluating the function
-   * @return
+   * @return a lambda expression
    */
   @NonNull
   private static BiFunction<IAnyAtomicItem, ISequence<?>, ISequence<?>> adaptFunction(

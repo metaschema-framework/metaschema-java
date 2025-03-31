@@ -10,11 +10,11 @@ import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvi
 import gov.nist.secauto.metaschema.core.metapath.impl.AbstractMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.AbstractAtomicItemBase;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IQNameItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IQNameItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IMapKey;
 import gov.nist.secauto.metaschema.core.metapath.item.function.IOpaqueMapKey;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -23,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class QNameItemImpl
     extends AbstractAtomicItemBase<IEnhancedQName>
     implements IQNameItem {
-
+  @NonNull
   private final IEnhancedQName value;
 
   /**
@@ -32,7 +32,7 @@ public class QNameItemImpl
    * @param value
    *          the value to wrap
    */
-  public QNameItemImpl(IEnhancedQName value) {
+  public QNameItemImpl(@NonNull IEnhancedQName value) {
     this.value = value;
   }
 

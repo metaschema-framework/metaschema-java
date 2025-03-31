@@ -7,8 +7,8 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import static com.github.seregamorph.hamcrest.MoreMatchers.where;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.bool;
-import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.eqname;
+import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;

@@ -38,6 +38,9 @@ public final class ConstraintLevelType {
       case DEBUG:
         target.setStringValue("DEBUG");
         break;
+      case NONE:
+        // do nothing
+        break;
       default:
         throw new UnsupportedOperationException(obj.name());
       }

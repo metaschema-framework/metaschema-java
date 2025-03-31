@@ -140,7 +140,7 @@ public final class FnMinMax {
           return item1 != null && ComparisonFunctions.valueCompairison(
               item1,
               ComparisonFunctions.Operator.LE,
-              item2,
+              ObjectUtils.notNull(item2),
               new DynamicContext()).toBoolean()
                   ? item1
                   : item2;
@@ -164,7 +164,7 @@ public final class FnMinMax {
           return item1 != null && ComparisonFunctions.valueCompairison(
               item1,
               ComparisonFunctions.Operator.GE,
-              item2,
+              ObjectUtils.notNull(item2),
               new DynamicContext()).toBoolean()
                   ? item1
                   : item2;

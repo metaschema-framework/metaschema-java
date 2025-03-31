@@ -104,7 +104,7 @@ public class XmlMetaConstraintLoader
     // generate the metapaths
     List<IMetapathExpression> metapaths = ObjectUtils.notNull(contextObj.getMetapathList().stream()
         .map(MetaschemaMetapathReferenceType::getTarget)
-        .map(path -> IMetapathExpression.lazyCompile(path, source.getStaticContext()))
+        .map(path -> IMetapathExpression.lazyCompile(ObjectUtils.notNull(path), source.getStaticContext()))
         .collect(Collectors.toList()));
 
     // parse the constraints
@@ -114,9 +114,9 @@ public class XmlMetaConstraintLoader
     // create the context
     MetaConstraintSet.Context context = new MetaConstraintSet.Context(parent, source, metapaths, constraints);
 
-    List<MetaConstraintSet.Context> childContexts = contextObj.getContextList().stream()
+    List<MetaConstraintSet.Context> childContexts = ObjectUtils.notNull(contextObj.getContextList().stream()
         .map(childObj -> parseContext(ObjectUtils.notNull(childObj), context, source))
-        .collect(Collectors.toList());
+        .collect(Collectors.toList()));
 
     context.addAll(childContexts);
 

@@ -86,7 +86,7 @@ public class MetaConstraintSet
               ObjectUtils.requireNonNull(metapath),
               source.getStaticContext()));
     }
-    return retval;
+    return ObjectUtils.notNull(retval);
   }
 
   public static class Context {

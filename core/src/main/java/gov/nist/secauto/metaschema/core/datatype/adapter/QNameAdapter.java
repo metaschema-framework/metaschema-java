@@ -44,7 +44,6 @@ public class QNameAdapter
     return JsonFormatTypes.STRING;
   }
 
-  @SuppressWarnings("null")
   @Override
   public IEnhancedQName parse(String value) {
     throw new UnsupportedOperationException("QNameAdapter does not support parse qualified namespaces or prefixes.");

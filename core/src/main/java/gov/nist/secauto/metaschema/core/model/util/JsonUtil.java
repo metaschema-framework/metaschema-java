@@ -164,6 +164,7 @@ public final class JsonUtil {
     switch (currentToken) {
     case START_ARRAY:
     case START_OBJECT:
+    case VALUE_EMBEDDED_OBJECT:
       parser.skipChildren();
       break;
     case VALUE_FALSE:
@@ -174,6 +175,10 @@ public final class JsonUtil {
     case VALUE_TRUE:
       // do nothing
       break;
+    case FIELD_NAME:
+    case END_OBJECT:
+    case END_ARRAY:
+    case NOT_AVAILABLE:
     default:
       // error
       String msg = String.format("Unhandled JsonToken %s.",

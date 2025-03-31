@@ -195,6 +195,7 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
    * type instance.
    */
   // TODO: Update with URL for docs from from metaschema-framework/metaschema#90.
+  @NonNull
   public static final QNameAdapter QNAME = new QNameAdapter();
   /**
    * The default Metaschema data type instance to use when no data type is defined

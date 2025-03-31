@@ -17,7 +17,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface IJsonSchemaPropertyFlag extends IJsonSchemaPropertyNamed {
   /**
    * Get the associated Metaschema flag instance.
-   * 
+   *
    * @return the instance
    */
   @NonNull

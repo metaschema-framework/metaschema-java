@@ -20,7 +20,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public interface IJsonSchemaModelDefinition extends IJsonSchemaDefinition {
   /**
    * Get the name of the JSON key flag.
-   * 
+   *
    * @return the name or {@code null} if a JSON property key is not used
    */
   @Nullable
@@ -31,7 +31,7 @@ public interface IJsonSchemaModelDefinition extends IJsonSchemaDefinition {
 
   /**
    * Get the JSON key flag.
-   * 
+   *
    * @return the flag or {@code null} if a JSON property key is not used
    */
   @Nullable
@@ -41,7 +41,7 @@ public interface IJsonSchemaModelDefinition extends IJsonSchemaDefinition {
    * Get the list of flags to use as properties.
    * <p>
    * This list will not include the JSON key flag.
-   * 
+   *
    * @return the list of flag JSON schema properties
    */
   @NonNull

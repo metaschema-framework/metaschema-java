@@ -44,9 +44,13 @@ public class LoggingConstraintValidationHandler
     case WARNING:
       retval = LOGGER.atWarn();
       break;
+    case DEBUG:
+      retval = LOGGER.atDebug();
+      break;
     case INFORMATIONAL:
       retval = LOGGER.atInfo();
       break;
+    case NONE:
     default:
       throw new UnsupportedOperationException(String.format("unsupported level '%s'", level));
     }
@@ -79,9 +83,13 @@ public class LoggingConstraintValidationHandler
     case WARNING:
       retval = LOGGER.isWarnEnabled();
       break;
+    case DEBUG:
+      retval = LOGGER.isDebugEnabled();
+      break;
     case INFORMATIONAL:
       retval = LOGGER.isInfoEnabled();
       break;
+    case NONE:
     default:
       throw new UnsupportedOperationException(String.format("unsupported level '%s'", level));
     }
