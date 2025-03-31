@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
@@ -14,7 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IQNameItem;
 import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -40,7 +41,7 @@ public final class FnFunctionLookup {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("name")
-          .type(IStringItem.type())
+          .type(IQNameItem.type())
           .one()
           .build())
       .argument(IArgument.builder()
@@ -59,13 +60,13 @@ public final class FnFunctionLookup {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    IStringItem name = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
+    IQNameItem name = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
     IIntegerItem arity = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
     IFunction matchingFunction = null;
 
     try {
-      matchingFunction = dynamicContext.getStaticContext().lookupFunction(
-          name.asString(),
+      matchingFunction = StaticContext.lookupFunction(
+          name.toEnhancedQName(),
           arity.toIntValueExact());
     } catch (StaticMetapathException ex) {
       if (ex.getCode() != StaticMetapathException.NO_FUNCTION_MATCH) {

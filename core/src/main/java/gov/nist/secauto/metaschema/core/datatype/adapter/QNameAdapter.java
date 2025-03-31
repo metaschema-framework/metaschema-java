@@ -10,12 +10,10 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import gov.nist.secauto.metaschema.core.datatype.AbstractDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IQNameItem;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUriReferenceItem;
 import gov.nist.secauto.metaschema.core.qname.EQNameFactory;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.net.URI;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -61,6 +59,7 @@ public class QNameAdapter
   @Override
   public IQNameItem newItem(Object value) {
     IEnhancedQName item = toValue(value);
+    // TODO: Review metaschema-framework/metaschema-java#396 and change accordingly.
     return IQNameItem.valueOf(item);
   }
 }

@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.BooleanItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.QNameItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
@@ -41,6 +40,7 @@ public interface IQNameItem extends IAnyAtomicItem {
    *          a string representing a QName value
    * @return the new item
    */
+  // TODO: Review metaschema-framework/metaschema-java#396 and change accordingly.
   @NonNull
   static IQNameItem valueOf(@NonNull String value) {
     return valueOf(EQNameFactory.instance().parseUriQualifiedName(value));
