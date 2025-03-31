@@ -35,16 +35,11 @@ public interface IQNameItem extends IAnyAtomicItem {
   }
 
   /**
-   * Construct a new boolean item using the provided string {@code value}.
-   * <p>
-   * The item will be {@link #TRUE} if the value is "1" or "true", or
-   * {@link #FALSE} otherwise
+   * Construct a new QName item using the provided string {@code value}.
    *
    * @param value
-   *          a string representing a boolean value
+   *          a string representing a QName value
    * @return the new item
-   * @throws InvalidTypeMetapathException
-   *           if the provided value is not a valid boolean value
    */
   @NonNull
   static IQNameItem valueOf(@NonNull String value) {
@@ -52,10 +47,10 @@ public interface IQNameItem extends IAnyAtomicItem {
   }
 
   /**
-   * Construct a new boolean item using the provided {@code value}.
+   * Construct a new QName item using the provided {@code value}.
    *
    * @param value
-   *          a boolean
+   *          a QName
    * @return the new item
    */
   @NonNull
@@ -91,9 +86,9 @@ public interface IQNameItem extends IAnyAtomicItem {
   }
 
   /**
-   * Get the "wrapped" boolean value.
+   * Get the "wrapped" EnhancedQName value.
    *
-   * @return the underlying boolean value
+   * @return the underlying QName value
    */
   IEnhancedQName toEnhancedQName();
 
