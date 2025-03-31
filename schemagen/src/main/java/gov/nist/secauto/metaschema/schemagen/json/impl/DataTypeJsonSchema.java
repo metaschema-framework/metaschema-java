@@ -28,7 +28,7 @@ public class DataTypeJsonSchema
 
   /**
    * Construct a new data type JSON schema.
-   * 
+   *
    * @param name
    *          the JSON schema definition name
    * @param dataTypeAdapter

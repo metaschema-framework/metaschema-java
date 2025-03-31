@@ -13,7 +13,6 @@ import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IQNameItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -67,7 +66,7 @@ public final class FnQName {
     if (paramUri.length() == 0) {
       throw new CastFunctionException(
           CastFunctionException.INVALID_LEXICAL_VALUE,
-          null,
+          paramUri,
           String.format("paramURI is an empty string and not a valid URI to form a QName."));
     }
 

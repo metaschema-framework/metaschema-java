@@ -98,7 +98,7 @@ public class JsonSchemaModule
 
   /**
    * Generate the referenced JSON schema definitions used in this JSON schema.
-   * 
+   *
    * @param state
    *          the JSON generation state used for context
    * @return the definitions JSON schema node

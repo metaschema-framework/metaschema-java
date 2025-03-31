@@ -35,7 +35,8 @@ class FnHoursFromTimeTest
             "fn:hours-from-time(meta:time('01:23:00+05:00'))"),
         Arguments.of(
             integer(20),
-            "fn:hours-from-time(fn:adjust-time-to-timezone(meta:time('01:23:00+05:00'), meta:day-time-duration('PT0S')))"),
+            "fn:hours-from-time(fn:adjust-time-to-timezone("
+                + "meta:time('01:23:00+05:00'), meta:day-time-duration('PT0S')))"),
         Arguments.of(
             integer(0),
             "fn:hours-from-time(meta:time('24:00:00'))"));

@@ -46,7 +46,7 @@ public class DataTypeRestrictionDefinitionJsonSchema
    * Construct a new data type JSON schema based on a Metaschema definition whose
    * constraints may further restrict the values allowed by the associated data
    * type.
-   * 
+   *
    * @param definition
    *          the Metaschema definition that declares the data type
    * @param allowedValuesCollection

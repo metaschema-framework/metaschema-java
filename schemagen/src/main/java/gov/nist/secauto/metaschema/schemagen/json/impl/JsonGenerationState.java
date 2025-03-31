@@ -229,6 +229,7 @@ public class JsonGenerationState
     return retval;
   }
 
+  @Override
   public void generateDataTypeDefinitions(@NonNull ObjectNode definitionsNode) {
     getDatatypeManager().generateDatatypeDefinitions(definitionsNode);
   }

@@ -16,7 +16,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface IDataTypeJsonSchema extends IJsonSchemaDefinable {
   /**
    * Get the adapter associated with this data type JSON schema.
-   * 
+   *
    * @return the adapter
    */
   @NonNull

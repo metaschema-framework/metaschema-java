@@ -87,7 +87,7 @@ public class JsonDatatypeManager
 
   /**
    * Generate the JSON schema definitions for all data types used.
-   * 
+   *
    * @param definitionsObject
    *          the JSON schema definitions node
    */

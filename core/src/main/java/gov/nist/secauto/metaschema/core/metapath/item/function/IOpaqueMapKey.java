@@ -11,6 +11,7 @@ package gov.nist.secauto.metaschema.core.metapath.item.function;
  */
 public interface IOpaqueMapKey extends IMapKey {
   @Override
+  @SuppressWarnings("PMD.CompareObjectsWithEquals")
   default boolean isSameKey(IMapKey other) {
     return this == other
         || other instanceof IOpaqueMapKey
