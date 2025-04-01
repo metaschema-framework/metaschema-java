@@ -158,7 +158,9 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
       IBindingMatcher old = bindingMatchers.put(qname, retval);
       if (old != null && !(definition.getContainingModule() instanceof MetaschemaModelModule)) {
         // FIXME: find existing causes of this in unit tests
-        LOGGER.atWarn().log("Replacing matcher for QName: {}", qname);
+        if (LOGGER.isDebugEnabled()) {
+          LOGGER.atDebug().log("Replacing matcher for QName: {}", qname);
+        }
       }
 
       // retval = bindingMatchers.get(definition);
