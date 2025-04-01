@@ -5,8 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IModule;
@@ -61,22 +59,16 @@ public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IMo
     ConstraintComposingVisitor visitor = new ConstraintComposingVisitor();
     IModuleNodeItem moduleItem = INodeItemFactory.instance().newModuleNodeItem(module);
 
-    StaticContext staticContext = StaticContext.builder()
-        .defaultModelNamespace(module.getXmlNamespace())
-        .build();
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-
     for (IConstraintSet set : getRegisteredConstraintSets()) {
       assert set != null;
-      applyConstraintsForModule(moduleItem, set, visitor, dynamicContext);
+      applyConstraintsForModule(moduleItem, set, visitor);
     }
   }
 
   private static void applyConstraintsForModule(
       @NonNull IModuleNodeItem moduleItem,
       @NonNull IConstraintSet set,
-      @NonNull ConstraintComposingVisitor visitor,
-      @NonNull DynamicContext dynamicContext) {
-    set.applyConstraintsForModule(moduleItem, dynamicContext, visitor);
+      @NonNull ConstraintComposingVisitor visitor) {
+    set.applyConstraintsForModule(moduleItem, visitor);
   }
 }

@@ -101,12 +101,13 @@ public class ScopedConstraintSet implements IConstraintSet {
   @Override
   public void applyConstraintsForModule(
       IModuleNodeItem moduleItem,
-      DynamicContext dynamicContext,
       IModelElementVisitor<ITargetedConstraints, Void> visitor) {
     IEnhancedQName qname = moduleItem.getModule().getQName();
     List<IScopedContraints> scopes = getScopedContraints().getOrDefault(qname, CollectionUtil.emptyList());
 
     Map<IDefinition, Set<ITargetedConstraints>> definitionConstraints = new HashMap<>();
+
+    DynamicContext dynamicContext = new DynamicContext(getSource().getStaticContext());
 
     for (IScopedContraints scoped : scopes) {
       for (ITargetedConstraints targeted : scoped.getTargetedContraints()) {
