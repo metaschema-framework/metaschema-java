@@ -57,12 +57,14 @@ public class MetaConstraintSet
   @Override
   public void applyConstraintsForModule(
       IModuleNodeItem moduleItem,
-      DynamicContext dynamicContext,
       IModelElementVisitor<ITargetedConstraints, Void> visitor) {
+
     for (IConstraintSet imported : imports) {
-      imported.applyConstraintsForModule(moduleItem, dynamicContext, visitor);
+      imported.applyConstraintsForModule(moduleItem, visitor);
     }
 
+    // generate a dynamic context using the external constraint set's static context
+    DynamicContext dynamicContext = new DynamicContext(getSource().getStaticContext());
     for (Context context : contexts) {
       context.applyConstraintsForModule(moduleItem, dynamicContext, visitor, ISequence.of(moduleItem));
     }
@@ -142,12 +144,12 @@ public class MetaConstraintSet
         @NonNull DynamicContext dynamicContext,
         @NonNull IModelElementVisitor<ITargetedConstraints, Void> visitor,
         @NonNull ISequence<? extends INodeItem> targetedItems) {
-      Set<IDefinition> definitionConstraints = new HashSet<>();
+      Set<IDefinition> targetedDefinitions = new HashSet<>();
 
       for (INodeItem nodeItem : targetedItems) {
         for (IMetapathExpression metapath : metapaths) {
           ISequence<? extends IDefinitionNodeItem<?, ?>> items = ISequence.of(ObjectUtils.notNull(
-              metapath.evaluate(nodeItem, dynamicContext).stream()
+              evaluateItem(metapath, nodeItem, dynamicContext).stream()
                   .filter(item -> filterNonDefinitionItem(item, metapath))
                   .map(item -> (IDefinitionNodeItem<?, ?>) item)))
               .reusable();
@@ -155,13 +157,12 @@ public class MetaConstraintSet
           if (!items.isEmpty()) {
             // build a map to ensure the constraint is only applied once to each
             // underlying definition
-            Set<IDefinition> targetedDefinitions = items.stream()
+            items.stream()
                 .map(IDefinitionNodeItem::getDefinition)
                 // ensure the definition only gets processed if the module being processed is
                 // the containing module
                 .filter(definition -> definition.getContainingModule().equals(moduleItem.getModule()))
-                .collect(Collectors.toUnmodifiableSet());
-            definitionConstraints.addAll(targetedDefinitions);
+                .forEach(definition -> targetedDefinitions.add(definition));
 
             // process child contexts, which will be applied depth first
             for (Context context : childContexts) {
@@ -172,11 +173,18 @@ public class MetaConstraintSet
       }
 
       // apply the constraints for this context
-      definitionConstraints.forEach(definition -> {
+      targetedDefinitions.forEach(definition -> {
         getTargetedConstraints().forEach(constraints -> {
           definition.accept(visitor, constraints);
         });
       });
+    }
+
+    private ISequence<?> evaluateItem(
+        @NonNull IMetapathExpression metapath,
+        @NonNull INodeItem nodeItem,
+        @NonNull DynamicContext dynamicContext) {
+      return metapath.evaluate(nodeItem, dynamicContext).reusable();
     }
 
     private static boolean filterNonDefinitionItem(IItem item, @NonNull IMetapathExpression metapath) {
