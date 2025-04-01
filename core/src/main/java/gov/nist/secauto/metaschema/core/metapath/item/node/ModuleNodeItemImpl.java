@@ -50,7 +50,7 @@ class ModuleNodeItemImpl
 
   @Override
   public String stringValue() {
-    return "";
+    return getModule().getQName().toEQName();
   }
 
   @Override
