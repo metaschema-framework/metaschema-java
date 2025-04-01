@@ -219,8 +219,11 @@ public abstract class AbstractFunction implements IFunction {
     return ISequence.of(stream);
   }
 
+  @Nullable
   private IItem getContextItem(@NonNull ISequence<?> focus) {
-    IItem contextItem = focus.getFirstItem(true);
+    IItem contextItem = isFocusDependent()
+        ? focus.getFirstItem(true)
+        : null;
     if (isFocusDependent() && contextItem == null) {
       throw new DynamicMetapathException(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, "The context is empty");
     }

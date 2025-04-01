@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
 package gov.nist.secauto.metaschema.databind;
 
@@ -17,6 +21,10 @@ import java.nio.file.Paths;
 
 class FnDocTest {
 
+  /**
+   * Ensure that the same document loaded twice produces the exact same node
+   * instances.
+   */
   @Test
   void testSameNode() {
     IBindingContext bindingContext = IBindingContext.newInstance();
@@ -43,5 +51,4 @@ class FnDocTest {
         ISequence.empty());
     assertSame(result1, result2);
   }
-
 }
