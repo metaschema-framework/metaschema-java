@@ -149,7 +149,7 @@ public class MetaConstraintSet
       for (INodeItem nodeItem : targetedItems) {
         for (IMetapathExpression metapath : metapaths) {
           ISequence<? extends IDefinitionNodeItem<?, ?>> items = ISequence.of(ObjectUtils.notNull(
-              metapath.evaluate(nodeItem, dynamicContext).stream()
+              evaluateItem(metapath, nodeItem, dynamicContext).stream()
                   .filter(item -> filterNonDefinitionItem(item, metapath))
                   .map(item -> (IDefinitionNodeItem<?, ?>) item)))
               .reusable();
@@ -178,6 +178,13 @@ public class MetaConstraintSet
           definition.accept(visitor, constraints);
         });
       });
+    }
+
+    private ISequence<?> evaluateItem(
+        @NonNull IMetapathExpression metapath,
+        @NonNull INodeItem nodeItem,
+        @NonNull DynamicContext dynamicContext) {
+      return metapath.evaluate(nodeItem, dynamicContext).reusable();
     }
 
     private static boolean filterNonDefinitionItem(IItem item, @NonNull IMetapathExpression metapath) {
