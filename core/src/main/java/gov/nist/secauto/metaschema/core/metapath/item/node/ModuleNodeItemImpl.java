@@ -50,11 +50,11 @@ class ModuleNodeItemImpl
 
   @Override
   public String stringValue() {
-    return getModule().getQName().toEQName();
+    return "";
   }
 
   @Override
   protected String getValueSignature() {
-    return null;
+    return getModule().getQName().toEQName();
   }
 }
