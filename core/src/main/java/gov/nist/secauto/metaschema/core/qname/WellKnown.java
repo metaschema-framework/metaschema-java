@@ -67,7 +67,9 @@ public final class WellKnown {
    *
    * @return the mapping of prefix to namespace URI for all well-known namespaces
    */
+  @NonNull
   @Deprecated(since = "2.2.0", forRemoval = true)
+  @SuppressFBWarnings(value = "MS_EXPOSE_REP", justification = "Internal state is immutable")
   public static Map<String, String> getWellKnownPrefixesToNamespaces() {
     return WELL_KNOWN_NAMESPACES;
   }
@@ -81,8 +83,9 @@ public final class WellKnown {
    *
    * @return the mapping of namespace URI to prefix for all well-known namespaces
    */
-  @SuppressFBWarnings("MS_EXPOSE_REP")
+  @NonNull
   @Deprecated(since = "2.2.0", forRemoval = true)
+  @SuppressFBWarnings(value = "MS_EXPOSE_REP", justification = "Internal state is immutable")
   public static Map<String, String> getWellKnownURIsToPrefixes() {
     return WELL_KNOWN_URI_TO_PREFIX;
   }

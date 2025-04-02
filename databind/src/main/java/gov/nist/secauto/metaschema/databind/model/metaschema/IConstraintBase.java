@@ -76,7 +76,7 @@ public interface IConstraintBase {
    * Get the requested level to report if the constraint is not satisfied.
    * <p>
    * If not provided, then the default level provided by
-   * {@link IConstraint#DEFAULT_LEVEL} is used.
+   * {@link IConstraint#defaultLevel()} is used.
    *
    * @return the level or {@code null} if the default level is to be used
    */

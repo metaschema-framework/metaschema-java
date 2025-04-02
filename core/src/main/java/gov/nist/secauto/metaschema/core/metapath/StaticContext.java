@@ -32,7 +32,6 @@ import javax.xml.XMLConstants;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // add support for default namespace
 /**
@@ -69,7 +68,7 @@ public final class StaticContext {
    *
    * @return the mapping of prefix to namespace URI for all well-known namespaces
    */
-  @SuppressFBWarnings("MS_EXPOSE_REP")
+  @NonNull
   @Deprecated(since = "2.2.0", forRemoval = true)
   public static Map<String, String> getWellKnownNamespacesMap() {
     return WellKnown.getWellKnownPrefixesToNamespaces();
@@ -86,7 +85,7 @@ public final class StaticContext {
    *
    * @return the mapping of namespace URI to prefix for all well-known namespaces
    */
-  @SuppressFBWarnings("MS_EXPOSE_REP")
+  @NonNull
   @Deprecated(since = "2.2.0", forRemoval = true)
   public static Map<String, String> getWellKnownURIToPrefixMap() {
     return WellKnown.getWellKnownURIsToPrefixes();
