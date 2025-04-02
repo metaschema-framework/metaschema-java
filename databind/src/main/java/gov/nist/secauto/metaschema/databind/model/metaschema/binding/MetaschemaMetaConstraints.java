@@ -50,8 +50,8 @@ import java.util.List;
         expect = @Expect(id = "metaschema-deprecated-types", formalName = "Avoid Deprecated Data Type Use",
             description = "Ensure that the data type specified is not one of the legacy Metaschema data types which have been deprecated (i.e. base64Binary, dateTime, dateTime-with-timezone, email, nonNegativeInteger, positiveInteger).",
             level = IConstraint.Level.WARNING, target = ".//matches/@datatype|.//(define-field|define-flag)/@as-type",
-            test = "not(.=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))",
-            message = "Use of the type '{ . }' is deprecated. Use '{ $deprecated-type-map(.)}' instead.")),
+            test = "not(data(.)=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))",
+            message = "Use of the type '{ data(.) }' is deprecated. Use '{ $deprecated-type-map(data(.))}' instead.")),
     modelConstraints = @gov.nist.secauto.metaschema.databind.model.annotations.AssemblyConstraints(unique = {
         @IsUnique(id = "meta-constraints-namespace-unique-entry", formalName = "Require Unique Namespace Entries",
             description = "Ensures that all declared namespace entries are unique.", level = IConstraint.Level.ERROR,
