@@ -174,7 +174,7 @@ public class MetaConstraintSet
                 // ensure the definition only gets processed if the module being processed is
                 // the containing module
                 .filter(definition -> !previouslyTargetedDefinitions.contains(definition))
-                .forEach(definition -> targetedDefinitions.add(definition));
+                .forEach(targetedDefinitions::add);
 
             // process child contexts, which will be applied depth first
             for (Context context : childContexts) {

@@ -15,6 +15,9 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A set of constraints targeted at the contents of a Metaschema module.
+ */
 public interface IConstraintSet {
   /**
    * Get information about where the constraint set was sourced from.

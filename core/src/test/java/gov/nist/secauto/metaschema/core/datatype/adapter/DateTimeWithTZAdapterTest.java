@@ -15,8 +15,6 @@ import java.time.ZonedDateTime;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class DateTimeWithTZAdapterTest {
-  private static final DateTimeWithTZAdapter ADAPTER = MetaschemaDataTypeProvider.DATE_TIME_WITH_TZ;
-
   @ParameterizedTest
   @ValueSource(strings = {
       "-0002-01-20T14:47:48.623-05:00",
@@ -29,7 +27,7 @@ class DateTimeWithTZAdapterTest {
       "2019-12-31T23:59:59Z"
   })
   void testParse(@NonNull String value) {
-    ZonedDateTime obj = ADAPTER.parse(value);
+    ZonedDateTime obj = MetaschemaDataTypeProvider.DATE_TIME_WITH_TZ.parse(value);
     assertNotNull(obj, "not null");
   }
 

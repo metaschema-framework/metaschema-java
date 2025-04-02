@@ -412,7 +412,7 @@ public final class ConstraintXmlSupport {
       }
 
       IConstraint.Level level = constraint.getLevel();
-      if (!IConstraint.DEFAULT_LEVEL.equals(level)) {
+      if (!IConstraint.defaultLevel().equals(level)) {
         bean.setLevel(level);
       }
 

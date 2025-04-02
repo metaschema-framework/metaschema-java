@@ -29,6 +29,9 @@ public class ValueConstraintSet implements IValueConstrained {
   @SuppressWarnings("PMD.UseConcurrentHashMap") // need ordering
   @NonNull
   private final Map<IEnhancedQName, ILet> lets = new LinkedHashMap<>();
+  /**
+   * The collection of constraints in this constraint set.
+   */
   @NonNull
   private final List<IConstraint> constraints = new LinkedList<>();
   @NonNull
@@ -39,6 +42,9 @@ public class ValueConstraintSet implements IValueConstrained {
   private final List<IIndexHasKeyConstraint> indexHasKeyConstraints = new LinkedList<>();
   @NonNull
   private final List<IExpectConstraint> expectConstraints = new LinkedList<>();
+  /**
+   * The lock used to manage adjustments to the contents of this constraint set.
+   */
   @NonNull
   private final ReadWriteLock instanceLock = new ReentrantReadWriteLock();
 

@@ -66,13 +66,13 @@ public final class ModelFactory {
   @NonNull
   private static IMetapathExpression metapath(@Nullable String target, @NonNull ISource source) {
     return target == null
-        ? IConstraint.DEFAULT_TARGET_METAPATH
+        ? IConstraint.defaultTarget()
         : IMetapathExpression.lazyCompile(target, source.getStaticContext());
   }
 
   @NonNull
   private static Level level(@Nullable Level level) {
-    return level == null ? IConstraint.DEFAULT_LEVEL : level;
+    return level == null ? IConstraint.defaultLevel() : level;
   }
 
   @NonNull
@@ -164,7 +164,7 @@ public final class ModelFactory {
   public static IAllowedValuesConstraint newAllowedValuesConstraint(
       @NonNull AllowedValuesType xmlObject,
       @NonNull ISource source) {
-    return newAllowedValuesConstraint(xmlObject, IConstraint.DEFAULT_TARGET_METAPATH, source);
+    return newAllowedValuesConstraint(xmlObject, IConstraint.defaultTarget(), source);
   }
 
   @NonNull
@@ -237,7 +237,7 @@ public final class ModelFactory {
   public static IMatchesConstraint newMatchesConstraint(
       @NonNull MatchesConstraintType xmlConstraint,
       @NonNull ISource source) {
-    return newMatchesConstraint(xmlConstraint, IConstraint.DEFAULT_TARGET_METAPATH, source);
+    return newMatchesConstraint(xmlConstraint, IConstraint.defaultTarget(), source);
   }
 
   @NonNull
@@ -369,7 +369,7 @@ public final class ModelFactory {
   public static IIndexHasKeyConstraint newIndexHasKeyConstraint(
       @NonNull IndexHasKeyConstraintType xmlObject,
       @NonNull ISource source) {
-    return newIndexHasKeyConstraint(xmlObject, IConstraint.DEFAULT_TARGET_METAPATH, source);
+    return newIndexHasKeyConstraint(xmlObject, IConstraint.defaultTarget(), source);
   }
 
   @NonNull
@@ -424,7 +424,7 @@ public final class ModelFactory {
   public static IExpectConstraint newExpectConstraint(
       @NonNull ExpectConstraintType xmlObject,
       @NonNull ISource source) {
-    return newExpectConstraint(xmlObject, IConstraint.DEFAULT_TARGET_METAPATH, source);
+    return newExpectConstraint(xmlObject, IConstraint.defaultTarget(), source);
   }
 
   @NonNull
@@ -506,7 +506,7 @@ public final class ModelFactory {
 
     return ILet.of(
         source.getStaticContext().parseVariableName(ObjectUtils.requireNonNull(xmlObject.getVar())),
-        ObjectUtils.notNull(xmlObject.getExpression()),
+        IMetapathExpression.lazyCompile(ObjectUtils.notNull(xmlObject.getExpression()), source.getStaticContext()),
         source,
         xmlObject.isSetRemarks()
             ? remarks(ObjectUtils.notNull(xmlObject.getRemarks()))

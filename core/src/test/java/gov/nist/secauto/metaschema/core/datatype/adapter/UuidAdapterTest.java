@@ -18,8 +18,6 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class UuidAdapterTest {
-  private static final UuidAdapter ADAPTER = new UuidAdapter();
-
   private static Stream<Arguments> provideValues() {
     return Stream.of(
         Arguments.of(
@@ -31,9 +29,9 @@ class UuidAdapterTest {
   @ParameterizedTest
   @MethodSource("provideValues")
   void testParseUUID(@NonNull String expected) {
-    UUID uuid = ADAPTER.parse(expected);
+    UUID uuid = MetaschemaDataTypeProvider.UUID.parse(expected);
     assertAll(
         () -> assertEquals(expected, uuid.toString()),
-        () -> assertEquals(expected, ADAPTER.asString(uuid)));
+        () -> assertEquals(expected, MetaschemaDataTypeProvider.UUID.asString(uuid)));
   }
 }

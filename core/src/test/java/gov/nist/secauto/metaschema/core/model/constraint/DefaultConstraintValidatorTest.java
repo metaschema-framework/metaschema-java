@@ -78,11 +78,12 @@ class DefaultConstraintValidatorTest {
     doReturn(CollectionUtil.emptyList()).when(flagDefinition).getMatchesConstraints();
     doReturn(CollectionUtil.emptyList()).when(flagDefinition).getIndexHasKeyConstraints();
 
-    doReturn(StaticContext.instance()).when(source).getStaticContext();
+    StaticContext staticContext = StaticContext.instance();
+    doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
     DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext();
+    DynamicContext dynamicContext = new DynamicContext(staticContext);
     validator.validate(flag, dynamicContext);
     validator.finalizeValidation(dynamicContext);
 
@@ -128,11 +129,12 @@ class DefaultConstraintValidatorTest {
     doReturn(CollectionUtil.emptyList()).when(flagDefinition).getMatchesConstraints();
     doReturn(CollectionUtil.emptyList()).when(flagDefinition).getIndexHasKeyConstraints();
 
-    doReturn(StaticContext.instance()).when(source).getStaticContext();
+    StaticContext staticContext = StaticContext.instance();
+    doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
     DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext();
+    DynamicContext dynamicContext = new DynamicContext(staticContext);
     validator.validate(flag, dynamicContext);
     validator.finalizeValidation(dynamicContext);
 
@@ -171,7 +173,9 @@ class DefaultConstraintValidatorTest {
     List<? extends IAllowedValuesConstraint> allowedValuesConstraints
         = List.of(allowedValues1, allowedValues2);
 
-    DynamicContext dynamicContext = new DynamicContext();
+    StaticContext staticContext = StaticContext.instance();
+    doReturn(staticContext).when(source).getStaticContext();
+    DynamicContext dynamicContext = new DynamicContext(staticContext);
 
     doReturn(flagDefinition).when(flag1).getDefinition();
     doAnswer(invocation -> invocation.getArgument(0, DefaultConstraintValidator.Visitor.class)
@@ -190,8 +194,6 @@ class DefaultConstraintValidatorTest {
     doReturn(CollectionUtil.emptyList()).when(flagDefinition).getExpectConstraints();
     doReturn(CollectionUtil.emptyList()).when(flagDefinition).getMatchesConstraints();
     doReturn(CollectionUtil.emptyList()).when(flagDefinition).getIndexHasKeyConstraints();
-
-    doReturn(StaticContext.instance()).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
     DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);

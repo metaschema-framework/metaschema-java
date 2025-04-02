@@ -24,7 +24,7 @@ public interface IIndexHasKeyConstraint extends IKeyConstraint {
   /**
    * The name of the index used to verify cross references.
    *
-   * @return the index name
+   * @return the name of the index this constraint uses for lookups
    */
   @NonNull
   String getIndexName();
@@ -56,6 +56,7 @@ public interface IIndexHasKeyConstraint extends IKeyConstraint {
     private final String indexName;
 
     private Builder(@NonNull String useIndex) {
+      // disable construction
       this.indexName = useIndex;
     }
 

@@ -202,7 +202,9 @@ public final class ConstraintBindingSupport {
 
           return ILet.of(
               staticContext.parseVariableName(ObjectUtils.requireNonNull(letObj.getVar())),
-              ObjectUtils.requireNonNull(letObj.getExpression()),
+              IMetapathExpression.lazyCompile(
+                  ObjectUtils.requireNonNull(letObj.getExpression()),
+                  source.getStaticContext()),
               source,
               remarks);
         })
@@ -448,7 +450,7 @@ public final class ConstraintBindingSupport {
       @Nullable String metapath,
       @NonNull ISource source) {
     return metapath == null
-        ? IConstraint.DEFAULT_TARGET_METAPATH
+        ? IConstraint.defaultTarget()
         : IMetapathExpression.lazyCompile(
             metapath,
             source.getStaticContext());
@@ -456,7 +458,7 @@ public final class ConstraintBindingSupport {
 
   @NonNull
   private static IConstraint.Level level(@Nullable String level) {
-    IConstraint.Level retval = IConstraint.DEFAULT_LEVEL;
+    IConstraint.Level retval = IConstraint.defaultLevel();
     if (level != null) {
       switch (level) {
       case "CRITICAL":

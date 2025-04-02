@@ -41,9 +41,9 @@ public abstract class AbstractConstraintBuilder<
   private MarkupLine description;
   private ISource source;
   @NonNull
-  private Level level = IConstraint.DEFAULT_LEVEL;
+  private Level level = IConstraint.defaultLevel();
   @NonNull
-  private IMetapathExpression target = IConstraint.DEFAULT_TARGET_METAPATH;
+  private IMetapathExpression target = IConstraint.defaultTarget();
   @NonNull
   private Map<IAttributable.Key, Set<String>> properties = new LinkedHashMap<>(); // NOPMD not thread safe
   private MarkupMultiline remarks;

@@ -22,8 +22,6 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class DateTimeAdapterTest {
-  private static final DateTimeAdapter ADAPTER = new DateTimeAdapter();
-
   /**
    * Provides test cases for date-time parsing.
    * <p>
@@ -101,7 +99,7 @@ class DateTimeAdapterTest {
   @ParameterizedTest
   @MethodSource("provideValues")
   void testSimpleDateTime(@NonNull String actual, boolean ambiguous, @NonNull ZonedDateTime expected) {
-    AmbiguousDateTime date = ADAPTER.parse(actual);
+    AmbiguousDateTime date = MetaschemaDataTypeProvider.DATE_TIME.parse(actual);
     assertAll(
         () -> assertEquals(ambiguous, !date.hasTimeZone()),
         () -> assertEquals(expected, date.getValue()));
