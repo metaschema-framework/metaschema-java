@@ -6,15 +6,12 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.path;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.ItemUtils;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
 
@@ -61,23 +58,6 @@ public class RootSlashOnlyPath
 
   @Override
   protected ISequence<? extends INodeItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
-    return ISequence.of(ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
-        .map(RootSlashOnlyPath::findAndValidateDocumentRoot)));
-  }
-
-  private static INodeItem findAndValidateDocumentRoot(INodeItem item) {
-    INodeItem root = Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item))
-        .findFirst()
-        .orElseThrow(() -> new DynamicMetapathException(
-            DynamicMetapathException.TREAT_DOES_NOT_MATCH_TYPE,
-            "Root node not found"));
-
-    if (!(root instanceof IDocumentNodeItem)) {
-      throw new DynamicMetapathException(
-          DynamicMetapathException.TREAT_DOES_NOT_MATCH_TYPE,
-          "The head of the tree is not a document node.");
-    }
-    return root;
+    return ItemUtils.getDocumentNodeItems(focus);
   }
 }

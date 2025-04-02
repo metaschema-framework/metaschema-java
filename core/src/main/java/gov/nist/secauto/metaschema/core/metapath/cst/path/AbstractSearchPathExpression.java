@@ -78,7 +78,7 @@ public abstract class AbstractSearchPathExpression
         = (Stream<? extends INodeItem>) expression.accept(dynamicContext, focus).stream();
 
     Stream<? extends INodeItem> childMatches = focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
+        .map(ItemUtils::checkItemIsNodeItem)
         .flatMap(focusedNode -> {
 
           Stream<? extends INodeItem> matches;

@@ -47,7 +47,7 @@ public class RootSlashPath
   @Override
   protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     ISequence<?> roots = ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItemForStep)
+        .map(ItemUtils::checkItemIsNodeItem)
         // the previous checks for a null instance
         .flatMap(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item)).limit(1))
         .collect(CustomCollectors.toSequence()));

@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
+import gov.nist.secauto.metaschema.core.metapath.InvalidTreatTypeDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
@@ -54,11 +54,10 @@ class RootSlashOnlyPathTest
     RootSlashOnlyPath expr = new RootSlashOnlyPath("test data");
 
     DynamicContext dynamicContext = newDynamicContext();
-    DynamicMetapathException thrown = assertThrows(DynamicMetapathException.class, () -> {
-      ISequence<?> result = expr.accept(dynamicContext, ISequence.of(item));
-      assertEquals(ISequence.of(item), result);
+    assertThrows(InvalidTreatTypeDynamicMetapathException.class, () -> {
+      expr.accept(dynamicContext, ISequence.of(item))
+          // ensure the stream is processed
+          .safeStream();
     });
-
-    assertEquals(DynamicMetapathException.TREAT_DOES_NOT_MATCH_TYPE, thrown.getCode());
   }
 }

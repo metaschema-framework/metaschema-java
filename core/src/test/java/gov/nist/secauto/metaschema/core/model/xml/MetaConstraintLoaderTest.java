@@ -9,8 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.function.library.FnPath;
-import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
@@ -44,14 +42,15 @@ public class MetaConstraintLoaderTest {
 
     IMetapathExpression expression = IMetapathExpression.compile("//@id", module.getModuleStaticContext());
     IModuleNodeItem moduleItem = INodeItemFactory.instance().newModuleNodeItem(module);
-    for (IItem item : expression.evaluate(moduleItem)) {
-      IDefinitionNodeItem<?, ?> nodeItem = (IDefinitionNodeItem<?, ?>) item;
-      System.out.print(FnPath.fnPath(nodeItem));
-      System.out.print(": ");
-      System.out.println(Long.toString(nodeItem.getDefinition().getMatchesConstraints().stream()
-          .filter(matches -> MetaschemaDataTypeProvider.UUID.equals(matches.getDataType()))
-          .count()));
-    }
+    // for (IItem item : expression.evaluate(moduleItem)) {
+    // IDefinitionNodeItem<?, ?> nodeItem = (IDefinitionNodeItem<?, ?>) item;
+    // System.out.print(FnPath.fnPath(nodeItem));
+    // System.out.print(": ");
+    // System.out.println(Long.toString(nodeItem.getDefinition().getMatchesConstraints().stream()
+    // .filter(matches ->
+    // MetaschemaDataTypeProvider.UUID.equals(matches.getDataType()))
+    // .count()));
+    // }
 
     expression.evaluate(moduleItem).stream()
         .map(item -> (IDefinitionNodeItem<?, ?>) item)
