@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
+import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.ConstraintComposingVisitor;
@@ -14,7 +15,9 @@ import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +32,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IModulePostProcessor {
   @NonNull
   private final List<IConstraintSet> registeredConstraintSets;
+  @NonNull
+  private final Set<IDefinition> previouslyTargetedDefinitions;
 
   /**
    * Create a new post processor.
@@ -43,6 +48,7 @@ public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IMo
             set.getImportedConstraintSets().stream()))
         .distinct()
         .collect(Collectors.toUnmodifiableList()));
+    this.previouslyTargetedDefinitions = new HashSet<>();
   }
 
   /**
@@ -61,14 +67,8 @@ public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IMo
 
     for (IConstraintSet set : getRegisteredConstraintSets()) {
       assert set != null;
-      applyConstraintsForModule(moduleItem, set, visitor);
+      previouslyTargetedDefinitions.addAll(
+          set.applyConstraintsForModule(moduleItem, previouslyTargetedDefinitions, visitor));
     }
-  }
-
-  private static void applyConstraintsForModule(
-      @NonNull IModuleNodeItem moduleItem,
-      @NonNull IConstraintSet set,
-      @NonNull ConstraintComposingVisitor visitor) {
-    set.applyConstraintsForModule(moduleItem, visitor);
   }
 }

@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelElementVisitor;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.logging.log4j.LogManager;
@@ -55,19 +56,29 @@ public class MetaConstraintSet
   }
 
   @Override
-  public void applyConstraintsForModule(
+  public Set<IDefinition> applyConstraintsForModule(
       IModuleNodeItem moduleItem,
+      Set<IDefinition> previouslyTargetedDefinitions,
       IModelElementVisitor<ITargetedConstraints, Void> visitor) {
 
+    Set<IDefinition> targetedDefinitions = new HashSet<>();
     for (IConstraintSet imported : imports) {
-      imported.applyConstraintsForModule(moduleItem, visitor);
+      targetedDefinitions.addAll(
+          imported.applyConstraintsForModule(moduleItem, previouslyTargetedDefinitions, visitor));
     }
 
     // generate a dynamic context using the external constraint set's static context
     DynamicContext dynamicContext = new DynamicContext(getSource().getStaticContext());
     for (Context context : contexts) {
-      context.applyConstraintsForModule(moduleItem, dynamicContext, visitor, ISequence.of(moduleItem));
+      targetedDefinitions.addAll(
+          context.applyConstraintsForModule(
+              moduleItem,
+              previouslyTargetedDefinitions,
+              dynamicContext,
+              visitor,
+              ISequence.of(moduleItem)));
     }
+    return CollectionUtil.unmodifiableSet(targetedDefinitions);
   }
 
   @NonNull
@@ -139,8 +150,9 @@ public class MetaConstraintSet
       return ObjectUtils.notNull(contextualizedMetapaths.get());
     }
 
-    void applyConstraintsForModule(
+    Set<IDefinition> applyConstraintsForModule(
         @NonNull IModuleNodeItem moduleItem,
+        @NonNull Set<IDefinition> previouslyTargetedDefinitions,
         @NonNull DynamicContext dynamicContext,
         @NonNull IModelElementVisitor<ITargetedConstraints, Void> visitor,
         @NonNull ISequence<? extends INodeItem> targetedItems) {
@@ -161,12 +173,13 @@ public class MetaConstraintSet
                 .map(IDefinitionNodeItem::getDefinition)
                 // ensure the definition only gets processed if the module being processed is
                 // the containing module
-                .filter(definition -> definition.getContainingModule().equals(moduleItem.getModule()))
+                .filter(definition -> !previouslyTargetedDefinitions.contains(definition))
                 .forEach(definition -> targetedDefinitions.add(definition));
 
             // process child contexts, which will be applied depth first
             for (Context context : childContexts) {
-              context.applyConstraintsForModule(moduleItem, dynamicContext, visitor, items);
+              context.applyConstraintsForModule(moduleItem, previouslyTargetedDefinitions, dynamicContext, visitor,
+                  items);
             }
           }
         }
@@ -178,6 +191,8 @@ public class MetaConstraintSet
           definition.accept(visitor, constraints);
         });
       });
+
+      return CollectionUtil.unmodifiableSet(targetedDefinitions);
     }
 
     private ISequence<?> evaluateItem(
