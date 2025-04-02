@@ -10,10 +10,10 @@ import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionService;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+import gov.nist.secauto.metaschema.core.qname.WellKnown;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.logging.log4j.LogManager;
@@ -79,15 +79,13 @@ class ListFunctionsSubcommand
                 IFunction::getName,
                 Collectors.toList())));
 
-    Map<String, String> namespaceToPrefixMap = StaticContext.getWellKnownNamespacesMap().entrySet().stream()
-        .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
-
     List<String> namespaces = new ArrayList<>(namespaceToNameToFunctionMap.keySet());
 
     Collections.sort(namespaces);
 
     for (String namespace : namespaces) {
-      String prefix = namespaceToPrefixMap.get(namespace);
+      assert namespace != null;
+      String prefix = WellKnown.getWellKnownPrefixForUri(namespace);
 
       if (prefix == null) {
         LOGGER.atInfo().log("In namespace '{}':", namespace);

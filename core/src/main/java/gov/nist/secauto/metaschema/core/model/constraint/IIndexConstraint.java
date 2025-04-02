@@ -24,8 +24,8 @@ public interface IIndexConstraint extends IKeyConstraint {
   }
 
   /**
-   * Get the name of the index, which is used to refer to the index by an
-   * {@link IIndexHasKeyConstraint}.
+   * Get the identifying name of the index, which is used to refer to the index by
+   * an {@link IIndexHasKeyConstraint}.
    *
    * @return the name of the index
    */
@@ -59,6 +59,7 @@ public interface IIndexConstraint extends IKeyConstraint {
     private final String name;
 
     private Builder(@NonNull String name) {
+      // disable construction
       this.name = name;
     }
 

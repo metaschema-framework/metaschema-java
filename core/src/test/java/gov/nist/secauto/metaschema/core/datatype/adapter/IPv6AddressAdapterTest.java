@@ -30,7 +30,7 @@ class IPv6AddressAdapterTest {
   })
   void testIPv6AddressThrowsWithInvalid(@NonNull String addr) {
     assertThrows(IllegalArgumentException.class, () -> {
-      new IPv6AddressAdapter().parse(addr);
+      MetaschemaDataTypeProvider.IP_V6_ADDRESS.parse(addr);
     });
   }
 
@@ -51,7 +51,7 @@ class IPv6AddressAdapterTest {
   })
   void testIPv6AddressAllowsCommonIPv6Addresses(@NonNull String addr) {
     assertDoesNotThrow(() -> {
-      new IPv6AddressAdapter().parse(addr);
+      MetaschemaDataTypeProvider.IP_V6_ADDRESS.parse(addr);
     });
   }
 }

@@ -9,7 +9,6 @@ import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
-import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10.ParamContext;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySequenceConstructor;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySquareConstructor;
@@ -427,7 +426,7 @@ public class BuildCSTVisitor
             2,
             (ctx, idx) -> {
               int pos = idx / 2;
-              ParamContext tree = ctx.param(pos);
+              Metapath10.ParamContext tree = ctx.param(pos);
               return IArgument.of(
                   getContext().parseVariableName(ObjectUtils.notNull(tree.eqname().getText())),
                   tree.typedeclaration() == null

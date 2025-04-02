@@ -23,8 +23,6 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class DateAdapterTest {
-  private static final DateAdapter ADAPTER = new DateAdapter();
-
   private static Stream<Arguments> provideValues() {
     return Stream.of(
         // Cases without timezone (ambiguous)
@@ -42,7 +40,7 @@ class DateAdapterTest {
   @ParameterizedTest
   @MethodSource("provideValues")
   void testSimpleDate(@NonNull String actual, boolean ambiguous, @NonNull ZonedDateTime expected) {
-    AmbiguousDate date = ADAPTER.parse(actual);
+    AmbiguousDate date = MetaschemaDataTypeProvider.DATE.parse(actual);
     assertAll(
         () -> assertEquals(ambiguous, !date.hasTimeZone()),
         () -> assertEquals(expected, date.getValue()));
@@ -61,7 +59,7 @@ class DateAdapterTest {
   @MethodSource("provideInvalidValues")
   void testInvalidDates(@NonNull String actual) {
     assertThrows(IllegalArgumentException.class, () -> {
-      ADAPTER.parse(actual);
+      MetaschemaDataTypeProvider.DATE.parse(actual);
     });
   }
 }

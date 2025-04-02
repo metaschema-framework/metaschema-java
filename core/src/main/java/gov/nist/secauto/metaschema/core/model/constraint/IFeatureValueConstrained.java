@@ -12,6 +12,10 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A marker interface for a Metaschema valued construct (i.e. flag, field) that
+ * can be constrained using Metaschema constraints.
+ */
 public interface IFeatureValueConstrained extends IValueConstrained {
   /**
    * Lazy initialize the instances for the constraints when the constraints are

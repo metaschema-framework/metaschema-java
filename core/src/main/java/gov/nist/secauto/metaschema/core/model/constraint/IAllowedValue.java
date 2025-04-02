@@ -14,6 +14,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * Represents an individual enumerated value associated with an
  * {@link IAllowedValuesConstraint}.
+ * <p>
+ * These values are part of a collection of values in an
+ * {@link IAllowedValuesConstraint}.
  */
 public interface IAllowedValue {
   /**

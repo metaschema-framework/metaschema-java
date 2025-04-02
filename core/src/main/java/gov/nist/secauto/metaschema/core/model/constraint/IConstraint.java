@@ -85,16 +85,24 @@ public interface IConstraint extends IAttributable, IDescribable {
   }
 
   /**
-   * The default level to use if no level is provided.
+   * Get the default level to use if no level is provided.
+   *
+   * @return the default level
    */
   @NonNull
-  Level DEFAULT_LEVEL = Level.ERROR;
+  static Level defaultLevel() {
+    return Level.ERROR;
+  }
 
   /**
-   * The compiled default target Metapath to use if no target is provided.
+   * Get the Metapath to use if no target is provided.
+   *
+   * @return the expression
    */
   @NonNull
-  IMetapathExpression DEFAULT_TARGET_METAPATH = IMetapathExpression.contextNode();
+  static IMetapathExpression defaultTarget() {
+    return IMetapathExpression.contextNode();
+  }
 
   /**
    * Get a string that identifies the provided constraint using the most specific

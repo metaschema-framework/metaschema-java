@@ -23,6 +23,10 @@ public interface ILet {
   /**
    * Create a new Let expression by compiling the provided Metapath expression
    * string.
+   * <p>
+   * This method is deprecated. Callers should use
+   * {@link #of(IEnhancedQName, IMetapathExpression, ISource, MarkupMultiline)}
+   * instead.
    *
    * @param name
    *          the let expression variable name
@@ -36,6 +40,7 @@ public interface ILet {
    */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
+  @Deprecated(since = "2.2.0", forRemoval = true)
   static ILet of(
       @NonNull IEnhancedQName name,
       @NonNull String valueExpression,

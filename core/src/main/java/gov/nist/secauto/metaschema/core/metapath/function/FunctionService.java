@@ -16,7 +16,11 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
-public final class FunctionService {
+/**
+ * Supports looking up named Metapath functions that are loaded using the
+ * {@link ServiceLoader} interface.
+ */
+public final class FunctionService implements IFunctionResolver {
   private static final Lazy<FunctionService> INSTANCE = Lazy.lazy(FunctionService::new);
   @NonNull
   private final ServiceLoader<IFunctionLibrary> loader;
@@ -28,8 +32,10 @@ public final class FunctionService {
    *
    * @return the service instance
    */
+  // FIXME: rename to instance()
+  @NonNull
   public static FunctionService getInstance() {
-    return INSTANCE.get();
+    return ObjectUtils.notNull(INSTANCE.get());
   }
 
   /**
@@ -75,21 +81,7 @@ public final class FunctionService {
     return getLibrary().stream();
   }
 
-  /**
-   * Retrieve the function with the provided name that supports the signature of
-   * the provided methods, if such a function exists.
-   *
-   * @param name
-   *          the name of a group of functions
-   * @param arity
-   *          the count of arguments for use in determining an argument signature
-   *          match
-   * @return the matching function or {@code null} if no match exists
-   * @throws StaticMetapathException
-   *           with the code {@link StaticMetapathException#NO_FUNCTION_MATCH} if
-   *           a matching function was not found
-   */
-  @NonNull
+  @Override
   public IFunction getFunction(@NonNull IEnhancedQName name, int arity) {
     IFunction retval = getLibrary().getFunction(name, arity);
 

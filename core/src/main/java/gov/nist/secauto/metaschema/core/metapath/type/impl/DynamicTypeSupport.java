@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext.EQNameResolver;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
@@ -100,7 +99,7 @@ public final class DynamicTypeSupport {
   private static boolean compareDefinition(
       @NonNull IDefinition definition,
       @NonNull String expected,
-      @NonNull EQNameResolver nameResolver) {
+      @NonNull IEnhancedQName.PrefixToNamespaceResolver nameResolver) {
     boolean retval;
     try {
       IEnhancedQName expectedName = nameResolver.resolve(expected);

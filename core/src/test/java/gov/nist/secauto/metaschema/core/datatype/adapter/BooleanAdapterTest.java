@@ -31,7 +31,7 @@ class BooleanAdapterTest {
       parser.nextToken();
       parser.nextToken();
 
-      Boolean obj = new BooleanAdapter().parse(
+      Boolean obj = MetaschemaDataTypeProvider.BOOLEAN.parse(
           parser,
           ObjectUtils.notNull(URI.create("https://example.com/not-a-resource")));
       assertAll(
