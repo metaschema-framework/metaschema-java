@@ -116,7 +116,7 @@ public final class FnDoc {
       return context.getDocumentLoader().loadAsNodeItem(ObjectUtils.notNull(uri.asUri()));
     } catch (IOException ex) {
       throw new DocumentFunctionException(DocumentFunctionException.ERROR_RETRIEVING_RESOURCE, String
-          .format("Unable to retrieve the resource identified by the URI '%s'.", documentUri.toString()), ex);
+          .format("Unable to retrieve the resource identified by the URI '%s'.", documentUri.asUri().toString()), ex);
     }
   }
 }
