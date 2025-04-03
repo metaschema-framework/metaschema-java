@@ -34,6 +34,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * A set of constraints, which are targeted at the contents of a Metaschema
+ * module within specific contexts.
+ */
 public class MetaConstraintSet
     extends AbstractConstraintSet {
   private static final Logger LOGGER = LogManager.getLogger(MetaConstraintSet.class);
@@ -42,6 +46,16 @@ public class MetaConstraintSet
   @NonNull
   private final List<Context> contexts;
 
+  /**
+   * Construct a new constraint set.
+   * 
+   * @param source
+   *          the source of the constraint set
+   * @param imports
+   *          other constraint sets imported by this set
+   * @param contexts
+   *          the contexts to use for this constraint set
+   */
   public MetaConstraintSet(
       @NonNull ISource source,
       @NonNull List<? extends IConstraintSet> imports,
@@ -132,21 +146,33 @@ public class MetaConstraintSet
           modelConstrained)));
     }
 
+    /**
+     * Get the set of constraints associated with this context.
+     * 
+     * @return the set of constraints
+     */
     @NonNull
-    public ITargetedConstraints getConstraints() {
+    private ITargetedConstraints getConstraints() {
       return ObjectUtils.notNull(constraints.get());
     }
 
+    /**
+     * Add a collection of child contexts to this context.
+     * 
+     * @param children
+     *          the children context to add
+     */
     public void addAll(@NonNull Collection<Context> children) {
       childContexts.addAll(children);
     }
 
     @NonNull
-    public List<IMetapathExpression> getMetapaths() {
+    private List<IMetapathExpression> getMetapaths() {
       return metapaths;
     }
 
-    public List<IMetapathExpression> getContextualizedMetapaths() {
+    @NonNull
+    private List<IMetapathExpression> getContextualizedMetapaths() {
       return ObjectUtils.notNull(contextualizedMetapaths.get());
     }
 
@@ -194,7 +220,7 @@ public class MetaConstraintSet
     }
 
     @NonNull
-    public static Stream<IMetapathExpression> concatMetapaths(
+    private static Stream<IMetapathExpression> concatMetapaths(
         @Nullable MetaConstraintSet.Context parent,
         @NonNull Stream<IMetapathExpression> metapaths,
         @NonNull ISource source) {

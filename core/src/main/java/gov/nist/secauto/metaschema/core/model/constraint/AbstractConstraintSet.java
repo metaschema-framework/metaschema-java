@@ -9,6 +9,10 @@ import gov.nist.secauto.metaschema.core.model.ISource;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A common implementation for a set of constraints targeted at the contents of
+ * a Metaschema module.
+ */
 public abstract class AbstractConstraintSet implements IConstraintSet {
   @NonNull
   private final ISource source;
