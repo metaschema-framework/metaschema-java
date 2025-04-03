@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=../../../../../databind-metaschema/target/generated-resources/schema/json/metaschema-model_schema.json
+metaschema-meta-constraints:
+  contexts:
+  - metapaths:
+    - target: "/METASCHEMA"
+    - target: "/metaschema-meta-constraints"
+    constraints:
+      rules:
+      - id: "junit-test-expect"
+        object-type: expect
+        test: "."
+        target: "."
+    contexts:
+    - metapaths:
+      - target: "*"
+      constraints:
+        rules:
+        - id: "junit-test-nested-expect"
+          object-type: expect
+          test: "."
+          target: "."

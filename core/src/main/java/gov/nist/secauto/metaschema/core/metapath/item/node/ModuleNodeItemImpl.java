@@ -55,6 +55,6 @@ class ModuleNodeItemImpl
 
   @Override
   protected String getValueSignature() {
-    return getModule().getQName().toEQName();
+    return getModule().getLocationHint();
   }
 }
