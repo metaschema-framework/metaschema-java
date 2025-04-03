@@ -13,8 +13,8 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Represents a collection of constraints to apply to a given module identified
- * by the module's namespace and short name.
+ * A collection of constraints to apply to a given module identified by the
+ * module's namespace and short name.
  */
 public class DefaultScopedContraints implements IScopedContraints {
   @NonNull

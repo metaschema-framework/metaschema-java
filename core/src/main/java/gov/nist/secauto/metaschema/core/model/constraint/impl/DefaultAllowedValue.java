@@ -12,6 +12,9 @@ import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstrain
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Organizes information for a single allowed value in a set of allowed values.
+ */
 public class DefaultAllowedValue implements IAllowedValue {
   @NonNull
   private final String value;

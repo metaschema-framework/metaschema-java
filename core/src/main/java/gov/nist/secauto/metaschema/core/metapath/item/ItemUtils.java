@@ -10,7 +10,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.path.Axis;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentBasedNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathError;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -31,7 +31,7 @@ public final class ItemUtils {
    * @param item
    *          the item to check
    * @return the item cast to a {@link INodeItem}
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the item is {@code null} or not an {@link INodeItem}
    */
   // FIXME: make this a method on the type implementation
@@ -46,7 +46,7 @@ public final class ItemUtils {
    * @param item
    *          the item to check
    * @return the item cast to a {@link INodeItem}
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the item is {@code null} or not an {@link INodeItem}
    */
   @NonNull
@@ -60,10 +60,10 @@ public final class ItemUtils {
       return ObjectUtils.notNull(itemClass.cast(item));
     }
     if (item == null) {
-      throw new TypeMetapathException(TypeMetapathException.NOT_A_NODE_ITEM_FOR_STEP,
+      throw new TypeMetapathError(TypeMetapathError.NOT_A_NODE_ITEM_FOR_STEP,
           "Item is null.");
     }
-    throw new TypeMetapathException(TypeMetapathException.NOT_A_NODE_ITEM_FOR_STEP,
+    throw new TypeMetapathError(TypeMetapathError.NOT_A_NODE_ITEM_FOR_STEP,
         String.format(
             "The item of type '%s' is not of the type '%s'.",
             item.getClass().getName(),
@@ -103,7 +103,7 @@ public final class ItemUtils {
    * @param clazz
    *          the Java class to check the item against
    * @return the item cast to the required class value
-   * @throws TypeMetapathException
+   * @throws TypeMetapathError
    *           if the item is {@code null} or does not match the type specified by
    *           {@code clazz}
    */
@@ -114,7 +114,7 @@ public final class ItemUtils {
     if (clazz.isInstance(item)) {
       return (TYPE) item;
     }
-    throw new TypeMetapathException(TypeMetapathException.INVALID_TYPE_ERROR,
+    throw new TypeMetapathError(TypeMetapathError.INVALID_TYPE_ERROR,
         String.format(
             "The item of type '%s' is not the required type '%s'.",
             item.getClass().getName(),

@@ -5,16 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath.type;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
+import gov.nist.secauto.metaschema.core.metapath.RuntimeMetapathError;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * MPTY: Exceptions related to Metapath type errors.
  */
-public class TypeMetapathException
-    extends DynamicMetapathError {
+public class TypeMetapathError
+    extends RuntimeMetapathError {
   @NonNull
   private static final String PREFIX = "MPTY";
   /**
@@ -42,7 +42,8 @@ public class TypeMetapathException
    */
   public static final int BASE_PATH_NOT_A_SEQUENCE = 19;
   /**
-   * The context item is not a node when evaluating an axis step.
+   * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPTY0020">err:MPTY0020</a>: The
+   * context item is not a node when evaluating an axis step.
    */
   public static final int NOT_A_NODE_ITEM_FOR_STEP = 20;
 
@@ -62,7 +63,7 @@ public class TypeMetapathException
    * @param cause
    *          the original exception cause
    */
-  public TypeMetapathException(int code, String message, Throwable cause) {
+  public TypeMetapathError(int code, String message, Throwable cause) {
     super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
@@ -75,7 +76,7 @@ public class TypeMetapathException
    * @param message
    *          the exception message
    */
-  public TypeMetapathException(int code, String message) {
+  public TypeMetapathError(int code, String message) {
     super(IErrorCode.of(PREFIX, code), message);
   }
 
@@ -88,7 +89,7 @@ public class TypeMetapathException
    * @param cause
    *          the original exception cause
    */
-  public TypeMetapathException(int code, Throwable cause) {
+  public TypeMetapathError(int code, Throwable cause) {
     super(IErrorCode.of(PREFIX, code), cause);
   }
 }

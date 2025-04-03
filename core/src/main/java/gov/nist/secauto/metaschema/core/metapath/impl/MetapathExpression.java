@@ -51,7 +51,7 @@ public class MetapathExpression
    * The Metapath expression identifying the current context node.
    */
   @NonNull
-  public static final MetapathExpression CONTEXT_NODE
+  public static final MetapathExpression CONTEXT_METAPATH
       = new MetapathExpression(".", ContextItem.instance(), StaticContext.instance());
   private static final Logger LOGGER = LogManager.getLogger(MetapathExpression.class);
   @NonNull
@@ -73,7 +73,7 @@ public class MetapathExpression
     @NonNull
     MetapathExpression retval;
     if (".".equals(path)) {
-      retval = CONTEXT_NODE;
+      retval = CONTEXT_METAPATH;
     } else {
       try {
         Metapath10 parser = newParser(path);
@@ -85,7 +85,10 @@ public class MetapathExpression
       } catch (StaticMetapathError ex) {
         String message = ex.getMessageText();
         throw new StaticMetapathError(
-            ex.getErrorCode(),
+            // FIXME: should it be this
+            // StaticMetapathError.INVALID_PATH_GRAMMAR,
+            // or this
+            ex.getErrorCode().getCode(),
             String.format("Unable to compile path '%s'.%s", path, message == null ? "" : " " + message),
             ex);
       } catch (MetapathException | ParseCancellationException ex) {
