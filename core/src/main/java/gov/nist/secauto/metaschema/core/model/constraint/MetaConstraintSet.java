@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelElementVisitor;
+import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -33,6 +34,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * A set of constraints, which are targeted at the contents of a Metaschema
+ * module within specific contexts.
+ */
 public class MetaConstraintSet
     extends AbstractConstraintSet {
   private static final Logger LOGGER = LogManager.getLogger(MetaConstraintSet.class);
@@ -41,6 +46,16 @@ public class MetaConstraintSet
   @NonNull
   private final List<Context> contexts;
 
+  /**
+   * Construct a new constraint set.
+   * 
+   * @param source
+   *          the source of the constraint set
+   * @param imports
+   *          other constraint sets imported by this set
+   * @param contexts
+   *          the contexts to use for this constraint set
+   */
   public MetaConstraintSet(
       @NonNull ISource source,
       @NonNull List<? extends IConstraintSet> imports,
@@ -67,6 +82,13 @@ public class MetaConstraintSet
           imported.applyConstraintsForModule(moduleItem, previouslyTargetedDefinitions, visitor));
     }
 
+    IModule module = moduleItem.getModule();
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.atDebug().log("Applying '{}' constraints to '{}' module.",
+          getSource().getLocationHint(),
+          module.getLocationHint());
+    }
+
     // generate a dynamic context using the external constraint set's static context
     DynamicContext dynamicContext = new DynamicContext(getSource().getStaticContext());
     for (Context context : contexts) {
@@ -81,27 +103,10 @@ public class MetaConstraintSet
     return CollectionUtil.unmodifiableSet(targetedDefinitions);
   }
 
-  @NonNull
-  public static Stream<IMetapathExpression> concatMetapaths(
-      @Nullable MetaConstraintSet.Context parent,
-      @NonNull Stream<IMetapathExpression> metapaths,
-      @NonNull ISource source) {
-
-    Stream<IMetapathExpression> retval = metapaths;
-    if (parent != null) {
-      List<IMetapathExpression> parentMetapaths = parent.getMetapaths().stream()
-          .collect(Collectors.toList());
-      retval = metapaths
-          .map(IMetapathExpression::getPath)
-          .flatMap(childPath -> parentMetapaths.stream()
-              .map(parentPath -> parentPath.getPath() + '/' + childPath))
-          .map(metapath -> IMetapathExpression.lazyCompile(
-              ObjectUtils.requireNonNull(metapath),
-              source.getStaticContext()));
-    }
-    return ObjectUtils.notNull(retval);
-  }
-
+  /**
+   * A nestable context, targeted by a set of metapath expressions, to apply
+   * constraints within.
+   */
   public static class Context {
     @NonNull
     private final List<IMetapathExpression> metapaths;
@@ -110,43 +115,64 @@ public class MetaConstraintSet
     @NonNull
     private final List<Context> childContexts = new LinkedList<>();
     @NonNull
-    private final Lazy<List<ITargetedConstraints>> targetedConstraints;
+    private final Lazy<ITargetedConstraints> constraints;
 
+    /**
+     * Construct a new context.
+     *
+     * @param parent
+     *          the parent content or {@code null} if there is no parent
+     * @param source
+     *          the source of the constraint set
+     * @param metapaths
+     *          the metapath expressions the context applies to
+     * @param modelConstrained
+     *          the constraints to apply to items matching one of the metapaths
+     */
     public Context(
         @Nullable Context parent,
         @NonNull ISource source,
         @NonNull List<IMetapathExpression> metapaths,
-        @NonNull IModelConstrained constraints) {
+        @NonNull IModelConstrained modelConstrained) {
       this.metapaths = metapaths;
       this.contextualizedMetapaths = ObjectUtils.notNull(Lazy.lazy(() -> {
         return concatMetapaths(parent, ObjectUtils.notNull(metapaths.stream()), source)
             .collect(Collectors.toUnmodifiableList());
       }));
-      this.targetedConstraints = ObjectUtils.notNull(Lazy.lazy(() -> {
-        return getMetapaths().stream()
-            .map(metapath -> new ModelTargetedConstraints(
-                source,
-                this::getContextualizedMetapaths,
-                constraints))
-            .collect(Collectors.toUnmodifiableList());
-      }));
+
+      this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> new ModelTargetedConstraints(
+          source,
+          this::getContextualizedMetapaths,
+          modelConstrained)));
     }
 
+    /**
+     * Get the set of constraints associated with this context.
+     * 
+     * @return the set of constraints
+     */
     @NonNull
-    public List<ITargetedConstraints> getTargetedConstraints() {
-      return ObjectUtils.notNull(targetedConstraints.get());
+    private ITargetedConstraints getConstraints() {
+      return ObjectUtils.notNull(constraints.get());
     }
 
+    /**
+     * Add a collection of child contexts to this context.
+     * 
+     * @param children
+     *          the children context to add
+     */
     public void addAll(@NonNull Collection<Context> children) {
       childContexts.addAll(children);
     }
 
     @NonNull
-    public List<IMetapathExpression> getMetapaths() {
+    private List<IMetapathExpression> getMetapaths() {
       return metapaths;
     }
 
-    public List<IMetapathExpression> getContextualizedMetapaths() {
+    @NonNull
+    private List<IMetapathExpression> getContextualizedMetapaths() {
       return ObjectUtils.notNull(contextualizedMetapaths.get());
     }
 
@@ -155,51 +181,63 @@ public class MetaConstraintSet
         @NonNull Set<IDefinition> previouslyTargetedDefinitions,
         @NonNull DynamicContext dynamicContext,
         @NonNull IModelElementVisitor<ITargetedConstraints, Void> visitor,
-        @NonNull ISequence<? extends INodeItem> targetedItems) {
-      Set<IDefinition> targetedDefinitions = new HashSet<>();
+        @NonNull ISequence<? extends INodeItem> contextItems) {
 
-      for (INodeItem nodeItem : targetedItems) {
-        for (IMetapathExpression metapath : metapaths) {
-          ISequence<? extends IDefinitionNodeItem<?, ?>> items = ISequence.of(ObjectUtils.notNull(
-              evaluateItem(metapath, nodeItem, dynamicContext).stream()
-                  .filter(item -> filterNonDefinitionItem(item, metapath))
-                  .map(item -> (IDefinitionNodeItem<?, ?>) item)))
-              .reusable();
-          assert items != null;
-          if (!items.isEmpty()) {
-            // build a map to ensure the constraint is only applied once to each
-            // underlying definition
-            items.stream()
-                .map(IDefinitionNodeItem::getDefinition)
-                // ensure the definition only gets processed if the module being processed is
-                // the containing module
-                .filter(definition -> !previouslyTargetedDefinitions.contains(definition))
-                .forEach(targetedDefinitions::add);
+      Set<IDefinition> retval = new HashSet<>();
 
-            // process child contexts, which will be applied depth first
-            for (Context context : childContexts) {
-              context.applyConstraintsForModule(moduleItem, previouslyTargetedDefinitions, dynamicContext, visitor,
-                  items);
-            }
-          }
-        }
-      }
+      ISequence<? extends IDefinitionNodeItem<?, ?>> targetedItems = ISequence.of(ObjectUtils.notNull(
+          contextItems.stream()
+              .flatMap(item -> getMetapaths().stream()
+                  .flatMap(metapath -> metapath.evaluate(item, dynamicContext).stream()
+                      .filter(result -> filterNonDefinitionItem(result, metapath))
+                      .map(result -> (IDefinitionNodeItem<?, ?>) result)))))
+          .reusable();
+
+      // process this context
+      Set<IDefinition> definitions = targetedItems.stream()
+          .map(IDefinitionNodeItem::getDefinition)
+          // ensure the definition only gets processed if the module being processed is
+          // the containing module
+          .filter(definition -> !previouslyTargetedDefinitions.contains(definition))
+          .collect(Collectors.toUnmodifiableSet());
 
       // apply the constraints for this context
-      targetedDefinitions.forEach(definition -> {
-        getTargetedConstraints().forEach(constraints -> {
-          definition.accept(visitor, constraints);
-        });
+      definitions.forEach(definition -> {
+        definition.accept(visitor, getConstraints());
       });
+      retval.addAll(definitions);
 
-      return CollectionUtil.unmodifiableSet(targetedDefinitions);
+      // process child contexts, which will be applied depth first
+      for (Context childContext : childContexts) {
+        retval.addAll(childContext.applyConstraintsForModule(
+            moduleItem,
+            previouslyTargetedDefinitions,
+            dynamicContext,
+            visitor,
+            targetedItems));
+      }
+      return CollectionUtil.unmodifiableSet(retval);
     }
 
-    private ISequence<?> evaluateItem(
-        @NonNull IMetapathExpression metapath,
-        @NonNull INodeItem nodeItem,
-        @NonNull DynamicContext dynamicContext) {
-      return metapath.evaluate(nodeItem, dynamicContext).reusable();
+    @NonNull
+    private static Stream<IMetapathExpression> concatMetapaths(
+        @Nullable MetaConstraintSet.Context parent,
+        @NonNull Stream<IMetapathExpression> metapaths,
+        @NonNull ISource source) {
+
+      Stream<IMetapathExpression> retval = metapaths;
+      if (parent != null) {
+        List<IMetapathExpression> parentMetapaths = parent.getMetapaths().stream()
+            .collect(Collectors.toList());
+        retval = metapaths
+            .map(IMetapathExpression::getPath)
+            .flatMap(childPath -> parentMetapaths.stream()
+                .map(parentPath -> parentPath.getPath() + '/' + childPath))
+            .map(metapath -> IMetapathExpression.lazyCompile(
+                ObjectUtils.requireNonNull(metapath),
+                source.getStaticContext()));
+      }
+      return ObjectUtils.notNull(retval);
     }
 
     private static boolean filterNonDefinitionItem(IItem item, @NonNull IMetapathExpression metapath) {
