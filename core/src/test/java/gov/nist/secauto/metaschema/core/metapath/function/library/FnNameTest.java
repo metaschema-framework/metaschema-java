@@ -17,7 +17,7 @@ import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
+import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathError;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.testing.model.mocking.MockedDocumentGenerator;
 
@@ -106,8 +106,8 @@ class FnNameTest
         () -> assertEquals(InvalidTypeMetapathException.class, cause == null
             ? null
             : cause.getClass()),
-        () -> assertEquals(TypeMetapathException.INVALID_TYPE_ERROR, cause instanceof TypeMetapathException
-            ? ((TypeMetapathException) cause).getErrorCode().getCode()
+        () -> assertEquals(TypeMetapathError.INVALID_TYPE_ERROR, cause instanceof TypeMetapathError
+            ? ((TypeMetapathError) cause).getErrorCode().getCode()
             : null));
   }
 }

@@ -5,13 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class UnidentifiedFunctionError
-    extends DynamicMetapathError {
+    extends FunctionMetapathError {
   @NonNull
   private static final IErrorCode ERROR_CODE = IErrorCode.of("FOER", 0);
 

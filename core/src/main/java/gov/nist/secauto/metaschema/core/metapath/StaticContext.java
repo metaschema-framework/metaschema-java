@@ -463,7 +463,7 @@ public final class StaticContext {
    * @param qname
    *          the qualified name of the function
    * @param arity
-   *          the number of arguments <<<<<<< HEAD
+   *          the number of arguments
    * @return the function
    * @throws StaticMetapathError
    *           with the code {@link StaticMetapathError#NO_FUNCTION_MATCH} if a

@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.model.xml.impl;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
@@ -503,10 +504,10 @@ public final class ModelFactory {
   public static ILet newLet(
       @NonNull ConstraintLetType xmlObject,
       @NonNull ISource source) {
-
+    StaticContext staticContext = source.getStaticContext();
     return ILet.of(
-        source.getStaticContext().parseVariableName(ObjectUtils.requireNonNull(xmlObject.getVar())),
-        IMetapathExpression.lazyCompile(ObjectUtils.notNull(xmlObject.getExpression()), source.getStaticContext()),
+        staticContext.parseVariableName(ObjectUtils.requireNonNull(xmlObject.getVar())),
+        IMetapathExpression.lazyCompile(ObjectUtils.notNull(xmlObject.getExpression()), staticContext),
         source,
         xmlObject.isSetRemarks()
             ? remarks(ObjectUtils.notNull(xmlObject.getRemarks()))

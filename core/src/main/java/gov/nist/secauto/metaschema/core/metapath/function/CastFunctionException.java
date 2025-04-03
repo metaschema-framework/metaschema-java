@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
@@ -15,7 +14,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FOCA: Exceptions related to type casting.
  */
 public class CastFunctionException
-    extends DynamicMetapathError {
+    extends FunctionMetapathError {
   @NonNull
   private static final String PREFIX = "FOCA";
   /**

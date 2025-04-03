@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -14,7 +13,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * FODT: Exceptions related to Date/Time/Duration errors.
  */
 public class DateTimeFunctionException
-    extends DynamicMetapathError {
+    extends FunctionMetapathError {
   @NonNull
   private static final String PREFIX = "FODT";
   /**

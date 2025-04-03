@@ -109,9 +109,7 @@ public abstract class AbstractSchemaGenerator<
       @NonNull S generationState,
       @Nullable BiConsumer<ModuleIndex.DefinitionEntry, IDefinition> handler) {
     // TODO: use of handler here is confusing and introduces side effects. Consider
-    // refactoring this in
-    // the caller
-
+    // refactoring this in the caller
     List<IAssemblyDefinition> rootAssemblyDefinitions = new LinkedList<>();
     for (ModuleIndex.DefinitionEntry entry : generationState.getMetaschemaIndex().getDefinitions()) {
 
