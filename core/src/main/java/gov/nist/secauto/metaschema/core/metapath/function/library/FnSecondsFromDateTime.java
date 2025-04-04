@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import gov.nist.secauto.metaschema.core.datatype.adapter.DecimalAdapter;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -75,6 +76,6 @@ public final class FnSecondsFromDateTime {
     return IDecimalItem.valueOf(ObjectUtils.notNull(
         BigDecimal.valueOf(arg.getSecond())
             .add(BigDecimal.valueOf(arg.getNano())
-                .divide(BigDecimal.valueOf(1_000_000_000.0), FunctionUtils.MATH_CONTEXT))));
+                .divide(BigDecimal.valueOf(1_000_000_000.0), DecimalAdapter.mathContext()))));
   }
 }

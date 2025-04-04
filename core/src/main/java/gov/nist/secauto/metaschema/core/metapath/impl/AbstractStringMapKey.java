@@ -16,7 +16,7 @@ public abstract class AbstractStringMapKey
     implements IStringMapKey {
 
   @Override
-  public int hashCode() {
+  protected int generateHashCode() {
     return asString().hashCode();
   }
 }

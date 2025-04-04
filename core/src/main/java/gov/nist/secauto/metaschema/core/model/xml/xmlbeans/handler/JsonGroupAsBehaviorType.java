@@ -40,7 +40,6 @@ public final class JsonGroupAsBehaviorType {
         target.setStringValue("BY_KEY");
         break;
       case NONE:
-      default:
         // do nothing
       }
     }

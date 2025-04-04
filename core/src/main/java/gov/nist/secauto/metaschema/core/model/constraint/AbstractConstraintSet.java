@@ -17,6 +17,12 @@ public abstract class AbstractConstraintSet implements IConstraintSet {
   @NonNull
   private final ISource source;
 
+  /**
+   * Construct a new constraint set.
+   *
+   * @param source
+   *          the constraint source information
+   */
   public AbstractConstraintSet(@NonNull ISource source) {
     this.source = source;
   }

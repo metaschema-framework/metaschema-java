@@ -33,8 +33,6 @@ public final class ConstraintExtensionEnum {
       case EXTERNAL:
         target.setStringValue("external");
         break;
-      default:
-        throw new UnsupportedOperationException(obj.name());
       }
     }
   }

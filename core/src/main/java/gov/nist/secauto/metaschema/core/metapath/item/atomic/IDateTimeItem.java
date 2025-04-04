@@ -81,6 +81,7 @@ public interface IDateTimeItem extends ICalendarTemporalItem {
    *          the time portion of the date/time
    * @return the date/time item
    */
+  @SuppressWarnings("PMD.CyclomaticComplexity")
   @NonNull
   static IDateTimeItem valueOf(@NonNull IDateItem date, @NonNull ITimeItem time) {
     ZonedDateTime zdtDate = ObjectUtils.notNull(date.asZonedDateTime());

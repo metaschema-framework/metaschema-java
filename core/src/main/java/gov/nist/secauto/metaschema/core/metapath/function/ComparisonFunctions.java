@@ -214,9 +214,9 @@ public final class ComparisonFunctions {
           dynamicContext);
     } else if (left instanceof ITimeItem && right instanceof ITimeItem) {
       retval = dateTimeCompare(
-          IDateTimeItem.valueOf(OperationFunctions.DATE_1972_12_31, (ITimeItem) left),
+          IDateTimeItem.valueOf(OperationFunctions.referenceDate(), (ITimeItem) left),
           operator,
-          IDateTimeItem.valueOf(OperationFunctions.DATE_1972_12_31, (ITimeItem) right),
+          IDateTimeItem.valueOf(OperationFunctions.referenceDate(), (ITimeItem) right),
           dynamicContext);
     } else if (left instanceof IDurationItem && right instanceof IDurationItem) {
       retval = durationCompare((IDurationItem) left, operator, (IDurationItem) right);
@@ -249,7 +249,7 @@ public final class ComparisonFunctions {
       @NonNull Operator operator,
       @NonNull IStringItem right) {
     int result = left.compareTo(right);
-    boolean retval;
+    Boolean retval = null;
     switch (operator) {
     case EQ:
       retval = result == 0;
@@ -269,10 +269,10 @@ public final class ComparisonFunctions {
     case NE:
       retval = result != 0;
       break;
-    default:
-      throw new IllegalArgumentException(
-          String.format("Unsupported operator '%s'", operator.name())); // NOPMD
     }
+
+    assert retval != null : String.format("Unsupported operator '%s'", operator.name());
+
     return IBooleanItem.valueOf(retval);
   }
 
@@ -291,7 +291,7 @@ public final class ComparisonFunctions {
   @NonNull
   public static IBooleanItem numericCompare(@NonNull INumericItem left, @NonNull Operator operator,
       @NonNull INumericItem right) {
-    IBooleanItem retval;
+    IBooleanItem retval = null;
     switch (operator) {
     case EQ:
       retval = OperationFunctions.opNumericEqual(left, right);
@@ -317,9 +317,9 @@ public final class ComparisonFunctions {
     case NE:
       retval = FnNot.fnNot(OperationFunctions.opNumericEqual(left, right));
       break;
-    default:
-      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));
     }
+    assert retval != null : String.format("Unsupported operator '%s'", operator.name());
+
     return retval;
   }
 
@@ -340,7 +340,7 @@ public final class ComparisonFunctions {
       @NonNull IBooleanItem left,
       @NonNull Operator operator,
       @NonNull IBooleanItem right) {
-    IBooleanItem retval;
+    IBooleanItem retval = null;
     switch (operator) {
     case EQ:
       retval = OperationFunctions.opBooleanEqual(left, right);
@@ -366,9 +366,9 @@ public final class ComparisonFunctions {
     case NE:
       retval = FnNot.fnNot(OperationFunctions.opBooleanEqual(left, right));
       break;
-    default:
-      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));
     }
+    assert retval != null : String.format("Unsupported operator '%s'", operator.name());
+
     return retval;
   }
 
@@ -392,7 +392,7 @@ public final class ComparisonFunctions {
       @NonNull Operator operator,
       @NonNull IDateTimeItem right,
       @Nullable DynamicContext dynamicContext) {
-    IBooleanItem retval;
+    IBooleanItem retval = null;
     switch (operator) {
     case EQ:
       retval = OperationFunctions.opDateTimeEqual(left, right, dynamicContext);
@@ -424,9 +424,9 @@ public final class ComparisonFunctions {
     case NE:
       retval = FnNot.fnNot(OperationFunctions.opDateTimeEqual(left, right, dynamicContext));
       break;
-    default:
-      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));
     }
+    assert retval != null : String.format("Unsupported operator '%s'", operator.name());
+
     return retval;
   }
 
@@ -507,8 +507,6 @@ public final class ComparisonFunctions {
     case NE:
       retval = FnNot.fnNot(OperationFunctions.opDurationEqual(left, right));
       break;
-    default:
-      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));
     }
 
     if (retval == null) {
@@ -536,7 +534,7 @@ public final class ComparisonFunctions {
   @NonNull
   public static IBooleanItem binaryCompare(@NonNull IBase64BinaryItem left, @NonNull Operator operator,
       @NonNull IBase64BinaryItem right) {
-    IBooleanItem retval;
+    IBooleanItem retval = null;
     switch (operator) {
     case EQ:
       retval = OperationFunctions.opBase64BinaryEqual(left, right);
@@ -562,9 +560,9 @@ public final class ComparisonFunctions {
     case NE:
       retval = FnNot.fnNot(OperationFunctions.opBase64BinaryEqual(left, right));
       break;
-    default:
-      throw new IllegalArgumentException(String.format("Unsupported operator '%s'", operator.name()));
     }
+    assert retval != null : String.format("Unsupported operator '%s'", operator.name());
+
     return retval;
   }
 }

@@ -5,11 +5,11 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic.impl;
 
+import gov.nist.secauto.metaschema.core.datatype.adapter.DecimalAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -37,7 +37,7 @@ public abstract class AbstractIntegerItem
 
   @Override
   public BigDecimal asDecimal() {
-    return new BigDecimal(getValue(), MathContext.DECIMAL64);
+    return new BigDecimal(getValue(), DecimalAdapter.mathContext());
   }
 
   @Override

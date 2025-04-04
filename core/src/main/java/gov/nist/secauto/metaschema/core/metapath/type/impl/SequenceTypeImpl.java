@@ -135,9 +135,10 @@ public class SequenceTypeImpl implements ISequenceType {
   public boolean matches(ICollectionValue item) {
     ISequence<?> sequence = item instanceof IItem ? ((IItem) item).toSequence() : (ISequence<?>) item;
 
-    boolean retval;
     // check the occurrence matches
     int size = sequence.size();
+
+    Boolean retval = null;
     switch (getOccurrence()) {
     case ONE:
       retval = size == 1;
@@ -154,10 +155,8 @@ public class SequenceTypeImpl implements ISequenceType {
     case ZERO_OR_ONE:
       retval = size <= 1;
       break;
-    default:
-      throw new UnsupportedOperationException(
-          String.format("Unsupported occurrence type '%s'.", getOccurrence().name()));
     }
+    assert retval != null : String.format("Unsupported occurrence type '%s'.", getOccurrence().name());
 
     if (retval) {
       // check the item type matches

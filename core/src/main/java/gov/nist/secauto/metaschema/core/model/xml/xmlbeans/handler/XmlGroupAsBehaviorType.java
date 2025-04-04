@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.model.xml.xmlbeans.handler;
 
-import gov.nist.secauto.metaschema.core.model.IGroupable;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 
 /**
@@ -33,9 +32,6 @@ public final class XmlGroupAsBehaviorType {
         break;
       case UNGROUPED:
         target.setStringValue("UNGROUPED");
-        break;
-      default:
-        target.setStringValue(IGroupable.DEFAULT_XML_GROUP_AS_BEHAVIOR.name());
         break;
       }
     }

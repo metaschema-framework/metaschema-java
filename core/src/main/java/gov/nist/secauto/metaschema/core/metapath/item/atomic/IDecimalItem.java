@@ -5,10 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.atomic;
 
+import gov.nist.secauto.metaschema.core.datatype.adapter.DecimalAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.CastFunctionException;
-import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.impl.DecimalItemImpl;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
@@ -225,7 +225,7 @@ public interface IDecimalItem extends INumericItem {
   default IDecimalItem subtract(@NonNull IDecimalItem subtrahend) {
     BigDecimal minuendDecimal = asDecimal();
     BigDecimal subtrahendDecimal = subtrahend.asDecimal();
-    return valueOf(ObjectUtils.notNull(minuendDecimal.subtract(subtrahendDecimal, FunctionUtils.MATH_CONTEXT)));
+    return valueOf(ObjectUtils.notNull(minuendDecimal.subtract(subtrahendDecimal, DecimalAdapter.mathContext())));
   }
 
   /**
@@ -238,7 +238,7 @@ public interface IDecimalItem extends INumericItem {
    */
   @NonNull
   default IDecimalItem multiply(@NonNull IDecimalItem multiplier) {
-    return valueOf(ObjectUtils.notNull(asDecimal().multiply(multiplier.asDecimal(), FunctionUtils.MATH_CONTEXT)));
+    return valueOf(ObjectUtils.notNull(asDecimal().multiply(multiplier.asDecimal(), DecimalAdapter.mathContext())));
   }
 
   /**
@@ -260,7 +260,7 @@ public interface IDecimalItem extends INumericItem {
       throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,
           ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
     }
-    return valueOf(ObjectUtils.notNull(asDecimal().divide(divisorDecimal, FunctionUtils.MATH_CONTEXT)));
+    return valueOf(ObjectUtils.notNull(asDecimal().divide(divisorDecimal, DecimalAdapter.mathContext())));
   }
 
   /**
@@ -285,7 +285,7 @@ public interface IDecimalItem extends INumericItem {
     BigDecimal decimalDividend = asDecimal();
     return IIntegerItem.valueOf(
         ObjectUtils.notNull(decimalDividend
-            .divideToIntegralValue(decimalDivisor, FunctionUtils.MATH_CONTEXT).toBigInteger()));
+            .divideToIntegralValue(decimalDivisor, DecimalAdapter.mathContext()).toBigInteger()));
   }
 
   /**
@@ -307,12 +307,12 @@ public interface IDecimalItem extends INumericItem {
       throw new ArithmeticFunctionException(ArithmeticFunctionException.DIVISION_BY_ZERO,
           ArithmeticFunctionException.DIVISION_BY_ZERO_MESSAGE);
     }
-    return valueOf(ObjectUtils.notNull(asDecimal().remainder(decimalDivisor, FunctionUtils.MATH_CONTEXT)));
+    return valueOf(ObjectUtils.notNull(asDecimal().remainder(decimalDivisor, DecimalAdapter.mathContext())));
   }
 
   @Override
   default IDecimalItem negate() {
-    return valueOf(ObjectUtils.notNull(asDecimal().negate(FunctionUtils.MATH_CONTEXT)));
+    return valueOf(ObjectUtils.notNull(asDecimal().negate(DecimalAdapter.mathContext())));
   }
 
   /**

@@ -135,7 +135,7 @@ public final class FnSum {
     // tell cpd to start ignoring code - CPD-OFF
 
     Map<Class<? extends IAnyAtomicItem>, Integer> typeCounts = FunctionUtils.countTypes(
-        OperationFunctions.AGGREGATE_MATH_TYPES,
+        OperationFunctions.aggregateMathTypes(),
         ObjectUtils.notNull(items));
 
     int count = items.size();
@@ -187,7 +187,7 @@ public final class FnSum {
       throw new InvalidArgumentFunctionException(
           InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
           String.format("Values must all be of type '%s'.",
-              OperationFunctions.AGGREGATE_MATH_TYPES.stream()
+              OperationFunctions.aggregateMathTypes().stream()
                   .map(Class::getName)
                   .collect(CustomCollectors.joiningWithOxfordComma(","))));
     }

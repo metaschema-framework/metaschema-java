@@ -70,7 +70,7 @@ public class FindingCollectingConstraintValidationHandler
 
   @NonNull
   private static Kind toKind(@NonNull Level level) {
-    Kind retval;
+    Kind retval = null;
     switch (level) {
     case CRITICAL:
     case ERROR:
@@ -84,9 +84,8 @@ public class FindingCollectingConstraintValidationHandler
     case WARNING:
       retval = Kind.PASS;
       break;
-    default:
-      throw new UnsupportedOperationException(String.format("Unsupported level '%s'.", level));
     }
+    assert retval != null : String.format("Unsupported level '%s'.", level);
 
     return retval;
   }

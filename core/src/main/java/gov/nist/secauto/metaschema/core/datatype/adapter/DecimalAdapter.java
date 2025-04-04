@@ -29,7 +29,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class DecimalAdapter
     extends AbstractDataTypeAdapter<BigDecimal, IDecimalItem> {
-  public static final MathContext MATH_CONTEXT = MathContext.DECIMAL64;
   @NonNull
   private static final List<IEnhancedQName> NAMES = ObjectUtils.notNull(
       List.of(
@@ -37,6 +36,22 @@ public class DecimalAdapter
 
   DecimalAdapter() {
     super(BigDecimal.class, IDecimalItem.class, IDecimalItem::cast);
+  }
+
+  /**
+   * Provides a standardized math context to use with {@link BigDecimal}
+   * operations.
+   * <p>
+   * This math context was chosen for decimal arithmetic operations, since
+   * DECIMAL64 provides a precision of 16 digits, which is sufficient for most
+   * business calculations while maintaining reasonable performance.
+   *
+   * @return the standardized math context
+   */
+  @SuppressWarnings("null")
+  @NonNull
+  public static MathContext mathContext() {
+    return MathContext.DECIMAL64;
   }
 
   @Override
@@ -51,7 +66,7 @@ public class DecimalAdapter
 
   @Override
   public BigDecimal parse(String value) {
-    return new BigDecimal(value, MATH_CONTEXT);
+    return new BigDecimal(value, mathContext());
   }
 
   @Override

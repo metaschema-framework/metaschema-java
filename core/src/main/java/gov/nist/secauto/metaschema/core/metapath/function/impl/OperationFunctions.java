@@ -38,6 +38,7 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Implementations of the XPath 3.1 operation functions.
@@ -49,17 +50,40 @@ import edu.umd.cs.findbugs.annotations.Nullable;
     "PMD.CyclomaticComplexity"
 })
 public final class OperationFunctions {
+  @SuppressFBWarnings(value = "MS_EXPOSE_REP", justification = "Value is immutable")
   @NonNull
-  public static final IDateItem DATE_1972_12_31 = IDateItem.valueOf(ObjectUtils.notNull(LocalDate.of(1972, 12, 31)));
-
+  private static final IDateItem DATE_1972_12_31 = IDateItem.valueOf(ObjectUtils.notNull(LocalDate.of(1972, 12, 31)));
   /**
    * Identifies the types and substypes that support aggregation.
    */
+  @SuppressFBWarnings(value = "MS_EXPOSE_REP", justification = "Value is immutable")
   @NonNull
-  public static final Set<Class<? extends IAnyAtomicItem>> AGGREGATE_MATH_TYPES = ObjectUtils.notNull(Set.of(
+  private static final Set<Class<? extends IAnyAtomicItem>> AGGREGATE_MATH_TYPES = ObjectUtils.notNull(Set.of(
       IDayTimeDurationItem.class,
       IYearMonthDurationItem.class,
       INumericItem.class));
+
+  /**
+   * Get a reference date for use in date-based operations.
+   *
+   * @return the reference date
+   */
+  @NonNull
+  public static IDateItem referenceDate() {
+    return DATE_1972_12_31;
+  }
+
+  /**
+   * Get the types supported by aggregation operations.
+   * <p>
+   * Any associated subtypes are also supported.
+   *
+   * @return the set of supported types
+   */
+  @NonNull
+  public static Set<Class<? extends IAnyAtomicItem>> aggregateMathTypes() {
+    return AGGREGATE_MATH_TYPES;
+  }
 
   private OperationFunctions() {
     // disable

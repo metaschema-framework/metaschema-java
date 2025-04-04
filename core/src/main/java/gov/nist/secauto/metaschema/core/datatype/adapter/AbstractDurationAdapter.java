@@ -24,6 +24,14 @@ import java.util.regex.Pattern;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Supports working with duration-based data values.
+ *
+ * @param <TYPE>
+ *          the raw Java type this adapter supports
+ * @param <ITEM_TYPE>
+ *          the metapath item type supported by the adapter
+ */
 public abstract class AbstractDurationAdapter<TYPE, ITEM_TYPE extends IDurationItem>
     extends AbstractDataTypeAdapter<TYPE, ITEM_TYPE> {
   private static final Pattern DURATION_PATTERN = Pattern.compile(
@@ -211,7 +219,7 @@ public abstract class AbstractDurationAdapter<TYPE, ITEM_TYPE extends IDurationI
 
   @NonNull
   private static BigDecimal parseDecimalValue(@Nullable String value) {
-    return value == null ? ObjectUtils.notNull(BigDecimal.ZERO) : new BigDecimal(value, DecimalAdapter.MATH_CONTEXT);
+    return value == null ? ObjectUtils.notNull(BigDecimal.ZERO) : new BigDecimal(value, DecimalAdapter.mathContext());
   }
 
   private static long toWholeSeconds(@NonNull BigDecimal bigSeconds) {
@@ -226,9 +234,9 @@ public abstract class AbstractDurationAdapter<TYPE, ITEM_TYPE extends IDurationI
   }
 
   private static long toFractionalNanoSeconds(@NonNull BigDecimal seconds) {
-    BigDecimal remainder = seconds.remainder(BigDecimal.ONE, DecimalAdapter.MATH_CONTEXT);
+    BigDecimal remainder = seconds.remainder(BigDecimal.ONE, DecimalAdapter.mathContext());
 
-    BigDecimal result = remainder.multiply(new BigDecimal("1e9", DecimalAdapter.MATH_CONTEXT))
+    BigDecimal result = remainder.multiply(new BigDecimal("1e9", DecimalAdapter.mathContext()))
         .setScale(0, RoundingMode.HALF_EVEN);
     try {
       return result.longValueExact();
