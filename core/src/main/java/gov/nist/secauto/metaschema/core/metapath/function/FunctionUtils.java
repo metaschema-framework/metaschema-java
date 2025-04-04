@@ -14,7 +14,6 @@ import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathExcepti
 import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.math.MathContext;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -36,13 +35,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 // types
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class FunctionUtils {
-  /**
-   * The math context used for decimal arithmetic operations. DECIMAL64 provides a
-   * precision of 16 digits, which is sufficient for most business calculations
-   * while maintaining reasonable performance.
-   */
-  public static final MathContext MATH_CONTEXT = MathContext.DECIMAL64;
-
   private FunctionUtils() {
     // disable
   }

@@ -41,8 +41,6 @@ public final class ConstraintLevelType {
       case NONE:
         // do nothing
         break;
-      default:
-        throw new UnsupportedOperationException(obj.name());
       }
     }
   }

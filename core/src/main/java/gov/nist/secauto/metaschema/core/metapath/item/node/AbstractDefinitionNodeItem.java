@@ -13,8 +13,7 @@ public abstract class AbstractDefinitionNodeItem<D extends IDefinition, I extend
   @NonNull
   private final D definition;
 
-  public AbstractDefinitionNodeItem(
-      @NonNull D definition) {
+  public AbstractDefinitionNodeItem(@NonNull D definition) {
     this.definition = definition;
   }
 

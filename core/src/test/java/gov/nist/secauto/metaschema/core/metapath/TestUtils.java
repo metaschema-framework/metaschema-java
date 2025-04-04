@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import gov.nist.secauto.metaschema.core.datatype.adapter.DecimalAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -31,7 +32,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -156,7 +156,7 @@ public final class TestUtils {
    * @return the decimal item
    */
   public static IDecimalItem decimal(@NonNull String value) {
-    return IDecimalItem.valueOf(new BigDecimal(value, MathContext.DECIMAL64));
+    return IDecimalItem.valueOf(new BigDecimal(value, DecimalAdapter.mathContext()));
   }
 
   /**

@@ -18,6 +18,15 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides a catalog of registered function implementations.
+ * <p>
+ * Functions can be registered using the {@link #registerFunction(IFunction)}
+ * method.
+ * <p>
+ * Previously registered functions can be looked up using the
+ * {@link #getFunction(IEnhancedQName, int)} method.
+ */
 public class FunctionLibrary implements IFunctionLibrary {
 
   @NonNull

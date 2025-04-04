@@ -45,6 +45,7 @@ public class XmlMetaConstraintLoader
     extends AbstractLoader<List<IConstraintSet>>
     implements IConstraintLoader {
 
+  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   @Override
   protected List<IConstraintSet> parseResource(URI resource, Deque<URI> visitedResources) throws IOException {
 

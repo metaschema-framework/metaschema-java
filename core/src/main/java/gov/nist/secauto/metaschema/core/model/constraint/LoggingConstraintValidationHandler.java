@@ -27,13 +27,15 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * Supports logging constraint findings to the configured Log4J2 instance.
  */
+@SuppressWarnings("PMD.GodClass")
 public class LoggingConstraintValidationHandler
     extends AbstractConstraintValidationHandler {
   private static final Logger LOGGER = LogManager.getLogger(DefaultConstraintValidator.class);
   private static final Throwable NO_EXCEPTION = null;
 
+  @NonNull
   private static LogBuilder getLogBuilder(@NonNull Level level) {
-    LogBuilder retval;
+    LogBuilder retval = null;
     switch (level) {
     case CRITICAL:
       retval = LOGGER.atFatal();
@@ -51,9 +53,9 @@ public class LoggingConstraintValidationHandler
       retval = LOGGER.atInfo();
       break;
     case NONE:
-    default:
-      throw new UnsupportedOperationException(String.format("unsupported level '%s'", level));
+      throw new UnsupportedOperationException(String.format("Unsupported log level '%s'", level));
     }
+    assert retval != null : String.format("Unsupported level '%s'.", level);
     return retval;
   }
 
@@ -72,7 +74,7 @@ public class LoggingConstraintValidationHandler
    *         otherwise
    */
   private static boolean isLogged(@NonNull Level level) {
-    boolean retval;
+    Boolean retval = null;
     switch (level) {
     case CRITICAL:
       retval = LOGGER.isFatalEnabled();
@@ -90,9 +92,9 @@ public class LoggingConstraintValidationHandler
       retval = LOGGER.isInfoEnabled();
       break;
     case NONE:
-    default:
-      throw new UnsupportedOperationException(String.format("unsupported level '%s'", level));
+      retval = false;
     }
+    assert retval != null : String.format("Unsupported level '%s'.", level);
     return retval;
   }
 
@@ -102,15 +104,17 @@ public class LoggingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull CharSequence message,
       @Nullable Throwable cause) {
-    LogBuilder builder = getLogBuilder(level);
-    if (cause != null) {
-      builder.withThrowable(cause);
+    if (!Level.NONE.equals(level)) {
+      LogBuilder builder = getLogBuilder(level);
+      if (cause != null) {
+        builder.withThrowable(cause);
+      }
+      builder.log("{}{}: ({}) {}",
+          identifier == null ? "" : "[" + identifier + "] ",
+          level.name(),
+          toPath(node),
+          message);
     }
-    builder.log("{}{}: ({}) {}",
-        identifier == null ? "" : "[" + identifier + "] ",
-        level.name(),
-        toPath(node),
-        message);
   }
 
   @Override

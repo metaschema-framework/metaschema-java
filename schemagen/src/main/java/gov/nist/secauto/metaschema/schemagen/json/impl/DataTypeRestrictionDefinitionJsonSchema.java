@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.DecimalAdapter;
 import gov.nist.secauto.metaschema.core.model.IValuedDefinition;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
@@ -19,7 +20,6 @@ import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState.AllowedValu
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -141,7 +141,7 @@ public class DataTypeRestrictionDefinitionJsonSchema
         enumArray.add(new BigInteger(allowedValue.getValue())); // NOPMD unavoidable
         break;
       case NUMBER:
-        enumArray.add(new BigDecimal(allowedValue.getValue(), MathContext.DECIMAL64)); // NOPMD unavoidable
+        enumArray.add(new BigDecimal(allowedValue.getValue(), DecimalAdapter.mathContext())); // NOPMD unavoidable
         break;
       case ANY:
       case ARRAY:

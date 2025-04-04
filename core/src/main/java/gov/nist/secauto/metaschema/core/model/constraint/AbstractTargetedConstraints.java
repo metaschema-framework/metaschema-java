@@ -102,6 +102,16 @@ public abstract class AbstractTargetedConstraints<T extends IValueConstrained>
     applyTo(definition);
   }
 
+  /**
+   * Throws a {@link ConstraintInitializationException} indicating that the
+   * constraint target is not valid.
+   *
+   * @param definition
+   *          the targeted definition
+   * @throws ConstraintInitializationException
+   *           when method is called to indicate that the provided definition is
+   *           not a valid constraint target
+   */
   protected void wrongDefinitionTypeTargeted(@NonNull IDefinition definition) {
     throw new ConstraintInitializationException(
         String.format(

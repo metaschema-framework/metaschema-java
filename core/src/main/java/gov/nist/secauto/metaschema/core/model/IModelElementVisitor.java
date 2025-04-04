@@ -15,7 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * of this visitor pattern.
  *
  * @param <CONTEXT>
- *          the type of data to pass to each visited node
+ *          the type of contextual data to pass to each visited node
  * @param <RESULT>
  *          the type of result produced by visitation
  * @see AbstractModelElementVisitor

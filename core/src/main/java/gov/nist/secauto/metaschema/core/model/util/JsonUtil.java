@@ -179,7 +179,6 @@ public final class JsonUtil {
     case END_OBJECT:
     case END_ARRAY:
     case NOT_AVAILABLE:
-    default:
       // error
       String msg = String.format("Unhandled JsonToken %s.",
           toString(parser, resource));

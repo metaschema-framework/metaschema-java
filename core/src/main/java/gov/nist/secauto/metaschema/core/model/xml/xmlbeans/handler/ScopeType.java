@@ -35,8 +35,6 @@ public final class ScopeType {
       case PRIVATE:
         target.setStringValue("local");
         break;
-      default:
-        throw new UnsupportedOperationException(value.toString());
       }
     }
   }

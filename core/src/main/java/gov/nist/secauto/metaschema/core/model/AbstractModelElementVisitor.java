@@ -17,12 +17,21 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * this visitor pattern.
  *
  * @param <CONTEXT>
- *          the type of data to pass to each visited node
+ *          the type of contextual data to pass to each visited node
  * @param <RESULT>
  *          the type of result produced by visitation
  * @see AbstractModelElementVisitor
  */
 public abstract class AbstractModelElementVisitor<CONTEXT, RESULT> implements IModelElementVisitor<CONTEXT, RESULT> {
+  /**
+   * Produce a default result for the provided element and contextual information.
+   *
+   * @param element
+   *          the element the result is for
+   * @param context
+   *          the contextual information provided by the visitor.
+   * @return the result
+   */
   protected abstract RESULT defaultResult(@NonNull IModelElement element, CONTEXT context);
 
   @Override

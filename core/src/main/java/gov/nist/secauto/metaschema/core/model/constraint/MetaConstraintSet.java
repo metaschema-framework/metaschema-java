@@ -37,6 +37,7 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * A set of constraints, which are targeted at the contents of a Metaschema
  * module within specific contexts.
  */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class MetaConstraintSet
     extends AbstractConstraintSet {
   private static final Logger LOGGER = LogManager.getLogger(MetaConstraintSet.class);
@@ -47,7 +48,7 @@ public class MetaConstraintSet
 
   /**
    * Construct a new constraint set.
-   * 
+   *
    * @param source
    *          the source of the constraint set
    * @param imports
@@ -143,7 +144,7 @@ public class MetaConstraintSet
 
     /**
      * Get the set of constraints associated with this context.
-     * 
+     *
      * @return the set of constraints
      */
     @NonNull
@@ -153,7 +154,7 @@ public class MetaConstraintSet
 
     /**
      * Add a collection of child contexts to this context.
-     * 
+     *
      * @param children
      *          the children context to add
      */

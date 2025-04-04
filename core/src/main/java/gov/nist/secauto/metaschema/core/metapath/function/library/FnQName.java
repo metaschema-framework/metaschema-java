@@ -19,13 +19,14 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-function-lookup">fn:function-lookup</a>
+ * /** Implements
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-QName">fn:QName</a>
  * functions.
  */
 public final class FnQName {
@@ -42,12 +43,12 @@ public final class FnQName {
       .argument(IArgument.builder()
           .name("paramURI")
           .type(IStringItem.type())
-          .one()
+          .zeroOrOne()
           .build())
       .argument(IArgument.builder()
           .name("paramQName")
           .type(IStringItem.type())
-          .zeroOrOne()
+          .one()
           .build())
       .returnType(IQNameItem.type())
       .returnOne()
@@ -60,35 +61,33 @@ public final class FnQName {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    IStringItem paramUri = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0).getFirstItem(true)));
+    IStringItem paramUri = FunctionUtils.asTypeOrNull(arguments.get(0).getFirstItem(true));
     IStringItem paramQName = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));
 
-    if (paramUri.length() == 0) {
-      throw new CastFunctionException(
-          CastFunctionException.INVALID_LEXICAL_VALUE,
-          paramUri,
-          String.format("paramURI is an empty string and not a valid URI to form a QName."));
-    }
+    IEnhancedQName result;
+    if (paramUri == null) {
+      result = IEnhancedQName.of(paramQName.asString());
+    } else {
+      if (paramUri.length() == 0) {
+        throw new CastFunctionException(
+            CastFunctionException.INVALID_LEXICAL_VALUE,
+            paramUri,
+            String.format("paramURI is an empty string and not a valid URI to form a QName."));
+      }
 
-    try {
-      URI uri = URI.create(paramUri.asString());
-    } catch (IllegalArgumentException ex) {
-      throw new CastFunctionException(
-          CastFunctionException.INVALID_LEXICAL_VALUE,
-          paramUri,
-          String.format("paramURI '%s' is not a valid URI to form a QName.", paramUri.asString()),
-          ex);
+      URI uri;
+      try {
+        uri = ObjectUtils.notNull(new URI(paramUri.asString()));
+      } catch (URISyntaxException ex) {
+        throw new CastFunctionException(
+            CastFunctionException.INVALID_LEXICAL_VALUE,
+            paramUri,
+            String.format("paramURI '%s' is not a valid URI to form a QName.", paramUri.asString()),
+            ex);
+      }
+      result = IEnhancedQName.of(uri, paramQName.asString());
     }
-
-    try {
-      return ISequence.of(IQNameItem.valueOf(IEnhancedQName.of(paramUri.asString(), paramQName.asString())));
-    } catch (Exception ex) {
-      throw new CastFunctionException(
-          CastFunctionException.INVALID_LEXICAL_VALUE,
-          paramUri,
-          String.format("paramQName '%s' is not a valid URI to form QName.", paramQName.asString()),
-          ex);
-    }
+    return ISequence.of(IQNameItem.valueOf(result));
   }
 
   private FnQName() {
