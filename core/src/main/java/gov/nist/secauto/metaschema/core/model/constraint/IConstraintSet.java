@@ -6,12 +6,10 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
-import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelElementVisitor;
 import gov.nist.secauto.metaschema.core.model.ISource;
 
 import java.util.Collection;
-import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -46,15 +44,10 @@ public interface IConstraintSet {
    *
    * @param moduleItem
    *          the module node item to apply applicable constraints to
-   * @param previouslyTargetedDefinitions
-   *          the set of definitions previously targeted for this constraint set
    * @param visitor
    *          the visitor used to apply constraints to target definitions
-   * @return the set of definitions targeted
    */
-  @NonNull
-  Set<IDefinition> applyConstraintsForModule(
+  void applyConstraintsForModule(
       @NonNull IModuleNodeItem moduleItem,
-      @NonNull Set<IDefinition> previouslyTargetedDefinitions,
       @NonNull IModelElementVisitor<ITargetedConstraints, Void> visitor);
 }
