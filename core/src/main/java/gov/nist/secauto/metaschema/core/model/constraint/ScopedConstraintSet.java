@@ -45,6 +45,8 @@ public class ScopedConstraintSet implements IConstraintSet {
   private final Set<IConstraintSet> importedConstraintSets;
   @NonNull
   private final Map<IEnhancedQName, List<IScopedContraints>> scopedContraints;
+  @NonNull
+  private final Set<IDefinition> previouslyTargetedDefinitions = new HashSet<>();
 
   /**
    * Construct a new constraint set.
@@ -99,9 +101,8 @@ public class ScopedConstraintSet implements IConstraintSet {
   }
 
   @Override
-  public Set<IDefinition> applyConstraintsForModule(
+  public void applyConstraintsForModule(
       IModuleNodeItem moduleItem,
-      Set<IDefinition> previouslyTargetedDefinitions,
       IModelElementVisitor<ITargetedConstraints, Void> visitor) {
     IEnhancedQName qname = moduleItem.getModule().getQName();
     List<IScopedContraints> scopes = getScopedContraints().getOrDefault(qname, CollectionUtil.emptyList());
@@ -142,8 +143,7 @@ public class ScopedConstraintSet implements IConstraintSet {
         definition.accept(visitor, constraints);
       }
     }
-
-    return CollectionUtil.unmodifiableSet(ObjectUtils.notNull(definitionConstraints.keySet()));
+    previouslyTargetedDefinitions.addAll(ObjectUtils.notNull(definitionConstraints.keySet()));
   }
 
   private static boolean filterNonDefinitionItem(IItem item, @NonNull IMetapathExpression metapath) {
