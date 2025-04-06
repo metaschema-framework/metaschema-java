@@ -196,9 +196,10 @@ public final class ArraySubarray {
    *          start position
    * @return a new array item consisting of the items in the identified range
    * @throws NegativeLengthArrayMetapathException
-   *           if the length is negative
+   *           if the length argument is negative
    * @throws IndexOutOfBoundsArrayMetapathException
-   *           if the start position is not in the range of 1 to array:size
+   *           if the position of the start argument is not a value in the range
+   *           of 1 to array:size
    */
   @NonNull
   public static <T extends ICollectionValue> IArrayItem<T> subarray(
