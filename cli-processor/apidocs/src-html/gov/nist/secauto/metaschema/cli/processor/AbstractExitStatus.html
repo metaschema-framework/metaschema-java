@@ -75,69 +75,61 @@
 <span class="source-line-no">062</span><span id="line-62">  }</span>
 <span class="source-line-no">063</span><span id="line-63"></span>
 <span class="source-line-no">064</span><span id="line-64">  /**</span>
-<span class="source-line-no">065</span><span id="line-65">   * Get the associated message.</span>
-<span class="source-line-no">066</span><span id="line-66">   *</span>
-<span class="source-line-no">067</span><span id="line-67">   * @return the message or {@code null}</span>
-<span class="source-line-no">068</span><span id="line-68">   */</span>
-<span class="source-line-no">069</span><span id="line-69">  @Nullable</span>
-<span class="source-line-no">070</span><span id="line-70">  protected abstract String getMessage();</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">  /**</span>
-<span class="source-line-no">073</span><span id="line-73">   * Determines the appropriate LogBuilder based on the exit code status. For</span>
-<span class="source-line-no">074</span><span id="line-74">   * non-positive exit codes (success/info), returns an INFO level builder. For</span>
-<span class="source-line-no">075</span><span id="line-75">   * positive exit codes (errors), returns an ERROR level builder.</span>
-<span class="source-line-no">076</span><span id="line-76">   *</span>
-<span class="source-line-no">077</span><span id="line-77">   * @return the appropriate LogBuilder based on exit status, or {@code null} if</span>
-<span class="source-line-no">078</span><span id="line-78">   *         logging is disabled at the determined level</span>
-<span class="source-line-no">079</span><span id="line-79">   */</span>
-<span class="source-line-no">080</span><span id="line-80">  @Nullable</span>
-<span class="source-line-no">081</span><span id="line-81">  private LogBuilder getLogBuilder() {</span>
-<span class="source-line-no">082</span><span id="line-82">    LogBuilder logBuilder = null;</span>
-<span class="source-line-no">083</span><span id="line-83">    if (getExitCode().getStatusCode() &lt;= 0) {</span>
-<span class="source-line-no">084</span><span id="line-84">      if (LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">085</span><span id="line-85">        logBuilder = LOGGER.atInfo();</span>
-<span class="source-line-no">086</span><span id="line-86">      }</span>
-<span class="source-line-no">087</span><span id="line-87">    } else if (LOGGER.isErrorEnabled()) {</span>
-<span class="source-line-no">088</span><span id="line-88">      logBuilder = LOGGER.atError();</span>
-<span class="source-line-no">089</span><span id="line-89">    }</span>
-<span class="source-line-no">090</span><span id="line-90">    return logBuilder;</span>
-<span class="source-line-no">091</span><span id="line-91">  }</span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">  /**</span>
-<span class="source-line-no">094</span><span id="line-94">   * Generates and logs a message based on the current exit status. The message is</span>
-<span class="source-line-no">095</span><span id="line-95">   * logged at either INFO level (for success/info status) or ERROR level (for</span>
-<span class="source-line-no">096</span><span id="line-96">   * error status).</span>
-<span class="source-line-no">097</span><span id="line-97">   *</span>
-<span class="source-line-no">098</span><span id="line-98">   * @param showStackTrace</span>
-<span class="source-line-no">099</span><span id="line-99">   *          if {@code true} and a throwable is present, includes the stack trace</span>
-<span class="source-line-no">100</span><span id="line-100">   *          in the log</span>
-<span class="source-line-no">101</span><span id="line-101">   */</span>
-<span class="source-line-no">102</span><span id="line-102">  @Override</span>
-<span class="source-line-no">103</span><span id="line-103">  public void generateMessage(boolean showStackTrace) {</span>
-<span class="source-line-no">104</span><span id="line-104">    LogBuilder logBuilder = getLogBuilder();</span>
-<span class="source-line-no">105</span><span id="line-105">    if (logBuilder == null) {</span>
-<span class="source-line-no">106</span><span id="line-106">      return;</span>
-<span class="source-line-no">107</span><span id="line-107">    }</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">    boolean useStackTrace = showStackTrace &amp;&amp; throwable != null;</span>
-<span class="source-line-no">110</span><span id="line-110">    if (useStackTrace) {</span>
-<span class="source-line-no">111</span><span id="line-111">      logBuilder.withThrowable(throwable);</span>
-<span class="source-line-no">112</span><span id="line-112">    }</span>
-<span class="source-line-no">113</span><span id="line-113"></span>
-<span class="source-line-no">114</span><span id="line-114">    String message = getMessage();</span>
-<span class="source-line-no">115</span><span id="line-115">    if (throwable != null &amp;&amp; message == null) {</span>
-<span class="source-line-no">116</span><span id="line-116">      message = throwable.getLocalizedMessage();</span>
-<span class="source-line-no">117</span><span id="line-117">    }</span>
+<span class="source-line-no">065</span><span id="line-65">   * Determines the appropriate LogBuilder based on the exit code status. For</span>
+<span class="source-line-no">066</span><span id="line-66">   * non-positive exit codes (success/info), returns an INFO level builder. For</span>
+<span class="source-line-no">067</span><span id="line-67">   * positive exit codes (errors), returns an ERROR level builder.</span>
+<span class="source-line-no">068</span><span id="line-68">   *</span>
+<span class="source-line-no">069</span><span id="line-69">   * @return the appropriate LogBuilder based on exit status, or {@code null} if</span>
+<span class="source-line-no">070</span><span id="line-70">   *         logging is disabled at the determined level</span>
+<span class="source-line-no">071</span><span id="line-71">   */</span>
+<span class="source-line-no">072</span><span id="line-72">  @Nullable</span>
+<span class="source-line-no">073</span><span id="line-73">  private LogBuilder getLogBuilder() {</span>
+<span class="source-line-no">074</span><span id="line-74">    LogBuilder logBuilder = null;</span>
+<span class="source-line-no">075</span><span id="line-75">    if (getExitCode().getStatusCode() &lt;= 0) {</span>
+<span class="source-line-no">076</span><span id="line-76">      if (LOGGER.isInfoEnabled()) {</span>
+<span class="source-line-no">077</span><span id="line-77">        logBuilder = LOGGER.atInfo();</span>
+<span class="source-line-no">078</span><span id="line-78">      }</span>
+<span class="source-line-no">079</span><span id="line-79">    } else if (LOGGER.isErrorEnabled()) {</span>
+<span class="source-line-no">080</span><span id="line-80">      logBuilder = LOGGER.atError();</span>
+<span class="source-line-no">081</span><span id="line-81">    }</span>
+<span class="source-line-no">082</span><span id="line-82">    return logBuilder;</span>
+<span class="source-line-no">083</span><span id="line-83">  }</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">  /**</span>
+<span class="source-line-no">086</span><span id="line-86">   * Generates and logs a message based on the current exit status. The message is</span>
+<span class="source-line-no">087</span><span id="line-87">   * logged at either INFO level (for success/info status) or ERROR level (for</span>
+<span class="source-line-no">088</span><span id="line-88">   * error status).</span>
+<span class="source-line-no">089</span><span id="line-89">   *</span>
+<span class="source-line-no">090</span><span id="line-90">   * @param showStackTrace</span>
+<span class="source-line-no">091</span><span id="line-91">   *          if {@code true} and a throwable is present, includes the stack trace</span>
+<span class="source-line-no">092</span><span id="line-92">   *          in the log</span>
+<span class="source-line-no">093</span><span id="line-93">   */</span>
+<span class="source-line-no">094</span><span id="line-94">  @Override</span>
+<span class="source-line-no">095</span><span id="line-95">  public void generateMessage(boolean showStackTrace) {</span>
+<span class="source-line-no">096</span><span id="line-96">    LogBuilder logBuilder = getLogBuilder();</span>
+<span class="source-line-no">097</span><span id="line-97">    if (logBuilder == null) {</span>
+<span class="source-line-no">098</span><span id="line-98">      return;</span>
+<span class="source-line-no">099</span><span id="line-99">    }</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">    boolean useStackTrace = showStackTrace &amp;&amp; throwable != null;</span>
+<span class="source-line-no">102</span><span id="line-102">    if (useStackTrace) {</span>
+<span class="source-line-no">103</span><span id="line-103">      logBuilder.withThrowable(throwable);</span>
+<span class="source-line-no">104</span><span id="line-104">    }</span>
+<span class="source-line-no">105</span><span id="line-105"></span>
+<span class="source-line-no">106</span><span id="line-106">    String message = getMessage();</span>
+<span class="source-line-no">107</span><span id="line-107">    if (throwable != null &amp;&amp; message == null) {</span>
+<span class="source-line-no">108</span><span id="line-108">      message = throwable.getLocalizedMessage();</span>
+<span class="source-line-no">109</span><span id="line-109">    }</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">    if (message != null &amp;&amp; !message.isEmpty()) {</span>
+<span class="source-line-no">112</span><span id="line-112">      logBuilder.log(message);</span>
+<span class="source-line-no">113</span><span id="line-113">    } else if (useStackTrace) {</span>
+<span class="source-line-no">114</span><span id="line-114">      // log the throwable</span>
+<span class="source-line-no">115</span><span id="line-115">      logBuilder.log();</span>
+<span class="source-line-no">116</span><span id="line-116">    } // else avoid an empty log line</span>
+<span class="source-line-no">117</span><span id="line-117">  }</span>
 <span class="source-line-no">118</span><span id="line-118"></span>
-<span class="source-line-no">119</span><span id="line-119">    if (message != null &amp;&amp; !message.isEmpty()) {</span>
-<span class="source-line-no">120</span><span id="line-120">      logBuilder.log(message);</span>
-<span class="source-line-no">121</span><span id="line-121">    } else if (useStackTrace) {</span>
-<span class="source-line-no">122</span><span id="line-122">      // log the throwable</span>
-<span class="source-line-no">123</span><span id="line-123">      logBuilder.log();</span>
-<span class="source-line-no">124</span><span id="line-124">    } // else avoid an empty log line</span>
-<span class="source-line-no">125</span><span id="line-125">  }</span>
-<span class="source-line-no">126</span><span id="line-126"></span>
-<span class="source-line-no">127</span><span id="line-127">}</span>
+<span class="source-line-no">119</span><span id="line-119">}</span>
 
 
 

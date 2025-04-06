@@ -159,25 +159,20 @@
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">return</strong> valueOf(ObjectUtils.notNull(asUri().resolve(other.asUri())));
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>   }
 <a class="jxr_linenumber" name="L153" href="#L153">153</a> 
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>   @Override
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>   <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">int</strong> compareTo(<a name="IAnyAtomicItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IAnyAtomicItem.html#IAnyAtomicItem">IAnyAtomicItem</a> item) {
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">return</strong> compareTo(<strong class="jxr_keyword">cast</strong>(item));
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>   }
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> 
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">   * Compares this value with the argument.</em>
-<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment">   * @param item</em>
-<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">   *          the item to compare with this value</em>
-<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">   * @return a negative integer, zero, or a positive integer if this value is less</em>
-<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">   *         than, equal to, or greater than the {@code item}.</em>
-<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>   <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">int</strong> compareTo(@NonNull <a name="IAnyUriItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IAnyUriItem.html#IAnyUriItem">IAnyUriItem</a> item) {
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>     <strong class="jxr_keyword">return</strong> asUri().compareTo(item.asUri());
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>   }
-<a class="jxr_linenumber" name="L170" href="#L170">170</a> }
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">   * Compares this value with the argument.</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">   * @param item</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">   *          the item to compare with this value</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">   * @return a negative integer, zero, or a positive integer if this value is less</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">   *         than, equal to, or greater than the {@code item}.</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>   <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">int</strong> compareTo(@NonNull <a name="IAnyUriItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IAnyUriItem.html#IAnyUriItem">IAnyUriItem</a> item) {
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>     <strong class="jxr_keyword">return</strong> asUri().compareTo(item.asUri());
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>   }
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

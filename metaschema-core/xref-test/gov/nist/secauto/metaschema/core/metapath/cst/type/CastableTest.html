@@ -18,7 +18,7 @@
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertTrue;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -46,8 +46,8 @@
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>    @ParameterizedTest
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>    @MethodSource(<span class="jxr_string">"provideValues"</span>)
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">void</strong> testCastable(@NonNull IAnyAtomicItem actual, @NonNull String singleType) {
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>      MetapathExpression metapath = MetapathExpression.compile(<span class="jxr_string">". castable as "</span> + singleType);
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">boolean</strong> result = ObjectUtils.notNull(metapath.evaluateAs(actual, MetapathExpression.ResultType.BOOLEAN));
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      IMetapathExpression metapath = IMetapathExpression.compile(<span class="jxr_string">". castable as "</span> + singleType);
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">boolean</strong> result = ObjectUtils.notNull(metapath.evaluateAs(actual, IMetapathExpression.ResultType.BOOLEAN));
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      assertTrue(
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>          result,
@@ -57,7 +57,7 @@
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    @Test
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>    <strong class="jxr_keyword">void</strong> testInvalidTypePrefix() {
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>      StaticMetapathException ex = assertThrows(StaticMetapathException.<strong class="jxr_keyword">class</strong>, () -&gt; {
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>        MetapathExpression.compile(<span class="jxr_string">"'a' castable as foo:bar"</span>);
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>        IMetapathExpression.compile(<span class="jxr_string">"'a' castable as foo:bar"</span>);
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      });
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      assertEquals(StaticMetapathException.PREFIX_NOT_EXPANDABLE, ex.getCode());
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>    }
@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    @Test
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">void</strong> testInvalidType() {
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      StaticMetapathException ex = assertThrows(StaticMetapathException.<strong class="jxr_keyword">class</strong>, () -&gt; {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        MetapathExpression.compile(<span class="jxr_string">"'a' castable as meta:bar"</span>);
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>        IMetapathExpression.compile(<span class="jxr_string">"'a' castable as meta:bar"</span>);
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      });
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      assertEquals(StaticMetapathException.CAST_UNKNOWN_TYPE, ex.getCode());
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    }
@@ -73,13 +73,13 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>    @Test
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>    <strong class="jxr_keyword">void</strong> testAnyAtomicType() {
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      StaticMetapathException ex = assertThrows(StaticMetapathException.<strong class="jxr_keyword">class</strong>, () -&gt; {
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        MetapathExpression.compile(<span class="jxr_string">"'a' castable as meta:any-atomic-type"</span>);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>        IMetapathExpression.compile(<span class="jxr_string">"'a' castable as meta:any-atomic-type"</span>);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      });
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      assertEquals(StaticMetapathException.CAST_ANY_ATOMIC, ex.getCode());
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>    }
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

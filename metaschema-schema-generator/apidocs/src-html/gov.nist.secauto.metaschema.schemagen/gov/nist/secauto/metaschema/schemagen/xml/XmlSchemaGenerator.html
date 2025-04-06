@@ -214,7 +214,7 @@
 <span class="source-line-no">201</span><span id="line-201">      for (IAssemblyDefinition definition : rootAssemblyDefinitions) {</span>
 <span class="source-line-no">202</span><span id="line-202">        IEnhancedQName xmlQName = definition.getRootQName();</span>
 <span class="source-line-no">203</span><span id="line-203">        if (xmlQName != null</span>
-<span class="source-line-no">204</span><span id="line-204">            &amp;&amp; (xmlQName.getNamespace() == null || state.getDefaultNS().equals(xmlQName.getNamespace()))) {</span>
+<span class="source-line-no">204</span><span id="line-204">            &amp;&amp; state.getDefaultNS().equals(xmlQName.getNamespace())) {</span>
 <span class="source-line-no">205</span><span id="line-205">          generateRootElement(definition, state);</span>
 <span class="source-line-no">206</span><span id="line-206">        }</span>
 <span class="source-line-no">207</span><span id="line-207">      }</span>

@@ -46,46 +46,47 @@
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>        <strong class="jxr_keyword">case</strong> DEBUG:
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>          target.setStringValue(<span class="jxr_string">"DEBUG"</span>);
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>          <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>        <strong class="jxr_keyword">default</strong>:
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>          <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(obj.name());
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>        }
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>      }
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>    }
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment">   * Returns an appropriate Java object from the given simple value.</em>
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment">   * @param obj</em>
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment">   *          the XML value to cast to a boolean</em>
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment">   * @return the associated boolean value</em>
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> IConstraint.Level decodeConstraintLevelType(org.apache.xmlbeans.SimpleValue obj) {
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>      String value = obj.getStringValue();
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      IConstraint.Level retval;
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">switch</strong> (value) {
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">case</strong> <span class="jxr_string">"CRITICAL"</span>:
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>        retval = IConstraint.Level.CRITICAL;
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">case</strong> <span class="jxr_string">"ERROR"</span>:
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>        retval = IConstraint.Level.ERROR;
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">case</strong> <span class="jxr_string">"WARNING"</span>:
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>        retval = IConstraint.Level.WARNING;
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>        <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">case</strong> <span class="jxr_string">"INFORMATIONAL"</span>:
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>        retval = IConstraint.Level.INFORMATIONAL;
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>        <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">case</strong> <span class="jxr_string">"DEBUG"</span>:
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>        retval = IConstraint.Level.DEBUG;
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>        <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">default</strong>:
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(value);
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      }
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">return</strong> retval;
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>    }
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  }
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>        <strong class="jxr_keyword">case</strong> NONE:
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>          <em class="jxr_comment">// do nothing</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>        }
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      }
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    }
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">   * Returns an appropriate Java object from the given simple value.</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment">   * @param obj</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment">   *          the XML value to cast to a boolean</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">   * @return the associated boolean value</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> IConstraint.Level decodeConstraintLevelType(org.apache.xmlbeans.SimpleValue obj) {
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      String value = obj.getStringValue();
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      IConstraint.Level retval;
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">switch</strong> (value) {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">case</strong> <span class="jxr_string">"CRITICAL"</span>:
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>        retval = IConstraint.Level.CRITICAL;
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">case</strong> <span class="jxr_string">"ERROR"</span>:
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        retval = IConstraint.Level.ERROR;
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>        <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">case</strong> <span class="jxr_string">"WARNING"</span>:
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>        retval = IConstraint.Level.WARNING;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>        <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">case</strong> <span class="jxr_string">"INFORMATIONAL"</span>:
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>        retval = IConstraint.Level.INFORMATIONAL;
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>        <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">case</strong> <span class="jxr_string">"DEBUG"</span>:
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>        retval = IConstraint.Level.DEBUG;
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>        <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">default</strong>:
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> UnsupportedOperationException(value);
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">return</strong> retval;
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>    }
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

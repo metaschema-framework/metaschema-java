@@ -83,7 +83,7 @@
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    @NonNull
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>    <strong class="jxr_keyword">static</strong> <a name="IPositiveIntegerItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IPositiveIntegerItem.html#IPositiveIntegerItem">IPositiveIntegerItem</a> valueOf(@NonNull <a name="INumericItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/INumericItem.html#INumericItem">INumericItem</a> value) {
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">return</strong> valueOf(value.asInteger());
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">return</strong> value instanceof <a name="IPositiveIntegerItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IPositiveIntegerItem.html#IPositiveIntegerItem">IPositiveIntegerItem</a> ? (<a name="IPositiveIntegerItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IPositiveIntegerItem.html#IPositiveIntegerItem">IPositiveIntegerItem</a>) value : valueOf(value.asInteger());
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>    }
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    <em class="jxr_javadoccomment">/**</em>
@@ -151,6 +151,6 @@
 <a class="jxr_linenumber" name="L143" href="#L143">143</a> }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

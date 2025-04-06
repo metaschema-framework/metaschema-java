@@ -158,199 +158,220 @@
 <span class="source-line-no">145</span><span id="line-145">  /**</span>
 <span class="source-line-no">146</span><span id="line-146">   * Get a new kind test that matches any {@link IDocumentNodeItem}.</span>
 <span class="source-line-no">147</span><span id="line-147">   *</span>
-<span class="source-line-no">148</span><span id="line-148">   * @param test</span>
-<span class="source-line-no">149</span><span id="line-149">   *          the root node test</span>
-<span class="source-line-no">150</span><span id="line-150">   * @return the document kind test</span>
-<span class="source-line-no">151</span><span id="line-151">   */</span>
-<span class="source-line-no">152</span><span id="line-152">  @NonNull</span>
-<span class="source-line-no">153</span><span id="line-153">  static IKindTest&lt;IDocumentNodeItem&gt; document() {</span>
-<span class="source-line-no">154</span><span id="line-154">    return AnyKindTest.ANY_DOCUMENT;</span>
-<span class="source-line-no">155</span><span id="line-155">  }</span>
-<span class="source-line-no">156</span><span id="line-156"></span>
-<span class="source-line-no">157</span><span id="line-157">  /**</span>
-<span class="source-line-no">158</span><span id="line-158">   * Get a new kind test that that matches an {@link IDocumentNodeItem} that has a</span>
-<span class="source-line-no">159</span><span id="line-159">   * root node of the provided kind.</span>
-<span class="source-line-no">160</span><span id="line-160">   *</span>
-<span class="source-line-no">161</span><span id="line-161">   * @param test</span>
-<span class="source-line-no">162</span><span id="line-162">   *          the root node test</span>
-<span class="source-line-no">163</span><span id="line-163">   * @return the document kind test</span>
-<span class="source-line-no">164</span><span id="line-164">   */</span>
-<span class="source-line-no">165</span><span id="line-165">  @NonNull</span>
-<span class="source-line-no">166</span><span id="line-166">  static IKindTest&lt;IDocumentNodeItem&gt; document(@NonNull IKindTest&lt;IAssemblyNodeItem&gt; test) {</span>
-<span class="source-line-no">167</span><span id="line-167">    return new KindDocumentTestImpl(test);</span>
-<span class="source-line-no">168</span><span id="line-168">  }</span>
-<span class="source-line-no">169</span><span id="line-169"></span>
-<span class="source-line-no">170</span><span id="line-170">  /**</span>
-<span class="source-line-no">171</span><span id="line-171">   * Matches any {@link IAssemblyNodeItem} regardless of its name or type.</span>
-<span class="source-line-no">172</span><span id="line-172">   *</span>
-<span class="source-line-no">173</span><span id="line-173">   * @return the test</span>
-<span class="source-line-no">174</span><span id="line-174">   */</span>
-<span class="source-line-no">175</span><span id="line-175">  @NonNull</span>
-<span class="source-line-no">176</span><span id="line-176">  static IKindTest&lt;IAssemblyNodeItem&gt; assembly() {</span>
-<span class="source-line-no">177</span><span id="line-177">    return AnyKindTest.ANY_ASSEMBLY;</span>
-<span class="source-line-no">178</span><span id="line-178">  }</span>
-<span class="source-line-no">179</span><span id="line-179"></span>
-<span class="source-line-no">180</span><span id="line-180">  /**</span>
-<span class="source-line-no">181</span><span id="line-181">   * Get a new kind test that matches a {@link IAssemblyNodeItem} with the</span>
-<span class="source-line-no">182</span><span id="line-182">   * provided name and a type matching the provided name of a specific assembly</span>
-<span class="source-line-no">183</span><span id="line-183">   * definition.</span>
-<span class="source-line-no">184</span><span id="line-184">   * &lt;p&gt;</span>
-<span class="source-line-no">185</span><span id="line-185">   * If used as part of a document kind test, the the provided</span>
-<span class="source-line-no">186</span><span id="line-186">   * {@code instanceName} will match the root assembly name of the document's</span>
-<span class="source-line-no">187</span><span id="line-187">   * root.</span>
-<span class="source-line-no">188</span><span id="line-188">   *</span>
-<span class="source-line-no">189</span><span id="line-189">   * @param instanceName</span>
-<span class="source-line-no">190</span><span id="line-190">   *          the name of the assembly root definition or instance to match</span>
-<span class="source-line-no">191</span><span id="line-191">   *          depending on the use context</span>
-<span class="source-line-no">192</span><span id="line-192">   * @param typeName</span>
-<span class="source-line-no">193</span><span id="line-193">   *          the name of the assembly definition to match</span>
-<span class="source-line-no">194</span><span id="line-194">   * @param staticContext</span>
-<span class="source-line-no">195</span><span id="line-195">   *          the static context in which the test was declared</span>
-<span class="source-line-no">196</span><span id="line-196">   * @return the test</span>
-<span class="source-line-no">197</span><span id="line-197">   */</span>
-<span class="source-line-no">198</span><span id="line-198">  @NonNull</span>
-<span class="source-line-no">199</span><span id="line-199">  static IKindTest&lt;IAssemblyNodeItem&gt; assembly(</span>
-<span class="source-line-no">200</span><span id="line-200">      @NonNull IEnhancedQName instanceName,</span>
-<span class="source-line-no">201</span><span id="line-201">      @Nullable String typeName,</span>
-<span class="source-line-no">202</span><span id="line-202">      @NonNull StaticContext staticContext) {</span>
-<span class="source-line-no">203</span><span id="line-203">    return new KindAssemblyTestImpl(instanceName, typeName, staticContext);</span>
-<span class="source-line-no">204</span><span id="line-204">  }</span>
-<span class="source-line-no">205</span><span id="line-205"></span>
-<span class="source-line-no">206</span><span id="line-206">  /**</span>
-<span class="source-line-no">207</span><span id="line-207">   * Get a new kind test that matches an {@link IAssemblyNodeItem} with any name</span>
-<span class="source-line-no">208</span><span id="line-208">   * and a type matching the provided name of a specific assembly definition.</span>
-<span class="source-line-no">209</span><span id="line-209">   *</span>
-<span class="source-line-no">210</span><span id="line-210">   * @param typeName</span>
-<span class="source-line-no">211</span><span id="line-211">   *          the name of the assembly definition to match</span>
-<span class="source-line-no">212</span><span id="line-212">   * @param staticContext</span>
-<span class="source-line-no">213</span><span id="line-213">   *          the static context in which the test was declared</span>
-<span class="source-line-no">214</span><span id="line-214">   * @return the test</span>
-<span class="source-line-no">215</span><span id="line-215">   */</span>
-<span class="source-line-no">216</span><span id="line-216">  @NonNull</span>
-<span class="source-line-no">217</span><span id="line-217">  static IKindTest&lt;IAssemblyNodeItem&gt; assembly(</span>
-<span class="source-line-no">218</span><span id="line-218">      @NonNull String typeName,</span>
-<span class="source-line-no">219</span><span id="line-219">      @NonNull StaticContext staticContext) {</span>
-<span class="source-line-no">220</span><span id="line-220">    return new KindAssemblyTestImpl(null, typeName, staticContext);</span>
-<span class="source-line-no">221</span><span id="line-221">  }</span>
-<span class="source-line-no">222</span><span id="line-222"></span>
-<span class="source-line-no">223</span><span id="line-223">  /**</span>
-<span class="source-line-no">224</span><span id="line-224">   * Matches any {@link IFieldNodeItem} regardless of its name or type.</span>
-<span class="source-line-no">225</span><span id="line-225">   *</span>
-<span class="source-line-no">226</span><span id="line-226">   * @return the test</span>
-<span class="source-line-no">227</span><span id="line-227">   */</span>
-<span class="source-line-no">228</span><span id="line-228">  @NonNull</span>
-<span class="source-line-no">229</span><span id="line-229">  static IKindTest&lt;IFieldNodeItem&gt; field() {</span>
-<span class="source-line-no">230</span><span id="line-230">    return AnyKindTest.ANY_FIELD;</span>
-<span class="source-line-no">231</span><span id="line-231">  }</span>
-<span class="source-line-no">232</span><span id="line-232"></span>
-<span class="source-line-no">233</span><span id="line-233">  /**</span>
-<span class="source-line-no">234</span><span id="line-234">   * Matches any {@link IFieldNodeItem} with the provided name and a type matching</span>
-<span class="source-line-no">235</span><span id="line-235">   * the provided name of a specific field definition.</span>
-<span class="source-line-no">236</span><span id="line-236">   *</span>
-<span class="source-line-no">237</span><span id="line-237">   * @param instanceName</span>
-<span class="source-line-no">238</span><span id="line-238">   *          the name of the field instance to match depending on the use context</span>
-<span class="source-line-no">239</span><span id="line-239">   * @param typeName</span>
-<span class="source-line-no">240</span><span id="line-240">   *          the name of the field definition to match</span>
-<span class="source-line-no">241</span><span id="line-241">   * @param staticContext</span>
-<span class="source-line-no">242</span><span id="line-242">   *          the static context in which the test was declared</span>
-<span class="source-line-no">243</span><span id="line-243">   * @return the test</span>
-<span class="source-line-no">244</span><span id="line-244">   */</span>
-<span class="source-line-no">245</span><span id="line-245">  @NonNull</span>
-<span class="source-line-no">246</span><span id="line-246">  static IKindTest&lt;IFieldNodeItem&gt; field(</span>
-<span class="source-line-no">247</span><span id="line-247">      @NonNull IEnhancedQName instanceName,</span>
-<span class="source-line-no">248</span><span id="line-248">      @Nullable String typeName,</span>
-<span class="source-line-no">249</span><span id="line-249">      @NonNull StaticContext staticContext) {</span>
-<span class="source-line-no">250</span><span id="line-250">    return new KindFieldTestImpl(instanceName, typeName, staticContext);</span>
-<span class="source-line-no">251</span><span id="line-251">  }</span>
-<span class="source-line-no">252</span><span id="line-252"></span>
-<span class="source-line-no">253</span><span id="line-253">  /**</span>
-<span class="source-line-no">254</span><span id="line-254">   * Matches any {@link IFieldNodeItem} with a name and type matching the provided</span>
-<span class="source-line-no">255</span><span id="line-255">   * name of a specific field definition.</span>
-<span class="source-line-no">256</span><span id="line-256">   *</span>
-<span class="source-line-no">257</span><span id="line-257">   * @param typeName</span>
-<span class="source-line-no">258</span><span id="line-258">   *          the name of the field definition to match</span>
-<span class="source-line-no">259</span><span id="line-259">   * @param staticContext</span>
-<span class="source-line-no">260</span><span id="line-260">   *          the static context in which the test was declared</span>
-<span class="source-line-no">261</span><span id="line-261">   * @return the test</span>
-<span class="source-line-no">262</span><span id="line-262">   */</span>
-<span class="source-line-no">263</span><span id="line-263">  @NonNull</span>
-<span class="source-line-no">264</span><span id="line-264">  static IKindTest&lt;IFieldNodeItem&gt; field(@NonNull String typeName, @NonNull StaticContext staticContext) {</span>
-<span class="source-line-no">265</span><span id="line-265">    return new KindFieldTestImpl(null, typeName, staticContext);</span>
-<span class="source-line-no">266</span><span id="line-266">  }</span>
-<span class="source-line-no">267</span><span id="line-267"></span>
-<span class="source-line-no">268</span><span id="line-268">  /**</span>
-<span class="source-line-no">269</span><span id="line-269">   * Matches any {@link IFlagNodeItem} regardless of its name or type.</span>
-<span class="source-line-no">270</span><span id="line-270">   *</span>
-<span class="source-line-no">271</span><span id="line-271">   * @return the test</span>
-<span class="source-line-no">272</span><span id="line-272">   */</span>
-<span class="source-line-no">273</span><span id="line-273">  @NonNull</span>
-<span class="source-line-no">274</span><span id="line-274">  static IKindTest&lt;IFlagNodeItem&gt; flag() {</span>
-<span class="source-line-no">275</span><span id="line-275">    return AnyKindTest.ANY_FLAG;</span>
-<span class="source-line-no">276</span><span id="line-276">  }</span>
-<span class="source-line-no">277</span><span id="line-277"></span>
-<span class="source-line-no">278</span><span id="line-278">  /**</span>
-<span class="source-line-no">279</span><span id="line-279">   * Matches any {@link IFlagNodeItem} with the provided name and type matching</span>
-<span class="source-line-no">280</span><span id="line-280">   * the provided name of a specific globally-scoped flag definition.</span>
-<span class="source-line-no">281</span><span id="line-281">   *</span>
-<span class="source-line-no">282</span><span id="line-282">   * @param instanceName</span>
-<span class="source-line-no">283</span><span id="line-283">   *          the name of the flag instance to match</span>
-<span class="source-line-no">284</span><span id="line-284">   * @param typeName</span>
-<span class="source-line-no">285</span><span id="line-285">   *          the name of the flag definition or value type to match</span>
-<span class="source-line-no">286</span><span id="line-286">   * @param staticContext</span>
-<span class="source-line-no">287</span><span id="line-287">   *          the static context in which the test was declared</span>
-<span class="source-line-no">288</span><span id="line-288">   * @return the test</span>
-<span class="source-line-no">289</span><span id="line-289">   */</span>
-<span class="source-line-no">290</span><span id="line-290">  @NonNull</span>
-<span class="source-line-no">291</span><span id="line-291">  static IKindTest&lt;IFlagNodeItem&gt; flag(</span>
-<span class="source-line-no">292</span><span id="line-292">      @NonNull IEnhancedQName instanceName,</span>
-<span class="source-line-no">293</span><span id="line-293">      @Nullable String typeName,</span>
-<span class="source-line-no">294</span><span id="line-294">      @NonNull StaticContext staticContext) {</span>
-<span class="source-line-no">295</span><span id="line-295">    return new KindFlagTestImpl(instanceName, typeName, staticContext);</span>
-<span class="source-line-no">296</span><span id="line-296">  }</span>
-<span class="source-line-no">297</span><span id="line-297"></span>
-<span class="source-line-no">298</span><span id="line-298">  /**</span>
-<span class="source-line-no">299</span><span id="line-299">   * Matches any {@link IFlagNodeItem} with any name and type matching the</span>
-<span class="source-line-no">300</span><span id="line-300">   * provided name of a specific globally-scoped flag definition.</span>
-<span class="source-line-no">301</span><span id="line-301">   *</span>
-<span class="source-line-no">302</span><span id="line-302">   * @param typeName</span>
-<span class="source-line-no">303</span><span id="line-303">   *          the name of the globally-scoped flag definition to match</span>
-<span class="source-line-no">304</span><span id="line-304">   * @param staticContext</span>
-<span class="source-line-no">305</span><span id="line-305">   *          the static context in which the test was declared</span>
-<span class="source-line-no">306</span><span id="line-306">   * @return the test</span>
-<span class="source-line-no">307</span><span id="line-307">   */</span>
-<span class="source-line-no">308</span><span id="line-308">  @NonNull</span>
-<span class="source-line-no">309</span><span id="line-309">  static IKindTest&lt;IFlagNodeItem&gt; flag(@NonNull String typeName, @NonNull StaticContext staticContext) {</span>
-<span class="source-line-no">310</span><span id="line-310">    return new KindFlagTestImpl(null, typeName, staticContext);</span>
-<span class="source-line-no">311</span><span id="line-311">  }</span>
-<span class="source-line-no">312</span><span id="line-312"></span>
-<span class="source-line-no">313</span><span id="line-313">  /**</span>
-<span class="source-line-no">314</span><span id="line-314">   * Test if the provided item matches this item type.</span>
-<span class="source-line-no">315</span><span id="line-315">   *</span>
-<span class="source-line-no">316</span><span id="line-316">   * @param item</span>
-<span class="source-line-no">317</span><span id="line-317">   *          the item to test</span>
-<span class="source-line-no">318</span><span id="line-318">   * @return {@code true} if the item matches the expectations or {@code false}</span>
-<span class="source-line-no">319</span><span id="line-319">   *         otherwise</span>
-<span class="source-line-no">320</span><span id="line-320">   */</span>
-<span class="source-line-no">321</span><span id="line-321">  default boolean isInstance(IItem item) {</span>
-<span class="source-line-no">322</span><span id="line-322">    return getItemClass().isInstance(item);</span>
-<span class="source-line-no">323</span><span id="line-323">  }</span>
-<span class="source-line-no">324</span><span id="line-324"></span>
-<span class="source-line-no">325</span><span id="line-325">  /**</span>
-<span class="source-line-no">326</span><span id="line-326">   * Get the item Java class associated with this item type.</span>
-<span class="source-line-no">327</span><span id="line-327">   *</span>
-<span class="source-line-no">328</span><span id="line-328">   * @return the item Java class</span>
-<span class="source-line-no">329</span><span id="line-329">   */</span>
-<span class="source-line-no">330</span><span id="line-330">  @NonNull</span>
-<span class="source-line-no">331</span><span id="line-331">  Class&lt;? extends IItem&gt; getItemClass();</span>
-<span class="source-line-no">332</span><span id="line-332"></span>
-<span class="source-line-no">333</span><span id="line-333">  /**</span>
-<span class="source-line-no">334</span><span id="line-334">   * Get the human-readable signature of the item type.</span>
-<span class="source-line-no">335</span><span id="line-335">   *</span>
-<span class="source-line-no">336</span><span id="line-336">   * @return the signature</span>
-<span class="source-line-no">337</span><span id="line-337">   */</span>
-<span class="source-line-no">338</span><span id="line-338">  @NonNull</span>
-<span class="source-line-no">339</span><span id="line-339">  String toSignature();</span>
-<span class="source-line-no">340</span><span id="line-340">}</span>
+<span class="source-line-no">148</span><span id="line-148">   * @return the document kind test</span>
+<span class="source-line-no">149</span><span id="line-149">   */</span>
+<span class="source-line-no">150</span><span id="line-150">  @NonNull</span>
+<span class="source-line-no">151</span><span id="line-151">  static IKindTest&lt;IDocumentNodeItem&gt; document() {</span>
+<span class="source-line-no">152</span><span id="line-152">    return AnyKindTest.ANY_DOCUMENT;</span>
+<span class="source-line-no">153</span><span id="line-153">  }</span>
+<span class="source-line-no">154</span><span id="line-154"></span>
+<span class="source-line-no">155</span><span id="line-155">  /**</span>
+<span class="source-line-no">156</span><span id="line-156">   * Get a new kind test that that matches an {@link IDocumentNodeItem} that has a</span>
+<span class="source-line-no">157</span><span id="line-157">   * root node of the provided kind.</span>
+<span class="source-line-no">158</span><span id="line-158">   *</span>
+<span class="source-line-no">159</span><span id="line-159">   * @param test</span>
+<span class="source-line-no">160</span><span id="line-160">   *          the root node test</span>
+<span class="source-line-no">161</span><span id="line-161">   * @return the document kind test</span>
+<span class="source-line-no">162</span><span id="line-162">   */</span>
+<span class="source-line-no">163</span><span id="line-163">  @NonNull</span>
+<span class="source-line-no">164</span><span id="line-164">  static IKindTest&lt;IDocumentNodeItem&gt; document(@NonNull IKindTest&lt;IAssemblyNodeItem&gt; test) {</span>
+<span class="source-line-no">165</span><span id="line-165">    return new KindDocumentTestImpl(test);</span>
+<span class="source-line-no">166</span><span id="line-166">  }</span>
+<span class="source-line-no">167</span><span id="line-167"></span>
+<span class="source-line-no">168</span><span id="line-168">  /**</span>
+<span class="source-line-no">169</span><span id="line-169">   * Matches any {@link IAssemblyNodeItem} regardless of its name or type.</span>
+<span class="source-line-no">170</span><span id="line-170">   *</span>
+<span class="source-line-no">171</span><span id="line-171">   * @return the test</span>
+<span class="source-line-no">172</span><span id="line-172">   */</span>
+<span class="source-line-no">173</span><span id="line-173">  @NonNull</span>
+<span class="source-line-no">174</span><span id="line-174">  static IKindTest&lt;IAssemblyNodeItem&gt; assembly() {</span>
+<span class="source-line-no">175</span><span id="line-175">    return AnyKindTest.ANY_ASSEMBLY;</span>
+<span class="source-line-no">176</span><span id="line-176">  }</span>
+<span class="source-line-no">177</span><span id="line-177"></span>
+<span class="source-line-no">178</span><span id="line-178">  /**</span>
+<span class="source-line-no">179</span><span id="line-179">   * Get a new kind test that matches a {@link IAssemblyNodeItem} with the</span>
+<span class="source-line-no">180</span><span id="line-180">   * provided name and a type matching the provided name of a specific assembly</span>
+<span class="source-line-no">181</span><span id="line-181">   * definition.</span>
+<span class="source-line-no">182</span><span id="line-182">   * &lt;p&gt;</span>
+<span class="source-line-no">183</span><span id="line-183">   * If used as part of a document kind test, the the provided</span>
+<span class="source-line-no">184</span><span id="line-184">   * {@code instanceName} will match the root assembly name of the document's</span>
+<span class="source-line-no">185</span><span id="line-185">   * root.</span>
+<span class="source-line-no">186</span><span id="line-186">   *</span>
+<span class="source-line-no">187</span><span id="line-187">   * @param instanceName</span>
+<span class="source-line-no">188</span><span id="line-188">   *          the name of the assembly root definition or instance to match</span>
+<span class="source-line-no">189</span><span id="line-189">   *          depending on the use context</span>
+<span class="source-line-no">190</span><span id="line-190">   * @param typeName</span>
+<span class="source-line-no">191</span><span id="line-191">   *          the name of the assembly definition to match</span>
+<span class="source-line-no">192</span><span id="line-192">   * @param staticContext</span>
+<span class="source-line-no">193</span><span id="line-193">   *          the static context in which the test was declared</span>
+<span class="source-line-no">194</span><span id="line-194">   * @return the test</span>
+<span class="source-line-no">195</span><span id="line-195">   */</span>
+<span class="source-line-no">196</span><span id="line-196">  @NonNull</span>
+<span class="source-line-no">197</span><span id="line-197">  static IKindTest&lt;IAssemblyNodeItem&gt; assembly(</span>
+<span class="source-line-no">198</span><span id="line-198">      @NonNull IEnhancedQName instanceName,</span>
+<span class="source-line-no">199</span><span id="line-199">      @Nullable String typeName,</span>
+<span class="source-line-no">200</span><span id="line-200">      @NonNull StaticContext staticContext) {</span>
+<span class="source-line-no">201</span><span id="line-201">    return new KindAssemblyTestImpl(instanceName, typeName, staticContext);</span>
+<span class="source-line-no">202</span><span id="line-202">  }</span>
+<span class="source-line-no">203</span><span id="line-203"></span>
+<span class="source-line-no">204</span><span id="line-204">  /**</span>
+<span class="source-line-no">205</span><span id="line-205">   * Get a new kind test that matches an {@link IAssemblyNodeItem} with any name</span>
+<span class="source-line-no">206</span><span id="line-206">   * and a type matching the provided name of a specific assembly definition.</span>
+<span class="source-line-no">207</span><span id="line-207">   *</span>
+<span class="source-line-no">208</span><span id="line-208">   * @param typeName</span>
+<span class="source-line-no">209</span><span id="line-209">   *          the name of the assembly definition to match</span>
+<span class="source-line-no">210</span><span id="line-210">   * @param staticContext</span>
+<span class="source-line-no">211</span><span id="line-211">   *          the static context in which the test was declared</span>
+<span class="source-line-no">212</span><span id="line-212">   * @return the test</span>
+<span class="source-line-no">213</span><span id="line-213">   */</span>
+<span class="source-line-no">214</span><span id="line-214">  @NonNull</span>
+<span class="source-line-no">215</span><span id="line-215">  static IKindTest&lt;IAssemblyNodeItem&gt; assembly(</span>
+<span class="source-line-no">216</span><span id="line-216">      @NonNull String typeName,</span>
+<span class="source-line-no">217</span><span id="line-217">      @NonNull StaticContext staticContext) {</span>
+<span class="source-line-no">218</span><span id="line-218">    return new KindAssemblyTestImpl(null, typeName, staticContext);</span>
+<span class="source-line-no">219</span><span id="line-219">  }</span>
+<span class="source-line-no">220</span><span id="line-220"></span>
+<span class="source-line-no">221</span><span id="line-221">  /**</span>
+<span class="source-line-no">222</span><span id="line-222">   * Matches any {@link IFieldNodeItem} regardless of its name or type.</span>
+<span class="source-line-no">223</span><span id="line-223">   *</span>
+<span class="source-line-no">224</span><span id="line-224">   * @return the test</span>
+<span class="source-line-no">225</span><span id="line-225">   */</span>
+<span class="source-line-no">226</span><span id="line-226">  @NonNull</span>
+<span class="source-line-no">227</span><span id="line-227">  static IKindTest&lt;IFieldNodeItem&gt; field() {</span>
+<span class="source-line-no">228</span><span id="line-228">    return AnyKindTest.ANY_FIELD;</span>
+<span class="source-line-no">229</span><span id="line-229">  }</span>
+<span class="source-line-no">230</span><span id="line-230"></span>
+<span class="source-line-no">231</span><span id="line-231">  /**</span>
+<span class="source-line-no">232</span><span id="line-232">   * Matches any {@link IFieldNodeItem} with the provided name and a type matching</span>
+<span class="source-line-no">233</span><span id="line-233">   * the provided name of a specific field definition.</span>
+<span class="source-line-no">234</span><span id="line-234">   *</span>
+<span class="source-line-no">235</span><span id="line-235">   * @param instanceName</span>
+<span class="source-line-no">236</span><span id="line-236">   *          the name of the field instance to match depending on the use context</span>
+<span class="source-line-no">237</span><span id="line-237">   * @param typeName</span>
+<span class="source-line-no">238</span><span id="line-238">   *          the name of the field definition to match</span>
+<span class="source-line-no">239</span><span id="line-239">   * @param staticContext</span>
+<span class="source-line-no">240</span><span id="line-240">   *          the static context in which the test was declared</span>
+<span class="source-line-no">241</span><span id="line-241">   * @return the test</span>
+<span class="source-line-no">242</span><span id="line-242">   */</span>
+<span class="source-line-no">243</span><span id="line-243">  @NonNull</span>
+<span class="source-line-no">244</span><span id="line-244">  static IKindTest&lt;IFieldNodeItem&gt; field(</span>
+<span class="source-line-no">245</span><span id="line-245">      @NonNull IEnhancedQName instanceName,</span>
+<span class="source-line-no">246</span><span id="line-246">      @Nullable String typeName,</span>
+<span class="source-line-no">247</span><span id="line-247">      @NonNull StaticContext staticContext) {</span>
+<span class="source-line-no">248</span><span id="line-248">    return new KindFieldTestImpl(instanceName, typeName, staticContext);</span>
+<span class="source-line-no">249</span><span id="line-249">  }</span>
+<span class="source-line-no">250</span><span id="line-250"></span>
+<span class="source-line-no">251</span><span id="line-251">  /**</span>
+<span class="source-line-no">252</span><span id="line-252">   * Matches any {@link IFieldNodeItem} with a name and type matching the provided</span>
+<span class="source-line-no">253</span><span id="line-253">   * name of a specific field definition.</span>
+<span class="source-line-no">254</span><span id="line-254">   *</span>
+<span class="source-line-no">255</span><span id="line-255">   * @param typeName</span>
+<span class="source-line-no">256</span><span id="line-256">   *          the name of the field definition to match</span>
+<span class="source-line-no">257</span><span id="line-257">   * @param staticContext</span>
+<span class="source-line-no">258</span><span id="line-258">   *          the static context in which the test was declared</span>
+<span class="source-line-no">259</span><span id="line-259">   * @return the test</span>
+<span class="source-line-no">260</span><span id="line-260">   */</span>
+<span class="source-line-no">261</span><span id="line-261">  @NonNull</span>
+<span class="source-line-no">262</span><span id="line-262">  static IKindTest&lt;IFieldNodeItem&gt; field(@NonNull String typeName, @NonNull StaticContext staticContext) {</span>
+<span class="source-line-no">263</span><span id="line-263">    return new KindFieldTestImpl(null, typeName, staticContext);</span>
+<span class="source-line-no">264</span><span id="line-264">  }</span>
+<span class="source-line-no">265</span><span id="line-265"></span>
+<span class="source-line-no">266</span><span id="line-266">  /**</span>
+<span class="source-line-no">267</span><span id="line-267">   * Matches any {@link IFlagNodeItem} regardless of its name or type.</span>
+<span class="source-line-no">268</span><span id="line-268">   *</span>
+<span class="source-line-no">269</span><span id="line-269">   * @return the test</span>
+<span class="source-line-no">270</span><span id="line-270">   */</span>
+<span class="source-line-no">271</span><span id="line-271">  @NonNull</span>
+<span class="source-line-no">272</span><span id="line-272">  static IKindTest&lt;IFlagNodeItem&gt; flag() {</span>
+<span class="source-line-no">273</span><span id="line-273">    return AnyKindTest.ANY_FLAG;</span>
+<span class="source-line-no">274</span><span id="line-274">  }</span>
+<span class="source-line-no">275</span><span id="line-275"></span>
+<span class="source-line-no">276</span><span id="line-276">  /**</span>
+<span class="source-line-no">277</span><span id="line-277">   * Matches any {@link IFlagNodeItem} with the provided name and type matching</span>
+<span class="source-line-no">278</span><span id="line-278">   * the provided name of a specific globally-scoped flag definition.</span>
+<span class="source-line-no">279</span><span id="line-279">   *</span>
+<span class="source-line-no">280</span><span id="line-280">   * @param instanceName</span>
+<span class="source-line-no">281</span><span id="line-281">   *          the name of the flag instance to match</span>
+<span class="source-line-no">282</span><span id="line-282">   * @param typeName</span>
+<span class="source-line-no">283</span><span id="line-283">   *          the name of the flag definition or value type to match</span>
+<span class="source-line-no">284</span><span id="line-284">   * @param staticContext</span>
+<span class="source-line-no">285</span><span id="line-285">   *          the static context in which the test was declared</span>
+<span class="source-line-no">286</span><span id="line-286">   * @return the test</span>
+<span class="source-line-no">287</span><span id="line-287">   */</span>
+<span class="source-line-no">288</span><span id="line-288">  @NonNull</span>
+<span class="source-line-no">289</span><span id="line-289">  static IKindTest&lt;IFlagNodeItem&gt; flag(</span>
+<span class="source-line-no">290</span><span id="line-290">      @NonNull IEnhancedQName instanceName,</span>
+<span class="source-line-no">291</span><span id="line-291">      @Nullable String typeName,</span>
+<span class="source-line-no">292</span><span id="line-292">      @NonNull StaticContext staticContext) {</span>
+<span class="source-line-no">293</span><span id="line-293">    return new KindFlagTestImpl(instanceName, typeName, staticContext);</span>
+<span class="source-line-no">294</span><span id="line-294">  }</span>
+<span class="source-line-no">295</span><span id="line-295"></span>
+<span class="source-line-no">296</span><span id="line-296">  /**</span>
+<span class="source-line-no">297</span><span id="line-297">   * Matches any {@link IFlagNodeItem} with any name and type matching the</span>
+<span class="source-line-no">298</span><span id="line-298">   * provided name of a specific globally-scoped flag definition.</span>
+<span class="source-line-no">299</span><span id="line-299">   *</span>
+<span class="source-line-no">300</span><span id="line-300">   * @param typeName</span>
+<span class="source-line-no">301</span><span id="line-301">   *          the name of the globally-scoped flag definition to match</span>
+<span class="source-line-no">302</span><span id="line-302">   * @param staticContext</span>
+<span class="source-line-no">303</span><span id="line-303">   *          the static context in which the test was declared</span>
+<span class="source-line-no">304</span><span id="line-304">   * @return the test</span>
+<span class="source-line-no">305</span><span id="line-305">   */</span>
+<span class="source-line-no">306</span><span id="line-306">  @NonNull</span>
+<span class="source-line-no">307</span><span id="line-307">  static IKindTest&lt;IFlagNodeItem&gt; flag(@NonNull String typeName, @NonNull StaticContext staticContext) {</span>
+<span class="source-line-no">308</span><span id="line-308">    return new KindFlagTestImpl(null, typeName, staticContext);</span>
+<span class="source-line-no">309</span><span id="line-309">  }</span>
+<span class="source-line-no">310</span><span id="line-310"></span>
+<span class="source-line-no">311</span><span id="line-311">  /**</span>
+<span class="source-line-no">312</span><span id="line-312">   * Test if the provided item matches this item type.</span>
+<span class="source-line-no">313</span><span id="line-313">   *</span>
+<span class="source-line-no">314</span><span id="line-314">   * @param item</span>
+<span class="source-line-no">315</span><span id="line-315">   *          the item to test</span>
+<span class="source-line-no">316</span><span id="line-316">   * @return {@code true} if the item matches the expectations or {@code false}</span>
+<span class="source-line-no">317</span><span id="line-317">   *         otherwise</span>
+<span class="source-line-no">318</span><span id="line-318">   */</span>
+<span class="source-line-no">319</span><span id="line-319">  default boolean isInstance(IItem item) {</span>
+<span class="source-line-no">320</span><span id="line-320">    return getItemClass().isInstance(item);</span>
+<span class="source-line-no">321</span><span id="line-321">  }</span>
+<span class="source-line-no">322</span><span id="line-322"></span>
+<span class="source-line-no">323</span><span id="line-323">  /**</span>
+<span class="source-line-no">324</span><span id="line-324">   * Test if the provided item matches this item type.</span>
+<span class="source-line-no">325</span><span id="line-325">   *</span>
+<span class="source-line-no">326</span><span id="line-326">   * @param &lt;T&gt;</span>
+<span class="source-line-no">327</span><span id="line-327">   *          the Java type of the item tested</span>
+<span class="source-line-no">328</span><span id="line-328">   * @param item</span>
+<span class="source-line-no">329</span><span id="line-329">   *          the item to test</span>
+<span class="source-line-no">330</span><span id="line-330">   * @return the item if the test passes</span>
+<span class="source-line-no">331</span><span id="line-331">   * @throws InvalidTypeMetapathException</span>
+<span class="source-line-no">332</span><span id="line-332">   *           if the test fails because the item is not the required type</span>
+<span class="source-line-no">333</span><span id="line-333">   */</span>
+<span class="source-line-no">334</span><span id="line-334">  @NonNull</span>
+<span class="source-line-no">335</span><span id="line-335">  default &lt;T extends IItem&gt; T test(@Nullable T item) {</span>
+<span class="source-line-no">336</span><span id="line-336">    if (item != null &amp;&amp; isInstance(item)) {</span>
+<span class="source-line-no">337</span><span id="line-337">      return item;</span>
+<span class="source-line-no">338</span><span id="line-338">    }</span>
+<span class="source-line-no">339</span><span id="line-339">    throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">340</span><span id="line-340">        null,</span>
+<span class="source-line-no">341</span><span id="line-341">        String.format("The item '%s' is not a '%s'",</span>
+<span class="source-line-no">342</span><span id="line-342">            item == null ? "null" : item.toSignature(),</span>
+<span class="source-line-no">343</span><span id="line-343">            toSignature()));</span>
+<span class="source-line-no">344</span><span id="line-344">  }</span>
+<span class="source-line-no">345</span><span id="line-345"></span>
+<span class="source-line-no">346</span><span id="line-346">  /**</span>
+<span class="source-line-no">347</span><span id="line-347">   * Get the item Java class associated with this item type.</span>
+<span class="source-line-no">348</span><span id="line-348">   *</span>
+<span class="source-line-no">349</span><span id="line-349">   * @return the item Java class</span>
+<span class="source-line-no">350</span><span id="line-350">   */</span>
+<span class="source-line-no">351</span><span id="line-351">  @NonNull</span>
+<span class="source-line-no">352</span><span id="line-352">  Class&lt;? extends IItem&gt; getItemClass();</span>
+<span class="source-line-no">353</span><span id="line-353"></span>
+<span class="source-line-no">354</span><span id="line-354">  /**</span>
+<span class="source-line-no">355</span><span id="line-355">   * Get the human-readable signature of the item type.</span>
+<span class="source-line-no">356</span><span id="line-356">   *</span>
+<span class="source-line-no">357</span><span id="line-357">   * @return the signature</span>
+<span class="source-line-no">358</span><span id="line-358">   */</span>
+<span class="source-line-no">359</span><span id="line-359">  @NonNull</span>
+<span class="source-line-no">360</span><span id="line-360">  String toSignature();</span>
+<span class="source-line-no">361</span><span id="line-361">}</span>
 
 
 

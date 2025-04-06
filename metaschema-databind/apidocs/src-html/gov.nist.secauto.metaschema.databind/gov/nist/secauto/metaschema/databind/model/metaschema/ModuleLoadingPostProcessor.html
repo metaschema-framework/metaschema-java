@@ -28,20 +28,21 @@
 <span class="source-line-no">015</span><span id="line-15"> *</span>
 <span class="source-line-no">016</span><span id="line-16"> * @since 2.0.0</span>
 <span class="source-line-no">017</span><span id="line-17"> */</span>
-<span class="source-line-no">018</span><span id="line-18">public interface ModuleLoadingPostProcessor {</span>
-<span class="source-line-no">019</span><span id="line-19">  /**</span>
-<span class="source-line-no">020</span><span id="line-20">   * Post-processes the provided Metaschema module.</span>
-<span class="source-line-no">021</span><span id="line-21">   *</span>
-<span class="source-line-no">022</span><span id="line-22">   * @param module</span>
-<span class="source-line-no">023</span><span id="line-23">   *          the Module module to generate classes for</span>
-<span class="source-line-no">024</span><span id="line-24">   * @param bindingContext</span>
-<span class="source-line-no">025</span><span id="line-25">   *          the Metaschema binding context used to load bound resources</span>
-<span class="source-line-no">026</span><span id="line-26">   * @since 2.0.0</span>
-<span class="source-line-no">027</span><span id="line-27">   */</span>
-<span class="source-line-no">028</span><span id="line-28">  void postProcessModule(</span>
-<span class="source-line-no">029</span><span id="line-29">      @NonNull IModule module,</span>
-<span class="source-line-no">030</span><span id="line-30">      @NonNull IBindingContext bindingContext);</span>
-<span class="source-line-no">031</span><span id="line-31">}</span>
+<span class="source-line-no">018</span><span id="line-18">@FunctionalInterface</span>
+<span class="source-line-no">019</span><span id="line-19">public interface ModuleLoadingPostProcessor {</span>
+<span class="source-line-no">020</span><span id="line-20">  /**</span>
+<span class="source-line-no">021</span><span id="line-21">   * Post-processes the provided Metaschema module.</span>
+<span class="source-line-no">022</span><span id="line-22">   *</span>
+<span class="source-line-no">023</span><span id="line-23">   * @param module</span>
+<span class="source-line-no">024</span><span id="line-24">   *          the Module module to generate classes for</span>
+<span class="source-line-no">025</span><span id="line-25">   * @param bindingContext</span>
+<span class="source-line-no">026</span><span id="line-26">   *          the Metaschema binding context used to load bound resources</span>
+<span class="source-line-no">027</span><span id="line-27">   * @since 2.0.0</span>
+<span class="source-line-no">028</span><span id="line-28">   */</span>
+<span class="source-line-no">029</span><span id="line-29">  void postProcessModule(</span>
+<span class="source-line-no">030</span><span id="line-30">      @NonNull IModule module,</span>
+<span class="source-line-no">031</span><span id="line-31">      @NonNull IBindingContext bindingContext);</span>
+<span class="source-line-no">032</span><span id="line-32">}</span>
 
 
 

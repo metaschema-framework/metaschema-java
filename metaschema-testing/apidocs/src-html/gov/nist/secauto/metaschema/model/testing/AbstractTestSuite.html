@@ -264,7 +264,7 @@
 <span class="source-line-no">251</span><span id="line-251">      schemaExtension = ".xsd";</span>
 <span class="source-line-no">252</span><span id="line-252">      break;</span>
 <span class="source-line-no">253</span><span id="line-253">    default:</span>
-<span class="source-line-no">254</span><span id="line-254">      throw new IllegalStateException();</span>
+<span class="source-line-no">254</span><span id="line-254">      throw new IllegalStateException(String.format("Unhandled content format '%s'.", requiredContentFormat));</span>
 <span class="source-line-no">255</span><span id="line-255">    }</span>
 <span class="source-line-no">256</span><span id="line-256"></span>
 <span class="source-line-no">257</span><span id="line-257">    // determine what file to use for the schema</span>
@@ -470,7 +470,7 @@
 <span class="source-line-no">457</span><span id="line-457">              contentValidator = lazyContentValidator.get();</span>
 <span class="source-line-no">458</span><span id="line-458">            } catch (Exception ex) {</span>
 <span class="source-line-no">459</span><span id="line-459">              throw new JUnitException( // NOPMD - cause is relevant, exception is not</span>
-<span class="source-line-no">460</span><span id="line-460">                  "failed to produce the content validator", ex.getCause());</span>
+<span class="source-line-no">460</span><span id="line-460">                  "failed to produce the content validator", ex);</span>
 <span class="source-line-no">461</span><span id="line-461">            }</span>
 <span class="source-line-no">462</span><span id="line-462"></span>
 <span class="source-line-no">463</span><span id="line-463">            assertEquals(</span>
@@ -541,54 +541,55 @@
 <span class="source-line-no">528</span><span id="line-528">   */</span>
 <span class="source-line-no">529</span><span id="line-529">  protected static boolean validateWithSchema(@NonNull IContentValidator validator, @NonNull Path target)</span>
 <span class="source-line-no">530</span><span id="line-530">      throws IOException {</span>
-<span class="source-line-no">531</span><span id="line-531">    IValidationResult schemaValidationResult = validator.validate(target);</span>
-<span class="source-line-no">532</span><span id="line-532">    if (!schemaValidationResult.isPassing()) {</span>
-<span class="source-line-no">533</span><span id="line-533">      LOGGER.atError().log("Schema validation failed for: {}", target);</span>
-<span class="source-line-no">534</span><span id="line-534">    }</span>
-<span class="source-line-no">535</span><span id="line-535">    return processValidationResult(schemaValidationResult);</span>
-<span class="source-line-no">536</span><span id="line-536">  }</span>
-<span class="source-line-no">537</span><span id="line-537"></span>
-<span class="source-line-no">538</span><span id="line-538">  private static boolean processValidationResult(IValidationResult schemaValidationResult) {</span>
-<span class="source-line-no">539</span><span id="line-539">    for (IValidationFinding finding : schemaValidationResult.getFindings()) {</span>
-<span class="source-line-no">540</span><span id="line-540">      logFinding(ObjectUtils.notNull(finding));</span>
-<span class="source-line-no">541</span><span id="line-541">    }</span>
-<span class="source-line-no">542</span><span id="line-542">    return schemaValidationResult.isPassing();</span>
-<span class="source-line-no">543</span><span id="line-543">  }</span>
-<span class="source-line-no">544</span><span id="line-544"></span>
-<span class="source-line-no">545</span><span id="line-545">  private static void logFinding(@NonNull IValidationFinding finding) {</span>
-<span class="source-line-no">546</span><span id="line-546">    LogBuilder logBuilder;</span>
-<span class="source-line-no">547</span><span id="line-547">    switch (finding.getSeverity()) {</span>
-<span class="source-line-no">548</span><span id="line-548">    case CRITICAL:</span>
-<span class="source-line-no">549</span><span id="line-549">      logBuilder = LOGGER.atFatal();</span>
-<span class="source-line-no">550</span><span id="line-550">      break;</span>
-<span class="source-line-no">551</span><span id="line-551">    case ERROR:</span>
-<span class="source-line-no">552</span><span id="line-552">      logBuilder = LOGGER.atError();</span>
-<span class="source-line-no">553</span><span id="line-553">      break;</span>
-<span class="source-line-no">554</span><span id="line-554">    case WARNING:</span>
-<span class="source-line-no">555</span><span id="line-555">      logBuilder = LOGGER.atWarn();</span>
-<span class="source-line-no">556</span><span id="line-556">      break;</span>
-<span class="source-line-no">557</span><span id="line-557">    case INFORMATIONAL:</span>
-<span class="source-line-no">558</span><span id="line-558">      logBuilder = LOGGER.atInfo();</span>
-<span class="source-line-no">559</span><span id="line-559">      break;</span>
-<span class="source-line-no">560</span><span id="line-560">    case DEBUG:</span>
-<span class="source-line-no">561</span><span id="line-561">      logBuilder = LOGGER.atDebug();</span>
-<span class="source-line-no">562</span><span id="line-562">      break;</span>
-<span class="source-line-no">563</span><span id="line-563">    default:</span>
-<span class="source-line-no">564</span><span id="line-564">      throw new IllegalArgumentException("Unknown level: " + finding.getSeverity().name());</span>
-<span class="source-line-no">565</span><span id="line-565">    }</span>
-<span class="source-line-no">566</span><span id="line-566"></span>
-<span class="source-line-no">567</span><span id="line-567">    // if (finding.getCause() != null) {</span>
-<span class="source-line-no">568</span><span id="line-568">    // logBuilder.withThrowable(finding.getCause());</span>
-<span class="source-line-no">569</span><span id="line-569">    // }</span>
-<span class="source-line-no">570</span><span id="line-570"></span>
-<span class="source-line-no">571</span><span id="line-571">    if (finding instanceof JsonValidationFinding) {</span>
-<span class="source-line-no">572</span><span id="line-572">      JsonValidationFinding jsonFinding = (JsonValidationFinding) finding;</span>
-<span class="source-line-no">573</span><span id="line-573">      logBuilder.log("[{}] {}", jsonFinding.getCause().getPointerToViolation(), finding.getMessage());</span>
-<span class="source-line-no">574</span><span id="line-574">    } else {</span>
-<span class="source-line-no">575</span><span id="line-575">      logBuilder.log("{}", finding.getMessage());</span>
-<span class="source-line-no">576</span><span id="line-576">    }</span>
-<span class="source-line-no">577</span><span id="line-577">  }</span>
-<span class="source-line-no">578</span><span id="line-578">}</span>
+<span class="source-line-no">531</span><span id="line-531">    LOGGER.atError().log("Validating: {}", target);</span>
+<span class="source-line-no">532</span><span id="line-532">    IValidationResult schemaValidationResult = validator.validate(target);</span>
+<span class="source-line-no">533</span><span id="line-533">    if (!schemaValidationResult.isPassing()) {</span>
+<span class="source-line-no">534</span><span id="line-534">      LOGGER.atError().log("Schema validation failed for: {}", target);</span>
+<span class="source-line-no">535</span><span id="line-535">    }</span>
+<span class="source-line-no">536</span><span id="line-536">    return processValidationResult(schemaValidationResult);</span>
+<span class="source-line-no">537</span><span id="line-537">  }</span>
+<span class="source-line-no">538</span><span id="line-538"></span>
+<span class="source-line-no">539</span><span id="line-539">  private static boolean processValidationResult(IValidationResult schemaValidationResult) {</span>
+<span class="source-line-no">540</span><span id="line-540">    for (IValidationFinding finding : schemaValidationResult.getFindings()) {</span>
+<span class="source-line-no">541</span><span id="line-541">      logFinding(ObjectUtils.notNull(finding));</span>
+<span class="source-line-no">542</span><span id="line-542">    }</span>
+<span class="source-line-no">543</span><span id="line-543">    return schemaValidationResult.isPassing();</span>
+<span class="source-line-no">544</span><span id="line-544">  }</span>
+<span class="source-line-no">545</span><span id="line-545"></span>
+<span class="source-line-no">546</span><span id="line-546">  private static void logFinding(@NonNull IValidationFinding finding) {</span>
+<span class="source-line-no">547</span><span id="line-547">    LogBuilder logBuilder;</span>
+<span class="source-line-no">548</span><span id="line-548">    switch (finding.getSeverity()) {</span>
+<span class="source-line-no">549</span><span id="line-549">    case CRITICAL:</span>
+<span class="source-line-no">550</span><span id="line-550">      logBuilder = LOGGER.atFatal();</span>
+<span class="source-line-no">551</span><span id="line-551">      break;</span>
+<span class="source-line-no">552</span><span id="line-552">    case ERROR:</span>
+<span class="source-line-no">553</span><span id="line-553">      logBuilder = LOGGER.atError();</span>
+<span class="source-line-no">554</span><span id="line-554">      break;</span>
+<span class="source-line-no">555</span><span id="line-555">    case WARNING:</span>
+<span class="source-line-no">556</span><span id="line-556">      logBuilder = LOGGER.atWarn();</span>
+<span class="source-line-no">557</span><span id="line-557">      break;</span>
+<span class="source-line-no">558</span><span id="line-558">    case INFORMATIONAL:</span>
+<span class="source-line-no">559</span><span id="line-559">      logBuilder = LOGGER.atInfo();</span>
+<span class="source-line-no">560</span><span id="line-560">      break;</span>
+<span class="source-line-no">561</span><span id="line-561">    case DEBUG:</span>
+<span class="source-line-no">562</span><span id="line-562">      logBuilder = LOGGER.atDebug();</span>
+<span class="source-line-no">563</span><span id="line-563">      break;</span>
+<span class="source-line-no">564</span><span id="line-564">    default:</span>
+<span class="source-line-no">565</span><span id="line-565">      throw new IllegalArgumentException("Unknown level: " + finding.getSeverity().name());</span>
+<span class="source-line-no">566</span><span id="line-566">    }</span>
+<span class="source-line-no">567</span><span id="line-567"></span>
+<span class="source-line-no">568</span><span id="line-568">    // if (finding.getCause() != null) {</span>
+<span class="source-line-no">569</span><span id="line-569">    // logBuilder.withThrowable(finding.getCause());</span>
+<span class="source-line-no">570</span><span id="line-570">    // }</span>
+<span class="source-line-no">571</span><span id="line-571"></span>
+<span class="source-line-no">572</span><span id="line-572">    if (finding instanceof JsonValidationFinding) {</span>
+<span class="source-line-no">573</span><span id="line-573">      JsonValidationFinding jsonFinding = (JsonValidationFinding) finding;</span>
+<span class="source-line-no">574</span><span id="line-574">      logBuilder.log("[{}] {}", jsonFinding.getCause().getPointerToViolation(), finding.getMessage());</span>
+<span class="source-line-no">575</span><span id="line-575">    } else {</span>
+<span class="source-line-no">576</span><span id="line-576">      logBuilder.log("{}", finding.getMessage());</span>
+<span class="source-line-no">577</span><span id="line-577">    }</span>
+<span class="source-line-no">578</span><span id="line-578">  }</span>
+<span class="source-line-no">579</span><span id="line-579">}</span>
 
 
 

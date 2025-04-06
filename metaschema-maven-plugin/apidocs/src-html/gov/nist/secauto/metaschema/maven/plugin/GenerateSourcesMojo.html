@@ -19,23 +19,23 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.maven.plugin;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.IModule;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.model.MetaschemaException;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.databind.IBindingContext;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.databind.codegen.JavaGenerator;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">import org.apache.maven.plugin.MojoExecutionException;</span>
-<span class="source-line-no">016</span><span id="line-16">import org.apache.maven.plugins.annotations.LifecyclePhase;</span>
-<span class="source-line-no">017</span><span id="line-17">import org.apache.maven.plugins.annotations.Mojo;</span>
-<span class="source-line-no">018</span><span id="line-18">import org.apache.maven.plugins.annotations.Parameter;</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">import java.io.File;</span>
-<span class="source-line-no">021</span><span id="line-21">import java.io.IOException;</span>
-<span class="source-line-no">022</span><span id="line-22">import java.util.Arrays;</span>
-<span class="source-line-no">023</span><span id="line-23">import java.util.Collections;</span>
-<span class="source-line-no">024</span><span id="line-24">import java.util.List;</span>
-<span class="source-line-no">025</span><span id="line-25">import java.util.Set;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.databind.codegen.IProduction;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.databind.codegen.JavaGenerator;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">import org.apache.maven.plugin.MojoExecutionException;</span>
+<span class="source-line-no">015</span><span id="line-15">import org.apache.maven.plugins.annotations.LifecyclePhase;</span>
+<span class="source-line-no">016</span><span id="line-16">import org.apache.maven.plugins.annotations.Mojo;</span>
+<span class="source-line-no">017</span><span id="line-17">import org.apache.maven.plugins.annotations.Parameter;</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">import java.io.File;</span>
+<span class="source-line-no">020</span><span id="line-20">import java.io.IOException;</span>
+<span class="source-line-no">021</span><span id="line-21">import java.util.Arrays;</span>
+<span class="source-line-no">022</span><span id="line-22">import java.util.Collections;</span>
+<span class="source-line-no">023</span><span id="line-23">import java.util.List;</span>
+<span class="source-line-no">024</span><span id="line-24">import java.util.Set;</span>
+<span class="source-line-no">025</span><span id="line-25">import java.util.stream.Collectors;</span>
 <span class="source-line-no">026</span><span id="line-26"></span>
 <span class="source-line-no">027</span><span id="line-27">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">028</span><span id="line-28"></span>
@@ -91,103 +91,47 @@
 <span class="source-line-no">078</span><span id="line-78">   * @throws MojoExecutionException</span>
 <span class="source-line-no">079</span><span id="line-79">   *           if an error occurred while generating sources</span>
 <span class="source-line-no">080</span><span id="line-80">   */</span>
-<span class="source-line-no">081</span><span id="line-81">  protected void generate(@NonNull Set&lt;IModule&gt; modules) throws MojoExecutionException {</span>
-<span class="source-line-no">082</span><span id="line-82">    DefaultBindingConfiguration bindingConfiguration = new DefaultBindingConfiguration();</span>
-<span class="source-line-no">083</span><span id="line-83">    for (File config : getConfigs()) {</span>
-<span class="source-line-no">084</span><span id="line-84">      try {</span>
-<span class="source-line-no">085</span><span id="line-85">        if (getLog().isInfoEnabled()) {</span>
-<span class="source-line-no">086</span><span id="line-86">          getLog().info("Loading binding configuration: " + config.getPath());</span>
-<span class="source-line-no">087</span><span id="line-87">        }</span>
-<span class="source-line-no">088</span><span id="line-88">        bindingConfiguration.load(config);</span>
-<span class="source-line-no">089</span><span id="line-89">      } catch (IOException ex) {</span>
-<span class="source-line-no">090</span><span id="line-90">        throw new MojoExecutionException(</span>
-<span class="source-line-no">091</span><span id="line-91">            String.format("Unable to load binding configuration from '%s'.", config.getPath()), ex);</span>
-<span class="source-line-no">092</span><span id="line-92">      }</span>
-<span class="source-line-no">093</span><span id="line-93">    }</span>
-<span class="source-line-no">094</span><span id="line-94"></span>
-<span class="source-line-no">095</span><span id="line-95">    try {</span>
-<span class="source-line-no">096</span><span id="line-96">      if (getLog().isInfoEnabled()) {</span>
-<span class="source-line-no">097</span><span id="line-97">        getLog().info("Generating Java classes in: " + getOutputDirectory().getPath());</span>
-<span class="source-line-no">098</span><span id="line-98">      }</span>
-<span class="source-line-no">099</span><span id="line-99">      JavaGenerator.generate(modules, ObjectUtils.notNull(getOutputDirectory().toPath()),</span>
-<span class="source-line-no">100</span><span id="line-100">          bindingConfiguration);</span>
-<span class="source-line-no">101</span><span id="line-101">    } catch (IOException ex) {</span>
-<span class="source-line-no">102</span><span id="line-102">      throw new MojoExecutionException("Creation of Java classes failed.", ex);</span>
-<span class="source-line-no">103</span><span id="line-103">    }</span>
-<span class="source-line-no">104</span><span id="line-104">  }</span>
-<span class="source-line-no">105</span><span id="line-105"></span>
-<span class="source-line-no">106</span><span id="line-106">  @SuppressWarnings("PMD.AvoidCatchingGenericException")</span>
-<span class="source-line-no">107</span><span id="line-107">  @Override</span>
-<span class="source-line-no">108</span><span id="line-108">  public void execute() throws MojoExecutionException {</span>
-<span class="source-line-no">109</span><span id="line-109">    File staleFile = getStaleFile();</span>
-<span class="source-line-no">110</span><span id="line-110">    try {</span>
-<span class="source-line-no">111</span><span id="line-111">      staleFile = ObjectUtils.notNull(staleFile.getCanonicalFile());</span>
-<span class="source-line-no">112</span><span id="line-112">    } catch (IOException ex) {</span>
-<span class="source-line-no">113</span><span id="line-113">      if (getLog().isWarnEnabled()) {</span>
-<span class="source-line-no">114</span><span id="line-114">        getLog().warn("Unable to resolve canonical path to stale file. Treating it as not existing.", ex);</span>
-<span class="source-line-no">115</span><span id="line-115">      }</span>
-<span class="source-line-no">116</span><span id="line-116">    }</span>
-<span class="source-line-no">117</span><span id="line-117"></span>
-<span class="source-line-no">118</span><span id="line-118">    boolean generate;</span>
-<span class="source-line-no">119</span><span id="line-119">    if (shouldExecutionBeSkipped()) {</span>
-<span class="source-line-no">120</span><span id="line-120">      if (getLog().isDebugEnabled()) {</span>
-<span class="source-line-no">121</span><span id="line-121">        getLog().debug(String.format("Source file generation is configured to be skipped. Skipping."));</span>
-<span class="source-line-no">122</span><span id="line-122">      }</span>
-<span class="source-line-no">123</span><span id="line-123">      generate = false;</span>
-<span class="source-line-no">124</span><span id="line-124">    } else if (staleFile.exists()) {</span>
-<span class="source-line-no">125</span><span id="line-125">      generate = isGenerationRequired();</span>
-<span class="source-line-no">126</span><span id="line-126">    } else {</span>
-<span class="source-line-no">127</span><span id="line-127">      if (getLog().isInfoEnabled()) {</span>
-<span class="source-line-no">128</span><span id="line-128">        getLog().info(String.format("Stale file '%s' doesn't exist! Generating source files.", staleFile.getPath()));</span>
-<span class="source-line-no">129</span><span id="line-129">      }</span>
-<span class="source-line-no">130</span><span id="line-130">      generate = true;</span>
-<span class="source-line-no">131</span><span id="line-131">    }</span>
-<span class="source-line-no">132</span><span id="line-132"></span>
-<span class="source-line-no">133</span><span id="line-133">    if (generate) {</span>
-<span class="source-line-no">134</span><span id="line-134">      performGeneration();</span>
-<span class="source-line-no">135</span><span id="line-135">      createStaleFile(staleFile);</span>
-<span class="source-line-no">136</span><span id="line-136"></span>
-<span class="source-line-no">137</span><span id="line-137">      // for m2e</span>
-<span class="source-line-no">138</span><span id="line-138">      getBuildContext().refresh(getOutputDirectory());</span>
-<span class="source-line-no">139</span><span id="line-139">    }</span>
-<span class="source-line-no">140</span><span id="line-140"></span>
-<span class="source-line-no">141</span><span id="line-141">    // add generated sources to Maven</span>
-<span class="source-line-no">142</span><span id="line-142">    try {</span>
-<span class="source-line-no">143</span><span id="line-143">      getMavenProject().addCompileSourceRoot(getOutputDirectory().getCanonicalFile().getPath());</span>
-<span class="source-line-no">144</span><span id="line-144">    } catch (IOException ex) {</span>
-<span class="source-line-no">145</span><span id="line-145">      throw new MojoExecutionException("Unable to add output directory to maven sources.", ex);</span>
-<span class="source-line-no">146</span><span id="line-146">    }</span>
-<span class="source-line-no">147</span><span id="line-147">  }</span>
-<span class="source-line-no">148</span><span id="line-148"></span>
-<span class="source-line-no">149</span><span id="line-149">  @SuppressWarnings("PMD.AvoidCatchingGenericException")</span>
-<span class="source-line-no">150</span><span id="line-150">  private void performGeneration() throws MojoExecutionException {</span>
-<span class="source-line-no">151</span><span id="line-151">    File outputDir = getOutputDirectory();</span>
-<span class="source-line-no">152</span><span id="line-152">    if (getLog().isDebugEnabled()) {</span>
-<span class="source-line-no">153</span><span id="line-153">      getLog().debug(String.format("Using outputDirectory: %s", outputDir.getPath()));</span>
-<span class="source-line-no">154</span><span id="line-154">    }</span>
-<span class="source-line-no">155</span><span id="line-155"></span>
-<span class="source-line-no">156</span><span id="line-156">    if (!outputDir.exists() &amp;&amp; !outputDir.mkdirs()) {</span>
-<span class="source-line-no">157</span><span id="line-157">      throw new MojoExecutionException("Unable to create output directory: " + outputDir);</span>
-<span class="source-line-no">158</span><span id="line-158">    }</span>
-<span class="source-line-no">159</span><span id="line-159"></span>
-<span class="source-line-no">160</span><span id="line-160">    IBindingContext bindingContext;</span>
-<span class="source-line-no">161</span><span id="line-161">    try {</span>
-<span class="source-line-no">162</span><span id="line-162">      bindingContext = newBindingContext();</span>
-<span class="source-line-no">163</span><span id="line-163">    } catch (MetaschemaException | IOException ex) {</span>
-<span class="source-line-no">164</span><span id="line-164">      throw new MojoExecutionException("Failed to create the binding context", ex);</span>
-<span class="source-line-no">165</span><span id="line-165">    }</span>
-<span class="source-line-no">166</span><span id="line-166"></span>
-<span class="source-line-no">167</span><span id="line-167">    // generate Java sources based on provided metaschema sources</span>
-<span class="source-line-no">168</span><span id="line-168">    Set&lt;IModule&gt; modules;</span>
-<span class="source-line-no">169</span><span id="line-169">    try {</span>
-<span class="source-line-no">170</span><span id="line-170">      modules = getModulesToGenerateFor(bindingContext);</span>
-<span class="source-line-no">171</span><span id="line-171">    } catch (Exception ex) {</span>
-<span class="source-line-no">172</span><span id="line-172">      throw new MojoExecutionException("Loading of metaschema modules failed", ex);</span>
-<span class="source-line-no">173</span><span id="line-173">    }</span>
-<span class="source-line-no">174</span><span id="line-174"></span>
-<span class="source-line-no">175</span><span id="line-175">    generate(modules);</span>
-<span class="source-line-no">176</span><span id="line-176">  }</span>
-<span class="source-line-no">177</span><span id="line-177">}</span>
+<span class="source-line-no">081</span><span id="line-81">  @Override</span>
+<span class="source-line-no">082</span><span id="line-82">  @NonNull</span>
+<span class="source-line-no">083</span><span id="line-83">  protected List&lt;File&gt; generate(@NonNull Set&lt;IModule&gt; modules) throws MojoExecutionException {</span>
+<span class="source-line-no">084</span><span id="line-84">    DefaultBindingConfiguration bindingConfiguration = new DefaultBindingConfiguration();</span>
+<span class="source-line-no">085</span><span id="line-85">    for (File config : getConfigs()) {</span>
+<span class="source-line-no">086</span><span id="line-86">      try {</span>
+<span class="source-line-no">087</span><span id="line-87">        if (getLog().isInfoEnabled()) {</span>
+<span class="source-line-no">088</span><span id="line-88">          getLog().info("Loading binding configuration: " + config.getPath());</span>
+<span class="source-line-no">089</span><span id="line-89">        }</span>
+<span class="source-line-no">090</span><span id="line-90">        bindingConfiguration.load(config);</span>
+<span class="source-line-no">091</span><span id="line-91">      } catch (IOException ex) {</span>
+<span class="source-line-no">092</span><span id="line-92">        throw new MojoExecutionException(</span>
+<span class="source-line-no">093</span><span id="line-93">            String.format("Unable to load binding configuration from '%s'.", config.getPath()), ex);</span>
+<span class="source-line-no">094</span><span id="line-94">      }</span>
+<span class="source-line-no">095</span><span id="line-95">    }</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">    IProduction production;</span>
+<span class="source-line-no">098</span><span id="line-98">    try {</span>
+<span class="source-line-no">099</span><span id="line-99">      if (getLog().isInfoEnabled()) {</span>
+<span class="source-line-no">100</span><span id="line-100">        getLog().info("Generating Java classes in: " + getOutputDirectory().getPath());</span>
+<span class="source-line-no">101</span><span id="line-101">      }</span>
+<span class="source-line-no">102</span><span id="line-102">      production = JavaGenerator.generate(</span>
+<span class="source-line-no">103</span><span id="line-103">          modules,</span>
+<span class="source-line-no">104</span><span id="line-104">          ObjectUtils.notNull(getOutputDirectory().toPath()),</span>
+<span class="source-line-no">105</span><span id="line-105">          bindingConfiguration);</span>
+<span class="source-line-no">106</span><span id="line-106">    } catch (IOException ex) {</span>
+<span class="source-line-no">107</span><span id="line-107">      throw new MojoExecutionException("Creation of Java classes failed.", ex);</span>
+<span class="source-line-no">108</span><span id="line-108">    }</span>
+<span class="source-line-no">109</span><span id="line-109"></span>
+<span class="source-line-no">110</span><span id="line-110">    // add generated sources to Maven</span>
+<span class="source-line-no">111</span><span id="line-111">    try {</span>
+<span class="source-line-no">112</span><span id="line-112">      getMavenProject().addCompileSourceRoot(getOutputDirectory().getCanonicalFile().getPath());</span>
+<span class="source-line-no">113</span><span id="line-113">    } catch (IOException ex) {</span>
+<span class="source-line-no">114</span><span id="line-114">      throw new MojoExecutionException("Unable to add output directory to maven sources.", ex);</span>
+<span class="source-line-no">115</span><span id="line-115">    }</span>
+<span class="source-line-no">116</span><span id="line-116"></span>
+<span class="source-line-no">117</span><span id="line-117">    return ObjectUtils.notNull(production.getGeneratedClasses()</span>
+<span class="source-line-no">118</span><span id="line-118">        .map(gen -&gt; gen.getClassFile().toFile())</span>
+<span class="source-line-no">119</span><span id="line-119">        .collect(Collectors.toUnmodifiableList()));</span>
+<span class="source-line-no">120</span><span id="line-120">  }</span>
+<span class="source-line-no">121</span><span id="line-121">}</span>
 
 
 

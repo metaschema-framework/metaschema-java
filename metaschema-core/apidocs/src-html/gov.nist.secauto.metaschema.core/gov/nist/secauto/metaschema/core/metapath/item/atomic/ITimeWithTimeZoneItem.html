@@ -146,15 +146,26 @@
 <span class="source-line-no">133</span><span id="line-133">          String.format("Unable to cast the temporal value '%s', since it lacks timezone information.",</span>
 <span class="source-line-no">134</span><span id="line-134">              temporal.asString()));</span>
 <span class="source-line-no">135</span><span id="line-135">    }</span>
-<span class="source-line-no">136</span><span id="line-136">    // get the time</span>
-<span class="source-line-no">137</span><span id="line-137">    return valueOf(ObjectUtils.notNull(temporal.asZonedDateTime().toOffsetDateTime().toOffsetTime()));</span>
-<span class="source-line-no">138</span><span id="line-138">  }</span>
-<span class="source-line-no">139</span><span id="line-139"></span>
-<span class="source-line-no">140</span><span id="line-140">  @Override</span>
-<span class="source-line-no">141</span><span id="line-141">  default ITimeWithTimeZoneItem castAsType(IAnyAtomicItem item) {</span>
-<span class="source-line-no">142</span><span id="line-142">    return cast(item);</span>
-<span class="source-line-no">143</span><span id="line-143">  }</span>
-<span class="source-line-no">144</span><span id="line-144">}</span>
+<span class="source-line-no">136</span><span id="line-136">    if (!temporal.hasTime()) {</span>
+<span class="source-line-no">137</span><span id="line-137">      // asString can throw IllegalStateException exception</span>
+<span class="source-line-no">138</span><span id="line-138">      throw new InvalidValueForCastFunctionException(</span>
+<span class="source-line-no">139</span><span id="line-139">          String.format("Unable to cast the temporal value '%s', since it lacks date information.",</span>
+<span class="source-line-no">140</span><span id="line-140">              temporal.asString()));</span>
+<span class="source-line-no">141</span><span id="line-141">    }</span>
+<span class="source-line-no">142</span><span id="line-142">    // get the time</span>
+<span class="source-line-no">143</span><span id="line-143">    return new TimeWithTimeZoneItemImpl(ObjectUtils.notNull(OffsetTime.of(</span>
+<span class="source-line-no">144</span><span id="line-144">        temporal.getHour(),</span>
+<span class="source-line-no">145</span><span id="line-145">        temporal.getMinute(),</span>
+<span class="source-line-no">146</span><span id="line-146">        temporal.getSecond(),</span>
+<span class="source-line-no">147</span><span id="line-147">        temporal.getNano(),</span>
+<span class="source-line-no">148</span><span id="line-148">        temporal.getZoneOffset())));</span>
+<span class="source-line-no">149</span><span id="line-149">  }</span>
+<span class="source-line-no">150</span><span id="line-150"></span>
+<span class="source-line-no">151</span><span id="line-151">  @Override</span>
+<span class="source-line-no">152</span><span id="line-152">  default ITimeWithTimeZoneItem castAsType(IAnyAtomicItem item) {</span>
+<span class="source-line-no">153</span><span id="line-153">    return cast(item);</span>
+<span class="source-line-no">154</span><span id="line-154">  }</span>
+<span class="source-line-no">155</span><span id="line-155">}</span>
 
 
 

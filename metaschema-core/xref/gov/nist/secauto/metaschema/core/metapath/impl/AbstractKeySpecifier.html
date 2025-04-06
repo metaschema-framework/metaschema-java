@@ -14,12 +14,12 @@
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.metaschema.core.metapath.impl;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ICollectionValue;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ISequence;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.cst.IExpression;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.library.ArrayGet;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.library.MapGet;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.IItem;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.IExpression;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.library.ArrayGet;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.library.MapGet;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.IItem;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;
@@ -130,7 +130,7 @@
 <a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">   * @return the key specifier</em>
 <a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>   @NonNull
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a name="IKeySpecifier" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/function/IKeySpecifier.html#IKeySpecifier">IKeySpecifier</a> newParenthesizedExprKeySpecifier(@NonNull <a name="IExpression" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/cst/IExpression.html#IExpression">IExpression</a> keyExpression) {
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a name="IKeySpecifier" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/function/IKeySpecifier.html#IKeySpecifier">IKeySpecifier</a> newParenthesizedExprKeySpecifier(@NonNull <a name="IExpression" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/IExpression.html#IExpression">IExpression</a> keyExpression) {
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> AbstractKeySpecifier.ParenthesizedExprKeySpecifier(keyExpression);
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>   }
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> 
@@ -171,7 +171,7 @@
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> index;
 <a class="jxr_linenumber" name="L164" href="#L164">164</a> 
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>     <strong class="jxr_keyword">public</strong> IntegerLiteralKeySpecifier(@NonNull <a name="IIntegerItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IIntegerItem.html#IIntegerItem">IIntegerItem</a> literal) {
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>       index = literal.asInteger().intValueExact();
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>       index = literal.toIntValueExact();
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>     }
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> 
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>     @Override
@@ -227,13 +227,13 @@
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> ParenthesizedExprKeySpecifier
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>       <strong class="jxr_keyword">extends</strong> <a name="AbstractKeySpecifier" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/impl/AbstractKeySpecifier.html#AbstractKeySpecifier">AbstractKeySpecifier</a> {
 <a class="jxr_linenumber" name="L221" href="#L221">221</a>     @NonNull
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="IExpression" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/cst/IExpression.html#IExpression">IExpression</a> keyExpression;
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="IExpression" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/IExpression.html#IExpression">IExpression</a> keyExpression;
 <a class="jxr_linenumber" name="L223" href="#L223">223</a> 
-<a class="jxr_linenumber" name="L224" href="#L224">224</a>     <strong class="jxr_keyword">public</strong> ParenthesizedExprKeySpecifier(@NonNull <a name="IExpression" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/cst/IExpression.html#IExpression">IExpression</a> keyExpression) {
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>     <strong class="jxr_keyword">public</strong> ParenthesizedExprKeySpecifier(@NonNull <a name="IExpression" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/IExpression.html#IExpression">IExpression</a> keyExpression) {
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>       <strong class="jxr_keyword">this</strong>.keyExpression = keyExpression;
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>     }
 <a class="jxr_linenumber" name="L227" href="#L227">227</a> 
-<a class="jxr_linenumber" name="L228" href="#L228">228</a>     <strong class="jxr_keyword">public</strong> <a name="IExpression" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/cst/IExpression.html#IExpression">IExpression</a> getKeyExpression() {
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     <strong class="jxr_keyword">public</strong> <a name="IExpression" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/IExpression.html#IExpression">IExpression</a> getKeyExpression() {
 <a class="jxr_linenumber" name="L229" href="#L229">229</a>       <strong class="jxr_keyword">return</strong> keyExpression;
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>     }
 <a class="jxr_linenumber" name="L231" href="#L231">231</a> 
@@ -247,7 +247,7 @@
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>           .atomize()
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>           .flatMap(key -&gt; {
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>             <strong class="jxr_keyword">if</strong> (key instanceof <a name="IIntegerItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IIntegerItem.html#IIntegerItem">IIntegerItem</a>) {
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>               <strong class="jxr_keyword">int</strong> index = ((<a name="IIntegerItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IIntegerItem.html#IIntegerItem">IIntegerItem</a>) key).asInteger().intValueExact();
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>               <strong class="jxr_keyword">int</strong> index = ((<a name="IIntegerItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IIntegerItem.html#IIntegerItem">IIntegerItem</a>) key).toIntValueExact();
 <a class="jxr_linenumber" name="L243" href="#L243">243</a>               <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L244" href="#L244">244</a>                 <strong class="jxr_keyword">return</strong> Stream.ofNullable(ArrayGet.get(targetItem, index));
 <a class="jxr_linenumber" name="L245" href="#L245">245</a>               } <strong class="jxr_keyword">catch</strong> (IndexOutOfBoundsException ex) {
@@ -284,6 +284,6 @@
 <a class="jxr_linenumber" name="L276" href="#L276">276</a> }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

@@ -265,33 +265,33 @@
 <span class="source-line-no">252</span><span id="line-252">   *           if the format option was not provided or was an invalid choice</span>
 <span class="source-line-no">253</span><span id="line-253">   * @since 2.0.0</span>
 <span class="source-line-no">254</span><span id="line-254">   */</span>
-<span class="source-line-no">255</span><span id="line-255">  @SuppressWarnings("PMD.PreserveStackTrace")</span>
-<span class="source-line-no">256</span><span id="line-256">  @NonNull</span>
-<span class="source-line-no">257</span><span id="line-257">  public static Format getFormat(</span>
-<span class="source-line-no">258</span><span id="line-258">      @NonNull CommandLine commandLine,</span>
-<span class="source-line-no">259</span><span id="line-259">      @NonNull Option option) throws CommandExecutionException {</span>
-<span class="source-line-no">260</span><span id="line-260">    // use the option</span>
-<span class="source-line-no">261</span><span id="line-261">    String toFormatText = commandLine.getOptionValue(option);</span>
-<span class="source-line-no">262</span><span id="line-262">    if (toFormatText == null) {</span>
-<span class="source-line-no">263</span><span id="line-263">      throw new CommandExecutionException(</span>
-<span class="source-line-no">264</span><span id="line-264">          ExitCode.INVALID_ARGUMENTS,</span>
-<span class="source-line-no">265</span><span id="line-265">          String.format("The '%s' argument was not provided.",</span>
-<span class="source-line-no">266</span><span id="line-266">              option.hasLongOpt()</span>
-<span class="source-line-no">267</span><span id="line-267">                  ? "--" + option.getLongOpt()</span>
-<span class="source-line-no">268</span><span id="line-268">                  : "-" + option.getOpt()));</span>
-<span class="source-line-no">269</span><span id="line-269">    }</span>
-<span class="source-line-no">270</span><span id="line-270">    try {</span>
-<span class="source-line-no">271</span><span id="line-271">      return Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
-<span class="source-line-no">272</span><span id="line-272">    } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">273</span><span id="line-273">      throw new CommandExecutionException(</span>
-<span class="source-line-no">274</span><span id="line-274">          ExitCode.INVALID_ARGUMENTS,</span>
-<span class="source-line-no">275</span><span id="line-275">          String.format("Invalid '%s' argument. The format must be one of: %s.",</span>
-<span class="source-line-no">276</span><span id="line-276">              option.hasLongOpt()</span>
-<span class="source-line-no">277</span><span id="line-277">                  ? "--" + option.getLongOpt()</span>
-<span class="source-line-no">278</span><span id="line-278">                  : "-" + option.getOpt(),</span>
-<span class="source-line-no">279</span><span id="line-279">              Arrays.stream(Format.values())</span>
-<span class="source-line-no">280</span><span id="line-280">                  .map(Enum::name)</span>
-<span class="source-line-no">281</span><span id="line-281">                  .collect(CustomCollectors.joiningWithOxfordComma("or"))));</span>
+<span class="source-line-no">255</span><span id="line-255">  @NonNull</span>
+<span class="source-line-no">256</span><span id="line-256">  public static Format getFormat(</span>
+<span class="source-line-no">257</span><span id="line-257">      @NonNull CommandLine commandLine,</span>
+<span class="source-line-no">258</span><span id="line-258">      @NonNull Option option) throws CommandExecutionException {</span>
+<span class="source-line-no">259</span><span id="line-259">    // use the option</span>
+<span class="source-line-no">260</span><span id="line-260">    String toFormatText = commandLine.getOptionValue(option);</span>
+<span class="source-line-no">261</span><span id="line-261">    if (toFormatText == null) {</span>
+<span class="source-line-no">262</span><span id="line-262">      throw new CommandExecutionException(</span>
+<span class="source-line-no">263</span><span id="line-263">          ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">264</span><span id="line-264">          String.format("The '%s' argument was not provided.",</span>
+<span class="source-line-no">265</span><span id="line-265">              option.hasLongOpt()</span>
+<span class="source-line-no">266</span><span id="line-266">                  ? "--" + option.getLongOpt()</span>
+<span class="source-line-no">267</span><span id="line-267">                  : "-" + option.getOpt()));</span>
+<span class="source-line-no">268</span><span id="line-268">    }</span>
+<span class="source-line-no">269</span><span id="line-269">    try {</span>
+<span class="source-line-no">270</span><span id="line-270">      return Format.valueOf(toFormatText.toUpperCase(Locale.ROOT));</span>
+<span class="source-line-no">271</span><span id="line-271">    } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">272</span><span id="line-272">      throw new CommandExecutionException(</span>
+<span class="source-line-no">273</span><span id="line-273">          ExitCode.INVALID_ARGUMENTS,</span>
+<span class="source-line-no">274</span><span id="line-274">          String.format("Invalid '%s' argument. The format must be one of: %s.",</span>
+<span class="source-line-no">275</span><span id="line-275">              option.hasLongOpt()</span>
+<span class="source-line-no">276</span><span id="line-276">                  ? "--" + option.getLongOpt()</span>
+<span class="source-line-no">277</span><span id="line-277">                  : "-" + option.getOpt(),</span>
+<span class="source-line-no">278</span><span id="line-278">              Arrays.stream(Format.values())</span>
+<span class="source-line-no">279</span><span id="line-279">                  .map(Enum::name)</span>
+<span class="source-line-no">280</span><span id="line-280">                  .collect(CustomCollectors.joiningWithOxfordComma("or"))),</span>
+<span class="source-line-no">281</span><span id="line-281">          ex);</span>
 <span class="source-line-no">282</span><span id="line-282">    }</span>
 <span class="source-line-no">283</span><span id="line-283">  }</span>
 <span class="source-line-no">284</span><span id="line-284"></span>

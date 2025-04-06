@@ -61,8 +61,8 @@
 <span class="source-line-no">048</span><span id="line-48">  @Override</span>
 <span class="source-line-no">049</span><span id="line-49">  default Object getValue(@NonNull Object parent) {</span>
 <span class="source-line-no">050</span><span id="line-50">    Field field = getField();</span>
-<span class="source-line-no">051</span><span id="line-51">    boolean accessable = field.canAccess(parent);</span>
-<span class="source-line-no">052</span><span id="line-52">    field.setAccessible(true); // NOPMD - intentional</span>
+<span class="source-line-no">051</span><span id="line-51">    // boolean accessable = field.canAccess(parent);</span>
+<span class="source-line-no">052</span><span id="line-52">    // field.setAccessible(true); // NOPMD - intentional</span>
 <span class="source-line-no">053</span><span id="line-53">    Object retval;</span>
 <span class="source-line-no">054</span><span id="line-54">    try {</span>
 <span class="source-line-no">055</span><span id="line-55">      Object result = field.get(parent);</span>
@@ -72,8 +72,8 @@
 <span class="source-line-no">059</span><span id="line-59">          String.format("Unable to get the value of field '%s' in class '%s'.", field.getName(),</span>
 <span class="source-line-no">060</span><span id="line-60">              field.getDeclaringClass().getName()),</span>
 <span class="source-line-no">061</span><span id="line-61">          ex);</span>
-<span class="source-line-no">062</span><span id="line-62">    } finally {</span>
-<span class="source-line-no">063</span><span id="line-63">      field.setAccessible(accessable); // NOPMD - intentional</span>
+<span class="source-line-no">062</span><span id="line-62">      // } finally {</span>
+<span class="source-line-no">063</span><span id="line-63">      // field.setAccessible(accessable); // NOPMD - intentional</span>
 <span class="source-line-no">064</span><span id="line-64">    }</span>
 <span class="source-line-no">065</span><span id="line-65">    return retval;</span>
 <span class="source-line-no">066</span><span id="line-66">  }</span>
@@ -81,8 +81,8 @@
 <span class="source-line-no">068</span><span id="line-68">  @Override</span>
 <span class="source-line-no">069</span><span id="line-69">  default void setValue(@NonNull Object parentObject, Object value) {</span>
 <span class="source-line-no">070</span><span id="line-70">    Field field = getField();</span>
-<span class="source-line-no">071</span><span id="line-71">    boolean accessable = field.canAccess(parentObject);</span>
-<span class="source-line-no">072</span><span id="line-72">    field.setAccessible(true); // NOPMD - intentional</span>
+<span class="source-line-no">071</span><span id="line-71">    // boolean accessable = field.canAccess(parentObject);</span>
+<span class="source-line-no">072</span><span id="line-72">    // field.setAccessible(true); // NOPMD - intentional</span>
 <span class="source-line-no">073</span><span id="line-73">    try {</span>
 <span class="source-line-no">074</span><span id="line-74">      field.set(parentObject, value);</span>
 <span class="source-line-no">075</span><span id="line-75">    } catch (IllegalArgumentException | IllegalAccessException ex) {</span>
@@ -93,8 +93,8 @@
 <span class="source-line-no">080</span><span id="line-80">              field.getName(),</span>
 <span class="source-line-no">081</span><span id="line-81">              field.getDeclaringClass().getName()),</span>
 <span class="source-line-no">082</span><span id="line-82">          ex);</span>
-<span class="source-line-no">083</span><span id="line-83">    } finally {</span>
-<span class="source-line-no">084</span><span id="line-84">      field.setAccessible(accessable); // NOPMD - intentional</span>
+<span class="source-line-no">083</span><span id="line-83">      // } finally {</span>
+<span class="source-line-no">084</span><span id="line-84">      // field.setAccessible(accessable); // NOPMD - intentional</span>
 <span class="source-line-no">085</span><span id="line-85">    }</span>
 <span class="source-line-no">086</span><span id="line-86">  }</span>
 <span class="source-line-no">087</span><span id="line-87"></span>

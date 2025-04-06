@@ -34,7 +34,12 @@
 <span class="source-line-no">021</span><span id="line-21">   */</span>
 <span class="source-line-no">022</span><span id="line-22">  @NonNull</span>
 <span class="source-line-no">023</span><span id="line-23">  IAnyAtomicItem getKey();</span>
-<span class="source-line-no">024</span><span id="line-24">}</span>
+<span class="source-line-no">024</span><span id="line-24"></span>
+<span class="source-line-no">025</span><span id="line-25">  @Override</span>
+<span class="source-line-no">026</span><span id="line-26">  int hashCode();</span>
+<span class="source-line-no">027</span><span id="line-27"></span>
+<span class="source-line-no">028</span><span id="line-28">  boolean isSameKey(@NonNull IMapKey other);</span>
+<span class="source-line-no">029</span><span id="line-29">}</span>
 
 
 

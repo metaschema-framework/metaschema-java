@@ -63,8 +63,8 @@
 <span class="source-line-no">050</span><span id="line-50">        expect = @Expect(id = "metaschema-deprecated-types", formalName = "Avoid Deprecated Data Type Use",</span>
 <span class="source-line-no">051</span><span id="line-51">            description = "Ensure that the data type specified is not one of the legacy Metaschema data types which have been deprecated (i.e. base64Binary, dateTime, dateTime-with-timezone, email, nonNegativeInteger, positiveInteger).",</span>
 <span class="source-line-no">052</span><span id="line-52">            level = IConstraint.Level.WARNING, target = ".//matches/@datatype|.//(define-field|define-flag)/@as-type",</span>
-<span class="source-line-no">053</span><span id="line-53">            test = "not(.=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))",</span>
-<span class="source-line-no">054</span><span id="line-54">            message = "Use of the type '{ . }' is deprecated. Use '{ $deprecated-type-map(.)}' instead.")),</span>
+<span class="source-line-no">053</span><span id="line-53">            test = "not(data(.)=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))",</span>
+<span class="source-line-no">054</span><span id="line-54">            message = "Use of the type '{ data(.) }' is deprecated. Use '{ $deprecated-type-map(data(.))}' instead.")),</span>
 <span class="source-line-no">055</span><span id="line-55">    modelConstraints = @gov.nist.secauto.metaschema.databind.model.annotations.AssemblyConstraints(unique = {</span>
 <span class="source-line-no">056</span><span id="line-56">        @IsUnique(id = "meta-constraints-namespace-unique-entry", formalName = "Require Unique Namespace Entries",</span>
 <span class="source-line-no">057</span><span id="line-57">            description = "Ensures that all declared namespace entries are unique.", level = IConstraint.Level.ERROR,</span>

@@ -37,7 +37,7 @@
 <span class="source-line-no">024</span><span id="line-24">    DEFINITION extends IFlagDefinition,</span>
 <span class="source-line-no">025</span><span id="line-25">    INSTANCE extends IFlagInstance&gt;</span>
 <span class="source-line-no">026</span><span id="line-26">    extends AbstractFlagInstance&lt;PARENT, DEFINITION, INSTANCE&gt;</span>
-<span class="source-line-no">027</span><span id="line-27">    implements IFlagInstance, IFlagDefinition,</span>
+<span class="source-line-no">027</span><span id="line-27">    implements IFlagDefinition,</span>
 <span class="source-line-no">028</span><span id="line-28">    IFeatureDefinitionInstanceInlined&lt;DEFINITION, INSTANCE&gt; {</span>
 <span class="source-line-no">029</span><span id="line-29"></span>
 <span class="source-line-no">030</span><span id="line-30">  /**</span>
@@ -60,7 +60,25 @@
 <span class="source-line-no">047</span><span id="line-47">  public final INSTANCE getInlineInstance() {</span>
 <span class="source-line-no">048</span><span id="line-48">    return ObjectUtils.asType(this);</span>
 <span class="source-line-no">049</span><span id="line-49">  }</span>
-<span class="source-line-no">050</span><span id="line-50">}</span>
+<span class="source-line-no">050</span><span id="line-50"></span>
+<span class="source-line-no">051</span><span id="line-51">  /**</span>
+<span class="source-line-no">052</span><span id="line-52">   * A visitor callback.</span>
+<span class="source-line-no">053</span><span id="line-53">   *</span>
+<span class="source-line-no">054</span><span id="line-54">   * @param &lt;CONTEXT&gt;</span>
+<span class="source-line-no">055</span><span id="line-55">   *          the type of the context parameter</span>
+<span class="source-line-no">056</span><span id="line-56">   * @param &lt;RESULT&gt;</span>
+<span class="source-line-no">057</span><span id="line-57">   *          the type of the visitor result</span>
+<span class="source-line-no">058</span><span id="line-58">   * @param visitor</span>
+<span class="source-line-no">059</span><span id="line-59">   *          the calling visitor</span>
+<span class="source-line-no">060</span><span id="line-60">   * @param context</span>
+<span class="source-line-no">061</span><span id="line-61">   *          a parameter used to pass contextual information between visitors</span>
+<span class="source-line-no">062</span><span id="line-62">   * @return the visitor result</span>
+<span class="source-line-no">063</span><span id="line-63">   */</span>
+<span class="source-line-no">064</span><span id="line-64">  @Override</span>
+<span class="source-line-no">065</span><span id="line-65">  public &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull IModelElementVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {</span>
+<span class="source-line-no">066</span><span id="line-66">    return visitor.visitFlagInstance(this, context);</span>
+<span class="source-line-no">067</span><span id="line-67">  }</span>
+<span class="source-line-no">068</span><span id="line-68">}</span>
 
 
 

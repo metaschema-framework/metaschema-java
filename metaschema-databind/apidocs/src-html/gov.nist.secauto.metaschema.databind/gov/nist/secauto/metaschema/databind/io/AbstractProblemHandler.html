@@ -53,13 +53,14 @@
 <span class="source-line-no">040</span><span id="line-40">      @NonNull Object targetObject,</span>
 <span class="source-line-no">041</span><span id="line-41">      @NonNull Collection&lt;? extends IBoundProperty&lt;?&gt;&gt; unhandledInstances) throws IOException {</span>
 <span class="source-line-no">042</span><span id="line-42">    for (IBoundProperty&lt;?&gt; instance : unhandledInstances) {</span>
-<span class="source-line-no">043</span><span id="line-43">      Object value = instance.getResolvedDefaultValue();</span>
-<span class="source-line-no">044</span><span id="line-44">      if (value != null) {</span>
-<span class="source-line-no">045</span><span id="line-45">        instance.setValue(targetObject, value);</span>
-<span class="source-line-no">046</span><span id="line-46">      }</span>
-<span class="source-line-no">047</span><span id="line-47">    }</span>
-<span class="source-line-no">048</span><span id="line-48">  }</span>
-<span class="source-line-no">049</span><span id="line-49">}</span>
+<span class="source-line-no">043</span><span id="line-43">      assert instance != null;</span>
+<span class="source-line-no">044</span><span id="line-44">      Object value = instance.getResolvedDefaultValue();</span>
+<span class="source-line-no">045</span><span id="line-45">      if (value != null) {</span>
+<span class="source-line-no">046</span><span id="line-46">        instance.setValue(targetObject, value);</span>
+<span class="source-line-no">047</span><span id="line-47">      }</span>
+<span class="source-line-no">048</span><span id="line-48">    }</span>
+<span class="source-line-no">049</span><span id="line-49">  }</span>
+<span class="source-line-no">050</span><span id="line-50">}</span>
 
 
 

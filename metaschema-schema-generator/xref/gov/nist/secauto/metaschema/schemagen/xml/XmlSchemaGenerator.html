@@ -209,7 +209,7 @@
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>       <strong class="jxr_keyword">for</strong> (IAssemblyDefinition definition : rootAssemblyDefinitions) {
 <a class="jxr_linenumber" name="L202" href="#L202">202</a>         IEnhancedQName xmlQName = definition.getRootQName();
 <a class="jxr_linenumber" name="L203" href="#L203">203</a>         <strong class="jxr_keyword">if</strong> (xmlQName != <strong class="jxr_keyword">null</strong>
-<a class="jxr_linenumber" name="L204" href="#L204">204</a>             &amp;&amp; (xmlQName.getNamespace() == <strong class="jxr_keyword">null</strong> || state.getDefaultNS().equals(xmlQName.getNamespace()))) {
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>             &amp;&amp; state.getDefaultNS().equals(xmlQName.getNamespace())) {
 <a class="jxr_linenumber" name="L205" href="#L205">205</a>           generateRootElement(definition, state);
 <a class="jxr_linenumber" name="L206" href="#L206">206</a>         }
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>       }
@@ -275,6 +275,6 @@
 <a class="jxr_linenumber" name="L267" href="#L267">267</a> }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

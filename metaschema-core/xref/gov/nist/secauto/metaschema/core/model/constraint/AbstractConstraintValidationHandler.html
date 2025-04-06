@@ -15,8 +15,8 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ISequence;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.CustomCollectors;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -95,7 +95,7 @@
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>              <span class="jxr_string">"The cardinality '%d' is below the required minimum '%d' for items matching '%s'."</span>,
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>              testedItems.size(),
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>              constraint.getMinOccurs(),
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>              constraint.getTarget()))
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>              constraint.getTarget().getPath()))
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>          : constraint.generateMessage(target, dynamicContext);
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>    }
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  
@@ -292,7 +292,7 @@
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>     <strong class="jxr_keyword">return</strong> constraint.getMessage() == <strong class="jxr_keyword">null</strong>
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>         ? ObjectUtils.notNull(String.format(<span class="jxr_string">"Expect constraint '%s' did not match the data at path '%s'"</span>,
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>             constraint.getTest(),
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>             constraint.getTest().getPath(),
 <a class="jxr_linenumber" name="L288" href="#L288">288</a>             toPath(target)))
 <a class="jxr_linenumber" name="L289" href="#L289">289</a>         : constraint.generateMessage(target, dynamicContext);
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>   }
@@ -411,6 +411,6 @@
 <a class="jxr_linenumber" name="L403" href="#L403">403</a> }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

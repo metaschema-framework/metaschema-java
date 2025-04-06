@@ -19,14 +19,14 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.function.library;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.DynamicContext;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.function.OperationFunctions;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.ISequence;</span>
 <span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
 <span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;</span>
 <span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;</span>
@@ -102,7 +102,7 @@
 <span class="source-line-no">089</span><span id="line-89">    ISequence&lt;? extends IAnyAtomicItem&gt; sequence = FunctionUtils.asType(</span>
 <span class="source-line-no">090</span><span id="line-90">        ObjectUtils.requireNonNull(arguments.get(0)));</span>
 <span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">    return ISequence.of(sum(sequence.getValue(), IIntegerItem.ZERO));</span>
+<span class="source-line-no">092</span><span id="line-92">    return ISequence.of(sum(sequence, IIntegerItem.ZERO));</span>
 <span class="source-line-no">093</span><span id="line-93">  }</span>
 <span class="source-line-no">094</span><span id="line-94"></span>
 <span class="source-line-no">095</span><span id="line-95">  @SuppressWarnings("unused")</span>
@@ -116,7 +116,7 @@
 <span class="source-line-no">103</span><span id="line-103"></span>
 <span class="source-line-no">104</span><span id="line-104">    IAnyAtomicItem zero = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(true));</span>
 <span class="source-line-no">105</span><span id="line-105"></span>
-<span class="source-line-no">106</span><span id="line-106">    return ISequence.of(sum(sequence.getValue(), zero));</span>
+<span class="source-line-no">106</span><span id="line-106">    return ISequence.of(sum(sequence, zero));</span>
 <span class="source-line-no">107</span><span id="line-107">  }</span>
 <span class="source-line-no">108</span><span id="line-108"></span>
 <span class="source-line-no">109</span><span id="line-109">  /**</span>
@@ -148,7 +148,7 @@
 <span class="source-line-no">135</span><span id="line-135">    // tell cpd to start ignoring code - CPD-OFF</span>
 <span class="source-line-no">136</span><span id="line-136"></span>
 <span class="source-line-no">137</span><span id="line-137">    Map&lt;Class&lt;? extends IAnyAtomicItem&gt;, Integer&gt; typeCounts = FunctionUtils.countTypes(</span>
-<span class="source-line-no">138</span><span id="line-138">        OperationFunctions.AGGREGATE_MATH_TYPES,</span>
+<span class="source-line-no">138</span><span id="line-138">        OperationFunctions.aggregateMathTypes(),</span>
 <span class="source-line-no">139</span><span id="line-139">        ObjectUtils.notNull(items));</span>
 <span class="source-line-no">140</span><span id="line-140"></span>
 <span class="source-line-no">141</span><span id="line-141">    int count = items.size();</span>
@@ -200,7 +200,7 @@
 <span class="source-line-no">187</span><span id="line-187">      throw new InvalidArgumentFunctionException(</span>
 <span class="source-line-no">188</span><span id="line-188">          InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,</span>
 <span class="source-line-no">189</span><span id="line-189">          String.format("Values must all be of type '%s'.",</span>
-<span class="source-line-no">190</span><span id="line-190">              OperationFunctions.AGGREGATE_MATH_TYPES.stream()</span>
+<span class="source-line-no">190</span><span id="line-190">              OperationFunctions.aggregateMathTypes().stream()</span>
 <span class="source-line-no">191</span><span id="line-191">                  .map(Class::getName)</span>
 <span class="source-line-no">192</span><span id="line-192">                  .collect(CustomCollectors.joiningWithOxfordComma(","))));</span>
 <span class="source-line-no">193</span><span id="line-193">    }</span>

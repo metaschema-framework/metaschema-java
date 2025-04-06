@@ -43,7 +43,7 @@
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>    @Test
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>    @Disabled
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <strong class="jxr_keyword">void</strong> testMetaschemaMetaschema() <strong class="jxr_keyword">throws</strong> MetaschemaException, IOException, ClassNotFoundException, BindingException {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <strong class="jxr_keyword">void</strong> testMetaschemaMetaschema() <strong class="jxr_keyword">throws</strong> MetaschemaException, IOException, ClassNotFoundException {
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      runTests(
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>          ObjectUtils.notNull(METASCHEMA_FILE),
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>          ObjectUtils.notNull(
@@ -106,7 +106,7 @@
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>      IBindingModuleLoader loader = newBindingContext().newModuleLoader();
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>      loader.allowEntityResolution();
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>     IBindingMetaschemaModule module = loader.load(ObjectUtils.notNull(URI.create(
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>         <span class="jxr_string">"https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.2/src/metaschema/oscal_complete_metaschema.xml"</span>)));
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>         <span class="jxr_string">"https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.3/src/metaschema/oscal_complete_metaschema.xml"</span>)));
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>     assertNotNull(module);
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>   }
 <a class="jxr_linenumber" name="L104" href="#L104">104</a> 
@@ -116,12 +116,12 @@
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>     <em class="jxr_comment">// loader.allowEntityResolution();</em>
 <a class="jxr_linenumber" name="L109" href="#L109">109</a> 
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>     IXmlMetaschemaModule module = loader.load(ObjectUtils.notNull(URI.create(
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>         <span class="jxr_string">"https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.2/src/metaschema/oscal_complete_metaschema.xml"</span>)));
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>         <span class="jxr_string">"https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.3/src/metaschema/oscal_complete_metaschema.xml"</span>)));
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>     assertNotNull(module);
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>   }
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

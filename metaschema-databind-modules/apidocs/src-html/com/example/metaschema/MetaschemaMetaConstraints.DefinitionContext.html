@@ -67,7 +67,7 @@
 <span class="source-line-no">054</span><span id="line-54">      description = "Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.",</span>
 <span class="source-line-no">055</span><span id="line-55">      useName = "namespace-binding",</span>
 <span class="source-line-no">056</span><span id="line-56">      maxOccurs = -1,</span>
-<span class="source-line-no">057</span><span id="line-57">      groupAs = @GroupAs(name = "namespace-bindings")</span>
+<span class="source-line-no">057</span><span id="line-57">      groupAs = @GroupAs(name = "namespace-bindings", inJson = JsonGroupAsBehavior.LIST)</span>
 <span class="source-line-no">058</span><span id="line-58">  )</span>
 <span class="source-line-no">059</span><span id="line-59">  private List&lt;MetapathNamespace&gt; _namespaceBindings;</span>
 <span class="source-line-no">060</span><span id="line-60"></span>

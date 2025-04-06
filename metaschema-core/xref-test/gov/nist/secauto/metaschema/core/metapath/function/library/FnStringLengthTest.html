@@ -20,9 +20,9 @@
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ISequence;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathException;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -51,8 +51,8 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    @ParameterizedTest
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    @MethodSource(<span class="jxr_string">"provideValues"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">void</strong> testExpression(@NonNull IIntegerItem expected, @NonNull String metapath) {
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      IIntegerItem result = MetapathExpression.compile(metapath)
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>          .evaluateAs(<strong class="jxr_keyword">null</strong>, MetapathExpression.ResultType.ITEM, newDynamicContext());
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      IIntegerItem result = IMetapathExpression.compile(metapath)
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          .evaluateAs(<strong class="jxr_keyword">null</strong>, IMetapathExpression.ResultType.ITEM, newDynamicContext());
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      assertEquals(expected, result);
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
@@ -86,6 +86,6 @@
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

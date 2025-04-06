@@ -21,71 +21,101 @@
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;</span>
 <span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">012</span><span id="line-12">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">/**</span>
-<span class="source-line-no">015</span><span id="line-15"> * Provides a variety of utilities for working with Metapath items.</span>
-<span class="source-line-no">016</span><span id="line-16"> */</span>
-<span class="source-line-no">017</span><span id="line-17">public final class ItemUtils {</span>
-<span class="source-line-no">018</span><span id="line-18"></span>
-<span class="source-line-no">019</span><span id="line-19">  private ItemUtils() {</span>
-<span class="source-line-no">020</span><span id="line-20">    // disable construction</span>
-<span class="source-line-no">021</span><span id="line-21">  }</span>
+<span class="source-line-no">011</span><span id="line-11">import java.util.Arrays;</span>
+<span class="source-line-no">012</span><span id="line-12">import java.util.Objects;</span>
+<span class="source-line-no">013</span><span id="line-13">import java.util.stream.Stream;</span>
+<span class="source-line-no">014</span><span id="line-14"></span>
+<span class="source-line-no">015</span><span id="line-15">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">016</span><span id="line-16">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">/**</span>
+<span class="source-line-no">019</span><span id="line-19"> * Provides a variety of utilities for working with Metapath items.</span>
+<span class="source-line-no">020</span><span id="line-20"> */</span>
+<span class="source-line-no">021</span><span id="line-21">public final class ItemUtils {</span>
 <span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">  /**</span>
-<span class="source-line-no">024</span><span id="line-24">   * Checks that the item is a node item.</span>
-<span class="source-line-no">025</span><span id="line-25">   *</span>
-<span class="source-line-no">026</span><span id="line-26">   * @param item</span>
-<span class="source-line-no">027</span><span id="line-27">   *          the item to check</span>
-<span class="source-line-no">028</span><span id="line-28">   * @return the item cast to a {@link INodeItem}</span>
-<span class="source-line-no">029</span><span id="line-29">   * @throws TypeMetapathException</span>
-<span class="source-line-no">030</span><span id="line-30">   *           if the item is {@code null} or not an {@link INodeItem}</span>
-<span class="source-line-no">031</span><span id="line-31">   */</span>
-<span class="source-line-no">032</span><span id="line-32">  // FIXME: make this a method on the type implementation</span>
-<span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
-<span class="source-line-no">034</span><span id="line-34">  public static INodeItem checkItemIsNodeItemForStep(@Nullable IItem item) {</span>
-<span class="source-line-no">035</span><span id="line-35">    if (item instanceof INodeItem) {</span>
-<span class="source-line-no">036</span><span id="line-36">      return (INodeItem) item;</span>
-<span class="source-line-no">037</span><span id="line-37">    }</span>
-<span class="source-line-no">038</span><span id="line-38">    if (item == null) {</span>
-<span class="source-line-no">039</span><span id="line-39">      throw new TypeMetapathException(TypeMetapathException.NOT_A_NODE_ITEM_FOR_STEP,</span>
-<span class="source-line-no">040</span><span id="line-40">          "Item is null.");</span>
+<span class="source-line-no">023</span><span id="line-23">  private ItemUtils() {</span>
+<span class="source-line-no">024</span><span id="line-24">    // disable construction</span>
+<span class="source-line-no">025</span><span id="line-25">  }</span>
+<span class="source-line-no">026</span><span id="line-26"></span>
+<span class="source-line-no">027</span><span id="line-27">  /**</span>
+<span class="source-line-no">028</span><span id="line-28">   * Checks that the item is a node item.</span>
+<span class="source-line-no">029</span><span id="line-29">   *</span>
+<span class="source-line-no">030</span><span id="line-30">   * @param item</span>
+<span class="source-line-no">031</span><span id="line-31">   *          the item to check</span>
+<span class="source-line-no">032</span><span id="line-32">   * @return the item cast to a {@link INodeItem}</span>
+<span class="source-line-no">033</span><span id="line-33">   * @throws TypeMetapathException</span>
+<span class="source-line-no">034</span><span id="line-34">   *           if the item is {@code null} or not an {@link INodeItem}</span>
+<span class="source-line-no">035</span><span id="line-35">   */</span>
+<span class="source-line-no">036</span><span id="line-36">  // FIXME: make this a method on the type implementation</span>
+<span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
+<span class="source-line-no">038</span><span id="line-38">  public static INodeItem checkItemIsNodeItemForStep(@Nullable IItem item) {</span>
+<span class="source-line-no">039</span><span id="line-39">    if (item instanceof INodeItem) {</span>
+<span class="source-line-no">040</span><span id="line-40">      return (INodeItem) item;</span>
 <span class="source-line-no">041</span><span id="line-41">    }</span>
-<span class="source-line-no">042</span><span id="line-42">    throw new TypeMetapathException(TypeMetapathException.NOT_A_NODE_ITEM_FOR_STEP,</span>
-<span class="source-line-no">043</span><span id="line-43">        String.format(</span>
-<span class="source-line-no">044</span><span id="line-44">            "The item of type '%s' is not a INodeItem.",</span>
-<span class="source-line-no">045</span><span id="line-45">            item.getClass().getName()));</span>
-<span class="source-line-no">046</span><span id="line-46">  }</span>
-<span class="source-line-no">047</span><span id="line-47"></span>
-<span class="source-line-no">048</span><span id="line-48">  /**</span>
-<span class="source-line-no">049</span><span id="line-49">   * Check that the item is the type specified by {@code clazz}.</span>
-<span class="source-line-no">050</span><span id="line-50">   *</span>
-<span class="source-line-no">051</span><span id="line-51">   * @param &lt;TYPE&gt;</span>
-<span class="source-line-no">052</span><span id="line-52">   *          the Java type the item is required to match</span>
-<span class="source-line-no">053</span><span id="line-53">   * @param item</span>
-<span class="source-line-no">054</span><span id="line-54">   *          the item to check</span>
-<span class="source-line-no">055</span><span id="line-55">   * @param clazz</span>
-<span class="source-line-no">056</span><span id="line-56">   *          the Java class to check the item against</span>
-<span class="source-line-no">057</span><span id="line-57">   * @return the item cast to the required class value</span>
-<span class="source-line-no">058</span><span id="line-58">   * @throws TypeMetapathException</span>
-<span class="source-line-no">059</span><span id="line-59">   *           if the item is {@code null} or does not match the type specified by</span>
-<span class="source-line-no">060</span><span id="line-60">   *           {@code clazz}</span>
-<span class="source-line-no">061</span><span id="line-61">   */</span>
-<span class="source-line-no">062</span><span id="line-62">  // FIXME: make this a method on the type implementation</span>
-<span class="source-line-no">063</span><span id="line-63">  @SuppressWarnings("unchecked")</span>
-<span class="source-line-no">064</span><span id="line-64">  @NonNull</span>
-<span class="source-line-no">065</span><span id="line-65">  public static &lt;TYPE&gt; TYPE checkItemType(@NonNull IItem item, @NonNull Class&lt;TYPE&gt; clazz) {</span>
-<span class="source-line-no">066</span><span id="line-66">    if (clazz.isInstance(item)) {</span>
-<span class="source-line-no">067</span><span id="line-67">      return (TYPE) item;</span>
-<span class="source-line-no">068</span><span id="line-68">    }</span>
-<span class="source-line-no">069</span><span id="line-69">    throw new TypeMetapathException(TypeMetapathException.INVALID_TYPE_ERROR,</span>
-<span class="source-line-no">070</span><span id="line-70">        String.format(</span>
-<span class="source-line-no">071</span><span id="line-71">            "The item of type '%s' is not the required type '%s'.",</span>
-<span class="source-line-no">072</span><span id="line-72">            item.getClass().getName(),</span>
-<span class="source-line-no">073</span><span id="line-73">            clazz.getName()));</span>
-<span class="source-line-no">074</span><span id="line-74">  }</span>
-<span class="source-line-no">075</span><span id="line-75">}</span>
+<span class="source-line-no">042</span><span id="line-42">    if (item == null) {</span>
+<span class="source-line-no">043</span><span id="line-43">      throw new TypeMetapathException(TypeMetapathException.NOT_A_NODE_ITEM_FOR_STEP,</span>
+<span class="source-line-no">044</span><span id="line-44">          "Item is null.");</span>
+<span class="source-line-no">045</span><span id="line-45">    }</span>
+<span class="source-line-no">046</span><span id="line-46">    throw new TypeMetapathException(TypeMetapathException.NOT_A_NODE_ITEM_FOR_STEP,</span>
+<span class="source-line-no">047</span><span id="line-47">        String.format(</span>
+<span class="source-line-no">048</span><span id="line-48">            "The item of type '%s' is not a INodeItem.",</span>
+<span class="source-line-no">049</span><span id="line-49">            item.getClass().getName()));</span>
+<span class="source-line-no">050</span><span id="line-50">  }</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">  /**</span>
+<span class="source-line-no">053</span><span id="line-53">   * Check that the item is the type specified by {@code clazz}.</span>
+<span class="source-line-no">054</span><span id="line-54">   *</span>
+<span class="source-line-no">055</span><span id="line-55">   * @param &lt;TYPE&gt;</span>
+<span class="source-line-no">056</span><span id="line-56">   *          the Java type the item is required to match</span>
+<span class="source-line-no">057</span><span id="line-57">   * @param item</span>
+<span class="source-line-no">058</span><span id="line-58">   *          the item to check</span>
+<span class="source-line-no">059</span><span id="line-59">   * @param clazz</span>
+<span class="source-line-no">060</span><span id="line-60">   *          the Java class to check the item against</span>
+<span class="source-line-no">061</span><span id="line-61">   * @return the item cast to the required class value</span>
+<span class="source-line-no">062</span><span id="line-62">   * @throws TypeMetapathException</span>
+<span class="source-line-no">063</span><span id="line-63">   *           if the item is {@code null} or does not match the type specified by</span>
+<span class="source-line-no">064</span><span id="line-64">   *           {@code clazz}</span>
+<span class="source-line-no">065</span><span id="line-65">   */</span>
+<span class="source-line-no">066</span><span id="line-66">  // FIXME: make this a method on the type implementation</span>
+<span class="source-line-no">067</span><span id="line-67">  @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">068</span><span id="line-68">  @NonNull</span>
+<span class="source-line-no">069</span><span id="line-69">  public static &lt;TYPE&gt; TYPE checkItemType(@NonNull IItem item, @NonNull Class&lt;TYPE&gt; clazz) {</span>
+<span class="source-line-no">070</span><span id="line-70">    if (clazz.isInstance(item)) {</span>
+<span class="source-line-no">071</span><span id="line-71">      return (TYPE) item;</span>
+<span class="source-line-no">072</span><span id="line-72">    }</span>
+<span class="source-line-no">073</span><span id="line-73">    throw new TypeMetapathException(TypeMetapathException.INVALID_TYPE_ERROR,</span>
+<span class="source-line-no">074</span><span id="line-74">        String.format(</span>
+<span class="source-line-no">075</span><span id="line-75">            "The item of type '%s' is not the required type '%s'.",</span>
+<span class="source-line-no">076</span><span id="line-76">            item.getClass().getName(),</span>
+<span class="source-line-no">077</span><span id="line-77">            clazz.getName()));</span>
+<span class="source-line-no">078</span><span id="line-78">  }</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">  public static &lt;T&gt; Stream&lt;Class&lt;? extends T&gt;&gt; interfacesFor(</span>
+<span class="source-line-no">081</span><span id="line-81">      @NonNull Class&lt;? extends T&gt; seed,</span>
+<span class="source-line-no">082</span><span id="line-82">      @NonNull Class&lt;T&gt; base) {</span>
+<span class="source-line-no">083</span><span id="line-83">    return ancestorsOrSelf(seed)</span>
+<span class="source-line-no">084</span><span id="line-84">        .flatMap(clazz -&gt; Stream.ofNullable(asSubclassOrNull(clazz, base)))</span>
+<span class="source-line-no">085</span><span id="line-85">        .flatMap(clazz -&gt; Stream.concat(</span>
+<span class="source-line-no">086</span><span id="line-86">            Stream.of(clazz),</span>
+<span class="source-line-no">087</span><span id="line-87">            Arrays.stream(seed.getInterfaces())</span>
+<span class="source-line-no">088</span><span id="line-88">                .flatMap(cls -&gt; Stream.ofNullable(asSubclassOrNull(cls, base)))));</span>
+<span class="source-line-no">089</span><span id="line-89">  }</span>
+<span class="source-line-no">090</span><span id="line-90"></span>
+<span class="source-line-no">091</span><span id="line-91">  private static &lt;T&gt; Stream&lt;Class&lt;? super T&gt;&gt; ancestorsOrSelf(@NonNull Class&lt;T&gt; seed) {</span>
+<span class="source-line-no">092</span><span id="line-92">    return Stream.iterate(seed, Objects::nonNull, Class::getSuperclass);</span>
+<span class="source-line-no">093</span><span id="line-93">  }</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">  @Nullable</span>
+<span class="source-line-no">096</span><span id="line-96">  private static &lt;T&gt; Class&lt;? extends T&gt; asSubclassOrNull(Class&lt;?&gt; clazz, Class&lt;T&gt; base) {</span>
+<span class="source-line-no">097</span><span id="line-97">    Class&lt;? extends T&gt; retval = null;</span>
+<span class="source-line-no">098</span><span id="line-98">    try {</span>
+<span class="source-line-no">099</span><span id="line-99">      retval = clazz.asSubclass(base);</span>
+<span class="source-line-no">100</span><span id="line-100">    } catch (@SuppressWarnings("unused") ClassCastException ex) {</span>
+<span class="source-line-no">101</span><span id="line-101">      // not a subclass, do nothing</span>
+<span class="source-line-no">102</span><span id="line-102">    }</span>
+<span class="source-line-no">103</span><span id="line-103">    return retval;</span>
+<span class="source-line-no">104</span><span id="line-104">  }</span>
+<span class="source-line-no">105</span><span id="line-105">}</span>
 
 
 

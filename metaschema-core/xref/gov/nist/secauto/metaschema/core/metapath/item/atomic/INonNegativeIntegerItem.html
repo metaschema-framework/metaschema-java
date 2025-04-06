@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>    @NonNull
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">static</strong> <a name="INonNegativeIntegerItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/INonNegativeIntegerItem.html#INonNegativeIntegerItem">INonNegativeIntegerItem</a> valueOf(@NonNull <a name="INumericItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/INumericItem.html#INumericItem">INumericItem</a> value) {
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">return</strong> valueOf(value.asInteger());
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">return</strong> value instanceof <a name="INonNegativeIntegerItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/INonNegativeIntegerItem.html#INonNegativeIntegerItem">INonNegativeIntegerItem</a> ? (<a name="INonNegativeIntegerItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/INonNegativeIntegerItem.html#INonNegativeIntegerItem">INonNegativeIntegerItem</a>) value : valueOf(value.asInteger());
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>    <em class="jxr_javadoccomment">/**</em>
@@ -155,6 +155,6 @@
 <a class="jxr_linenumber" name="L147" href="#L147">147</a> }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

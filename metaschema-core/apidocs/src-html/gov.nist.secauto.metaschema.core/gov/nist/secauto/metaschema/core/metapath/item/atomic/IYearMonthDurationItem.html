@@ -68,96 +68,109 @@
 <span class="source-line-no">055</span><span id="line-55">    } catch (IllegalArgumentException ex) {</span>
 <span class="source-line-no">056</span><span id="line-56">      throw new InvalidTypeMetapathException(</span>
 <span class="source-line-no">057</span><span id="line-57">          null,</span>
-<span class="source-line-no">058</span><span id="line-58">          String.format("Invalid year/month duration value '%s'. %s",</span>
-<span class="source-line-no">059</span><span id="line-59">              value,</span>
-<span class="source-line-no">060</span><span id="line-60">              ex.getLocalizedMessage()),</span>
-<span class="source-line-no">061</span><span id="line-61">          ex);</span>
-<span class="source-line-no">062</span><span id="line-62">    }</span>
-<span class="source-line-no">063</span><span id="line-63">  }</span>
-<span class="source-line-no">064</span><span id="line-64"></span>
-<span class="source-line-no">065</span><span id="line-65">  /**</span>
-<span class="source-line-no">066</span><span id="line-66">   * Construct a new year month day duration item using the provided</span>
-<span class="source-line-no">067</span><span id="line-67">   * {@code value}.</span>
-<span class="source-line-no">068</span><span id="line-68">   *</span>
-<span class="source-line-no">069</span><span id="line-69">   * @param value</span>
-<span class="source-line-no">070</span><span id="line-70">   *          a duration</span>
-<span class="source-line-no">071</span><span id="line-71">   * @return the new item</span>
-<span class="source-line-no">072</span><span id="line-72">   */</span>
-<span class="source-line-no">073</span><span id="line-73">  @NonNull</span>
-<span class="source-line-no">074</span><span id="line-74">  static IYearMonthDurationItem valueOf(@NonNull Period value) {</span>
-<span class="source-line-no">075</span><span id="line-75">    return new YearMonthDurationItemImpl(ObjectUtils.notNull(value.withDays(0)));</span>
-<span class="source-line-no">076</span><span id="line-76">  }</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">  /**</span>
-<span class="source-line-no">079</span><span id="line-79">   * Construct a new year month day duration item using the provided values.</span>
-<span class="source-line-no">080</span><span id="line-80">   *</span>
-<span class="source-line-no">081</span><span id="line-81">   * @param years</span>
-<span class="source-line-no">082</span><span id="line-82">   *          the number of years in the period</span>
-<span class="source-line-no">083</span><span id="line-83">   * @param months</span>
-<span class="source-line-no">084</span><span id="line-84">   *          the number of months in the period</span>
-<span class="source-line-no">085</span><span id="line-85">   * @return the new item</span>
-<span class="source-line-no">086</span><span id="line-86">   */</span>
-<span class="source-line-no">087</span><span id="line-87">  @NonNull</span>
-<span class="source-line-no">088</span><span id="line-88">  static IYearMonthDurationItem valueOf(int years, int months) {</span>
-<span class="source-line-no">089</span><span id="line-89">    return valueOf(ObjectUtils.notNull(Period.of(years, months, 0)));</span>
-<span class="source-line-no">090</span><span id="line-90">  }</span>
-<span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">  /**</span>
-<span class="source-line-no">093</span><span id="line-93">   * Cast the provided type to this item type.</span>
-<span class="source-line-no">094</span><span id="line-94">   *</span>
-<span class="source-line-no">095</span><span id="line-95">   * @param item</span>
-<span class="source-line-no">096</span><span id="line-96">   *          the item to cast</span>
-<span class="source-line-no">097</span><span id="line-97">   * @return the original item if it is already this type, otherwise a new item</span>
-<span class="source-line-no">098</span><span id="line-98">   *         cast to this type</span>
-<span class="source-line-no">099</span><span id="line-99">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">100</span><span id="line-100">   *           if the provided {@code item} cannot be cast to this type</span>
-<span class="source-line-no">101</span><span id="line-101">   */</span>
-<span class="source-line-no">102</span><span id="line-102">  @NonNull</span>
-<span class="source-line-no">103</span><span id="line-103">  static IYearMonthDurationItem cast(@NonNull IAnyAtomicItem item) {</span>
-<span class="source-line-no">104</span><span id="line-104">    try {</span>
-<span class="source-line-no">105</span><span id="line-105">      return item instanceof IYearMonthDurationItem</span>
-<span class="source-line-no">106</span><span id="line-106">          ? (IYearMonthDurationItem) item</span>
-<span class="source-line-no">107</span><span id="line-107">          : valueOf(item.asString());</span>
-<span class="source-line-no">108</span><span id="line-108">    } catch (IllegalStateException | InvalidTypeMetapathException ex) {</span>
-<span class="source-line-no">109</span><span id="line-109">      // asString can throw IllegalStateException exception</span>
-<span class="source-line-no">110</span><span id="line-110">      throw new InvalidValueForCastFunctionException(ex);</span>
-<span class="source-line-no">111</span><span id="line-111">    }</span>
-<span class="source-line-no">112</span><span id="line-112">  }</span>
-<span class="source-line-no">113</span><span id="line-113"></span>
-<span class="source-line-no">114</span><span id="line-114">  /**</span>
-<span class="source-line-no">115</span><span id="line-115">   * Get the "wrapped" duration value.</span>
-<span class="source-line-no">116</span><span id="line-116">   *</span>
-<span class="source-line-no">117</span><span id="line-117">   * @return the underlying duration value</span>
-<span class="source-line-no">118</span><span id="line-118">   */</span>
-<span class="source-line-no">119</span><span id="line-119">  @NonNull</span>
-<span class="source-line-no">120</span><span id="line-120">  Period asPeriod();</span>
-<span class="source-line-no">121</span><span id="line-121"></span>
-<span class="source-line-no">122</span><span id="line-122">  @Override</span>
-<span class="source-line-no">123</span><span id="line-123">  default IYearMonthDurationItem castAsType(IAnyAtomicItem item) {</span>
-<span class="source-line-no">124</span><span id="line-124">    return cast(item);</span>
-<span class="source-line-no">125</span><span id="line-125">  }</span>
-<span class="source-line-no">126</span><span id="line-126"></span>
-<span class="source-line-no">127</span><span id="line-127">  @Override</span>
-<span class="source-line-no">128</span><span id="line-128">  default int compareTo(IAnyAtomicItem item) {</span>
-<span class="source-line-no">129</span><span id="line-129">    return compareTo(cast(item));</span>
-<span class="source-line-no">130</span><span id="line-130">  }</span>
-<span class="source-line-no">131</span><span id="line-131"></span>
-<span class="source-line-no">132</span><span id="line-132">  /**</span>
-<span class="source-line-no">133</span><span id="line-133">   * Compares this value with the argument.</span>
-<span class="source-line-no">134</span><span id="line-134">   *</span>
-<span class="source-line-no">135</span><span id="line-135">   * @param item</span>
-<span class="source-line-no">136</span><span id="line-136">   *          the item to compare with this value</span>
-<span class="source-line-no">137</span><span id="line-137">   * @return a negative integer, zero, or a positive integer if this value is less</span>
-<span class="source-line-no">138</span><span id="line-138">   *         than, equal to, or greater than the {@code item}.</span>
-<span class="source-line-no">139</span><span id="line-139">   */</span>
-<span class="source-line-no">140</span><span id="line-140">  default int compareTo(IYearMonthDurationItem item) {</span>
-<span class="source-line-no">141</span><span id="line-141">    Period thisPeriod = asPeriod().normalized();</span>
-<span class="source-line-no">142</span><span id="line-142">    Period thatPeriod = item.asPeriod().normalized();</span>
-<span class="source-line-no">143</span><span id="line-143"></span>
-<span class="source-line-no">144</span><span id="line-144">    int result = Integer.compare(thisPeriod.getYears(), thatPeriod.getYears());</span>
-<span class="source-line-no">145</span><span id="line-145">    return result == 0 ? Integer.compare(thisPeriod.getMonths(), thatPeriod.getMonths()) : result;</span>
-<span class="source-line-no">146</span><span id="line-146">  }</span>
-<span class="source-line-no">147</span><span id="line-147">}</span>
+<span class="source-line-no">058</span><span id="line-58">          String.format("Invalid year/month duration value '%s'.",</span>
+<span class="source-line-no">059</span><span id="line-59">              value),</span>
+<span class="source-line-no">060</span><span id="line-60">          ex);</span>
+<span class="source-line-no">061</span><span id="line-61">    }</span>
+<span class="source-line-no">062</span><span id="line-62">  }</span>
+<span class="source-line-no">063</span><span id="line-63"></span>
+<span class="source-line-no">064</span><span id="line-64">  /**</span>
+<span class="source-line-no">065</span><span id="line-65">   * Construct a new year month day duration item using the provided</span>
+<span class="source-line-no">066</span><span id="line-66">   * {@code value}.</span>
+<span class="source-line-no">067</span><span id="line-67">   *</span>
+<span class="source-line-no">068</span><span id="line-68">   * @param value</span>
+<span class="source-line-no">069</span><span id="line-69">   *          a duration</span>
+<span class="source-line-no">070</span><span id="line-70">   * @return the new item</span>
+<span class="source-line-no">071</span><span id="line-71">   */</span>
+<span class="source-line-no">072</span><span id="line-72">  @NonNull</span>
+<span class="source-line-no">073</span><span id="line-73">  static IYearMonthDurationItem valueOf(@NonNull Period value) {</span>
+<span class="source-line-no">074</span><span id="line-74">    return new YearMonthDurationItemImpl(ObjectUtils.notNull(value.withDays(0)));</span>
+<span class="source-line-no">075</span><span id="line-75">  }</span>
+<span class="source-line-no">076</span><span id="line-76"></span>
+<span class="source-line-no">077</span><span id="line-77">  /**</span>
+<span class="source-line-no">078</span><span id="line-78">   * Construct a new year month day duration item using the provided values.</span>
+<span class="source-line-no">079</span><span id="line-79">   *</span>
+<span class="source-line-no">080</span><span id="line-80">   * @param years</span>
+<span class="source-line-no">081</span><span id="line-81">   *          the number of years in the period</span>
+<span class="source-line-no">082</span><span id="line-82">   * @param months</span>
+<span class="source-line-no">083</span><span id="line-83">   *          the number of months in the period</span>
+<span class="source-line-no">084</span><span id="line-84">   * @return the new item</span>
+<span class="source-line-no">085</span><span id="line-85">   */</span>
+<span class="source-line-no">086</span><span id="line-86">  @NonNull</span>
+<span class="source-line-no">087</span><span id="line-87">  static IYearMonthDurationItem valueOf(int years, int months) {</span>
+<span class="source-line-no">088</span><span id="line-88">    return valueOf(ObjectUtils.notNull(Period.of(years, months, 0)));</span>
+<span class="source-line-no">089</span><span id="line-89">  }</span>
+<span class="source-line-no">090</span><span id="line-90"></span>
+<span class="source-line-no">091</span><span id="line-91">  /**</span>
+<span class="source-line-no">092</span><span id="line-92">   * Get the "wrapped" duration value.</span>
+<span class="source-line-no">093</span><span id="line-93">   *</span>
+<span class="source-line-no">094</span><span id="line-94">   * @return the underlying duration value</span>
+<span class="source-line-no">095</span><span id="line-95">   */</span>
+<span class="source-line-no">096</span><span id="line-96">  @NonNull</span>
+<span class="source-line-no">097</span><span id="line-97">  Period asPeriod();</span>
+<span class="source-line-no">098</span><span id="line-98"></span>
+<span class="source-line-no">099</span><span id="line-99">  /**</span>
+<span class="source-line-no">100</span><span id="line-100">   * Get the total quantity of months this duration represents.</span>
+<span class="source-line-no">101</span><span id="line-101">   *</span>
+<span class="source-line-no">102</span><span id="line-102">   * @return the total months</span>
+<span class="source-line-no">103</span><span id="line-103">   */</span>
+<span class="source-line-no">104</span><span id="line-104">  default long asTotalMonths() {</span>
+<span class="source-line-no">105</span><span id="line-105">    return asPeriod().toTotalMonths();</span>
+<span class="source-line-no">106</span><span id="line-106">  }</span>
+<span class="source-line-no">107</span><span id="line-107"></span>
+<span class="source-line-no">108</span><span id="line-108">  /**</span>
+<span class="source-line-no">109</span><span id="line-109">   * Returns a new instance with each amount in this period negated.</span>
+<span class="source-line-no">110</span><span id="line-110">   *</span>
+<span class="source-line-no">111</span><span id="line-111">   * @return the new negated instance</span>
+<span class="source-line-no">112</span><span id="line-112">   */</span>
+<span class="source-line-no">113</span><span id="line-113">  @NonNull</span>
+<span class="source-line-no">114</span><span id="line-114">  default IYearMonthDurationItem negate() {</span>
+<span class="source-line-no">115</span><span id="line-115">    return valueOf(ObjectUtils.notNull(asPeriod().negated()));</span>
+<span class="source-line-no">116</span><span id="line-116">  }</span>
+<span class="source-line-no">117</span><span id="line-117"></span>
+<span class="source-line-no">118</span><span id="line-118">  /**</span>
+<span class="source-line-no">119</span><span id="line-119">   * Cast the provided type to this item type.</span>
+<span class="source-line-no">120</span><span id="line-120">   *</span>
+<span class="source-line-no">121</span><span id="line-121">   * @param item</span>
+<span class="source-line-no">122</span><span id="line-122">   *          the item to cast</span>
+<span class="source-line-no">123</span><span id="line-123">   * @return the original item if it is already this type, otherwise a new item</span>
+<span class="source-line-no">124</span><span id="line-124">   *         cast to this type</span>
+<span class="source-line-no">125</span><span id="line-125">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">126</span><span id="line-126">   *           if the provided {@code item} cannot be cast to this type</span>
+<span class="source-line-no">127</span><span id="line-127">   */</span>
+<span class="source-line-no">128</span><span id="line-128">  @NonNull</span>
+<span class="source-line-no">129</span><span id="line-129">  static IYearMonthDurationItem cast(@NonNull IAnyAtomicItem item) {</span>
+<span class="source-line-no">130</span><span id="line-130">    try {</span>
+<span class="source-line-no">131</span><span id="line-131">      return item instanceof IYearMonthDurationItem</span>
+<span class="source-line-no">132</span><span id="line-132">          ? (IYearMonthDurationItem) item</span>
+<span class="source-line-no">133</span><span id="line-133">          : valueOf(item.asString());</span>
+<span class="source-line-no">134</span><span id="line-134">    } catch (IllegalStateException | InvalidTypeMetapathException ex) {</span>
+<span class="source-line-no">135</span><span id="line-135">      // asString can throw IllegalStateException exception</span>
+<span class="source-line-no">136</span><span id="line-136">      throw new InvalidValueForCastFunctionException(ex);</span>
+<span class="source-line-no">137</span><span id="line-137">    }</span>
+<span class="source-line-no">138</span><span id="line-138">  }</span>
+<span class="source-line-no">139</span><span id="line-139"></span>
+<span class="source-line-no">140</span><span id="line-140">  @Override</span>
+<span class="source-line-no">141</span><span id="line-141">  default IYearMonthDurationItem castAsType(IAnyAtomicItem item) {</span>
+<span class="source-line-no">142</span><span id="line-142">    return cast(item);</span>
+<span class="source-line-no">143</span><span id="line-143">  }</span>
+<span class="source-line-no">144</span><span id="line-144"></span>
+<span class="source-line-no">145</span><span id="line-145">  /**</span>
+<span class="source-line-no">146</span><span id="line-146">   * Compares this value with the argument.</span>
+<span class="source-line-no">147</span><span id="line-147">   *</span>
+<span class="source-line-no">148</span><span id="line-148">   * @param item</span>
+<span class="source-line-no">149</span><span id="line-149">   *          the item to compare with this value</span>
+<span class="source-line-no">150</span><span id="line-150">   * @return a negative integer, zero, or a positive integer if this value is less</span>
+<span class="source-line-no">151</span><span id="line-151">   *         than, equal to, or greater than the {@code item}.</span>
+<span class="source-line-no">152</span><span id="line-152">   */</span>
+<span class="source-line-no">153</span><span id="line-153">  default int compareTo(IYearMonthDurationItem item) {</span>
+<span class="source-line-no">154</span><span id="line-154">    Period thisPeriod = asPeriod().normalized();</span>
+<span class="source-line-no">155</span><span id="line-155">    Period thatPeriod = item.asPeriod().normalized();</span>
+<span class="source-line-no">156</span><span id="line-156"></span>
+<span class="source-line-no">157</span><span id="line-157">    int result = Integer.compare(thisPeriod.getYears(), thatPeriod.getYears());</span>
+<span class="source-line-no">158</span><span id="line-158">    return result == 0 ? Integer.compare(thisPeriod.getMonths(), thatPeriod.getMonths()) : result;</span>
+<span class="source-line-no">159</span><span id="line-159">  }</span>
+<span class="source-line-no">160</span><span id="line-160">}</span>
 
 
 

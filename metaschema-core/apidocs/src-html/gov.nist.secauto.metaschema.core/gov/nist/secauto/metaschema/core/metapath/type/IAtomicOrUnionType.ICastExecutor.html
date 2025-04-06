@@ -19,8 +19,8 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.type;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.item.ISequence;</span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.type.impl.NonAdapterAtomicItemType;</span>
 <span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;</span>
@@ -123,48 +123,59 @@
 <span class="source-line-no">110</span><span id="line-110">   * @throws InvalidValueForCastFunctionException</span>
 <span class="source-line-no">111</span><span id="line-111">   *           if the provided {@code item} cannot be cast to this type</span>
 <span class="source-line-no">112</span><span id="line-112">   */</span>
-<span class="source-line-no">113</span><span id="line-113">  I cast(@NonNull IAnyAtomicItem item);</span>
-<span class="source-line-no">114</span><span id="line-114"></span>
-<span class="source-line-no">115</span><span id="line-115">  /**</span>
-<span class="source-line-no">116</span><span id="line-116">   * Cast the provided sequence to this item type.</span>
-<span class="source-line-no">117</span><span id="line-117">   * &lt;p&gt;</span>
-<span class="source-line-no">118</span><span id="line-118">   * Implements the process described in</span>
-<span class="source-line-no">119</span><span id="line-119">   * &lt;a href="https://www.w3.org/TR/xpath-31/#id-cast"&gt;XPath 3.1 Cast&lt;/a&gt;.</span>
-<span class="source-line-no">120</span><span id="line-120">   *</span>
-<span class="source-line-no">121</span><span id="line-121">   * @param sequence</span>
-<span class="source-line-no">122</span><span id="line-122">   *          the sequence to cast</span>
-<span class="source-line-no">123</span><span id="line-123">   * @return the original item if it is already this type, otherwise a new item</span>
-<span class="source-line-no">124</span><span id="line-124">   *         cast to this type</span>
-<span class="source-line-no">125</span><span id="line-125">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">126</span><span id="line-126">   *           if the provided {@code item} cannot be cast to this type</span>
-<span class="source-line-no">127</span><span id="line-127">   * @throws TypeMetapathException</span>
-<span class="source-line-no">128</span><span id="line-128">   *           if the sequence contains more than one item</span>
-<span class="source-line-no">129</span><span id="line-129">   */</span>
-<span class="source-line-no">130</span><span id="line-130">  @Nullable</span>
-<span class="source-line-no">131</span><span id="line-131">  default I cast(@NonNull ISequence&lt;?&gt; sequence) {</span>
-<span class="source-line-no">132</span><span id="line-132">    IAnyAtomicItem item = ISequence.of(sequence.atomize()).getFirstItem(true);</span>
-<span class="source-line-no">133</span><span id="line-133">    return item == null ? null : cast(item);</span>
-<span class="source-line-no">134</span><span id="line-134">  }</span>
-<span class="source-line-no">135</span><span id="line-135"></span>
-<span class="source-line-no">136</span><span id="line-136">  /**</span>
-<span class="source-line-no">137</span><span id="line-137">   * A callback used to perform a casting operation.</span>
-<span class="source-line-no">138</span><span id="line-138">   *</span>
-<span class="source-line-no">139</span><span id="line-139">   * @param &lt;ITEM&gt;</span>
-<span class="source-line-no">140</span><span id="line-140">   *          the Java type for the resulting item</span>
-<span class="source-line-no">141</span><span id="line-141">   */</span>
-<span class="source-line-no">142</span><span id="line-142">  @FunctionalInterface</span>
-<span class="source-line-no">143</span><span id="line-143">  interface ICastExecutor&lt;ITEM extends IAnyAtomicItem&gt; {</span>
-<span class="source-line-no">144</span><span id="line-144">    /**</span>
-<span class="source-line-no">145</span><span id="line-145">     * Cast the provided {@code item}.</span>
-<span class="source-line-no">146</span><span id="line-146">     *</span>
-<span class="source-line-no">147</span><span id="line-147">     * @param item</span>
-<span class="source-line-no">148</span><span id="line-148">     *          the item to cast</span>
-<span class="source-line-no">149</span><span id="line-149">     * @return the item cast to the appropriate type</span>
-<span class="source-line-no">150</span><span id="line-150">     */</span>
-<span class="source-line-no">151</span><span id="line-151">    @NonNull</span>
-<span class="source-line-no">152</span><span id="line-152">    ITEM cast(@NonNull IAnyAtomicItem item);</span>
-<span class="source-line-no">153</span><span id="line-153">  }</span>
-<span class="source-line-no">154</span><span id="line-154">}</span>
+<span class="source-line-no">113</span><span id="line-113">  @NonNull</span>
+<span class="source-line-no">114</span><span id="line-114">  I cast(@NonNull IAnyAtomicItem item);</span>
+<span class="source-line-no">115</span><span id="line-115"></span>
+<span class="source-line-no">116</span><span id="line-116">  /**</span>
+<span class="source-line-no">117</span><span id="line-117">   * Cast the provided sequence to this item type.</span>
+<span class="source-line-no">118</span><span id="line-118">   * &lt;p&gt;</span>
+<span class="source-line-no">119</span><span id="line-119">   * Implements the process described in</span>
+<span class="source-line-no">120</span><span id="line-120">   * &lt;a href="https://www.w3.org/TR/xpath-31/#id-cast"&gt;XPath 3.1 Cast&lt;/a&gt;.</span>
+<span class="source-line-no">121</span><span id="line-121">   *</span>
+<span class="source-line-no">122</span><span id="line-122">   * @param sequence</span>
+<span class="source-line-no">123</span><span id="line-123">   *          the sequence to cast</span>
+<span class="source-line-no">124</span><span id="line-124">   * @return the original item if it is already this type, otherwise a new item</span>
+<span class="source-line-no">125</span><span id="line-125">   *         cast to this type</span>
+<span class="source-line-no">126</span><span id="line-126">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">127</span><span id="line-127">   *           if the provided {@code item} cannot be cast to this type</span>
+<span class="source-line-no">128</span><span id="line-128">   * @throws TypeMetapathException</span>
+<span class="source-line-no">129</span><span id="line-129">   *           if the sequence contains more than one item</span>
+<span class="source-line-no">130</span><span id="line-130">   */</span>
+<span class="source-line-no">131</span><span id="line-131">  @Nullable</span>
+<span class="source-line-no">132</span><span id="line-132">  default I cast(@NonNull ISequence&lt;?&gt; sequence) {</span>
+<span class="source-line-no">133</span><span id="line-133">    IAnyAtomicItem item = ISequence.of(sequence.atomize()).getFirstItem(true);</span>
+<span class="source-line-no">134</span><span id="line-134">    return item == null ? null : cast(item);</span>
+<span class="source-line-no">135</span><span id="line-135">  }</span>
+<span class="source-line-no">136</span><span id="line-136"></span>
+<span class="source-line-no">137</span><span id="line-137">  /**</span>
+<span class="source-line-no">138</span><span id="line-138">   * A callback used to perform a casting operation.</span>
+<span class="source-line-no">139</span><span id="line-139">   *</span>
+<span class="source-line-no">140</span><span id="line-140">   * @param &lt;ITEM&gt;</span>
+<span class="source-line-no">141</span><span id="line-141">   *          the Java type for the resulting item</span>
+<span class="source-line-no">142</span><span id="line-142">   */</span>
+<span class="source-line-no">143</span><span id="line-143">  @FunctionalInterface</span>
+<span class="source-line-no">144</span><span id="line-144">  interface ICastExecutor&lt;ITEM extends IAnyAtomicItem&gt; {</span>
+<span class="source-line-no">145</span><span id="line-145">    /**</span>
+<span class="source-line-no">146</span><span id="line-146">     * Cast the provided {@code item}.</span>
+<span class="source-line-no">147</span><span id="line-147">     *</span>
+<span class="source-line-no">148</span><span id="line-148">     * @param item</span>
+<span class="source-line-no">149</span><span id="line-149">     *          the item to cast</span>
+<span class="source-line-no">150</span><span id="line-150">     * @return the item cast to the appropriate type</span>
+<span class="source-line-no">151</span><span id="line-151">     */</span>
+<span class="source-line-no">152</span><span id="line-152">    @NonNull</span>
+<span class="source-line-no">153</span><span id="line-153">    ITEM cast(@NonNull IAnyAtomicItem item);</span>
+<span class="source-line-no">154</span><span id="line-154">  }</span>
+<span class="source-line-no">155</span><span id="line-155"></span>
+<span class="source-line-no">156</span><span id="line-156">  /**</span>
+<span class="source-line-no">157</span><span id="line-157">   * Construct a new instance of this type using the provided value.</span>
+<span class="source-line-no">158</span><span id="line-158">   *</span>
+<span class="source-line-no">159</span><span id="line-159">   * @param value</span>
+<span class="source-line-no">160</span><span id="line-160">   *          the "wrapped" value of the type</span>
+<span class="source-line-no">161</span><span id="line-161">   * @return the new item</span>
+<span class="source-line-no">162</span><span id="line-162">   */</span>
+<span class="source-line-no">163</span><span id="line-163">  @NonNull</span>
+<span class="source-line-no">164</span><span id="line-164">  I newItem(@NonNull Object value);</span>
+<span class="source-line-no">165</span><span id="line-165">}</span>
 
 
 

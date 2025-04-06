@@ -19,22 +19,22 @@
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.datatype.object.AmbiguousDate;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.ParameterizedTest;
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.Arguments;
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.MethodSource;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.time.ZoneOffset;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.time.ZonedDateTime;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.util.stream.Stream;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">class</strong> <a name="DateAdapterTest" href="../../../../../../../gov/nist/secauto/metaschema/core/datatype/adapter/DateAdapterTest.html#DateAdapterTest">DateAdapterTest</a> {
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> DateAdapter ADAPTER = <strong class="jxr_keyword">new</strong> DateAdapter();
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Stream&lt;Arguments&gt; provideValues() {
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">return</strong> Stream.of(
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>          <em class="jxr_comment">// Cases without timezone (ambiguous)</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Disabled;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.ParameterizedTest;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.Arguments;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.MethodSource;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.time.ZoneOffset;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.time.ZonedDateTime;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.util.stream.Stream;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">class</strong> <a name="DateAdapterTest" href="../../../../../../../gov/nist/secauto/metaschema/core/datatype/adapter/DateAdapterTest.html#DateAdapterTest">DateAdapterTest</a> {
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Stream&lt;Arguments&gt; provideValues() {
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">return</strong> Stream.of(
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>          <em class="jxr_comment">// Cases without timezone (ambiguous)</em>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>          Arguments.of(<span class="jxr_string">"-0002-01-01"</span>, <strong class="jxr_keyword">true</strong>, ZonedDateTime.of(-2, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)),
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>          Arguments.of(<span class="jxr_string">"2018-01-01"</span>, <strong class="jxr_keyword">true</strong>, ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)),
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>          Arguments.of(<span class="jxr_string">"2020-01-01"</span>, <strong class="jxr_keyword">true</strong>, ZonedDateTime.of(2020, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)),
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>          Arguments.of(<span class="jxr_string">"2018-01-01"</span>, <strong class="jxr_keyword">true</strong>, ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC)),
@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>    @ParameterizedTest
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>    @MethodSource(<span class="jxr_string">"provideValues"</span>)
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">void</strong> testSimpleDate(@NonNull String actual, <strong class="jxr_keyword">boolean</strong> ambiguous, @NonNull ZonedDateTime expected) {
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>      AmbiguousDate date = ADAPTER.parse(actual);
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      AmbiguousDate date = MetaschemaDataTypeProvider.DATE.parse(actual);
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      assertAll(
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>          () -&gt; assertEquals(ambiguous, !date.hasTimeZone()),
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>          () -&gt; assertEquals(expected, date.getValue()));
@@ -62,16 +62,17 @@
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>          Arguments.of(<span class="jxr_string">"2023-06-31-04:00"</span>));
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>    }
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>    @ParameterizedTest
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>    @MethodSource(<span class="jxr_string">"provideInvalidValues"</span>)
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">void</strong> testInvalidDates(@NonNull String actual) {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      assertThrows(IllegalArgumentException.<strong class="jxr_keyword">class</strong>, () -&gt; {
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>        ADAPTER.parse(actual);
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>      });
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    }
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>  }
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>    @Disabled
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>    @ParameterizedTest
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>    @MethodSource(<span class="jxr_string">"provideInvalidValues"</span>)
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">void</strong> testInvalidDates(@NonNull String actual) {
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      assertThrows(IllegalArgumentException.<strong class="jxr_keyword">class</strong>, () -&gt; {
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        MetaschemaDataTypeProvider.DATE.parse(actual);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      });
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>    }
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

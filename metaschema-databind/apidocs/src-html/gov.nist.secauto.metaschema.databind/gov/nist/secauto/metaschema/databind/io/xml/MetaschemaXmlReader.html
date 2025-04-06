@@ -210,7 +210,7 @@
 <span class="source-line-no">197</span><span id="line-197">            Function.identity()));</span>
 <span class="source-line-no">198</span><span id="line-198"></span>
 <span class="source-line-no">199</span><span id="line-199">    for (Attribute attribute : CollectionUtil.toIterable(ObjectUtils.notNull(start.getAttributes()))) {</span>
-<span class="source-line-no">200</span><span id="line-200">      IEnhancedQName qname = IEnhancedQName.of(attribute.getName());</span>
+<span class="source-line-no">200</span><span id="line-200">      IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.requireNonNull(attribute.getName()));</span>
 <span class="source-line-no">201</span><span id="line-201">      IBoundInstanceFlag instance = flagInstanceMap.get(qname);</span>
 <span class="source-line-no">202</span><span id="line-202">      if (instance == null) {</span>
 <span class="source-line-no">203</span><span id="line-203">        // unrecognized flag</span>
@@ -602,7 +602,7 @@
 <span class="source-line-no">589</span><span id="line-589">    }</span>
 <span class="source-line-no">590</span><span id="line-590"></span>
 <span class="source-line-no">591</span><span id="line-591">    @Nullable</span>
-<span class="source-line-no">592</span><span id="line-592">    private Object checkMissingFieldValue(Object value) throws IOException {</span>
+<span class="source-line-no">592</span><span id="line-592">    private Object checkMissingFieldValue(Object value) {</span>
 <span class="source-line-no">593</span><span id="line-593">      if (value == null &amp;&amp; LOGGER.isWarnEnabled()) {</span>
 <span class="source-line-no">594</span><span id="line-594">        StartElement start = getStartElement();</span>
 <span class="source-line-no">595</span><span id="line-595">        LOGGER.atWarn().log("Missing property value{}",</span>

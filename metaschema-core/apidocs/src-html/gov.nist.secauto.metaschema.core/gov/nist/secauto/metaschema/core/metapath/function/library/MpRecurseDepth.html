@@ -19,15 +19,15 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.function.library;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.DynamicContext;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;</span>
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.ISequence;</span>
 <span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;</span>
 <span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;</span>
 <span class="source-line-no">020</span><span id="line-20">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
@@ -124,9 +124,9 @@
 <span class="source-line-no">111</span><span id="line-111">      @NonNull ISequence&lt;INodeItem&gt; initialContext,</span>
 <span class="source-line-no">112</span><span id="line-112">      @NonNull IStringItem recursionPath,</span>
 <span class="source-line-no">113</span><span id="line-113">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">114</span><span id="line-114">    MetapathExpression recursionMetapath;</span>
+<span class="source-line-no">114</span><span id="line-114">    IMetapathExpression recursionMetapath;</span>
 <span class="source-line-no">115</span><span id="line-115">    try {</span>
-<span class="source-line-no">116</span><span id="line-116">      recursionMetapath = MetapathExpression.compile(recursionPath.asString(), dynamicContext.getStaticContext());</span>
+<span class="source-line-no">116</span><span id="line-116">      recursionMetapath = IMetapathExpression.compile(recursionPath.asString(), dynamicContext.getStaticContext());</span>
 <span class="source-line-no">117</span><span id="line-117">    } catch (MetapathException ex) {</span>
 <span class="source-line-no">118</span><span id="line-118">      throw new StaticMetapathException(StaticMetapathException.INVALID_PATH_GRAMMAR, ex.getMessage(), ex);</span>
 <span class="source-line-no">119</span><span id="line-119">    }</span>
@@ -151,21 +151,22 @@
 <span class="source-line-no">138</span><span id="line-138">  @NonNull</span>
 <span class="source-line-no">139</span><span id="line-139">  public static ISequence&lt;INodeItem&gt; recurseDepth(</span>
 <span class="source-line-no">140</span><span id="line-140">      @NonNull ISequence&lt;INodeItem&gt; initialContext,</span>
-<span class="source-line-no">141</span><span id="line-141">      @NonNull MetapathExpression recursionMetapath,</span>
+<span class="source-line-no">141</span><span id="line-141">      @NonNull IMetapathExpression recursionMetapath,</span>
 <span class="source-line-no">142</span><span id="line-142">      @NonNull DynamicContext dynamicContext) {</span>
 <span class="source-line-no">143</span><span id="line-143"></span>
 <span class="source-line-no">144</span><span id="line-144">    return ISequence.of(ObjectUtils.notNull(initialContext.stream()</span>
 <span class="source-line-no">145</span><span id="line-145">        .flatMap(item -&gt; {</span>
 <span class="source-line-no">146</span><span id="line-146">          @NonNull</span>
 <span class="source-line-no">147</span><span id="line-147">          ISequence&lt;INodeItem&gt; metapathResult = recursionMetapath.evaluate(item, dynamicContext);</span>
-<span class="source-line-no">148</span><span id="line-148">          // ensure this is list backed</span>
-<span class="source-line-no">149</span><span id="line-149">          metapathResult.getValue();</span>
-<span class="source-line-no">150</span><span id="line-150"></span>
-<span class="source-line-no">151</span><span id="line-151">          ISequence&lt;INodeItem&gt; result = recurseDepth(metapathResult, recursionMetapath, dynamicContext);</span>
-<span class="source-line-no">152</span><span id="line-152">          return ObjectUtils.notNull(Stream.concat(Stream.of(item), result.stream()));</span>
-<span class="source-line-no">153</span><span id="line-153">        })));</span>
-<span class="source-line-no">154</span><span id="line-154">  }</span>
-<span class="source-line-no">155</span><span id="line-155">}</span>
+<span class="source-line-no">148</span><span id="line-148">          ISequence&lt;INodeItem&gt; result = recurseDepth(</span>
+<span class="source-line-no">149</span><span id="line-149">              // ensure the sequence is list backed</span>
+<span class="source-line-no">150</span><span id="line-150">              metapathResult.reusable(),</span>
+<span class="source-line-no">151</span><span id="line-151">              recursionMetapath,</span>
+<span class="source-line-no">152</span><span id="line-152">              dynamicContext);</span>
+<span class="source-line-no">153</span><span id="line-153">          return ObjectUtils.notNull(Stream.concat(Stream.of(item), result.stream()));</span>
+<span class="source-line-no">154</span><span id="line-154">        })));</span>
+<span class="source-line-no">155</span><span id="line-155">  }</span>
+<span class="source-line-no">156</span><span id="line-156">}</span>
 
 
 

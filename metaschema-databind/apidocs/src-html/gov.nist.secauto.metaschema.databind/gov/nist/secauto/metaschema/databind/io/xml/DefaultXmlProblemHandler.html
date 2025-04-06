@@ -60,7 +60,7 @@
 <span class="source-line-no">047</span><span id="line-47">      IBoundObject targetObject,</span>
 <span class="source-line-no">048</span><span id="line-48">      Attribute attribute,</span>
 <span class="source-line-no">049</span><span id="line-49">      IXmlParsingContext parsingContext) {</span>
-<span class="source-line-no">050</span><span id="line-50">    IEnhancedQName qname = IEnhancedQName.of(attribute.getName());</span>
+<span class="source-line-no">050</span><span id="line-50">    IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.requireNonNull(attribute.getName()));</span>
 <span class="source-line-no">051</span><span id="line-51">    // check if warning is needed</span>
 <span class="source-line-no">052</span><span id="line-52">    if (LOGGER.isWarnEnabled() &amp;&amp; !IGNORED_QNAMES.contains(qname)) {</span>
 <span class="source-line-no">053</span><span id="line-53">      LOGGER.atWarn().log("Skipping unrecognized attribute '{}'{}.",</span>

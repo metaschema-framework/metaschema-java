@@ -52,68 +52,70 @@
 <span class="source-line-no">039</span><span id="line-39">        ConstraintLetExpression.class,</span>
 <span class="source-line-no">040</span><span id="line-40">        FlagAllowedValues.class,</span>
 <span class="source-line-no">041</span><span id="line-41">        FlagExpect.class,</span>
-<span class="source-line-no">042</span><span id="line-42">        FlagIndexHasKey.class,</span>
-<span class="source-line-no">043</span><span id="line-43">        FlagMatches.class,</span>
-<span class="source-line-no">044</span><span id="line-44">        TargetedAllowedValuesConstraint.class,</span>
-<span class="source-line-no">045</span><span id="line-45">        TargetedMatchesConstraint.class,</span>
-<span class="source-line-no">046</span><span id="line-46">        TargetedExpectConstraint.class,</span>
-<span class="source-line-no">047</span><span id="line-47">        TargetedIndexHasKeyConstraint.class,</span>
-<span class="source-line-no">048</span><span id="line-48">        KeyConstraintField.class,</span>
-<span class="source-line-no">049</span><span id="line-49">        TargetedIsUniqueConstraint.class,</span>
-<span class="source-line-no">050</span><span id="line-50">        TargetedIndexConstraint.class,</span>
-<span class="source-line-no">051</span><span id="line-51">        TargetedHasCardinalityConstraint.class,</span>
-<span class="source-line-no">052</span><span id="line-52">        MetaschemaModuleConstraints.class,</span>
-<span class="source-line-no">053</span><span id="line-53">        MetaschemaMetaConstraints.class,</span>
-<span class="source-line-no">054</span><span id="line-54">        MetaschemaMetapath.class,</span>
-<span class="source-line-no">055</span><span id="line-55">        MetapathContext.class</span>
-<span class="source-line-no">056</span><span id="line-56">    }</span>
-<span class="source-line-no">057</span><span id="line-57">)</span>
-<span class="source-line-no">058</span><span id="line-58">public final class MetaschemaModelModule extends AbstractBoundModule {</span>
-<span class="source-line-no">059</span><span id="line-59">  private static final MarkupLine NAME = MarkupLine.fromMarkdown("Metaschema Model");</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">  private static final String SHORT_NAME = "metaschema-model";</span>
+<span class="source-line-no">042</span><span id="line-42">        FlagReport.class,</span>
+<span class="source-line-no">043</span><span id="line-43">        FlagIndexHasKey.class,</span>
+<span class="source-line-no">044</span><span id="line-44">        FlagMatches.class,</span>
+<span class="source-line-no">045</span><span id="line-45">        TargetedAllowedValuesConstraint.class,</span>
+<span class="source-line-no">046</span><span id="line-46">        TargetedMatchesConstraint.class,</span>
+<span class="source-line-no">047</span><span id="line-47">        TargetedExpectConstraint.class,</span>
+<span class="source-line-no">048</span><span id="line-48">        TargetedReportConstraint.class,</span>
+<span class="source-line-no">049</span><span id="line-49">        TargetedIndexHasKeyConstraint.class,</span>
+<span class="source-line-no">050</span><span id="line-50">        KeyConstraintField.class,</span>
+<span class="source-line-no">051</span><span id="line-51">        TargetedIsUniqueConstraint.class,</span>
+<span class="source-line-no">052</span><span id="line-52">        TargetedIndexConstraint.class,</span>
+<span class="source-line-no">053</span><span id="line-53">        TargetedHasCardinalityConstraint.class,</span>
+<span class="source-line-no">054</span><span id="line-54">        MetaschemaModuleConstraints.class,</span>
+<span class="source-line-no">055</span><span id="line-55">        MetaschemaMetaConstraints.class,</span>
+<span class="source-line-no">056</span><span id="line-56">        MetaschemaMetapath.class,</span>
+<span class="source-line-no">057</span><span id="line-57">        MetapathContext.class</span>
+<span class="source-line-no">058</span><span id="line-58">    }</span>
+<span class="source-line-no">059</span><span id="line-59">)</span>
+<span class="source-line-no">060</span><span id="line-60">public final class MetaschemaModelModule extends AbstractBoundModule {</span>
+<span class="source-line-no">061</span><span id="line-61">  private static final MarkupLine NAME = MarkupLine.fromMarkdown("Metaschema Model");</span>
 <span class="source-line-no">062</span><span id="line-62"></span>
-<span class="source-line-no">063</span><span id="line-63">  private static final String VERSION = "1.0.0-M2";</span>
+<span class="source-line-no">063</span><span id="line-63">  private static final String SHORT_NAME = "metaschema-model";</span>
 <span class="source-line-no">064</span><span id="line-64"></span>
-<span class="source-line-no">065</span><span id="line-65">  private static final URI XML_NAMESPACE = URI.create("http://example.com/ns/oscal/metaschema/1.0");</span>
+<span class="source-line-no">065</span><span id="line-65">  private static final String VERSION = "1.0.0-M2";</span>
 <span class="source-line-no">066</span><span id="line-66"></span>
-<span class="source-line-no">067</span><span id="line-67">  private static final URI JSON_BASE_URI = URI.create("http://example.com/ns/oscal/metaschema/1.0");</span>
+<span class="source-line-no">067</span><span id="line-67">  private static final URI XML_NAMESPACE = URI.create("http://example.com/ns/oscal/metaschema/1.0");</span>
 <span class="source-line-no">068</span><span id="line-68"></span>
-<span class="source-line-no">069</span><span id="line-69">  public MetaschemaModelModule(List&lt;? extends IBoundModule&gt; importedModules,</span>
-<span class="source-line-no">070</span><span id="line-70">      IBindingContext bindingContext) {</span>
-<span class="source-line-no">071</span><span id="line-71">    super(importedModules, bindingContext);</span>
-<span class="source-line-no">072</span><span id="line-72">  }</span>
-<span class="source-line-no">073</span><span id="line-73"></span>
-<span class="source-line-no">074</span><span id="line-74">  @Override</span>
-<span class="source-line-no">075</span><span id="line-75">  public MarkupLine getName() {</span>
-<span class="source-line-no">076</span><span id="line-76">    return NAME;</span>
-<span class="source-line-no">077</span><span id="line-77">  }</span>
-<span class="source-line-no">078</span><span id="line-78"></span>
-<span class="source-line-no">079</span><span id="line-79">  @Override</span>
-<span class="source-line-no">080</span><span id="line-80">  public String getShortName() {</span>
-<span class="source-line-no">081</span><span id="line-81">    return SHORT_NAME;</span>
-<span class="source-line-no">082</span><span id="line-82">  }</span>
-<span class="source-line-no">083</span><span id="line-83"></span>
-<span class="source-line-no">084</span><span id="line-84">  @Override</span>
-<span class="source-line-no">085</span><span id="line-85">  public String getVersion() {</span>
-<span class="source-line-no">086</span><span id="line-86">    return VERSION;</span>
-<span class="source-line-no">087</span><span id="line-87">  }</span>
-<span class="source-line-no">088</span><span id="line-88"></span>
-<span class="source-line-no">089</span><span id="line-89">  @Override</span>
-<span class="source-line-no">090</span><span id="line-90">  public URI getXmlNamespace() {</span>
-<span class="source-line-no">091</span><span id="line-91">    return XML_NAMESPACE;</span>
-<span class="source-line-no">092</span><span id="line-92">  }</span>
-<span class="source-line-no">093</span><span id="line-93"></span>
-<span class="source-line-no">094</span><span id="line-94">  @Override</span>
-<span class="source-line-no">095</span><span id="line-95">  public URI getJsonBaseUri() {</span>
-<span class="source-line-no">096</span><span id="line-96">    return JSON_BASE_URI;</span>
-<span class="source-line-no">097</span><span id="line-97">  }</span>
-<span class="source-line-no">098</span><span id="line-98"></span>
-<span class="source-line-no">099</span><span id="line-99">  @Override</span>
-<span class="source-line-no">100</span><span id="line-100">  public MarkupMultiline getRemarks() {</span>
-<span class="source-line-no">101</span><span id="line-101">    return null;</span>
-<span class="source-line-no">102</span><span id="line-102">  }</span>
-<span class="source-line-no">103</span><span id="line-103">}</span>
+<span class="source-line-no">069</span><span id="line-69">  private static final URI JSON_BASE_URI = URI.create("http://example.com/ns/oscal/metaschema/1.0");</span>
+<span class="source-line-no">070</span><span id="line-70"></span>
+<span class="source-line-no">071</span><span id="line-71">  public MetaschemaModelModule(List&lt;? extends IBoundModule&gt; importedModules,</span>
+<span class="source-line-no">072</span><span id="line-72">      IBindingContext bindingContext) {</span>
+<span class="source-line-no">073</span><span id="line-73">    super(importedModules, bindingContext);</span>
+<span class="source-line-no">074</span><span id="line-74">  }</span>
+<span class="source-line-no">075</span><span id="line-75"></span>
+<span class="source-line-no">076</span><span id="line-76">  @Override</span>
+<span class="source-line-no">077</span><span id="line-77">  public MarkupLine getName() {</span>
+<span class="source-line-no">078</span><span id="line-78">    return NAME;</span>
+<span class="source-line-no">079</span><span id="line-79">  }</span>
+<span class="source-line-no">080</span><span id="line-80"></span>
+<span class="source-line-no">081</span><span id="line-81">  @Override</span>
+<span class="source-line-no">082</span><span id="line-82">  public String getShortName() {</span>
+<span class="source-line-no">083</span><span id="line-83">    return SHORT_NAME;</span>
+<span class="source-line-no">084</span><span id="line-84">  }</span>
+<span class="source-line-no">085</span><span id="line-85"></span>
+<span class="source-line-no">086</span><span id="line-86">  @Override</span>
+<span class="source-line-no">087</span><span id="line-87">  public String getVersion() {</span>
+<span class="source-line-no">088</span><span id="line-88">    return VERSION;</span>
+<span class="source-line-no">089</span><span id="line-89">  }</span>
+<span class="source-line-no">090</span><span id="line-90"></span>
+<span class="source-line-no">091</span><span id="line-91">  @Override</span>
+<span class="source-line-no">092</span><span id="line-92">  public URI getXmlNamespace() {</span>
+<span class="source-line-no">093</span><span id="line-93">    return XML_NAMESPACE;</span>
+<span class="source-line-no">094</span><span id="line-94">  }</span>
+<span class="source-line-no">095</span><span id="line-95"></span>
+<span class="source-line-no">096</span><span id="line-96">  @Override</span>
+<span class="source-line-no">097</span><span id="line-97">  public URI getJsonBaseUri() {</span>
+<span class="source-line-no">098</span><span id="line-98">    return JSON_BASE_URI;</span>
+<span class="source-line-no">099</span><span id="line-99">  }</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">  @Override</span>
+<span class="source-line-no">102</span><span id="line-102">  public MarkupMultiline getRemarks() {</span>
+<span class="source-line-no">103</span><span id="line-103">    return null;</span>
+<span class="source-line-no">104</span><span id="line-104">  }</span>
+<span class="source-line-no">105</span><span id="line-105">}</span>
 
 
 

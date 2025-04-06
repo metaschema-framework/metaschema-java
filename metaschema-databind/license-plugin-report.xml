@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1732638250838">
-    <module artifactId="metaschema-databind" groupId="dev.metaschema.java" version="2.1.0"/>
+<licensePluginReport goal="FORMAT" timestamp="1743912621262">
+    <module artifactId="metaschema-databind" groupId="dev.metaschema.java" version="2.2.0"/>
     <files>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/DefaultBindingContextTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/Examples.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/databind/FnDocTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/codegen/AbstractMetaschemaTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/codegen/BasicMetaschemaTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/codegen/GenerationTest.java" result="NOOP"/>
@@ -20,7 +21,9 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/model/DefaultAssemblyClassBindingTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/model/DefaultFieldPropertyTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/model/JsonKeyTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/databind/model/extra/MetaschemaModuleExternalConstraintsTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/model/impl/ConstraintFactoryTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/databind/model/metaschema/BindingConstraintLoaderTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/model/metaschema/BindingModuleLoaderTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/model/test/DefaultValueKeyField.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/model/test/EmptyBoundAssembly.java" result="NOOP"/>

@@ -19,13 +19,13 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.function.library;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.DynamicContext;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.ISequence;</span>
 <span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
 <span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;</span>
 <span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;</span>
@@ -135,47 +135,48 @@
 <span class="source-line-no">122</span><span id="line-122">    return retval;</span>
 <span class="source-line-no">123</span><span id="line-123">  }</span>
 <span class="source-line-no">124</span><span id="line-124"></span>
-<span class="source-line-no">125</span><span id="line-125">  @NonNull</span>
-<span class="source-line-no">126</span><span id="line-126">  private static Stream&lt;ICollectionValue&gt; find(</span>
-<span class="source-line-no">127</span><span id="line-127">      @NonNull ICollectionValue value,</span>
-<span class="source-line-no">128</span><span id="line-128">      @NonNull IAnyAtomicItem key) {</span>
-<span class="source-line-no">129</span><span id="line-129">    Stream&lt;ICollectionValue&gt; retval;</span>
-<span class="source-line-no">130</span><span id="line-130">    if (value instanceof ISequence) {</span>
-<span class="source-line-no">131</span><span id="line-131">      ISequence&lt;?&gt; sequence = (ISequence&lt;?&gt;) value;</span>
-<span class="source-line-no">132</span><span id="line-132">      // handle sequence items</span>
-<span class="source-line-no">133</span><span id="line-133">      retval = find((Collection&lt;? extends IItem&gt;) sequence, key);</span>
-<span class="source-line-no">134</span><span id="line-134">    } else {</span>
-<span class="source-line-no">135</span><span id="line-135">      // handle item</span>
-<span class="source-line-no">136</span><span id="line-136">      retval = find((IItem) value, key);</span>
-<span class="source-line-no">137</span><span id="line-137">    }</span>
-<span class="source-line-no">138</span><span id="line-138">    return retval;</span>
-<span class="source-line-no">139</span><span id="line-139">  }</span>
-<span class="source-line-no">140</span><span id="line-140"></span>
-<span class="source-line-no">141</span><span id="line-141">  /**</span>
-<span class="source-line-no">142</span><span id="line-142">   * An implementation of XPath 3.1 &lt;a href=</span>
-<span class="source-line-no">143</span><span id="line-143">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-find"&gt;map:find&lt;/a&gt;.</span>
-<span class="source-line-no">144</span><span id="line-144">   * &lt;p&gt;</span>
-<span class="source-line-no">145</span><span id="line-145">   * This is a specialized method for processing an item that is a map item, which</span>
-<span class="source-line-no">146</span><span id="line-146">   * can be searched for a key in a much more efficient way.</span>
-<span class="source-line-no">147</span><span id="line-147">   *</span>
-<span class="source-line-no">148</span><span id="line-148">   * @param item</span>
-<span class="source-line-no">149</span><span id="line-149">   *          the item to search for key matches</span>
-<span class="source-line-no">150</span><span id="line-150">   * @param key</span>
-<span class="source-line-no">151</span><span id="line-151">   *          the key for the item to retrieve</span>
-<span class="source-line-no">152</span><span id="line-152">   * @return the retrieved item</span>
-<span class="source-line-no">153</span><span id="line-153">   */</span>
-<span class="source-line-no">154</span><span id="line-154">  @NonNull</span>
-<span class="source-line-no">155</span><span id="line-155">  public static Stream&lt;ICollectionValue&gt; find(</span>
-<span class="source-line-no">156</span><span id="line-156">      @NonNull IMapItem&lt;?&gt; item,</span>
-<span class="source-line-no">157</span><span id="line-157">      @NonNull IAnyAtomicItem key) {</span>
-<span class="source-line-no">158</span><span id="line-158">    return ObjectUtils.notNull(Stream.concat(</span>
-<span class="source-line-no">159</span><span id="line-159">        // add matching value, if it exists</span>
-<span class="source-line-no">160</span><span id="line-160">        Stream.ofNullable(MapGet.get(item, key)),</span>
-<span class="source-line-no">161</span><span id="line-161">        item.values().stream()</span>
-<span class="source-line-no">162</span><span id="line-162">            // handle map values</span>
-<span class="source-line-no">163</span><span id="line-163">            .flatMap(value -&gt; find(ObjectUtils.notNull(value), key))));</span>
-<span class="source-line-no">164</span><span id="line-164">  }</span>
-<span class="source-line-no">165</span><span id="line-165">}</span>
+<span class="source-line-no">125</span><span id="line-125">  @SuppressWarnings("unused")</span>
+<span class="source-line-no">126</span><span id="line-126">  @NonNull</span>
+<span class="source-line-no">127</span><span id="line-127">  private static Stream&lt;ICollectionValue&gt; find(</span>
+<span class="source-line-no">128</span><span id="line-128">      @NonNull ICollectionValue value,</span>
+<span class="source-line-no">129</span><span id="line-129">      @NonNull IAnyAtomicItem key) {</span>
+<span class="source-line-no">130</span><span id="line-130">    Stream&lt;ICollectionValue&gt; retval;</span>
+<span class="source-line-no">131</span><span id="line-131">    if (value instanceof ISequence) {</span>
+<span class="source-line-no">132</span><span id="line-132">      ISequence&lt;?&gt; sequence = (ISequence&lt;?&gt;) value;</span>
+<span class="source-line-no">133</span><span id="line-133">      // handle sequence items</span>
+<span class="source-line-no">134</span><span id="line-134">      retval = find((Collection&lt;? extends IItem&gt;) sequence, key);</span>
+<span class="source-line-no">135</span><span id="line-135">    } else {</span>
+<span class="source-line-no">136</span><span id="line-136">      // handle item</span>
+<span class="source-line-no">137</span><span id="line-137">      retval = find((IItem) value, key);</span>
+<span class="source-line-no">138</span><span id="line-138">    }</span>
+<span class="source-line-no">139</span><span id="line-139">    return retval;</span>
+<span class="source-line-no">140</span><span id="line-140">  }</span>
+<span class="source-line-no">141</span><span id="line-141"></span>
+<span class="source-line-no">142</span><span id="line-142">  /**</span>
+<span class="source-line-no">143</span><span id="line-143">   * An implementation of XPath 3.1 &lt;a href=</span>
+<span class="source-line-no">144</span><span id="line-144">   * "https://www.w3.org/TR/xpath-functions-31/#func-map-find"&gt;map:find&lt;/a&gt;.</span>
+<span class="source-line-no">145</span><span id="line-145">   * &lt;p&gt;</span>
+<span class="source-line-no">146</span><span id="line-146">   * This is a specialized method for processing an item that is a map item, which</span>
+<span class="source-line-no">147</span><span id="line-147">   * can be searched for a key in a much more efficient way.</span>
+<span class="source-line-no">148</span><span id="line-148">   *</span>
+<span class="source-line-no">149</span><span id="line-149">   * @param item</span>
+<span class="source-line-no">150</span><span id="line-150">   *          the item to search for key matches</span>
+<span class="source-line-no">151</span><span id="line-151">   * @param key</span>
+<span class="source-line-no">152</span><span id="line-152">   *          the key for the item to retrieve</span>
+<span class="source-line-no">153</span><span id="line-153">   * @return the retrieved item</span>
+<span class="source-line-no">154</span><span id="line-154">   */</span>
+<span class="source-line-no">155</span><span id="line-155">  @NonNull</span>
+<span class="source-line-no">156</span><span id="line-156">  public static Stream&lt;ICollectionValue&gt; find(</span>
+<span class="source-line-no">157</span><span id="line-157">      @NonNull IMapItem&lt;?&gt; item,</span>
+<span class="source-line-no">158</span><span id="line-158">      @NonNull IAnyAtomicItem key) {</span>
+<span class="source-line-no">159</span><span id="line-159">    return ObjectUtils.notNull(Stream.concat(</span>
+<span class="source-line-no">160</span><span id="line-160">        // add matching value, if it exists</span>
+<span class="source-line-no">161</span><span id="line-161">        Stream.ofNullable(MapGet.get(item, key)),</span>
+<span class="source-line-no">162</span><span id="line-162">        item.values().stream()</span>
+<span class="source-line-no">163</span><span id="line-163">            // handle map values</span>
+<span class="source-line-no">164</span><span id="line-164">            .flatMap(value -&gt; find(ObjectUtils.notNull(value), key))));</span>
+<span class="source-line-no">165</span><span id="line-165">  }</span>
+<span class="source-line-no">166</span><span id="line-166">}</span>
 
 
 

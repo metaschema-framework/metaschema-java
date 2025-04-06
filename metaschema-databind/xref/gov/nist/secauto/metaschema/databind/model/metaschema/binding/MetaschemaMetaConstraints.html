@@ -58,8 +58,8 @@
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>          expect = @Expect(id = <span class="jxr_string">"metaschema-deprecated-types"</span>, formalName = <span class="jxr_string">"Avoid Deprecated Data Type Use"</span>,
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>              description = <span class="jxr_string">"Ensure that the data type specified is not one of the legacy Metaschema data types which have been deprecated (i.e. base64Binary, dateTime, dateTime-with-timezone, email, nonNegativeInteger, positiveInteger)."</span>,
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>              level = IConstraint.Level.WARNING, target = <span class="jxr_string">".//matches/@datatype|.//(define-field|define-flag)/@as-type"</span>,
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>              test = <span class="jxr_string">"not(.=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))"</span>,
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>              message = <span class="jxr_string">"Use of the type '{ . }' is deprecated. Use '{ $deprecated-type-map(.)}' instead."</span>)),
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>              test = <span class="jxr_string">"not(data(.)=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))"</span>,
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>              message = <span class="jxr_string">"Use of the type '{ data(.) }' is deprecated. Use '{ $deprecated-type-map(data(.))}' instead."</span>)),
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      modelConstraints = @gov.nist.secauto.metaschema.databind.model.annotations.AssemblyConstraints(unique = {
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>          @IsUnique(id = <span class="jxr_string">"meta-constraints-namespace-unique-entry"</span>, formalName = <span class="jxr_string">"Require Unique Namespace Entries"</span>,
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>              description = <span class="jxr_string">"Ensures that all declared namespace entries are unique."</span>, level = IConstraint.Level.ERROR,
@@ -362,6 +362,6 @@
 <a class="jxr_linenumber" name="L354" href="#L354">354</a> }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

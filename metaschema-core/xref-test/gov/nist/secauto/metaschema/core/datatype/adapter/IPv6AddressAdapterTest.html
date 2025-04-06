@@ -38,7 +38,7 @@
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>    })
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">void</strong> testIPv6AddressThrowsWithInvalid(@NonNull String addr) {
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      assertThrows(IllegalArgumentException.<strong class="jxr_keyword">class</strong>, () -&gt; {
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>        <strong class="jxr_keyword">new</strong> IPv6AddressAdapter().parse(addr);
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>        MetaschemaDataTypeProvider.IP_V6_ADDRESS.parse(addr);
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>      });
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    }
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
@@ -59,12 +59,12 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>    })
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">void</strong> testIPv6AddressAllowsCommonIPv6Addresses(@NonNull String addr) {
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      assertDoesNotThrow(() -&gt; {
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>        <strong class="jxr_keyword">new</strong> IPv6AddressAdapter().parse(addr);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>        MetaschemaDataTypeProvider.IP_V6_ADDRESS.parse(addr);
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      });
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>    }
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

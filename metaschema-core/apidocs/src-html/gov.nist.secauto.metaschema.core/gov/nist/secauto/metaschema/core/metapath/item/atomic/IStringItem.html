@@ -70,73 +70,78 @@
 <span class="source-line-no">057</span><span id="line-57">  }</span>
 <span class="source-line-no">058</span><span id="line-58"></span>
 <span class="source-line-no">059</span><span id="line-59">  /**</span>
-<span class="source-line-no">060</span><span id="line-60">   * Cast the provided type to this item type.</span>
+<span class="source-line-no">060</span><span id="line-60">   * Encode this string as base64.</span>
 <span class="source-line-no">061</span><span id="line-61">   *</span>
-<span class="source-line-no">062</span><span id="line-62">   * @param item</span>
-<span class="source-line-no">063</span><span id="line-63">   *          the item to cast</span>
-<span class="source-line-no">064</span><span id="line-64">   * @return the original item if it is already this type, otherwise a new item</span>
-<span class="source-line-no">065</span><span id="line-65">   *         cast to this type</span>
-<span class="source-line-no">066</span><span id="line-66">   * @throws InvalidValueForCastFunctionException</span>
-<span class="source-line-no">067</span><span id="line-67">   *           if the provided {@code item} cannot be cast to this type</span>
-<span class="source-line-no">068</span><span id="line-68">   */</span>
-<span class="source-line-no">069</span><span id="line-69">  @NonNull</span>
-<span class="source-line-no">070</span><span id="line-70">  static IStringItem cast(@NonNull IAnyAtomicItem item) {</span>
-<span class="source-line-no">071</span><span id="line-71">    try {</span>
-<span class="source-line-no">072</span><span id="line-72">      return item instanceof IStringItem</span>
-<span class="source-line-no">073</span><span id="line-73">          ? (IStringItem) item</span>
-<span class="source-line-no">074</span><span id="line-74">          : valueOf(item.asString());</span>
-<span class="source-line-no">075</span><span id="line-75">    } catch (IllegalStateException ex) {</span>
-<span class="source-line-no">076</span><span id="line-76">      // asString can throw IllegalStateException exception</span>
-<span class="source-line-no">077</span><span id="line-77">      throw new InvalidValueForCastFunctionException(ex);</span>
-<span class="source-line-no">078</span><span id="line-78">    }</span>
-<span class="source-line-no">079</span><span id="line-79">  }</span>
-<span class="source-line-no">080</span><span id="line-80"></span>
-<span class="source-line-no">081</span><span id="line-81">  @Override</span>
-<span class="source-line-no">082</span><span id="line-82">  default IStringItem asStringItem() {</span>
-<span class="source-line-no">083</span><span id="line-83">    return this;</span>
-<span class="source-line-no">084</span><span id="line-84">  }</span>
-<span class="source-line-no">085</span><span id="line-85"></span>
-<span class="source-line-no">086</span><span id="line-86">  @Override</span>
-<span class="source-line-no">087</span><span id="line-87">  default IStringItem castAsType(IAnyAtomicItem item) {</span>
-<span class="source-line-no">088</span><span id="line-88">    return cast(item);</span>
+<span class="source-line-no">062</span><span id="line-62">   * @return the base64 encoded text</span>
+<span class="source-line-no">063</span><span id="line-63">   */</span>
+<span class="source-line-no">064</span><span id="line-64">  default IBase64BinaryItem encode() {</span>
+<span class="source-line-no">065</span><span id="line-65">    // Encode the string to Base64</span>
+<span class="source-line-no">066</span><span id="line-66">    return IBase64BinaryItem.encode(asString());</span>
+<span class="source-line-no">067</span><span id="line-67">  }</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  /**</span>
+<span class="source-line-no">070</span><span id="line-70">   * Cast the provided type to this item type.</span>
+<span class="source-line-no">071</span><span id="line-71">   *</span>
+<span class="source-line-no">072</span><span id="line-72">   * @param item</span>
+<span class="source-line-no">073</span><span id="line-73">   *          the item to cast</span>
+<span class="source-line-no">074</span><span id="line-74">   * @return the original item if it is already this type, otherwise a new item</span>
+<span class="source-line-no">075</span><span id="line-75">   *         cast to this type</span>
+<span class="source-line-no">076</span><span id="line-76">   * @throws InvalidValueForCastFunctionException</span>
+<span class="source-line-no">077</span><span id="line-77">   *           if the provided {@code item} cannot be cast to this type</span>
+<span class="source-line-no">078</span><span id="line-78">   */</span>
+<span class="source-line-no">079</span><span id="line-79">  @NonNull</span>
+<span class="source-line-no">080</span><span id="line-80">  static IStringItem cast(@NonNull IAnyAtomicItem item) {</span>
+<span class="source-line-no">081</span><span id="line-81">    try {</span>
+<span class="source-line-no">082</span><span id="line-82">      return item instanceof IStringItem</span>
+<span class="source-line-no">083</span><span id="line-83">          ? (IStringItem) item</span>
+<span class="source-line-no">084</span><span id="line-84">          : valueOf(item.asString());</span>
+<span class="source-line-no">085</span><span id="line-85">    } catch (IllegalStateException ex) {</span>
+<span class="source-line-no">086</span><span id="line-86">      // asString can throw IllegalStateException exception</span>
+<span class="source-line-no">087</span><span id="line-87">      throw new InvalidValueForCastFunctionException(ex);</span>
+<span class="source-line-no">088</span><span id="line-88">    }</span>
 <span class="source-line-no">089</span><span id="line-89">  }</span>
 <span class="source-line-no">090</span><span id="line-90"></span>
-<span class="source-line-no">091</span><span id="line-91">  /**</span>
-<span class="source-line-no">092</span><span id="line-92">   * Compares this value with the argument. Ordering is in lexical dictionary</span>
-<span class="source-line-no">093</span><span id="line-93">   * order.</span>
-<span class="source-line-no">094</span><span id="line-94">   *</span>
-<span class="source-line-no">095</span><span id="line-95">   * @param other</span>
-<span class="source-line-no">096</span><span id="line-96">   *          the item to compare with this value</span>
-<span class="source-line-no">097</span><span id="line-97">   * @return a negative integer, zero, or a positive integer if this value is less</span>
-<span class="source-line-no">098</span><span id="line-98">   *         than, equal to, or greater than the {@code item}.</span>
-<span class="source-line-no">099</span><span id="line-99">   */</span>
-<span class="source-line-no">100</span><span id="line-100">  default int compareTo(@NonNull IStringItem other) {</span>
-<span class="source-line-no">101</span><span id="line-101">    return asString().compareTo(other.asString());</span>
-<span class="source-line-no">102</span><span id="line-102">  }</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">  @Override</span>
-<span class="source-line-no">105</span><span id="line-105">  default int compareTo(IAnyAtomicItem other) {</span>
-<span class="source-line-no">106</span><span id="line-106">    return compareTo(other.asStringItem());</span>
-<span class="source-line-no">107</span><span id="line-107">  }</span>
-<span class="source-line-no">108</span><span id="line-108"></span>
-<span class="source-line-no">109</span><span id="line-109">  /**</span>
-<span class="source-line-no">110</span><span id="line-110">   * An implementation of &lt;a href=</span>
-<span class="source-line-no">111</span><span id="line-111">   * "https://www.w3.org/TR/xpath-functions-31/#func-normalize-space"&gt;fn::normalize-space&lt;/a&gt;.</span>
-<span class="source-line-no">112</span><span id="line-112">   *</span>
-<span class="source-line-no">113</span><span id="line-113">   * @return the normalized string value for this string</span>
-<span class="source-line-no">114</span><span id="line-114">   */</span>
-<span class="source-line-no">115</span><span id="line-115">  @NonNull</span>
-<span class="source-line-no">116</span><span id="line-116">  IStringItem normalizeSpace();</span>
-<span class="source-line-no">117</span><span id="line-117"></span>
-<span class="source-line-no">118</span><span id="line-118">  /**</span>
-<span class="source-line-no">119</span><span id="line-119">   * Get the length of the string.</span>
-<span class="source-line-no">120</span><span id="line-120">   *</span>
-<span class="source-line-no">121</span><span id="line-121">   * @return the length</span>
-<span class="source-line-no">122</span><span id="line-122">   */</span>
-<span class="source-line-no">123</span><span id="line-123">  default int length() {</span>
-<span class="source-line-no">124</span><span id="line-124">    return asString().length();</span>
-<span class="source-line-no">125</span><span id="line-125">  }</span>
-<span class="source-line-no">126</span><span id="line-126">}</span>
+<span class="source-line-no">091</span><span id="line-91">  @Override</span>
+<span class="source-line-no">092</span><span id="line-92">  default IStringItem asStringItem() {</span>
+<span class="source-line-no">093</span><span id="line-93">    return this;</span>
+<span class="source-line-no">094</span><span id="line-94">  }</span>
+<span class="source-line-no">095</span><span id="line-95"></span>
+<span class="source-line-no">096</span><span id="line-96">  @Override</span>
+<span class="source-line-no">097</span><span id="line-97">  default IStringItem castAsType(IAnyAtomicItem item) {</span>
+<span class="source-line-no">098</span><span id="line-98">    return cast(item);</span>
+<span class="source-line-no">099</span><span id="line-99">  }</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">  /**</span>
+<span class="source-line-no">102</span><span id="line-102">   * Compares this value with the argument. Ordering is in lexical dictionary</span>
+<span class="source-line-no">103</span><span id="line-103">   * order.</span>
+<span class="source-line-no">104</span><span id="line-104">   *</span>
+<span class="source-line-no">105</span><span id="line-105">   * @param other</span>
+<span class="source-line-no">106</span><span id="line-106">   *          the item to compare with this value</span>
+<span class="source-line-no">107</span><span id="line-107">   * @return a negative integer, zero, or a positive integer if this value is less</span>
+<span class="source-line-no">108</span><span id="line-108">   *         than, equal to, or greater than the {@code item}.</span>
+<span class="source-line-no">109</span><span id="line-109">   */</span>
+<span class="source-line-no">110</span><span id="line-110">  default int compareTo(@NonNull IStringItem other) {</span>
+<span class="source-line-no">111</span><span id="line-111">    return asString().compareTo(other.asString());</span>
+<span class="source-line-no">112</span><span id="line-112">  }</span>
+<span class="source-line-no">113</span><span id="line-113"></span>
+<span class="source-line-no">114</span><span id="line-114">  /**</span>
+<span class="source-line-no">115</span><span id="line-115">   * An implementation of &lt;a href=</span>
+<span class="source-line-no">116</span><span id="line-116">   * "https://www.w3.org/TR/xpath-functions-31/#func-normalize-space"&gt;fn::normalize-space&lt;/a&gt;.</span>
+<span class="source-line-no">117</span><span id="line-117">   *</span>
+<span class="source-line-no">118</span><span id="line-118">   * @return the normalized string value for this string</span>
+<span class="source-line-no">119</span><span id="line-119">   */</span>
+<span class="source-line-no">120</span><span id="line-120">  @NonNull</span>
+<span class="source-line-no">121</span><span id="line-121">  IStringItem normalizeSpace();</span>
+<span class="source-line-no">122</span><span id="line-122"></span>
+<span class="source-line-no">123</span><span id="line-123">  /**</span>
+<span class="source-line-no">124</span><span id="line-124">   * Get the length of the string.</span>
+<span class="source-line-no">125</span><span id="line-125">   *</span>
+<span class="source-line-no">126</span><span id="line-126">   * @return the length</span>
+<span class="source-line-no">127</span><span id="line-127">   */</span>
+<span class="source-line-no">128</span><span id="line-128">  default int length() {</span>
+<span class="source-line-no">129</span><span id="line-129">    return asString().length();</span>
+<span class="source-line-no">130</span><span id="line-130">  }</span>
+<span class="source-line-no">131</span><span id="line-131">}</span>
 
 
 

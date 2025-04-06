@@ -69,8 +69,8 @@
 <span class="source-line-no">056</span><span id="line-56">        expect = @Expect(id = "metaschema-deprecated-types", formalName = "Avoid Deprecated Data Type Use",</span>
 <span class="source-line-no">057</span><span id="line-57">            description = "Ensure that the data type specified is not one of the legacy Metaschema data types which have been deprecated (i.e. base64Binary, dateTime, dateTime-with-timezone, email, nonNegativeInteger, positiveInteger).",</span>
 <span class="source-line-no">058</span><span id="line-58">            level = IConstraint.Level.WARNING, target = ".//matches/@datatype|.//(define-field|define-flag)/@as-type",</span>
-<span class="source-line-no">059</span><span id="line-59">            test = "not(.=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))",</span>
-<span class="source-line-no">060</span><span id="line-60">            message = "Use of the type '{ . }' is deprecated. Use '{ $deprecated-type-map(.)}' instead.")))</span>
+<span class="source-line-no">059</span><span id="line-59">            test = "not(data(.)=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))",</span>
+<span class="source-line-no">060</span><span id="line-60">            message = "Use of the type '{ data(.) }' is deprecated. Use '{ $deprecated-type-map(data(.))}' instead.")))</span>
 <span class="source-line-no">061</span><span id="line-61">public class MetaschemaModuleConstraints implements IBoundObject {</span>
 <span class="source-line-no">062</span><span id="line-62">  private final IMetaschemaData __metaschemaData;</span>
 <span class="source-line-no">063</span><span id="line-63"></span>

@@ -60,46 +60,51 @@
 <span class="source-line-no">047</span><span id="line-47">    return module;</span>
 <span class="source-line-no">048</span><span id="line-48">  }</span>
 <span class="source-line-no">049</span><span id="line-49"></span>
-<span class="source-line-no">050</span><span id="line-50">  @SuppressWarnings("null")</span>
-<span class="source-line-no">051</span><span id="line-51">  @Override</span>
-<span class="source-line-no">052</span><span id="line-52">  public final IEnhancedQName getQName() {</span>
-<span class="source-line-no">053</span><span id="line-53">    return qname.get();</span>
-<span class="source-line-no">054</span><span id="line-54">  }</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">  @SuppressWarnings("null")</span>
-<span class="source-line-no">057</span><span id="line-57">  @Override</span>
-<span class="source-line-no">058</span><span id="line-58">  public final IEnhancedQName getDefinitionQName() {</span>
-<span class="source-line-no">059</span><span id="line-59">    return definitionQName.get();</span>
-<span class="source-line-no">060</span><span id="line-60">  }</span>
-<span class="source-line-no">061</span><span id="line-61"></span>
+<span class="source-line-no">050</span><span id="line-50">  @Override</span>
+<span class="source-line-no">051</span><span id="line-51">  public ISource getSource() {</span>
+<span class="source-line-no">052</span><span id="line-52">    return getContainingModule().getSource();</span>
+<span class="source-line-no">053</span><span id="line-53">  }</span>
+<span class="source-line-no">054</span><span id="line-54"></span>
+<span class="source-line-no">055</span><span id="line-55">  @SuppressWarnings("null")</span>
+<span class="source-line-no">056</span><span id="line-56">  @Override</span>
+<span class="source-line-no">057</span><span id="line-57">  public final IEnhancedQName getQName() {</span>
+<span class="source-line-no">058</span><span id="line-58">    return qname.get();</span>
+<span class="source-line-no">059</span><span id="line-59">  }</span>
+<span class="source-line-no">060</span><span id="line-60"></span>
+<span class="source-line-no">061</span><span id="line-61">  @SuppressWarnings("null")</span>
 <span class="source-line-no">062</span><span id="line-62">  @Override</span>
-<span class="source-line-no">063</span><span id="line-63">  public boolean isInline() {</span>
-<span class="source-line-no">064</span><span id="line-64">    // never inline</span>
-<span class="source-line-no">065</span><span id="line-65">    return false;</span>
-<span class="source-line-no">066</span><span id="line-66">  }</span>
-<span class="source-line-no">067</span><span id="line-67"></span>
-<span class="source-line-no">068</span><span id="line-68">  @Override</span>
-<span class="source-line-no">069</span><span id="line-69">  public final INSTANCE getInlineInstance() {</span>
-<span class="source-line-no">070</span><span id="line-70">    // never inline</span>
-<span class="source-line-no">071</span><span id="line-71">    return null;</span>
-<span class="source-line-no">072</span><span id="line-72">  }</span>
-<span class="source-line-no">073</span><span id="line-73"></span>
-<span class="source-line-no">074</span><span id="line-74">  /**</span>
-<span class="source-line-no">075</span><span id="line-75">   * Provides a callback for generating a qualified name from a name.</span>
-<span class="source-line-no">076</span><span id="line-76">   */</span>
-<span class="source-line-no">077</span><span id="line-77">  @FunctionalInterface</span>
-<span class="source-line-no">078</span><span id="line-78">  public interface NameInitializer {</span>
-<span class="source-line-no">079</span><span id="line-79">    /**</span>
-<span class="source-line-no">080</span><span id="line-80">     * Produce a qualified name by parsing the provided name.</span>
-<span class="source-line-no">081</span><span id="line-81">     *</span>
-<span class="source-line-no">082</span><span id="line-82">     * @param name</span>
-<span class="source-line-no">083</span><span id="line-83">     *          the name to parse</span>
-<span class="source-line-no">084</span><span id="line-84">     * @return the qualified name for the provided name</span>
-<span class="source-line-no">085</span><span id="line-85">     */</span>
-<span class="source-line-no">086</span><span id="line-86">    @NonNull</span>
-<span class="source-line-no">087</span><span id="line-87">    IEnhancedQName apply(@NonNull String name);</span>
-<span class="source-line-no">088</span><span id="line-88">  }</span>
-<span class="source-line-no">089</span><span id="line-89">}</span>
+<span class="source-line-no">063</span><span id="line-63">  public final IEnhancedQName getDefinitionQName() {</span>
+<span class="source-line-no">064</span><span id="line-64">    return definitionQName.get();</span>
+<span class="source-line-no">065</span><span id="line-65">  }</span>
+<span class="source-line-no">066</span><span id="line-66"></span>
+<span class="source-line-no">067</span><span id="line-67">  @Override</span>
+<span class="source-line-no">068</span><span id="line-68">  public boolean isInline() {</span>
+<span class="source-line-no">069</span><span id="line-69">    // never inline</span>
+<span class="source-line-no">070</span><span id="line-70">    return false;</span>
+<span class="source-line-no">071</span><span id="line-71">  }</span>
+<span class="source-line-no">072</span><span id="line-72"></span>
+<span class="source-line-no">073</span><span id="line-73">  @Override</span>
+<span class="source-line-no">074</span><span id="line-74">  public final INSTANCE getInlineInstance() {</span>
+<span class="source-line-no">075</span><span id="line-75">    // never inline</span>
+<span class="source-line-no">076</span><span id="line-76">    return null;</span>
+<span class="source-line-no">077</span><span id="line-77">  }</span>
+<span class="source-line-no">078</span><span id="line-78"></span>
+<span class="source-line-no">079</span><span id="line-79">  /**</span>
+<span class="source-line-no">080</span><span id="line-80">   * Provides a callback for generating a qualified name from a name.</span>
+<span class="source-line-no">081</span><span id="line-81">   */</span>
+<span class="source-line-no">082</span><span id="line-82">  @FunctionalInterface</span>
+<span class="source-line-no">083</span><span id="line-83">  public interface NameInitializer {</span>
+<span class="source-line-no">084</span><span id="line-84">    /**</span>
+<span class="source-line-no">085</span><span id="line-85">     * Produce a qualified name by parsing the provided name.</span>
+<span class="source-line-no">086</span><span id="line-86">     *</span>
+<span class="source-line-no">087</span><span id="line-87">     * @param name</span>
+<span class="source-line-no">088</span><span id="line-88">     *          the name to parse</span>
+<span class="source-line-no">089</span><span id="line-89">     * @return the qualified name for the provided name</span>
+<span class="source-line-no">090</span><span id="line-90">     */</span>
+<span class="source-line-no">091</span><span id="line-91">    @NonNull</span>
+<span class="source-line-no">092</span><span id="line-92">    IEnhancedQName apply(@NonNull String name);</span>
+<span class="source-line-no">093</span><span id="line-93">  }</span>
+<span class="source-line-no">094</span><span id="line-94">}</span>
 
 
 

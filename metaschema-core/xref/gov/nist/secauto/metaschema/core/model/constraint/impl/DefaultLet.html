@@ -14,7 +14,7 @@
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.metaschema.core.model.constraint.impl;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.ISource;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.ILet;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -32,7 +32,7 @@
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>    @NonNull
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="IEnhancedQName" href="../../../../../../../../gov/nist/secauto/metaschema/core/qname/IEnhancedQName.html#IEnhancedQName">IEnhancedQName</a> name;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>    @NonNull
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> MetapathExpression valueExpression;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="IMetapathExpression" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/IMetapathExpression.html#IMetapathExpression">IMetapathExpression</a> valueExpression;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>    @NonNull
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="ISource" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/ISource.html#ISource">ISource</a> source;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>    @Nullable
@@ -52,7 +52,7 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">public</strong> <a name="DefaultLet" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/impl/DefaultLet.html#DefaultLet">DefaultLet</a>(
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>        @NonNull <a name="IEnhancedQName" href="../../../../../../../../gov/nist/secauto/metaschema/core/qname/IEnhancedQName.html#IEnhancedQName">IEnhancedQName</a> name,
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>        @NonNull MetapathExpression metapath,
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>        @NonNull <a name="IMetapathExpression" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/IMetapathExpression.html#IMetapathExpression">IMetapathExpression</a> metapath,
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>        @NonNull <a name="ISource" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/ISource.html#ISource">ISource</a> source,
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>        @Nullable <a name="MarkupMultiline" href="../../../../../../../../gov/nist/secauto/metaschema/core/datatype/markup/MarkupMultiline.html#MarkupMultiline">MarkupMultiline</a> remarks) {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">this</strong>.name = name;
@@ -67,7 +67,7 @@
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    }
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>    @Override
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>    <strong class="jxr_keyword">public</strong> MetapathExpression getValueExpression() {
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>    <strong class="jxr_keyword">public</strong> <a name="IMetapathExpression" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/IMetapathExpression.html#IMetapathExpression">IMetapathExpression</a> getValueExpression() {
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      <strong class="jxr_keyword">return</strong> valueExpression;
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>    }
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
@@ -84,6 +84,6 @@
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>  }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

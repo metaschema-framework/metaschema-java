@@ -90,7 +90,7 @@
 <span class="source-line-no">077</span><span id="line-77">   */</span>
 <span class="source-line-no">078</span><span id="line-78">  @NonNull</span>
 <span class="source-line-no">079</span><span id="line-79">  public IEnhancedQName newQName(@NonNull String namespace, @NonNull String localName) {</span>
-<span class="source-line-no">080</span><span id="line-80">    return cache.of(namespace, localName);</span>
+<span class="source-line-no">080</span><span id="line-80">    return cache.cachedQNameFor(namespace, localName);</span>
 <span class="source-line-no">081</span><span id="line-81">  }</span>
 <span class="source-line-no">082</span><span id="line-82"></span>
 <span class="source-line-no">083</span><span id="line-83">  /**</span>
@@ -99,9 +99,9 @@
 <span class="source-line-no">086</span><span id="line-86">   * The name can be:</span>
 <span class="source-line-no">087</span><span id="line-87">   * &lt;ul&gt;</span>
 <span class="source-line-no">088</span><span id="line-88">   * &lt;li&gt;A URI qualified name of the form &lt;code&gt;Q{URI}name&lt;/code&gt;, where the URI</span>
-<span class="source-line-no">089</span><span id="line-89">   * represents the namespace&lt;/li&gt;</span>
+<span class="source-line-no">089</span><span id="line-89">   * represents the namespace</span>
 <span class="source-line-no">090</span><span id="line-90">   * &lt;li&gt;A lexical name of the forms &lt;code&gt;prefix:name&lt;/code&gt; or</span>
-<span class="source-line-no">091</span><span id="line-91">   * &lt;code&gt;name&lt;/code&gt;, where the prefix represents the namespace&lt;/li&gt;</span>
+<span class="source-line-no">091</span><span id="line-91">   * &lt;code&gt;name&lt;/code&gt;, where the prefix represents the namespace</span>
 <span class="source-line-no">092</span><span id="line-92">   * &lt;/ul&gt;</span>
 <span class="source-line-no">093</span><span id="line-93">   *</span>
 <span class="source-line-no">094</span><span id="line-94">   * @param name</span>
@@ -143,7 +143,7 @@
 <span class="source-line-no">130</span><span id="line-130"></span>
 <span class="source-line-no">131</span><span id="line-131">  @NonNull</span>
 <span class="source-line-no">132</span><span id="line-132">  private IEnhancedQName newUriQualifiedName(@NonNull Matcher matcher) {</span>
-<span class="source-line-no">133</span><span id="line-133">    return cache.of(</span>
+<span class="source-line-no">133</span><span id="line-133">    return cache.cachedQNameFor(</span>
 <span class="source-line-no">134</span><span id="line-134">        ObjectUtils.notNull(matcher.group(1)),</span>
 <span class="source-line-no">135</span><span id="line-135">        ObjectUtils.notNull(matcher.group(2)));</span>
 <span class="source-line-no">136</span><span id="line-136">  }</span>
@@ -185,7 +185,7 @@
 <span class="source-line-no">172</span><span id="line-172">              prefix,</span>
 <span class="source-line-no">173</span><span id="line-173">              name));</span>
 <span class="source-line-no">174</span><span id="line-174">    }</span>
-<span class="source-line-no">175</span><span id="line-175">    return cache.of(namespace, ObjectUtils.notNull(matcher.group(2)));</span>
+<span class="source-line-no">175</span><span id="line-175">    return cache.cachedQNameFor(namespace, ObjectUtils.notNull(matcher.group(2)));</span>
 <span class="source-line-no">176</span><span id="line-176">  }</span>
 <span class="source-line-no">177</span><span id="line-177"></span>
 <span class="source-line-no">178</span><span id="line-178">  /**</span>

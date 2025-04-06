@@ -67,8 +67,8 @@
 <span class="source-line-no">054</span><span id="line-54">                  return FileVisitResult.CONTINUE;</span>
 <span class="source-line-no">055</span><span id="line-55">                }</span>
 <span class="source-line-no">056</span><span id="line-56">              });</span>
-<span class="source-line-no">057</span><span id="line-57">        } catch (IOException ex) {</span>
-<span class="source-line-no">058</span><span id="line-58">          // this is a best effort</span>
+<span class="source-line-no">057</span><span id="line-57">        } catch (@SuppressWarnings("unused") IOException ex) {</span>
+<span class="source-line-no">058</span><span id="line-58">          // this is a best effort, ignore the error</span>
 <span class="source-line-no">059</span><span id="line-59">        }</span>
 <span class="source-line-no">060</span><span id="line-60">      });</span>
 <span class="source-line-no">061</span><span id="line-61">    } finally {</span>

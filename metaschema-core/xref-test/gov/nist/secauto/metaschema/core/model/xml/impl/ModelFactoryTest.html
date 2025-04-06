@@ -16,21 +16,21 @@
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertAll;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.ISource;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.ILet;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.xml.xmlbeans.ConstraintLetType;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.xml.xmlbeans.RemarksType;
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.apache.xmlbeans.XmlException;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">class</strong> <a name="ModelFactoryTest" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/xml/impl/ModelFactoryTest.html#ModelFactoryTest">ModelFactoryTest</a> {
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>    @SuppressWarnings(<span class="jxr_string">"null"</span>)
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.ISource;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.ILet;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.xml.xmlbeans.ConstraintLetType;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.xml.xmlbeans.RemarksType;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.apache.xmlbeans.XmlException;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">class</strong> <a name="ModelFactoryTest" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/xml/impl/ModelFactoryTest.html#ModelFactoryTest">ModelFactoryTest</a> {
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>    @Test
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">void</strong> letTest() <strong class="jxr_keyword">throws</strong> XmlException {
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>      ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(<span class="jxr_string">"https://example.com/"</span>)));
@@ -45,15 +45,16 @@
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>      letObj.setRemarks(remarks);
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      ILet let = ModelFactory.newLet(letObj, source);
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>      assertAll(
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>          () -&gt; assertEquals(IEnhancedQName.of(variable), let.getName()),
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>          () -&gt; assertEquals(expression, let.getValueExpression().getPath()),
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>          () -&gt; assertEquals(source, let.getSource()),
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>          () -&gt; assertEquals(<span class="jxr_string">"Test"</span>, let.getRemarks().toMarkdown()));
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>    }
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  }
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      MarkupMultiline letRemarks = let.getRemarks();
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      assertAll(
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>          () -&gt; assertEquals(IEnhancedQName.of(variable), let.getName()),
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          () -&gt; assertEquals(expression, let.getValueExpression().getPath()),
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          () -&gt; assertEquals(source, let.getSource()),
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          () -&gt; assertEquals(<span class="jxr_string">"Test"</span>, letRemarks == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : letRemarks.toMarkdown()));
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    }
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

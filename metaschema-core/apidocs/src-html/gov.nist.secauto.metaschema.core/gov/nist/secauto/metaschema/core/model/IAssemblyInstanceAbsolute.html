@@ -18,9 +18,28 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.model;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">public interface IAssemblyInstanceAbsolute extends IAssemblyInstance, INamedModelInstanceAbsolute {</span>
-<span class="source-line-no">009</span><span id="line-9">  // no additional methods</span>
-<span class="source-line-no">010</span><span id="line-10">}</span>
+<span class="source-line-no">008</span><span id="line-8">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">009</span><span id="line-9"></span>
+<span class="source-line-no">010</span><span id="line-10">public interface IAssemblyInstanceAbsolute extends IAssemblyInstance, INamedModelInstanceAbsolute {</span>
+<span class="source-line-no">011</span><span id="line-11"></span>
+<span class="source-line-no">012</span><span id="line-12">  /**</span>
+<span class="source-line-no">013</span><span id="line-13">   * A visitor callback.</span>
+<span class="source-line-no">014</span><span id="line-14">   *</span>
+<span class="source-line-no">015</span><span id="line-15">   * @param &lt;CONTEXT&gt;</span>
+<span class="source-line-no">016</span><span id="line-16">   *          the type of the context parameter</span>
+<span class="source-line-no">017</span><span id="line-17">   * @param &lt;RESULT&gt;</span>
+<span class="source-line-no">018</span><span id="line-18">   *          the type of the visitor result</span>
+<span class="source-line-no">019</span><span id="line-19">   * @param visitor</span>
+<span class="source-line-no">020</span><span id="line-20">   *          the calling visitor</span>
+<span class="source-line-no">021</span><span id="line-21">   * @param context</span>
+<span class="source-line-no">022</span><span id="line-22">   *          a parameter used to pass contextual information between visitors</span>
+<span class="source-line-no">023</span><span id="line-23">   * @return the visitor result</span>
+<span class="source-line-no">024</span><span id="line-24">   */</span>
+<span class="source-line-no">025</span><span id="line-25">  @Override</span>
+<span class="source-line-no">026</span><span id="line-26">  default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull IModelElementVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {</span>
+<span class="source-line-no">027</span><span id="line-27">    return visitor.visitAssemblyInstance(this, context);</span>
+<span class="source-line-no">028</span><span id="line-28">  }</span>
+<span class="source-line-no">029</span><span id="line-29">}</span>
 
 
 

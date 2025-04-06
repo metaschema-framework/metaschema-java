@@ -80,36 +80,37 @@
 <span class="source-line-no">067</span><span id="line-67"></span>
 <span class="source-line-no">068</span><span id="line-68">      // get roots from exported</span>
 <span class="source-line-no">069</span><span id="line-69">      for (IAssemblyDefinition assembly : module.getExportedAssemblyDefinitions()) {</span>
-<span class="source-line-no">070</span><span id="line-70">        if (assembly.isRoot()) {</span>
-<span class="source-line-no">071</span><span id="line-71">          definitions.add(assembly);</span>
-<span class="source-line-no">072</span><span id="line-72">        }</span>
-<span class="source-line-no">073</span><span id="line-73">      }</span>
-<span class="source-line-no">074</span><span id="line-74">    }</span>
-<span class="source-line-no">075</span><span id="line-75">    return collectUsedDefinitions(definitions);</span>
-<span class="source-line-no">076</span><span id="line-76">  }</span>
-<span class="source-line-no">077</span><span id="line-77"></span>
-<span class="source-line-no">078</span><span id="line-78">  /**</span>
-<span class="source-line-no">079</span><span id="line-79">   * Collect the globally defined Metaschema definitions from the provided</span>
-<span class="source-line-no">080</span><span id="line-80">   * Metaschema module, and any Metaschema modules imported directly or indirectly</span>
-<span class="source-line-no">081</span><span id="line-81">   * by this module.</span>
-<span class="source-line-no">082</span><span id="line-82">   *</span>
-<span class="source-line-no">083</span><span id="line-83">   * @param module</span>
-<span class="source-line-no">084</span><span id="line-84">   *          the metaschema module to analyze</span>
-<span class="source-line-no">085</span><span id="line-85">   * @return a collection of matching definitions</span>
-<span class="source-line-no">086</span><span id="line-86">   */</span>
-<span class="source-line-no">087</span><span id="line-87">  @NonNull</span>
-<span class="source-line-no">088</span><span id="line-88">  public static Collection&lt;? extends IDefinition&gt; collectUsedDefinitionsFromModule(</span>
-<span class="source-line-no">089</span><span id="line-89">      @NonNull IModule module) {</span>
-<span class="source-line-no">090</span><span id="line-90">    return collectUsedDefinitionsFromModule(CollectionUtil.singleton(module));</span>
-<span class="source-line-no">091</span><span id="line-91">  }</span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">  /**</span>
-<span class="source-line-no">094</span><span id="line-94">   * Construct a new walker.</span>
-<span class="source-line-no">095</span><span id="line-95">   */</span>
-<span class="source-line-no">096</span><span id="line-96">  protected UsedDefinitionModelWalker() {</span>
-<span class="source-line-no">097</span><span id="line-97">    super(FILTER);</span>
-<span class="source-line-no">098</span><span id="line-98">  }</span>
-<span class="source-line-no">099</span><span id="line-99">}</span>
+<span class="source-line-no">070</span><span id="line-70">        assert assembly != null;</span>
+<span class="source-line-no">071</span><span id="line-71">        if (assembly.isRoot()) {</span>
+<span class="source-line-no">072</span><span id="line-72">          definitions.add(assembly);</span>
+<span class="source-line-no">073</span><span id="line-73">        }</span>
+<span class="source-line-no">074</span><span id="line-74">      }</span>
+<span class="source-line-no">075</span><span id="line-75">    }</span>
+<span class="source-line-no">076</span><span id="line-76">    return collectUsedDefinitions(definitions);</span>
+<span class="source-line-no">077</span><span id="line-77">  }</span>
+<span class="source-line-no">078</span><span id="line-78"></span>
+<span class="source-line-no">079</span><span id="line-79">  /**</span>
+<span class="source-line-no">080</span><span id="line-80">   * Collect the globally defined Metaschema definitions from the provided</span>
+<span class="source-line-no">081</span><span id="line-81">   * Metaschema module, and any Metaschema modules imported directly or indirectly</span>
+<span class="source-line-no">082</span><span id="line-82">   * by this module.</span>
+<span class="source-line-no">083</span><span id="line-83">   *</span>
+<span class="source-line-no">084</span><span id="line-84">   * @param module</span>
+<span class="source-line-no">085</span><span id="line-85">   *          the metaschema module to analyze</span>
+<span class="source-line-no">086</span><span id="line-86">   * @return a collection of matching definitions</span>
+<span class="source-line-no">087</span><span id="line-87">   */</span>
+<span class="source-line-no">088</span><span id="line-88">  @NonNull</span>
+<span class="source-line-no">089</span><span id="line-89">  public static Collection&lt;? extends IDefinition&gt; collectUsedDefinitionsFromModule(</span>
+<span class="source-line-no">090</span><span id="line-90">      @NonNull IModule module) {</span>
+<span class="source-line-no">091</span><span id="line-91">    return collectUsedDefinitionsFromModule(CollectionUtil.singleton(module));</span>
+<span class="source-line-no">092</span><span id="line-92">  }</span>
+<span class="source-line-no">093</span><span id="line-93"></span>
+<span class="source-line-no">094</span><span id="line-94">  /**</span>
+<span class="source-line-no">095</span><span id="line-95">   * Construct a new walker.</span>
+<span class="source-line-no">096</span><span id="line-96">   */</span>
+<span class="source-line-no">097</span><span id="line-97">  protected UsedDefinitionModelWalker() {</span>
+<span class="source-line-no">098</span><span id="line-98">    super(FILTER);</span>
+<span class="source-line-no">099</span><span id="line-99">  }</span>
+<span class="source-line-no">100</span><span id="line-100">}</span>
 
 
 

@@ -37,32 +37,33 @@
 <span class="source-line-no">024</span><span id="line-24">    T extends AbstractConfigurableMessageConstraintBuilder&lt;T, R&gt;,</span>
 <span class="source-line-no">025</span><span id="line-25">    R extends IConfigurableMessageConstraint&gt;</span>
 <span class="source-line-no">026</span><span id="line-26">    extends AbstractConstraintBuilder&lt;T, R&gt; {</span>
-<span class="source-line-no">027</span><span id="line-27">  private String message;</span>
-<span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">  /**</span>
-<span class="source-line-no">030</span><span id="line-30">   * A message to emit when the constraint is violated. Allows embedded Metapath</span>
-<span class="source-line-no">031</span><span id="line-31">   * expressions using the syntax {@code \{ metapath \}}.</span>
-<span class="source-line-no">032</span><span id="line-32">   *</span>
-<span class="source-line-no">033</span><span id="line-33">   * @param message</span>
-<span class="source-line-no">034</span><span id="line-34">   *          the message if defined or {@code null} otherwise</span>
-<span class="source-line-no">035</span><span id="line-35">   * @return this builder</span>
-<span class="source-line-no">036</span><span id="line-36">   */</span>
-<span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
-<span class="source-line-no">038</span><span id="line-38">  public T message(@NonNull String message) {</span>
-<span class="source-line-no">039</span><span id="line-39">    this.message = message;</span>
-<span class="source-line-no">040</span><span id="line-40">    return getThis();</span>
-<span class="source-line-no">041</span><span id="line-41">  }</span>
-<span class="source-line-no">042</span><span id="line-42"></span>
-<span class="source-line-no">043</span><span id="line-43">  /**</span>
-<span class="source-line-no">044</span><span id="line-44">   * Get the constraint message provided to the builder.</span>
-<span class="source-line-no">045</span><span id="line-45">   *</span>
-<span class="source-line-no">046</span><span id="line-46">   * @return the message or {@code null} if no message is set</span>
-<span class="source-line-no">047</span><span id="line-47">   */</span>
-<span class="source-line-no">048</span><span id="line-48">  @Nullable</span>
-<span class="source-line-no">049</span><span id="line-49">  protected String getMessage() {</span>
-<span class="source-line-no">050</span><span id="line-50">    return message;</span>
-<span class="source-line-no">051</span><span id="line-51">  }</span>
-<span class="source-line-no">052</span><span id="line-52">}</span>
+<span class="source-line-no">027</span><span id="line-27">  @Nullable</span>
+<span class="source-line-no">028</span><span id="line-28">  private String message;</span>
+<span class="source-line-no">029</span><span id="line-29"></span>
+<span class="source-line-no">030</span><span id="line-30">  /**</span>
+<span class="source-line-no">031</span><span id="line-31">   * A message to emit when the constraint is violated. Allows embedded Metapath</span>
+<span class="source-line-no">032</span><span id="line-32">   * expressions using the syntax {@code \{ metapath \}}.</span>
+<span class="source-line-no">033</span><span id="line-33">   *</span>
+<span class="source-line-no">034</span><span id="line-34">   * @param message</span>
+<span class="source-line-no">035</span><span id="line-35">   *          the message if defined or {@code null} otherwise</span>
+<span class="source-line-no">036</span><span id="line-36">   * @return this builder</span>
+<span class="source-line-no">037</span><span id="line-37">   */</span>
+<span class="source-line-no">038</span><span id="line-38">  @NonNull</span>
+<span class="source-line-no">039</span><span id="line-39">  public T message(@NonNull String message) {</span>
+<span class="source-line-no">040</span><span id="line-40">    this.message = message;</span>
+<span class="source-line-no">041</span><span id="line-41">    return getThis();</span>
+<span class="source-line-no">042</span><span id="line-42">  }</span>
+<span class="source-line-no">043</span><span id="line-43"></span>
+<span class="source-line-no">044</span><span id="line-44">  /**</span>
+<span class="source-line-no">045</span><span id="line-45">   * Get the constraint message provided to the builder.</span>
+<span class="source-line-no">046</span><span id="line-46">   *</span>
+<span class="source-line-no">047</span><span id="line-47">   * @return the message or {@code null} if no message is set</span>
+<span class="source-line-no">048</span><span id="line-48">   */</span>
+<span class="source-line-no">049</span><span id="line-49">  @Nullable</span>
+<span class="source-line-no">050</span><span id="line-50">  protected String getMessage() {</span>
+<span class="source-line-no">051</span><span id="line-51">    return message;</span>
+<span class="source-line-no">052</span><span id="line-52">  }</span>
+<span class="source-line-no">053</span><span id="line-53">}</span>
 
 
 

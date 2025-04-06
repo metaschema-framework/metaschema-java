@@ -19,12 +19,12 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.function.library;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.DynamicContext;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.ISequence;</span>
 <span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDecimalItem;</span>
 <span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;</span>
 <span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
@@ -109,7 +109,7 @@
 <span class="source-line-no">096</span><span id="line-96"></span>
 <span class="source-line-no">097</span><span id="line-97">    IDecimalItem start = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));</span>
 <span class="source-line-no">098</span><span id="line-98"></span>
-<span class="source-line-no">099</span><span id="line-99">    int startIndex = start.round().asInteger().intValue();</span>
+<span class="source-line-no">099</span><span id="line-99">    int startIndex = start.round().toIntValueExact();</span>
 <span class="source-line-no">100</span><span id="line-100"></span>
 <span class="source-line-no">101</span><span id="line-101">    return ISequence.of(IStringItem.valueOf(</span>
 <span class="source-line-no">102</span><span id="line-102">        fnSubstring(</span>
@@ -138,8 +138,8 @@
 <span class="source-line-no">125</span><span id="line-125">    return ISequence.of(IStringItem.valueOf(</span>
 <span class="source-line-no">126</span><span id="line-126">        fnSubstring(</span>
 <span class="source-line-no">127</span><span id="line-127">            sourceString.asString(),</span>
-<span class="source-line-no">128</span><span id="line-128">            start.round().asInteger().intValue(),</span>
-<span class="source-line-no">129</span><span id="line-129">            length.round().asInteger().intValue())));</span>
+<span class="source-line-no">128</span><span id="line-128">            start.round().toIntValueExact(),</span>
+<span class="source-line-no">129</span><span id="line-129">            length.round().toIntValueExact())));</span>
 <span class="source-line-no">130</span><span id="line-130">  }</span>
 <span class="source-line-no">131</span><span id="line-131"></span>
 <span class="source-line-no">132</span><span id="line-132">  /**</span>

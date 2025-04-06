@@ -19,46 +19,98 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.item.atomic;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">/**</span>
-<span class="source-line-no">014</span><span id="line-14"> * Provides base functionality for atomic item implementations.</span>
-<span class="source-line-no">015</span><span id="line-15"> *</span>
-<span class="source-line-no">016</span><span id="line-16"> * @param &lt;TYPE&gt;</span>
-<span class="source-line-no">017</span><span id="line-17"> *          the Java type of the underlying data value</span>
-<span class="source-line-no">018</span><span id="line-18"> */</span>
-<span class="source-line-no">019</span><span id="line-19">public abstract class AbstractAtomicItemBase&lt;TYPE&gt; implements IAnyAtomicItem {</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">  @Override</span>
-<span class="source-line-no">022</span><span id="line-22">  @NonNull</span>
-<span class="source-line-no">023</span><span id="line-23">  public abstract IDataTypeAdapter&lt;TYPE&gt; getJavaTypeAdapter();</span>
-<span class="source-line-no">024</span><span id="line-24"></span>
-<span class="source-line-no">025</span><span id="line-25">  @Override</span>
-<span class="source-line-no">026</span><span id="line-26">  public String asString() {</span>
-<span class="source-line-no">027</span><span id="line-27">    return getJavaTypeAdapter().asString(getValue());</span>
-<span class="source-line-no">028</span><span id="line-28">  }</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.DynamicContext;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.function.ComparisonFunctions;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">014</span><span id="line-14"></span>
+<span class="source-line-no">015</span><span id="line-15">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">016</span><span id="line-16">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">/**</span>
+<span class="source-line-no">019</span><span id="line-19"> * Provides base functionality for atomic item implementations.</span>
+<span class="source-line-no">020</span><span id="line-20"> *</span>
+<span class="source-line-no">021</span><span id="line-21"> * @param &lt;TYPE&gt;</span>
+<span class="source-line-no">022</span><span id="line-22"> *          the Java type of the underlying data value</span>
+<span class="source-line-no">023</span><span id="line-23"> */</span>
+<span class="source-line-no">024</span><span id="line-24">public abstract class AbstractAtomicItemBase&lt;TYPE&gt; implements IAnyAtomicItem {</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">  @Override</span>
+<span class="source-line-no">027</span><span id="line-27">  @NonNull</span>
+<span class="source-line-no">028</span><span id="line-28">  public abstract IDataTypeAdapter&lt;TYPE&gt; getJavaTypeAdapter();</span>
 <span class="source-line-no">029</span><span id="line-29"></span>
 <span class="source-line-no">030</span><span id="line-30">  @Override</span>
-<span class="source-line-no">031</span><span id="line-31">  public String toSignature() {</span>
-<span class="source-line-no">032</span><span id="line-32">    return ObjectUtils.notNull(new StringBuilder()</span>
-<span class="source-line-no">033</span><span id="line-33">        .append(getType().toSignature())</span>
-<span class="source-line-no">034</span><span id="line-34">        .append("(")</span>
-<span class="source-line-no">035</span><span id="line-35">        .append(getValueSignature())</span>
-<span class="source-line-no">036</span><span id="line-36">        .append(")")</span>
-<span class="source-line-no">037</span><span id="line-37">        .toString());</span>
-<span class="source-line-no">038</span><span id="line-38">  }</span>
-<span class="source-line-no">039</span><span id="line-39"></span>
-<span class="source-line-no">040</span><span id="line-40">  @NonNull</span>
-<span class="source-line-no">041</span><span id="line-41">  protected abstract String getValueSignature();</span>
-<span class="source-line-no">042</span><span id="line-42"></span>
-<span class="source-line-no">043</span><span id="line-43">  @NonNull</span>
-<span class="source-line-no">044</span><span id="line-44">  @Override</span>
-<span class="source-line-no">045</span><span id="line-45">  public String toString() {</span>
-<span class="source-line-no">046</span><span id="line-46">    return toSignature();</span>
-<span class="source-line-no">047</span><span id="line-47">  }</span>
-<span class="source-line-no">048</span><span id="line-48">}</span>
+<span class="source-line-no">031</span><span id="line-31">  public String asString() {</span>
+<span class="source-line-no">032</span><span id="line-32">    return getJavaTypeAdapter().asString(getValue());</span>
+<span class="source-line-no">033</span><span id="line-33">  }</span>
+<span class="source-line-no">034</span><span id="line-34"></span>
+<span class="source-line-no">035</span><span id="line-35">  @Override</span>
+<span class="source-line-no">036</span><span id="line-36">  public String toSignature() {</span>
+<span class="source-line-no">037</span><span id="line-37">    return ObjectUtils.notNull(new StringBuilder()</span>
+<span class="source-line-no">038</span><span id="line-38">        .append(getType().toSignature())</span>
+<span class="source-line-no">039</span><span id="line-39">        .append('(')</span>
+<span class="source-line-no">040</span><span id="line-40">        .append(getValueSignature())</span>
+<span class="source-line-no">041</span><span id="line-41">        .append(')')</span>
+<span class="source-line-no">042</span><span id="line-42">        .toString());</span>
+<span class="source-line-no">043</span><span id="line-43">  }</span>
+<span class="source-line-no">044</span><span id="line-44"></span>
+<span class="source-line-no">045</span><span id="line-45">  /**</span>
+<span class="source-line-no">046</span><span id="line-46">   * Get the string to use for the item's value in the item's signature.</span>
+<span class="source-line-no">047</span><span id="line-47">   *</span>
+<span class="source-line-no">048</span><span id="line-48">   * @return the value string</span>
+<span class="source-line-no">049</span><span id="line-49">   */</span>
+<span class="source-line-no">050</span><span id="line-50">  @NonNull</span>
+<span class="source-line-no">051</span><span id="line-51">  protected abstract String getValueSignature();</span>
+<span class="source-line-no">052</span><span id="line-52"></span>
+<span class="source-line-no">053</span><span id="line-53">  @NonNull</span>
+<span class="source-line-no">054</span><span id="line-54">  @Override</span>
+<span class="source-line-no">055</span><span id="line-55">  public String toString() {</span>
+<span class="source-line-no">056</span><span id="line-56">    return toSignature();</span>
+<span class="source-line-no">057</span><span id="line-57">  }</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">  @Override</span>
+<span class="source-line-no">060</span><span id="line-60">  public boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {</span>
+<span class="source-line-no">061</span><span id="line-61">    return handleDeepEquals(other, dynamicContext);</span>
+<span class="source-line-no">062</span><span id="line-62">  }</span>
+<span class="source-line-no">063</span><span id="line-63"></span>
+<span class="source-line-no">064</span><span id="line-64">  /**</span>
+<span class="source-line-no">065</span><span id="line-65">   * Determine if this and the other value are deeply equal, without relying on</span>
+<span class="source-line-no">066</span><span id="line-66">   * the dynamic context.</span>
+<span class="source-line-no">067</span><span id="line-67">   * &lt;p&gt;</span>
+<span class="source-line-no">068</span><span id="line-68">   * Item equality is defined by the</span>
+<span class="source-line-no">069</span><span id="line-69">   * &lt;a href="https://www.w3.org/TR/xpath-functions-31/#func-deep-equal"&gt;XPath 3.1</span>
+<span class="source-line-no">070</span><span id="line-70">   * fn:deep-equal&lt;/a&gt; specification.</span>
+<span class="source-line-no">071</span><span id="line-71">   *</span>
+<span class="source-line-no">072</span><span id="line-72">   * @param other</span>
+<span class="source-line-no">073</span><span id="line-73">   *          the other value to compare to this value to</span>
+<span class="source-line-no">074</span><span id="line-74">   * @return the {@code true} if the two values are equal, or {@code false}</span>
+<span class="source-line-no">075</span><span id="line-75">   *         otherwise</span>
+<span class="source-line-no">076</span><span id="line-76">   */</span>
+<span class="source-line-no">077</span><span id="line-77">  @Override</span>
+<span class="source-line-no">078</span><span id="line-78">  public boolean deepEquals(@Nullable ICollectionValue other) {</span>
+<span class="source-line-no">079</span><span id="line-79">    return handleDeepEquals(other, null);</span>
+<span class="source-line-no">080</span><span id="line-80">  }</span>
+<span class="source-line-no">081</span><span id="line-81"></span>
+<span class="source-line-no">082</span><span id="line-82">  private boolean handleDeepEquals(</span>
+<span class="source-line-no">083</span><span id="line-83">      @Nullable ICollectionValue other,</span>
+<span class="source-line-no">084</span><span id="line-84">      @Nullable DynamicContext dynamicContext) {</span>
+<span class="source-line-no">085</span><span id="line-85">    boolean retval;</span>
+<span class="source-line-no">086</span><span id="line-86">    try {</span>
+<span class="source-line-no">087</span><span id="line-87">      retval = other instanceof IAnyAtomicItem</span>
+<span class="source-line-no">088</span><span id="line-88">          &amp;&amp; ComparisonFunctions.valueCompairison(</span>
+<span class="source-line-no">089</span><span id="line-89">              this,</span>
+<span class="source-line-no">090</span><span id="line-90">              ComparisonFunctions.Operator.EQ,</span>
+<span class="source-line-no">091</span><span id="line-91">              (IAnyAtomicItem) other,</span>
+<span class="source-line-no">092</span><span id="line-92">              dynamicContext)</span>
+<span class="source-line-no">093</span><span id="line-93">              .toBoolean();</span>
+<span class="source-line-no">094</span><span id="line-94">    } catch (@SuppressWarnings("unused") InvalidTypeMetapathException ex) {</span>
+<span class="source-line-no">095</span><span id="line-95">      // incompatible types are a non-match</span>
+<span class="source-line-no">096</span><span id="line-96">      retval = false;</span>
+<span class="source-line-no">097</span><span id="line-97">    }</span>
+<span class="source-line-no">098</span><span id="line-98">    return retval;</span>
+<span class="source-line-no">099</span><span id="line-99">  }</span>
+<span class="source-line-no">100</span><span id="line-100">}</span>
 
 
 

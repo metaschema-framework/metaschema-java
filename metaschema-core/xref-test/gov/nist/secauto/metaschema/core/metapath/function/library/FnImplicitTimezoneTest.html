@@ -16,7 +16,7 @@
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  
@@ -30,8 +30,8 @@
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>    @Test
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>    <strong class="jxr_keyword">void</strong> test() {
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>      DynamicContext context = <strong class="jxr_keyword">new</strong> DynamicContext();
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>      IDayTimeDurationItem currentTime = ObjectUtils.notNull(MetapathExpression.compile(<span class="jxr_string">"fn:implicit-timezone()"</span>)
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>          .evaluateAs(<strong class="jxr_keyword">null</strong>, MetapathExpression.ResultType.ITEM, context));
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>      IDayTimeDurationItem currentTime = ObjectUtils.notNull(IMetapathExpression.compile(<span class="jxr_string">"fn:implicit-timezone()"</span>)
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>          .evaluateAs(<strong class="jxr_keyword">null</strong>, IMetapathExpression.ResultType.ITEM, context));
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>      assertEquals(
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>          context.getCurrentDateTime().getOffset().get(ChronoField.OFFSET_SECONDS),
@@ -41,6 +41,6 @@
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

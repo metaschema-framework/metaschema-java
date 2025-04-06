@@ -14,14 +14,14 @@
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.metaschema.core.metapath.function.library;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ISequence;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.IArgument;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.OperationFunctions;
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.IItem;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.IArgument;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.IFunction;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.IItem;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
@@ -97,7 +97,7 @@
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>      ISequence&lt;? <strong class="jxr_keyword">extends</strong> IAnyAtomicItem&gt; sequence = FunctionUtils.asType(
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>          ObjectUtils.requireNonNull(arguments.get(0)));
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>  
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">return</strong> ISequence.of(sum(sequence.getValue(), IIntegerItem.ZERO));
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">return</strong> ISequence.of(sum(sequence, IIntegerItem.ZERO));
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>    }
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>    @SuppressWarnings(<span class="jxr_string">"unused"</span>)
@@ -111,7 +111,7 @@
 <a class="jxr_linenumber" name="L103" href="#L103">103</a> 
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>     <a name="IAnyAtomicItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IAnyAtomicItem.html#IAnyAtomicItem">IAnyAtomicItem</a> zero = FunctionUtils.asTypeOrNull(arguments.get(1).getFirstItem(<strong class="jxr_keyword">true</strong>));
 <a class="jxr_linenumber" name="L105" href="#L105">105</a> 
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">return</strong> ISequence.of(sum(sequence.getValue(), zero));
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">return</strong> ISequence.of(sum(sequence, zero));
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>   }
 <a class="jxr_linenumber" name="L108" href="#L108">108</a> 
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>   <em class="jxr_javadoccomment">/**</em>
@@ -143,7 +143,7 @@
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>     <em class="jxr_comment">// tell cpd to start ignoring code - CPD-OFF</em>
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> 
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>     Map&lt;Class&lt;? <strong class="jxr_keyword">extends</strong> IAnyAtomicItem&gt;, Integer&gt; typeCounts = FunctionUtils.countTypes(
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>         OperationFunctions.AGGREGATE_MATH_TYPES,
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         OperationFunctions.aggregateMathTypes(),
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>         ObjectUtils.notNull(items));
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> 
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>     <strong class="jxr_keyword">int</strong> count = items.size();
@@ -195,7 +195,7 @@
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="InvalidArgumentFunctionException" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/InvalidArgumentFunctionException.html#InvalidArgumentFunctionException">InvalidArgumentFunctionException</a>(
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>           InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>           String.format(<span class="jxr_string">"Values must all be of type '%s'."</span>,
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>               OperationFunctions.AGGREGATE_MATH_TYPES.stream()
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>               OperationFunctions.aggregateMathTypes().stream()
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>                   .map(Class::getName)
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>                   .collect(CustomCollectors.joiningWithOxfordComma(<span class="jxr_string">","</span>))));
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>     }
@@ -207,6 +207,6 @@
 <a class="jxr_linenumber" name="L199" href="#L199">199</a> }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

@@ -205,7 +205,7 @@
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>             Function.identity()));
 <a class="jxr_linenumber" name="L198" href="#L198">198</a> 
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>     <strong class="jxr_keyword">for</strong> (Attribute attribute : CollectionUtil.toIterable(ObjectUtils.notNull(start.getAttributes()))) {
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>       IEnhancedQName qname = IEnhancedQName.of(attribute.getName());
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>       IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.requireNonNull(attribute.getName()));
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>       <a name="IBoundInstanceFlag" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/IBoundInstanceFlag.html#IBoundInstanceFlag">IBoundInstanceFlag</a> instance = flagInstanceMap.get(qname);
 <a class="jxr_linenumber" name="L202" href="#L202">202</a>       <strong class="jxr_keyword">if</strong> (instance == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L203" href="#L203">203</a>         <em class="jxr_comment">// unrecognized flag</em>
@@ -597,7 +597,7 @@
 <a class="jxr_linenumber" name="L589" href="#L589">589</a>     }
 <a class="jxr_linenumber" name="L590" href="#L590">590</a> 
 <a class="jxr_linenumber" name="L591" href="#L591">591</a>     @Nullable
-<a class="jxr_linenumber" name="L592" href="#L592">592</a>     <strong class="jxr_keyword">private</strong> Object checkMissingFieldValue(Object value) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L592" href="#L592">592</a>     <strong class="jxr_keyword">private</strong> Object checkMissingFieldValue(Object value) {
 <a class="jxr_linenumber" name="L593" href="#L593">593</a>       <strong class="jxr_keyword">if</strong> (value == <strong class="jxr_keyword">null</strong> &amp;&amp; LOGGER.isWarnEnabled()) {
 <a class="jxr_linenumber" name="L594" href="#L594">594</a>         StartElement start = getStartElement();
 <a class="jxr_linenumber" name="L595" href="#L595">595</a>         LOGGER.atWarn().log(<span class="jxr_string">"Missing property value{}"</span>,
@@ -714,6 +714,6 @@
 <a class="jxr_linenumber" name="L706" href="#L706">706</a> }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>

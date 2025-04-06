@@ -23,10 +23,10 @@
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;</span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;</span>
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.DynamicContext;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;</span>
 <span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;</span>
-<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;</span>
+<span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.ISequence;</span>
 <span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.node.AbstractNodeItemVisitor;</span>
 <span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;</span>
 <span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;</span>
@@ -399,13 +399,13 @@
 <span class="source-line-no">386</span><span id="line-386">      @NonNull Throwable ex) {</span>
 <span class="source-line-no">387</span><span id="line-387">    StringBuilder builder = new StringBuilder(128);</span>
 <span class="source-line-no">388</span><span id="line-388">    builder.append("A ")</span>
-<span class="source-line-no">389</span><span id="line-389">        .append(constraint.getClass().getName())</span>
+<span class="source-line-no">389</span><span id="line-389">        .append(constraint.getType().getName())</span>
 <span class="source-line-no">390</span><span id="line-390">        .append(" constraint");</span>
 <span class="source-line-no">391</span><span id="line-391"></span>
 <span class="source-line-no">392</span><span id="line-392">    String id = constraint.getId();</span>
 <span class="source-line-no">393</span><span id="line-393">    if (id == null) {</span>
 <span class="source-line-no">394</span><span id="line-394">      builder.append(" targeting the metapath '")</span>
-<span class="source-line-no">395</span><span id="line-395">          .append(constraint.getTarget())</span>
+<span class="source-line-no">395</span><span id="line-395">          .append(constraint.getTarget().getPath())</span>
 <span class="source-line-no">396</span><span id="line-396">          .append('\'');</span>
 <span class="source-line-no">397</span><span id="line-397">    } else {</span>
 <span class="source-line-no">398</span><span id="line-398">      builder.append(" with id '")</span>
@@ -415,7 +415,7 @@
 <span class="source-line-no">402</span><span id="line-402"></span>
 <span class="source-line-no">403</span><span id="line-403">    builder.append(", matching the item at path '")</span>
 <span class="source-line-no">404</span><span id="line-404">        .append(item.getMetapath())</span>
-<span class="source-line-no">405</span><span id="line-405">        .append("', resulted in an unexpected error. The error was: ")</span>
+<span class="source-line-no">405</span><span id="line-405">        .append("', resulted in an unexpected error. ")</span>
 <span class="source-line-no">406</span><span id="line-406">        .append(ex.getLocalizedMessage());</span>
 <span class="source-line-no">407</span><span id="line-407">    return ObjectUtils.notNull(builder.toString());</span>
 <span class="source-line-no">408</span><span id="line-408">  }</span>
@@ -635,82 +635,82 @@
 <span class="source-line-no">622</span><span id="line-622">      indexNameToKeyRefMap.put(indexName, keyRefItems);</span>
 <span class="source-line-no">623</span><span id="line-623">    }</span>
 <span class="source-line-no">624</span><span id="line-624"></span>
-<span class="source-line-no">625</span><span id="line-625">    KeyRef keyRef = new KeyRef(constraint, node, new ArrayList&lt;&gt;(targets.getValue()));</span>
-<span class="source-line-no">626</span><span id="line-626">    keyRefItems.add(keyRef);</span>
-<span class="source-line-no">627</span><span id="line-627">  }</span>
-<span class="source-line-no">628</span><span id="line-628"></span>
-<span class="source-line-no">629</span><span id="line-629">  /**</span>
-<span class="source-line-no">630</span><span id="line-630">   * Evaluates the provided collection of {@code constraints} in the context of</span>
-<span class="source-line-no">631</span><span id="line-631">   * the {@code item}.</span>
-<span class="source-line-no">632</span><span id="line-632">   *</span>
-<span class="source-line-no">633</span><span id="line-633">   * @param constraints</span>
-<span class="source-line-no">634</span><span id="line-634">   *          the constraints to execute</span>
-<span class="source-line-no">635</span><span id="line-635">   * @param item</span>
-<span class="source-line-no">636</span><span id="line-636">   *          the focus of Metapath evaluation</span>
-<span class="source-line-no">637</span><span id="line-637">   * @param dynamicContext</span>
-<span class="source-line-no">638</span><span id="line-638">   *          the Metapath dynamic execution context to use for Metapath</span>
-<span class="source-line-no">639</span><span id="line-639">   *          evaluation</span>
-<span class="source-line-no">640</span><span id="line-640">   */</span>
-<span class="source-line-no">641</span><span id="line-641">  @SuppressWarnings("PMD.AvoidCatchingGenericException")</span>
-<span class="source-line-no">642</span><span id="line-642">  private void validateExpect(</span>
-<span class="source-line-no">643</span><span id="line-643">      @NonNull List&lt;? extends IExpectConstraint&gt; constraints,</span>
-<span class="source-line-no">644</span><span id="line-644">      @NonNull IDefinitionNodeItem&lt;?, ?&gt; item,</span>
-<span class="source-line-no">645</span><span id="line-645">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">646</span><span id="line-646">    for (IExpectConstraint constraint : constraints) {</span>
-<span class="source-line-no">647</span><span id="line-647">      assert constraint != null;</span>
-<span class="source-line-no">648</span><span id="line-648"></span>
-<span class="source-line-no">649</span><span id="line-649">      try {</span>
-<span class="source-line-no">650</span><span id="line-650">        ISequence&lt;? extends IDefinitionNodeItem&lt;?, ?&gt;&gt; targets = constraint.matchTargets(item, dynamicContext);</span>
-<span class="source-line-no">651</span><span id="line-651">        validateExpect(constraint, item, targets, dynamicContext);</span>
-<span class="source-line-no">652</span><span id="line-652">      } catch (RuntimeException ex) {</span>
-<span class="source-line-no">653</span><span id="line-653">        handleError(constraint, item, ex, dynamicContext);</span>
-<span class="source-line-no">654</span><span id="line-654">      }</span>
-<span class="source-line-no">655</span><span id="line-655">    }</span>
-<span class="source-line-no">656</span><span id="line-656">  }</span>
-<span class="source-line-no">657</span><span id="line-657"></span>
-<span class="source-line-no">658</span><span id="line-658">  /**</span>
-<span class="source-line-no">659</span><span id="line-659">   * Evaluates the provided {@code constraint} against each of the</span>
-<span class="source-line-no">660</span><span id="line-660">   * {@code targets}.</span>
-<span class="source-line-no">661</span><span id="line-661">   *</span>
-<span class="source-line-no">662</span><span id="line-662">   * @param constraint</span>
-<span class="source-line-no">663</span><span id="line-663">   *          the constraint to execute</span>
-<span class="source-line-no">664</span><span id="line-664">   * @param node</span>
-<span class="source-line-no">665</span><span id="line-665">   *          the original focus of Metapath evaluation for identifying the</span>
-<span class="source-line-no">666</span><span id="line-666">   *          targets</span>
-<span class="source-line-no">667</span><span id="line-667">   * @param targets</span>
-<span class="source-line-no">668</span><span id="line-668">   *          the focus of Metapath evaluation for evaluating any constraint</span>
-<span class="source-line-no">669</span><span id="line-669">   *          Metapath clauses</span>
-<span class="source-line-no">670</span><span id="line-670">   * @param dynamicContext</span>
-<span class="source-line-no">671</span><span id="line-671">   *          the Metapath dynamic execution context to use for Metapath</span>
-<span class="source-line-no">672</span><span id="line-672">   *          evaluation</span>
-<span class="source-line-no">673</span><span id="line-673">   */</span>
-<span class="source-line-no">674</span><span id="line-674">  private void validateExpect(</span>
-<span class="source-line-no">675</span><span id="line-675">      @NonNull IExpectConstraint constraint,</span>
-<span class="source-line-no">676</span><span id="line-676">      @NonNull INodeItem node,</span>
-<span class="source-line-no">677</span><span id="line-677">      @NonNull ISequence&lt;? extends INodeItem&gt; targets,</span>
-<span class="source-line-no">678</span><span id="line-678">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">679</span><span id="line-679">    MetapathExpression metapath = MetapathExpression.compile(</span>
-<span class="source-line-no">680</span><span id="line-680">        constraint.getTest(),</span>
-<span class="source-line-no">681</span><span id="line-681">        dynamicContext.getStaticContext());</span>
-<span class="source-line-no">682</span><span id="line-682"></span>
-<span class="source-line-no">683</span><span id="line-683">    IConstraintValidationHandler handler = getConstraintValidationHandler();</span>
-<span class="source-line-no">684</span><span id="line-684">    targets.stream()</span>
-<span class="source-line-no">685</span><span id="line-685">        .forEachOrdered(item -&gt; {</span>
-<span class="source-line-no">686</span><span id="line-686">          assert item != null;</span>
-<span class="source-line-no">687</span><span id="line-687"></span>
-<span class="source-line-no">688</span><span id="line-688">          if (item.hasValue()) {</span>
-<span class="source-line-no">689</span><span id="line-689">            try {</span>
-<span class="source-line-no">690</span><span id="line-690">              ISequence&lt;?&gt; result = metapath.evaluate(item, dynamicContext);</span>
-<span class="source-line-no">691</span><span id="line-691">              if (FnBoolean.fnBoolean(result).toBoolean()) {</span>
-<span class="source-line-no">692</span><span id="line-692">                handlePass(constraint, node, item, dynamicContext);</span>
-<span class="source-line-no">693</span><span id="line-693">              } else {</span>
-<span class="source-line-no">694</span><span id="line-694">                handler.handleExpectViolation(constraint, node, item, dynamicContext);</span>
+<span class="source-line-no">625</span><span id="line-625">    keyRefItems.add(new KeyRef(constraint, node, new ArrayList&lt;&gt;(targets)));</span>
+<span class="source-line-no">626</span><span id="line-626">  }</span>
+<span class="source-line-no">627</span><span id="line-627"></span>
+<span class="source-line-no">628</span><span id="line-628">  /**</span>
+<span class="source-line-no">629</span><span id="line-629">   * Evaluates the provided collection of {@code constraints} in the context of</span>
+<span class="source-line-no">630</span><span id="line-630">   * the {@code item}.</span>
+<span class="source-line-no">631</span><span id="line-631">   *</span>
+<span class="source-line-no">632</span><span id="line-632">   * @param constraints</span>
+<span class="source-line-no">633</span><span id="line-633">   *          the constraints to execute</span>
+<span class="source-line-no">634</span><span id="line-634">   * @param item</span>
+<span class="source-line-no">635</span><span id="line-635">   *          the focus of Metapath evaluation</span>
+<span class="source-line-no">636</span><span id="line-636">   * @param dynamicContext</span>
+<span class="source-line-no">637</span><span id="line-637">   *          the Metapath dynamic execution context to use for Metapath</span>
+<span class="source-line-no">638</span><span id="line-638">   *          evaluation</span>
+<span class="source-line-no">639</span><span id="line-639">   */</span>
+<span class="source-line-no">640</span><span id="line-640">  @SuppressWarnings("PMD.AvoidCatchingGenericException")</span>
+<span class="source-line-no">641</span><span id="line-641">  private void validateExpect(</span>
+<span class="source-line-no">642</span><span id="line-642">      @NonNull List&lt;? extends IExpectConstraint&gt; constraints,</span>
+<span class="source-line-no">643</span><span id="line-643">      @NonNull IDefinitionNodeItem&lt;?, ?&gt; item,</span>
+<span class="source-line-no">644</span><span id="line-644">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">645</span><span id="line-645">    for (IExpectConstraint constraint : constraints) {</span>
+<span class="source-line-no">646</span><span id="line-646">      assert constraint != null;</span>
+<span class="source-line-no">647</span><span id="line-647"></span>
+<span class="source-line-no">648</span><span id="line-648">      try {</span>
+<span class="source-line-no">649</span><span id="line-649">        ISequence&lt;? extends IDefinitionNodeItem&lt;?, ?&gt;&gt; targets = constraint.matchTargets(item, dynamicContext);</span>
+<span class="source-line-no">650</span><span id="line-650">        validateExpect(constraint, item, targets, dynamicContext);</span>
+<span class="source-line-no">651</span><span id="line-651">      } catch (RuntimeException ex) {</span>
+<span class="source-line-no">652</span><span id="line-652">        handleError(constraint, item, ex, dynamicContext);</span>
+<span class="source-line-no">653</span><span id="line-653">      }</span>
+<span class="source-line-no">654</span><span id="line-654">    }</span>
+<span class="source-line-no">655</span><span id="line-655">  }</span>
+<span class="source-line-no">656</span><span id="line-656"></span>
+<span class="source-line-no">657</span><span id="line-657">  /**</span>
+<span class="source-line-no">658</span><span id="line-658">   * Evaluates the provided {@code constraint} against each of the</span>
+<span class="source-line-no">659</span><span id="line-659">   * {@code targets}.</span>
+<span class="source-line-no">660</span><span id="line-660">   *</span>
+<span class="source-line-no">661</span><span id="line-661">   * @param constraint</span>
+<span class="source-line-no">662</span><span id="line-662">   *          the constraint to execute</span>
+<span class="source-line-no">663</span><span id="line-663">   * @param node</span>
+<span class="source-line-no">664</span><span id="line-664">   *          the original focus of Metapath evaluation for identifying the</span>
+<span class="source-line-no">665</span><span id="line-665">   *          targets</span>
+<span class="source-line-no">666</span><span id="line-666">   * @param targets</span>
+<span class="source-line-no">667</span><span id="line-667">   *          the focus of Metapath evaluation for evaluating any constraint</span>
+<span class="source-line-no">668</span><span id="line-668">   *          Metapath clauses</span>
+<span class="source-line-no">669</span><span id="line-669">   * @param dynamicContext</span>
+<span class="source-line-no">670</span><span id="line-670">   *          the Metapath dynamic execution context to use for Metapath</span>
+<span class="source-line-no">671</span><span id="line-671">   *          evaluation</span>
+<span class="source-line-no">672</span><span id="line-672">   */</span>
+<span class="source-line-no">673</span><span id="line-673">  private void validateExpect(</span>
+<span class="source-line-no">674</span><span id="line-674">      @NonNull IExpectConstraint constraint,</span>
+<span class="source-line-no">675</span><span id="line-675">      @NonNull INodeItem node,</span>
+<span class="source-line-no">676</span><span id="line-676">      @NonNull ISequence&lt;? extends INodeItem&gt; targets,</span>
+<span class="source-line-no">677</span><span id="line-677">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">678</span><span id="line-678">    try {</span>
+<span class="source-line-no">679</span><span id="line-679">      IMetapathExpression metapath = constraint.getTest();</span>
+<span class="source-line-no">680</span><span id="line-680">      IConstraintValidationHandler handler = getConstraintValidationHandler();</span>
+<span class="source-line-no">681</span><span id="line-681">      targets.stream()</span>
+<span class="source-line-no">682</span><span id="line-682">          .forEachOrdered(item -&gt; {</span>
+<span class="source-line-no">683</span><span id="line-683">            assert item != null;</span>
+<span class="source-line-no">684</span><span id="line-684"></span>
+<span class="source-line-no">685</span><span id="line-685">            if (item.hasValue()) {</span>
+<span class="source-line-no">686</span><span id="line-686">              try {</span>
+<span class="source-line-no">687</span><span id="line-687">                ISequence&lt;?&gt; result = metapath.evaluate(item, dynamicContext);</span>
+<span class="source-line-no">688</span><span id="line-688">                if (FnBoolean.fnBoolean(result).toBoolean()) {</span>
+<span class="source-line-no">689</span><span id="line-689">                  handlePass(constraint, node, item, dynamicContext);</span>
+<span class="source-line-no">690</span><span id="line-690">                } else {</span>
+<span class="source-line-no">691</span><span id="line-691">                  handler.handleExpectViolation(constraint, node, item, dynamicContext);</span>
+<span class="source-line-no">692</span><span id="line-692">                }</span>
+<span class="source-line-no">693</span><span id="line-693">              } catch (MetapathException ex) {</span>
+<span class="source-line-no">694</span><span id="line-694">                handleError(constraint, item, ex, dynamicContext);</span>
 <span class="source-line-no">695</span><span id="line-695">              }</span>
-<span class="source-line-no">696</span><span id="line-696">            } catch (MetapathException ex) {</span>
-<span class="source-line-no">697</span><span id="line-697">              handleError(constraint, item, ex, dynamicContext);</span>
-<span class="source-line-no">698</span><span id="line-698">            }</span>
-<span class="source-line-no">699</span><span id="line-699">          }</span>
-<span class="source-line-no">700</span><span id="line-700">        });</span>
+<span class="source-line-no">696</span><span id="line-696">            }</span>
+<span class="source-line-no">697</span><span id="line-697">          });</span>
+<span class="source-line-no">698</span><span id="line-698">    } catch (MetapathException ex) {</span>
+<span class="source-line-no">699</span><span id="line-699">      handleError(constraint, node, ex, dynamicContext);</span>
+<span class="source-line-no">700</span><span id="line-700">    }</span>
 <span class="source-line-no">701</span><span id="line-701">  }</span>
 <span class="source-line-no">702</span><span id="line-702"></span>
 <span class="source-line-no">703</span><span id="line-703">  /**</span>
@@ -984,100 +984,99 @@
 <span class="source-line-no">971</span><span id="line-971">        for (ILet let : lets) {</span>
 <span class="source-line-no">972</span><span id="line-972">          IEnhancedQName name = let.getName();</span>
 <span class="source-line-no">973</span><span id="line-973">          ISequence&lt;?&gt; result = let.getValueExpression().evaluate(focus, subContext);</span>
-<span class="source-line-no">974</span><span id="line-974"></span>
-<span class="source-line-no">975</span><span id="line-975">          // ensure the sequence is list backed</span>
-<span class="source-line-no">976</span><span id="line-976">          result.getValue();</span>
-<span class="source-line-no">977</span><span id="line-977"></span>
-<span class="source-line-no">978</span><span id="line-978">          subContext.bindVariableValue(name, result);</span>
-<span class="source-line-no">979</span><span id="line-979">        }</span>
-<span class="source-line-no">980</span><span id="line-980">        retval = subContext;</span>
-<span class="source-line-no">981</span><span id="line-981">      }</span>
-<span class="source-line-no">982</span><span id="line-982">      return retval;</span>
-<span class="source-line-no">983</span><span id="line-983">    }</span>
-<span class="source-line-no">984</span><span id="line-984"></span>
-<span class="source-line-no">985</span><span id="line-985">    @Override</span>
-<span class="source-line-no">986</span><span id="line-986">    public Void visitFlag(@NonNull IFlagNodeItem item, DynamicContext context) {</span>
-<span class="source-line-no">987</span><span id="line-987">      assert context != null;</span>
-<span class="source-line-no">988</span><span id="line-988"></span>
-<span class="source-line-no">989</span><span id="line-989">      IFlagDefinition definition = item.getDefinition();</span>
-<span class="source-line-no">990</span><span id="line-990">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
-<span class="source-line-no">991</span><span id="line-991"></span>
-<span class="source-line-no">992</span><span id="line-992">      validateFlag(item, effectiveContext);</span>
-<span class="source-line-no">993</span><span id="line-993">      super.visitFlag(item, effectiveContext);</span>
-<span class="source-line-no">994</span><span id="line-994">      handleAllowedValues(item, context);</span>
-<span class="source-line-no">995</span><span id="line-995">      return null;</span>
-<span class="source-line-no">996</span><span id="line-996">    }</span>
-<span class="source-line-no">997</span><span id="line-997"></span>
-<span class="source-line-no">998</span><span id="line-998">    @Override</span>
-<span class="source-line-no">999</span><span id="line-999">    public Void visitField(@NonNull IFieldNodeItem item, DynamicContext context) {</span>
-<span class="source-line-no">1000</span><span id="line-1000">      assert context != null;</span>
-<span class="source-line-no">1001</span><span id="line-1001"></span>
-<span class="source-line-no">1002</span><span id="line-1002">      IFieldDefinition definition = item.getDefinition();</span>
-<span class="source-line-no">1003</span><span id="line-1003">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
-<span class="source-line-no">1004</span><span id="line-1004"></span>
-<span class="source-line-no">1005</span><span id="line-1005">      validateField(item, effectiveContext);</span>
-<span class="source-line-no">1006</span><span id="line-1006">      super.visitField(item, effectiveContext);</span>
-<span class="source-line-no">1007</span><span id="line-1007">      handleAllowedValues(item, context);</span>
-<span class="source-line-no">1008</span><span id="line-1008">      return null;</span>
-<span class="source-line-no">1009</span><span id="line-1009">    }</span>
-<span class="source-line-no">1010</span><span id="line-1010"></span>
-<span class="source-line-no">1011</span><span id="line-1011">    @Override</span>
-<span class="source-line-no">1012</span><span id="line-1012">    public Void visitAssembly(@NonNull IAssemblyNodeItem item, DynamicContext context) {</span>
-<span class="source-line-no">1013</span><span id="line-1013">      assert context != null;</span>
-<span class="source-line-no">1014</span><span id="line-1014"></span>
-<span class="source-line-no">1015</span><span id="line-1015">      IAssemblyDefinition definition = item.getDefinition();</span>
-<span class="source-line-no">1016</span><span id="line-1016">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
-<span class="source-line-no">1017</span><span id="line-1017"></span>
-<span class="source-line-no">1018</span><span id="line-1018">      validateAssembly(item, effectiveContext);</span>
-<span class="source-line-no">1019</span><span id="line-1019">      super.visitAssembly(item, effectiveContext);</span>
-<span class="source-line-no">1020</span><span id="line-1020">      return null;</span>
-<span class="source-line-no">1021</span><span id="line-1021">    }</span>
-<span class="source-line-no">1022</span><span id="line-1022"></span>
-<span class="source-line-no">1023</span><span id="line-1023">    @Override</span>
-<span class="source-line-no">1024</span><span id="line-1024">    public Void visitMetaschema(@NonNull IModuleNodeItem item, DynamicContext context) {</span>
-<span class="source-line-no">1025</span><span id="line-1025">      throw new UnsupportedOperationException("Method not used.");</span>
-<span class="source-line-no">1026</span><span id="line-1026">    }</span>
-<span class="source-line-no">1027</span><span id="line-1027"></span>
-<span class="source-line-no">1028</span><span id="line-1028">    @Override</span>
-<span class="source-line-no">1029</span><span id="line-1029">    protected Void defaultResult() {</span>
-<span class="source-line-no">1030</span><span id="line-1030">      // no result value</span>
-<span class="source-line-no">1031</span><span id="line-1031">      return null;</span>
-<span class="source-line-no">1032</span><span id="line-1032">    }</span>
-<span class="source-line-no">1033</span><span id="line-1033">  }</span>
-<span class="source-line-no">1034</span><span id="line-1034"></span>
-<span class="source-line-no">1035</span><span id="line-1035">  private static class KeyRef {</span>
-<span class="source-line-no">1036</span><span id="line-1036">    @NonNull</span>
-<span class="source-line-no">1037</span><span id="line-1037">    private final IIndexHasKeyConstraint constraint;</span>
-<span class="source-line-no">1038</span><span id="line-1038">    @NonNull</span>
-<span class="source-line-no">1039</span><span id="line-1039">    private final INodeItem node;</span>
-<span class="source-line-no">1040</span><span id="line-1040">    @NonNull</span>
-<span class="source-line-no">1041</span><span id="line-1041">    private final List&lt;INodeItem&gt; targets;</span>
-<span class="source-line-no">1042</span><span id="line-1042"></span>
-<span class="source-line-no">1043</span><span id="line-1043">    public KeyRef(</span>
-<span class="source-line-no">1044</span><span id="line-1044">        @NonNull IIndexHasKeyConstraint constraint,</span>
-<span class="source-line-no">1045</span><span id="line-1045">        @NonNull INodeItem node,</span>
-<span class="source-line-no">1046</span><span id="line-1046">        @NonNull List&lt;INodeItem&gt; targets) {</span>
-<span class="source-line-no">1047</span><span id="line-1047">      this.node = node;</span>
-<span class="source-line-no">1048</span><span id="line-1048">      this.constraint = constraint;</span>
-<span class="source-line-no">1049</span><span id="line-1049">      this.targets = targets;</span>
-<span class="source-line-no">1050</span><span id="line-1050">    }</span>
-<span class="source-line-no">1051</span><span id="line-1051"></span>
-<span class="source-line-no">1052</span><span id="line-1052">    @NonNull</span>
-<span class="source-line-no">1053</span><span id="line-1053">    public IIndexHasKeyConstraint getConstraint() {</span>
-<span class="source-line-no">1054</span><span id="line-1054">      return constraint;</span>
-<span class="source-line-no">1055</span><span id="line-1055">    }</span>
-<span class="source-line-no">1056</span><span id="line-1056"></span>
-<span class="source-line-no">1057</span><span id="line-1057">    @NonNull</span>
-<span class="source-line-no">1058</span><span id="line-1058">    protected INodeItem getNode() {</span>
-<span class="source-line-no">1059</span><span id="line-1059">      return node;</span>
-<span class="source-line-no">1060</span><span id="line-1060">    }</span>
-<span class="source-line-no">1061</span><span id="line-1061"></span>
-<span class="source-line-no">1062</span><span id="line-1062">    @NonNull</span>
-<span class="source-line-no">1063</span><span id="line-1063">    public List&lt;INodeItem&gt; getTargets() {</span>
-<span class="source-line-no">1064</span><span id="line-1064">      return targets;</span>
-<span class="source-line-no">1065</span><span id="line-1065">    }</span>
-<span class="source-line-no">1066</span><span id="line-1066">  }</span>
-<span class="source-line-no">1067</span><span id="line-1067">}</span>
+<span class="source-line-no">974</span><span id="line-974">          subContext.bindVariableValue(</span>
+<span class="source-line-no">975</span><span id="line-975">              name,</span>
+<span class="source-line-no">976</span><span id="line-976">              // ensure the sequence is list backed</span>
+<span class="source-line-no">977</span><span id="line-977">              result.reusable());</span>
+<span class="source-line-no">978</span><span id="line-978">        }</span>
+<span class="source-line-no">979</span><span id="line-979">        retval = subContext;</span>
+<span class="source-line-no">980</span><span id="line-980">      }</span>
+<span class="source-line-no">981</span><span id="line-981">      return retval;</span>
+<span class="source-line-no">982</span><span id="line-982">    }</span>
+<span class="source-line-no">983</span><span id="line-983"></span>
+<span class="source-line-no">984</span><span id="line-984">    @Override</span>
+<span class="source-line-no">985</span><span id="line-985">    public Void visitFlag(@NonNull IFlagNodeItem item, DynamicContext context) {</span>
+<span class="source-line-no">986</span><span id="line-986">      assert context != null;</span>
+<span class="source-line-no">987</span><span id="line-987"></span>
+<span class="source-line-no">988</span><span id="line-988">      IFlagDefinition definition = item.getDefinition();</span>
+<span class="source-line-no">989</span><span id="line-989">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
+<span class="source-line-no">990</span><span id="line-990"></span>
+<span class="source-line-no">991</span><span id="line-991">      validateFlag(item, effectiveContext);</span>
+<span class="source-line-no">992</span><span id="line-992">      super.visitFlag(item, effectiveContext);</span>
+<span class="source-line-no">993</span><span id="line-993">      handleAllowedValues(item, context);</span>
+<span class="source-line-no">994</span><span id="line-994">      return null;</span>
+<span class="source-line-no">995</span><span id="line-995">    }</span>
+<span class="source-line-no">996</span><span id="line-996"></span>
+<span class="source-line-no">997</span><span id="line-997">    @Override</span>
+<span class="source-line-no">998</span><span id="line-998">    public Void visitField(@NonNull IFieldNodeItem item, DynamicContext context) {</span>
+<span class="source-line-no">999</span><span id="line-999">      assert context != null;</span>
+<span class="source-line-no">1000</span><span id="line-1000"></span>
+<span class="source-line-no">1001</span><span id="line-1001">      IFieldDefinition definition = item.getDefinition();</span>
+<span class="source-line-no">1002</span><span id="line-1002">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
+<span class="source-line-no">1003</span><span id="line-1003"></span>
+<span class="source-line-no">1004</span><span id="line-1004">      validateField(item, effectiveContext);</span>
+<span class="source-line-no">1005</span><span id="line-1005">      super.visitField(item, effectiveContext);</span>
+<span class="source-line-no">1006</span><span id="line-1006">      handleAllowedValues(item, context);</span>
+<span class="source-line-no">1007</span><span id="line-1007">      return null;</span>
+<span class="source-line-no">1008</span><span id="line-1008">    }</span>
+<span class="source-line-no">1009</span><span id="line-1009"></span>
+<span class="source-line-no">1010</span><span id="line-1010">    @Override</span>
+<span class="source-line-no">1011</span><span id="line-1011">    public Void visitAssembly(@NonNull IAssemblyNodeItem item, DynamicContext context) {</span>
+<span class="source-line-no">1012</span><span id="line-1012">      assert context != null;</span>
+<span class="source-line-no">1013</span><span id="line-1013"></span>
+<span class="source-line-no">1014</span><span id="line-1014">      IAssemblyDefinition definition = item.getDefinition();</span>
+<span class="source-line-no">1015</span><span id="line-1015">      DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);</span>
+<span class="source-line-no">1016</span><span id="line-1016"></span>
+<span class="source-line-no">1017</span><span id="line-1017">      validateAssembly(item, effectiveContext);</span>
+<span class="source-line-no">1018</span><span id="line-1018">      super.visitAssembly(item, effectiveContext);</span>
+<span class="source-line-no">1019</span><span id="line-1019">      return null;</span>
+<span class="source-line-no">1020</span><span id="line-1020">    }</span>
+<span class="source-line-no">1021</span><span id="line-1021"></span>
+<span class="source-line-no">1022</span><span id="line-1022">    @Override</span>
+<span class="source-line-no">1023</span><span id="line-1023">    public Void visitMetaschema(@NonNull IModuleNodeItem item, DynamicContext context) {</span>
+<span class="source-line-no">1024</span><span id="line-1024">      throw new UnsupportedOperationException("Method not used.");</span>
+<span class="source-line-no">1025</span><span id="line-1025">    }</span>
+<span class="source-line-no">1026</span><span id="line-1026"></span>
+<span class="source-line-no">1027</span><span id="line-1027">    @Override</span>
+<span class="source-line-no">1028</span><span id="line-1028">    protected Void defaultResult() {</span>
+<span class="source-line-no">1029</span><span id="line-1029">      // no result value</span>
+<span class="source-line-no">1030</span><span id="line-1030">      return null;</span>
+<span class="source-line-no">1031</span><span id="line-1031">    }</span>
+<span class="source-line-no">1032</span><span id="line-1032">  }</span>
+<span class="source-line-no">1033</span><span id="line-1033"></span>
+<span class="source-line-no">1034</span><span id="line-1034">  private static class KeyRef {</span>
+<span class="source-line-no">1035</span><span id="line-1035">    @NonNull</span>
+<span class="source-line-no">1036</span><span id="line-1036">    private final IIndexHasKeyConstraint constraint;</span>
+<span class="source-line-no">1037</span><span id="line-1037">    @NonNull</span>
+<span class="source-line-no">1038</span><span id="line-1038">    private final INodeItem node;</span>
+<span class="source-line-no">1039</span><span id="line-1039">    @NonNull</span>
+<span class="source-line-no">1040</span><span id="line-1040">    private final List&lt;INodeItem&gt; targets;</span>
+<span class="source-line-no">1041</span><span id="line-1041"></span>
+<span class="source-line-no">1042</span><span id="line-1042">    public KeyRef(</span>
+<span class="source-line-no">1043</span><span id="line-1043">        @NonNull IIndexHasKeyConstraint constraint,</span>
+<span class="source-line-no">1044</span><span id="line-1044">        @NonNull INodeItem node,</span>
+<span class="source-line-no">1045</span><span id="line-1045">        @NonNull List&lt;INodeItem&gt; targets) {</span>
+<span class="source-line-no">1046</span><span id="line-1046">      this.node = node;</span>
+<span class="source-line-no">1047</span><span id="line-1047">      this.constraint = constraint;</span>
+<span class="source-line-no">1048</span><span id="line-1048">      this.targets = targets;</span>
+<span class="source-line-no">1049</span><span id="line-1049">    }</span>
+<span class="source-line-no">1050</span><span id="line-1050"></span>
+<span class="source-line-no">1051</span><span id="line-1051">    @NonNull</span>
+<span class="source-line-no">1052</span><span id="line-1052">    public IIndexHasKeyConstraint getConstraint() {</span>
+<span class="source-line-no">1053</span><span id="line-1053">      return constraint;</span>
+<span class="source-line-no">1054</span><span id="line-1054">    }</span>
+<span class="source-line-no">1055</span><span id="line-1055"></span>
+<span class="source-line-no">1056</span><span id="line-1056">    @NonNull</span>
+<span class="source-line-no">1057</span><span id="line-1057">    protected INodeItem getNode() {</span>
+<span class="source-line-no">1058</span><span id="line-1058">      return node;</span>
+<span class="source-line-no">1059</span><span id="line-1059">    }</span>
+<span class="source-line-no">1060</span><span id="line-1060"></span>
+<span class="source-line-no">1061</span><span id="line-1061">    @NonNull</span>
+<span class="source-line-no">1062</span><span id="line-1062">    public List&lt;INodeItem&gt; getTargets() {</span>
+<span class="source-line-no">1063</span><span id="line-1063">      return targets;</span>
+<span class="source-line-no">1064</span><span id="line-1064">    }</span>
+<span class="source-line-no">1065</span><span id="line-1065">  }</span>
+<span class="source-line-no">1066</span><span id="line-1066">}</span>
 
 
 

@@ -19,13 +19,13 @@
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath.function.library;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.DynamicContext;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.ICollectionValue;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.ISequence;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
-<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
-<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.function.IArgument;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.function.IFunction;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
+<span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.ISequence;</span>
 <span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;</span>
 <span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;</span>
 <span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;</span>
@@ -141,7 +141,7 @@
 <span class="source-line-no">128</span><span id="line-128">  public static &lt;T extends ICollectionValue&gt; IArrayItem&lt;T&gt; subarray(</span>
 <span class="source-line-no">129</span><span id="line-129">      @NonNull IArrayItem&lt;T&gt; array,</span>
 <span class="source-line-no">130</span><span id="line-130">      @NonNull IIntegerItem startItem) {</span>
-<span class="source-line-no">131</span><span id="line-131">    return subarray(array, startItem.asInteger().intValueExact());</span>
+<span class="source-line-no">131</span><span id="line-131">    return subarray(array, startItem.toIntValueExact());</span>
 <span class="source-line-no">132</span><span id="line-132">  }</span>
 <span class="source-line-no">133</span><span id="line-133"></span>
 <span class="source-line-no">134</span><span id="line-134">  /**</span>
@@ -168,7 +168,7 @@
 <span class="source-line-no">155</span><span id="line-155">      @NonNull IArrayItem&lt;T&gt; array,</span>
 <span class="source-line-no">156</span><span id="line-156">      @NonNull IIntegerItem startItem,</span>
 <span class="source-line-no">157</span><span id="line-157">      @NonNull IIntegerItem lengthItem) {</span>
-<span class="source-line-no">158</span><span id="line-158">    return subarray(array, startItem.asInteger().intValueExact(), lengthItem.asInteger().intValueExact());</span>
+<span class="source-line-no">158</span><span id="line-158">    return subarray(array, startItem.toIntValueExact(), lengthItem.toIntValueExact());</span>
 <span class="source-line-no">159</span><span id="line-159">  }</span>
 <span class="source-line-no">160</span><span id="line-160"></span>
 <span class="source-line-no">161</span><span id="line-161">  /**</span>

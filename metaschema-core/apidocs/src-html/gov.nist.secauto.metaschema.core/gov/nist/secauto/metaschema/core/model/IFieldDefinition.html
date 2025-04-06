@@ -103,7 +103,25 @@
 <span class="source-line-no">090</span><span id="line-90">    // no value by default</span>
 <span class="source-line-no">091</span><span id="line-91">    return null;</span>
 <span class="source-line-no">092</span><span id="line-92">  }</span>
-<span class="source-line-no">093</span><span id="line-93">}</span>
+<span class="source-line-no">093</span><span id="line-93"></span>
+<span class="source-line-no">094</span><span id="line-94">  /**</span>
+<span class="source-line-no">095</span><span id="line-95">   * A visitor callback.</span>
+<span class="source-line-no">096</span><span id="line-96">   *</span>
+<span class="source-line-no">097</span><span id="line-97">   * @param &lt;CONTEXT&gt;</span>
+<span class="source-line-no">098</span><span id="line-98">   *          the type of the context parameter</span>
+<span class="source-line-no">099</span><span id="line-99">   * @param &lt;RESULT&gt;</span>
+<span class="source-line-no">100</span><span id="line-100">   *          the type of the visitor result</span>
+<span class="source-line-no">101</span><span id="line-101">   * @param visitor</span>
+<span class="source-line-no">102</span><span id="line-102">   *          the calling visitor</span>
+<span class="source-line-no">103</span><span id="line-103">   * @param context</span>
+<span class="source-line-no">104</span><span id="line-104">   *          a parameter used to pass contextual information between visitors</span>
+<span class="source-line-no">105</span><span id="line-105">   * @return the visitor result</span>
+<span class="source-line-no">106</span><span id="line-106">   */</span>
+<span class="source-line-no">107</span><span id="line-107">  @Override</span>
+<span class="source-line-no">108</span><span id="line-108">  default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull IModelElementVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {</span>
+<span class="source-line-no">109</span><span id="line-109">    return visitor.visitFieldDefinition(this, context);</span>
+<span class="source-line-no">110</span><span id="line-110">  }</span>
+<span class="source-line-no">111</span><span id="line-111">}</span>
 
 
 

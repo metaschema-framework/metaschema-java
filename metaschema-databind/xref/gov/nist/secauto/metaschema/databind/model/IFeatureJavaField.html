@@ -56,8 +56,8 @@
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>    @Override
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    <strong class="jxr_keyword">default</strong> Object getValue(@NonNull Object parent) {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      Field field = getField();
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">boolean</strong> accessable = field.canAccess(parent);
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>      field.setAccessible(<strong class="jxr_keyword">true</strong>); <em class="jxr_comment">// NOPMD - intentional</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <em class="jxr_comment">// boolean accessable = field.canAccess(parent);</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <em class="jxr_comment">// field.setAccessible(true); // NOPMD - intentional</em>
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      Object retval;
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>        Object result = field.get(parent);
@@ -67,8 +67,8 @@
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>            String.format(<span class="jxr_string">"Unable to get the value of field '%s' in class '%s'."</span>, field.getName(),
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>                field.getDeclaringClass().getName()),
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>            ex);
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>        field.setAccessible(accessable); <em class="jxr_comment">// NOPMD - intentional</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        <em class="jxr_comment">// } finally {</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>        <em class="jxr_comment">// field.setAccessible(accessable); // NOPMD - intentional</em>
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      }
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>    }
@@ -76,8 +76,8 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    @Override
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">void</strong> setValue(@NonNull Object parentObject, Object value) {
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      Field field = getField();
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">boolean</strong> accessable = field.canAccess(parentObject);
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      field.setAccessible(<strong class="jxr_keyword">true</strong>); <em class="jxr_comment">// NOPMD - intentional</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <em class="jxr_comment">// boolean accessable = field.canAccess(parentObject);</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <em class="jxr_comment">// field.setAccessible(true); // NOPMD - intentional</em>
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>        field.set(parentObject, value);
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException | IllegalAccessException ex) {
@@ -88,14 +88,14 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>                field.getName(),
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>                field.getDeclaringClass().getName()),
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>            ex);
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>        field.setAccessible(accessable); <em class="jxr_comment">// NOPMD - intentional</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>        <em class="jxr_comment">// } finally {</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        <em class="jxr_comment">// field.setAccessible(accessable); // NOPMD - intentional</em>
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>      }
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>    }
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  }
 </pre>
 <hr/>
-<div id="footer">© 2024</div>
+<div id="footer">© 2025</div>
 </body>
 </html>
