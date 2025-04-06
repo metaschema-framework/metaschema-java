@@ -29,7 +29,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Implements the XPath 3.1 <a href=
- * "https://www.w3.org/TR/xpath-functions-31/#func-current-date">fn:current-date</a>
+ * "https://www.w3.org/TR/xpath-functions-31/#func-dateTime">fn:dateTime</a>
  * function.
  */
 public final class FnDateTime {

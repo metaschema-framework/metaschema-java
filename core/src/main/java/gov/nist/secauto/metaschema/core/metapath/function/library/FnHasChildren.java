@@ -22,8 +22,8 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements
- * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-root">fn:root</a>
+ * /** Implements <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-has-children">fn:has-children</a>
  * functions.
  */
 public final class FnHasChildren {

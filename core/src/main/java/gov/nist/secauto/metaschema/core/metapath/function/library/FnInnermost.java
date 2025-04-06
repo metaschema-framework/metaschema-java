@@ -23,8 +23,8 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements
- * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-root">fn:root</a>
+ * /** Implements <a href=
+ * "https://www.w3.org/TR/xpath-functions-31/#func-innermost">fn:innermost</a>
  * functions.
  */
 public final class FnInnermost {
