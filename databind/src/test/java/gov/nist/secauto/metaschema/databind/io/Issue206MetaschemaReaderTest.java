@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.json.JsonFactoryFactory;
@@ -49,7 +50,7 @@ class Issue206MetaschemaReaderTest {
   JUnit5Mockery context = new JUnit5Mockery();
 
   @Test
-  void testIssue205Json() throws IOException {
+  void testIssue205Json() throws IOException, MetaschemaException {
     String json = "{" +
         "   \"flag\": \"flag-value\"" +
         "}";
@@ -76,7 +77,7 @@ class Issue206MetaschemaReaderTest {
   }
 
   @Test
-  void testIssue205XmlNoValue() throws IOException, XMLStreamException {
+  void testIssue205XmlNoValue() throws IOException, XMLStreamException, MetaschemaException {
     String xml = "<test-field xmlns=\"http://example.com/\" flag=\"flag-value\"/>";
     URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
 
@@ -100,7 +101,7 @@ class Issue206MetaschemaReaderTest {
   }
 
   @Test
-  void testIssue205XmlEmptyValue() throws IOException, XMLStreamException {
+  void testIssue205XmlEmptyValue() throws IOException, XMLStreamException, MetaschemaException {
     String xml = "<test-field xmlns=\"http://example.com/\" flag=\"flag-value\"></test-field>";
     URI source = ObjectUtils.notNull(URI.create("https://example.com/not-a-resource"));
 

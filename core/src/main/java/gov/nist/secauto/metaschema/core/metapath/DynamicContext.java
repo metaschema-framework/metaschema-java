@@ -19,7 +19,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDayTimeDurationIte
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IUriResolver;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
@@ -31,11 +30,9 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -230,8 +227,8 @@ public class DynamicContext { // NOPMD - intentional data class
   public IDocumentLoader getDocumentLoader() {
     IDocumentLoader retval = sharedState.documentLoader;
     if (retval == null) {
-      throw new ContextAbsentDynamicMetapathException(
-          "No document loader configured for the dynamic context.");
+      throw new UnsupportedOperationException(
+          "No document loader configured for the dynamic context. Use setDocumentLoader(loader) to confgure one.");
     }
     return retval;
   }
@@ -322,7 +319,7 @@ public class DynamicContext { // NOPMD - intentional data class
    * @param name
    *          the variable qualified name
    * @return the non-null variable value
-   * @throws MetapathException
+   * @throws DynamicMetapathException
    *           of the variable has not been assigned or if the variable value is
    *           {@code null}
    */
@@ -330,12 +327,10 @@ public class DynamicContext { // NOPMD - intentional data class
   public ISequence<?> getVariableValue(@NonNull IEnhancedQName name) {
     ISequence<?> retval = letVariableMap.get(name.getIndexPosition());
     if (retval == null) {
-      if (letVariableMap.containsKey(name.getIndexPosition())) {
-        throw new MetapathException(String.format("Variable '%s' has null contents.", name));
-      }
-      throw new StaticMetapathError(
-          StaticMetapathError.NOT_DEFINED,
-          String.format("Variable '%s' not defined in the dynamic context.", name));
+      throw new StaticMetapathException(
+          StaticMetapathException.NOT_DEFINED,
+          String.format("Variable '%s' not defined in the dynamic context.", name))
+              .registerEvaluationContext(this);
     }
     return retval;
   }
@@ -348,9 +343,9 @@ public class DynamicContext { // NOPMD - intentional data class
    * @param arity
    *          the number of arguments in the requested function
    * @return the function
-   * @throws StaticMetapathError
-   *           with the code {@link StaticMetapathError#NO_FUNCTION_MATCH} if a
-   *           matching function was not found
+   * @throws StaticMetapathException
+   *           with the code {@link StaticMetapathException#NO_FUNCTION_MATCH} if
+   *           a matching function was not found
    */
   @NonNull
   public IFunction lookupFunction(@NonNull IEnhancedQName name, int arity) {
@@ -401,8 +396,8 @@ public class DynamicContext { // NOPMD - intentional data class
    * @return the execution stack
    */
   @NonNull
-  public List<IExpression> getExecutionStack() {
-    return CollectionUtil.unmodifiableList(new ArrayList<>(this.sharedState.executionStack));
+  public Deque<IExpression> getExecutionStack() {
+    return new ArrayDeque<>(this.sharedState.executionStack);
   }
 
   /**

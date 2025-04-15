@@ -75,13 +75,16 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
    * @return the new message
+   * @throws ConstraintValidationException
+   *           if the custom message contains a Metapath expression that is
+   *           invalid or if the expression failed to evaluate
    */
   @NonNull
   protected String newCardinalityMinimumViolationMessage(
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem target,
       @NonNull ISequence<? extends INodeItem> testedItems,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     return constraint.getMessage() == null
         ? ObjectUtils.notNull(String.format(
             "The cardinality '%d' is below the required minimum '%d' for items matching '%s'.",
@@ -105,13 +108,16 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
    * @return the new message
+   * @throws ConstraintValidationException
+   *           if the custom message contains a Metapath expression that is
+   *           invalid or if the expression failed to evaluate
    */
   @NonNull
   protected String newCardinalityMaximumViolationMessage(
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem target,
       @NonNull ISequence<? extends INodeItem> testedItems,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     return constraint.getMessage() == null
         ? ObjectUtils.notNull(String.format(
             "The cardinality '%d' is greater than the required maximum '%d' at: %s.",
@@ -143,6 +149,9 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
    * @return the new message
+   * @throws ConstraintValidationException
+   *           if the custom message contains a Metapath expression that is
+   *           invalid or if the expression failed to evaluate
    */
   @NonNull
   protected String newIndexDuplicateKeyViolationMessage(
@@ -150,7 +159,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     // TODO: render the key paths
     return constraint.getMessage() == null
         ? ObjectUtils.notNull(String.format("Index '%s' has duplicate key for items at paths '%s' and '%s'",
@@ -176,6 +185,9 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
    * @return the new message
+   * @throws ConstraintValidationException
+   *           if the custom message contains a Metapath expression that is
+   *           invalid or if the expression failed to evaluate
    */
   @NonNull
   protected String newUniqueKeyViolationMessage(
@@ -183,7 +195,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     return constraint.getMessage() == null
         ? ObjectUtils.notNull(String.format("Unique constraint violation at paths '%s' and '%s'",
             toPath(oldItem),
@@ -209,6 +221,9 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
    * @return the new message
+   * @throws ConstraintValidationException
+   *           if the custom message contains a Metapath expression that is
+   *           invalid or if the expression failed to evaluate
    */
   @NonNull
   protected String newMatchPatternViolationMessage(
@@ -217,7 +232,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
       @NonNull INodeItem target,
       @NonNull String value,
       @NonNull Pattern pattern,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     return constraint.getMessage() == null
         ? ObjectUtils.notNull(String.format("Value '%s' did not match the pattern '%s' at path '%s'",
             value,
@@ -244,6 +259,9 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
    * @return the new message
+   * @throws ConstraintValidationException
+   *           if the custom message contains a Metapath expression that is
+   *           invalid or if the expression failed to evaluate
    */
   @NonNull
   protected String newMatchDatatypeViolationMessage(
@@ -252,7 +270,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
       @NonNull INodeItem target,
       @NonNull String value,
       @NonNull IDataTypeAdapter<?> adapter,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     return constraint.getMessage() == null
         ? ObjectUtils.notNull(String.format("Value '%s' did not conform to the data type '%s' at path '%s'",
             value,
@@ -275,13 +293,16 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
    * @return the new message
+   * @throws ConstraintValidationException
+   *           if the custom message contains a Metapath expression that is
+   *           invalid or if the expression failed to evaluate
    */
   @NonNull
   protected String newExpectViolationMessage(
       @NonNull IExpectConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     return constraint.getMessage() == null
         ? ObjectUtils.notNull(String.format("Expect constraint '%s' did not match the data at path '%s'",
             constraint.getTest().getPath(),
@@ -351,6 +372,9 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
    * @return the new message
+   * @throws ConstraintValidationException
+   *           if the custom message contains a Metapath expression that is
+   *           invalid or if the expression failed to evaluate
    */
   @NonNull
   protected String newIndexMissMessage(
@@ -358,7 +382,7 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull List<String> key,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     String keyValues = key.stream()
         .collect(Collectors.joining(","));
 

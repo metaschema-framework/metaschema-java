@@ -7,8 +7,11 @@ package gov.nist.secauto.metaschema.databind;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.DefaultConstraintValidator;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.util.ExceptionUtils;
+import gov.nist.secauto.metaschema.core.util.ExceptionUtils.WrappedException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext.IBindingMatcher;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
@@ -72,9 +75,10 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
   }
 
   @Override
+  @SuppressWarnings("PMD.ExceptionAsFlowControl")
   public IBoundModule registerModule(
       IModule module,
-      IBindingContext bindingContext) {
+      IBindingContext bindingContext) throws MetaschemaException {
     modulesLock.lock();
     try {
       return ObjectUtils.notNull(moduleToBoundModuleMap.computeIfAbsent(module, key -> {
@@ -84,8 +88,12 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
         if (key instanceof IBoundModule) {
           boundModule = (IBoundModule) key;
         } else {
-          Class<? extends IBoundModule> moduleClass = handleUnboundModule(key);
-          boundModule = lookupInstance(moduleClass, bindingContext);
+          try {
+            Class<? extends IBoundModule> moduleClass = handleUnboundModule(key);
+            boundModule = lookupInstance(moduleClass, bindingContext);
+          } catch (MetaschemaException ex) {
+            throw ExceptionUtils.wrap(ex);
+          }
         }
 
         boundModule.getExportedAssemblyDefinitions().forEach(assembly -> {
@@ -98,13 +106,15 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
 
         return boundModule;
       }));
+    } catch (WrappedException ex) {
+      throw ExceptionUtils.unwrap(ex, MetaschemaException.class);
     } finally {
       modulesLock.unlock();
     }
   }
 
   @NonNull
-  protected abstract Class<? extends IBoundModule> handleUnboundModule(@NonNull IModule key);
+  protected abstract Class<? extends IBoundModule> handleUnboundModule(@NonNull IModule key) throws MetaschemaException;
 
   /**
    * Get the Module instance for a given class annotated by the

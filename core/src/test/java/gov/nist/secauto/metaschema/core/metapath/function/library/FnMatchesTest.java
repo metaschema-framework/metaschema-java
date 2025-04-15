@@ -80,19 +80,11 @@ class FnMatchesTest
   void testInvalidPattern() {
     RegularExpressionMetapathException throwable = assertThrows(RegularExpressionMetapathException.class,
         () -> {
-          try {
-            FunctionTestBase.executeFunction(
-                FnMatches.SIGNATURE_TWO_ARG,
-                newDynamicContext(),
-                ISequence.empty(),
-                ObjectUtils.notNull(List.of(sequence(string("input")), sequence(string("pattern[")))));
-          } catch (MetapathException ex) {
-            Throwable cause = ex.getCause();
-            if (cause != null) {
-              throw cause;
-            }
-            throw ex;
-          }
+          FunctionTestBase.executeFunction(
+              FnMatches.SIGNATURE_TWO_ARG,
+              newDynamicContext(),
+              ISequence.empty(),
+              ObjectUtils.notNull(List.of(sequence(string("input")), sequence(string("pattern[")))));
         });
     assertEquals(RegularExpressionMetapathException.INVALID_EXPRESSION, throwable.getErrorCode().getCode());
   }

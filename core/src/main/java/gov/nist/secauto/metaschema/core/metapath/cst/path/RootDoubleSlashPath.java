@@ -47,6 +47,6 @@ public class RootDoubleSlashPath
     return ISequence.of(search(
         getExpression(),
         dynamicContext,
-        ItemUtils.getDocumentNodeItems(focus)));
+        ItemUtils.getDocumentNodeItems(dynamicContext, focus)));
   }
 }

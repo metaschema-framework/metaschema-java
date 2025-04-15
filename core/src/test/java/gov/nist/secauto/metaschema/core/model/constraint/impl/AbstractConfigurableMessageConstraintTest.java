@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationException;
 import gov.nist.secauto.metaschema.core.model.constraint.DefaultConstraintValidator;
 import gov.nist.secauto.metaschema.core.model.constraint.FindingCollectingConstraintValidationHandler;
 import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
@@ -29,7 +30,7 @@ class AbstractConfigurableMessageConstraintTest
     extends ExpressionTestBase {
 
   @Test
-  void testDifferentNS() {
+  void testDifferentNS() throws ConstraintValidationException {
     StaticContext constraintContext = StaticContext.builder()
         .defaultModelNamespace(NS)
         .baseUri(ObjectUtils.notNull(URI.create("https://example.com/other")))
@@ -56,7 +57,7 @@ class AbstractConfigurableMessageConstraintTest
   }
 
   @Test
-  void testWildCard() {
+  void testWildCard() throws ConstraintValidationException {
     StaticContext constraintContext = StaticContext.builder()
         .defaultModelNamespace(NS)
         .baseUri(ObjectUtils.notNull(URI.create("https://example.com/other")))
@@ -83,7 +84,7 @@ class AbstractConfigurableMessageConstraintTest
   }
 
   @Test
-  void testPrefix() {
+  void testPrefix() throws ConstraintValidationException {
     StaticContext constraintContext = StaticContext.builder()
         .defaultModelNamespace(NS)
         .baseUri(ObjectUtils.notNull(URI.create("https://example.com/other")))
@@ -111,7 +112,7 @@ class AbstractConfigurableMessageConstraintTest
   }
 
   @Test
-  void testQualifiedName() {
+  void testQualifiedName() throws ConstraintValidationException {
     StaticContext constraintContext = StaticContext.builder()
         .defaultModelNamespace(NS)
         .baseUri(ObjectUtils.notNull(URI.create("https://example.com/other")))

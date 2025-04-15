@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationException;
 import gov.nist.secauto.metaschema.core.model.constraint.DefaultConstraintValidator;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintValidationHandler;
 import gov.nist.secauto.metaschema.core.model.constraint.LoggingConstraintValidationHandler;
@@ -91,7 +92,11 @@ public abstract class AbstractDeserializer<CLASS extends IBoundObject>
     }
 
     if (isValidating()) {
-      validate(nodeItem);
+      try {
+        validate(nodeItem);
+      } catch (ConstraintValidationException ex) {
+        throw new IOException(ex);
+      }
     }
     return nodeItem;
   }
@@ -117,7 +122,11 @@ public abstract class AbstractDeserializer<CLASS extends IBoundObject>
 
     if (isValidating()) {
       INodeItem nodeItem = deserializeToNodeItemInternal(reader, documentUri);
-      validate(nodeItem);
+      try {
+        validate(nodeItem);
+      } catch (ConstraintValidationException ex) {
+        throw new IOException(ex);
+      }
       retval = ObjectUtils.asType(ObjectUtils.requireNonNull(nodeItem.getValue()));
     } else {
       retval = deserializeToValueInternal(reader, documentUri);
@@ -125,7 +134,7 @@ public abstract class AbstractDeserializer<CLASS extends IBoundObject>
     return retval;
   }
 
-  private void validate(@NonNull INodeItem nodeItem) {
+  private void validate(@NonNull INodeItem nodeItem) throws ConstraintValidationException {
     IDefinitionNodeItem<?, ?> definitionNodeItem;
     if (nodeItem instanceof IDocumentNodeItem) {
       definitionNodeItem = ((IDocumentNodeItem) nodeItem).getRootAssemblyNodeItem();

@@ -14,7 +14,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <RESULT>
  *          the type of result produced by visitation
  */
-public abstract class AbstractNodeItemVisitor<CONTEXT, RESULT> implements INodeItemVisitor<CONTEXT, RESULT> {
+public abstract class AbstractNodeItemVisitor<CONTEXT, RESULT>
+    implements INodeItemVisitor<CONTEXT, RESULT> {
   /**
    * Visit the provided {@code item}.
    *
@@ -59,6 +60,8 @@ public abstract class AbstractNodeItemVisitor<CONTEXT, RESULT> implements INodeI
    * @param context
    *          provides contextual information for use by the visitor
    * @return the result produced by visiting the item's child model items
+   * @throws EXCEPTION
+   *           when an un-handled error was raised while visiting a child node
    */
   protected RESULT visitModelChildren(@NonNull INodeItem item, CONTEXT context) {
     RESULT result = defaultResult();
@@ -153,7 +156,6 @@ public abstract class AbstractNodeItemVisitor<CONTEXT, RESULT> implements INodeI
   public RESULT visitDocument(IDocumentNodeItem item, CONTEXT context) {
     // this is the default behavior, which can be overridden
     return visitModelChildren(item, context);
-    // return visitAssembly(item.getRootAssemblyNodeItem(), context);
   }
 
   @Override

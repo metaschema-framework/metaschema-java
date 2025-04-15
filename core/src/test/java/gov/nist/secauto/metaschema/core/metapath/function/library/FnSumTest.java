@@ -9,10 +9,8 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.dayTimeDuratio
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.yearMonthDuration;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
@@ -53,19 +51,21 @@ class FnSumTest
 
   @ParameterizedTest
   @MethodSource("provideValuesOneArg")
-  void testAvg(@Nullable IAnyAtomicItem expected, @NonNull IAnyAtomicItem... values) {
-    try {
+  void testSum(@Nullable IAnyAtomicItem expected, @NonNull IAnyAtomicItem... values) {
+    List<ISequence<?>> arguments = CollectionUtil.singletonList(ISequence.of(values));
+    if (expected == null) {
+      assertThrows(InvalidArgumentFunctionException.class, () -> {
+        FunctionTestBase.executeFunction(
+            FnSum.SIGNATURE_ONE_ARG,
+            newDynamicContext(),
+            null,
+            arguments);
+      });
+    } else {
       assertFunctionResult(
           FnSum.SIGNATURE_ONE_ARG,
           ISequence.of(expected),
-          CollectionUtil.singletonList(ISequence.of(values)));
-    } catch (MetapathException ex) {
-      if (expected == null) {
-        assertAll(
-            () -> assertInstanceOf(InvalidArgumentFunctionException.class, ex.getCause()));
-      } else {
-        throw ex;
-      }
+          arguments);
     }
   }
 
@@ -84,25 +84,27 @@ class FnSumTest
 
   @ParameterizedTest
   @MethodSource("provideValuesTwoArg")
-  void testAvgWithZero(@Nullable IAnyAtomicItem expected, @Nullable IAnyAtomicItem zero,
+  void testSumWithZero(@Nullable IAnyAtomicItem expected, @Nullable IAnyAtomicItem zero,
       @NonNull IAnyAtomicItem... values) {
-    try {
+    List<ISequence<?>> arguments = ObjectUtils.notNull(List.of(ISequence.of(values), ISequence.of(zero)));
+    if (expected == null) {
+      assertThrows(InvalidArgumentFunctionException.class, () -> {
+        FunctionTestBase.executeFunction(
+            FnSum.SIGNATURE_TWO_ARG,
+            newDynamicContext(),
+            null,
+            arguments);
+      });
+    } else {
       assertFunctionResult(
           FnSum.SIGNATURE_TWO_ARG,
           ISequence.of(expected),
-          ObjectUtils.notNull(List.of(ISequence.of(values), ISequence.of(zero))));
-    } catch (MetapathException ex) {
-      if (expected == null) {
-        assertAll(
-            () -> assertInstanceOf(InvalidArgumentFunctionException.class, ex.getCause()));
-      } else {
-        throw ex;
-      }
+          arguments);
     }
   }
 
   @Test
-  void testAvgNoOpTwoArg() {
+  void testSumNoOpTwoArg() {
     assertFunctionResult(
         FnSum.SIGNATURE_TWO_ARG,
         ISequence.empty(),

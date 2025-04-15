@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.IModuleLoader;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.databind.IBindingContext.IBindingMatcher;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
@@ -62,7 +63,7 @@ public class PostProcessingModuleLoaderStrategy
   }
 
   @Override
-  public IBoundModule registerModule(IModule module, IBindingContext bindingContext) {
+  public IBoundModule registerModule(IModule module, IBindingContext bindingContext) throws MetaschemaException {
     IBoundModule boundModule;
     postProcessedModulesLock.lock();
     try {

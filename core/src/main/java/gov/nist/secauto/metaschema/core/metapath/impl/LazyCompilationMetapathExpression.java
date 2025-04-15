@@ -6,12 +6,17 @@
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.InvalidMetapathGrammarException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
+import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
+import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
@@ -43,7 +48,15 @@ public class LazyCompilationMetapathExpression implements IMetapathExpression {
       @NonNull StaticContext staticContext) {
     this.path = path;
     this.staticContext = staticContext;
-    this.compiledMetapath = ObjectUtils.notNull(Lazy.lazy(() -> IMetapathExpression.compile(path, staticContext)));
+    this.compiledMetapath = ObjectUtils.notNull(Lazy.lazy(() -> {
+      IMetapathExpression result;
+      try {
+        result = IMetapathExpression.compile(path, staticContext);
+      } catch (InvalidMetapathGrammarException ex) {
+        throw new InvalidMetapathGrammarException(ex);
+      }
+      return result;
+    }));
   }
 
   @Override
@@ -59,6 +72,26 @@ public class LazyCompilationMetapathExpression implements IMetapathExpression {
   @NonNull
   private IMetapathExpression getCompiledMetapath() {
     return ObjectUtils.notNull(compiledMetapath.get());
+  }
+
+  @Override
+  public List<? extends IExpression> getChildren() {
+    return getCompiledMetapath().getChildren();
+  }
+
+  @Override
+  public Class<? extends IItem> getBaseResultType() {
+    return getCompiledMetapath().getBaseResultType();
+  }
+
+  @Override
+  public ISequence<? extends IItem> accept(DynamicContext dynamicContext, ISequence<?> focus) {
+    return getCompiledMetapath().accept(dynamicContext, focus);
+  }
+
+  @Override
+  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
+    return getCompiledMetapath().accept(visitor, context);
   }
 
   @Override

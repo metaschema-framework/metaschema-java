@@ -9,7 +9,6 @@ import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
@@ -53,7 +52,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.impl.values.XmlValueNotSupportedException;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -253,18 +251,7 @@ public final class ConstraintXmlSupport {
       @NonNull T constraints,
       @NonNull XmlObject xmlObject,
       @NonNull ISource source) {
-    try {
-      parser.parse(source, xmlObject, constraints);
-    } catch (MetapathException | XmlValueNotSupportedException ex) {
-      if (ex.getCause() instanceof MetapathException) {
-        throw new MetapathException(
-            String.format("Unable to compile a Metapath in '%s'. %s",
-                source.getSource(),
-                ex.getLocalizedMessage()),
-            ex);
-      }
-      throw ex;
-    }
+    parser.parse(source, xmlObject, constraints);
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")

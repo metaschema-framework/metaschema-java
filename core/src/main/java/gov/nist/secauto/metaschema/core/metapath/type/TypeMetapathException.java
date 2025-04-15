@@ -6,15 +6,21 @@
 package gov.nist.secauto.metaschema.core.metapath.type;
 
 import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
-import gov.nist.secauto.metaschema.core.metapath.RuntimeMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * MPTY: Exceptions related to Metapath type errors.
  */
-public class TypeMetapathError
-    extends RuntimeMetapathError {
+public class TypeMetapathException
+    extends MetapathException {
+
+  /**
+   * the serial version UID.
+   */
+  private static final long serialVersionUID = 2L;
   @NonNull
   private static final String PREFIX = "MPTY";
   /**
@@ -33,7 +39,7 @@ public class TypeMetapathError
    * SequenceType Matching</a>.
    */
   // FIXME: differentiate static vs dynamic errors
-  public static final int INVALID_TYPE_ERROR = 4;
+  protected static final int INVALID_TYPE_ERROR = 4;
   /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPTY0019">err:MPTY0019</a>: It
    * is a <a href="https://www.w3.org/TR/xpath-31/#dt-type-error">type error</a>
@@ -48,11 +54,6 @@ public class TypeMetapathError
   public static final int NOT_A_NODE_ITEM_FOR_STEP = 20;
 
   /**
-   * the serial version UID.
-   */
-  private static final long serialVersionUID = 2L;
-
-  /**
    * Constructs a new exception with the provided {@code code}, {@code message},
    * and {@code cause}.
    *
@@ -63,7 +64,10 @@ public class TypeMetapathError
    * @param cause
    *          the original exception cause
    */
-  public TypeMetapathError(int code, String message, Throwable cause) {
+  protected TypeMetapathException(
+      int code,
+      @Nullable String message,
+      @Nullable Throwable cause) {
     super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
@@ -71,25 +75,16 @@ public class TypeMetapathError
    * Constructs a new exception with the provided {@code code}, {@code message},
    * and no cause.
    *
+   * @param evaluationStack
+   *          the Metapath evaluation stack that lead to this exception
    * @param code
    *          the error code value
    * @param message
    *          the exception message
    */
-  public TypeMetapathError(int code, String message) {
+  public TypeMetapathException(
+      int code,
+      @Nullable String message) {
     super(IErrorCode.of(PREFIX, code), message);
-  }
-
-  /**
-   * Constructs a new exception with the provided {@code code}, no message, and
-   * the {@code cause}.
-   *
-   * @param code
-   *          the error code value
-   * @param cause
-   *          the original exception cause
-   */
-  public TypeMetapathError(int code, Throwable cause) {
-    super(IErrorCode.of(PREFIX, code), cause);
   }
 }

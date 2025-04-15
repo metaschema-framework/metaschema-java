@@ -6,9 +6,11 @@
 package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
@@ -78,8 +80,13 @@ class ValidateModuleCommand
     }
 
     @Override
-    protected IModule getModule(CommandLine commandLine, IBindingContext bindingContext) {
-      return bindingContext.registerModule(MetaschemaModelModule.class);
+    protected IModule getModule(CommandLine commandLine, IBindingContext bindingContext)
+        throws CommandExecutionException {
+      try {
+        return bindingContext.registerModule(MetaschemaModelModule.class);
+      } catch (MetaschemaException ex) {
+        throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);
+      }
     }
 
     @Override

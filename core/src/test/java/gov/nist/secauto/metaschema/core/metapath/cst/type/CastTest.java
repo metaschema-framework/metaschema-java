@@ -13,12 +13,14 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.dayTimeDuratio
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.yearMonthDuration;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.InvalidMetapathGrammarException;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 
@@ -116,25 +118,46 @@ class CastTest
 
   @Test
   void testInvalidTypePrefix() {
-    StaticMetapathError ex = assertThrows(StaticMetapathError.class, () -> {
+    InvalidMetapathGrammarException thrown = assertThrows(InvalidMetapathGrammarException.class, () -> {
       IMetapathExpression.compile("'a' cast as foo:bar");
     });
-    assertEquals(StaticMetapathError.PREFIX_NOT_EXPANDABLE, ex.getErrorCode().getCode());
+    assertThat(thrown)
+        .cause()
+        .isExactlyInstanceOf(StaticMetapathException.class)
+        .extracting(
+            ex -> ex instanceof StaticMetapathException
+                ? ((StaticMetapathException) ex).getErrorCode().getCode()
+                : null)
+        .isEqualTo(StaticMetapathException.PREFIX_NOT_EXPANDABLE);
   }
 
   @Test
   void testInvalidType() {
-    StaticMetapathError ex = assertThrows(StaticMetapathError.class, () -> {
+    InvalidMetapathGrammarException thrown = assertThrows(InvalidMetapathGrammarException.class, () -> {
       IMetapathExpression.compile("'a' cast as meta:bar");
     });
-    assertEquals(StaticMetapathError.CAST_UNKNOWN_TYPE, ex.getErrorCode().getCode());
+    assertThat(thrown)
+        .cause()
+        .isExactlyInstanceOf(StaticMetapathException.class)
+        .extracting(
+            ex -> ex instanceof StaticMetapathException
+                ? ((StaticMetapathException) ex).getErrorCode().getCode()
+                : null)
+        .isEqualTo(StaticMetapathException.CAST_UNKNOWN_TYPE);
   }
 
   @Test
   void testAnyAtomicType() {
-    StaticMetapathError ex = assertThrows(StaticMetapathError.class, () -> {
+    InvalidMetapathGrammarException thrown = assertThrows(InvalidMetapathGrammarException.class, () -> {
       IMetapathExpression.compile("'a' cast as meta:any-atomic-type");
     });
-    assertEquals(StaticMetapathError.CAST_ANY_ATOMIC, ex.getErrorCode().getCode());
+    assertThat(thrown)
+        .cause()
+        .isExactlyInstanceOf(StaticMetapathException.class)
+        .extracting(
+            ex -> ex instanceof StaticMetapathException
+                ? ((StaticMetapathException) ex).getErrorCode().getCode()
+                : null)
+        .isEqualTo(StaticMetapathException.CAST_ANY_ATOMIC);
   }
 }

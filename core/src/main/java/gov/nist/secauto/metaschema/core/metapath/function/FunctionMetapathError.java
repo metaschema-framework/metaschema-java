@@ -6,12 +6,14 @@
 package gov.nist.secauto.metaschema.core.metapath.function;
 
 import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
-import gov.nist.secauto.metaschema.core.metapath.RuntimeMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
+// TODO: remove this intermediate exception?
 public class FunctionMetapathError
-    extends RuntimeMetapathError {
+    extends MetapathException {
 
   /**
    * the serial version UID.
@@ -27,8 +29,10 @@ public class FunctionMetapathError
    * @param message
    *          the exception message
    */
-  public FunctionMetapathError(@NonNull IErrorCode errorCode, String message) {
-    super(errorCode, message);
+  public FunctionMetapathError(
+      @NonNull IErrorCode errorCode,
+      @Nullable String message) {
+    super(errorCode, message, null);
   }
 
   /**
@@ -42,7 +46,10 @@ public class FunctionMetapathError
    * @param cause
    *          the original exception cause
    */
-  protected FunctionMetapathError(@NonNull IErrorCode errorCode, String message, Throwable cause) {
+  public FunctionMetapathError(
+      @NonNull IErrorCode errorCode,
+      @Nullable String message,
+      @Nullable Throwable cause) {
     super(errorCode, message, cause);
   }
 
@@ -55,8 +62,9 @@ public class FunctionMetapathError
    * @param cause
    *          the original exception cause
    */
-  public FunctionMetapathError(@NonNull IErrorCode errorCode, Throwable cause) {
-    super(errorCode, cause);
+  public FunctionMetapathError(
+      @NonNull IErrorCode errorCode,
+      @Nullable Throwable cause) {
+    super(errorCode, null, cause);
   }
-
 }

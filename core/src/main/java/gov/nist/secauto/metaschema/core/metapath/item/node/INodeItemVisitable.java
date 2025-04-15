@@ -17,5 +17,7 @@ public interface INodeItemVisitable {
    *          a parameter used to pass contextual information between visitors
    * @return the visitor result
    */
-  <CONTEXT, RESULT> RESULT accept(@NonNull INodeItemVisitor<CONTEXT, RESULT> visitor, CONTEXT context);
+  <CONTEXT, RESULT> RESULT accept(
+      @NonNull INodeItemVisitor<CONTEXT, RESULT> visitor,
+      CONTEXT context);
 }

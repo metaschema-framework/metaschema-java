@@ -7,18 +7,17 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.bool;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -71,11 +70,15 @@ class ArrowExpressionTest
         .build();
     DynamicContext dynamicContext = new DynamicContext(staticContext);
 
-    MetapathException ex = assertThrows(
-        MetapathException.class,
+    StaticMetapathException thrown = assertThrows(StaticMetapathException.class,
         () -> IMetapathExpression.compile("() => $ex:undefined()", staticContext)
             .evaluate(null, dynamicContext));
-    assertEquals(StaticMetapathError.NOT_DEFINED,
-        ObjectUtils.requireNonNull((StaticMetapathError) ex.getCause()).getErrorCode().getCode());
+    assertThat(thrown)
+        .isExactlyInstanceOf(StaticMetapathException.class)
+        .extracting(
+            ex -> ex instanceof StaticMetapathException
+                ? ex.getErrorCode().getCode()
+                : null)
+        .isEqualTo(StaticMetapathException.NOT_DEFINED);
   }
 }

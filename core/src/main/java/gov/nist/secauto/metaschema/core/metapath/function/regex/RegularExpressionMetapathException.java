@@ -5,13 +5,14 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.regex;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicMetapathError;
 import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
+import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class RegularExpressionMetapathException
-    extends DynamicMetapathError {
+    extends MetapathException {
   @NonNull
   private static final String PREFIX = "MPRX";
   /**
@@ -69,7 +70,10 @@ public class RegularExpressionMetapathException
    * @param cause
    *          the original exception cause
    */
-  public RegularExpressionMetapathException(int code, String message, Throwable cause) {
+  public RegularExpressionMetapathException(
+      int code,
+      @Nullable String message,
+      @Nullable Throwable cause) {
     super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
@@ -82,7 +86,9 @@ public class RegularExpressionMetapathException
    * @param message
    *          the exception message
    */
-  public RegularExpressionMetapathException(int code, String message) {
+  public RegularExpressionMetapathException(
+      int code,
+      @Nullable String message) {
     super(IErrorCode.of(PREFIX, code), message);
   }
 
@@ -95,7 +101,9 @@ public class RegularExpressionMetapathException
    * @param cause
    *          the original exception cause
    */
-  public RegularExpressionMetapathException(int code, Throwable cause) {
+  public RegularExpressionMetapathException(
+      int code,
+      @Nullable Throwable cause) {
     super(IErrorCode.of(PREFIX, code), cause);
   }
 }

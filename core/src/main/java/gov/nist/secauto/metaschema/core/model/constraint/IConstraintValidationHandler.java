@@ -34,12 +34,15 @@ public interface IConstraintValidationHandler {
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if the constraint has a custom message that contains a Metapath
+   *           expression that is invalid or if the expression failed to evaluate
    */
   void handleCardinalityMinimumViolation(
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem target,
       @NonNull ISequence<? extends INodeItem> testedItems,
-      @NonNull DynamicContext dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 
   /**
    * Handle a cardinality constraint maximum violation.
@@ -53,12 +56,15 @@ public interface IConstraintValidationHandler {
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if the constraint has a custom message that contains a Metapath
+   *           expression that is invalid or if the expression failed to evaluate
    */
   void handleCardinalityMaximumViolation(
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem target,
       @NonNull ISequence<? extends INodeItem> testedItems,
-      @NonNull DynamicContext dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 
   /**
    * Handle a duplicate index violation.
@@ -94,13 +100,16 @@ public interface IConstraintValidationHandler {
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if the constraint has a custom message that contains a Metapath
+   *           expression that is invalid or if the expression failed to evaluate
    */
   void handleIndexDuplicateKeyViolation(
       @NonNull IIndexConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 
   /**
    * Handle an unique key violation.
@@ -119,13 +128,16 @@ public interface IConstraintValidationHandler {
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if the constraint has a custom message that contains a Metapath
+   *           expression that is invalid or if the expression failed to evaluate
    */
   void handleUniqueKeyViolation(
       @NonNull IUniqueConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 
   /**
    * Handle an error that occurred while generating a key.
@@ -193,13 +205,16 @@ public interface IConstraintValidationHandler {
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if the constraint has a custom message that contains a Metapath
+   *           expression that is invalid or if the expression failed to evaluate
    */
   void handleIndexMiss(
       @NonNull IIndexHasKeyConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull List<String> key,
-      @NonNull DynamicContext dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 
   /**
    * Handle a match pattern violation.
@@ -220,6 +235,9 @@ public interface IConstraintValidationHandler {
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if the constraint has a custom message that contains a Metapath
+   *           expression that is invalid or if the expression failed to evaluate
    */
   void handleMatchPatternViolation(
       @NonNull IMatchesConstraint constraint,
@@ -227,7 +245,7 @@ public interface IConstraintValidationHandler {
       @NonNull INodeItem target,
       @NonNull String value,
       @NonNull Pattern pattern,
-      @NonNull DynamicContext dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 
   /**
    * Handle a match data type violation.
@@ -251,6 +269,9 @@ public interface IConstraintValidationHandler {
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if the constraint has a custom message that contains a Metapath
+   *           expression that is invalid or if the expression failed to evaluate
    */
   void handleMatchDatatypeViolation(
       @NonNull IMatchesConstraint constraint,
@@ -259,7 +280,7 @@ public interface IConstraintValidationHandler {
       @NonNull String value,
       @NonNull IDataTypeAdapter<?> adapter,
       @NonNull IllegalArgumentException cause,
-      @NonNull DynamicContext dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 
   /**
    * Handle an expect test violation.
@@ -276,12 +297,15 @@ public interface IConstraintValidationHandler {
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if the constraint has a custom message that contains a Metapath
+   *           expression that is invalid or if the expression failed to evaluate
    */
   void handleExpectViolation(
       @NonNull IExpectConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 
   /**
    * Handle an allowed values constraint violation.

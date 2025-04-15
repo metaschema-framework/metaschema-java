@@ -17,6 +17,8 @@ import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.ValidationFeature;
 import gov.nist.secauto.metaschema.core.model.validation.AggregateValidationResult;
@@ -162,6 +164,7 @@ public abstract class AbstractValidateContentCommand
      * @return the loaded Metaschema module
      * @throws CommandExecutionException
      *           if an error occurred while loading the module
+     * @throws MetaschemaException
      */
     @NonNull
     protected abstract IModule getModule(
@@ -283,7 +286,7 @@ public abstract class AbstractValidateContentCommand
             ex);
       } catch (IOException ex) {
         throw new CommandExecutionException(ExitCode.IO_ERROR, ex.getLocalizedMessage(), ex);
-      } catch (MetapathException ex) {
+      } catch (MetapathException | MetaschemaException | ConstraintValidationException ex) {
         throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex.getLocalizedMessage(), ex);
       }
       return validationResult;

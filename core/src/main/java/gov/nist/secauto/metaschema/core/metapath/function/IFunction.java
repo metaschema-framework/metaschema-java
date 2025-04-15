@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.function;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.ICollectionValue;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -433,7 +433,7 @@ public interface IFunction extends IItem {
     public Builder returnType(@NonNull String name) {
       try {
         this.returnType = getStaticContext().lookupAtomicType(name);
-      } catch (StaticMetapathError ex) {
+      } catch (StaticMetapathException ex) {
         throw new IllegalArgumentException(
             String.format("No data type with the name '%s'.", name), ex);
       }
@@ -451,7 +451,7 @@ public interface IFunction extends IItem {
     public Builder returnType(@NonNull IEnhancedQName name) {
       try {
         this.returnType = StaticContext.lookupAtomicType(name);
-      } catch (StaticMetapathError ex) {
+      } catch (StaticMetapathException ex) {
         throw new IllegalArgumentException(
             String.format("No data type with the name '%s'.", name), ex);
       }

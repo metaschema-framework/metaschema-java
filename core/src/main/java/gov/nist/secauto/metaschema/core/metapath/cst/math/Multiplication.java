@@ -138,6 +138,7 @@ public class Multiplication
    * @throws InvalidTypeMetapathException
    *           for unsupported operand combinations.
    */
+  // TODO: Is this used?
   @SuppressWarnings("PMD.CyclomaticComplexity")
   @NonNull
   public static IAnyAtomicItem multiply(

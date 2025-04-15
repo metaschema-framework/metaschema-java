@@ -54,7 +54,7 @@ public class Castable
   protected ISequence<IBooleanItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     boolean retval;
     try {
-      cast(focus);
+      cast(focus, dynamicContext);
       retval = true;
     } catch (@SuppressWarnings("unused") MetapathException ex) {
       // this exception proves the cast did not work

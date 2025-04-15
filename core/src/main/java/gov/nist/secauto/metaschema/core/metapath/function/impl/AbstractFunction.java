@@ -136,14 +136,14 @@ public abstract class AbstractFunction implements IFunction {
         argument = argumentIterator.next();
       } else if (!function.isArityUnbounded()) {
         throw new InvalidTypeMetapathException(
-            null,
-            String.format("argument signature doesn't match '%s'", function.toSignature()));
+            function,
+            String.format("Argument signature doesn't match '%s'.", function.toSignature()));
       }
 
       assert argument != null;
       assert parameter != null;
 
-      retval.add(convertArgument(argument, parameter));
+      retval.add(convertArgument(argument, parameter, dynamicContext));
     }
     return CollectionUtil.unmodifiableList(retval);
   }
@@ -151,7 +151,8 @@ public abstract class AbstractFunction implements IFunction {
   @NonNull
   private static ISequence<?> convertArgument(
       @NonNull IArgument argument,
-      @NonNull ISequence<?> parameter) {
+      @NonNull ISequence<?> parameter,
+      @NonNull DynamicContext dynamicContext) {
     ISequenceType sequenceType = argument.getSequenceType();
 
     // apply occurrence
@@ -161,7 +162,7 @@ public abstract class AbstractFunction implements IFunction {
     if (!result.isEmpty()) {
       IItemType type = sequenceType.getType();
       // this is not required to be an empty sequence
-      result = convertSequence(argument, result, type);
+      result = convertSequence(argument, result, type, dynamicContext);
     }
 
     // verify resulting values
@@ -179,13 +180,16 @@ public abstract class AbstractFunction implements IFunction {
    *          the sequence to convert
    * @param requiredSequenceType
    *          the expected item type for the sequence
+   * @param dynamicContext
+   *          the dynamic evaluation context
    * @return the converted sequence
    */
   @NonNull
   protected static ISequence<?> convertSequence(
       @NonNull IArgument argument,
       @NonNull ISequence<?> sequence,
-      @NonNull IItemType requiredSequenceType) {
+      @NonNull IItemType requiredSequenceType,
+      @NonNull DynamicContext dynamicContext) {
     Class<? extends IItem> requiredSequenceTypeClass = requiredSequenceType.getItemClass();
 
     Stream<? extends IItem> stream = sequence.safeStream();
@@ -221,13 +225,9 @@ public abstract class AbstractFunction implements IFunction {
 
   @Nullable
   private IItem getContextItem(@NonNull ISequence<?> focus) {
-    IItem contextItem = isFocusDependent()
+    return isFocusDependent()
         ? focus.getFirstItem(true)
         : null;
-    if (isFocusDependent() && contextItem == null) {
-      throw new ContextAbsentDynamicMetapathException("The context item is empty");
-    }
-    return contextItem;
   }
 
   @Override
@@ -238,6 +238,9 @@ public abstract class AbstractFunction implements IFunction {
 
     try {
       IItem contextItem = getContextItem(focus);
+      if (isFocusDependent() && contextItem == null) {
+        throw new ContextAbsentDynamicMetapathException("The context item is empty.");
+      }
 
       List<ISequence<?>> convertedArguments = convertArguments(this, arguments, dynamicContext);
 
@@ -268,12 +271,7 @@ public abstract class AbstractFunction implements IFunction {
       // toSignature(), convertedArguments.toString(), result.asList().toString()));
       return result;
     } catch (MetapathException ex) {
-      // FIXME: avoid throwing a new exception for a function-related exception. Fix
-      // this after refactoring the exception hierarchy.
-      throw new MetapathException(String.format("Unable to execute function '%s'. %s",
-          toSignature(),
-          ex.getLocalizedMessage()),
-          ex);
+      throw ex.registerEvaluationContext(dynamicContext);
     }
   }
 

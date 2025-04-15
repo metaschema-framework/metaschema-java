@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -86,7 +86,7 @@ public final class FunctionService implements IFunctionResolver {
     IFunction retval = getLibrary().getFunction(name, arity);
 
     if (retval == null) {
-      throw new StaticMetapathError(StaticMetapathError.NO_FUNCTION_MATCH,
+      throw new StaticMetapathException(StaticMetapathException.NO_FUNCTION_MATCH,
           String.format("unable to find function with name '%s' having arity '%d'", name, arity));
     }
     return retval;

@@ -5,8 +5,8 @@
 
 package gov.nist.secauto.metaschema.databind.codegen;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 
@@ -24,7 +24,7 @@ public class DefaultModuleBindingGenerator implements IModuleBindingGenerator {
   }
 
   @Override
-  public Class<? extends IBoundModule> generate(IModule module) {
+  public Class<? extends IBoundModule> generate(IModule module) throws MetaschemaException {
     ClassLoader classLoader = ModuleCompilerHelper.newClassLoader(
         compilePath,
         ObjectUtils.notNull(Thread.currentThread().getContextClassLoader()));
@@ -33,7 +33,7 @@ public class DefaultModuleBindingGenerator implements IModuleBindingGenerator {
     try {
       production = ModuleCompilerHelper.compileMetaschema(module, compilePath);
     } catch (IOException ex) {
-      throw new MetapathException(
+      throw new MetaschemaException(
           String.format("Unable to generate and compile classes for module '%s'.", module.getLocation()),
           ex);
     }

@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.function;
 import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class UnidentifiedFunctionError
     extends FunctionMetapathError {
@@ -28,7 +29,7 @@ public class UnidentifiedFunctionError
    * @param cause
    *          the original exception cause
    */
-  public UnidentifiedFunctionError(String message, Throwable cause) {
+  public UnidentifiedFunctionError(@Nullable String message, @Nullable Throwable cause) {
     super(ERROR_CODE, message, cause);
   }
 
@@ -39,7 +40,7 @@ public class UnidentifiedFunctionError
    * @param message
    *          the exception message
    */
-  public UnidentifiedFunctionError(String message) {
+  public UnidentifiedFunctionError(@Nullable String message) {
     super(ERROR_CODE, message);
   }
 
@@ -50,7 +51,7 @@ public class UnidentifiedFunctionError
    * @param cause
    *          the original exception cause
    */
-  public UnidentifiedFunctionError(Throwable cause) {
+  public UnidentifiedFunctionError(@Nullable Throwable cause) {
     super(ERROR_CODE, cause);
   }
 }

@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,10 +13,8 @@ import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathExc
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathError;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.testing.model.mocking.MockedDocumentGenerator;
 
@@ -80,34 +77,19 @@ class FnNameTest
   void testContextAbsent() {
     DynamicContext dynamicContext = newDynamicContext();
 
-    MetapathException ex = assertThrows(MetapathException.class, () -> {
+    assertThrows(ContextAbsentDynamicMetapathException.class, () -> {
       IMetapathExpression.compile("name()", dynamicContext.getStaticContext())
           .evaluateAs(null, IMetapathExpression.ResultType.ITEM, dynamicContext);
     });
-    Throwable cause = ex.getCause() != null ? ex.getCause().getCause() : null;
-
-    assertEquals(ContextAbsentDynamicMetapathException.class,
-        cause == null
-            ? null
-            : cause.getClass());
   }
 
   @Test
   void testNotANode() {
     DynamicContext dynamicContext = newDynamicContext();
 
-    MetapathException ex = assertThrows(MetapathException.class, () -> {
+    assertThrows(InvalidTypeMetapathException.class, () -> {
       IMetapathExpression.compile("name()", dynamicContext.getStaticContext())
           .evaluateAs(IStringItem.valueOf("test"), IMetapathExpression.ResultType.ITEM, dynamicContext);
     });
-    Throwable cause = ex.getCause() != null ? ex.getCause().getCause() : null;
-
-    assertAll(
-        () -> assertEquals(InvalidTypeMetapathException.class, cause == null
-            ? null
-            : cause.getClass()),
-        () -> assertEquals(TypeMetapathError.INVALID_TYPE_ERROR, cause instanceof TypeMetapathError
-            ? ((TypeMetapathError) cause).getErrorCode().getCode()
-            : null));
   }
 }

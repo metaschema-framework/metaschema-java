@@ -9,11 +9,13 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
+import gov.nist.secauto.metaschema.core.metapath.InvalidMetapathGrammarException;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintInitializationException;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConfigurableMessageConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -85,7 +87,8 @@ public abstract class AbstractConfigurableMessageConstraint
   }
 
   @Override
-  public String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context) {
+  public String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context)
+      throws ConstraintValidationException {
     String message = getMessage();
     if (message == null) {
       throw new ConstraintInitializationException(
@@ -93,10 +96,9 @@ public abstract class AbstractConfigurableMessageConstraint
               IConstraint.getConstraintIdentity(this),
               getSource().getLocationHint()));
     }
-
-    return ObjectUtils.notNull(StringUtils.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {
-      String metapath = ObjectUtils.notNull(match.group(2));
-      try {
+    try {
+      return ObjectUtils.notNull(StringUtils.replaceTokens(message, METAPATH_VALUE_TEMPLATE_PATTERN, match -> {
+        String metapath = ObjectUtils.notNull(match.group(2));
         IMetapathExpression expr = IMetapathExpression.compile(
             metapath,
             // need to use the static context of the source to resolve prefixes, etc., since
@@ -108,14 +110,19 @@ public abstract class AbstractConfigurableMessageConstraint
             // here we are using the static context of the instance, since this is how
             // variables and nodes are resolved.
             context);
-      } catch (MetapathException ex) {
-        throw new MetapathException(
-            String.format("Unable to evaluate the message replacement expression '%s' in constraint '%s'. %s",
-                metapath,
-                IConstraint.getConstraintIdentity(this),
-                ex.getLocalizedMessage()),
-            ex);
-      }
-    }).toString());
+      }).toString());
+    } catch (InvalidMetapathGrammarException ex) {
+      throw new ConstraintValidationException(
+          String.format("Unable to compile a message replacement expression in constraint '%s'. %s",
+              IConstraint.getConstraintIdentity(this),
+              ex.getLocalizedMessage()),
+          ex);
+    } catch (MetapathException ex) {
+      throw new ConstraintValidationException(
+          String.format("Unable to evaluate a message replacement expression in constraint '%s'. %s",
+              IConstraint.getConstraintIdentity(this),
+              ex.getLocalizedMessage()),
+          ex);
+    }
   }
 }

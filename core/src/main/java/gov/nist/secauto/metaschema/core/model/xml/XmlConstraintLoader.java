@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.core.model.xml;
 
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
@@ -38,7 +37,6 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.apache.xmlbeans.impl.values.XmlValueNotSupportedException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -181,18 +179,7 @@ public class XmlConstraintLoader
       assert scope != null;
 
       List<ITargetedConstraints> targetedConstraints = new LinkedList<>(); // NOPMD - intentional
-      try {
-        SCOPE_PARSER.parse(source, scope, Pair.of(source, targetedConstraints));
-      } catch (MetapathException | XmlValueNotSupportedException ex) {
-        if (ex.getCause() instanceof MetapathException) {
-          throw new MetapathException(
-              String.format("Unable to compile a Metapath in '%s'. %s",
-                  source.getSource(),
-                  ex.getLocalizedMessage()),
-              ex);
-        }
-        throw ex;
-      }
+      SCOPE_PARSER.parse(source, scope, Pair.of(source, targetedConstraints));
 
       URI namespace = ObjectUtils.notNull(URI.create(scope.getMetaschemaNamespace()));
       String shortName = ObjectUtils.requireNonNull(scope.getMetaschemaShortName());

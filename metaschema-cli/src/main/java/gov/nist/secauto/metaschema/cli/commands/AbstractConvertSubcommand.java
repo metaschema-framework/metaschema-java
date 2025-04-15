@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.AbstractCommandExecutor
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.AutoCloser;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -94,9 +95,12 @@ public abstract class AbstractConvertSubcommand
      * @return the context
      * @throws CommandExecutionException
      *           if an error occurred getting the binding context
+     * @throws MetaschemaException
+     *           if an error occurred while setting up the binding context, such as
+     *           pre-loading any needed modules
      */
     @NonNull
-    protected abstract IBindingContext getBindingContext() throws CommandExecutionException;
+    protected abstract IBindingContext getBindingContext() throws CommandExecutionException, MetaschemaException;
 
     @SuppressWarnings({
         "PMD.OnlyOneReturn", // readability
@@ -120,9 +124,8 @@ public abstract class AbstractConvertSubcommand
 
       Format toFormat = MetaschemaCommands.getFormat(cmdLine, MetaschemaCommands.TO_OPTION);
 
-      IBindingContext bindingContext = getBindingContext();
-
       try {
+        IBindingContext bindingContext = getBindingContext();
         IBoundLoader loader = bindingContext.newBoundLoader();
         if (LOGGER.isInfoEnabled()) {
           LOGGER.info("Converting '{}'.", source);
@@ -145,7 +148,7 @@ public abstract class AbstractConvertSubcommand
             handleConversion(source, toFormat, writer, loader);
           }
         }
-      } catch (IllegalArgumentException ex) {
+      } catch (IllegalArgumentException | MetaschemaException ex) {
         throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);
       } catch (IOException ex) {
         throw new CommandExecutionException(ExitCode.IO_ERROR, ex);

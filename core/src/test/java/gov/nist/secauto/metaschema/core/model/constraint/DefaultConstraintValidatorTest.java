@@ -51,7 +51,7 @@ class DefaultConstraintValidatorTest {
 
   @SuppressWarnings("null")
   @Test
-  void testAllowedValuesAllowOther() {
+  void testAllowedValuesAllowOther() throws ConstraintValidationException {
     MockNodeItemFactory itemFactory = new MockNodeItemFactory();
 
     IFlagNodeItem flag = itemFactory.flag(qname("value"), IStringItem.valueOf("value"));
@@ -92,7 +92,7 @@ class DefaultConstraintValidatorTest {
 
   @SuppressWarnings("null")
   @Test
-  void testAllowedValuesMultipleAllowOther() {
+  void testAllowedValuesMultipleAllowOther() throws ConstraintValidationException {
     MockNodeItemFactory itemFactory = new MockNodeItemFactory();
 
     IFlagNodeItem flag = itemFactory.flag(qname("value"), IStringItem.valueOf("value"));
@@ -143,7 +143,7 @@ class DefaultConstraintValidatorTest {
 
   @SuppressWarnings("null")
   @Test
-  void testMultipleAllowedValuesConflictingAllowOther() {
+  void testMultipleAllowedValuesConflictingAllowOther() throws ConstraintValidationException {
     MockNodeItemFactory itemFactory = new MockNodeItemFactory();
 
     IFlagNodeItem flag1 = itemFactory.flag(qname("value"), IStringItem.valueOf("value"));

@@ -5,12 +5,12 @@
 
 package gov.nist.secauto.metaschema.maven.plugin;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationException;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
 import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
@@ -425,7 +425,7 @@ public abstract class AbstractMetaschemaMojo
   protected Set<IModule> getModulesToGenerateFor(
       @NonNull IBindingContext bindingContext,
       @NonNull IModuleLoader.IModulePostProcessor modulePostProcessor)
-      throws MetaschemaException, IOException {
+      throws MetaschemaException, IOException, ConstraintValidationException {
 
     // Don't use the normal loader, since it attempts to register and compile the
     // module.
@@ -718,12 +718,12 @@ public abstract class AbstractMetaschemaMojo
     }
 
     @NonNull
-    public IProduction generateClasses(@NonNull IModule module) {
+    public IProduction generateClasses(@NonNull IModule module) throws MetaschemaException {
       IProduction production;
       try {
         production = JavaGenerator.generate(module, compilePath, bindingConfiguration);
       } catch (IOException ex) {
-        throw new MetapathException(
+        throw new MetaschemaException(
             String.format("Unable to generate and compile classes for module '%s'.", module.getLocation()),
             ex);
       }
@@ -779,7 +779,7 @@ public abstract class AbstractMetaschemaMojo
     }
 
     @Override
-    public Class<? extends IBoundModule> generate(IModule module) {
+    public Class<? extends IBoundModule> generate(IModule module) throws MetaschemaException {
       IProduction production = generateClasses(module);
       try {
         compileClasses(production, compilePath);

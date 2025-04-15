@@ -12,6 +12,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Provides an error code that identifies the type of message.
+ * <p>
+ * Implementations of this interface are expected to be immutable.
  */
 public interface IErrorCode {
   @SuppressWarnings("PMD.ShortMethodName")

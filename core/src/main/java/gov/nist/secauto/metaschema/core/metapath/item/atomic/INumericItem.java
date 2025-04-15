@@ -291,7 +291,5 @@ public interface INumericItem extends IAnyAtomicItem {
    * @return a new value with the sign reversed
    */
   @NonNull
-  default INumericItem negate() {
-    return OperationFunctions.opNumericUnaryMinus(this);
-  }
+  INumericItem negate();
 }

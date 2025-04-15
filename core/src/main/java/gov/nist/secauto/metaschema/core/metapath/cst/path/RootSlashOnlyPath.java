@@ -58,6 +58,6 @@ public class RootSlashOnlyPath
 
   @Override
   protected ISequence<? extends INodeItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
-    return ItemUtils.getDocumentNodeItems(focus);
+    return ItemUtils.getDocumentNodeItems(dynamicContext, focus);
   }
 }

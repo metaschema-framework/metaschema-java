@@ -7,9 +7,9 @@ package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
+import gov.nist.secauto.metaschema.core.metapath.InvalidMetapathGrammarException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.FailingErrorListener;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
@@ -65,7 +65,7 @@ public class MetapathExpression
    * @param context
    *          the static evaluation context
    * @return the compiled expression object
-   * @throws MetapathException
+   * @throws InvalidMetapathGrammarException
    *           if an error occurred while compiling the Metapath expression
    */
   @NonNull
@@ -82,19 +82,15 @@ public class MetapathExpression
         IExpression expr = new BuildCSTVisitor(context).visit(tree);
         logCst(expr);
         retval = new MetapathExpression(path, expr, context);
-      } catch (StaticMetapathError ex) {
+      } catch (StaticMetapathException ex) {
         String message = ex.getMessageText();
-        throw new StaticMetapathError(
-            // FIXME: should it be this
-            // StaticMetapathError.INVALID_PATH_GRAMMAR,
-            // or this
-            ex.getErrorCode().getCode(),
+        throw new InvalidMetapathGrammarException(
             String.format("Unable to compile path '%s'.%s", path, message == null ? "" : " " + message),
             ex);
-      } catch (MetapathException | ParseCancellationException ex) {
+      } catch (ParseCancellationException ex) {
         String msg = String.format("Unable to compile Metapath '%s'", path);
         LOGGER.atError().withThrowable(ex).log(msg);
-        throw new StaticMetapathError(StaticMetapathError.INVALID_PATH_GRAMMAR, msg, ex);
+        throw new InvalidMetapathGrammarException(msg, ex);
       }
     }
     return retval;
@@ -159,6 +155,11 @@ public class MetapathExpression
     this.expression = expr;
   }
 
+  @Override
+  protected IExpression getExpression() {
+    return expression;
+  }
+
   /**
    * Get the compiled compact syntax tree (CST) representation of the Metapath.
    *
@@ -179,15 +180,11 @@ public class MetapathExpression
   public <T extends IItem> ISequence<T> evaluate(
       @Nullable IItem focus,
       @NonNull DynamicContext dynamicContext) {
+    dynamicContext.pushExecutionStack(this);
     try {
       return ObjectUtils.asType(getCSTNode().accept(dynamicContext, ISequence.of(focus)).reusable());
-    } catch (MetapathException ex) {
-      throw new MetapathException(
-          String.format("An error occurred while evaluating the expression '%s'. %s",
-              getPath(),
-              ex.getLocalizedMessage()),
-          ex);
+    } finally {
+      dynamicContext.popExecutionStack(this);
     }
   }
-
 }

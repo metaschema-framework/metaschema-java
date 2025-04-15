@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -83,8 +83,8 @@ public class DynamicFunctionCall
           specifier.toAtomicItem().asString(),
           arguments.size());
     } else {
-      throw new StaticMetapathError(
-          StaticMetapathError.NO_FUNCTION_MATCH,
+      throw new StaticMetapathException(
+          StaticMetapathException.NO_FUNCTION_MATCH,
           "Unable to get function name. The error specifier is an empty sequence.");
     }
     return function.execute(arguments, dynamicContext, focus);

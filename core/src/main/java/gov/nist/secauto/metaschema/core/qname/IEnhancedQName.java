@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.core.qname;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -249,9 +249,9 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
      * @param name
      *          the name to resolve
      * @return the URI string or {@code null} if the prefix is unbound
-     * @throws StaticMetapathError
-     *           with the code {@link StaticMetapathError#PREFIX_NOT_EXPANDABLE} if
-     *           a non-empty prefix is provided
+     * @throws StaticMetapathException
+     *           with the code {@link StaticMetapathException#PREFIX_NOT_EXPANDABLE}
+     *           if a non-empty prefix is provided
      */
     @NonNull
     IEnhancedQName resolve(@NonNull String name);

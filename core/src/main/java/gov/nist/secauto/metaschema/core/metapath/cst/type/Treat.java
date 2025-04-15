@@ -65,6 +65,7 @@ public class Treat
     ISequence<?> retval = value.accept(dynamicContext, focus);
     if (!type.matches(retval)) {
       throw new InvalidTreatTypeDynamicMetapathException(
+          dynamicContext.getExecutionStack(),
           String.format("The sequence '%s' does not match the sequence type '%s'.", retval, type.toSignature()));
     }
     return retval;
