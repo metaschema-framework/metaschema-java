@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.cst.type;
 
+import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -95,7 +96,9 @@ public abstract class AbstractCastingExpression
    * @return a sequence containing the casted item
    */
   @NonNull
-  protected ISequence<IAnyAtomicItem> cast(@NonNull ISequence<?> sequence) {
+  protected ISequence<IAnyAtomicItem> cast(
+      @NonNull ISequence<?> sequence,
+      @NonNull DynamicContext dynamicContext) {
     IAnyAtomicItem result = type.cast(sequence);
 
     if (result == null && !allowEmptySequence) {

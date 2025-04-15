@@ -68,7 +68,8 @@ public final class ContextItem
   @Override
   protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     if (focus.isEmpty()) {
-      throw new ContextAbsentDynamicMetapathException("The context item is empty");
+      throw new ContextAbsentDynamicMetapathException("The context item is empty")
+          .registerEvaluationContext(dynamicContext);
     }
     return focus;
   }

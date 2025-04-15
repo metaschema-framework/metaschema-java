@@ -9,13 +9,13 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.array;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
@@ -60,15 +60,11 @@ class FnStringTest
   void testNoFocus() {
     assertThrows(ContextAbsentDynamicMetapathException.class,
         () -> {
-          try {
-            FunctionTestBase.executeFunction(
-                FnString.SIGNATURE_NO_ARG,
-                newDynamicContext(),
-                null,
-                CollectionUtil.singletonList(sequence()));
-          } catch (MetapathException ex) {
-            throw ex.getCause();
-          }
+          FunctionTestBase.executeFunction(
+              FnString.SIGNATURE_NO_ARG,
+              newDynamicContext(),
+              null,
+              CollectionUtil.singletonList(sequence()));
         });
   }
 
@@ -76,15 +72,11 @@ class FnStringTest
   void testInvalidArgument() {
     assertThrows(InvalidTypeMetapathException.class,
         () -> {
-          try {
-            FunctionTestBase.executeFunction(
-                FnString.SIGNATURE_ONE_ARG,
-                newDynamicContext(),
-                ISequence.empty(),
-                ObjectUtils.notNull(List.of(sequence(integer(1), integer(2)))));
-          } catch (MetapathException ex) {
-            throw ex.getCause();
-          }
+          FunctionTestBase.executeFunction(
+              FnString.SIGNATURE_ONE_ARG,
+              newDynamicContext(),
+              ISequence.empty(),
+              ObjectUtils.notNull(List.of(sequence(integer(1), integer(2)))));
         });
   }
 
@@ -92,20 +84,18 @@ class FnStringTest
   void testInvalidArgumentType() {
     InvalidTypeFunctionException throwable = assertThrows(InvalidTypeFunctionException.class,
         () -> {
-          try {
-            FunctionTestBase.executeFunction(
-                FnString.SIGNATURE_ONE_ARG,
-                newDynamicContext(),
-                ISequence.empty(),
-                ObjectUtils.notNull(List.of(
-                    sequence(
-                        array(
-                            array(integer(1), integer(2)),
-                            array(integer(3), integer(4)))))));
-          } catch (MetapathException ex) {
-            throw ex.getCause();
-          }
+          FunctionTestBase.executeFunction(
+              FnString.SIGNATURE_ONE_ARG,
+              newDynamicContext(),
+              ISequence.empty(),
+              ObjectUtils.notNull(List.of(
+                  sequence(
+                      array(
+                          array(integer(1), integer(2)),
+                          array(integer(3), integer(4)))))));
         });
-    assertEquals(InvalidTypeFunctionException.ARGUMENT_TO_STRING_IS_FUNCTION, throwable.getErrorCode().getCode());
+    assertThat(throwable)
+        .extracting(ex -> ex.getErrorCode().getCode())
+        .isEqualTo(InvalidTypeFunctionException.ARGUMENT_TO_STRING_IS_FUNCTION);
   }
 }

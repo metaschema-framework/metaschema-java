@@ -26,6 +26,8 @@ import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ExceptionUtils;
+import gov.nist.secauto.metaschema.core.util.ExceptionUtils.WrappedException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -70,8 +72,10 @@ public class DefaultConstraintValidator
   @NonNull
   private final IMutableConfiguration<ValidationFeature<?>> configuration;
 
+  private final boolean exceptionOnError = false;
+
   /**
-   * Construct a new constraint validator instance.
+   * Construct a new constraint validation instance.
    *
    * @param handler
    *          the validation handler to use for handling constraint violations
@@ -138,8 +142,12 @@ public class DefaultConstraintValidator
   @Override
   public void validate(
       @NonNull INodeItem item,
-      @NonNull DynamicContext dynamicContext) {
-    item.accept(new Visitor(), dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    try {
+      item.accept(new Visitor(), dynamicContext);
+    } catch (WrappedException ex) {
+      ex.unwrapAndThrow(ConstraintValidationException.class);
+    }
   }
 
   /**
@@ -159,10 +167,14 @@ public class DefaultConstraintValidator
       @NonNull DynamicContext dynamicContext) {
     IFlagDefinition definition = item.getDefinition();
 
-    validateExpect(definition.getExpectConstraints(), item, dynamicContext);
-    validateAllowedValues(definition.getAllowedValuesConstraints(), item, dynamicContext);
-    validateIndexHasKey(definition.getIndexHasKeyConstraints(), item, dynamicContext);
-    validateMatches(definition.getMatchesConstraints(), item, dynamicContext);
+    try {
+      validateExpect(definition.getExpectConstraints(), item, dynamicContext);
+      validateAllowedValues(definition.getAllowedValuesConstraints(), item, dynamicContext);
+      validateIndexHasKey(definition.getIndexHasKeyConstraints(), item, dynamicContext);
+      validateMatches(definition.getMatchesConstraints(), item, dynamicContext);
+    } catch (ConstraintValidationException ex) {
+      throw ExceptionUtils.wrap(ex);
+    }
   }
 
   /**
@@ -182,10 +194,14 @@ public class DefaultConstraintValidator
       @NonNull DynamicContext dynamicContext) {
     IFieldDefinition definition = item.getDefinition();
 
-    validateExpect(definition.getExpectConstraints(), item, dynamicContext);
-    validateAllowedValues(definition.getAllowedValuesConstraints(), item, dynamicContext);
-    validateIndexHasKey(definition.getIndexHasKeyConstraints(), item, dynamicContext);
-    validateMatches(definition.getMatchesConstraints(), item, dynamicContext);
+    try {
+      validateExpect(definition.getExpectConstraints(), item, dynamicContext);
+      validateAllowedValues(definition.getAllowedValuesConstraints(), item, dynamicContext);
+      validateIndexHasKey(definition.getIndexHasKeyConstraints(), item, dynamicContext);
+      validateMatches(definition.getMatchesConstraints(), item, dynamicContext);
+    } catch (ConstraintValidationException ex) {
+      throw ExceptionUtils.wrap(ex);
+    }
   }
 
   /**
@@ -196,22 +212,25 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
-   * @throws MetapathException
-   *           if an error occurred while evaluating a Metapath used in a
-   *           constraint
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
   protected void validateAssembly(
       @NonNull IAssemblyNodeItem item,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     IAssemblyDefinition definition = item.getDefinition();
 
-    validateExpect(definition.getExpectConstraints(), item, dynamicContext);
-    validateAllowedValues(definition.getAllowedValuesConstraints(), item, dynamicContext);
-    validateIndexHasKey(definition.getIndexHasKeyConstraints(), item, dynamicContext);
-    validateMatches(definition.getMatchesConstraints(), item, dynamicContext);
-    validateHasCardinality(definition.getHasCardinalityConstraints(), item, dynamicContext);
-    validateIndex(definition.getIndexConstraints(), item, dynamicContext);
-    validateUnique(definition.getUniqueConstraints(), item, dynamicContext);
+    try {
+      validateExpect(definition.getExpectConstraints(), item, dynamicContext);
+      validateAllowedValues(definition.getAllowedValuesConstraints(), item, dynamicContext);
+      validateIndexHasKey(definition.getIndexHasKeyConstraints(), item, dynamicContext);
+      validateMatches(definition.getMatchesConstraints(), item, dynamicContext);
+      validateHasCardinality(definition.getHasCardinalityConstraints(), item, dynamicContext);
+      validateIndex(definition.getIndexConstraints(), item, dynamicContext);
+      validateUnique(definition.getUniqueConstraints(), item, dynamicContext);
+    } catch (ConstraintValidationException ex) {
+      throw ExceptionUtils.wrap(ex);
+    }
   }
 
   /**
@@ -225,19 +244,19 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private void validateHasCardinality( // NOPMD false positive
       @NonNull List<? extends ICardinalityConstraint> constraints,
       @NonNull IAssemblyNodeItem item,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     for (ICardinalityConstraint constraint : constraints) {
       assert constraint != null;
-
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateHasCardinality(constraint, item, targets, dynamicContext);
-      } catch (RuntimeException ex) {
+      } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
       }
     }
@@ -255,12 +274,14 @@ public class DefaultConstraintValidator
    * @param targets
    *          the focus of Metapath evaluation for evaluating any constraint
    *          Metapath clauses
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
   private void validateHasCardinality(
       @NonNull ICardinalityConstraint constraint,
       @NonNull IAssemblyNodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     int itemCount = targets.size();
 
     IConstraintValidationHandler handler = getConstraintValidationHandler();
@@ -294,19 +315,20 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private void validateIndex(
       @NonNull List<? extends IIndexConstraint> constraints,
       @NonNull IAssemblyNodeItem item,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     for (IIndexConstraint constraint : constraints) {
       assert constraint != null;
 
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateIndex(constraint, item, targets, dynamicContext);
-      } catch (RuntimeException ex) {
+      } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
       }
     }
@@ -327,37 +349,50 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
   private void validateIndex(
       @NonNull IIndexConstraint constraint,
       @NonNull IAssemblyNodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
-      @NonNull DynamicContext dynamicContext) {
-    String indexName = constraint.getName();
-
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     IConstraintValidationHandler handler = getConstraintValidationHandler();
-    if (indexNameToIndexMap.containsKey(indexName)) {
+    if (indexNameToIndexMap.containsKey(constraint.getName())) {
       handler.handleIndexDuplicateViolation(constraint, node, dynamicContext);
     } else {
-      IIndex index = IIndex.newInstance(constraint.getKeyFields());
-      targets.stream()
-          .forEachOrdered(item -> {
-            assert item != null;
-            if (item.hasValue()) {
-              try {
-                INodeItem oldItem = index.put(item, dynamicContext);
-                if (oldItem == null) {
-                  handlePass(constraint, node, item, dynamicContext);
-                } else {
-                  handler.handleIndexDuplicateKeyViolation(constraint, node, oldItem, item, dynamicContext);
-                }
-              } catch (MetapathException ex) {
-                handler.handleKeyMatchError(constraint, node, item, ex, dynamicContext);
-              }
-            }
-          });
-      indexNameToIndexMap.put(indexName, index);
+      validateIndexEntries(constraint, node, targets, dynamicContext);
     }
+  }
+
+  private void validateIndexEntries(
+      @NonNull IIndexConstraint constraint,
+      @NonNull IAssemblyNodeItem node,
+      @NonNull ISequence<? extends INodeItem> targets,
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    IIndex index = IIndex.newInstance(constraint.getKeyFields());
+    for (INodeItem item : targets) {
+      assert item != null;
+      if (item.hasValue()) {
+        INodeItem oldItem = null;
+        try {
+          oldItem = index.put(item, IIndex.toKey(item, index.getKeyFields(), dynamicContext));
+        } catch (IllegalArgumentException ex) {
+          // throw by IIndex.toKey
+          handleError(constraint, item, ex, dynamicContext);
+        }
+        try {
+          if (oldItem == null) {
+            handlePass(constraint, node, item, dynamicContext);
+          } else {
+            handler.handleIndexDuplicateKeyViolation(constraint, node, oldItem, item, dynamicContext);
+          }
+        } catch (MetapathException ex) {
+          handler.handleKeyMatchError(constraint, node, item, ex, dynamicContext);
+        }
+      }
+    }
+    indexNameToIndexMap.put(constraint.getName(), index);
   }
 
   private void handlePass(
@@ -374,9 +409,16 @@ public class DefaultConstraintValidator
       @NonNull IConstraint constraint,
       @NonNull INodeItem node,
       @NonNull Throwable ex,
-      @NonNull DynamicContext dynamicContext) {
-    getConstraintValidationHandler()
-        .handleError(constraint, node, toErrorMessage(constraint, node, ex), ex, dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    if (exceptionOnError) {
+      if (ex instanceof ConstraintValidationException) {
+        throw (ConstraintValidationException) ex;
+      }
+      throw new ConstraintValidationException(ex);
+    } else {
+      getConstraintValidationHandler()
+          .handleError(constraint, node, toErrorMessage(constraint, node, ex), ex, dynamicContext);
+    }
   }
 
   @NonNull
@@ -418,19 +460,20 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private void validateUnique(
       @NonNull List<? extends IUniqueConstraint> constraints,
       @NonNull IAssemblyNodeItem item,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     for (IUniqueConstraint constraint : constraints) {
       assert constraint != null;
 
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateUnique(constraint, item, targets, dynamicContext);
-      } catch (RuntimeException ex) {
+      } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
       }
     }
@@ -451,32 +494,40 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
   private void validateUnique(
       @NonNull IUniqueConstraint constraint,
       @NonNull IAssemblyNodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
 
     IConstraintValidationHandler handler = getConstraintValidationHandler();
     IIndex index = IIndex.newInstance(constraint.getKeyFields());
-    targets.stream()
-        .forEachOrdered(item -> {
-          assert item != null;
-          if (item.hasValue()) {
-            try {
-              INodeItem oldItem = index.put(item, dynamicContext);
-              if (oldItem == null) {
-                handlePass(constraint, node, item, dynamicContext);
-              } else {
-                handler.handleUniqueKeyViolation(constraint, node, oldItem, item, dynamicContext);
-              }
-            } catch (MetapathException ex) {
-              handler.handleKeyMatchError(constraint, node, item, ex, dynamicContext);
-              throw ex;
-            }
+
+    for (INodeItem item : targets) {
+      assert item != null;
+      if (item.hasValue()) {
+        INodeItem oldItem = null;
+        try {
+          oldItem = index.put(item, IIndex.toKey(item, index.getKeyFields(), dynamicContext));
+        } catch (IllegalArgumentException ex) {
+          // raised by IIndex.toKey
+          handleError(constraint, item, ex, dynamicContext);
+        }
+
+        try {
+          if (oldItem == null) {
+            handlePass(constraint, node, item, dynamicContext);
+          } else {
+            handler.handleUniqueKeyViolation(constraint, node, oldItem, item, dynamicContext);
           }
-        });
+        } catch (MetapathException ex) {
+          handleError(constraint, item, ex, dynamicContext);
+        }
+      }
+    }
   }
 
   /**
@@ -490,12 +541,13 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
-  private void validateMatches( // NOPMD false positive
+  private void validateMatches(
       @NonNull List<? extends IMatchesConstraint> constraints,
       @NonNull IDefinitionNodeItem<?, ?> item,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
 
     for (IMatchesConstraint constraint : constraints) {
       assert constraint != null;
@@ -503,7 +555,7 @@ public class DefaultConstraintValidator
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateMatches(constraint, item, targets, dynamicContext);
-      } catch (RuntimeException ex) {
+      } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
       }
     }
@@ -521,26 +573,27 @@ public class DefaultConstraintValidator
    * @param targets
    *          the focus of Metapath evaluation for evaluating any constraint
    *          Metapath clauses
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
   private void validateMatches(
       @NonNull IMatchesConstraint constraint,
       @NonNull INodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
-      @NonNull DynamicContext dynamicContext) {
-    targets.stream()
-        .forEachOrdered(item -> {
-          assert item != null;
-          if (item.hasValue()) {
-            validateMatchesItem(constraint, node, item, dynamicContext);
-          }
-        });
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    for (INodeItem item : targets) {
+      assert item != null;
+      if (item.hasValue()) {
+        validateMatchesItem(constraint, node, item, dynamicContext);
+      }
+    }
   }
 
   private void validateMatchesItem(
       @NonNull IMatchesConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem item,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     String value = item.toAtomicItem().asString();
 
     IConstraintValidationHandler handler = getConstraintValidationHandler();
@@ -578,12 +631,13 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private void validateIndexHasKey( // NOPMD false positive
       @NonNull List<? extends IIndexHasKeyConstraint> constraints,
       @NonNull IDefinitionNodeItem<?, ?> item,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
 
     for (IIndexHasKeyConstraint constraint : constraints) {
       assert constraint != null;
@@ -591,7 +645,7 @@ public class DefaultConstraintValidator
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateIndexHasKey(constraint, item, targets);
-      } catch (RuntimeException ex) {
+      } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
       }
     }
@@ -636,19 +690,20 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private void validateExpect(
       @NonNull List<? extends IExpectConstraint> constraints,
       @NonNull IDefinitionNodeItem<?, ?> item,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     for (IExpectConstraint constraint : constraints) {
       assert constraint != null;
 
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateExpect(constraint, item, targets, dynamicContext);
-      } catch (RuntimeException ex) {
+      } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
       }
     }
@@ -669,31 +724,32 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
   private void validateExpect(
       @NonNull IExpectConstraint constraint,
       @NonNull INodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     IMetapathExpression test = constraint.getTest();
     IConstraintValidationHandler handler = getConstraintValidationHandler();
-    targets.stream()
-        .forEachOrdered(item -> {
-          assert item != null;
+    for (INodeItem item : targets) {
+      assert item != null;
 
-          if (item.hasValue()) {
-            try {
-              ISequence<?> result = test.evaluate(item, dynamicContext);
-              if (FnBoolean.fnBoolean(result).toBoolean()) {
-                handlePass(constraint, node, item, dynamicContext);
-              } else {
-                handler.handleExpectViolation(constraint, node, item, dynamicContext);
-              }
-            } catch (MetapathException ex) {
-              handleError(constraint, item, ex, dynamicContext);
-            }
+      if (item.hasValue()) {
+        try {
+          ISequence<?> result = test.evaluate(item, dynamicContext);
+          if (FnBoolean.fnBoolean(result).toBoolean()) {
+            handlePass(constraint, node, item, dynamicContext);
+          } else {
+            handler.handleExpectViolation(constraint, node, item, dynamicContext);
           }
-        });
+        } catch (MetapathException ex) {
+          handleError(constraint, item, ex, dynamicContext);
+        }
+      }
+    }
   }
 
   /**
@@ -707,18 +763,19 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private void validateAllowedValues(
       @NonNull List<? extends IAllowedValuesConstraint> constraints,
       @NonNull IDefinitionNodeItem<?, ?> item,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     for (IAllowedValuesConstraint constraint : constraints) {
       assert constraint != null;
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateAllowedValues(constraint, item, targets, dynamicContext);
-      } catch (RuntimeException ex) {
+      } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
       }
     }
@@ -739,23 +796,24 @@ public class DefaultConstraintValidator
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
    */
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private void validateAllowedValues(
       @NonNull IAllowedValuesConstraint constraint,
       @NonNull IDefinitionNodeItem<?, ?> node,
       @NonNull ISequence<? extends IDefinitionNodeItem<?, ?>> targets,
-      @NonNull DynamicContext dynamicContext) {
-    targets.stream().forEachOrdered(item -> {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    for (INodeItem item : targets) {
       assert item != null;
       if (item.hasValue()) {
         try {
           updateValueStatus(item, constraint, node);
-        } catch (RuntimeException ex) {
+        } catch (ConstraintValidationException ex) {
           handleError(constraint, item, ex, dynamicContext);
         }
       }
-    });
+    }
   }
 
   /**
@@ -768,11 +826,14 @@ public class DefaultConstraintValidator
    * @param node
    *          the original focus of Metapath evaluation for identifying the
    *          targets
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while registering the allowed
+   *           values
    */
   protected void updateValueStatus(
       @NonNull INodeItem targetItem,
       @NonNull IAllowedValuesConstraint allowedValues,
-      @NonNull IDefinitionNodeItem<?, ?> node) {
+      @NonNull IDefinitionNodeItem<?, ?> node) throws ConstraintValidationException {
     // constraint.getAllowedValues().containsKey(value)
 
     @Nullable
@@ -782,7 +843,7 @@ public class DefaultConstraintValidator
       valueMap.put(targetItem, valueStatus);
     }
 
-    valueStatus.registerAllowedValue(allowedValues, node);
+    valueStatus.registerAllowedValues(allowedValues, node);
   }
 
   /**
@@ -804,9 +865,8 @@ public class DefaultConstraintValidator
     }
   }
 
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   @Override
-  public void finalizeValidation(DynamicContext dynamicContext) {
+  public void finalizeValidation(DynamicContext dynamicContext) throws ConstraintValidationException {
     // key references
     for (Map.Entry<String, List<KeyRef>> entry : indexNameToKeyRefMap.entrySet()) {
       String indexName = ObjectUtils.notNull(entry.getKey());
@@ -823,7 +883,7 @@ public class DefaultConstraintValidator
           assert item != null;
           try {
             validateKeyRef(constraint, node, item, indexName, index, dynamicContext);
-          } catch (RuntimeException ex) {
+          } catch (MetapathException ex) {
             handleError(constraint, item, ex, dynamicContext);
           }
         }
@@ -837,10 +897,16 @@ public class DefaultConstraintValidator
       @NonNull INodeItem item,
       @NonNull String indexName,
       @Nullable IIndex index,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     IConstraintValidationHandler handler = getConstraintValidationHandler();
     try {
-      List<String> key = IIndex.toKey(item, constraint.getKeyFields(), dynamicContext);
+      List<String> key;
+      try {
+        key = IIndex.toKey(item, constraint.getKeyFields(), dynamicContext);
+      } catch (IllegalArgumentException ex) {
+        handler.handleError(constraint, item, toErrorMessage(constraint, item, ex), ex, dynamicContext);
+        throw ex;
+      }
 
       if (index == null) {
         handler.handleMissingIndexViolation(
@@ -880,9 +946,9 @@ public class DefaultConstraintValidator
       this.value = item.toAtomicItem().asString();
     }
 
-    public void registerAllowedValue(
+    public void registerAllowedValues(
         @NonNull IAllowedValuesConstraint allowedValues,
-        @NonNull IDefinitionNodeItem<?, ?> node) {
+        @NonNull IDefinitionNodeItem<?, ?> node) throws ConstraintValidationException {
       IAllowedValuesConstraint.Extensible newExtensible = allowedValues.getExtensible();
       if (newExtensible.ordinal() > extensible.ordinal()) {
         // record the most restrictive value
@@ -890,10 +956,11 @@ public class DefaultConstraintValidator
       } else if (IAllowedValuesConstraint.Extensible.NONE.equals(newExtensible)
           && IAllowedValuesConstraint.Extensible.NONE.equals(extensible)) {
         // this is an error, where there are two none constraints that conflict
-        throw new MetapathException(
-            String.format(
+        // TODO: find a different exception type to use
+        throw new ConstraintValidationException(
+            ObjectUtils.notNull(String.format(
                 "Multiple constraints matching path '%s' have scope='none', which prevents extension. Involved" +
-                    " constraints are those: %s",
+                    " constraints are: %s",
                 Stream.concat(
                     Stream.of(allowedValues),
                     constraints.stream()
@@ -902,14 +969,14 @@ public class DefaultConstraintValidator
                             constraint -> IAllowedValuesConstraint.Extensible.NONE.equals(constraint.getExtensible())))
                     .map(IConstraint::getConstraintIdentity)
                     .collect(Collectors.joining(", ", "{", "}")),
-                item.getMetapath()));
+                item.getMetapath())));
       } else if (allowedValues.getExtensible().ordinal() < extensible.ordinal()) {
-        String msg = String.format(
+        String msg = ObjectUtils.notNull(String.format(
             "An allowed values constraint with an extensibility scope '%s'"
                 + " exceeds the allowed scope '%s' at path '%s'",
-            allowedValues.getExtensible().name(), extensible.name(), item.getMetapath());
+            allowedValues.getExtensible().name(), extensible.name(), item.getMetapath()));
         LOGGER.atError().log(msg);
-        throw new MetapathException(msg);
+        throw new ConstraintValidationException(msg);
       }
       this.constraints.add(Pair.of(allowedValues, node));
       if (!allowedValues.isAllowedOther()) {
@@ -1010,7 +1077,11 @@ public class DefaultConstraintValidator
       IAssemblyDefinition definition = item.getDefinition();
       DynamicContext effectiveContext = handleLetStatements(item, definition.getLetExpressions(), context);
 
-      validateAssembly(item, effectiveContext);
+      try {
+        validateAssembly(item, effectiveContext);
+      } catch (ConstraintValidationException ex) {
+        throw ExceptionUtils.wrap(ex);
+      }
       super.visitAssembly(item, effectiveContext);
       return null;
     }

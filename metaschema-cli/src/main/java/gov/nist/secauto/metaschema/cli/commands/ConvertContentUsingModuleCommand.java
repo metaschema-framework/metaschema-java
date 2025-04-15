@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionExcepti
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -81,7 +82,7 @@ class ConvertContentUsingModuleCommand
     }
 
     @Override
-    protected IBindingContext getBindingContext() throws CommandExecutionException {
+    protected IBindingContext getBindingContext() throws CommandExecutionException, MetaschemaException {
       IBindingContext retval = MetaschemaCommands.newBindingContextWithDynamicCompilation();
 
       @SuppressWarnings("synthetic-access")

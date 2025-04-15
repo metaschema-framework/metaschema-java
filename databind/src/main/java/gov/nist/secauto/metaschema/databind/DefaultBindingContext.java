@@ -98,7 +98,11 @@ public class DefaultBindingContext implements IBindingContext {
   public DefaultBindingContext(@NonNull IBindingContext.IModuleLoaderStrategy strategy) {
     // only allow extended classes
     moduleLoaderStrategy = strategy;
-    registerModule(MetaschemaModelModule.class);
+    try {
+      registerModule(MetaschemaModelModule.class);
+    } catch (MetaschemaException ex) {
+      throw new IllegalStateException("Unable to register the builtin Metaschema module.", ex);
+    }
   }
 
   @Override
@@ -114,20 +118,20 @@ public class DefaultBindingContext implements IBindingContext {
 
   @Override
   @NonNull
-  public final IBoundModule registerModule(@NonNull Class<? extends IBoundModule> clazz) {
+  public final IBoundModule registerModule(@NonNull Class<? extends IBoundModule> clazz) throws MetaschemaException {
     IModuleLoaderStrategy strategy = getModuleLoaderStrategy();
     IBoundModule module = strategy.loadModule(clazz, this);
     registerImportedModules(module);
     return strategy.registerModule(module, this);
   }
 
-  private void registerImportedModules(@NonNull IBoundModule module) {
+  private void registerImportedModules(@NonNull IBoundModule module) throws MetaschemaException {
     IModuleLoaderStrategy strategy = getModuleLoaderStrategy();
-    module.getImportedModules().stream()
-        .forEachOrdered(parentModule -> {
-          registerImportedModules(ObjectUtils.notNull(parentModule));
-          strategy.registerModule(ObjectUtils.notNull(parentModule), this);
-        });
+    for (IBoundModule parentModule : module.getImportedModules()) {
+      assert parentModule != null;
+      registerImportedModules(parentModule);
+      strategy.registerModule(parentModule, this);
+    }
   }
 
   /**

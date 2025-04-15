@@ -31,7 +31,7 @@ public abstract class AbstractExpression implements IExpression {
   }
 
   @Override
-  public String getText() {
+  public String getPath() {
     return text;
   }
 

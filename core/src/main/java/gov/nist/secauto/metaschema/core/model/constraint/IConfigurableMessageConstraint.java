@@ -39,7 +39,10 @@ public interface IConfigurableMessageConstraint extends IConstraint {
    * @throws ConstraintInitializationException
    *           if a custom message is not defined, which will occur if this method
    *           is called while {@link #getMessage()} returns {@code null}
+   * @throws ConstraintValidationException
+   *           if the custom message contains a Metapath expression that is
+   *           invalid or if the expression failed to evaluate
    */
   @NonNull
-  String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context);
+  String generateMessage(@NonNull INodeItem item, @NonNull DynamicContext context) throws ConstraintValidationException;
 }

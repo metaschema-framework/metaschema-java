@@ -17,6 +17,7 @@ import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
+import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationException;
 import gov.nist.secauto.metaschema.core.model.constraint.DefaultConstraintValidator;
 import gov.nist.secauto.metaschema.core.model.constraint.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.model.constraint.FindingCollectingConstraintValidationHandler;
@@ -244,9 +245,11 @@ public interface IBindingContext {
    * @param clazz
    *          the class implementing a bound Metaschema module
    * @return the loaded module
+   * @throws MetaschemaException
+   *           if an error occurred while registering the module
    */
   @NonNull
-  IBoundModule registerModule(@NonNull Class<? extends IBoundModule> clazz);
+  IBoundModule registerModule(@NonNull Class<? extends IBoundModule> clazz) throws MetaschemaException;
 
   /**
    * Registers the provided Metaschema module with this binding context.
@@ -259,6 +262,8 @@ public interface IBindingContext {
    *          the Module module to generate classes for
    * @return the registered module, which may be a different instance than what
    *         was provided if dynamic compilation was performed
+   * @throws MetaschemaException
+   *           if an error occurred while registering the module
    * @throws UnsupportedOperationException
    *           if this binding context is not configured to support dynamic bound
    *           module loading and the module instance is not a subclass of
@@ -266,7 +271,7 @@ public interface IBindingContext {
    * @since 2.0.0
    */
   @NonNull
-  default IBoundModule registerModule(@NonNull IModule module) {
+  default IBoundModule registerModule(@NonNull IModule module) throws MetaschemaException {
     return getModuleLoaderStrategy().registerModule(module, this);
   }
 
@@ -463,13 +468,13 @@ public interface IBindingContext {
    * @param config
    *          the validation configuration
    * @return the validation result
+   * @throws ConstraintValidationException
    * @throws IllegalArgumentException
-   *           if the provided class is not bound to a Module assembly or field
    */
   default IValidationResult validate(
       @NonNull IDocumentNodeItem nodeItem,
       @NonNull IBoundLoader loader,
-      @Nullable IConfiguration<ValidationFeature<?>> config) {
+      @Nullable IConfiguration<ValidationFeature<?>> config) throws ConstraintValidationException {
     IRootAssemblyNodeItem root = nodeItem.getRootAssemblyNodeItem();
     return validate(root, loader, config);
   }
@@ -485,13 +490,13 @@ public interface IBindingContext {
    * @param config
    *          the validation configuration
    * @return the validation result
+   * @throws ConstraintValidationException
    * @throws IllegalArgumentException
-   *           if the provided class is not bound to a Module assembly or field
    */
   default IValidationResult validate(
       @NonNull IDefinitionNodeItem<?, ?> nodeItem,
       @NonNull IBoundLoader loader,
-      @Nullable IConfiguration<ValidationFeature<?>> config) {
+      @Nullable IConfiguration<ValidationFeature<?>> config) throws ConstraintValidationException {
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
     IConstraintValidator validator = newValidator(handler, config);
@@ -519,12 +524,13 @@ public interface IBindingContext {
    * @return the validation result
    * @throws IOException
    *           if an error occurred while reading the target
+   * @throws ConstraintValidationException
    */
   default IValidationResult validate(
       @NonNull URI target,
       @NonNull Format asFormat,
       @NonNull ISchemaValidationProvider schemaProvider,
-      @Nullable IConfiguration<ValidationFeature<?>> config) throws IOException {
+      @Nullable IConfiguration<ValidationFeature<?>> config) throws IOException, ConstraintValidationException {
 
     IValidationResult retval = schemaProvider.validateWithSchema(target, asFormat, this);
 
@@ -546,11 +552,12 @@ public interface IBindingContext {
    * @return the validation results
    * @throws IOException
    *           if an error occurred while parsing the target
+   * @throws ConstraintValidationException
    */
   default IValidationResult validateWithConstraints(
       @NonNull URI target,
       @Nullable IConfiguration<ValidationFeature<?>> config)
-      throws IOException {
+      throws IOException, ConstraintValidationException {
     IBoundLoader loader = newBoundLoader();
     loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
     IDocumentNodeItem nodeItem = loader.loadAsNodeItem(target);
@@ -628,6 +635,8 @@ public interface IBindingContext {
      *          the Metaschema binding context used to load bound resources
      * @return the registered module, which may be a different instance than what
      *         was provided if dynamic compilation was performed
+     * @throws MetaschemaException
+     *           if an error occurred while dynamically binding the provided module
      * @throws UnsupportedOperationException
      *           if this binding context is not configured to support dynamic bound
      *           module loading and the module instance is not a subclass of
@@ -637,7 +646,7 @@ public interface IBindingContext {
     @NonNull
     IBoundModule registerModule(
         @NonNull IModule module,
-        @NonNull IBindingContext bindingContext);
+        @NonNull IBindingContext bindingContext) throws MetaschemaException;
     //
     // /**
     // * Register a matcher used to identify a bound class by the definition's root

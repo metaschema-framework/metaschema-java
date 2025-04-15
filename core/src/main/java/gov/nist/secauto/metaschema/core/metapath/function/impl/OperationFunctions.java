@@ -1132,14 +1132,17 @@ public final class OperationFunctions {
    * @return the number with a reversed sign
    */
   @NonNull
-  public static INumericItem opNumericUnaryMinus(@NonNull INumericItem item) {
+  public static INumericItem opNumericUnaryMinus(
+      @NonNull INumericItem item) {
     INumericItem retval;
     if (item instanceof IIntegerItem) {
       retval = ((IIntegerItem) item).negate();
     } else if (item instanceof IDecimalItem) {
       retval = ((IDecimalItem) item).negate();
     } else {
-      throw new InvalidTypeMetapathException(item, String.format("Unsupported numeric type '%s'.", item.getClass()));
+      throw new InvalidTypeMetapathException(
+          item,
+          String.format("Unsupported numeric type '%s'.", item.getClass()));
     }
     return retval;
   }

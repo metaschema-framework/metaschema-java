@@ -7,13 +7,12 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 
@@ -47,20 +46,15 @@ class FnExactlyOneTest
   @ParameterizedTest
   @MethodSource("provideValues")
   void test(@Nullable ISequence<?> expected, @NonNull String metapath) {
-    try {
+    if (expected == null) {
+      InvalidArgumentFunctionException thrown = assertThrows(InvalidArgumentFunctionException.class, () -> {
+        IMetapathExpression.compile(metapath).evaluate(null, newDynamicContext());
+      });
+      assertThat(thrown).extracting(ex -> ex.getErrorCode().getCode())
+          .isEqualTo(InvalidArgumentFunctionException.INVALID_ARGUMENT_EXACTLY_ONE);
+    } else {
       assertEquals(expected, IMetapathExpression.compile(metapath)
           .evaluate(null, newDynamicContext()));
-    } catch (MetapathException ex) {
-      // FIXME: After refactoring the exception hierarchy, target the actual exception
-      Throwable cause = ex.getCause() == null ? ex.getCause() : ex.getCause().getCause();
-      assertAll(
-          () -> assertNull(expected),
-          () -> assertEquals(InvalidArgumentFunctionException.class, cause.getClass()),
-          () -> assertEquals(
-              InvalidArgumentFunctionException.INVALID_ARGUMENT_EXACTLY_ONE,
-              cause instanceof InvalidArgumentFunctionException
-                  ? ((InvalidArgumentFunctionException) cause).getErrorCode().getCode()
-                  : null));
     }
   }
 }

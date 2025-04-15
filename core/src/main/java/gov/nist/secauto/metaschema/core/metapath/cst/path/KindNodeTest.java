@@ -50,7 +50,7 @@ public class KindNodeTest
   @Override
   protected ISequence<? extends INodeItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     return ISequence.of(filterStream(ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItem))));
+        .map(item -> ItemUtils.checkItemIsNodeItem(dynamicContext, item)))));
   }
 
   @SuppressWarnings("null")

@@ -60,8 +60,11 @@ public class MapConstructor
               IAnyAtomicItem key = ISequence.of(keyExpression.accept(dynamicContext, focus).atomize())
                   .getFirstItem(true);
               if (key == null) {
-                throw new InvalidTypeMetapathException(null, String.format(
-                    "The expression '%s' did not result in a single key atomic value.", keyExpression.toCSTString()));
+                throw new InvalidTypeMetapathException(
+                    null,
+                    String.format("The expression '%s' did not result in a single key atomic value.",
+                        keyExpression.toCSTString()))
+                            .registerEvaluationContext(dynamicContext);
               }
               ICollectionValue value = item.getValueExpression().accept(dynamicContext, focus).toCollectionValue();
 

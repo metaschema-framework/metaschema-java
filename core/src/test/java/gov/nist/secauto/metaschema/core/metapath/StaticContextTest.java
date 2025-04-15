@@ -141,11 +141,11 @@ class StaticContextTest {
 
   @Test
   void lookupNonExistantDataType() {
-    StaticMetapathError ex = assertThrows(StaticMetapathError.class, () -> {
+    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
       StaticContext.instance().lookupAtomicType("xs:string");
     });
 
-    assertEquals(StaticMetapathError.PREFIX_NOT_EXPANDABLE, ex.getErrorCode().getCode());
+    assertEquals(StaticMetapathException.PREFIX_NOT_EXPANDABLE, ex.getErrorCode().getCode());
   }
 
   @Test

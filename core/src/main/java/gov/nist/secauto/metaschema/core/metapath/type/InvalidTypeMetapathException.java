@@ -12,10 +12,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Provides a convenient way to raise a
- * {@link TypeMetapathError#INVALID_TYPE_ERROR}.
+ * {@link TypeMetapathException#INVALID_TYPE_ERROR}.
  */
 public class InvalidTypeMetapathException
-    extends TypeMetapathError {
+    extends TypeMetapathException {
 
   /**
    * the serial version UID.
@@ -34,8 +34,12 @@ public class InvalidTypeMetapathException
    * @param cause
    *          the original exception cause
    */
-  public InvalidTypeMetapathException(@NonNull IItem item, @NonNull Throwable cause) {
-    super(INVALID_TYPE_ERROR, String.format("Invalid data type '%s'", item.getClass().getName()),
+  public InvalidTypeMetapathException(
+      @NonNull IItem item,
+      @NonNull Throwable cause) {
+    super(
+        INVALID_TYPE_ERROR,
+        String.format("Invalid data type '%s'", item.getClass().getName()),
         cause);
     this.item = item;
   }
@@ -47,7 +51,8 @@ public class InvalidTypeMetapathException
    * @param item
    *          the item related to the invalid type error
    */
-  public InvalidTypeMetapathException(@NonNull IItem item) {
+  public InvalidTypeMetapathException(
+      @NonNull IItem item) {
     super(INVALID_TYPE_ERROR, String.format("Invalid data type '%s'", item.getClass().getName()));
     this.item = item;
   }
@@ -63,7 +68,10 @@ public class InvalidTypeMetapathException
    * @param cause
    *          the original exception cause
    */
-  public InvalidTypeMetapathException(@Nullable IItem item, @Nullable String message, @NonNull Throwable cause) {
+  public InvalidTypeMetapathException(
+      @Nullable IItem item,
+      @Nullable String message,
+      @NonNull Throwable cause) {
     super(INVALID_TYPE_ERROR, message, cause);
     this.item = item;
   }
@@ -77,7 +85,9 @@ public class InvalidTypeMetapathException
    * @param message
    *          the exception message
    */
-  public InvalidTypeMetapathException(@Nullable IItem item, @Nullable String message) {
+  public InvalidTypeMetapathException(
+      @Nullable IItem item,
+      @Nullable String message) {
     super(INVALID_TYPE_ERROR, message);
     this.item = item;
   }

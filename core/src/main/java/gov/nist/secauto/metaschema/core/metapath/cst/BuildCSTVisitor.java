@@ -6,8 +6,9 @@
 package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.IExpression;
+import gov.nist.secauto.metaschema.core.metapath.InvalidMetapathGrammarException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
 import gov.nist.secauto.metaschema.core.metapath.cst.items.ArraySequenceConstructor;
@@ -1171,16 +1172,16 @@ public class BuildCSTVisitor
     IAtomicOrUnionType<?> type;
     try {
       type = getContext().lookupAtomicType(name);
-    } catch (StaticMetapathError ex) {
-      if (StaticMetapathError.UNKNOWN_TYPE == ex.getErrorCode().getCode()) {
-        throw new StaticMetapathError(StaticMetapathError.CAST_UNKNOWN_TYPE, ex);
+    } catch (StaticMetapathException ex) {
+      if (StaticMetapathException.UNKNOWN_TYPE == ex.getErrorCode().getCode()) {
+        throw new StaticMetapathException(StaticMetapathException.CAST_UNKNOWN_TYPE, ex);
       }
       throw ex;
     }
 
     if (IItemType.anyAtomic().equals(type)) {
-      throw new StaticMetapathError(
-          StaticMetapathError.CAST_ANY_ATOMIC,
+      throw new StaticMetapathException(
+          StaticMetapathException.CAST_ANY_ATOMIC,
           String.format("Type cannot be '%s',", IItemType.anyAtomic()));
     }
     return type;
@@ -1275,8 +1276,8 @@ public class BuildCSTVisitor
           // function expression
           result = visit(arrowCtx.parenthesizedexpr().expr());
         } else {
-          throw new StaticMetapathError(
-              StaticMetapathError.INVALID_PATH_GRAMMAR,
+          // TODO: Is this the correct exception to throw here?
+          throw new InvalidMetapathGrammarException(
               String.format("Unable to get function name using arrow specifier '%s'.", arrowCtx.getText()));
         }
 

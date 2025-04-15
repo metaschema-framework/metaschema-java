@@ -21,6 +21,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -127,11 +128,15 @@ class EvaluateMetapathCommand
     if (cmdLine.hasOption(MetaschemaCommands.METASCHEMA_OPTIONAL_OPTION)) {
       IBindingContext bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
 
-      module = bindingContext.registerModule(MetaschemaCommands.loadModule(
-          cmdLine,
-          MetaschemaCommands.METASCHEMA_OPTIONAL_OPTION,
-          ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),
-          bindingContext));
+      try {
+        module = bindingContext.registerModule(MetaschemaCommands.loadModule(
+            cmdLine,
+            MetaschemaCommands.METASCHEMA_OPTIONAL_OPTION,
+            ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),
+            bindingContext));
+      } catch (MetaschemaException ex) {
+        throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);
+      }
 
       // determine if the query is evaluated against the module or the instance
       if (cmdLine.hasOption(CONTENT_OPTION)) {

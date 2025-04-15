@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.databind.model.impl;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
@@ -39,27 +38,21 @@ public final class ConstraintSupport {
       @NonNull ISource source,
       @NonNull IValueConstrained set) {
     if (valueAnnotation != null) {
-      try {
-        Arrays.stream(valueAnnotation.lets())
-            .map(annotation -> ConstraintFactory.newLetExpression(annotation, source))
-            .forEachOrdered(set::addLetExpression);
-        Arrays.stream(valueAnnotation.allowedValues())
-            .map(annotation -> ConstraintFactory.newAllowedValuesConstraint(annotation, source))
-            .forEachOrdered(set::addConstraint);
-        Arrays.stream(valueAnnotation.matches())
-            .map(annotation -> ConstraintFactory.newMatchesConstraint(annotation, source))
-            .forEachOrdered(set::addConstraint);
-        Arrays.stream(valueAnnotation.indexHasKey())
-            .map(annotation -> ConstraintFactory.newIndexHasKeyConstraint(annotation, source))
-            .forEachOrdered(set::addConstraint);
-        Arrays.stream(valueAnnotation.expect())
-            .map(annotation -> ConstraintFactory.newExpectConstraint(annotation, source))
-            .forEachOrdered(set::addConstraint);
-      } catch (MetapathException ex) {
-        throw new MetapathException(
-            String.format("Unable to compile a Metapath in '%s'. %s", source.getSource(), ex.getLocalizedMessage()),
-            ex);
-      }
+      Arrays.stream(valueAnnotation.lets())
+          .map(annotation -> ConstraintFactory.newLetExpression(annotation, source))
+          .forEachOrdered(set::addLetExpression);
+      Arrays.stream(valueAnnotation.allowedValues())
+          .map(annotation -> ConstraintFactory.newAllowedValuesConstraint(annotation, source))
+          .forEachOrdered(set::addConstraint);
+      Arrays.stream(valueAnnotation.matches())
+          .map(annotation -> ConstraintFactory.newMatchesConstraint(annotation, source))
+          .forEachOrdered(set::addConstraint);
+      Arrays.stream(valueAnnotation.indexHasKey())
+          .map(annotation -> ConstraintFactory.newIndexHasKeyConstraint(annotation, source))
+          .forEachOrdered(set::addConstraint);
+      Arrays.stream(valueAnnotation.expect())
+          .map(annotation -> ConstraintFactory.newExpectConstraint(annotation, source))
+          .forEachOrdered(set::addConstraint);
     }
   }
 
@@ -80,23 +73,17 @@ public final class ConstraintSupport {
       @NonNull ISource source,
       @NonNull IModelConstrained set) {
     if (assemblyAnnotation != null) {
-      try {
-        Arrays.stream(assemblyAnnotation.index())
-            .map(annotation -> ConstraintFactory.newIndexConstraint(annotation, source))
-            .forEachOrdered(set::addConstraint);
+      Arrays.stream(assemblyAnnotation.index())
+          .map(annotation -> ConstraintFactory.newIndexConstraint(annotation, source))
+          .forEachOrdered(set::addConstraint);
 
-        Arrays.stream(assemblyAnnotation.unique())
-            .map(annotation -> ConstraintFactory.newUniqueConstraint(annotation, source))
-            .forEachOrdered(set::addConstraint);
+      Arrays.stream(assemblyAnnotation.unique())
+          .map(annotation -> ConstraintFactory.newUniqueConstraint(annotation, source))
+          .forEachOrdered(set::addConstraint);
 
-        Arrays.stream(assemblyAnnotation.cardinality())
-            .map(annotation -> ConstraintFactory.newCardinalityConstraint(annotation, source))
-            .forEachOrdered(set::addConstraint);
-      } catch (MetapathException ex) {
-        throw new MetapathException(
-            String.format("Unable to compile a Metapath in '%s'. %s", source.getSource(), ex.getLocalizedMessage()),
-            ex);
-      }
+      Arrays.stream(assemblyAnnotation.cardinality())
+          .map(annotation -> ConstraintFactory.newCardinalityConstraint(annotation, source))
+          .forEachOrdered(set::addConstraint);
     }
   }
 }

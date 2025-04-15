@@ -53,7 +53,7 @@ public class WildcardNodeTest
   @Override
   protected ISequence<? extends INodeItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
     Stream<INodeItem> stream = focus.stream()
-        .map(ItemUtils::checkItemIsNodeItem);
+        .map(item -> ItemUtils.checkItemIsNodeItem(dynamicContext, item));
 
     if (matcher != null) {
       stream = stream.filter(this::match);

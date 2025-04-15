@@ -115,7 +115,7 @@ public class Step
       axisResult = ISequence.empty();
     } else {
       axisResult = ISequence.of(ObjectUtils.notNull(focus.stream()
-          .map(ItemUtils::checkItemIsNodeItem)
+          .map(item -> ItemUtils.checkItemIsNodeItem(dynamicContext, item))
           .flatMap(item -> {
             assert item != null;
             return axis.execute(item);

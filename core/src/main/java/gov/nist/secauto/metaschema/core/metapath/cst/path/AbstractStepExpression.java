@@ -67,7 +67,7 @@ public abstract class AbstractStepExpression<RESULT_TYPE extends INodeItem>
       DynamicContext dynamicContext,
       ISequence<?> focus) {
     return ISequence.of(ObjectUtils.notNull(focus.stream()
-        .map(ItemUtils::checkItemIsNodeItem)
+        .map(item -> ItemUtils.checkItemIsNodeItem(dynamicContext, item))
         .flatMap(item -> {
           assert item != null;
           return match(item);

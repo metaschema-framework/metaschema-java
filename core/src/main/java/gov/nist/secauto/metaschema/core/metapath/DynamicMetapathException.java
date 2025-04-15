@@ -6,13 +6,14 @@
 package gov.nist.secauto.metaschema.core.metapath;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * MPDY: Exceptions related to the Metapath dynamic context and dynamic
  * evaluation.
  */
 public class DynamicMetapathException
-    extends DynamicMetapathError {
+    extends MetapathException {
   @NonNull
   private static final String PREFIX = "MPDY";
 
@@ -55,7 +56,9 @@ public class DynamicMetapathException
    * @param message
    *          the exception message
    */
-  public DynamicMetapathException(int code, String message) {
+  public DynamicMetapathException(
+      int code,
+      @Nullable String message) {
     super(IErrorCode.of(PREFIX, code), message);
   }
 
@@ -70,7 +73,10 @@ public class DynamicMetapathException
    * @param cause
    *          the original exception cause
    */
-  public DynamicMetapathException(int code, String message, Throwable cause) {
+  public DynamicMetapathException(
+      int code,
+      @Nullable String message,
+      @Nullable Throwable cause) {
     super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
@@ -83,7 +89,9 @@ public class DynamicMetapathException
    * @param cause
    *          the original exception cause
    */
-  public DynamicMetapathException(int code, Throwable cause) {
+  public DynamicMetapathException(
+      int code,
+      @Nullable Throwable cause) {
     super(IErrorCode.of(PREFIX, code), cause);
   }
 }

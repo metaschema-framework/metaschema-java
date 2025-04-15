@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
@@ -292,7 +293,7 @@ public final class SarifValidationHandler {
    */
   @NonNull
   public String writeToString(@NonNull IBindingContext bindingContext) throws IOException {
-    bindingContext.registerModule(SarifModule.class);
+    registerSarifMetaschemaModule(bindingContext);
     try (StringWriter writer = new StringWriter()) {
       bindingContext.newSerializer(Format.JSON, Sarif.class)
           .disableFeature(SerializationFeature.SERIALIZE_ROOT)
@@ -319,7 +320,7 @@ public final class SarifValidationHandler {
     URI output = ObjectUtils.notNull(outputFile.toUri());
     Sarif sarif = generateSarif(output);
 
-    bindingContext.registerModule(SarifModule.class);
+    registerSarifMetaschemaModule(bindingContext);
     bindingContext.newSerializer(Format.JSON, Sarif.class)
         .disableFeature(SerializationFeature.SERIALIZE_ROOT)
         .serialize(
@@ -328,6 +329,14 @@ public final class SarifValidationHandler {
             StandardOpenOption.CREATE,
             StandardOpenOption.WRITE,
             StandardOpenOption.TRUNCATE_EXISTING);
+  }
+
+  private static void registerSarifMetaschemaModule(@NonNull IBindingContext bindingContext) {
+    try {
+      bindingContext.registerModule(SarifModule.class);
+    } catch (MetaschemaException ex) {
+      throw new IllegalStateException("Unable to register the builtin SARIF module.", ex);
+    }
   }
 
   private interface IResult {

@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.metapath.cst;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IExpression;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -65,15 +65,15 @@ public class StaticFunctionCall
    *
    * @return the function or {@code null} if no function matched the defined name
    *         and arguments
-   * @throws StaticMetapathError
+   * @throws StaticMetapathException
    *           if the function was not found
    */
   @NonNull
   public IFunction getFunction() {
     IFunction function = functionSupplier.get();
     if (function == null) {
-      throw new StaticMetapathError(
-          StaticMetapathError.NO_FUNCTION_MATCH,
+      throw new StaticMetapathException(
+          StaticMetapathException.NO_FUNCTION_MATCH,
           String.format(
               "No matching function found for the given name and arguments"));
     }

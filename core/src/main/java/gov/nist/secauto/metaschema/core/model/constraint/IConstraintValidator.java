@@ -24,13 +24,14 @@ public interface IConstraintValidator {
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
    * @throws MetapathException
    *           if an error occurred while evaluating a Metapath used in a
    *           constraint
    */
   void validate(
       @NonNull INodeItem item,
-      @NonNull DynamicContext dynamicContext);
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 
   /**
    * Complete any validations that require full analysis of the content model.
@@ -38,9 +39,10 @@ public interface IConstraintValidator {
    * @param dynamicContext
    *          the Metapath dynamic execution context to use for Metapath
    *          evaluation
+   * @throws ConstraintValidationException
    * @throws MetapathException
    *           if an error occurred while evaluating a Metapath used in a
    *           constraint
    */
-  void finalizeValidation(@NonNull DynamicContext dynamicContext);
+  void finalizeValidation(@NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 }

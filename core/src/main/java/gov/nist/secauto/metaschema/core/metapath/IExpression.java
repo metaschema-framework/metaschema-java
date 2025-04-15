@@ -30,7 +30,7 @@ public interface IExpression {
    * @return the expression text
    */
   @NonNull
-  String getText();
+  String getPath();
 
   /**
    * Retrieve the child expressions associated with this expression.

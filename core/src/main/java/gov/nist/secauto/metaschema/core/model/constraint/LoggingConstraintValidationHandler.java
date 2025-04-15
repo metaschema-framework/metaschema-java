@@ -122,7 +122,7 @@ public class LoggingConstraintValidationHandler
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
       logMessage(
@@ -143,7 +143,7 @@ public class LoggingConstraintValidationHandler
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem node,
       @NonNull ISequence<? extends INodeItem> targets,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
       logMessage(
@@ -165,7 +165,7 @@ public class LoggingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
       logMessage(
@@ -188,7 +188,7 @@ public class LoggingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
       logMessage(
@@ -231,7 +231,7 @@ public class LoggingConstraintValidationHandler
       @NonNull INodeItem target,
       @NonNull String value,
       @NonNull Pattern pattern,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
       logMessage(
@@ -257,7 +257,7 @@ public class LoggingConstraintValidationHandler
       @NonNull String value,
       @NonNull IDataTypeAdapter<?> adapter,
       @NonNull IllegalArgumentException cause,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
       logMessage(
@@ -280,7 +280,7 @@ public class LoggingConstraintValidationHandler
       @NonNull IExpectConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
       logMessage(
@@ -343,7 +343,7 @@ public class LoggingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull List<String> key,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     Level level = constraint.getLevel();
     if (isLogged(level)) {
       logMessage(

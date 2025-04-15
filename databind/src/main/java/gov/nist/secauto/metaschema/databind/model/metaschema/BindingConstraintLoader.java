@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.AbstractLoader;
 import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
@@ -35,8 +34,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaM
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetapath;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.impl.ConstraintBindingSupport;
-
-import org.apache.xmlbeans.impl.values.XmlValueNotSupportedException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -181,31 +178,20 @@ public class BindingConstraintLoader
       assert scope != null;
 
       List<ITargetedConstraints> targetedConstraints = new LinkedList<>();
-      try {
-        for (IValueConstraintsBase constraintsObj : CollectionUtil.listOrEmpty(scope.getConstraints())) {
-          if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Assembly) {
-            targetedConstraints.add(handleScopedAssembly(
-                (MetaschemaModuleConstraints.Scope.Assembly) constraintsObj,
-                source));
-          } else if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Field) {
-            targetedConstraints.add(handleScopedField(
-                (MetaschemaModuleConstraints.Scope.Field) constraintsObj,
-                source));
-          } else if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Flag) {
-            targetedConstraints.add(handleScopedFlag(
-                (MetaschemaModuleConstraints.Scope.Flag) constraintsObj,
-                source));
-          }
+      for (IValueConstraintsBase constraintsObj : CollectionUtil.listOrEmpty(scope.getConstraints())) {
+        if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Assembly) {
+          targetedConstraints.add(handleScopedAssembly(
+              (MetaschemaModuleConstraints.Scope.Assembly) constraintsObj,
+              source));
+        } else if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Field) {
+          targetedConstraints.add(handleScopedField(
+              (MetaschemaModuleConstraints.Scope.Field) constraintsObj,
+              source));
+        } else if (constraintsObj instanceof MetaschemaModuleConstraints.Scope.Flag) {
+          targetedConstraints.add(handleScopedFlag(
+              (MetaschemaModuleConstraints.Scope.Flag) constraintsObj,
+              source));
         }
-      } catch (MetapathException | XmlValueNotSupportedException ex) {
-        if (ex.getCause() instanceof MetapathException) {
-          throw new MetapathException(
-              String.format("Unable to compile a Metapath in '%s'. %s",
-                  source.getSource(),
-                  ex.getLocalizedMessage()),
-              ex);
-        }
-        throw ex;
       }
 
       URI namespace = ObjectUtils.requireNonNull(scope.getMetaschemaNamespace());

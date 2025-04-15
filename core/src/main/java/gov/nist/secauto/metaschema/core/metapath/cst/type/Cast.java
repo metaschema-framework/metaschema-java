@@ -50,7 +50,7 @@ public class Cast
 
   @Override
   protected ISequence<?> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
-    return cast(focus);
+    return cast(focus, dynamicContext);
   }
 
   @Override

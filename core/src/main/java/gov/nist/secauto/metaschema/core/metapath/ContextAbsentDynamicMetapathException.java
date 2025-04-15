@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
+
 /**
  * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPDY0002">err:MPDY0002</a>: It
  * is a <a href="https://www.w3.org/TR/xpath-31/#dt-dynamic-error">dynamic
@@ -24,7 +26,7 @@ public class ContextAbsentDynamicMetapathException
    * @param message
    *          the exception message
    */
-  public ContextAbsentDynamicMetapathException(String message) {
+  public ContextAbsentDynamicMetapathException(@Nullable String message) {
     super(DYNAMIC_CONTEXT_ABSENT, message);
   }
 
@@ -37,7 +39,9 @@ public class ContextAbsentDynamicMetapathException
    * @param cause
    *          the original exception cause
    */
-  public ContextAbsentDynamicMetapathException(String message, Throwable cause) {
+  public ContextAbsentDynamicMetapathException(
+      @Nullable String message,
+      @Nullable Throwable cause) {
     super(DYNAMIC_CONTEXT_ABSENT, message, cause);
   }
 
@@ -47,7 +51,7 @@ public class ContextAbsentDynamicMetapathException
    * @param cause
    *          the original exception cause
    */
-  public ContextAbsentDynamicMetapathException(Throwable cause) {
+  public ContextAbsentDynamicMetapathException(@Nullable Throwable cause) {
     super(DYNAMIC_CONTEXT_ABSENT, cause);
   }
 }

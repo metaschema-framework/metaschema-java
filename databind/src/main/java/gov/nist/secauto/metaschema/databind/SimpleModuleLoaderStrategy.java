@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.databind.codegen.IModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 
@@ -33,7 +34,7 @@ public class SimpleModuleLoaderStrategy
   }
 
   @Override
-  protected Class<? extends IBoundModule> handleUnboundModule(IModule module) {
+  protected Class<? extends IBoundModule> handleUnboundModule(IModule module) throws MetaschemaException {
     return generator.generate(module);
   }
 }

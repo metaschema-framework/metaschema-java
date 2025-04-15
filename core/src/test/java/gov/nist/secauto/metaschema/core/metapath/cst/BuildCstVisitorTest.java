@@ -10,6 +10,7 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.bool;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.eqname;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
@@ -26,9 +27,8 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.StaticMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.antlr.FailingErrorListener;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10;
 import gov.nist.secauto.metaschema.core.metapath.antlr.Metapath10Lexer;
@@ -297,16 +297,16 @@ class BuildCstVisitorTest {
     StaticContext staticContext = StaticContext.builder().build();
     DynamicContext dynamicContext = new DynamicContext(staticContext);
 
-    MetapathException thrown = assertThrows(MetapathException.class,
+    StaticMetapathException thrown = assertThrows(StaticMetapathException.class,
         () -> IMetapathExpression.compile(metapath, staticContext).evaluateAs(null,
             IMetapathExpression.ResultType.ITEM, dynamicContext));
-    Throwable cause = thrown.getCause();
-
-    assertEquals(
-        StaticMetapathError.NO_FUNCTION_MATCH,
-        cause instanceof StaticMetapathError
-            ? ((StaticMetapathError) cause).getErrorCode().getCode()
-            : null);
+    assertThat(thrown)
+        .isExactlyInstanceOf(StaticMetapathException.class)
+        .extracting(
+            ex -> ex instanceof StaticMetapathException
+                ? ex.getErrorCode().getCode()
+                : null)
+        .isEqualTo(StaticMetapathException.NO_FUNCTION_MATCH);
   }
 
   static Stream<Arguments> testNamedFunctionRefCall() {

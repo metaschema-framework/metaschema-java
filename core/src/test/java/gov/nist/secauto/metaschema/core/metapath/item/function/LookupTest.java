@@ -11,6 +11,7 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.map;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -154,9 +155,7 @@ public class LookupTest
           assertNotNull(result);
           result.safeStream();
         });
-    Throwable cause = thrown.getCause();
-    assertEquals(
-        IndexOutOfBoundsArrayMetapathException.class,
-        cause == null ? null : cause.getClass());
+    assertThat(thrown)
+        .isExactlyInstanceOf(IndexOutOfBoundsArrayMetapathException.class);
   }
 }

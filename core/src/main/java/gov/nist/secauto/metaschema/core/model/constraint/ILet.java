@@ -7,7 +7,6 @@ package gov.nist.secauto.metaschema.core.model.constraint;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.DefaultLet;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -46,21 +45,11 @@ public interface ILet {
       @NonNull String valueExpression,
       @NonNull ISource source,
       @Nullable MarkupMultiline remarks) {
-    try {
-      return of(
-          name,
-          IMetapathExpression.lazyCompile(valueExpression, source.getStaticContext()),
-          source,
-          remarks);
-    } catch (MetapathException ex) {
-      throw new MetapathException(
-          String.format("Unable to compile the let expression '%s=%s'%s. %s",
-              name,
-              valueExpression,
-              source.getSource() == null ? "" : " in " + source.getSource(),
-              ex.getMessage()),
-          ex);
-    }
+    return of(
+        name,
+        IMetapathExpression.lazyCompile(valueExpression, source.getStaticContext()),
+        source,
+        remarks);
   }
 
   /**

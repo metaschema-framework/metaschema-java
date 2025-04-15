@@ -14,7 +14,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathError;
+import gov.nist.secauto.metaschema.core.metapath.type.TypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * Supports compiling and executing Metapath expressions.
  */
-public interface IMetapathExpression {
+public interface IMetapathExpression extends IExpression {
 
   /**
    * Identifies the expected type for a Metapath evaluation result.
@@ -82,16 +82,19 @@ public interface IMetapathExpression {
      * @param sequence
      *          the Metapath result sequence to convert
      * @return the converted sequence as the expected type
-     * @throws TypeMetapathError
+     * @throws TypeMetapathException
      *           if the provided sequence is incompatible with the expected result
      *           type
      */
+    // TODO: trace exceptions thrown to ensure the Javadoc matches; should be static
+    // type error
     @Nullable
     public <T> T convert(@NonNull ISequence<?> sequence) {
       try {
         return ObjectUtils.asNullableType(converter.convert(sequence));
       } catch (ClassCastException ex) {
-        throw new InvalidTypeMetapathException(null,
+        throw new InvalidTypeMetapathException(
+            null,
             String.format("Unable to cast type '%s' to expected result type '%s'.",
                 expectedClass().getName(),
                 name()),
@@ -122,7 +125,7 @@ public interface IMetapathExpression {
    * @param path
    *          the metapath expression
    * @return the compiled expression object
-   * @throws MetapathException
+   * @throws InvalidMetapathGrammarException
    *           if an error occurred while compiling the Metapath expression
    */
   @NonNull
@@ -138,7 +141,7 @@ public interface IMetapathExpression {
    * @param staticContext
    *          the static evaluation context
    * @return the compiled expression object
-   * @throws MetapathException
+   * @throws InvalidMetapathGrammarException
    *           if an error occurred while compiling the Metapath expression
    */
   @NonNull
@@ -168,6 +171,7 @@ public interface IMetapathExpression {
    *
    * @return the expression
    */
+  @Override
   @NonNull
   String getPath();
 
@@ -188,7 +192,7 @@ public interface IMetapathExpression {
    * @param resultType
    *          the type of result to produce
    * @return the converted result
-   * @throws TypeMetapathError
+   * @throws TypeMetapathException
    *           if the provided sequence is incompatible with the requested result
    *           type
    * @throws MetapathException
@@ -212,7 +216,7 @@ public interface IMetapathExpression {
    * @param resultType
    *          the type of result to produce
    * @return the converted result
-   * @throws TypeMetapathError
+   * @throws TypeMetapathException
    *           if the provided sequence is incompatible with the requested result
    *           type
    * @throws MetapathException
@@ -243,7 +247,7 @@ public interface IMetapathExpression {
    * @param dynamicContext
    *          the dynamic context to use for evaluation
    * @return the converted result
-   * @throws TypeMetapathError
+   * @throws TypeMetapathException
    *           if the provided sequence is incompatible with the requested result
    *           type
    * @throws MetapathException

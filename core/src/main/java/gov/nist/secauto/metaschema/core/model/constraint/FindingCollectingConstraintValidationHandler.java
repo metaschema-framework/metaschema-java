@@ -95,7 +95,7 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem target,
       @NonNull ISequence<? extends INodeItem> testedItems,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     addFinding(ConstraintValidationFinding.builder(constraint, target)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
@@ -110,7 +110,7 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull ICardinalityConstraint constraint,
       @NonNull INodeItem target,
       @NonNull ISequence<? extends INodeItem> testedItems,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     addFinding(ConstraintValidationFinding.builder(constraint, target)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
@@ -126,7 +126,7 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
@@ -141,7 +141,7 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull INodeItem oldItem,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
@@ -174,7 +174,7 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull INodeItem target,
       @NonNull String value,
       @NonNull Pattern pattern,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
@@ -191,7 +191,7 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull String value,
       @NonNull IDataTypeAdapter<?> adapter,
       @NonNull IllegalArgumentException cause,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
@@ -206,7 +206,7 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull IExpectConstraint constraint,
       @NonNull INodeItem node,
       @NonNull INodeItem target,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))
@@ -251,7 +251,7 @@ public class FindingCollectingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull INodeItem target,
       @NonNull List<String> key,
-      @NonNull DynamicContext dynamicContext) {
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
     addFinding(ConstraintValidationFinding.builder(constraint, node)
         .severity(constraint.getLevel())
         .kind(toKind(constraint.getLevel()))

@@ -81,7 +81,10 @@ public class FunctionCallAccessor
     IItem collection = target.getFirstItem(true);
 
     if (!(collection instanceof IFunction)) {
-      throw new InvalidTypeMetapathException(collection, "The base expression did not evaluate to a function.");
+      throw new InvalidTypeMetapathException(
+          collection,
+          "The base expression did not evaluate to a function.")
+              .registerEvaluationContext(dynamicContext);
     }
 
     return ((IFunction) collection).execute(ObjectUtils.notNull(getArguments().stream()

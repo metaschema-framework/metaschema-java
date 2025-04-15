@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.AutoCloser;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -140,9 +141,9 @@ class GenerateSchemaCommand
         ObjectUtils.requireNonNull(extraArgs.get(0)),
         ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()),
         bindingContext);
-    bindingContext.registerModule(module);
 
     try {
+      bindingContext.registerModule(module);
       if (LOGGER.isInfoEnabled()) {
         LOGGER.info("Generating {} schema for '{}'.", asFormat.name(), extraArgs.get(0));
       }
@@ -158,7 +159,7 @@ class GenerateSchemaCommand
       } else {
         ISchemaGenerator.generateSchema(module, destination, asFormat, configuration);
       }
-    } catch (IOException ex) {
+    } catch (IOException | MetaschemaException ex) {
       throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);
     }
     if (destination != null && LOGGER.isInfoEnabled()) {

@@ -9,10 +9,8 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.decimal;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.uri;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
@@ -23,6 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -46,18 +45,20 @@ class FnMinMaxTest
   @ParameterizedTest
   @MethodSource("provideValuesMin")
   void testMin(@Nullable IAnyAtomicItem expected, @NonNull IAnyAtomicItem... values) {
-    try {
+    List<ISequence<?>> arguments = CollectionUtil.singletonList(ISequence.of(values));
+    if (expected == null) {
+      assertThrows(InvalidArgumentFunctionException.class, () -> {
+        FunctionTestBase.executeFunction(
+            FnMinMax.SIGNATURE_MIN,
+            newDynamicContext(),
+            null,
+            arguments);
+      });
+    } else {
       assertFunctionResult(
           FnMinMax.SIGNATURE_MIN,
           ISequence.of(expected),
-          CollectionUtil.singletonList(ISequence.of(values)));
-    } catch (MetapathException ex) {
-      if (expected == null) {
-        assertAll(
-            () -> assertInstanceOf(InvalidArgumentFunctionException.class, ex.getCause()));
-      } else {
-        throw ex;
-      }
+          arguments);
     }
   }
 
@@ -84,18 +85,20 @@ class FnMinMaxTest
   @ParameterizedTest
   @MethodSource("provideValuesMax")
   void testMax(@Nullable IAnyAtomicItem expected, @NonNull IAnyAtomicItem... values) {
-    try {
+    List<ISequence<?>> arguments = CollectionUtil.singletonList(ISequence.of(values));
+    if (expected == null) {
+      assertThrows(InvalidArgumentFunctionException.class, () -> {
+        FunctionTestBase.executeFunction(
+            FnMinMax.SIGNATURE_MAX,
+            newDynamicContext(),
+            null,
+            arguments);
+      });
+    } else {
       assertFunctionResult(
           FnMinMax.SIGNATURE_MAX,
           ISequence.of(expected),
           CollectionUtil.singletonList(ISequence.of(values)));
-    } catch (MetapathException ex) {
-      if (expected == null) {
-        assertAll(
-            () -> assertInstanceOf(InvalidArgumentFunctionException.class, ex.getCause()));
-      } else {
-        throw ex;
-      }
     }
   }
 

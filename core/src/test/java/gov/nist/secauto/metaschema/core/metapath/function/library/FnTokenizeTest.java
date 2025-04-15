@@ -58,6 +58,7 @@ class FnTokenizeTest
     assertEquals(expected, IMetapathExpression.compile(metapath).evaluate(null, newDynamicContext()));
   }
 
+  // TODO: make sure this (and others) exception chain is flattened
   @Test
   void testMatchZeroLengthString() {
     RegularExpressionMetapathException throwable = assertThrows(RegularExpressionMetapathException.class,
@@ -83,19 +84,11 @@ class FnTokenizeTest
   void testInvalidPattern() {
     RegularExpressionMetapathException throwable = assertThrows(RegularExpressionMetapathException.class,
         () -> {
-          try {
-            FunctionTestBase.executeFunction(
-                FnTokenize.SIGNATURE_TWO_ARG,
-                newDynamicContext(),
-                ISequence.empty(),
-                ObjectUtils.notNull(List.of(sequence(string("input")), sequence(string("pattern[")))));
-          } catch (MetapathException ex) {
-            Throwable cause = ex.getCause();
-            if (cause != null) {
-              throw cause;
-            }
-            throw ex;
-          }
+          FunctionTestBase.executeFunction(
+              FnTokenize.SIGNATURE_TWO_ARG,
+              newDynamicContext(),
+              ISequence.empty(),
+              ObjectUtils.notNull(List.of(sequence(string("input")), sequence(string("pattern[")))));
         });
     assertEquals(RegularExpressionMetapathException.INVALID_EXPRESSION, throwable.getErrorCode().getCode());
   }

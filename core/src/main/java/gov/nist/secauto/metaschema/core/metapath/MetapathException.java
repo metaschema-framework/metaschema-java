@@ -5,57 +5,156 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
 /**
  * {@code MetapathException} is the superclass of all exceptions that can be
  * thrown during the compilation and evaluation of a Metapath.
  */
 public class MetapathException
     extends RuntimeException {
-
   /**
    * the serial version UID.
    */
   private static final long serialVersionUID = 1L;
-
   /**
-   * Constructs a new Metapath exception with a {@code null} message and no cause.
+   * The error prefix which identifies what kind of error it is.
    */
-  public MetapathException() {
-    // no message
-  }
+  @NonNull
+  private final IErrorCode errorCode;
+
+  @Nullable
+  private Deque<IExpression> evaluationStack = null;
 
   /**
-   * Constructs a new Metapath exception with the provided {@code message} and no
-   * cause.
+   * Constructs a new Metapath exception with the provided {@code code} and
+   * {@code message} and no cause.
    *
+   * @param errorCode
+   *          the error code that identifies the type of error
    * @param message
    *          the exception message
    */
-  public MetapathException(String message) {
+  protected MetapathException(
+      @NonNull IErrorCode errorCode,
+      @Nullable String message) {
     super(message);
+    this.errorCode = errorCode;
   }
 
   /**
    * Constructs a new Metapath exception with a {@code null} message and the
-   * provided {@code cause}.
+   * provided {@code code} and {@code cause}.
    *
+   * @param errorCode
+   *          the error code that identifies the type of error
    * @param cause
    *          the exception cause
    */
-  public MetapathException(Throwable cause) {
+  protected MetapathException(
+      @NonNull IErrorCode errorCode,
+      @Nullable Throwable cause) {
     super(cause);
+    this.errorCode = errorCode;
   }
 
   /**
-   * Constructs a new Metapath exception with the provided {@code message} and
-   * {@code cause}.
+   * Constructs a new Metapath exception with the provided {@code code},
+   * {@code message} and {@code cause}.
    *
+   * @param errorCode
+   *          the error code that identifies the type of error
    * @param message
    *          the exception message
    * @param cause
    *          the exception cause
    */
-  public MetapathException(String message, Throwable cause) {
+  protected MetapathException(
+      @NonNull IErrorCode errorCode,
+      @Nullable String message,
+      @Nullable Throwable cause) {
     super(message, cause);
+    this.errorCode = errorCode;
   }
+
+  public MetapathException registerEvaluationContext(@NonNull DynamicContext dynamicContext) {
+    if (evaluationStack == null) {
+      evaluationStack = dynamicContext.getExecutionStack();
+    }
+    return this;
+  }
+
+  public MetapathException registerEvaluationContext(@NonNull IMetapathExpression metapath) {
+    if (evaluationStack == null) {
+      evaluationStack = new ArrayDeque<>(Collections.singleton(metapath));
+    }
+    return this;
+  }
+
+  @Nullable
+  protected Deque<IExpression> getEvaluationStack() {
+    return evaluationStack;
+  }
+
+  @Override
+  public final String getMessage() {
+    String message = getMessageText();
+    return String.format(
+        "%s%s",
+        getErrorCode().toString(),
+        message == null ? "" : ": " + message);
+  }
+
+  /**
+   * Get the message text without the error code prefix.
+   *
+   * @return the message text or {@code null}
+   */
+  @Nullable
+  public String getMessageText() {
+    Deque<IExpression> evaluationStack = getEvaluationStack();
+
+    // assert evaluationStack != null
+    // && !evaluationStack.isEmpty() : "The evaluation stack must contain at least
+    // one entry";
+    return super.getMessage();
+
+    // TODO: get function call context
+    // evaluationStack.stream()
+    // .filter(null)
+    // .findFirst();
+
+    // new FunctionMetapathError(
+    // dynamicContext.getExecutionStack(),
+    // ex.getErrorCode(),
+    // String.format("Unable to execute function '%s'. %s",
+    // toSignature(),
+    // ex.getLocalizedMessage()),
+    // ex);
+
+    // TODO: get expression context, which should be the head
+
+    // IMetapathExpression head = (IMetapathExpression)
+    // getEvaluationStack().peekLast();
+    // return String.format(
+    // "An error occurred while evaluating the expression '%s'%s",
+    // head.getPath(),
+    // message == null ? "" : ": " + message);
+  }
+
+  /**
+   * Get the error code, which indicates what type of error it is.
+   *
+   * @return the error code
+   */
+  @NonNull
+  public final IErrorCode getErrorCode() {
+    return errorCode;
+  }
+
 }

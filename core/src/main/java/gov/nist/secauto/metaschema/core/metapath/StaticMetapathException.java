@@ -6,14 +6,19 @@
 package gov.nist.secauto.metaschema.core.metapath;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * MPST: Exceptions related to the Metapath static context and static
  * evaluation.
  */
+// TODO: review use of this exception
+// TODO: include a reference to the Metapath expression?
+// TODO: Move this to a StaticMetapathException that extends this class; align
+// signatures with DynamicMetapathError
 @SuppressWarnings("PMD.DataClass")
-public class StaticMetapathError
-    extends RuntimeMetapathError {
+public class StaticMetapathException
+    extends MetapathException {
   @NonNull
   private static final String PREFIX = "MPST";
   /**
@@ -22,7 +27,7 @@ public class StaticMetapathError
    * error</a> if an expression is not a valid instance of the Metapath grammar.
    */
   // TODO: need a Metapath grammar link
-  public static final int INVALID_PATH_GRAMMAR = 3;
+  protected static final int INVALID_PATH_GRAMMAR = 3;
 
   /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPST0008">err:MPST0008</a>: It
@@ -136,7 +141,10 @@ public class StaticMetapathError
    * @param cause
    *          the original exception cause
    */
-  public StaticMetapathError(int code, String message, Throwable cause) {
+  public StaticMetapathException(
+      int code,
+      @Nullable String message,
+      @Nullable Throwable cause) {
     super(IErrorCode.of(PREFIX, code), message, cause);
   }
 
@@ -149,8 +157,10 @@ public class StaticMetapathError
    * @param message
    *          the exception message
    */
-  public StaticMetapathError(int code, String message) {
-    super(IErrorCode.of(PREFIX, code), message);
+  public StaticMetapathException(
+      int code,
+      @Nullable String message) {
+    super(IErrorCode.of(PREFIX, code), message, null);
   }
 
   /**
@@ -162,7 +172,9 @@ public class StaticMetapathError
    * @param cause
    *          the original exception cause
    */
-  public StaticMetapathError(int code, Throwable cause) {
-    super(IErrorCode.of(PREFIX, code), cause);
+  public StaticMetapathException(
+      int code,
+      @Nullable Throwable cause) {
+    super(IErrorCode.of(PREFIX, code), null, cause);
   }
 }
