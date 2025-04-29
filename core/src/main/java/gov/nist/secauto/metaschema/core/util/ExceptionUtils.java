@@ -40,6 +40,12 @@ public final class ExceptionUtils {
 
   public static final class WrappedException
       extends RuntimeException {
+
+    /**
+     * the serial version UID.
+     */
+    private static final long serialVersionUID = 2L;
+
     public WrappedException(@NonNull Throwable cause) {
       super(cause);
     }
