@@ -9,6 +9,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class ConstraintValidationException
     extends Exception {
+
+  /**
+   * the serial version UID.
+   */
+  private static final long serialVersionUID = 2L;
+
   /**
    * Constructs a new exception with the specified detail message. The cause is
    * not initialized, and may subsequently be initialized by a call to

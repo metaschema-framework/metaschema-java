@@ -1174,7 +1174,10 @@ public class BuildCSTVisitor
       type = getContext().lookupAtomicType(name);
     } catch (StaticMetapathException ex) {
       if (StaticMetapathException.UNKNOWN_TYPE == ex.getErrorCode().getCode()) {
-        throw new StaticMetapathException(StaticMetapathException.CAST_UNKNOWN_TYPE, ex);
+        throw new StaticMetapathException(
+            StaticMetapathException.CAST_UNKNOWN_TYPE,
+            String.format("Unknown type '%s'.", name),
+            ex);
       }
       throw ex;
     }

@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,8 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 
-import org.junit.jupiter.api.Disabled;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.io.IOException;
 
@@ -30,12 +33,16 @@ class MetapathExpressionTest {
   // @GivenTextResource(from = "/incorrect-examples.txt", charset = "UTF-8")
   // String incorrectMetapathInstances;
 
-  @Test
-  @Disabled
-  void testCorrect() {
-    for (String line : correctMetapathInstances.split("\\r?\\n")) {
-      if (line.startsWith("# ")) {
-        continue;
+  @ParameterizedTest
+  @CsvFileSource(resources = "/correct-examples.txt", delimiter = ';')
+  void testCorrect(String line) {
+    if (!line.startsWith("# ")
+        && !line.contains("text()")
+        && !line.contains("number(")
+        && !line.contains("current(")
+        && !line.contains("last(")) {
+      if (line.endsWith(";")) {
+        line = line.substring(0, line.length() - 1);
       }
       // System.out.println(line);
       IMetapathExpression.compile(line);
@@ -77,9 +84,12 @@ class MetapathExpressionTest {
 
   @Test
   void testMalformedIf() throws IOException {
-    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
+    InvalidMetapathGrammarException thrown = assertThrows(InvalidMetapathGrammarException.class, () -> {
       IMetapathExpression.compile("if 'a' = '1.1.2' then true() else false()");
     });
-    assertEquals(StaticMetapathException.INVALID_PATH_GRAMMAR, ex.getErrorCode().getCode());
+    assertThat(thrown)
+        .isExactlyInstanceOf(InvalidMetapathGrammarException.class)
+        .cause()
+        .isExactlyInstanceOf(ParseCancellationException.class);
   }
 }

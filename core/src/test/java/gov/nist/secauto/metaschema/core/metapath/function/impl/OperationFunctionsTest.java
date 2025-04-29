@@ -14,12 +14,15 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.duration;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.time;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.yearMonthDuration;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.from;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.function.ArithmeticFunctionException;
+import gov.nist.secauto.metaschema.core.metapath.function.CastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.function.DateTimeFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IBooleanItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IDateItem;
@@ -147,7 +150,12 @@ class OperationFunctionsTest {
         ArithmeticFunctionException thrown = assertThrows(ArithmeticFunctionException.class, () -> {
           OperationFunctions.opNumericDivide(dividend, divisor);
         });
-        assertEquals(ArithmeticFunctionException.DIVISION_BY_ZERO, thrown.getErrorCode().getCode());
+        assertThat(thrown)
+            .isExactlyInstanceOf(ArithmeticFunctionException.class)
+            .returns(
+                ArithmeticFunctionException.DIVISION_BY_ZERO,
+                from(ex -> ex.getErrorCode().getCode()))
+            .hasNoCause();
       }
     }
 
@@ -193,7 +201,12 @@ class OperationFunctionsTest {
         ArithmeticFunctionException thrown = assertThrows(ArithmeticFunctionException.class, () -> {
           OperationFunctions.opNumericIntegerDivide(dividend, divisor);
         });
-        assertEquals(ArithmeticFunctionException.DIVISION_BY_ZERO, thrown.getErrorCode().getCode());
+        assertThat(thrown)
+            .isExactlyInstanceOf(ArithmeticFunctionException.class)
+            .returns(
+                ArithmeticFunctionException.DIVISION_BY_ZERO,
+                from(ex -> ex.getErrorCode().getCode()))
+            .hasNoCause();
       }
     }
 
@@ -465,7 +478,13 @@ class OperationFunctionsTest {
                 IYearMonthDurationItem.valueOf("P" + Integer.MAX_VALUE + "Y"),
                 IYearMonthDurationItem.valueOf("P" + Integer.MAX_VALUE + "Y"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
+          assertThat(thrown)
+              .isExactlyInstanceOf(DateTimeFunctionException.class)
+              .returns(
+                  DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR,
+                  from(ex -> ex.getErrorCode().getCode()))
+              .cause()
+              .isExactlyInstanceOf(ArithmeticException.class);
         }
 
         @Test
@@ -486,7 +505,13 @@ class OperationFunctionsTest {
                 IYearMonthDurationItem.valueOf("-P" + Integer.MAX_VALUE + "Y"),
                 IYearMonthDurationItem.valueOf("P" + Integer.MAX_VALUE + "Y"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
+          assertThat(thrown)
+              .isExactlyInstanceOf(DateTimeFunctionException.class)
+              .returns(
+                  DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR,
+                  from(ex -> ex.getErrorCode().getCode()))
+              .cause()
+              .isExactlyInstanceOf(ArithmeticException.class);
         }
 
         @Test
@@ -518,7 +543,18 @@ class OperationFunctionsTest {
                 IYearMonthDurationItem.valueOf("P" + Integer.MAX_VALUE + "Y"),
                 IDecimalItem.valueOf("2.5"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
+          assertThat(thrown)
+              .isExactlyInstanceOf(DateTimeFunctionException.class)
+              .returns(
+                  DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR,
+                  from(ex -> ex.getErrorCode().getCode()))
+              .cause()
+              .isExactlyInstanceOf(CastFunctionException.class)
+              .returns(
+                  CastFunctionException.INPUT_VALUE_TOO_LARGE,
+                  from(ex -> ex instanceof CastFunctionException
+                      ? ((CastFunctionException) ex).getErrorCode().getCode()
+                      : null));
         }
 
         @Test
@@ -564,7 +600,12 @@ class OperationFunctionsTest {
                 IDayTimeDurationItem.valueOf("PT" + (Long.MAX_VALUE - 807) + "S"),
                 IDayTimeDurationItem.valueOf("PT" + (Long.MAX_VALUE - 807) + "S"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
+          assertThat(thrown)
+              .isExactlyInstanceOf(DateTimeFunctionException.class)
+              .hasCauseExactlyInstanceOf(ArithmeticException.class)
+              .returns(
+                  DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR,
+                  from(ex -> ex.getErrorCode().getCode()));
         }
 
         @Test
@@ -585,7 +626,12 @@ class OperationFunctionsTest {
                 IDayTimeDurationItem.valueOf("-PT" + (Long.MAX_VALUE - 807) + "S"),
                 IDayTimeDurationItem.valueOf("PT" + (Long.MAX_VALUE - 807) + "S"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
+          assertThat(thrown)
+              .isExactlyInstanceOf(DateTimeFunctionException.class)
+              .hasCauseExactlyInstanceOf(ArithmeticException.class)
+              .returns(
+                  DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR,
+                  from(ex -> ex.getErrorCode().getCode()));
         }
 
         @Test
@@ -606,7 +652,18 @@ class OperationFunctionsTest {
                 IDayTimeDurationItem.valueOf("PT" + Long.MAX_VALUE / 2 + "S"),
                 IDecimalItem.valueOf("5"));
           });
-          assertEquals(DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR, thrown.getErrorCode().getCode());
+          assertThat(thrown)
+              .isExactlyInstanceOf(DateTimeFunctionException.class)
+              .returns(
+                  DateTimeFunctionException.DURATION_OVERFLOW_UNDERFLOW_ERROR,
+                  from(ex -> ex.getErrorCode().getCode()))
+              .cause()
+              .isExactlyInstanceOf(CastFunctionException.class)
+              .returns(
+                  CastFunctionException.INPUT_VALUE_TOO_LARGE,
+                  from(ex -> ex instanceof CastFunctionException
+                      ? ((CastFunctionException) ex).getErrorCode().getCode()
+                      : null));
         }
 
         @Test

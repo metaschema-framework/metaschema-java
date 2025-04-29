@@ -7,12 +7,12 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.function.regex.RegularExpressionMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -23,6 +23,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -61,28 +62,24 @@ class FnTokenizeTest
   // TODO: make sure this (and others) exception chain is flattened
   @Test
   void testMatchZeroLengthString() {
-    RegularExpressionMetapathException throwable = assertThrows(RegularExpressionMetapathException.class,
+    RegularExpressionMetapathException thrown = assertThrows(RegularExpressionMetapathException.class,
         () -> {
-          try {
-            FunctionTestBase.executeFunction(
-                FnTokenize.SIGNATURE_TWO_ARG,
-                newDynamicContext(),
-                ISequence.empty(),
-                ObjectUtils.notNull(List.of(sequence(string("abba")), sequence(string(".?")))));
-          } catch (MetapathException ex) {
-            Throwable cause = ex.getCause();
-            if (cause != null) {
-              throw cause;
-            }
-            throw ex;
-          }
+          FunctionTestBase.executeFunction(
+              FnTokenize.SIGNATURE_TWO_ARG,
+              newDynamicContext(),
+              ISequence.empty(),
+              ObjectUtils.notNull(List.of(sequence(string("abba")), sequence(string(".?")))));
         });
-    assertEquals(RegularExpressionMetapathException.MATCHES_ZERO_LENGTH_STRING, throwable.getErrorCode().getCode());
+    assertThat(thrown)
+        .isExactlyInstanceOf(RegularExpressionMetapathException.class)
+        .hasNoCause()
+        .extracting(ex -> ex.getErrorCode().getCode())
+        .isEqualTo(RegularExpressionMetapathException.MATCHES_ZERO_LENGTH_STRING);
   }
 
   @Test
   void testInvalidPattern() {
-    RegularExpressionMetapathException throwable = assertThrows(RegularExpressionMetapathException.class,
+    RegularExpressionMetapathException thrown = assertThrows(RegularExpressionMetapathException.class,
         () -> {
           FunctionTestBase.executeFunction(
               FnTokenize.SIGNATURE_TWO_ARG,
@@ -90,30 +87,30 @@ class FnTokenizeTest
               ISequence.empty(),
               ObjectUtils.notNull(List.of(sequence(string("input")), sequence(string("pattern[")))));
         });
-    assertEquals(RegularExpressionMetapathException.INVALID_EXPRESSION, throwable.getErrorCode().getCode());
+    assertThat(thrown)
+        .isExactlyInstanceOf(RegularExpressionMetapathException.class)
+        .hasCauseExactlyInstanceOf(PatternSyntaxException.class)
+        .extracting(ex -> ex.getErrorCode().getCode())
+        .isEqualTo(RegularExpressionMetapathException.INVALID_EXPRESSION);
   }
 
   @Test
   void testInvalidFlag() {
-    RegularExpressionMetapathException throwable = assertThrows(RegularExpressionMetapathException.class,
+    RegularExpressionMetapathException thrown = assertThrows(RegularExpressionMetapathException.class,
         () -> {
-          try {
-            FunctionTestBase.executeFunction(
-                FnTokenize.SIGNATURE_THREE_ARG,
-                newDynamicContext(),
-                ISequence.empty(),
-                ObjectUtils.notNull(List.of(
-                    sequence(string("input")),
-                    sequence(string("pattern")),
-                    sequence(string("dsm")))));
-          } catch (MetapathException ex) {
-            Throwable cause = ex.getCause();
-            if (cause != null) {
-              throw cause;
-            }
-            throw ex;
-          }
+          FunctionTestBase.executeFunction(
+              FnTokenize.SIGNATURE_THREE_ARG,
+              newDynamicContext(),
+              ISequence.empty(),
+              ObjectUtils.notNull(List.of(
+                  sequence(string("input")),
+                  sequence(string("pattern")),
+                  sequence(string("dsm")))));
         });
-    assertEquals(RegularExpressionMetapathException.INVALID_FLAG, throwable.getErrorCode().getCode());
+    assertThat(thrown)
+        .isExactlyInstanceOf(RegularExpressionMetapathException.class)
+        .hasNoCause()
+        .extracting(ex -> ex.getErrorCode().getCode())
+        .isEqualTo(RegularExpressionMetapathException.INVALID_FLAG);
   }
 }

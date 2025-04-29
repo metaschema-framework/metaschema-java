@@ -89,7 +89,9 @@ public class MetapathExpression
             ex);
       } catch (ParseCancellationException ex) {
         String msg = String.format("Unable to compile Metapath '%s'", path);
-        LOGGER.atError().withThrowable(ex).log(msg);
+        if (LOGGER.isDebugEnabled()) {
+          LOGGER.atDebug().withThrowable(ex).log(msg);
+        }
         throw new InvalidMetapathGrammarException(msg, ex);
       }
     }

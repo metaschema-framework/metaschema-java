@@ -16,6 +16,11 @@ public class InvalidMetapathGrammarException
     extends StaticMetapathException {
 
   /**
+   * the serial version UID.
+   */
+  private static final long serialVersionUID = 2L;
+
+  /**
    * Constructs a new exception with the provided {@code message} and
    * {@code cause}.
    *

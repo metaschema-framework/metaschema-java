@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -141,11 +142,12 @@ class StaticContextTest {
 
   @Test
   void lookupNonExistantDataType() {
-    StaticMetapathException ex = assertThrows(StaticMetapathException.class, () -> {
+    StaticMetapathException thrown = assertThrows(StaticMetapathException.class, () -> {
       StaticContext.instance().lookupAtomicType("xs:string");
     });
-
-    assertEquals(StaticMetapathException.PREFIX_NOT_EXPANDABLE, ex.getErrorCode().getCode());
+    assertThat(thrown)
+        .extracting(ex -> ex.getErrorCode().getCode())
+        .isEqualTo(StaticMetapathException.PREFIX_NOT_EXPANDABLE);
   }
 
   @Test
