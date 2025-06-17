@@ -38,7 +38,7 @@
 
 		<dependency.antlr4.version>4.13.2</dependency.antlr4.version>
 		<dependency.assertj.version>3.27.3</dependency.assertj.version>
-		<dependency.caffeine.version>3.2.0</dependency.caffeine.version>
+		<dependency.caffeine.version>3.2.1</dependency.caffeine.version>
 		<dependency.commons-cli.version>1.9.0</dependency.commons-cli.version>
 		<dependency.commons-codec.version>1.18.0</dependency.commons-codec.version>
 		<dependency.commons-collections4.version>4.5.0-M3</dependency.commons-collections4.version>
