@@ -264,6 +264,11 @@ public class DefaultBindingContext implements IBindingContext {
     return ObjectUtils.asType(definition.deepCopyItem(other, parentInstance));
   }
 
+  @Override
+  protected final void finalize() {
+    // Do nothing
+  }
+
   private static class ModuleLoader
       extends BindingModuleLoader {
 
@@ -301,6 +306,5 @@ public class DefaultBindingContext implements IBindingContext {
         List<? extends IBindingMetaschemaModule> importedModules) throws MetaschemaException {
       return super.newModule(resource, binding, importedModules);
     }
-
   }
 }
