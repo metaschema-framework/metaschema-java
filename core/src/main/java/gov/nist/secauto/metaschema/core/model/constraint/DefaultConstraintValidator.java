@@ -72,8 +72,6 @@ public class DefaultConstraintValidator
   @NonNull
   private final IMutableConfiguration<ValidationFeature<?>> configuration;
 
-  private final boolean exceptionOnError = false;
-
   /**
    * Construct a new constraint validation instance.
    *
@@ -410,15 +408,14 @@ public class DefaultConstraintValidator
       @NonNull INodeItem node,
       @NonNull Throwable ex,
       @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
-    if (exceptionOnError) {
+    if (isFeatureEnabled(ValidationFeature.THROW_EXCEPTION_ON_ERROR)) {
       if (ex instanceof ConstraintValidationException) {
         throw (ConstraintValidationException) ex;
       }
       throw new ConstraintValidationException(ex);
-    } else {
-      getConstraintValidationHandler()
-          .handleError(constraint, node, toErrorMessage(constraint, node, ex), ex, dynamicContext);
     }
+    getConstraintValidationHandler()
+        .handleError(constraint, node, toErrorMessage(constraint, node, ex), ex, dynamicContext);
   }
 
   @NonNull

@@ -117,34 +117,18 @@ public class MetapathException
    */
   @Nullable
   public String getMessageText() {
-    Deque<IExpression> evaluationStack = getEvaluationStack();
+    String msg = super.getMessage();
 
-    // assert evaluationStack != null
-    // && !evaluationStack.isEmpty() : "The evaluation stack must contain at least
-    // one entry";
-    return super.getMessage();
+    Deque<IExpression> stack = getEvaluationStack();
 
-    // TODO: get function call context
-    // evaluationStack.stream()
-    // .filter(null)
-    // .findFirst();
-
-    // new FunctionMetapathError(
-    // dynamicContext.getExecutionStack(),
-    // ex.getErrorCode(),
-    // String.format("Unable to execute function '%s'. %s",
-    // toSignature(),
-    // ex.getLocalizedMessage()),
-    // ex);
-
-    // TODO: get expression context, which should be the head
-
-    // IMetapathExpression head = (IMetapathExpression)
-    // getEvaluationStack().peekLast();
-    // return String.format(
-    // "An error occurred while evaluating the expression '%s'%s",
-    // head.getPath(),
-    // message == null ? "" : ": " + message);
+    if (stack != null && !stack.isEmpty()) {
+      IExpression head = stack.peekLast();
+      msg = String.format(
+          "An error occurred while evaluating the expression '%s'%s",
+          head.getPath(),
+          msg == null ? "" : ": " + msg);
+    }
+    return msg;
   }
 
   /**
