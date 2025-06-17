@@ -25,6 +25,12 @@ public final class ValidationFeature<V>
   @NonNull
   public static final ValidationFeature<Boolean> VALIDATE_GENERATE_PASS_FINDINGS
       = new ValidationFeature<>("include-pass-findings", Boolean.class, false);
+  /**
+   * If enabled, throw an exception when an error occurs.
+   */
+  @NonNull
+  public static final ValidationFeature<Boolean> THROW_EXCEPTION_ON_ERROR
+      = new ValidationFeature<>("throw-exception-on-error", Boolean.class, false);
 
   private ValidationFeature(
       @NonNull String name,
