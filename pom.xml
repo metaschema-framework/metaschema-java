@@ -43,7 +43,7 @@
 		<dependency.commons-codec.version>1.18.0</dependency.commons-codec.version>
 		<dependency.commons-collections4.version>4.5.0-M3</dependency.commons-collections4.version>
 		<dependency.commons-io.version>2.18.0</dependency.commons-io.version>
-		<dependency.commons-lang3.version>3.17.0</dependency.commons-lang3.version>
+		<dependency.commons-lang3.version>3.18.0</dependency.commons-lang3.version>
 		<dependency.commons-text.version>1.13.0</dependency.commons-text.version>
 		<dependency.eclipse-jdt.version>2.3.100</dependency.eclipse-jdt.version>
 		<dependency.everit-json.version>1.14.5</dependency.everit-json.version>
