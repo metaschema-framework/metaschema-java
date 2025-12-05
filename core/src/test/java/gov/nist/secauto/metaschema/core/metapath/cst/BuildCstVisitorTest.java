@@ -59,6 +59,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.jmock.Mockery;
 import org.jmock.junit5.JUnit5Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -89,7 +90,11 @@ class BuildCstVisitorTest {
   private static final IEnhancedQName FLAG = IEnhancedQName.of("flag");
 
   @RegisterExtension
-  Mockery context = new JUnit5Mockery();
+  Mockery context = new JUnit5Mockery() {
+    {
+      setThreadingPolicy(new Synchroniser());
+    }
+  };
 
   @NonNull
   private static IDocumentNodeItem newTestDocument() {
