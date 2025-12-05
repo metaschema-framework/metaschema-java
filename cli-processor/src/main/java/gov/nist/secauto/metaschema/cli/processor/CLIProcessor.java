@@ -120,6 +120,8 @@ public class CLIProcessor {
   private final String exec;
   @NonNull
   private final Map<String, IVersionInfo> versionInfos;
+  @NonNull
+  private final PrintStream outputStream;
 
   /**
    * The main entry point for command execution.
@@ -161,9 +163,33 @@ public class CLIProcessor {
    *          the version info to display when the version option is provided
    */
   public CLIProcessor(@NonNull String exec, @NonNull Map<String, IVersionInfo> versionInfos) {
+    this(exec, versionInfos, null);
+  }
+
+  /**
+   * The main entry point for CLI processing.
+   * <p>
+   * This constructor allows specifying a custom output stream for testing
+   * purposes.
+   *
+   * @param exec
+   *          the command name
+   * @param versionInfos
+   *          the version info to display when the version option is provided
+   * @param outputStream
+   *          the output stream to write to, or {@code null} to use the default
+   *          console
+   */
+  public CLIProcessor(@NonNull String exec, @NonNull Map<String, IVersionInfo> versionInfos,
+      @Nullable PrintStream outputStream) {
     this.exec = exec;
     this.versionInfos = versionInfos;
-    AnsiConsole.systemInstall();
+    if (outputStream == null) {
+      AnsiConsole.systemInstall();
+      this.outputStream = ObjectUtils.notNull(AnsiConsole.out());
+    } else {
+      this.outputStream = outputStream;
+    }
   }
 
   /**
@@ -281,10 +307,8 @@ public class CLIProcessor {
    * Output version information.
    */
   protected void showVersion() {
-    @SuppressWarnings("resource")
-    PrintStream out = AnsiConsole.out(); // NOPMD - not owner
     getVersionInfos().values().stream().forEach(info -> {
-      out.println(ansi()
+      outputStream.println(ansi()
           .bold().a(info.getName()).boldOff()
           .a(" ")
           .bold().a(info.getVersion()).boldOff()
@@ -298,7 +322,7 @@ public class CLIProcessor {
           .bold().a(info.getGitOriginUrl()).boldOff()
           .reset());
     });
-    out.flush();
+    outputStream.flush();
   }
 
   /**
@@ -753,8 +777,10 @@ public class CLIProcessor {
       HelpFormatter formatter = new HelpFormatter();
       formatter.setLongOptSeparator("=");
 
-      @SuppressWarnings("resource")
-      AnsiPrintStream out = AnsiConsole.out();
+      PrintStream out = outputStream;
+      int terminalWidth = (out instanceof AnsiPrintStream)
+          ? ((AnsiPrintStream) out).getTerminalWidth()
+          : 80;
 
       try (PrintWriter writer = new PrintWriter( // NOPMD not owned
           AutoCloser.preventClose(out),
@@ -762,7 +788,7 @@ public class CLIProcessor {
           StandardCharsets.UTF_8)) {
         formatter.printHelp(
             writer,
-            Math.max(out.getTerminalWidth(), 50),
+            Math.max(terminalWidth, 50),
             buildHelpCliSyntax(),
             buildHelpHeader(),
             toOptions(),

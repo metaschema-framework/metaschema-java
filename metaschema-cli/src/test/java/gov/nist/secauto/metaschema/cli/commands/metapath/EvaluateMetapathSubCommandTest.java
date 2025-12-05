@@ -13,10 +13,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import nl.altindag.log.LogCaptor;
 
 @Execution(value = ExecutionMode.SAME_THREAD, reason = "Log capturing needs to be single threaded")
 class EvaluateMetapathSubCommandTest {
+
+  /**
+   * A PrintStream that discards all output, used to suppress CLI console output
+   * during tests.
+   */
+  private static final PrintStream NULL_STREAM = new PrintStream(new OutputStream() {
+    @Override
+    public void write(int b) {
+      // discard
+    }
+  });
 
   @Test
   void test() {
@@ -28,7 +42,7 @@ class EvaluateMetapathSubCommandTest {
               "-e",
               "3 + 4 + 5",
               "--show-stack-trace" };
-      CLI.runCli(args);
+      CLI.runCli(NULL_STREAM, args);
       assertThat(captor.getInfoLogs().contains("12"));
     }
   }

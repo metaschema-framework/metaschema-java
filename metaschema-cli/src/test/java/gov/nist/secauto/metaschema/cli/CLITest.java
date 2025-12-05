@@ -20,6 +20,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -33,6 +35,22 @@ import nl.altindag.log.LogCaptor;
 @Execution(value = ExecutionMode.SAME_THREAD, reason = "Log capturing needs to be single threaded")
 public class CLITest {
   private static final ExitCode NO_EXCEPTION_CLASS = null;
+
+  /**
+   * A PrintStream that discards all output, used to suppress CLI console output
+   * during tests.
+   */
+  private static final PrintStream NULL_STREAM = new PrintStream(new OutputStream() {
+    @Override
+    public void write(int b) {
+      // discard
+    }
+
+    @Override
+    public void write(byte[] b, int off, int len) {
+      // discard
+    }
+  });
 
   void evaluateResult(@NonNull ExitStatus status, @NonNull ExitCode expectedCode, @NonNull String[] args) {
     status.generateMessage(true);
@@ -254,9 +272,9 @@ public class CLITest {
     String[] fullArgs = Stream.of(args, defaultArgs).flatMap(Stream::of)
         .toArray(String[]::new);
     if (expectedThrownClass == null) {
-      evaluateResult(CLI.runCli(fullArgs), expectedExitCode, fullArgs);
+      evaluateResult(CLI.runCli(NULL_STREAM, fullArgs), expectedExitCode, fullArgs);
     } else {
-      evaluateResult(CLI.runCli(fullArgs), expectedExitCode, expectedThrownClass, fullArgs);
+      evaluateResult(CLI.runCli(NULL_STREAM, fullArgs), expectedExitCode, expectedThrownClass, fullArgs);
     }
   }
 
@@ -269,7 +287,7 @@ public class CLITest {
           "src/test/resources/content/215.xml",
           "--disable-schema-validation"
       };
-      CLI.runCli(cliArgs);
+      CLI.runCli(NULL_STREAM, cliArgs);
       assertThat(captor.getErrorLogs().toString())
           .contains("expect-default-non-zero: Expect constraint '. > 0' did not match the data",
               "expect-custom-non-zero: No default message, custom error message for expect-custom-non-zero constraint.",
@@ -296,7 +314,7 @@ public class CLITest {
           "src/test/resources/content/constraint-constraints.xml",
           "--disable-schema-validation",
       };
-      CLI.runCli(cliArgs);
+      CLI.runCli(NULL_STREAM, cliArgs);
       assertThat(captor.getErrorLogs().toString())
           .contains("This constraint SHOULD be violated if test passes.");
     }
