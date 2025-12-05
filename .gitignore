@@ -26,3 +26,6 @@ velocity.log*
 node_modules/
 package.json
 package-lock.json
+
+# Claude
+CLAUDE.local.md
