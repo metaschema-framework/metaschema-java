@@ -123,7 +123,6 @@ public class CLITest {
   }
 
   private static Stream<Arguments> providesValues() {
-    @SuppressWarnings("serial")
     List<Arguments> values = new LinkedList<>() {
       {
         add(Arguments.of(new String[] {}, ExitCode.INVALID_COMMAND,
