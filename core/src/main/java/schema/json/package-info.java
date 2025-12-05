@@ -7,5 +7,4 @@
  * Provides schema resources for JSON schema and Metaschema data types.
  */
 
-@Deprecated
 package schema.json;
