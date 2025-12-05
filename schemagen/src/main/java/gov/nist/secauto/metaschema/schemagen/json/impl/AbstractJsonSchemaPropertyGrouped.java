@@ -47,7 +47,7 @@ public abstract class AbstractJsonSchemaPropertyGrouped<I extends INamedModelIns
    */
   protected AbstractJsonSchemaPropertyGrouped(@NonNull I instance, @NonNull IJsonGenerationState state) {
     super(instance);
-    this.definitionName = ObjectUtils.notNull(Lazy.lazy(() -> getDefinitionName(state)));
+    this.definitionName = ObjectUtils.notNull(Lazy.of(() -> getDefinitionName(state)));
     this.jsonKey = instance.getJsonKey();
 
     IEnhancedQName jsonKeyName = this.jsonKey == null ? null : this.jsonKey.getQName();

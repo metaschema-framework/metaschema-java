@@ -99,7 +99,7 @@ public class XmlModule
 
     METASCHEMADocument.METASCHEMA moduleXml = ObjectUtils.requireNonNull(xmlObject.getMETASCHEMA());
 
-    this.staticContext = ObjectUtils.notNull(Lazy.lazy(() -> {
+    this.staticContext = ObjectUtils.notNull(Lazy.of(() -> {
       StaticContext.Builder builder = StaticContext.builder()
           .baseUri(resource)
           .defaultModelNamespace(ObjectUtils.requireNonNull(moduleXml.getNamespace()));
@@ -111,7 +111,7 @@ public class XmlModule
       return builder.build();
     }));
     this.module = xmlObject;
-    this.definitions = Lazy.lazy(() -> new Definitions(moduleXml));
+    this.definitions = Lazy.of(() -> new Definitions(moduleXml));
     this.source = ISource.moduleSource(this);
   }
 

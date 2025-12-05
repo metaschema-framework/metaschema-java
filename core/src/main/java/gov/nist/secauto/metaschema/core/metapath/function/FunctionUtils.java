@@ -130,7 +130,6 @@ public final class FunctionUtils {
    * @throws ClassCastException
    *           if the item's type is not compatible with the requested type
    */
-  @Deprecated(since = "3.0.0", forRemoval = true)
   @SuppressWarnings("unchecked")
   @Nullable
   public static <TYPE extends IItem> TYPE asTypeOrNull(@Nullable IItem item) {
@@ -148,7 +147,6 @@ public final class FunctionUtils {
    * @throws ClassCastException
    *           if the item's type is not compatible with the requested type
    */
-  @Deprecated(since = "3.0.0", forRemoval = true)
   @SuppressWarnings("unchecked")
   @NonNull
   public static <TYPE extends IItem> TYPE asType(@NonNull IItem item) {
@@ -166,7 +164,6 @@ public final class FunctionUtils {
    * @throws ClassCastException
    *           if the sequence's type is not compatible with the requested type
    */
-  @Deprecated(since = "3.0.0", forRemoval = true)
   @SuppressWarnings("unchecked")
   @NonNull
   public static <TYPE extends IItem> ISequence<TYPE> asType(@NonNull ISequence<?> sequence) {

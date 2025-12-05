@@ -169,7 +169,7 @@ class XmlChoiceInstance
       @NonNull IAssemblyDefinition parent) {
     super(parent);
     this.xmlChoice = xmlObject;
-    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> newContainer(xmlObject, this)));
+    this.modelContainer = ObjectUtils.notNull(Lazy.of(() -> newContainer(xmlObject, this)));
   }
 
   @Override

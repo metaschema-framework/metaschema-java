@@ -143,10 +143,10 @@ public final class InstanceModelFieldComplex
     FieldSupport.bindField(javaField);
     this.javaField = javaField;
     this.annotation = annotation;
-    this.collectionInfo = ObjectUtils.notNull(Lazy.lazy(() -> IModelInstanceCollectionInfo.of(this)));
+    this.collectionInfo = ObjectUtils.notNull(Lazy.of(() -> IModelInstanceCollectionInfo.of(this)));
     this.groupAs = groupAs;
     this.definition = definition;
-    this.defaultValue = ObjectUtils.notNull(Lazy.lazy(() -> {
+    this.defaultValue = ObjectUtils.notNull(Lazy.of(() -> {
       Object retval = null;
       if (getMaxOccurs() == 1) {
         IBoundFieldValue fieldValue = definition.getFieldValue();
@@ -168,7 +168,7 @@ public final class InstanceModelFieldComplex
       }
       return retval;
     }));
-    this.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -> {
+    this.jsonProperties = ObjectUtils.notNull(Lazy.of(() -> {
       Predicate<IBoundInstanceFlag> flagFilter = null;
       IBoundInstanceFlag jsonKey = getEffectiveJsonKey();
       if (jsonKey != null) {
@@ -177,7 +177,7 @@ public final class InstanceModelFieldComplex
       return definition.getJsonProperties(flagFilter);
     }));
     this.properties = ObjectUtils.notNull(
-        Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+        Lazy.of(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
             Arrays.stream(annotation.properties())
                 .map(ModelUtil::toPropertyEntry)
                 .collect(

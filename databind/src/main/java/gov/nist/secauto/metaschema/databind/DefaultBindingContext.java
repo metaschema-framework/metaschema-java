@@ -60,7 +60,7 @@ import nl.talsmasoftware.lazy4j.Lazy;
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class DefaultBindingContext implements IBindingContext {
-  private static Lazy<DefaultBindingContext> singleton = Lazy.lazy(DefaultBindingContext::new);
+  private static Lazy<DefaultBindingContext> singleton = Lazy.of(DefaultBindingContext::new);
   @NonNull
   private final IModuleLoaderStrategy moduleLoaderStrategy;
   @NonNull

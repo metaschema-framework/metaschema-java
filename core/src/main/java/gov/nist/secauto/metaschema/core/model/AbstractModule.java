@@ -67,8 +67,8 @@ public abstract class AbstractModule<
   public AbstractModule(@NonNull List<? extends M> importedModules) {
     this.importedModules
         = CollectionUtil.unmodifiableList(ObjectUtils.requireNonNull(importedModules, "importedModules"));
-    this.exports = ObjectUtils.notNull(Lazy.lazy(() -> new Exports(importedModules)));
-    this.qname = ObjectUtils.notNull(Lazy.lazy(() -> IEnhancedQName.of(getXmlNamespace(), getShortName())));
+    this.exports = ObjectUtils.notNull(Lazy.of(() -> new Exports(importedModules)));
+    this.qname = ObjectUtils.notNull(Lazy.of(() -> IEnhancedQName.of(getXmlNamespace(), getShortName())));
   }
 
   @Override

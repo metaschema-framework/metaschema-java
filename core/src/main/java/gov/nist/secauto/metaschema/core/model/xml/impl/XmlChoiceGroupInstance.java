@@ -167,7 +167,7 @@ class XmlChoiceGroupInstance
       @NonNull IAssemblyDefinition parent) {
     super(parent);
     this.xmlObject = xmlObject;
-    this.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -> newContainer(
+    this.modelContainer = ObjectUtils.notNull(Lazy.of(() -> newContainer(
         parent.getContainingModule().getSource(),
         xmlObject,
         this)));
