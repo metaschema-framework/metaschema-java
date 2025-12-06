@@ -46,8 +46,9 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
+
+import javax.inject.Inject;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.sonatype.plexus.build.incremental.BuildContext;
@@ -99,7 +100,7 @@ public abstract class AbstractMetaschemaMojo
   @Parameter(defaultValue = "${mojoExecution}", readonly = true)
   private MojoExecution mojoExecution;
 
-  @Component
+  @Inject
   private BuildContext buildContext;
 
   @Parameter(defaultValue = "${plugin.artifacts}", readonly = true, required = true)
