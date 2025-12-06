@@ -81,7 +81,8 @@ public class NumericCastSymmetryTest {
     return Stream.of(
         Arguments.of(string("abc"), "non-numeric string"),
         Arguments.of(string(""), "empty string"),
-        Arguments.of(string("1.2.3"), "invalid number format"));
+        Arguments.of(string("1.2.3"), "invalid number format"),
+        Arguments.of(string("   "), "whitespace-only string"));
   }
 
   @ParameterizedTest(name = "{1}")
