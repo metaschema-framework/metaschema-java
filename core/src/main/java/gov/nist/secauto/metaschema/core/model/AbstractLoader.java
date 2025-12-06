@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
-import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -24,10 +23,7 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -36,21 +32,15 @@ public abstract class AbstractLoader<T> implements ILoader<T> {
   private static final Logger LOGGER = LogManager.getLogger(AbstractLoader.class);
 
   @NonNull
-  private final Cache<URI, T> cache = ObjectUtils.notNull(Caffeine.newBuilder()
+  private final Map<URI, T> cache = ObjectUtils.notNull(Caffeine.newBuilder()
       .maximumSize(100)
       .expireAfterAccess(10, TimeUnit.MINUTES)
-      .build());
-
-  /**
-   * Per-URI locks to prevent concurrent loading of the same resource.
-   */
-  @NonNull
-  private final ConcurrentHashMap<URI, Lock> loadingLocks = new ConcurrentHashMap<>();
+      .<URI, T>build().asMap());
 
   @Override
   @NonNull
   public Collection<T> getLoadedResources() {
-    return CollectionUtil.unmodifiableCollection(ObjectUtils.notNull(cache.asMap().values()));
+    return CollectionUtil.unmodifiableCollection(ObjectUtils.notNull(cache.values()));
   }
 
   /**
@@ -60,7 +50,7 @@ public abstract class AbstractLoader<T> implements ILoader<T> {
    */
   @NonNull
   protected Map<URI, T> getCachedEntries() {
-    return CollectionUtil.unmodifiableMap(cache.asMap());
+    return CollectionUtil.unmodifiableMap(cache);
   }
 
   @Override
@@ -146,29 +136,10 @@ public abstract class AbstractLoader<T> implements ILoader<T> {
           + visitedResources.stream().map(URI::toString).collect(Collectors.joining(",")));
     }
 
-    // Check cache first without locking
-    T retval = cache.getIfPresent(resource);
-    if (retval != null) {
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Found resource in cache '{}'", resource);
-      }
-      return retval;
-    }
-
-    // Get or create a lock for this specific URI
-    Lock lock = loadingLocks.computeIfAbsent(resource, k -> new ReentrantLock());
-    lock.lock();
-    try {
-      // Double-check after acquiring lock
-      retval = cache.getIfPresent(resource);
-      if (retval != null) {
-        if (LOGGER.isDebugEnabled()) {
-          LOGGER.debug("Found resource in cache after lock '{}'", resource);
-        }
-        return retval;
-      }
-
+    T retval = cache.get(resource);
+    if (retval == null) {
       LOGGER.info("Loading '{}'", resource);
+
       try {
         visitedResources.push(resource);
         retval = parseResource(resource, visitedResources);
@@ -176,12 +147,10 @@ public abstract class AbstractLoader<T> implements ILoader<T> {
         visitedResources.pop();
       }
       cache.put(resource, retval);
-      return ObjectUtils.notNull(retval);
-    } finally {
-      lock.unlock();
-      // Clean up the lock from the map to prevent memory leak
-      loadingLocks.remove(resource, lock);
+    } else if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Found resource in cache '{}'", resource);
     }
+    return ObjectUtils.notNull(retval);
   }
 
   /**
