@@ -43,6 +43,9 @@ public interface INumericItem extends IAnyAtomicItem {
 
   /**
    * Cast the provided type to this item type.
+   * <p>
+   * Per XPath 3.1, boolean values are cast as: {@code true} → 1, {@code false} →
+   * 0.
    *
    * @param item
    *          the item to cast
@@ -53,14 +56,21 @@ public interface INumericItem extends IAnyAtomicItem {
    */
   @NonNull
   static INumericItem cast(@NonNull IAnyAtomicItem item) {
-    try {
-      return item instanceof INumericItem
-          ? (INumericItem) item
-          : IDecimalItem.valueOf(item.asString());
-    } catch (IllegalStateException | InvalidTypeMetapathException ex) {
-      // asString can throw IllegalStateException exception
-      throw new InvalidValueForCastFunctionException(ex);
+    INumericItem retval;
+    if (item instanceof INumericItem) {
+      retval = (INumericItem) item;
+    } else if (item instanceof IBooleanItem) {
+      // XPath 3.1: boolean true -> 1, false -> 0
+      retval = IIntegerItem.valueOf(((IBooleanItem) item).toBoolean());
+    } else {
+      try {
+        retval = IDecimalItem.valueOf(item.asString());
+      } catch (IllegalStateException | InvalidTypeMetapathException ex) {
+        // asString can throw IllegalStateException exception
+        throw new InvalidValueForCastFunctionException(ex);
+      }
     }
+    return retval;
   }
 
   /**

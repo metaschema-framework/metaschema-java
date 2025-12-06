@@ -95,11 +95,7 @@ public final class FunctionUtils {
   @Deprecated(since = "3.0.0", forRemoval = true)
   @NonNull
   public static INumericItem toNumeric(@NonNull IAnyAtomicItem item) {
-    try {
-      return IDecimalItem.cast(item);
-    } catch (InvalidValueForCastFunctionException ex) {
-      throw new InvalidTypeMetapathException(item, ex.getLocalizedMessage(), ex);
-    }
+    return castToNumeric(item);
   }
 
   /**
@@ -111,10 +107,35 @@ public final class FunctionUtils {
    * @return the numeric item value
    * @throws TypeMetapathException
    *           if the item cannot be cast to a numeric value
+   * @deprecated Use {@link #castToNumeric(IAnyAtomicItem)} with null checking
+   *             instead
    */
+  @Deprecated(since = "3.0.0", forRemoval = true)
   @Nullable
   public static INumericItem toNumericOrNull(@Nullable IAnyAtomicItem item) {
-    return item == null ? null : toNumeric(item);
+    return item == null ? null : castToNumeric(item);
+  }
+
+  /**
+   * Casts the provided item value to a {@link INumericItem} value.
+   * <p>
+   * This method wraps {@link INumericItem#cast(IAnyAtomicItem)} and converts
+   * {@link InvalidValueForCastFunctionException} to
+   * {@link InvalidTypeMetapathException} for consistent exception handling.
+   *
+   * @param item
+   *          the value to cast
+   * @return the numeric item value
+   * @throws InvalidTypeMetapathException
+   *           if the item cannot be cast to a numeric value
+   */
+  @NonNull
+  public static INumericItem castToNumeric(@NonNull IAnyAtomicItem item) {
+    try {
+      return INumericItem.cast(item);
+    } catch (InvalidValueForCastFunctionException ex) {
+      throw new InvalidTypeMetapathException(item, ex.getLocalizedMessage(), ex);
+    }
   }
 
   /**

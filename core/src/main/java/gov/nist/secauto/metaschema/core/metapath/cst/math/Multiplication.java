@@ -157,9 +157,9 @@ public class Multiplication
       }
     } else {
       // handle as numeric
-      INumericItem left = FunctionUtils.toNumeric(leftItem);
+      INumericItem left = FunctionUtils.castToNumeric(leftItem);
       if (rightItem instanceof INumericItem) {
-        INumericItem right = FunctionUtils.toNumeric(rightItem);
+        INumericItem right = FunctionUtils.castToNumeric(rightItem);
         retval = OperationFunctions.opNumericMultiply(left, right);
       } else if (rightItem instanceof IYearMonthDurationItem) {
         retval = OperationFunctions.opMultiplyYearMonthDuration((IYearMonthDurationItem) rightItem, left);

@@ -126,8 +126,8 @@ public abstract class AbstractBasicArithmeticExpression
 
     if (typeStrategies == null) {
       return operationAsNumeric(
-          FunctionUtils.toNumeric(left),
-          FunctionUtils.toNumeric(right));
+          FunctionUtils.castToNumeric(left),
+          FunctionUtils.castToNumeric(right));
     }
 
     // Find matching strategy for subtrahend type

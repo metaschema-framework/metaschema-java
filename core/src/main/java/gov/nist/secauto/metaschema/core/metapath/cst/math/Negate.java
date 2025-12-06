@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 
 import java.util.List;
@@ -61,8 +62,8 @@ public class Negate
 
   @Override
   protected ISequence<? extends INumericItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
-    INumericItem item = FunctionUtils.toNumericOrNull(
-        ISequence.of(getChild().accept(dynamicContext, focus).atomize()).getFirstItem(true));
+    IAnyAtomicItem atomicItem = ISequence.of(getChild().accept(dynamicContext, focus).atomize()).getFirstItem(true);
+    INumericItem item = atomicItem == null ? null : FunctionUtils.castToNumeric(atomicItem);
     if (item != null) {
       item = OperationFunctions.opNumericUnaryMinus(item);
     }
