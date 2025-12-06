@@ -34,15 +34,19 @@ public class DeadlockDetectionExtension implements TestWatcher {
 
   @Override
   public void testAborted(ExtensionContext context, Throwable cause) {
-    LOGGER.error("Test aborted: {} - {}", context.getDisplayName(), cause.getMessage());
-    dumpThreadInfo(context, "ABORTED");
+    if (LOGGER.isErrorEnabled()) {
+      LOGGER.error("Test aborted: {} - {}", context.getDisplayName(), cause.getMessage());
+      dumpThreadInfo(context, "ABORTED");
+    }
   }
 
   @Override
   public void testFailed(ExtensionContext context, Throwable cause) {
     // Check if this looks like a timeout
     if (isTimeoutException(cause)) {
-      LOGGER.error("Test timed out (possible deadlock): {}", context.getDisplayName());
+      if (LOGGER.isErrorEnabled()) {
+        LOGGER.error("Test timed out (possible deadlock): {}", context.getDisplayName());
+      }
       dumpThreadInfo(context, "TIMEOUT");
       detectDeadlocks();
     }
@@ -88,7 +92,9 @@ public class DeadlockDetectionExtension implements TestWatcher {
 
     sb.append("=".repeat(80)).append("\n");
 
-    LOGGER.error(sb.toString());
+    if (LOGGER.isErrorEnabled()) {
+      LOGGER.error(sb.toString());
+    }
   }
 
   private void detectDeadlocks() {
@@ -119,7 +125,9 @@ public class DeadlockDetectionExtension implements TestWatcher {
 
       sb.append("!".repeat(80)).append("\n");
 
-      LOGGER.error(sb.toString());
+      if (LOGGER.isErrorEnabled()) {
+        LOGGER.error(sb.toString());
+      }
     }
   }
 
