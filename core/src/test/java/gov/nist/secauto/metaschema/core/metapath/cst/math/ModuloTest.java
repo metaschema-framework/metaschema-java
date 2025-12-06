@@ -59,7 +59,9 @@ public class ModuloTest
   private static Stream<Arguments> provideInvalidValues() {
     return Stream.of(
         // Invalid type for modulo - strings cannot be cast to numeric
-        Arguments.of("'abc' mod 2"));
+        Arguments.of("'abc' mod 2"),
+        // Division by zero
+        Arguments.of("5 mod 0"));
   }
 
   @ParameterizedTest

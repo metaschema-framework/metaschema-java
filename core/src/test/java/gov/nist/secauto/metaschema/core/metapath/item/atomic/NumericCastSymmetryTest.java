@@ -9,6 +9,7 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.decimal;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
@@ -113,6 +114,6 @@ public class NumericCastSymmetryTest {
   void testNumericPassthrough(@NonNull INumericItem input, @NonNull String description) {
     // INumericItem.cast should return the same instance for already-numeric items
     INumericItem result = INumericItem.cast(input);
-    assertEquals(input, result, "INumericItem.cast should return equivalent value for: " + description);
+    assertSame(input, result, "INumericItem.cast should return same instance for: " + description);
   }
 }

@@ -59,7 +59,9 @@ public class IntegerDivisionTest
   private static Stream<Arguments> provideInvalidValues() {
     return Stream.of(
         // Invalid type for idiv - strings cannot be cast to numeric
-        Arguments.of("'abc' idiv 2"));
+        Arguments.of("'abc' idiv 2"),
+        // Division by zero
+        Arguments.of("5 idiv 0"));
   }
 
   @ParameterizedTest
