@@ -83,11 +83,4 @@ public abstract class AbstractContainerModelSupport<
   public Map<Integer, AI> getAssemblyInstanceMap() {
     return assemblyInstances;
   }
-
-  @SuppressWarnings({ "PMD.EmptyFinalizer", "checkstyle:NoFinalizer" })
-  @Override
-  protected final void finalize() {
-    // Address SEI CERT Rule OBJ-11:
-    // https://wiki.sei.cmu.edu/confluence/display/java/OBJ11-J.+Be+wary+of+letting+constructors+throw+exceptions
-  }
 }

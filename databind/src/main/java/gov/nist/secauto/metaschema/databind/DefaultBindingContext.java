@@ -264,7 +264,15 @@ public class DefaultBindingContext implements IBindingContext {
     return ObjectUtils.asType(definition.deepCopyItem(other, parentInstance));
   }
 
+  /**
+   * Used to prevent finalizer attacks as recommended in SEI CERT Rule OBJ-11.
+   * This is needed because the class is non-final and the constructor can throw.
+   */
   @Override
+  @SuppressWarnings({
+      "PMD.EmptyFinalizer",
+      "checkstyle:NoFinalizer",
+      "deprecation" })
   protected final void finalize() {
     // Do nothing
   }
