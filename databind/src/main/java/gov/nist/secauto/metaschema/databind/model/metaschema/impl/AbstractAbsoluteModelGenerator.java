@@ -24,7 +24,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefin
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Supports generating the model contents of a Metaschema instance with a
@@ -215,13 +214,5 @@ public abstract class AbstractAbsoluteModelGenerator<
         objInstance,
         fieldInlineDefinitionPosition++,
         getParent()));
-  }
-
-  @SuppressWarnings({ "PMD.EmptyFinalizer", "checkstyle:NoFinalizer" })
-  @SuppressFBWarnings(value = "FI_EMPTY", justification = "needed to avoid finalization bug")
-  @Override
-  protected final void finalize() {
-    // Address SEI CERT Rule OBJ-11:
-    // https://wiki.sei.cmu.edu/confluence/display/java/OBJ11-J.+Be+wary+of+letting+constructors+throw+exceptions
   }
 }
