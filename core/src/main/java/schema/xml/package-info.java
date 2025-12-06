@@ -7,5 +7,4 @@
  * Provides schema resources for XML schema and Metaschema data types.
  */
 
-@Deprecated
 package schema.xml;

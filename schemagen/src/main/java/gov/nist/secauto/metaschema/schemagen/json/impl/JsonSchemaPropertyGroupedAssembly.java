@@ -42,7 +42,7 @@ public class JsonSchemaPropertyGroupedAssembly
       @NonNull IAssemblyInstanceGrouped instance,
       @NonNull IJsonGenerationState state) {
     super(instance, state);
-    this.choices = Lazy.lazy(() -> {
+    this.choices = Lazy.of(() -> {
       List<IJsonSchemaPropertyFlag> flagProperties = getFlagProperties();
       List<IJsonSchemaPropertyNamed> modelProperties
           = JsonSchemaHelper.buildModelProperties(instance.getDefinition(), state);

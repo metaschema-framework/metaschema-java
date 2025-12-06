@@ -17,8 +17,8 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.auto.Mock;
 import org.jmock.junit5.JUnit5Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -27,25 +27,22 @@ import java.util.List;
 class ExpressionUtilsTest {
 
   @RegisterExtension
-  Mockery context = new JUnit5Mockery();
+  Mockery context = new JUnit5Mockery() {
+    {
+      setThreadingPolicy(new Synchroniser());
+    }
+  };
 
-  @Mock
-  private IFlagNodeItem flagNodeItem1; // NOPMD - it's injected
-  @Mock
-  private IFlagNodeItem flagNodeItem2; // NOPMD - it's injected
-
-  @Mock
-  private IExpression basicFlagExpr1; // NOPMD - it's injected
-  @Mock
-  private IExpression basicFlagExpr2; // NOPMD - it's injected
-  @Mock
-  private IExpression basicAssemblyExpr; // NOPMD - it's injected
-  @Mock
-  private IExpression basicFieldExpr; // NOPMD - it's injected
+  private IExpression basicFlagExpr1;
+  private IExpression basicFlagExpr2;
+  private IExpression basicAssemblyExpr;
+  private IExpression basicFieldExpr;
 
   @Test
   void testTwoFlags() {
     Class<INodeItem> baseType = INodeItem.class;
+    basicFlagExpr1 = context.mock(IExpression.class, "basicFlagExpr1");
+    basicFlagExpr2 = context.mock(IExpression.class, "basicFlagExpr2");
 
     context.checking(new Expectations() {
       { // NOPMD - intentional
@@ -64,6 +61,8 @@ class ExpressionUtilsTest {
   @Test
   void testFlagAndAssembly() {
     Class<INodeItem> baseType = INodeItem.class;
+    basicFlagExpr1 = context.mock(IExpression.class, "basicFlagExpr1");
+    basicAssemblyExpr = context.mock(IExpression.class, "basicAssemblyExpr");
 
     context.checking(new Expectations() {
       { // NOPMD - intentional
@@ -82,6 +81,8 @@ class ExpressionUtilsTest {
   @Test
   void testFieldAndAssembly() {
     Class<INodeItem> baseType = INodeItem.class;
+    basicFieldExpr = context.mock(IExpression.class, "basicFieldExpr");
+    basicAssemblyExpr = context.mock(IExpression.class, "basicAssemblyExpr");
 
     context.checking(new Expectations() {
       { // NOPMD - intentional

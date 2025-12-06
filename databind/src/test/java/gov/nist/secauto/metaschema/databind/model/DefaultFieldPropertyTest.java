@@ -15,17 +15,13 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
-import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.json.MetaschemaJsonReader;
 import gov.nist.secauto.metaschema.databind.model.test.MultiFieldAssembly;
 import gov.nist.secauto.metaschema.databind.model.test.SimpleAssembly;
 
-import org.jmock.auto.Mock;
-import org.jmock.junit5.JUnit5Mockery;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,15 +29,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 class DefaultFieldPropertyTest {
-  @RegisterExtension
-  JUnit5Mockery context = new JUnit5Mockery();
-
-  @Mock
-  private IModule module; // NOPMD - it's injected
-  @Mock
-  private IBoundDefinitionModelAssembly classBinding; // NOPMD - it's injected
-  @Mock
-  private IBindingContext bindingContext; // NOPMD - it's injected
 
   @Test
   void testJsonReadFlag()

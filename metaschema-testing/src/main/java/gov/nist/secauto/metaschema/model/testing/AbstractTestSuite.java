@@ -208,7 +208,7 @@ public abstract class AbstractTestSuite {
     assert collectionUri != null;
 
     LOGGER.atInfo().log("Collection: " + collectionUri);
-    Lazy<Path> collectionGenerationPath = ObjectUtils.notNull(Lazy.lazy(() -> {
+    Lazy<Path> collectionGenerationPath = ObjectUtils.notNull(Lazy.of(() -> {
       Path retval;
       try {
         retval = ObjectUtils.requireNonNull(Files.createTempDirectory(generationPath, "collection-"));
@@ -316,7 +316,7 @@ public abstract class AbstractTestSuite {
       @NonNull URI collectionUri,
       @NonNull Lazy<Path> collectionGenerationPath,
       @NonNull IBindingContext bindingContext) {
-    Lazy<Path> scenarioGenerationPath = ObjectUtils.notNull(Lazy.lazy(() -> {
+    Lazy<Path> scenarioGenerationPath = ObjectUtils.notNull(Lazy.of(() -> {
       Path retval;
       try {
         retval = Files.createTempDirectory(collectionGenerationPath.get(), "scenario-");
@@ -339,9 +339,9 @@ public abstract class AbstractTestSuite {
       throw new JUnitException("Unable to generate classes for metaschema: " + metaschemaUri, ex);
     }
 
-    Lazy<Path> lazySchema = Lazy.lazy(() -> generateSchema(module, scenarioGenerationPath));
+    Lazy<Path> lazySchema = Lazy.of(() -> generateSchema(module, scenarioGenerationPath));
 
-    Lazy<IContentValidator> lazyContentValidator = Lazy.lazy(() -> {
+    Lazy<IContentValidator> lazyContentValidator = Lazy.of(() -> {
       Path schemaPath = lazySchema.get();
       return getContentValidatorSupplier().apply(schemaPath);
     });

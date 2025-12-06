@@ -41,7 +41,7 @@ public final class QNameCache {
       = Comparator.comparingInt(IEnhancedQName::getIndexPosition);
 
   @NonNull
-  private static final Lazy<QNameCache> INSTANCE = ObjectUtils.notNull(Lazy.lazy(QNameCache::new));
+  private static final Lazy<QNameCache> INSTANCE = ObjectUtils.notNull(Lazy.of(QNameCache::new));
 
   @NonNull
   private final NamespaceCache namespaceCache;

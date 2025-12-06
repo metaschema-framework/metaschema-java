@@ -25,15 +25,17 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class YamlOperations {
-  private static final Yaml YAML_PARSER;
-
-  static {
+  /**
+   * Thread-local Yaml parser to ensure thread safety. SnakeYAML's Yaml class is
+   * not thread-safe, so each thread needs its own instance.
+   */
+  private static final ThreadLocal<Yaml> YAML_PARSER = ThreadLocal.withInitial(() -> {
     LoaderOptions loaderOptions = new LoaderOptions();
     loaderOptions.setCodePointLimit(Integer.MAX_VALUE - 1); // 2GB
     Constructor constructor = new Constructor(loaderOptions);
     DumperOptions dumperOptions = new DumperOptions();
     Representer representer = new Representer(dumperOptions);
-    YAML_PARSER = new Yaml(constructor, representer, dumperOptions, loaderOptions, new Resolver() {
+    return new Yaml(constructor, representer, dumperOptions, loaderOptions, new Resolver() {
       @Override
       protected void addImplicitResolvers() {
         addImplicitResolver(Tag.BOOL, BOOL, "yYnNtTfFoO");
@@ -45,7 +47,7 @@ public final class YamlOperations {
         // addImplicitResolver(Tag.TIMESTAMP, TIMESTAMP, "0123456789");
       }
     });
-  }
+  });
 
   private YamlOperations() {
     // disable construction
@@ -65,7 +67,7 @@ public final class YamlOperations {
   @NonNull
   public static Map<String, Object> parseYaml(URI target) throws IOException {
     try (BufferedInputStream is = new BufferedInputStream(ObjectUtils.notNull(target.toURL().openStream()))) {
-      return (Map<String, Object>) YAML_PARSER.load(is);
+      return (Map<String, Object>) YAML_PARSER.get().load(is);
     }
   }
 

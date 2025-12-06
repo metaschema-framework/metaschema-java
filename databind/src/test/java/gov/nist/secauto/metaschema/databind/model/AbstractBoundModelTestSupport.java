@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.databind.codegen.AbstractMetaschemaTest;
 import gov.nist.secauto.metaschema.databind.model.test.RootBoundAssembly;
 
 import org.jmock.junit5.JUnit5Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.io.IOException;
@@ -24,7 +25,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class AbstractBoundModelTestSupport
     extends AbstractMetaschemaTest {
   @RegisterExtension
-  JUnit5Mockery context = new JUnit5Mockery();
+  JUnit5Mockery context = new JUnit5Mockery() {
+    {
+      setThreadingPolicy(new Synchroniser());
+    }
+  };
 
   @NonNull
   protected JUnit5Mockery getJUnit5Mockery() {

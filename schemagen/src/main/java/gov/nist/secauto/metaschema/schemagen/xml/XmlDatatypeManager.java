@@ -34,7 +34,7 @@ public class XmlDatatypeManager
   public static final String NS_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
 
   @NonNull
-  private static final Lazy<List<IDatatypeProvider>> DATATYPE_PROVIDERS = ObjectUtils.notNull(Lazy.lazy(() -> List.of(
+  private static final Lazy<List<IDatatypeProvider>> DATATYPE_PROVIDERS = ObjectUtils.notNull(Lazy.of(() -> List.of(
       new XmlCoreDatatypeProvider(),
       new XmlProseCompositDatatypeProvider(
           ObjectUtils.notNull(List.of(

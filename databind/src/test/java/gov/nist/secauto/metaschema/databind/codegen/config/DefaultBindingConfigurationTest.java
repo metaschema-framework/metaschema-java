@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -31,7 +32,11 @@ class DefaultBindingConfigurationTest {
   private static final String DEFINITION__CLASS_NAME = "TheChild";
 
   @RegisterExtension
-  JUnit5Mockery context = new JUnit5Mockery();
+  JUnit5Mockery context = new JUnit5Mockery() {
+    {
+      setThreadingPolicy(new Synchroniser());
+    }
+  };
   private final IModelDefinition definition = context.mock(IModelDefinition.class);
   private final IModule module = context.mock(IModule.class);
 

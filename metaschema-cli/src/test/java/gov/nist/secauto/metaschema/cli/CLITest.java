@@ -20,6 +20,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -34,22 +36,93 @@ import nl.altindag.log.LogCaptor;
 public class CLITest {
   private static final ExitCode NO_EXCEPTION_CLASS = null;
 
-  void evaluateResult(@NonNull ExitStatus status, @NonNull ExitCode expectedCode) {
+  /**
+   * A PrintStream that discards all output, used to suppress CLI console output
+   * during tests.
+   */
+  private static final PrintStream NULL_STREAM = new PrintStream(new OutputStream() {
+    @Override
+    public void write(int b) {
+      // discard
+    }
+
+    @Override
+    public void write(byte[] b, int off, int len) {
+      // discard
+    }
+  });
+
+  void evaluateResult(@NonNull ExitStatus status, @NonNull ExitCode expectedCode, @NonNull String[] args) {
     status.generateMessage(true);
-    assertAll(() -> assertEquals(expectedCode, status.getExitCode(), "exit code mismatch"),
-        () -> assertNull(status.getThrowable(), "expected null Throwable"));
+    Throwable thrown = status.getThrowable();
+    assertAll(
+        () -> assertEquals(expectedCode, status.getExitCode(),
+            () -> buildExitCodeMismatchMessage(status, expectedCode, thrown, args)),
+        () -> assertNull(thrown,
+            () -> buildUnexpectedThrowableMessage(thrown, args)));
   }
 
   void evaluateResult(@NonNull ExitStatus status, @NonNull ExitCode expectedCode,
-      @NonNull Class<? extends Throwable> thrownClass) {
+      @NonNull Class<? extends Throwable> thrownClass, @NonNull String[] args) {
     Throwable thrown = status.getThrowable();
     assertAll(
-        () -> assertEquals(expectedCode, status.getExitCode(), "exit code mismatch"),
-        () -> assertEquals(thrownClass, thrown == null ? null : thrown.getClass(), "expected Throwable mismatch"));
+        () -> assertEquals(expectedCode, status.getExitCode(),
+            () -> buildExitCodeMismatchMessage(status, expectedCode, thrown, args)),
+        () -> assertEquals(thrownClass, thrown == null ? null : thrown.getClass(),
+            () -> buildThrowableMismatchMessage(thrownClass, thrown, args)));
+  }
+
+  private String buildExitCodeMismatchMessage(@NonNull ExitStatus status, @NonNull ExitCode expectedCode,
+      Throwable thrown, @NonNull String[] args) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("exit code mismatch: expected <").append(expectedCode).append("> but was <")
+        .append(status.getExitCode()).append(">");
+    sb.append("\nCommand args: ").append(String.join(" ", args));
+    if (status.getMessage() != null) {
+      sb.append("\nStatus message: ").append(status.getMessage());
+    }
+    if (thrown != null) {
+      sb.append("\nThrowable: ").append(thrown.getClass().getName()).append(": ").append(thrown.getMessage());
+      sb.append("\nStack trace:\n").append(getStackTraceAsString(thrown));
+    }
+    return sb.toString();
+  }
+
+  private String buildUnexpectedThrowableMessage(Throwable thrown, @NonNull String[] args) {
+    if (thrown == null) {
+      return "expected null Throwable";
+    }
+    StringBuilder sb = new StringBuilder();
+    sb.append("expected null Throwable but got: ").append(thrown.getClass().getName())
+        .append(": ").append(thrown.getMessage());
+    sb.append("\nCommand args: ").append(String.join(" ", args));
+    sb.append("\nStack trace:\n").append(getStackTraceAsString(thrown));
+    return sb.toString();
+  }
+
+  private String buildThrowableMismatchMessage(Class<? extends Throwable> expectedClass, Throwable thrown,
+      @NonNull String[] args) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("expected Throwable mismatch: expected <")
+        .append(expectedClass == null ? "null" : expectedClass.getName())
+        .append("> but was <")
+        .append(thrown == null ? "null" : thrown.getClass().getName())
+        .append(">");
+    sb.append("\nCommand args: ").append(String.join(" ", args));
+    if (thrown != null) {
+      sb.append("\nMessage: ").append(thrown.getMessage());
+      sb.append("\nStack trace:\n").append(getStackTraceAsString(thrown));
+    }
+    return sb.toString();
+  }
+
+  private String getStackTraceAsString(Throwable throwable) {
+    java.io.StringWriter sw = new java.io.StringWriter();
+    throwable.printStackTrace(new java.io.PrintWriter(sw));
+    return sw.toString();
   }
 
   private static Stream<Arguments> providesValues() {
-    @SuppressWarnings("serial")
     List<Arguments> values = new LinkedList<>() {
       {
         add(Arguments.of(new String[] {}, ExitCode.INVALID_COMMAND,
@@ -198,9 +271,9 @@ public class CLITest {
     String[] fullArgs = Stream.of(args, defaultArgs).flatMap(Stream::of)
         .toArray(String[]::new);
     if (expectedThrownClass == null) {
-      evaluateResult(CLI.runCli(fullArgs), expectedExitCode);
+      evaluateResult(CLI.runCli(NULL_STREAM, fullArgs), expectedExitCode, fullArgs);
     } else {
-      evaluateResult(CLI.runCli(fullArgs), expectedExitCode, expectedThrownClass);
+      evaluateResult(CLI.runCli(NULL_STREAM, fullArgs), expectedExitCode, expectedThrownClass, fullArgs);
     }
   }
 
@@ -213,7 +286,7 @@ public class CLITest {
           "src/test/resources/content/215.xml",
           "--disable-schema-validation"
       };
-      CLI.runCli(cliArgs);
+      CLI.runCli(NULL_STREAM, cliArgs);
       assertThat(captor.getErrorLogs().toString())
           .contains("expect-default-non-zero: Expect constraint '. > 0' did not match the data",
               "expect-custom-non-zero: No default message, custom error message for expect-custom-non-zero constraint.",
@@ -240,7 +313,7 @@ public class CLITest {
           "src/test/resources/content/constraint-constraints.xml",
           "--disable-schema-validation",
       };
-      CLI.runCli(cliArgs);
+      CLI.runCli(NULL_STREAM, cliArgs);
       assertThat(captor.getErrorLogs().toString())
           .contains("This constraint SHOULD be violated if test passes.");
     }

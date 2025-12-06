@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dev.metaschema</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>8</version>
+		<version>9-SNAPSHOT</version>
 	</parent>
 
 	<groupId>dev.metaschema.java</groupId>
@@ -701,6 +701,9 @@
 						<redirectTestOutputToFile>true</redirectTestOutputToFile>
 						<!-- Use of TCP to transmit events to the plugin -->
 						<forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
+						<!-- Deadlock detection: kill forked JVM after 5 minutes of no output -->
+						<forkedProcessTimeoutInSeconds>300</forkedProcessTimeoutInSeconds>
+						<forkedProcessExitTimeoutInSeconds>60</forkedProcessExitTimeoutInSeconds>
 						<!-- Junit5 parallel configuration -->
 						<parallel>all</parallel>
 						<useUnlimitedThreads>true</useUnlimitedThreads>
@@ -708,7 +711,10 @@
 							<configurationParameters>
 								junit.jupiter.execution.parallel.enabled = true
 								junit.jupiter.execution.parallel.mode.default = concurrent
-								junit.jupiter.execution.timeout.default=60 s
+								junit.jupiter.execution.timeout.default = 60 s
+								junit.jupiter.execution.timeout.mode = disabled_on_debug
+								junit.jupiter.execution.timeout.thread.mode.default = SEPARATE_THREAD
+								junit.jupiter.extensions.autodetection.enabled = true
 							</configurationParameters>
 						</properties>
 						<!-- tree reporter configuration -->

@@ -14,10 +14,12 @@ import gov.nist.secauto.metaschema.core.MetaschemaJavaVersion;
 import gov.nist.secauto.metaschema.core.model.MetaschemaVersion;
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
 
+import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * The main entry point for the CLI application.
@@ -43,6 +45,24 @@ public final class CLI {
    */
   @NonNull
   public static ExitStatus runCli(String... args) {
+    return runCli(null, args);
+  }
+
+  /**
+   * Execute a command line with a custom output stream.
+   * <p>
+   * This method is useful for testing, allowing output to be captured instead of
+   * being written directly to the console.
+   *
+   * @param outputStream
+   *          the output stream to write to, or {@code null} to use the default
+   *          console
+   * @param args
+   *          the command line arguments
+   * @return the execution result
+   */
+  @NonNull
+  public static ExitStatus runCli(@Nullable PrintStream outputStream, String... args) {
     System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");
 
     @SuppressWarnings("PMD.UseConcurrentHashMap")
@@ -50,7 +70,7 @@ public final class CLI {
     versions.put(CLIProcessor.COMMAND_VERSION, new MetaschemaJavaVersion());
     versions.put(MetaschemaConstants.METASCHEMA_NAMESPACE, new MetaschemaVersion());
 
-    CLIProcessor processor = new CLIProcessor("metaschema-cli", versions);
+    CLIProcessor processor = new CLIProcessor("metaschema-cli", versions, outputStream);
     MetaschemaCommands.COMMANDS.forEach(processor::addCommandHandler);
 
     CommandService.getInstance().getCommands().stream().forEach(command -> {

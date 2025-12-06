@@ -47,7 +47,7 @@ public class JsonSchemaDefinitionAssembly
       @Nullable IEnhancedQName jsonKeyFlagName,
       @NonNull IJsonGenerationState state) {
     super(definition, jsonKeyFlagName, state);
-    this.choices = Lazy.lazy(() -> {
+    this.choices = Lazy.of(() -> {
       List<IJsonSchemaPropertyFlag> flagProperties = getFlagProperties();
       List<IJsonSchemaPropertyNamed> modelProperties = JsonSchemaHelper.buildModelProperties(getDefinition(), state);
 

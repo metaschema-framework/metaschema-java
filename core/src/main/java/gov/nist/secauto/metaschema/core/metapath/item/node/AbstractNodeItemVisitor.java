@@ -60,8 +60,6 @@ public abstract class AbstractNodeItemVisitor<CONTEXT, RESULT>
    * @param context
    *          provides contextual information for use by the visitor
    * @return the result produced by visiting the item's child model items
-   * @throws EXCEPTION
-   *           when an un-handled error was raised while visiting a child node
    */
   protected RESULT visitModelChildren(@NonNull INodeItem item, CONTEXT context) {
     RESULT result = defaultResult();

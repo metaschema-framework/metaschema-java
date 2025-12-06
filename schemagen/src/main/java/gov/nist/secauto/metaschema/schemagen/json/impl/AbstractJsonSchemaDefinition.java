@@ -37,7 +37,7 @@ public abstract class AbstractJsonSchemaDefinition<D extends IDefinition> implem
       @NonNull D definition,
       @NonNull IJsonGenerationState state) {
     this.definition = definition;
-    this.name = ObjectUtils.notNull(Lazy.lazy(() -> generateDefinitionName(state)));
+    this.name = ObjectUtils.notNull(Lazy.of(() -> generateDefinitionName(state)));
   }
 
   @Override

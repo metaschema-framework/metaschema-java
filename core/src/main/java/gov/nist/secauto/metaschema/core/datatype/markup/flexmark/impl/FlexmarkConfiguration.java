@@ -47,7 +47,7 @@ public final class FlexmarkConfiguration {
    */
   @NonNull
   private static final Lazy<DataSet> FLEXMARK_CONFIG
-      = ObjectUtils.notNull(Lazy.lazy(FlexmarkConfiguration::initFlexmarkConfig));
+      = ObjectUtils.notNull(Lazy.of(FlexmarkConfiguration::initFlexmarkConfig));
 
   /**
    * Get the singleton configuration instance.

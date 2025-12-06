@@ -121,7 +121,7 @@ public final class InstanceModelFieldScalar
     FieldSupport.bindField(javaField);
     this.javaField = javaField;
     this.annotation = annotation;
-    this.collectionInfo = ObjectUtils.notNull(Lazy.lazy(() -> IModelInstanceCollectionInfo.of(this)));
+    this.collectionInfo = ObjectUtils.notNull(Lazy.of(() -> IModelInstanceCollectionInfo.of(this)));
     this.groupAs = groupAs;
     this.javaTypeAdapter = ModelUtil.getDataTypeAdapter(
         annotation.typeAdapter(),
@@ -131,14 +131,14 @@ public final class InstanceModelFieldScalar
     IModule module = getContainingModule();
     ISource source = module.getSource();
 
-    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
+    this.constraints = ObjectUtils.notNull(Lazy.of(() -> {
       IValueConstrained retval = new ValueConstraintSet(source);
       ValueConstraints valueAnnotation = annotation.valueConstraints();
       ConstraintSupport.parse(valueAnnotation, module.getSource(), retval);
       return retval;
     }));
     this.properties = ObjectUtils.notNull(
-        Lazy.lazy(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+        Lazy.of(() -> CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
             Arrays.stream(annotation.properties())
                 .map(ModelUtil::toPropertyEntry)
                 .collect(

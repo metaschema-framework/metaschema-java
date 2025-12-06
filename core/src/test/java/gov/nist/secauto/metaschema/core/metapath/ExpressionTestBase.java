@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.junit5.JUnit5Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.io.File;
@@ -30,7 +31,11 @@ public class ExpressionTestBase {
   @SuppressWarnings("exports")
   @NonNull
   @RegisterExtension
-  public final Mockery context = new JUnit5Mockery();
+  public final Mockery context = new JUnit5Mockery() {
+    {
+      setThreadingPolicy(new Synchroniser());
+    }
+  };
 
   /**
    * Get the mocking context.

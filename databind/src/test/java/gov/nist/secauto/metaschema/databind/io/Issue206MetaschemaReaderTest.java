@@ -30,6 +30,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaModule;
 
 import org.codehaus.stax2.XMLEventReader2;
 import org.jmock.junit5.JUnit5Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -47,7 +48,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 class Issue206MetaschemaReaderTest {
   @RegisterExtension
-  JUnit5Mockery context = new JUnit5Mockery();
+  JUnit5Mockery context = new JUnit5Mockery() {
+    {
+      setThreadingPolicy(new Synchroniser());
+    }
+  };
 
   @Test
   void testIssue205Json() throws IOException, MetaschemaException {

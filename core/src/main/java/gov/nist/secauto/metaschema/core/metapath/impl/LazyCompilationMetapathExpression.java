@@ -48,7 +48,7 @@ public class LazyCompilationMetapathExpression implements IMetapathExpression {
       @NonNull StaticContext staticContext) {
     this.path = path;
     this.staticContext = staticContext;
-    this.compiledMetapath = ObjectUtils.notNull(Lazy.lazy(() -> {
+    this.compiledMetapath = ObjectUtils.notNull(Lazy.of(() -> {
       IMetapathExpression result;
       try {
         result = IMetapathExpression.compile(path, staticContext);

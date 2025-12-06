@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.databind.IBindingContext;
 
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,11 @@ import dev.harrel.jsonschema.providers.OrgJsonNode;
 
 class SarifValidationHandlerTest {
   @RegisterExtension
-  public final JUnit5Mockery context = new JUnit5Mockery();
+  public final JUnit5Mockery context = new JUnit5Mockery() {
+    {
+      setThreadingPolicy(new Synchroniser());
+    }
+  };
 
   @Test
   void testWriteToString() throws IOException {

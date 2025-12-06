@@ -43,7 +43,7 @@ public class JsonSchemaPropertyAssembly
       @NonNull IJsonGenerationState state) {
     super(instance, instance.getJsonName());
     this.jsonKey = instance.getJsonKey();
-    this.definitionSchema = ObjectUtils.notNull(Lazy.lazy(() -> state.getAssemblyDefinition(
+    this.definitionSchema = ObjectUtils.notNull(Lazy.of(() -> state.getAssemblyDefinition(
         instance.getDefinition(),
         jsonKey == null ? null : jsonKey.getQName())));
   }

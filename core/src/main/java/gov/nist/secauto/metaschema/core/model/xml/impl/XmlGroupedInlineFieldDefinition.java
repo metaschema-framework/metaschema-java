@@ -67,14 +67,14 @@ public class XmlGroupedInlineFieldDefinition
       @NonNull IChoiceGroupInstance parent) {
     super(parent);
     this.xmlObject = xmlObject;
-    this.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -> XmlFlagContainerSupport.newInstance(
+    this.flagContainer = ObjectUtils.notNull(Lazy.of(() -> XmlFlagContainerSupport.newInstance(
         xmlObject,
         this,
         parent.getJsonKeyFlagInstanceName())));
 
     ISource source = parent.getContainingModule().getSource();
 
-    this.constraints = ObjectUtils.notNull(Lazy.lazy(() -> {
+    this.constraints = ObjectUtils.notNull(Lazy.of(() -> {
       IValueConstrained retval = new ValueConstraintSet(source);
       if (getXmlObject().isSetConstraint()) {
         ConstraintXmlSupport.parse(retval, ObjectUtils.notNull(getXmlObject().getConstraint()), source);

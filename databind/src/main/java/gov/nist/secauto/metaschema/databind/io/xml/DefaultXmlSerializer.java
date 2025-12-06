@@ -45,7 +45,7 @@ public class DefaultXmlSerializer<CLASS extends IBoundObject>
   }
 
   protected final void resetFactory() {
-    this.factory = Lazy.lazy(this::newFactoryInstance);
+    this.factory = Lazy.of(this::newFactoryInstance);
   }
 
   @Override

@@ -164,7 +164,6 @@ public abstract class AbstractValidateContentCommand
      * @return the loaded Metaschema module
      * @throws CommandExecutionException
      *           if an error occurred while loading the module
-     * @throws MetaschemaException
      */
     @NonNull
     protected abstract IModule getModule(

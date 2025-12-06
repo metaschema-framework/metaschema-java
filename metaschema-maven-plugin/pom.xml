@@ -144,7 +144,6 @@
                 <configuration>
                     <goalPrefix>metaschema</goalPrefix>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-                    <outputDirectory>${project.build.directory}/classes/META-INF/maven</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>

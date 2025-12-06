@@ -22,7 +22,7 @@ import nl.talsmasoftware.lazy4j.Lazy;
  */
 public final class NamespaceCache {
   @NonNull
-  private static final Lazy<NamespaceCache> INSTANCE = ObjectUtils.notNull(Lazy.lazy(NamespaceCache::new));
+  private static final Lazy<NamespaceCache> INSTANCE = ObjectUtils.notNull(Lazy.of(NamespaceCache::new));
 
   private final Map<String, Integer> nsToIndex = new ConcurrentHashMap<>();
   private final Map<Integer, String> indexToNs = new ConcurrentHashMap<>();

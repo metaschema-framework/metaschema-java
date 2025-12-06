@@ -25,7 +25,7 @@ public abstract class AbstractUriItem
     implements IAnyUriItem {
 
   @SuppressWarnings("synthetic-access")
-  private final Lazy<String> stringValue = Lazy.lazy(super::asString);
+  private final Lazy<String> stringValue = Lazy.of(super::asString);
 
   /**
    * Construct a new item that wraps the provided value.

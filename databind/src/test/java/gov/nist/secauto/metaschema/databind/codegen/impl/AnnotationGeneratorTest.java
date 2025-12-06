@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -27,7 +28,11 @@ import java.util.Map;
 
 class AnnotationGeneratorTest {
   @RegisterExtension
-  final JUnit5Mockery context = new JUnit5Mockery();
+  final JUnit5Mockery context = new JUnit5Mockery() {
+    {
+      setThreadingPolicy(new Synchroniser());
+    }
+  };
 
   @Test
   void letAssignmentTest() {
