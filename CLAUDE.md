@@ -151,7 +151,7 @@ mvn -pl core test -Dtest=FnCountTest#testCount
 
 ### Javadoc Requirements (BLOCKING)
 
-**All code changes must follow the Javadoc style guide**: [.claude/docs/javadoc-style-guide.md](.claude/docs/javadoc-style-guide.md)
+**All code changes must follow the Javadoc style guide**: [docs/javadoc-style-guide.md](docs/javadoc-style-guide.md)
 
 Key requirements:
 - **New code**: 100% Javadoc coverage on `public`/`protected` members (BLOCKING)

@@ -38,6 +38,7 @@ This project uses a typical GitHub fork and pull request [workflow](https://guid
 This repository consists of the following directories and files pertaining to the project:
 
 - [.github](.github): Contains GitHub issue and pull request templates for the project.
+- [docs](docs): Contains project documentation, including style guides.
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md): This file contains a code of conduct for all project contributors.
 - [CONTRIBUTING.md](CONTRIBUTING.md): This file is for potential contributors to the project. It provides basic information on the project, describes the main ways people can make contributions, explains how to report issues, and lists pointers to additional sources of information. It also has instructions on establishing a development environment for contributing to the project and using GitHub project cards to track development sprints.
 - [LICENSE.md](LICENSE.md): This file contains license information for the files in this GitHub repository.
@@ -82,6 +83,9 @@ The following are some guidelines to consider when performing code reviews.
    - Do consider how your feedback could be addressed by follow-on work. Consider opening new issues for less significant concerns.
 - Unit Testing
    - Do consider the coverage of test cases. Do the unit tests cover major code paths and error conditions?
+- Documentation
+   - Do verify that new public/protected APIs have complete Javadoc per the [style guide](docs/javadoc-style-guide.md).
+   - Do check that modified code has updated documentation where applicable.
 - Approving or Requesting changes
    - Do not approve or request changes to a PR if you have open questions. Seek question resolution before taking a position.
    - Do not request changes for a nit or suggestion.
@@ -94,6 +98,12 @@ The following are some guidelines to consider when performing code reviews.
 You can contact the maintainers of this project at [maintainers@metaschema.dev](mailto:maintainers@metaschema.dev) if you are interested in contributing to the development of this project or exchanging ideas.
 
 ## Developer information
+
+### Code style
+
+This project enforces code style through static analysis tools. Contributors should review:
+
+- [Javadoc Style Guide](docs/javadoc-style-guide.md): Requirements for documenting public and protected APIs
 
 ### Core Metaschema functions
 
