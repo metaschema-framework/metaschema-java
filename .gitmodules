@@ -8,4 +8,4 @@
 [submodule "databind-metaschema/modules"]
 	path = databind-metaschema/modules
 	url = https://github.com/metaschema-framework/metaschema-modules.git
-	branch = main
+	branch = develop
