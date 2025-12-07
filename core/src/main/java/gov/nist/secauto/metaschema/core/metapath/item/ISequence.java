@@ -255,18 +255,27 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
 
   /**
    * Returns an unmodifiable sequence containing the provided {@code items}.
+   * <p>
+   * If the provided collection is already an {@link ISequence}, it is returned
+   * unchanged. Otherwise, the collection is wrapped directly without making a
+   * defensive copy. If you need a sequence that is independent of the original
+   * collection, use {@link #copyOf(Collection)} instead.
    *
    * @param <ITEM_TYPE>
    *          the type of items contained in the sequence.
    * @param items
    *          the items to add to the sequence
-   * @return the new sequence
+   * @return the new sequence, or the same sequence if items is already an
+   *         {@link ISequence}
    */
+  @SuppressWarnings("unchecked")
   @NonNull
   static <ITEM_TYPE extends IItem> ISequence<ITEM_TYPE> ofCollection( // NOPMD - intentional
       @NonNull Collection<ITEM_TYPE> items) {
     ISequence<ITEM_TYPE> retval;
-    if (items.isEmpty()) {
+    if (items instanceof ISequence) {
+      retval = (ISequence<ITEM_TYPE>) items;
+    } else if (items.isEmpty()) {
       retval = empty();
     } else if (items.size() == 1) {
       retval = new SingletonSequence<>(ObjectUtils.notNull(items.iterator().next()));

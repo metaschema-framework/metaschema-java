@@ -11,6 +11,7 @@ import static gov.nist.secauto.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -153,5 +154,16 @@ class ISequenceTest {
     assertTrue(IStringItem.class.isAssignableFrom(types.get(0)));
     assertTrue(IIntegerItem.class.isAssignableFrom(types.get(1)));
     assertTrue(IStringItem.class.isAssignableFrom(types.get(2)));
+  }
+
+  @Test
+  void testOfCollectionReturnsSequenceUnchanged() {
+    // When ofCollection receives an ISequence, it should return the same instance
+    ISequence<IAnyAtomicItem> original = ISequence.of(integer(1), integer(2));
+
+    ISequence<IAnyAtomicItem> result = ISequence.ofCollection(original);
+
+    // Should be the exact same instance, not a copy
+    assertSame(original, result);
   }
 }

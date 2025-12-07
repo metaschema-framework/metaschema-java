@@ -230,7 +230,7 @@ public final class FnAvg {
   private static <T extends IItem> Map<Class<? extends T>, Integer> countTypes(
       @NonNull java.util.Set<Class<? extends T>> classes,
       @NonNull Collection<? extends T> items) {
-    // Convert to List<T> for ISequence.ofCollection
+    // ISequence.ofCollection handles ISequence passthrough and List conversion
     List<T> itemList = items instanceof List
         ? (List<T>) items
         : ObjectUtils.notNull(items.stream().collect(Collectors.toList()));
