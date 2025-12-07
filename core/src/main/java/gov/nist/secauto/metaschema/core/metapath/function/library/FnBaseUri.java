@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -75,10 +76,13 @@ public final class FnBaseUri {
       IItem focus) {
     INodeItem nodeItem;
     if (focus == null) {
-      nodeItem = null;
+      // Per XPath 3.1: If the context item is absent, dynamic error [err:XPDY0002]
+      throw new ContextAbsentDynamicMetapathException(
+          "The context item is absent for fn:base-uri()");
     } else if (focus instanceof INodeItem) {
       nodeItem = (INodeItem) focus;
     } else {
+      // Per XPath 3.1: If the context item is not a node, type error [err:XPTY0004]
       throw new InvalidTypeMetapathException(
           focus,
           String.format("Expected type '%s', but the node was type '%s'.",

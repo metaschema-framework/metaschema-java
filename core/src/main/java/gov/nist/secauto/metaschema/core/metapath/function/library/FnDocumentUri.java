@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -72,8 +73,9 @@ public final class FnDocumentUri {
 
     ISequence<IAnyUriItem> retval;
     if (focus == null) {
-      // context item absent - handled by Metapath runtime
-      retval = ISequence.empty();
+      // Per XPath 3.1: If the context item is absent, dynamic error [err:XPDY0002]
+      throw new ContextAbsentDynamicMetapathException(
+          "The context item is absent for fn:document-uri()");
     } else if (focus instanceof IDocumentNodeItem) {
       retval = ISequence.of(fnDocumentUri((IDocumentNodeItem) focus));
     } else if (focus instanceof INodeItem) {

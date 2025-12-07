@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
@@ -70,6 +71,20 @@ class FnBaseUriTest
     assertThrows(InvalidTypeMetapathException.class, () -> {
       IMetapathExpression.compile("base-uri()", dynamicContext.getStaticContext())
           .evaluateAs(IStringItem.valueOf("test"), IMetapathExpression.ResultType.ITEM, dynamicContext);
+    });
+  }
+
+  /**
+   * Per XPath 3.1 spec, if the context item is absent, a dynamic error
+   * (err:XPDY0002) is raised.
+   */
+  @Test
+  void testContextAbsentThrowsDynamicError() {
+    DynamicContext dynamicContext = newDynamicContext();
+
+    assertThrows(ContextAbsentDynamicMetapathException.class, () -> {
+      IMetapathExpression.compile("base-uri()", dynamicContext.getStaticContext())
+          .evaluateAs(null, IMetapathExpression.ResultType.ITEM, dynamicContext);
     });
   }
 }

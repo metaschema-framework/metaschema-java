@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
@@ -75,7 +76,9 @@ public final class FnPath {
 
     ISequence<IStringItem> retval;
     if (focus == null) {
-      retval = ISequence.empty();
+      // Per XPath 3.1: If the context item is absent, dynamic error [err:XPDY0002]
+      throw new ContextAbsentDynamicMetapathException(
+          "The context item is absent for fn:path()");
     } else if (focus instanceof INodeItem) {
       retval = ISequence.of(fnPath((INodeItem) focus));
     } else {
