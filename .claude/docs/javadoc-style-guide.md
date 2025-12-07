@@ -23,10 +23,56 @@ Javadoc is **required** for all `protected` and `public` members:
 ### Exceptions
 
 Javadoc is **not required** for:
-- Methods annotated with `@Override` (inherited documentation applies)
+- Methods annotated with `@Override` (inherited documentation applies—see below for when to override)
 - Methods annotated with `@Test` (test method names should be self-documenting)
-- Private members
-- Package-private (default) members
+- Private members (but encouraged if complex—see below)
+- Package-private (default) members (but encouraged if complex—see below)
+
+### Private and Package-Private Members
+
+While not required, Javadoc **is encouraged** for private and package-private members when:
+- The implementation is complex or non-obvious
+- The member has important invariants or constraints
+- Future maintainers would benefit from understanding the design decision
+- The member interacts with other parts of the system in subtle ways
+
+```java
+/**
+ * Cache of resolved definitions, keyed by qualified name. Entries are
+ * lazily populated on first access and never evicted. Thread-safe via
+ * synchronized access in {@link #getDefinition}.
+ */
+private final Map<QName, IDefinition> definitionCache = new HashMap<>();
+```
+
+### Override Methods and {@inheritDoc}
+
+Methods annotated with `@Override` inherit documentation from the parent class or interface by default. However, you **should add or override Javadoc** when:
+
+- The implementation has behavior beyond what the parent documents
+- There are additional constraints, preconditions, or postconditions
+- The implementation throws additional exceptions
+- Performance characteristics differ significantly
+- The implementation has side effects not mentioned in the parent
+
+Use `{@inheritDoc}` to inherit the parent's documentation while adding implementation-specific details:
+
+```java
+/**
+ * {@inheritDoc}
+ * <p>
+ * This implementation additionally validates that the module has been
+ * initialized before returning the definition. Returns {@code null} if
+ * the module is in an uninitialized state.
+ *
+ * @throws IllegalStateException
+ *          if the module has been closed
+ */
+@Override
+public IDefinition getDefinition(QName name) {
+```
+
+When the override implementation is straightforward and fully described by the parent documentation, no additional Javadoc is needed.
 
 ## Structure and Formatting
 
@@ -85,9 +131,9 @@ When a tag description spans multiple lines, continuation lines must be indented
 ### Forbidden Patterns
 
 Do NOT start summaries with these patterns (enforced by Checkstyle):
-- `@return the *` - e.g., "Returns the value" (redundant with `@return` tag)
-- `This method returns ` - redundant phrasing
-- `A {@code ClassName} is a ` - weak opening
+- Patterns starting with `@return the`—e.g., "Returns the value" (redundant with `@return` tag)
+- Patterns starting with `This method returns`—redundant phrasing
+- Patterns like `A {@code ClassName} is a`—weak opening
 
 ### Good Summary Examples
 
@@ -137,6 +183,43 @@ Document all checked exceptions and significant unchecked exceptions:
  *          if an I/O error occurs while reading the file
  */
 ```
+
+### Deprecated Documentation
+
+When using `@deprecated`, you **must** clearly document:
+1. **Why** it is deprecated (the reason)
+2. **What** to use instead (the replacement)
+
+The `@deprecated` tag should include both pieces of information:
+
+```java
+/**
+ * Loads a module from the given path.
+ *
+ * @param path the file path to load
+ * @return the loaded module
+ * @deprecated This method does not support URI-based loading. Use
+ *          {@link #loadModule(URI)} instead, which provides consistent
+ *          handling of both file and classpath resources.
+ */
+@Deprecated
+public IModule loadModule(Path path) {
+```
+
+For classes and interfaces:
+```java
+/**
+ * Legacy parser for Metaschema v1 format.
+ *
+ * @deprecated The v1 format is no longer supported as of release 2.0.
+ *          Use {@link MetaschemaParser} which supports the current v2 format
+ *          and provides better error handling.
+ */
+@Deprecated
+public class LegacyMetaschemaParser {
+```
+
+**Note**: Always pair the `@deprecated` Javadoc tag with the `@Deprecated` annotation.
 
 ## Single-Line Javadoc
 
