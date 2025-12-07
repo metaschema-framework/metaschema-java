@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 
@@ -55,10 +56,10 @@ public class IntegerDivision
 
   @Override
   protected ISequence<? extends IIntegerItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
-    INumericItem dividend = FunctionUtils.toNumericOrNull(
-        ISequence.of(getLeft().accept(dynamicContext, focus).atomize()).getFirstItem(true));
-    INumericItem divisor = FunctionUtils.toNumericOrNull(
-        ISequence.of(getRight().accept(dynamicContext, focus).atomize()).getFirstItem(true));
+    IAnyAtomicItem leftItem = ISequence.of(getLeft().accept(dynamicContext, focus).atomize()).getFirstItem(true);
+    IAnyAtomicItem rightItem = ISequence.of(getRight().accept(dynamicContext, focus).atomize()).getFirstItem(true);
+    INumericItem dividend = leftItem == null ? null : FunctionUtils.castToNumeric(leftItem);
+    INumericItem divisor = rightItem == null ? null : FunctionUtils.castToNumeric(rightItem);
 
     return resultOrEmpty(dividend, divisor);
   }

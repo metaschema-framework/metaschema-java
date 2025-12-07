@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.impl.OperationFunctions;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.INumericItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -56,8 +57,10 @@ public class Modulo
 
   @Override
   protected ISequence<? extends INumericItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
-    INumericItem dividend = FunctionUtils.toNumeric(getLeft().accept(dynamicContext, focus), true);
-    INumericItem divisor = FunctionUtils.toNumeric(getRight().accept(dynamicContext, focus), true);
+    IAnyAtomicItem leftItem = ISequence.of(getLeft().accept(dynamicContext, focus).atomize()).getFirstItem(true);
+    IAnyAtomicItem rightItem = ISequence.of(getRight().accept(dynamicContext, focus).atomize()).getFirstItem(true);
+    INumericItem dividend = leftItem == null ? null : FunctionUtils.castToNumeric(leftItem);
+    INumericItem divisor = rightItem == null ? null : FunctionUtils.castToNumeric(rightItem);
     return resultOrEmpty(dividend, divisor);
   }
 
