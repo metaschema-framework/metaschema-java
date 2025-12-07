@@ -51,7 +51,7 @@ public final class FnDocumentUri {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(IDocumentNodeItem.type())
+          .type(INodeItem.type())
           .zeroOrOne()
           .build())
       .returnType(IAnyUriItem.type())

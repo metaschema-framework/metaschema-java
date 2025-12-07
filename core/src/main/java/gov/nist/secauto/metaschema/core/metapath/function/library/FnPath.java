@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -76,7 +77,7 @@ public final class FnPath {
     if (focus == null) {
       retval = ISequence.empty();
     } else if (focus instanceof INodeItem) {
-      retval = ISequence.of(IStringItem.valueOf(((INodeItem) focus).toPath(IPathFormatter.METAPATH_PATH_FORMATER)));
+      retval = ISequence.of(fnPath((INodeItem) focus));
     } else {
       throw new InvalidTypeMetapathException(
           focus,
@@ -136,6 +137,16 @@ public final class FnPath {
    */
   @Nullable
   public static IStringItem fnPath(@Nullable INodeItem item) {
-    return item == null ? null : IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER));
+    if (item == null) {
+      return null;
+    }
+    String path = item.toPath(IPathFormatter.METAPATH_PATH_FORMATER);
+    // Per XPath 3.1, document nodes return "/" for their path
+    // The MetapathFormatter returns empty string for document nodes
+    // (to enable proper joining), so we need to handle this case
+    if (item instanceof IDocumentNodeItem && path.isEmpty()) {
+      path = "/";
+    }
+    return IStringItem.valueOf(path);
   }
 }

@@ -13,8 +13,6 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
-import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -67,21 +65,13 @@ public final class FnData {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-
-    ISequence<IAnyAtomicItem> retval;
-    if (focus == null) {
-      retval = ISequence.empty();
-    } else if (focus instanceof INodeItem) {
-      IAnyAtomicItem data = ((INodeItem) focus).toAtomicItem();
-      retval = ISequence.of(data);
-    } else {
-      throw new InvalidTypeMetapathException(
-          focus,
-          String.format("Expected type '%s', but the node was type '%s'.",
-              INodeItem.class.getName(),
-              focus.getClass().getName()));
-    }
-    return retval;
+    // Per XPath 3.1 spec, fn:data() atomizes the context item:
+    // - Atomic values pass through unchanged
+    // - Nodes are replaced with their typed values
+    // - Arrays are flattened
+    return focus == null
+        ? ISequence.empty()
+        : ISequence.of(focus.atomize());
   }
 
   @SuppressWarnings("unused")
