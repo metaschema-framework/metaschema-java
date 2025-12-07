@@ -8,7 +8,6 @@ package gov.nist.secauto.metaschema.core.metapath.function.library;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
-import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
@@ -73,13 +72,17 @@ public final class FnPath {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-    INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);
-
     ISequence<IStringItem> retval;
-    if (item == null) {
+    if (focus == null) {
       retval = ISequence.empty();
+    } else if (focus instanceof INodeItem) {
+      retval = ISequence.of(IStringItem.valueOf(((INodeItem) focus).toPath(IPathFormatter.METAPATH_PATH_FORMATER)));
     } else {
-      retval = ISequence.of(IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER)));
+      throw new InvalidTypeMetapathException(
+          focus,
+          String.format("Expected type '%s', but the node was type '%s'.",
+              INodeItem.class.getName(),
+              focus.getClass().getName()));
     }
     return retval;
   }

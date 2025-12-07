@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -67,14 +68,18 @@ public final class FnData {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-    INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);
-
     ISequence<IAnyAtomicItem> retval;
-    if (item == null) {
+    if (focus == null) {
       retval = ISequence.empty();
-    } else {
-      IAnyAtomicItem data = item.toAtomicItem();
+    } else if (focus instanceof INodeItem) {
+      IAnyAtomicItem data = ((INodeItem) focus).toAtomicItem();
       retval = ISequence.of(data);
+    } else {
+      throw new InvalidTypeMetapathException(
+          focus,
+          String.format("Expected type '%s', but the node was type '%s'.",
+              INodeItem.class.getName(),
+              focus.getClass().getName()));
     }
     return retval;
   }

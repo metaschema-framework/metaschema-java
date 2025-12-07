@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -69,11 +70,24 @@ public final class FnDocumentUri {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-    INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);
-
-    return item instanceof IDocumentNodeItem
-        ? ISequence.of(fnDocumentUri((IDocumentNodeItem) item))
-        : ISequence.empty();
+    ISequence<IAnyUriItem> retval;
+    if (focus == null) {
+      // context item absent - handled by Metapath runtime
+      retval = ISequence.empty();
+    } else if (focus instanceof IDocumentNodeItem) {
+      retval = ISequence.of(fnDocumentUri((IDocumentNodeItem) focus));
+    } else if (focus instanceof INodeItem) {
+      // node item but not a document - return empty sequence per XPath spec
+      retval = ISequence.empty();
+    } else {
+      // not a node at all - throw type error per XPath spec
+      throw new InvalidTypeMetapathException(
+          focus,
+          String.format("Expected type '%s', but the node was type '%s'.",
+              INodeItem.class.getName(),
+              focus.getClass().getName()));
+    }
+    return retval;
   }
 
   @SuppressWarnings("unused")

@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -80,7 +81,16 @@ public final class MpRecurseDepth {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-    ISequence<INodeItem> initalContext = ISequence.of(FunctionUtils.requireType(INodeItem.class, focus));
+    if (!(focus instanceof INodeItem)) {
+      throw new InvalidTypeMetapathException(
+          focus,
+          focus == null
+              ? String.format("Expected non-null type '%s', but the node was null.", INodeItem.class.getName())
+              : String.format("Expected type '%s', but the node was type '%s'.",
+                  INodeItem.class.getName(),
+                  focus.getClass().getName()));
+    }
+    ISequence<INodeItem> initalContext = ISequence.of((INodeItem) focus);
 
     ISequence<? extends IStringItem> arg = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
     IStringItem recursionPath = ObjectUtils.requireNonNull(arg.getFirstItem(true));

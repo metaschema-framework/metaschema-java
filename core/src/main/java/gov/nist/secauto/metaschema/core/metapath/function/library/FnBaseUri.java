@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -72,8 +73,19 @@ public final class FnBaseUri {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    return ISequence.of(fnBaseUri(
-        FunctionUtils.requireTypeOrNull(INodeItem.class, focus)));
+    INodeItem nodeItem;
+    if (focus == null) {
+      nodeItem = null;
+    } else if (focus instanceof INodeItem) {
+      nodeItem = (INodeItem) focus;
+    } else {
+      throw new InvalidTypeMetapathException(
+          focus,
+          String.format("Expected type '%s', but the node was type '%s'.",
+              INodeItem.class.getName(),
+              focus.getClass().getName()));
+    }
+    return ISequence.of(fnBaseUri(nodeItem));
   }
 
   @SuppressWarnings("unused")
