@@ -140,7 +140,8 @@ mvn -pl core test -Dtest=FnCountTest#testCount
 ## Git Workflow
 
 - Repository: https://github.com/metaschema-framework/metaschema-java
-- New PRs target the `develop` branch
+- **All PRs MUST be created from a personal fork** (BLOCKING - required by CONTRIBUTING.md)
+- **All PRs MUST target the `develop` branch** (BLOCKING - required by CONTRIBUTING.md)
 - Clone with submodules: `git clone --recurse-submodules`
 - All changes require PR review (CODEOWNERS enforced)
 - Squash non-relevant commits before submitting PR (BLOCKING)
