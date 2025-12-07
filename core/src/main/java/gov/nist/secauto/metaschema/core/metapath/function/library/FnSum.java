@@ -118,7 +118,8 @@ public final class FnSum {
    */
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
-      "PMD.CyclomaticComplexity" // ok
+      "PMD.CyclomaticComplexity", // ok
+      "unchecked" // safe cast for wildcard type
   })
   @Nullable
   public static IAnyAtomicItem sum(
@@ -134,9 +135,9 @@ public final class FnSum {
 
     // tell cpd to start ignoring code - CPD-OFF
 
-    Map<Class<? extends IAnyAtomicItem>, Integer> typeCounts = FunctionUtils.countTypes(
-        OperationFunctions.aggregateMathTypes(),
-        ObjectUtils.notNull(items));
+    Map<Class<? extends IAnyAtomicItem>, Integer> typeCounts = ISequence
+        .ofCollection((List<IAnyAtomicItem>) items)
+        .countTypes(OperationFunctions.aggregateMathTypes());
 
     int count = items.size();
     int dayTimeCount = typeCounts.getOrDefault(IDayTimeDurationItem.class, 0);

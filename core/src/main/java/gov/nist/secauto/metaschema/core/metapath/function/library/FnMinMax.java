@@ -195,10 +195,11 @@ public final class FnMinMax {
         .collect(Collectors.toList()));
   }
 
+  @SuppressWarnings("unchecked")
   @NonNull
   private static Map<Class<? extends IAnyAtomicItem>, Integer> countItemTypes(
       @NonNull List<? extends IAnyAtomicItem> items) {
-    return FunctionUtils.countTypes(PRIMITIVE_ITEM_TYPES, items);
+    return ISequence.ofCollection((List<IAnyAtomicItem>) items).countTypes(PRIMITIVE_ITEM_TYPES);
   }
 
   @SuppressWarnings("PMD.OnlyOneReturn")
@@ -227,11 +228,13 @@ public final class FnMinMax {
     }
 
     // No valid conversion possible
+    @SuppressWarnings("unchecked")
+    List<IAnyAtomicItem> itemList = (List<IAnyAtomicItem>) items;
     throw new InvalidArgumentFunctionException(
         InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
         String.format(
             "Values must all be of a single atomic type. Found multiple types: [%s]",
-            FunctionUtils.getTypes(items).stream()
+            ISequence.ofCollection(itemList).getItemTypes().stream()
                 .map(Class::getSimpleName)
                 .collect(Collectors.joining(", "))));
   }
