@@ -22,7 +22,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationI
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -119,7 +118,8 @@ public final class FnSum {
    */
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
-      "PMD.CyclomaticComplexity" // ok
+      "PMD.CyclomaticComplexity", // ok
+      "unchecked" // safe cast for wildcard type
   })
   @Nullable
   public static IAnyAtomicItem sum(
@@ -135,7 +135,8 @@ public final class FnSum {
 
     // tell cpd to start ignoring code - CPD-OFF
 
-    Map<Class<? extends IAnyAtomicItem>, Integer> typeCounts = ISequence.ofCollection(new ArrayList<>(items))
+    Map<Class<? extends IAnyAtomicItem>, Integer> typeCounts = ISequence
+        .ofCollection((List<IAnyAtomicItem>) items)
         .countTypes(OperationFunctions.aggregateMathTypes());
 
     int count = items.size();
