@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * The base class for {@link IArrayItem} implementations, that provides an
@@ -35,12 +36,19 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
     implements IArrayItem<ITEM>, IFeatureCollectionFunctionItem {
   @NonNull
   private static final IEnhancedQName QNAME = IEnhancedQName.of("array");
+  /**
+   * The function arguments, lazily initialized to prevent class initialization
+   * deadlock when multiple threads trigger class loading simultaneously.
+   */
   @NonNull
-  private static final List<IArgument> ARGUMENTS = ObjectUtils.notNull(List.of(
-      IArgument.builder().name("position").type(IIntegerItem.type()).one().build()));
-
+  private static final Lazy<List<IArgument>> ARGUMENTS = ObjectUtils.notNull(Lazy.of(() -> ObjectUtils.notNull(List.of(
+      IArgument.builder().name("position").type(IIntegerItem.type()).one().build()))));
+  /**
+   * An empty array item singleton, lazily initialized to prevent class
+   * initialization deadlock.
+   */
   @NonNull
-  private static final IArrayItem<?> EMPTY = new ArrayItemN<>();
+  private static final Lazy<IArrayItem<?>> EMPTY = ObjectUtils.notNull(Lazy.of(ArrayItemN::new));
 
   /**
    * Get an immutable array item that is empty.
@@ -52,7 +60,7 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
   @SuppressWarnings("unchecked")
   @NonNull
   public static <T extends ICollectionValue> IArrayItem<T> empty() {
-    return (IArrayItem<T>) EMPTY;
+    return (IArrayItem<T>) EMPTY.get();
   }
 
   @Override
@@ -62,7 +70,7 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
 
   @Override
   public List<IArgument> getArguments() {
-    return ARGUMENTS;
+    return ARGUMENTS.get();
   }
 
   @Override
