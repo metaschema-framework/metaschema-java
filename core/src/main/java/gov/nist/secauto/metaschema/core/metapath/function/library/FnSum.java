@@ -22,6 +22,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IYearMonthDurationI
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -134,9 +135,8 @@ public final class FnSum {
 
     // tell cpd to start ignoring code - CPD-OFF
 
-    Map<Class<? extends IAnyAtomicItem>, Integer> typeCounts = FunctionUtils.countTypes(
-        OperationFunctions.aggregateMathTypes(),
-        ObjectUtils.notNull(items));
+    Map<Class<? extends IAnyAtomicItem>, Integer> typeCounts = ISequence.ofCollection(new ArrayList<>(items))
+        .countTypes(OperationFunctions.aggregateMathTypes());
 
     int count = items.size();
     int dayTimeCount = typeCounts.getOrDefault(IDayTimeDurationItem.class, 0);

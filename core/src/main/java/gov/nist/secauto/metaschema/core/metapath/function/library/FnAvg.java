@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -93,7 +94,7 @@ public final class FnAvg {
 
     // tell cpd to start ignoring code - CPD-OFF
 
-    Map<Class<? extends IAnyAtomicItem>, Integer> typeCounts = FunctionUtils.countTypes(
+    Map<Class<? extends IAnyAtomicItem>, Integer> typeCounts = countTypes(
         OperationFunctions.aggregateMathTypes(),
         ObjectUtils.notNull(items));
 
@@ -210,5 +211,29 @@ public final class FnAvg {
         items,
         (BinaryOperator<INumericItem>) OperationFunctions::opNumericAdd,
         (BiFunction<INumericItem, IIntegerItem, IDecimalItem>) OperationFunctions::opNumericDivide);
+  }
+
+  /**
+   * Count the occurrences of the provided data type item classes in the
+   * collection of items.
+   *
+   * @param <T>
+   *          the base item type
+   * @param classes
+   *          the set of classes to count
+   * @param items
+   *          the items to analyze
+   * @return a mapping of class to count
+   */
+  @SuppressWarnings("unchecked")
+  @NonNull
+  private static <T extends IItem> Map<Class<? extends T>, Integer> countTypes(
+      @NonNull java.util.Set<Class<? extends T>> classes,
+      @NonNull Collection<? extends T> items) {
+    // Convert to List<T> for ISequence.ofCollection
+    List<T> itemList = items instanceof List
+        ? (List<T>) items
+        : ObjectUtils.notNull(items.stream().collect(Collectors.toList()));
+    return ISequence.ofCollection(itemList).countTypes(classes);
   }
 }

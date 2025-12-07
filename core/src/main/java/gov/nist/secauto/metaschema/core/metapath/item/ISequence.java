@@ -18,8 +18,12 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -592,5 +596,46 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
         : collection.isEmpty()
             ? empty()
             : new SequenceN<>(new ArrayList<>(collection));
+  }
+
+  /**
+   * Count the occurrences of items in this sequence that are instances of the
+   * provided type classes.
+   * <p>
+   * For each class in the provided set, this method counts how many items in the
+   * sequence are assignable to that class.
+   *
+   * @param <T>
+   *          the base type of the classes to count
+   * @param classes
+   *          the set of classes to count occurrences for
+   * @return a map from each class to the count of matching items
+   */
+  @NonNull
+  default <T extends IItem> Map<Class<? extends T>, Integer> countTypes(
+      @NonNull Set<Class<? extends T>> classes) {
+    Map<Class<? extends T>, Integer> retval = new HashMap<>();
+    for (ITEM item : this) {
+      Class<?> itemClass = item.getClass();
+      for (Class<? extends T> clazz : classes) {
+        if (clazz.isAssignableFrom(itemClass)) {
+          retval.compute(clazz, (cl, current) -> current == null ? 1 : current + 1);
+        }
+      }
+    }
+    return retval;
+  }
+
+  /**
+   * Get a list of the Java class types for each item in this sequence.
+   *
+   * @return a list of class types corresponding to each item in the sequence
+   */
+  @SuppressWarnings("unchecked")
+  @NonNull
+  default List<Class<? extends ITEM>> getItemTypes() {
+    return ObjectUtils.notNull(safeStream()
+        .map(item -> (Class<? extends ITEM>) item.getClass())
+        .collect(Collectors.toList()));
   }
 }

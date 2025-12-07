@@ -26,6 +26,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -198,7 +199,7 @@ public final class FnMinMax {
   @NonNull
   private static Map<Class<? extends IAnyAtomicItem>, Integer> countItemTypes(
       @NonNull List<? extends IAnyAtomicItem> items) {
-    return FunctionUtils.countTypes(PRIMITIVE_ITEM_TYPES, items);
+    return ISequence.ofCollection(new ArrayList<>(items)).countTypes(PRIMITIVE_ITEM_TYPES);
   }
 
   @SuppressWarnings("PMD.OnlyOneReturn")
@@ -231,7 +232,7 @@ public final class FnMinMax {
         InvalidArgumentFunctionException.INVALID_ARGUMENT_TYPE,
         String.format(
             "Values must all be of a single atomic type. Found multiple types: [%s]",
-            FunctionUtils.getTypes(items).stream()
+            ISequence.ofCollection(new ArrayList<>(items)).getItemTypes().stream()
                 .map(Class::getSimpleName)
                 .collect(Collectors.joining(", "))));
   }
