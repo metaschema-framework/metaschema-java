@@ -303,6 +303,8 @@ Use HTML sparingly for formatting:
 
 ## Verification
 
+These commands require Maven to be configured. See [CLAUDE.md](../CLAUDE.md) for build setup instructions.
+
 Run Checkstyle to verify Javadoc compliance:
 ```bash
 mvn checkstyle:check
