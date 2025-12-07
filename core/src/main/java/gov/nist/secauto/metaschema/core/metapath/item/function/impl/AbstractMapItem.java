@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
  * The base class for {@link IMapItem} implementations, that provide an
@@ -43,13 +44,18 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
   @NonNull
   private static final IEnhancedQName QNAME = IEnhancedQName.of("map");
   /**
-   * The function arguments.
+   * The function arguments, lazily initialized to prevent class initialization
+   * deadlock when multiple threads trigger class loading simultaneously.
    */
   @NonNull
-  private static final List<IArgument> ARGUMENTS = ObjectUtils.notNull(List.of(
-      IArgument.builder().name("key").type(IAnyAtomicItem.type()).one().build()));
+  private static final Lazy<List<IArgument>> ARGUMENTS = ObjectUtils.notNull(Lazy.of(() -> ObjectUtils.notNull(List.of(
+      IArgument.builder().name("key").type(IAnyAtomicItem.type()).one().build()))));
+  /**
+   * An empty map item singleton, lazily initialized to prevent class
+   * initialization deadlock.
+   */
   @NonNull
-  private static final IMapItem<?> EMPTY = new MapItemN<>();
+  private static final Lazy<IMapItem<?>> EMPTY = ObjectUtils.notNull(Lazy.of(MapItemN::new));
 
   /**
    * Get an immutable map item that is empty.
@@ -62,7 +68,7 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
   @SuppressWarnings("unchecked")
   @NonNull
   public static <V extends ICollectionValue> IMapItem<V> empty() {
-    return (IMapItem<V>) EMPTY;
+    return (IMapItem<V>) EMPTY.get();
   }
 
   @Override
@@ -72,7 +78,7 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
 
   @Override
   public List<IArgument> getArguments() {
-    return ARGUMENTS;
+    return ARGUMENTS.get();
   }
 
   @Override
