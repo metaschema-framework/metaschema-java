@@ -150,37 +150,48 @@ Math operations in CST package.
 
 ---
 
-### PR 4: Fix FunctionUtils Deprecation (Function Library)
+### PR 4: Fix FunctionUtils Deprecation (Function Library) ✅ COMPLETED
 
 | Attribute | Value |
 |-----------|-------|
-| **Files Changed** | ~5 |
+| **Files Changed** | 5 (3 source + 1 test + 1 interface) |
 | **Risk Level** | Medium |
 | **Dependencies** | PR 3 |
 | **Target Branch** | develop |
+| **Status** | ✅ Completed 2025-12-07 |
+| **Pull Request** | [#520](https://github.com/metaschema-framework/metaschema-java/pull/520) |
 
 #### Focus
 Function library classes that use deprecated FunctionUtils methods.
 
-#### Files to Modify
+#### Files Modified
 
-| File | Line(s) | Method |
-|------|---------|--------|
-| `core/.../function/library/FnAvg.java` | 96 | `countTypes()` |
-| `core/.../function/library/FnMinMax.java` | 201, 234 | `countTypes()`, `getTypes()` |
-| `core/.../function/library/FnSum.java` | 137 | `countTypes()` |
+| File | Changes |
+|------|---------|
+| `core/.../item/ISequence.java` | Added `countTypes()` and `getItemTypes()` methods; optimized `ofCollection()` to return ISequence unchanged |
+| `core/.../function/library/FnAvg.java` | Added private `countTypes()` helper using ISequence methods |
+| `core/.../function/library/FnMinMax.java` | Replaced `FunctionUtils.countTypes()` and `getTypes()` with ISequence methods |
+| `core/.../function/library/FnSum.java` | Replaced `FunctionUtils.countTypes()` with ISequence method |
 
-#### Implementation Approach
+#### Test Files Added/Modified
 
-1. Replace `countTypes()` calls with inline type counting logic
-2. Replace `getTypes()` calls with inline type extraction
+| File | Tests | Description |
+|------|-------|-------------|
+| `core/.../metapath/ISequenceTest.java` | 9 | Tests for `countTypes()`, `getItemTypes()`, and `ofCollection()` passthrough behavior |
+
+#### Implementation Findings
+
+1. **ISequence enhancements**: Added type utility methods directly to ISequence interface for reuse across function library
+2. **Performance optimization**: `ofCollection()` now returns ISequence unchanged when input is already a sequence, avoiding unnecessary wrapping
+3. **Documentation**: Added comprehensive Javadoc documenting defensive copy behavior (or lack thereof)
 
 #### Acceptance Criteria
 
-- [ ] Tests written/updated before code changes (TDD)
-- [ ] No deprecated `FunctionUtils.countTypes()` calls
-- [ ] No deprecated `FunctionUtils.getTypes()` calls
-- [ ] All Metapath function tests pass
+- [x] Tests written/updated before code changes (TDD) - 9 new tests for ISequence methods
+- [x] No deprecated `FunctionUtils.countTypes()` calls
+- [x] No deprecated `FunctionUtils.getTypes()` calls
+- [x] All Metapath function tests pass
+- [x] New ISequence methods documented with Javadoc
 
 ---
 
@@ -415,7 +426,7 @@ Type requirement methods and remaining usages.
 | 1 | Fix finalize() deprecation | 2 | Medium | None | ✅ [#512](https://github.com/metaschema-framework/metaschema-java/pull/512) |
 | 2 | Fix @Component deprecation | 1 | Low | None | ✅ [#513](https://github.com/metaschema-framework/metaschema-java/pull/513) |
 | 3 | Fix FunctionUtils (math ops) | 11 | Medium | None | ✅ [#514](https://github.com/metaschema-framework/metaschema-java/pull/514) |
-| 4 | Fix FunctionUtils (function library) | ~5 | Medium | PR 3 | Pending |
+| 4 | Fix FunctionUtils (function library) | 5 | Medium | PR 3 | ✅ [#520](https://github.com/metaschema-framework/metaschema-java/pull/520) |
 | 5 | Fix FunctionUtils (type requirements) | ~6 | Medium | PR 4 (recommended) | Pending |
 | 6 | Fix INcNameItem deprecation | ~5 | Medium | None | Pending |
 | 7 | Javadoc: core/model | ~40-50 | Low | None | Pending |
@@ -426,7 +437,7 @@ Type requirement methods and remaining usages.
 | 12 | Javadoc: remaining | ~20-30 | Low | None | Pending |
 
 **Total Estimated PRs**: 12
-**Completed PRs**: 3
+**Completed PRs**: 4
 **Total Estimated Files**: ~250-300 (within limits when split across PRs)
 
 ## Related Issues
