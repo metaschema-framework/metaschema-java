@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -250,6 +251,47 @@ final class ModuleBuilder
     for (IAssemblyDefinition def : assemblyDefs) {
       Integer index = def.getDefinitionQName().getIndexPosition();
       doReturn(def).when(module).getAssemblyDefinitionByName(eq(index));
+    }
+
+    // Set up export methods - for modules without imports, exported equals local
+    doReturn(CollectionUtil.unmodifiableList(flagDefs)).when(module).getExportedFlagDefinitions();
+    doReturn(CollectionUtil.unmodifiableList(fieldDefs)).when(module).getExportedFieldDefinitions();
+    doReturn(CollectionUtil.unmodifiableList(assemblyDefs)).when(module).getExportedAssemblyDefinitions();
+
+    // Root assembly definitions - assemblies that have rootQName set
+    List<IAssemblyDefinition> rootDefs = assemblyDefs.stream()
+        .filter(def -> def.getRootQName() != null)
+        .collect(Collectors.toList());
+    doReturn(CollectionUtil.unmodifiableList(rootDefs)).when(module).getRootAssemblyDefinitions();
+    doReturn(CollectionUtil.unmodifiableList(rootDefs)).when(module).getExportedRootAssemblyDefinitions();
+
+    // Set up root assembly lookup by name
+    for (IAssemblyDefinition rootDef : rootDefs) {
+      IEnhancedQName rootQName = rootDef.getRootQName();
+      if (rootQName != null) {
+        Integer rootIndex = rootQName.getIndexPosition();
+        doReturn(rootDef).when(module).getExportedRootAssemblyDefinitionByName(eq(rootIndex));
+      }
+    }
+
+    // Combined assembly and field definitions
+    List<Object> assemblyAndFieldDefs = new ArrayList<>();
+    assemblyAndFieldDefs.addAll(assemblyDefs);
+    assemblyAndFieldDefs.addAll(fieldDefs);
+    doReturn(CollectionUtil.unmodifiableList(assemblyAndFieldDefs)).when(module).getAssemblyAndFieldDefinitions();
+
+    // Scoped methods - for modules without imports, scoped equals local
+    for (IFlagDefinition def : flagDefs) {
+      IEnhancedQName qname = def.getDefinitionQName();
+      doReturn(def).when(module).getScopedFlagDefinitionByName(eq(qname));
+    }
+    for (IFieldDefinition def : fieldDefs) {
+      Integer index = def.getDefinitionQName().getIndexPosition();
+      doReturn(def).when(module).getScopedFieldDefinitionByName(eq(index));
+    }
+    for (IAssemblyDefinition def : assemblyDefs) {
+      Integer index = def.getDefinitionQName().getIndexPosition();
+      doReturn(def).when(module).getScopedAssemblyDefinitionByName(eq(index));
     }
   }
 }

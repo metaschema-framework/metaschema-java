@@ -219,6 +219,89 @@ class ModuleBuilderTest {
   }
 
   @Test
+  void testExportedDefinitions() {
+    // Given
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create("https://example.com/test"));
+
+    // When
+    IModule module = mocking.module()
+        .namespace(TEST_NAMESPACE)
+        .shortName(TEST_SHORT_NAME)
+        .version(TEST_VERSION)
+        .source(source)
+        .flag(mocking.flag().name("test-flag"))
+        .field(mocking.field().name("test-field"))
+        .assembly(mocking.assembly().name("test-assembly"))
+        .toModule();
+
+    // Then - exported should equal local (no imports)
+    assertEquals(module.getFlagDefinitions().size(),
+        module.getExportedFlagDefinitions().size(),
+        "Exported flags should equal local flags");
+    assertEquals(module.getFieldDefinitions().size(),
+        module.getExportedFieldDefinitions().size(),
+        "Exported fields should equal local fields");
+    assertEquals(module.getAssemblyDefinitions().size(),
+        module.getExportedAssemblyDefinitions().size(),
+        "Exported assemblies should equal local assemblies");
+  }
+
+  @Test
+  void testRootAssemblyDefinitions() {
+    // Given
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create("https://example.com/test"));
+
+    // When - create one root assembly and one non-root assembly
+    IModule module = mocking.module()
+        .namespace(TEST_NAMESPACE)
+        .shortName(TEST_SHORT_NAME)
+        .version(TEST_VERSION)
+        .source(source)
+        .assembly(mocking.assembly()
+            .name("root-assembly")
+            .rootName("root"))
+        .assembly(mocking.assembly().name("non-root-assembly"))
+        .toModule();
+
+    // Then
+    assertEquals(2, module.getAssemblyDefinitions().size(), "Should have two assembly definitions");
+    assertEquals(1, module.getRootAssemblyDefinitions().size(), "Should have one root assembly");
+
+    IAssemblyDefinition rootDef = module.getRootAssemblyDefinitions().iterator().next();
+    assertEquals("root-assembly", rootDef.getName(), "Root assembly name should match");
+    assertNotNull(rootDef.getRootQName(), "Root assembly should have rootQName set");
+
+    // Exported roots should be same as local roots
+    assertEquals(module.getRootAssemblyDefinitions().size(),
+        module.getExportedRootAssemblyDefinitions().size(),
+        "Exported roots should equal local roots");
+  }
+
+  @Test
+  void testAssemblyAndFieldDefinitions() {
+    // Given
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create("https://example.com/test"));
+
+    // When
+    IModule module = mocking.module()
+        .namespace(TEST_NAMESPACE)
+        .shortName(TEST_SHORT_NAME)
+        .version(TEST_VERSION)
+        .source(source)
+        .field(mocking.field().name("field1"))
+        .field(mocking.field().name("field2"))
+        .assembly(mocking.assembly().name("assembly1"))
+        .toModule();
+
+    // Then - combined list should have both
+    assertEquals(3, module.getAssemblyAndFieldDefinitions().size(),
+        "Combined list should have 2 fields + 1 assembly = 3");
+  }
+
+  @Test
   void testModuleDefinitionLookup() {
     // Given
     MockedModelTestSupport mocking = new MockedModelTestSupport();
