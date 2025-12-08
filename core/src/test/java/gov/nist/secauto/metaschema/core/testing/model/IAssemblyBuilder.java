@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.core.testing.model;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -107,4 +108,14 @@ public interface IAssemblyBuilder extends IModelBuilder<IAssemblyBuilder> {
    */
   @NonNull
   IAssemblyDefinition toDefinition();
+
+  /**
+   * Build a mocked assembly definition associated with the given module.
+   *
+   * @param module
+   *          the containing module
+   * @return the new mocked definition
+   */
+  @NonNull
+  IAssemblyDefinition toDefinition(@NonNull IModule module);
 }

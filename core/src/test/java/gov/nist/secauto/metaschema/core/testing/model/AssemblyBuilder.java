@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelElement;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.ISource;
@@ -116,13 +117,19 @@ final class AssemblyBuilder
   @Override
   @NonNull
   public IAssemblyDefinition toDefinition() {
+    return toDefinition(null);
+  }
+
+  @Override
+  @NonNull
+  public IAssemblyDefinition toDefinition(@Nullable IModule module) {
     validate();
 
     // already validated as non-null
     ISource source = ObjectUtils.notNull(getSource());
 
     IAssemblyDefinition retval = mock(IAssemblyDefinition.class);
-    applyDefinition(retval);
+    applyDefinition(retval, module);
 
     Map<IEnhancedQName, IFlagInstance> flags = getFlags().stream()
         .map(builder -> builder.source(source).toInstance(retval))

@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * A builder for creating mock {@link IModule} instances for testing purposes.
@@ -87,6 +88,36 @@ public interface IModuleBuilder {
    */
   @NonNull
   IModuleBuilder source(@NonNull ISource source);
+
+  /**
+   * Add a flag definition to the module.
+   *
+   * @param flag
+   *          the flag builder to add
+   * @return this builder
+   */
+  @NonNull
+  IModuleBuilder flag(@Nullable IFlagBuilder flag);
+
+  /**
+   * Add a field definition to the module.
+   *
+   * @param field
+   *          the field builder to add
+   * @return this builder
+   */
+  @NonNull
+  IModuleBuilder field(@Nullable IFieldBuilder field);
+
+  /**
+   * Add an assembly definition to the module.
+   *
+   * @param assembly
+   *          the assembly builder to add
+   * @return this builder
+   */
+  @NonNull
+  IModuleBuilder assembly(@Nullable IAssemblyBuilder assembly);
 
   /**
    * Build the mock module.

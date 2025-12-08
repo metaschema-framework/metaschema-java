@@ -12,12 +12,14 @@ import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvi
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelElement;
 import gov.nist.secauto.metaschema.core.model.ModelType;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * A builder that generates mock flag definitions and instances.
@@ -83,10 +85,16 @@ final class FlagBuilder
   @Override
   @NonNull
   public IFlagDefinition toDefinition() {
+    return toDefinition(null);
+  }
+
+  @Override
+  @NonNull
+  public IFlagDefinition toDefinition(@Nullable IModule module) {
     validate();
 
     IFlagDefinition retval = mock(IFlagDefinition.class);
-    applyDefinition(retval);
+    applyDefinition(retval, module);
 
     doReturn(new ValueConstraintSet(ObjectUtils.notNull(getSource()))).when(retval).getConstraintSupport();
     doReturn(dataTypeAdapter).when(retval).getJavaTypeAdapter();
