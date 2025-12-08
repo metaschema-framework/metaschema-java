@@ -85,7 +85,7 @@ public final class FnDocumentUri {
       // not a node at all - throw type error per XPath spec
       throw new InvalidTypeMetapathException(
           focus,
-          String.format("Expected type '%s', but the item was type '%s'.",
+          String.format("Expected type '%s', but the context item was type '%s'.",
               INodeItem.class.getName(),
               focus.getClass().getName()));
     }
