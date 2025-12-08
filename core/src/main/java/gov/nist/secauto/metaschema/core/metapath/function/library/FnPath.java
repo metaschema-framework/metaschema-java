@@ -5,15 +5,16 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
-import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
 import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
 import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -73,13 +74,19 @@ public final class FnPath {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-    INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);
-
     ISequence<IStringItem> retval;
-    if (item == null) {
-      retval = ISequence.empty();
+    if (focus == null) {
+      // Per XPath 3.1: If the context item is absent, dynamic error [err:XPDY0002]
+      throw new ContextAbsentDynamicMetapathException(
+          "The context item is absent for fn:path()");
+    } else if (focus instanceof INodeItem) {
+      retval = ISequence.of(fnPath((INodeItem) focus));
     } else {
-      retval = ISequence.of(IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER)));
+      throw new InvalidTypeMetapathException(
+          focus,
+          String.format("Expected type '%s', but the context item was type '%s'.",
+              INodeItem.class.getName(),
+              focus.getClass().getName()));
     }
     return retval;
   }
@@ -133,6 +140,16 @@ public final class FnPath {
    */
   @Nullable
   public static IStringItem fnPath(@Nullable INodeItem item) {
-    return item == null ? null : IStringItem.valueOf(item.toPath(IPathFormatter.METAPATH_PATH_FORMATER));
+    if (item == null) {
+      return null;
+    }
+    String path = item.toPath(IPathFormatter.METAPATH_PATH_FORMATER);
+    // Per XPath 3.1, document nodes return "/" for their path
+    // The MetapathFormatter returns empty string for document nodes
+    // (to enable proper joining), so we need to handle this case
+    if (item instanceof IDocumentNodeItem && path.isEmpty()) {
+      path = "/";
+    }
+    return IStringItem.valueOf(path);
   }
 }

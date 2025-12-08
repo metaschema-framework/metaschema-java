@@ -35,8 +35,16 @@ public interface IMetapathExpression extends IExpression {
      * The result is expected to be a {@link BigDecimal} value.
      */
     NUMBER(BigDecimal.class, sequence -> {
-      INumericItem numeric = FunctionUtils.toNumeric(sequence, true);
-      return numeric == null ? null : numeric.asDecimal();
+      IItem item = sequence.getFirstItem(true);
+      if (item == null) {
+        return null;
+      }
+      IAnyAtomicItem atomicItem = ISequence.getFirstItem(item.atomize(), true);
+      if (atomicItem == null) {
+        throw new InvalidTypeMetapathException(item, "Unable to cast to numeric: atomization returned null");
+      }
+      INumericItem numeric = FunctionUtils.castToNumeric(atomicItem);
+      return numeric.asDecimal();
     }),
     /**
      * The result is expected to be a {@link String} value.

@@ -13,7 +13,6 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -66,17 +65,13 @@ public final class FnData {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-
-    INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);
-
-    ISequence<IAnyAtomicItem> retval;
-    if (item == null) {
-      retval = ISequence.empty();
-    } else {
-      IAnyAtomicItem data = item.toAtomicItem();
-      retval = ISequence.of(data);
-    }
-    return retval;
+    // Per XPath 3.1 spec, fn:data() atomizes the context item:
+    // - Atomic values pass through unchanged
+    // - Nodes are replaced with their typed values
+    // - Arrays are flattened
+    return focus == null
+        ? ISequence.empty()
+        : ISequence.of(focus.atomize());
   }
 
   @SuppressWarnings("unused")

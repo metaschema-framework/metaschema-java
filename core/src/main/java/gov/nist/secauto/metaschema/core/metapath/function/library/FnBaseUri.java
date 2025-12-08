@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -14,6 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
@@ -72,8 +74,22 @@ public final class FnBaseUri {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    return ISequence.of(fnBaseUri(
-        FunctionUtils.requireTypeOrNull(INodeItem.class, focus)));
+    INodeItem nodeItem;
+    if (focus == null) {
+      // Per XPath 3.1: If the context item is absent, dynamic error [err:XPDY0002]
+      throw new ContextAbsentDynamicMetapathException(
+          "The context item is absent for fn:base-uri()");
+    } else if (focus instanceof INodeItem) {
+      nodeItem = (INodeItem) focus;
+    } else {
+      // Per XPath 3.1: If the context item is not a node, type error [err:XPTY0004]
+      throw new InvalidTypeMetapathException(
+          focus,
+          String.format("Expected type '%s', but the context item was type '%s'.",
+              INodeItem.class.getName(),
+              focus.getClass().getName()));
+    }
+    return ISequence.of(fnBaseUri(nodeItem));
   }
 
   @SuppressWarnings("unused")

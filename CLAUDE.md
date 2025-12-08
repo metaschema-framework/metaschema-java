@@ -87,6 +87,18 @@ metaschema-framework (parent)
 - **datatype/** - Data type adapters for Metaschema types
 - **mdm/** - Metaschema Document Model node items
 
+### Metapath and XPath 3.1
+
+Metapath is an implementation of XPath 3.1. The [XPath 3.1 specification](https://www.w3.org/TR/xpath-31/) and [XPath Functions 3.1](https://www.w3.org/TR/xpath-functions-31/) should be used as the authoritative behavioral reference when:
+- Implementing new Metapath functions
+- Fixing bugs in existing function implementations
+- Understanding expected error handling behavior
+
+**When behavior differs from the spec**: If you discover that the current Metapath implementation differs from the XPath 3.1 specification, raise this as a clarification to the user before making changes. Consider:
+- Whether the deviation is intentional (Metaschema-specific extension)
+- The risk of changing behavior that existing code may depend on
+- Whether tests need to be added to verify spec-compliant behavior
+
 ### Generated Code
 
 Code generation occurs during Maven build:

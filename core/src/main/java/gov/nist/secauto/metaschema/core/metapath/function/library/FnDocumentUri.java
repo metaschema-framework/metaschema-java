@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
 import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;
@@ -15,6 +16,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
+import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.List;
@@ -50,7 +52,7 @@ public final class FnDocumentUri {
       .focusIndependent()
       .argument(IArgument.builder()
           .name("arg1")
-          .type(IDocumentNodeItem.type())
+          .type(INodeItem.type())
           .zeroOrOne()
           .build())
       .returnType(IAnyUriItem.type())
@@ -69,11 +71,25 @@ public final class FnDocumentUri {
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
 
-    INodeItem item = FunctionUtils.requireTypeOrNull(INodeItem.class, focus);
-
-    return item instanceof IDocumentNodeItem
-        ? ISequence.of(fnDocumentUri((IDocumentNodeItem) item))
-        : ISequence.empty();
+    ISequence<IAnyUriItem> retval;
+    if (focus == null) {
+      // Per XPath 3.1: If the context item is absent, dynamic error [err:XPDY0002]
+      throw new ContextAbsentDynamicMetapathException(
+          "The context item is absent for fn:document-uri()");
+    } else if (focus instanceof IDocumentNodeItem) {
+      retval = ISequence.of(fnDocumentUri((IDocumentNodeItem) focus));
+    } else if (focus instanceof INodeItem) {
+      // node item but not a document - return empty sequence per XPath spec
+      retval = ISequence.empty();
+    } else {
+      // not a node at all - throw type error per XPath spec
+      throw new InvalidTypeMetapathException(
+          focus,
+          String.format("Expected type '%s', but the context item was type '%s'.",
+              INodeItem.class.getName(),
+              focus.getClass().getName()));
+    }
+    return retval;
   }
 
   @SuppressWarnings("unused")
