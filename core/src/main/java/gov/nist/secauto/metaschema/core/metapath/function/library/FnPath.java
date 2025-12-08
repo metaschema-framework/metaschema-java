@@ -84,7 +84,7 @@ public final class FnPath {
     } else {
       throw new InvalidTypeMetapathException(
           focus,
-          String.format("Expected type '%s', but the node was type '%s'.",
+          String.format("Expected type '%s', but the item was type '%s'.",
               INodeItem.class.getName(),
               focus.getClass().getName()));
     }

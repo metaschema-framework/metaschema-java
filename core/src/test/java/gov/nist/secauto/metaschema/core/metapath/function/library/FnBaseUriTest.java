@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function.library;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -44,8 +45,9 @@ class FnBaseUriTest
             MockedDocumentGenerator.generateDocumentNodeItem(),
             IMetapathExpression.ResultType.ITEM,
             dynamicContext);
-    // The mocked document should have a base URI
+    // The mocked document should have a base URI matching the expected value
     assertNotNull(result);
+    assertEquals(MockedDocumentGenerator.BASE_URI.toString(), result.asUri().toString());
   }
 
   @Test
@@ -57,7 +59,9 @@ class FnBaseUriTest
             MockedDocumentGenerator.generateDocumentNodeItem(),
             IMetapathExpression.ResultType.ITEM,
             dynamicContext);
+    // The /root node should have the same base URI as the document
     assertNotNull(result);
+    assertEquals(MockedDocumentGenerator.BASE_URI.toString(), result.asUri().toString());
   }
 
   /**
