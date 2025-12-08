@@ -220,6 +220,10 @@ final class ModuleBuilder
     if (hasReferences) {
       // Phase 1: Build all assembly shells (without model instances)
       for (IAssemblyBuilder builder : assemblyBuilders) {
+        if (!(builder instanceof AssemblyBuilder)) {
+          throw new IllegalStateException(
+              "Two-phase construction requires AssemblyBuilder instances, got: " + builder.getClass().getName());
+        }
         AssemblyBuilder ab = (AssemblyBuilder) builder;
         ab.namespace(moduleNamespace).source(moduleSource);
         IAssemblyDefinition def = ab.toDefinitionShell(module);
