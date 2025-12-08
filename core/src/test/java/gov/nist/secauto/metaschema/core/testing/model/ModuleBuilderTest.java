@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
@@ -136,6 +137,85 @@ class ModuleBuilderTest {
     assertNotNull(assemblyDef, "Assembly definition should not be null");
     assertEquals("test-assembly", assemblyDef.getName(), "Assembly name should match");
     assertSame(module, assemblyDef.getContainingModule(), "Assembly should reference containing module");
+  }
+
+  @Test
+  void testRecursiveAssembly() {
+    // Given - an assembly that references itself (like a "parent" that can contain
+    // children of same type)
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create("https://example.com/test"));
+
+    // When - build a module with self-referencing assembly
+    IModule module = mocking.module()
+        .namespace(TEST_NAMESPACE)
+        .shortName(TEST_SHORT_NAME)
+        .version(TEST_VERSION)
+        .source(source)
+        .assembly(mocking.assembly()
+            .name("node")
+            .modelInstances(java.util.List.of(
+                mocking.assemblyRef("node")))) // Reference to self
+        .toModule();
+
+    // Then - assembly should exist and be resolvable
+    assertEquals(1, module.getAssemblyDefinitions().size(), "Should have one assembly definition");
+    IAssemblyDefinition nodeDef = module.getAssemblyDefinitions().iterator().next();
+    assertEquals("node", nodeDef.getName(), "Assembly name should match");
+
+    // The model instance should reference the same definition
+    var modelInstances = nodeDef.getModelInstances();
+    assertEquals(1, modelInstances.size(), "Should have one model instance");
+    INamedModelInstanceAbsolute childInstance = (INamedModelInstanceAbsolute) modelInstances.iterator().next();
+    assertNotNull(childInstance, "Child instance should not be null");
+    assertEquals("node", childInstance.getName(), "Child instance name should match");
+    assertSame(nodeDef, childInstance.getDefinition(), "Child should reference parent definition");
+  }
+
+  @Test
+  void testCrossReferenceAssemblies() {
+    // Given - two assemblies that reference each other
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create("https://example.com/test"));
+
+    // When - build a module with cross-referencing assemblies
+    IModule module = mocking.module()
+        .namespace(TEST_NAMESPACE)
+        .shortName(TEST_SHORT_NAME)
+        .version(TEST_VERSION)
+        .source(source)
+        .assembly(mocking.assembly()
+            .name("parent")
+            .modelInstances(java.util.List.of(
+                mocking.assemblyRef("child"))))
+        .assembly(mocking.assembly()
+            .name("child")
+            .modelInstances(java.util.List.of(
+                mocking.assemblyRef("parent"))))
+        .toModule();
+
+    // Then - both assemblies should be defined
+    assertEquals(2, module.getAssemblyDefinitions().size(), "Should have two assembly definitions");
+
+    // Verify cross-references resolve correctly
+    IEnhancedQName parentQName = IEnhancedQName.of(TEST_NAMESPACE, "parent");
+    IEnhancedQName childQName = IEnhancedQName.of(TEST_NAMESPACE, "child");
+
+    IAssemblyDefinition parentDef = module.getAssemblyDefinitionByName(parentQName.getIndexPosition());
+    IAssemblyDefinition childDef = module.getAssemblyDefinitionByName(childQName.getIndexPosition());
+
+    assertNotNull(parentDef, "Parent should be found");
+    assertNotNull(childDef, "Child should be found");
+
+    // Parent's child instance should reference child definition
+    INamedModelInstanceAbsolute childInParent
+        = (INamedModelInstanceAbsolute) parentDef.getModelInstances().iterator().next();
+    assertSame(childDef, childInParent.getDefinition(), "Parent's child should reference child definition");
+
+    // Child's parent instance should reference parent definition
+    INamedModelInstanceAbsolute parentInChild
+        = (INamedModelInstanceAbsolute) childDef.getModelInstances().iterator().next();
+    assertSame(parentDef, parentInChild.getDefinition(), "Child's parent should reference parent definition");
   }
 
   @Test

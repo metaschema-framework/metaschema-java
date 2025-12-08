@@ -53,4 +53,30 @@ public interface IModuleMockFactory extends IMockFactory {
   default IModuleBuilder module() {
     return IModuleBuilder.builder();
   }
+
+  /**
+   * Create a reference to an assembly definition by name. The reference will be
+   * resolved when the module is built, allowing recursive assembly structures.
+   *
+   * @param name
+   *          the local name of the referenced assembly definition
+   * @return a builder that represents the reference
+   */
+  @NonNull
+  default IModelBuilder<?> assemblyRef(@NonNull String name) {
+    return new AssemblyReference(name);
+  }
+
+  /**
+   * Create a reference to a field definition by name. The reference will be
+   * resolved when the module is built.
+   *
+   * @param name
+   *          the local name of the referenced field definition
+   * @return a builder that represents the reference
+   */
+  @NonNull
+  default IModelBuilder<?> fieldRef(@NonNull String name) {
+    return new FieldReference(name);
+  }
 }

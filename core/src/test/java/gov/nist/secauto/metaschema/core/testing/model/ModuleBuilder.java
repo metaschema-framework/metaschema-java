@@ -20,7 +20,9 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -186,15 +188,16 @@ final class ModuleBuilder
       doReturn(def).when(module).getFlagDefinitionByName(eq(qname));
     }
 
-    // Build field definitions
-    List<IFieldDefinition> fieldDefs = new ArrayList<>();
+    // Build field definitions - keep a map for reference resolution
+    Map<String, IFieldDefinition> fieldDefsByName = new LinkedHashMap<>();
     for (IFieldBuilder builder : fieldBuilders) {
       IFieldDefinition def = builder
           .namespace(moduleNamespace)
           .source(moduleSource)
           .toDefinition(module);
-      fieldDefs.add(def);
+      fieldDefsByName.put(def.getName(), def);
     }
+    List<IFieldDefinition> fieldDefs = new ArrayList<>(fieldDefsByName.values());
     doReturn(CollectionUtil.unmodifiableList(fieldDefs)).when(module).getFieldDefinitions();
     // Set up lookup by index position - extract index first to avoid nested
     // stubbing issues
@@ -203,15 +206,44 @@ final class ModuleBuilder
       doReturn(def).when(module).getFieldDefinitionByName(eq(index));
     }
 
-    // Build assembly definitions
-    List<IAssemblyDefinition> assemblyDefs = new ArrayList<>();
-    for (IAssemblyBuilder builder : assemblyBuilders) {
-      IAssemblyDefinition def = builder
-          .namespace(moduleNamespace)
-          .source(moduleSource)
-          .toDefinition(module);
-      assemblyDefs.add(def);
+    // Check if any assembly has references that need lazy resolution
+    boolean hasReferences = assemblyBuilders.stream()
+        .filter(AssemblyBuilder.class::isInstance)
+        .map(AssemblyBuilder.class::cast)
+        .anyMatch(AssemblyBuilder::hasModelReferences);
+
+    // Build assembly definitions - use two-phase if there are references
+    Map<String, IAssemblyDefinition> assemblyDefsByName = new LinkedHashMap<>();
+    Map<AssemblyBuilder, IAssemblyDefinition> builderToDefMap = new LinkedHashMap<>();
+
+    if (hasReferences) {
+      // Phase 1: Build all assembly shells (without model instances)
+      for (IAssemblyBuilder builder : assemblyBuilders) {
+        AssemblyBuilder ab = (AssemblyBuilder) builder;
+        ab.namespace(moduleNamespace).source(moduleSource);
+        IAssemblyDefinition def = ab.toDefinitionShell(module);
+        assemblyDefsByName.put(def.getName(), def);
+        builderToDefMap.put(ab, def);
+      }
+
+      // Phase 2: Resolve model instances for all assemblies
+      for (Map.Entry<AssemblyBuilder, IAssemblyDefinition> entry : builderToDefMap.entrySet()) {
+        AssemblyBuilder ab = entry.getKey();
+        IAssemblyDefinition def = entry.getValue();
+        ab.resolveModelInstances(def, assemblyDefsByName, fieldDefsByName);
+      }
+    } else {
+      // No references - build normally
+      for (IAssemblyBuilder builder : assemblyBuilders) {
+        IAssemblyDefinition def = builder
+            .namespace(moduleNamespace)
+            .source(moduleSource)
+            .toDefinition(module);
+        assemblyDefsByName.put(def.getName(), def);
+      }
     }
+
+    List<IAssemblyDefinition> assemblyDefs = new ArrayList<>(assemblyDefsByName.values());
     doReturn(CollectionUtil.unmodifiableList(assemblyDefs)).when(module).getAssemblyDefinitions();
     // Set up lookup by index position - extract index first to avoid nested
     // stubbing issues
