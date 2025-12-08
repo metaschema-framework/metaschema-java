@@ -43,4 +43,14 @@ public interface IModuleMockFactory extends IMockFactory {
   default IAssemblyBuilder assembly() {
     return IAssemblyBuilder.builder();
   }
+
+  /**
+   * Get a new module builder.
+   *
+   * @return the builder
+   */
+  @NonNull
+  default IModuleBuilder module() {
+    return IModuleBuilder.builder();
+  }
 }
