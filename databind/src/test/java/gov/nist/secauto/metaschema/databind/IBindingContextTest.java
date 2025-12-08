@@ -13,7 +13,7 @@ import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.model.xml.XmlConstraintLoader;
+import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
@@ -25,11 +25,11 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
-class DefaultBindingContextTest {
+class IBindingContextTest {
 
   @Test
   void testConstraints() throws MetaschemaException, IOException {
-    IConstraintLoader constraintLoader = new XmlConstraintLoader();
+    IConstraintLoader constraintLoader = new BindingConstraintLoader(DefaultBindingContext.instance());
     List<IConstraintSet> constraintSet = constraintLoader.load(
         ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints.xml")));
 

@@ -114,7 +114,7 @@ public class BindingConstraintLoader
           .forEach(binding -> builder.namespace(
               ObjectUtils.notNull(binding.getPrefix()),
               ObjectUtils.notNull(binding.getUri())));
-      ISource source = ISource.externalSource(resource);
+      ISource source = ISource.externalSource(builder.build(), false);
 
       // create the constraint set
       retval = CollectionUtil.singletonList(new ScopedConstraintSet(
@@ -159,10 +159,11 @@ public class BindingConstraintLoader
   }
 
   /**
-   * Parse individual constraint definitions from the provided XMLBeans object.
+   * Parse individual constraint definitions from the provided bound constraint
+   * document.
    *
    * @param obj
-   *          the XMLBeans object
+   *          the bound constraint document
    * @param source
    *          the source of the constraint content
    * @return the scoped constraint definitions

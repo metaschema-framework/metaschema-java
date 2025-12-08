@@ -15,7 +15,7 @@ import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;
-import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
+import gov.nist.secauto.metaschema.core.model.MetaschemaModelConstants;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -104,7 +104,7 @@ public abstract class AbstractSchemaGeneratorTestSuite
     //
     // try (InputStream is
     // = module.getResourceAsStream("schema.json/json-schema.json")) {
-    try (InputStream is = ModuleLoader.class.getResourceAsStream("/schema/json/json-schema.json")) {
+    try (InputStream is = MetaschemaModelConstants.class.getResourceAsStream("/schema/json/json-schema.json")) {
       assert is != null : "unable to get JSON schema resource";
       JsonSchemaContentValidator schemaValidator = new JsonSchemaContentValidator(is);
       JSON_SCHEMA_VALIDATOR = schemaValidator;

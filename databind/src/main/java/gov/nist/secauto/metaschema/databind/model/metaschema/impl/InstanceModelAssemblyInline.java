@@ -26,7 +26,7 @@ import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-import gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
+import gov.nist.secauto.metaschema.core.model.MetaschemaModelConstants;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.IGroupAs;
@@ -121,7 +121,7 @@ public class InstanceModelAssemblyInline
     this.modelContainer = ObjectUtils.notNull(Lazy.of(() -> AssemblyModelGenerator.of(
         binding.getModel(),
         ObjectUtils.requireNonNull(bindingInstance.getDefinition()
-            .getAssemblyInstanceByName(XmlModuleConstants.MODEL_QNAME.getIndexPosition())),
+            .getAssemblyInstanceByName(MetaschemaModelConstants.MODEL_QNAME.getIndexPosition())),
         this,
         nodeItemFactory)));
 

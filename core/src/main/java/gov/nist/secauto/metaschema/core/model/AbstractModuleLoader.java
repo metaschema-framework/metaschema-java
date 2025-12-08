@@ -109,7 +109,7 @@ public abstract class AbstractModuleLoader<T, M extends IModuleExtended<M, ?, ?,
    *
    * @param resource
    *          the resource to parse
-   * @return the XMLBeans representation of the Metaschema module
+   * @return the parsed Metaschema module
    * @throws IOException
    *           if a parsing error occurred
    */

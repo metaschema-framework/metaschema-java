@@ -49,10 +49,6 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.xmlbeans</groupId>
-            <artifactId>xmlbeans</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>stax2-api</artifactId>
         </dependency>
@@ -159,9 +155,6 @@
                 <directory>src/main/resources</directory>
             </resource>
             <resource>
-                <directory>${project.build.directory}/generated-resources/xmlbeans</directory>
-            </resource>
-            <resource>
                 <directory>${project.build.directory}/generated-resources/schema</directory>
             </resource>
         </resources>
@@ -173,7 +166,6 @@
                     <configuration>
                         <excludeRoots>
                             <excludeRoot>target/generated-sources/antlr4</excludeRoot>
-                            <excludeRoot>target/generated-sources/xmlbeans</excludeRoot>
                             <excludeRoot>qt3tests</excludeRoot>
                         </excludeRoots>
                     </configuration>
@@ -184,8 +176,6 @@
                     <configuration>
                         <excludes>
 							<!-- filter generated code -->
-                            <exclude>gov/nist/secauto/metaschema/core/model/xml/xmlbeans/**/*</exclude>
-                            <exclude>org/apache/xmlbeans/**/*</exclude>
                             <exclude>gov/nist/secauto/metaschema/core/metapath/antlr/*</exclude>
                         </excludes>
                     </configuration>
@@ -256,30 +246,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.xmlbeans</groupId>
-                <artifactId>xmlbeans</artifactId>
-                <executions>
-                    <execution>
-                        <id>metaschema-beans</id>
-                        <inherited>false</inherited>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <xmlConfigs>
-                                ${project.basedir}/src/schema/xmlconfig.xml</xmlConfigs>
-                            <sourceDir>${project.basedir}/metaschema/schema/xml</sourceDir>
-                            <javaTargetDir>
-                                ${project.build.directory}/generated-sources/xmlbeans</javaTargetDir>
-                            <classTargetDir>
-                                ${project.build.directory}/generated-resources/xmlbeans</classTargetDir>
-                            <name>metaschema</name>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
@@ -293,8 +259,6 @@
                             <sources>
                                 <source>
                                     ${project.build.directory}/generated-sources/antlr4</source>
-                                <source>
-                                    ${project.build.directory}/generated-sources/xmlbeans</source>
                             </sources>
                         </configuration>
                     </execution>
