@@ -149,6 +149,35 @@ mvn -pl core test -Dtest=FnCountTest#testCount
 - Uses SpotBugs annotations (`@NonNull`, `@Nullable`) for null safety
 - Package structure follows `gov.nist.secauto.metaschema.*` convention
 
+### Javadoc Requirements (BLOCKING)
+
+**All code changes must follow the Javadoc style guide**: [docs/javadoc-style-guide.md](docs/javadoc-style-guide.md)
+
+Key requirements:
+- **New code**: 100% Javadoc coverage on `public`/`protected` members (BLOCKING)
+- **Modified code**: Add/update Javadoc on any members you touch (Required)
+- **Surrounding code**: Document nearby undocumented members when practical (Encouraged)
+
+Checkstyle enforces these rules (configured in [oss-maven checkstyle.xml](https://github.com/metaschema-framework/oss-maven/blob/main/oss-build-support/src/main/resources/checkstyle/checkstyle.xml)):
+- `MissingJavadocMethod` - requires Javadoc on protected+ methods
+- `JavadocMethod` - validates `@param`, `@return`, `@throws` tags
+- `JavadocType` - requires Javadoc on protected+ types
+- `NonEmptyAtclauseDescription` - tags must have meaningful content
+- `AtclauseOrder` - tags must follow order: `@param`, `@return`, `@throws`, `@deprecated`
+
+Exceptions (no Javadoc required):
+- `@Override` methods (inherit documentation)
+- `@Test` methods (use descriptive names)
+- Generated code (`*.xmlbeans`, `*.antlr` packages)
+
+```bash
+# Check Javadoc compliance
+mvn checkstyle:check
+
+# Generate Javadoc to find errors
+mvn javadoc:javadoc
+```
+
 ## Git Workflow
 
 - Repository: https://github.com/metaschema-framework/metaschema-java
