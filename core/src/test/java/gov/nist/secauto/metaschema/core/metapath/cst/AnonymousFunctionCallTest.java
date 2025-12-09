@@ -13,7 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression.ResultType;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
-import gov.nist.secauto.metaschema.core.testing.model.mocking.MockedDocumentGenerator;
+import gov.nist.secauto.metaschema.core.testsupport.mocking.MockedDocumentGenerator;
 
 import org.junit.jupiter.api.Test;
 

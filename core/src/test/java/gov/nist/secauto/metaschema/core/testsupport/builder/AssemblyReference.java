@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.testing.model;
+package gov.nist.secauto.metaschema.core.testsupport.builder;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
@@ -16,28 +16,28 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * A reference to a field definition by name. This class implements
+ * A reference to an assembly definition by name. This class implements
  * {@link IModelBuilder} to allow it to be used in model instance lists, but the
  * actual instance is created during module resolution when the referenced
  * definition is available.
  *
  * <p>
- * This enables assembly structures that reference fields defined elsewhere in
- * the module.
+ * This enables recursive assembly structures where an assembly can contain
+ * instances of itself or other assemblies that are defined later in the module.
  */
-final class FieldReference
-    implements IModelBuilder<FieldReference>, IModelReference {
+final class AssemblyReference
+    implements IModelBuilder<AssemblyReference>, IModelReference {
 
   private final String referencedName;
   private ISource source;
 
   /**
-   * Construct a new field reference.
+   * Construct a new assembly reference.
    *
    * @param referencedName
-   *          the local name of the referenced field definition
+   *          the local name of the referenced assembly definition
    */
-  FieldReference(@NonNull String referencedName) {
+  AssemblyReference(@NonNull String referencedName) {
     this.referencedName = referencedName;
   }
 
@@ -48,35 +48,35 @@ final class FieldReference
   }
 
   @Override
-  public FieldReference reset() {
+  public AssemblyReference reset() {
     this.source = null;
     return this;
   }
 
   @Override
   @NonNull
-  public FieldReference namespace(@NonNull String name) {
+  public AssemblyReference namespace(@NonNull String name) {
     // References use the name from construction; namespace is set by ModuleBuilder
     return this;
   }
 
   @Override
   @NonNull
-  public FieldReference name(@NonNull String name) {
+  public AssemblyReference name(@NonNull String name) {
     // References use the name from construction
     return this;
   }
 
   @Override
   @NonNull
-  public FieldReference qname(@NonNull IEnhancedQName qname) {
+  public AssemblyReference qname(@NonNull IEnhancedQName qname) {
     // References use the name from construction
     return this;
   }
 
   @Override
   @NonNull
-  public FieldReference source(@NonNull ISource source) {
+  public AssemblyReference source(@NonNull ISource source) {
     this.source = source;
     return this;
   }
@@ -93,13 +93,13 @@ final class FieldReference
 
   @Override
   @NonNull
-  public FieldReference flags(@Nullable List<IFlagBuilder> flags) {
+  public AssemblyReference flags(@Nullable List<IFlagBuilder> flags) {
     // References don't support flags - they reference existing definitions
-    throw new UnsupportedOperationException("Field references cannot have flags");
+    throw new UnsupportedOperationException("Assembly references cannot have flags");
   }
 
   /**
-   * This method should not be called directly. Field references are resolved
+   * This method should not be called directly. Assembly references are resolved
    * during module construction.
    *
    * @param parent
@@ -112,7 +112,7 @@ final class FieldReference
   @NonNull
   public INamedModelInstanceAbsolute toInstance(@NonNull IAssemblyDefinition parent) {
     throw new UnsupportedOperationException(
-        "Field references must be resolved during module construction. "
+        "Assembly references must be resolved during module construction. "
             + "Use ModuleBuilder to build the module, which will resolve references.");
   }
 }

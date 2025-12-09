@@ -13,8 +13,8 @@ import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.xml.XmlMetaConstraintLoader;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.testing.model.IModuleBuilder;
-import gov.nist.secauto.metaschema.core.testing.model.MockedModelTestSupport;
+import gov.nist.secauto.metaschema.core.testsupport.builder.IModuleBuilder;
+import gov.nist.secauto.metaschema.core.testsupport.MockedModelTestSupport;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.testing.model.mocking;
+package gov.nist.secauto.metaschema.core.testsupport.mocking;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -38,7 +38,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 /**
  * Generates mock node item objects.
  */
-// FIXME: Integrate with classes in gov.nist.secauto.metaschema.core.testing
+// FIXME: Integrate with classes in gov.nist.secauto.metaschema.core.testsupport
 @SuppressWarnings("checkstyle:MissingJavadocMethodCheck")
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
 public class MockNodeItemFactory

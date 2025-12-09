@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.util.MermaidErDiagramGenerator;
-import gov.nist.secauto.metaschema.core.testing.model.IModuleBuilder;
-import gov.nist.secauto.metaschema.core.testing.model.MockedModelTestSupport;
+import gov.nist.secauto.metaschema.core.testsupport.builder.IModuleBuilder;
+import gov.nist.secauto.metaschema.core.testsupport.MockedModelTestSupport;
 
 import org.junit.jupiter.api.Test;
 

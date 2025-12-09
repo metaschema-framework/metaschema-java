@@ -19,7 +19,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationExc
 import gov.nist.secauto.metaschema.core.model.constraint.DefaultConstraintValidator;
 import gov.nist.secauto.metaschema.core.model.constraint.FindingCollectingConstraintValidationHandler;
 import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
-import gov.nist.secauto.metaschema.core.testing.model.mocking.MockedDocumentGenerator;
+import gov.nist.secauto.metaschema.core.testsupport.mocking.MockedDocumentGenerator;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
