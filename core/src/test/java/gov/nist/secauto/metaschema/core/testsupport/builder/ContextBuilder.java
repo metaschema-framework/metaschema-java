@@ -71,8 +71,8 @@ public class ContextBuilder implements IContextBuilder {
 
   @Override
   @NonNull
-  public <B extends AbstractConstraintBuilder<B, C>, C extends IConstraint> IContextBuilder constraint(
-      @NonNull AbstractConstraintBuilder<B, C> constraintBuilder) {
+  public IContextBuilder constraint(
+      @NonNull AbstractConstraintBuilder<?, ? extends IConstraint> constraintBuilder) {
     this.constraints.add(constraintBuilder.build());
     return this;
   }

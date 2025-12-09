@@ -35,17 +35,13 @@ public interface IContextBuilder {
    * <p>
    * The builder's {@code build()} method will be called to create the constraint.
    *
-   * @param <B>
-   *          the constraint builder type
-   * @param <C>
-   *          the constraint type
    * @param constraintBuilder
    *          the constraint builder
    * @return this builder
    */
   @NonNull
-  <B extends AbstractConstraintBuilder<B, C>, C extends IConstraint> IContextBuilder constraint(
-      @NonNull AbstractConstraintBuilder<B, C> constraintBuilder);
+  IContextBuilder constraint(
+      @NonNull AbstractConstraintBuilder<?, ? extends IConstraint> constraintBuilder);
 
   /**
    * Add a child context nested within this context.
