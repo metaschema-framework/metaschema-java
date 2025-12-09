@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.testing.model;
+package gov.nist.secauto.metaschema.core.testsupport;
 
-import gov.nist.secauto.metaschema.core.testing.model.mocking.AbstractMockitoFactory;
+import gov.nist.secauto.metaschema.core.testsupport.builder.IModuleMockFactory;
+import gov.nist.secauto.metaschema.core.testsupport.mocking.AbstractMockitoFactory;
 
 /**
  * Provides the ability to generate mocked Metaschema module definitions and

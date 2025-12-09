@@ -17,7 +17,7 @@ import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.testing.model.mocking.MockNodeItemFactory;
+import gov.nist.secauto.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import org.junit.jupiter.api.Test;

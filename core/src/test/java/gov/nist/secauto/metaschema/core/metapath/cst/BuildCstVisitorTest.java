@@ -51,7 +51,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IRootAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.testing.model.mocking.MockNodeItemFactory;
+import gov.nist.secauto.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.antlr.v4.runtime.CharStreams;

@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.testing.model;
+package gov.nist.secauto.metaschema.core.testsupport.builder;
 
-import gov.nist.secauto.metaschema.core.testing.model.mocking.IMockFactory;
+import gov.nist.secauto.metaschema.core.testsupport.mocking.IMockFactory;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 

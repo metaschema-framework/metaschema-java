@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.testing.model.mocking;
+package gov.nist.secauto.metaschema.core.testsupport.mocking;
 
 import static org.mockito.Mockito.withSettings;
 

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.testing.model.mocking;
+package gov.nist.secauto.metaschema.core.testsupport.mocking;
 
 import gov.nist.secauto.metaschema.core.mdm.IDMAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.mdm.IDMDocumentNodeItem;
@@ -18,7 +18,7 @@ import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.testing.model.MockedModelTestSupport;
+import gov.nist.secauto.metaschema.core.testsupport.MockedModelTestSupport;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;

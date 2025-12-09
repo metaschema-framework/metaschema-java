@@ -17,7 +17,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.testing.model.mocking.MockedDocumentGenerator;
+import gov.nist.secauto.metaschema.core.testsupport.mocking.MockedDocumentGenerator;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

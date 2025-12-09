@@ -10,7 +10,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.testing.model.MockedModelTestSupport;
+import gov.nist.secauto.metaschema.core.testsupport.MockedModelTestSupport;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;

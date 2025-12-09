@@ -15,7 +15,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.testing.model.mocking.MockedDocumentGenerator;
+import gov.nist.secauto.metaschema.core.testsupport.mocking.MockedDocumentGenerator;
 
 import org.junit.jupiter.api.Test;
 

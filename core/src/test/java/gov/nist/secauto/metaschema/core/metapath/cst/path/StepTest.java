@@ -17,7 +17,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-import gov.nist.secauto.metaschema.core.testing.model.mocking.MockNodeItemFactory;
+import gov.nist.secauto.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.assertj.core.api.Assertions;

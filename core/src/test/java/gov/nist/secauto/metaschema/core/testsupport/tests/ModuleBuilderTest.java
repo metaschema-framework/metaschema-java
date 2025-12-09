@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.testing.model;
+package gov.nist.secauto.metaschema.core.testsupport.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,6 +16,8 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.testsupport.MockedModelTestSupport;
+import gov.nist.secauto.metaschema.core.testsupport.builder.IModuleBuilder;
 
 import org.junit.jupiter.api.Test;
 
