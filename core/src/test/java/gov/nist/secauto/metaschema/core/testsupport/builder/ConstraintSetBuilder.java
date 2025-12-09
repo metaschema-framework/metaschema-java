@@ -52,7 +52,8 @@ public class ConstraintSetBuilder implements IConstraintSetBuilder {
   @Override
   @NonNull
   public IConstraintSetBuilder context(@NonNull Consumer<IContextBuilder> contextConfigurer) {
-    ContextBuilder contextBuilder = new ContextBuilder(ObjectUtils.requireNonNull(source));
+    ContextBuilder contextBuilder = new ContextBuilder(
+        ObjectUtils.requireNonNull(source, "source must be set before adding contexts"));
     contextConfigurer.accept(contextBuilder);
     this.contexts.add(contextBuilder);
     return this;

@@ -106,6 +106,19 @@ public class ContextBuilder implements IContextBuilder {
     return context;
   }
 
+  /**
+   * Add a constraint to the model constrained object.
+   * <p>
+   * This method dispatches the constraint to the appropriate typed add method
+   * based on the constraint's runtime type.
+   *
+   * @param modelConstrained
+   *          the model constrained object to add the constraint to
+   * @param constraint
+   *          the constraint to add
+   * @throws UnsupportedOperationException
+   *           if the constraint type is not supported
+   */
   private static void addConstraint(@NonNull IModelConstrained modelConstrained, @NonNull IConstraint constraint) {
     if (constraint instanceof IAllowedValuesConstraint) {
       modelConstrained.addConstraint((IAllowedValuesConstraint) constraint);
