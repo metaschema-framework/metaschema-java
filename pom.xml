@@ -59,7 +59,7 @@
 		<dependency.jmock-junit5.version>2.13.1</dependency.jmock-junit5.version>
 		<dependency.json.version>20250517</dependency.json.version>
 		<dependency.lazy4j.version>2.0.3</dependency.lazy4j.version>
-		<dependency.log4j2.version>2.25.0</dependency.log4j2.version>
+		<dependency.log4j2.version>2.25.2</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.12.1</dependency.logcaptor.version>
 		<dependency.mokito.version>5.20.0</dependency.mokito.version>
 		<dependency.moxy.version>4.0.7</dependency.moxy.version>
