@@ -75,6 +75,10 @@ class ConstraintSetBuilderTest {
 
     // Then
     assertNotNull(constraintSet, "Constraint set should not be null");
+    assertEquals(source, constraintSet.getSource(), "Source should match");
+    // Note: Verifying the constraint was actually added requires applying the
+    // constraint set to a module, which is tested in
+    // ExternalConstraintsModulePostProcessorTest
   }
 
   @Test
@@ -102,6 +106,7 @@ class ConstraintSetBuilderTest {
 
     // Then
     assertNotNull(constraintSet, "Constraint set should not be null");
+    assertEquals(source, constraintSet.getSource(), "Source should match");
   }
 
   @Test
@@ -129,6 +134,7 @@ class ConstraintSetBuilderTest {
 
     // Then
     assertNotNull(constraintSet, "Constraint set should not be null");
+    assertEquals(source, constraintSet.getSource(), "Source should match");
   }
 
   @Test
@@ -180,5 +186,6 @@ class ConstraintSetBuilderTest {
 
     // Then
     assertNotNull(constraintSet, "Constraint set should not be null");
+    assertEquals(source, constraintSet.getSource(), "Source should match");
   }
 }

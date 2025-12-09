@@ -27,6 +27,18 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Implementation of {@link IContextBuilder} for creating constraint contexts.
+ * <p>
+ * This builder supports the following constraint types:
+ * <ul>
+ * <li>{@link IAllowedValuesConstraint}</li>
+ * <li>{@link IMatchesConstraint}</li>
+ * <li>{@link IExpectConstraint}</li>
+ * <li>{@link IIndexHasKeyConstraint}</li>
+ * </ul>
+ * Other constraint types (such as {@code ICardinalityConstraint},
+ * {@code IIndexConstraint}, or {@code IUniqueConstraint}) will throw an
+ * {@link UnsupportedOperationException} when added. To support additional
+ * constraint types, extend the {@link #addConstraint} method.
  */
 public class ContextBuilder implements IContextBuilder {
   @NonNull
