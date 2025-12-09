@@ -10,9 +10,12 @@ import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.testsupport.builder.IModuleBuilder;
 import gov.nist.secauto.metaschema.core.testsupport.MockedModelTestSupport;
 
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.List;
 
 class AbstractRecursionPreventingNodeItemVisitorTest {
@@ -46,7 +49,10 @@ class AbstractRecursionPreventingNodeItemVisitorTest {
         };
 
     // This should complete without infinite loop due to recursion prevention
-    visitor.visitMetaschema(INodeItemFactory.instance().newModuleNodeItem(module), null);
+    // Using timeout assertion to make the test intent explicit
+    assertTimeoutPreemptively(Duration.ofSeconds(1), () -> {
+      visitor.visitMetaschema(INodeItemFactory.instance().newModuleNodeItem(module), null);
+    });
   }
 
 }

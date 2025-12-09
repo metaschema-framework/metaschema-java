@@ -61,5 +61,8 @@ class MermaidErDiagramGeneratorTest {
     // Verify the diagram contains expected elements
     assertTrue(diagram.contains("erDiagram"), "Diagram should start with erDiagram");
     assertTrue(diagram.contains("root"), "Diagram should contain root assembly");
+    assertTrue(diagram.contains("child-item"), "Diagram should contain child-item assembly");
+    assertTrue(diagram.contains("title"), "Diagram should contain title field");
+    assertTrue(diagram.contains("description"), "Diagram should contain description field");
   }
 }
