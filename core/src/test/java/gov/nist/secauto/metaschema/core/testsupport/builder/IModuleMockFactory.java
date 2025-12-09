@@ -79,4 +79,14 @@ public interface IModuleMockFactory extends IMockFactory {
   default IModelBuilder<?> fieldRef(@NonNull String name) {
     return new FieldReference(name);
   }
+
+  /**
+   * Get a new constraint set builder.
+   *
+   * @return the builder
+   */
+  @NonNull
+  default IConstraintSetBuilder constraintSet() {
+    return IConstraintSetBuilder.builder();
+  }
 }
