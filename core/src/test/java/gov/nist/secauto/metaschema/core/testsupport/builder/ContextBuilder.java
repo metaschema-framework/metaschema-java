@@ -10,11 +10,14 @@ import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.AbstractConstraintBuilder;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.ICardinalityConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IIndexConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexHasKeyConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
+import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.MetaConstraintSet;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -28,17 +31,17 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * Implementation of {@link IContextBuilder} for creating constraint contexts.
  * <p>
- * This builder supports the following constraint types:
+ * This builder supports all constraint types defined in the Metaschema
+ * constraint model:
  * <ul>
  * <li>{@link IAllowedValuesConstraint}</li>
  * <li>{@link IMatchesConstraint}</li>
  * <li>{@link IExpectConstraint}</li>
  * <li>{@link IIndexHasKeyConstraint}</li>
+ * <li>{@link ICardinalityConstraint}</li>
+ * <li>{@link IIndexConstraint}</li>
+ * <li>{@link IUniqueConstraint}</li>
  * </ul>
- * Other constraint types (such as {@code ICardinalityConstraint},
- * {@code IIndexConstraint}, or {@code IUniqueConstraint}) will throw an
- * {@link UnsupportedOperationException} when added. To support additional
- * constraint types, extend the {@link #addConstraint} method.
  */
 public class ContextBuilder implements IContextBuilder {
   @NonNull
@@ -131,6 +134,7 @@ public class ContextBuilder implements IContextBuilder {
    * @throws UnsupportedOperationException
    *           if the constraint type is not supported
    */
+  @SuppressWarnings("PMD.CyclomaticComplexity")
   private static void addConstraint(@NonNull IModelConstrained modelConstrained, @NonNull IConstraint constraint) {
     if (constraint instanceof IAllowedValuesConstraint) {
       modelConstrained.addConstraint((IAllowedValuesConstraint) constraint);
@@ -140,6 +144,12 @@ public class ContextBuilder implements IContextBuilder {
       modelConstrained.addConstraint((IExpectConstraint) constraint);
     } else if (constraint instanceof IIndexHasKeyConstraint) {
       modelConstrained.addConstraint((IIndexHasKeyConstraint) constraint);
+    } else if (constraint instanceof ICardinalityConstraint) {
+      modelConstrained.addConstraint((ICardinalityConstraint) constraint);
+    } else if (constraint instanceof IIndexConstraint) {
+      modelConstrained.addConstraint((IIndexConstraint) constraint);
+    } else if (constraint instanceof IUniqueConstraint) {
+      modelConstrained.addConstraint((IUniqueConstraint) constraint);
     } else {
       throw new UnsupportedOperationException(
           "Unsupported constraint type: " + constraint.getClass().getName());

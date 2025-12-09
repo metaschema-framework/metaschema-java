@@ -15,8 +15,14 @@ import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.ICardinalityConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
+import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IIndexConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IIndexHasKeyConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.testsupport.MockedModelTestSupport;
 import gov.nist.secauto.metaschema.core.testsupport.builder.IConstraintSetBuilder;
 
@@ -182,6 +188,117 @@ class ConstraintSetBuilderTest {
                 .source(source)
                 .target(IMetapathExpression.compile("@attr2"))
                 .datatype(MetaschemaDataTypeProvider.STRING)))
+        .build();
+
+    // Then
+    assertNotNull(constraintSet, "Constraint set should not be null");
+    assertEquals(source, constraintSet.getSource(), "Source should match");
+  }
+
+  @Test
+  void testConstraintSetWithExpectConstraint() {
+    // Given
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    // When
+    IConstraintSet constraintSet = mocking.constraintSet()
+        .source(source)
+        .context(ctx -> ctx
+            .metapath("//item")
+            .constraint(IExpectConstraint.builder()
+                .source(source)
+                .target(IMetapathExpression.compile("."))
+                .test(IMetapathExpression.compile("@id != ''"))))
+        .build();
+
+    // Then
+    assertNotNull(constraintSet, "Constraint set should not be null");
+    assertEquals(source, constraintSet.getSource(), "Source should match");
+  }
+
+  @Test
+  void testConstraintSetWithCardinalityConstraint() {
+    // Given
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    // When
+    IConstraintSet constraintSet = mocking.constraintSet()
+        .source(source)
+        .context(ctx -> ctx
+            .metapath("//parent")
+            .constraint(ICardinalityConstraint.builder()
+                .source(source)
+                .target(IMetapathExpression.compile("child"))
+                .minOccurs(1)
+                .maxOccurs(5)))
+        .build();
+
+    // Then
+    assertNotNull(constraintSet, "Constraint set should not be null");
+    assertEquals(source, constraintSet.getSource(), "Source should match");
+  }
+
+  @Test
+  void testConstraintSetWithIndexConstraint() {
+    // Given
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    // When
+    IConstraintSet constraintSet = mocking.constraintSet()
+        .source(source)
+        .context(ctx -> ctx
+            .metapath("//items")
+            .constraint(IIndexConstraint.builder("item-index")
+                .source(source)
+                .target(IMetapathExpression.compile("item"))
+                .keyField(IKeyField.of(IMetapathExpression.compile("@id"), null, null))))
+        .build();
+
+    // Then
+    assertNotNull(constraintSet, "Constraint set should not be null");
+    assertEquals(source, constraintSet.getSource(), "Source should match");
+  }
+
+  @Test
+  void testConstraintSetWithIndexHasKeyConstraint() {
+    // Given
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    // When
+    IConstraintSet constraintSet = mocking.constraintSet()
+        .source(source)
+        .context(ctx -> ctx
+            .metapath("//reference")
+            .constraint(IIndexHasKeyConstraint.builder("item-index")
+                .source(source)
+                .target(IMetapathExpression.compile("."))
+                .keyField(IKeyField.of(IMetapathExpression.compile("@item-ref"), null, null))))
+        .build();
+
+    // Then
+    assertNotNull(constraintSet, "Constraint set should not be null");
+    assertEquals(source, constraintSet.getSource(), "Source should match");
+  }
+
+  @Test
+  void testConstraintSetWithUniqueConstraint() {
+    // Given
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    // When
+    IConstraintSet constraintSet = mocking.constraintSet()
+        .source(source)
+        .context(ctx -> ctx
+            .metapath("//collection")
+            .constraint(IUniqueConstraint.builder()
+                .source(source)
+                .target(IMetapathExpression.compile("entry"))
+                .keyField(IKeyField.of(IMetapathExpression.compile("@key"), null, null))))
         .build();
 
     // Then
