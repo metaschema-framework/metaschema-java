@@ -42,7 +42,7 @@
 		<dependency.commons-cli.version>1.9.0</dependency.commons-cli.version>
 		<dependency.commons-codec.version>1.18.0</dependency.commons-codec.version>
 		<dependency.commons-collections4.version>4.5.0</dependency.commons-collections4.version>
-		<dependency.commons-io.version>2.19.0</dependency.commons-io.version>
+		<dependency.commons-io.version>2.21.0</dependency.commons-io.version>
 		<dependency.commons-lang3.version>3.20.0</dependency.commons-lang3.version>
 		<dependency.commons-text.version>1.13.1</dependency.commons-text.version>
 		<dependency.eclipse-jdt.version>2.4.0</dependency.eclipse-jdt.version>
