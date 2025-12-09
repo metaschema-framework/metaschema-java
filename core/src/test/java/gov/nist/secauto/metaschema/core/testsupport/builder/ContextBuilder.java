@@ -19,7 +19,6 @@ import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.MetaConstraintSet;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,11 +103,11 @@ public class ContextBuilder implements IContextBuilder {
       addConstraint(modelConstrained, constraint);
     }
 
-    // Create the context
+    // Create the context with a defensive copy of metapaths
     MetaConstraintSet.Context context = new MetaConstraintSet.Context(
         parent,
         source,
-        ObjectUtils.notNull(metapaths),
+        List.copyOf(metapaths),
         modelConstrained);
 
     // Build and add child contexts
@@ -126,6 +125,10 @@ public class ContextBuilder implements IContextBuilder {
    * <p>
    * This method dispatches the constraint to the appropriate typed add method
    * based on the constraint's runtime type.
+   * <p>
+   * <b>Note:</b> When new constraint types are added to the Metaschema constraint
+   * model, this method and the class-level Javadoc must be updated to include
+   * support for the new type.
    *
    * @param modelConstrained
    *          the model constrained object to add the constraint to
