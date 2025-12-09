@@ -86,6 +86,7 @@ final class FieldReference
    *
    * @return the source, or {@code null} if not set
    */
+  @Nullable
   protected ISource getSource() {
     return source;
   }

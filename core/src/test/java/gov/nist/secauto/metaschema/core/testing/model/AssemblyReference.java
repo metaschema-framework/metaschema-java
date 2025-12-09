@@ -86,6 +86,7 @@ final class AssemblyReference
    *
    * @return the source, or {@code null} if not set
    */
+  @Nullable
   protected ISource getSource() {
     return source;
   }

@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -193,12 +192,12 @@ final class AssemblyBuilder
     });
     doReturn(
         modelInstances.values().stream()
-            .flatMap(value -> value instanceof IAssemblyInstance ? Stream.of(value) : null)
+            .filter(IAssemblyInstance.class::isInstance)
             .collect(Collectors.toList()))
                 .when(retval).getAssemblyInstances();
     doReturn(
         modelInstances.values().stream()
-            .flatMap(value -> value instanceof IFieldInstance ? Stream.of(value) : null)
+            .filter(IFieldInstance.class::isInstance)
             .collect(Collectors.toList()))
                 .when(retval).getFieldInstances();
     return retval;

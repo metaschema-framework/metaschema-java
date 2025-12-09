@@ -141,9 +141,10 @@ final class ModuleBuilder
     doReturn(source).when(module).getSource();
 
     // Location information
-    doReturn(source.getSource()).when(module).getLocation();
-    doReturn(source.getSource() != null ? ObjectUtils.notNull(source.getSource()).toString() : shortName)
-        .when(module).getLocationHint();
+    URI sourceUri = source.getSource();
+    doReturn(sourceUri).when(module).getLocation();
+    String locationHint = sourceUri != null ? sourceUri.toString() : shortName;
+    doReturn(locationHint).when(module).getLocationHint();
 
     // Module QName
     IEnhancedQName qname = IEnhancedQName.of(namespace, shortName);
