@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelElement;
+import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelElement;
 import gov.nist.secauto.metaschema.core.model.ISource;
@@ -21,6 +22,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.StringUtils;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * A base class for Metaschema module-based model builders.
@@ -89,6 +91,24 @@ abstract class AbstractMetaschemaBuilder<T extends IMetaschemaBuilder<T>>
   }
 
   /**
+   * Get the currently configured namespace.
+   *
+   * @return the namespace or {@code null} if no namespace is configured
+   */
+  protected String getNamespace() {
+    return namespace;
+  }
+
+  /**
+   * Get the currently configured name.
+   *
+   * @return the name or {@code null} if no name is configured
+   */
+  protected String getName() {
+    return name;
+  }
+
+  /**
    * Validate the data provided to this builder to ensure correct and required
    * information is provided.
    */
@@ -104,6 +124,18 @@ abstract class AbstractMetaschemaBuilder<T extends IMetaschemaBuilder<T>>
    *          the definition to apply mocking expectations for
    */
   protected void applyDefinition(@NonNull IDefinition definition) {
+    applyDefinition(definition, null);
+  }
+
+  /**
+   * Apply expectations to the mocking context for the provided definition.
+   *
+   * @param definition
+   *          the definition to apply mocking expectations for
+   * @param module
+   *          the containing module, or {@code null} if standalone
+   */
+  protected void applyDefinition(@NonNull IDefinition definition, @Nullable IModule module) {
     applyModelElement(definition);
     applyNamed(definition);
     applyAttributable(definition);
@@ -115,8 +147,11 @@ abstract class AbstractMetaschemaBuilder<T extends IMetaschemaBuilder<T>>
     doReturn(CollectionUtil.emptyMap()).when(definition).getProperties();
     doReturn(null).when(definition).getInlineInstance();
 
+    if (module != null) {
+      doReturn(module).when(definition).getContainingModule();
+    }
+
     // doReturn().when(definition).getConstraintSupport();
-    // doReturn().when(definition).getContainingModule();
     // doReturn().when(definition).getModelType();
   }
 

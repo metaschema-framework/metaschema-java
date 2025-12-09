@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
+import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelElement;
 import gov.nist.secauto.metaschema.core.model.ModelType;
 import gov.nist.secauto.metaschema.core.model.constraint.ValueConstraintSet;
@@ -25,6 +26,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 final class FieldBuilder
     extends AbstractModelBuilder<IFieldBuilder>
@@ -79,10 +81,16 @@ final class FieldBuilder
   @Override
   @NonNull
   public IFieldDefinition toDefinition() {
+    return toDefinition(null);
+  }
+
+  @Override
+  @NonNull
+  public IFieldDefinition toDefinition(@Nullable IModule module) {
     validate();
 
     IFieldDefinition retval = mock(IFieldDefinition.class);
-    applyDefinition(retval);
+    applyDefinition(retval, module);
 
     Map<IEnhancedQName, IFlagInstance> flags = getFlags().stream()
         .map(builder -> builder.toInstance(retval))

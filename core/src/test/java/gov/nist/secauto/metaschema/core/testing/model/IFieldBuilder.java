@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.model.IModule;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -78,4 +79,14 @@ public interface IFieldBuilder extends IModelBuilder<IFieldBuilder> {
    */
   @NonNull
   IFieldDefinition toDefinition();
+
+  /**
+   * Build a mocked field definition associated with the given module.
+   *
+   * @param module
+   *          the containing module
+   * @return the new mocked definition
+   */
+  @NonNull
+  IFieldDefinition toDefinition(@NonNull IModule module);
 }

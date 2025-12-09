@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
+import gov.nist.secauto.metaschema.core.model.IModule;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -89,4 +90,14 @@ public interface IFlagBuilder extends IMetaschemaBuilder<IFlagBuilder> {
    */
   @NonNull
   IFlagDefinition toDefinition();
+
+  /**
+   * Build a mocked flag definition associated with the given module.
+   *
+   * @param module
+   *          the containing module
+   * @return the new mocked definition
+   */
+  @NonNull
+  IFlagDefinition toDefinition(@NonNull IModule module);
 }
