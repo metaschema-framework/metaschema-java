@@ -122,8 +122,10 @@ class SarifValidationHandlerTest {
 
       JsonNode instanceNode = new OrgJsonNode(new JSONObject(sarifOutput));
 
-      Validator.Result result
-          = new ValidatorFactory().withDialect(new Dialects.Draft2020Dialect()).validate(schemaNode, instanceNode);
+      Validator.Result result = new ValidatorFactory()
+          .withJsonNodeFactory(new OrgJsonNode.Factory())
+          .withDialect(new Dialects.Draft2020Dialect())
+          .validate(schemaNode, instanceNode);
       StringJoiner sj = new StringJoiner("\n");
       for (dev.harrel.jsonschema.Error finding : result.getErrors()) {
         sj.add(String.format("[%s]%s %s for schema '%s'",
@@ -213,8 +215,10 @@ class SarifValidationHandlerTest {
       try (Reader instanceReader = Files.newBufferedReader(sarifFile, StandardCharsets.UTF_8)) {
         JsonNode instanceNode = new OrgJsonNode(new JSONObject(new JSONTokener(instanceReader)));
 
-        Validator.Result result
-            = new ValidatorFactory().withDialect(new Dialects.Draft2020Dialect()).validate(schemaNode, instanceNode);
+        Validator.Result result = new ValidatorFactory()
+            .withJsonNodeFactory(new OrgJsonNode.Factory())
+            .withDialect(new Dialects.Draft2020Dialect())
+            .validate(schemaNode, instanceNode);
         StringJoiner sj = new StringJoiner("\n");
         for (dev.harrel.jsonschema.Error finding : result.getErrors()) {
           sj.add(String.format("[%s]%s %s for schema '%s'",
