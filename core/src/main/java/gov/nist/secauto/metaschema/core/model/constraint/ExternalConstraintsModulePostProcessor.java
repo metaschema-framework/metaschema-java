@@ -10,7 +10,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.core.model.constraint.impl.ConstraintComposingVisitor;
-import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.util.Collection;
@@ -24,7 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * A module loading post processor that integrates applicable external
  * constraints into a given module when loaded.
  *
- * @see ModuleLoader#ModuleLoader(List)
+ * @see IModuleLoader
  */
 public class ExternalConstraintsModulePostProcessor implements IModuleLoader.IModulePostProcessor {
   @NonNull

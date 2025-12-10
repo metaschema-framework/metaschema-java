@@ -8,8 +8,6 @@ package gov.nist.secauto.metaschema.databind.io;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
-import gov.nist.secauto.metaschema.core.model.xml.IXmlMetaschemaModule;
-import gov.nist.secauto.metaschema.core.model.xml.ModuleLoader;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.codegen.AbstractMetaschemaTest;
@@ -98,16 +96,6 @@ class MetaschemaModuleMetaschemaTest
     IBindingModuleLoader loader = newBindingContext().newModuleLoader();
     loader.allowEntityResolution();
     IBindingMetaschemaModule module = loader.load(ObjectUtils.notNull(URI.create(
-        "https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.3/src/metaschema/oscal_complete_metaschema.xml")));
-    assertNotNull(module);
-  }
-
-  @Test
-  void testOscalXmlModuleLoader() throws MetaschemaException, IOException {
-    ModuleLoader loader = new ModuleLoader();
-    // loader.allowEntityResolution();
-
-    IXmlMetaschemaModule module = loader.load(ObjectUtils.notNull(URI.create(
         "https://raw.githubusercontent.com/usnistgov/OSCAL/refs/tags/v1.1.3/src/metaschema/oscal_complete_metaschema.xml")));
     assertNotNull(module);
   }

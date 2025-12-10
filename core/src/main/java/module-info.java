@@ -38,7 +38,6 @@ module gov.nist.secauto.metaschema.core {
   requires org.apache.commons.lang3;
   requires org.apache.commons.text;
   requires org.apache.logging.log4j;
-  requires transitive org.apache.xmlbeans;
   requires transitive org.codehaus.stax2;
   requires transitive org.json;
   requires org.jsoup;
@@ -83,7 +82,6 @@ module gov.nist.secauto.metaschema.core {
   exports gov.nist.secauto.metaschema.core.model.constraint;
   exports gov.nist.secauto.metaschema.core.model.util;
   exports gov.nist.secauto.metaschema.core.model.validation;
-  exports gov.nist.secauto.metaschema.core.model.xml;
   exports gov.nist.secauto.metaschema.core.qname;
   exports gov.nist.secauto.metaschema.core.util;
 
@@ -97,11 +95,6 @@ module gov.nist.secauto.metaschema.core {
 
   // allow reflection on data types
   opens gov.nist.secauto.metaschema.core.datatype.markup;
-
-  // need to allow access to the generated XMLBeans files
-  opens org.apache.xmlbeans.metadata.system.metaschema;
-  opens gov.nist.secauto.metaschema.core.model.xml.xmlbeans;
-  opens gov.nist.secauto.metaschema.core.model.xml.xmlbeans.impl;
 
   // services
   uses IDataTypeProvider;

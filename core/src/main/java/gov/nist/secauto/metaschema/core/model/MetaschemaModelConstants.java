@@ -3,17 +3,9 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.model.xml;
+package gov.nist.secauto.metaschema.core.model;
 
 import gov.nist.secauto.metaschema.core.MetaschemaConstants;
-import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
-import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
-import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
-import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
-import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
-import gov.nist.secauto.metaschema.core.model.IFieldInstance;
-import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
-import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.ICardinalityConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
@@ -26,61 +18,61 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Provides commonly used XML constants related to an XML-based Metaschema
- * module.
+ * Provides commonly used QName constants for Metaschema model elements.
  */
-// FIXME: integrate these into the model interfaces or generalize these outside
-// of XML
 @SuppressWarnings("PMD.DataClass")
-public final class XmlModuleConstants {
+public final class MetaschemaModelConstants {
   /**
-   * The name of an {@link IAssemblyInstance} in XML.
+   * The name of an {@link IAssemblyInstance} in the Metaschema model.
    */
   @NonNull
   public static final IEnhancedQName ASSEMBLY_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "assembly");
 
   /**
-   * The name of an inline {@link IAssemblyDefinition} in XML.
+   * The name of an inline {@link IAssemblyDefinition} in the Metaschema model.
    */
   @NonNull
   public static final IEnhancedQName DEFINE_ASSEMBLY_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "define-assembly");
-  /**
-   * The name of an {@link IFieldInstance} in XML.
-   */
-  @NonNull
-  public static final IEnhancedQName FIELD_QNAME = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "field");
 
   /**
-   * The name of an inline {@link IFieldDefinition} in XML.
+   * The name of an {@link IFieldInstance} in the Metaschema model.
+   */
+  @NonNull
+  public static final IEnhancedQName FIELD_QNAME
+      = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "field");
+
+  /**
+   * The name of an inline {@link IFieldDefinition} in the Metaschema model.
    */
   @NonNull
   public static final IEnhancedQName DEFINE_FIELD_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "define-field");
 
   /**
-   * The name of an {@link IFlagInstance} in XML.
+   * The name of an {@link IFlagInstance} in the Metaschema model.
    */
   @NonNull
-  public static final IEnhancedQName FLAG_QNAME = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "flag");
+  public static final IEnhancedQName FLAG_QNAME
+      = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "flag");
 
   /**
-   * The name of an inline {@link IFlagDefinition} in XML.
+   * The name of an inline {@link IFlagDefinition} in the Metaschema model.
    */
   @NonNull
   public static final IEnhancedQName DEFINE_FLAG_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "define-flag");
 
   /**
-   * The name of an {@link IChoiceInstance} in XML.
+   * The name of an {@link IChoiceInstance} in the Metaschema model.
    */
   @NonNull
   public static final IEnhancedQName CHOICE_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "choice");
 
   /**
-   * The name of an {@link IChoiceGroupInstance} in XML.
+   * The name of an {@link IChoiceGroupInstance} in the Metaschema model.
    */
   @NonNull
   public static final IEnhancedQName CHOICE_GROUP_QNAME
@@ -88,61 +80,65 @@ public final class XmlModuleConstants {
 
   /**
    * The name of the element that identifies the model of an
-   * {@link IAssemblyDefinition} in XML.
+   * {@link IAssemblyDefinition} in the Metaschema model.
    */
   @NonNull
-  public static final IEnhancedQName MODEL_QNAME = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "model");
+  public static final IEnhancedQName MODEL_QNAME
+      = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "model");
 
   /**
-   * The name of an {@link IAllowedValuesConstraint} constraint in XML.
+   * The name of an {@link IAllowedValuesConstraint} constraint in the Metaschema
+   * model.
    */
   @NonNull
   public static final IEnhancedQName ALLOWED_VALUES_CONSTRAINT_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "allowed-values");
 
   /**
-   * The name of an {@link IIndexHasKeyConstraint} constraint in XML.
+   * The name of an {@link IIndexHasKeyConstraint} constraint in the Metaschema
+   * model.
    */
   @NonNull
   public static final IEnhancedQName INDEX_HAS_KEY_CONSTRAINT_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "index-has-key");
 
   /**
-   * The name of an {@link IMatchesConstraint} constraint in XML.
+   * The name of an {@link IMatchesConstraint} constraint in the Metaschema model.
    */
   @NonNull
   public static final IEnhancedQName MATCHES_CONSTRAINT_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "matches");
 
   /**
-   * The name of an {@link IExpectConstraint} constraint in XML.
+   * The name of an {@link IExpectConstraint} constraint in the Metaschema model.
    */
   @NonNull
   public static final IEnhancedQName EXPECT_CONSTRAINT_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "expect");
 
   /**
-   * The name of an {@link IIndexConstraint} constraint in XML.
+   * The name of an {@link IIndexConstraint} constraint in the Metaschema model.
    */
   @NonNull
   public static final IEnhancedQName INDEX_CONSTRAINT_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "index");
 
   /**
-   * The name of an {@link IUniqueConstraint} constraint in XML.
+   * The name of an {@link IUniqueConstraint} constraint in the Metaschema model.
    */
   @NonNull
   public static final IEnhancedQName IS_UNIQUE_CONSTRAINT_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "is-unique");
 
   /**
-   * The name of an {@link ICardinalityConstraint} constraint in XML.
+   * The name of an {@link ICardinalityConstraint} constraint in the Metaschema
+   * model.
    */
   @NonNull
   public static final IEnhancedQName HAS_CARDINALITY_CONSTRAINT_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "has-cardinality");
 
-  private XmlModuleConstants() {
+  private MetaschemaModelConstants() {
     // disable construction
   }
 }
