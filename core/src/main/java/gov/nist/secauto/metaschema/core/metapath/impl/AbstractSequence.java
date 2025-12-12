@@ -31,9 +31,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public abstract class AbstractSequence<ITEM extends IItem>
     implements ISequence<ITEM> {
 
-  @NonNull
-  private static final ISequence<?> EMPTY = new SequenceN<>();
-
   /**
    * Get an immutable sequence that is empty.
    *
@@ -43,7 +40,7 @@ public abstract class AbstractSequence<ITEM extends IItem>
    */
   @SuppressWarnings("unchecked")
   public static <T extends IItem> ISequence<T> empty() {
-    return (ISequence<T>) EMPTY;
+    return (ISequence<T>) SequenceN.empty();
   }
 
   @Override

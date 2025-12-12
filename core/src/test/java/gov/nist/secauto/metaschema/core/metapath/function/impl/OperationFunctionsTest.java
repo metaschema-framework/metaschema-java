@@ -229,6 +229,31 @@ class OperationFunctionsTest {
       assertEquals(expected, OperationFunctions.opNumericMod(dividend, divisor));
     }
 
+    private Stream<Arguments> provideValuesOpNumericModByZero() {
+      return Stream.of(
+          Arguments.of(integer(0), integer(0)),
+          Arguments.of(decimal("1.0"), integer(0)),
+          Arguments.of(integer(1), decimal("0.0")),
+          Arguments.of(integer(1), decimal("0")));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValuesOpNumericModByZero")
+    @DisplayName("op:numeric-mod - by zero")
+    void testOpNumericModByZero(
+        @NonNull INumericItem dividend,
+        @NonNull INumericItem divisor) {
+      ArithmeticFunctionException thrown = assertThrows(ArithmeticFunctionException.class, () -> {
+        OperationFunctions.opNumericMod(dividend, divisor);
+      });
+      assertThat(thrown)
+          .isExactlyInstanceOf(ArithmeticFunctionException.class)
+          .returns(
+              ArithmeticFunctionException.DIVISION_BY_ZERO,
+              from(ex -> ex.getErrorCode().getCode()))
+          .hasNoCause();
+    }
+
     private Stream<Arguments> provideValuesOpNumericUnaryMinus() {
       return Stream.of(
           Arguments.of(integer(-10), integer(10)),
