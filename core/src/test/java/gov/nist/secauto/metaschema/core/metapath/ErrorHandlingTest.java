@@ -305,9 +305,8 @@ class ErrorHandlingTest
         "Custom error message");
 
     // Verify exception has correct error code
-    // (TypeMetapathException.INVALID_TYPE_ERROR = 4)
     assertThat(exception.getErrorCode().getCode())
-        .isEqualTo(4);
+        .isEqualTo(TypeMetapathException.INVALID_TYPE_ERROR);
 
     assertThat(exception)
         .extracting(InvalidTypeMetapathException::getItem)
@@ -329,9 +328,8 @@ class ErrorHandlingTest
     assertThat(exception)
         .hasCause(cause);
     // Verify exception has correct error code
-    // (TypeMetapathException.INVALID_TYPE_ERROR = 4)
     assertThat(exception.getErrorCode().getCode())
-        .isEqualTo(4);
+        .isEqualTo(TypeMetapathException.INVALID_TYPE_ERROR);
   }
 
   // ============================================================================

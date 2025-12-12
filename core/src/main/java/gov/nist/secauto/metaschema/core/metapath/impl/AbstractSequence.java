@@ -38,9 +38,8 @@ public abstract class AbstractSequence<ITEM extends IItem>
    *          the item Java type
    * @return the empty sequence
    */
-  @SuppressWarnings("unchecked")
   public static <T extends IItem> ISequence<T> empty() {
-    return (ISequence<T>) SequenceN.empty();
+    return SequenceN.empty();
   }
 
   @Override

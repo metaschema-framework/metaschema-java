@@ -169,8 +169,14 @@ class FunctionServiceTest {
 
     assertAll(
         () -> assertFalse(functions.isEmpty(), "Function stream should not be empty"),
-        () -> assertTrue(functions.size() > 50,
-            "Default library should contain many functions (XPath + extensions)"));
+        // Check for presence of well-known functions rather than a specific count
+        // which would be brittle as the library evolves
+        () -> assertTrue(functions.stream()
+            .anyMatch(f -> "count".equals(f.getName())),
+            "Stream should contain fn:count"),
+        () -> assertTrue(functions.stream()
+            .anyMatch(f -> "concat".equals(f.getName())),
+            "Stream should contain fn:concat"));
   }
 
   /**
@@ -389,7 +395,7 @@ class FunctionServiceTest {
                 .allowUnboundedArity(true)
                 .returnType(IItem.type())
                 .returnOne()
-                .functionHandler((f, a, d, foc) -> ISequence.empty())
+                .functionHandler((f, a, d, foc) -> ISequence.of(string("x")))
                 .build(),
             "Building unbounded arity function without arguments should throw IllegalStateException"));
   }
