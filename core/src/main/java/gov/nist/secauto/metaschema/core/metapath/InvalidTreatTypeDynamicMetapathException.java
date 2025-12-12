@@ -34,6 +34,7 @@ public class InvalidTreatTypeDynamicMetapathException
       @NonNull Deque<IExpression> evaluationStack,
       @Nullable String message) {
     super(TREAT_DOES_NOT_MATCH_TYPE, message);
+    registerEvaluationContext(evaluationStack);
   }
 
   /**

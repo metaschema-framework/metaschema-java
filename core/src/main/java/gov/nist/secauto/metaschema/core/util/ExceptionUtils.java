@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.util;
 
+import java.util.Objects;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -24,7 +26,7 @@ public final class ExceptionUtils {
    */
   @NonNull
   public static WrappedException wrap(@NonNull Throwable ex) {
-    return new WrappedException(ex);
+    return new WrappedException(Objects.requireNonNull(ex, "ex"));
   }
 
   /**
@@ -39,7 +41,7 @@ public final class ExceptionUtils {
    */
   @NonNull
   public static WrappedException wrapAndThrow(@NonNull Throwable ex) {
-    return new WrappedException(ex);
+    return wrap(ex);
   }
 
   /**

@@ -26,7 +26,8 @@
  * <h2>Usage Context</h2>
  * <p>
  * This validation framework differs from constraint validation
- * ({@link gov.nist.secauto.metaschema.core.model.constraint}) in that it:
+ * ({@link gov.nist.secauto.metaschema.core.model.constraint.IConstraint}) in
+ * that it:
  * <ul>
  * <li>Validates against schema documents (XSD/JSON Schema) rather than
  * constraint rules</li>
@@ -39,9 +40,10 @@
  * <p>
  * For constraint-based validation (e.g., allowed values, uniqueness,
  * cardinality), use the
- * {@link gov.nist.secauto.metaschema.core.model.constraint} package instead.
+ * {@link gov.nist.secauto.metaschema.core.model.constraint.IConstraint}
+ * instead.
  *
- * @see gov.nist.secauto.metaschema.core.model.constraint
+ * @see gov.nist.secauto.metaschema.core.model.constraint.IConstraint
  */
 
 package gov.nist.secauto.metaschema.core.model.validation;

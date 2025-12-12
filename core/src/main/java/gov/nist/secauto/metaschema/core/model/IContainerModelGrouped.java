@@ -31,7 +31,7 @@ public interface IContainerModelGrouped extends IContainerModel {
   /**
    * Get all named model instances within the container.
    *
-   * @return an ordered mapping of use name to model instance
+   * @return the named model instances in this container
    */
   @Override
   @NonNull
@@ -53,7 +53,7 @@ public interface IContainerModelGrouped extends IContainerModel {
   /**
    * Get all field instances within the container.
    *
-   * @return a mapping of use name to field instance
+   * @return the field instances in this container
    */
   @Override
   @NonNull
@@ -75,7 +75,7 @@ public interface IContainerModelGrouped extends IContainerModel {
   /**
    * Get all assembly instances within the container.
    *
-   * @return a mapping of use name to assembly instance
+   * @return the assembly instances in this container
    */
   @Override
   @NonNull

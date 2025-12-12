@@ -103,6 +103,22 @@ public class MetapathException
   }
 
   /**
+   * Registers the evaluation context from the provided evaluation stack.
+   * <p>
+   * A snapshot of the stack is captured if not already set.
+   *
+   * @param stack
+   *          the evaluation stack recording the expressions being evaluated
+   * @return this exception instance for chaining
+   */
+  public MetapathException registerEvaluationContext(@NonNull Deque<? extends IExpression> stack) {
+    if (evaluationStack == null) {
+      evaluationStack = new ArrayDeque<>(stack);
+    }
+    return this;
+  }
+
+  /**
    * Registers the evaluation context from the provided metapath expression.
    * <p>
    * The expression is recorded as the evaluation context if not already set.
