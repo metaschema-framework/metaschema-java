@@ -5,12 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.metapath.item.node;
 
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.ISource;
-import gov.nist.secauto.metaschema.core.testsupport.builder.IModuleBuilder;
 import gov.nist.secauto.metaschema.core.testsupport.MockedModelTestSupport;
-
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import gov.nist.secauto.metaschema.core.testsupport.builder.IModuleBuilder;
 
 import org.junit.jupiter.api.Test;
 

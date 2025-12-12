@@ -40,7 +40,7 @@ class ExpressionUtilsTest {
 
   @Test
   void testTwoFlags() {
-    Class<INodeItem> baseType = INodeItem.class;
+    final Class<INodeItem> baseType = INodeItem.class;
     basicFlagExpr1 = context.mock(IExpression.class, "basicFlagExpr1");
     basicFlagExpr2 = context.mock(IExpression.class, "basicFlagExpr2");
 
@@ -60,7 +60,7 @@ class ExpressionUtilsTest {
 
   @Test
   void testFlagAndAssembly() {
-    Class<INodeItem> baseType = INodeItem.class;
+    final Class<INodeItem> baseType = INodeItem.class;
     basicFlagExpr1 = context.mock(IExpression.class, "basicFlagExpr1");
     basicAssemblyExpr = context.mock(IExpression.class, "basicAssemblyExpr");
 
@@ -80,7 +80,7 @@ class ExpressionUtilsTest {
 
   @Test
   void testFieldAndAssembly() {
-    Class<INodeItem> baseType = INodeItem.class;
+    final Class<INodeItem> baseType = INodeItem.class;
     basicFieldExpr = context.mock(IExpression.class, "basicFieldExpr");
     basicAssemblyExpr = context.mock(IExpression.class, "basicAssemblyExpr");
 
