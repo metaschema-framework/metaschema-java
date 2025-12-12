@@ -47,7 +47,7 @@ public interface INamedModelInstance extends IModelInstance, INamedInstance {
 
   /**
    * Indicates if a flag's value can be used as a property name in the containing
-   * object in JSON who's value will be the object containing the flag. In such
+   * object in JSON whose value will be the object containing the flag. In such
    * cases, the flag will not appear in the object. This is only allowed if the
    * flag is required, as determined by a {@code true} result from
    * {@link IFlagInstance#isRequired()}. The {@link IFlagInstance} can be

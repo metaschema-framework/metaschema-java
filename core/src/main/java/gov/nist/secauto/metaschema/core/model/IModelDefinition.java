@@ -67,7 +67,7 @@ public interface IModelDefinition extends IDefinition, IContainer {
 
   /**
    * Retrieves the flag instance to use as as the property name for the containing
-   * object in JSON who's value will be the object containing the flag.
+   * object in JSON whose value will be the object containing the flag.
    *
    * @return the flag instance if a JSON key is configured, or {@code null}
    *         otherwise

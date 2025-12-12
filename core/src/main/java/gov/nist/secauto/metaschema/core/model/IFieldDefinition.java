@@ -54,7 +54,7 @@ public interface IFieldDefinition extends IModelDefinition, IValuedDefinition, I
   }
 
   /**
-   * Retrieves the flag instance who's value will be used as the "value key".
+   * Retrieves the flag instance whose value will be used as the "value key".
    *
    * @return the configured flag instance, or {@code null} if a flag is not
    *         configured as the "value key"

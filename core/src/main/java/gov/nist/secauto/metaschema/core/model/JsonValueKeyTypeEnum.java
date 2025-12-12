@@ -18,7 +18,7 @@ public enum JsonValueKeyTypeEnum {
    */
   STATIC_LABEL,
   /**
-   * A flag is idenfied as the value key, who's value will be used.
+   * A flag is identified as the value key, whose value will be used.
    */
   FLAG;
 }

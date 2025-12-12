@@ -89,14 +89,17 @@ public class MetapathException
   /**
    * Registers the evaluation context from the provided dynamic context.
    * <p>
-   * The execution stack is captured from the dynamic context if not already set.
+   * A snapshot of the execution stack is captured from the dynamic context if not
+   * already set. This ensures the recorded state reflects the stack at the time
+   * of registration, avoiding confusion from post-throw mutations.
    *
    * @param dynamicContext
    *          the dynamic context containing the execution stack
    * @return this exception instance for chaining
    */
-  public MetapathException registerEvaluationContext(@NonNull DynamicContext dynamicContext) {
+  public final MetapathException registerEvaluationContext(@NonNull DynamicContext dynamicContext) {
     if (evaluationStack == null) {
+      // getExecutionStack() returns a defensive copy
       evaluationStack = dynamicContext.getExecutionStack();
     }
     return this;
@@ -111,7 +114,7 @@ public class MetapathException
    *          the evaluation stack recording the expressions being evaluated
    * @return this exception instance for chaining
    */
-  public MetapathException registerEvaluationContext(@NonNull Deque<? extends IExpression> stack) {
+  public final MetapathException registerEvaluationContext(@NonNull Deque<? extends IExpression> stack) {
     if (evaluationStack == null) {
       evaluationStack = new ArrayDeque<>(stack);
     }
@@ -127,7 +130,7 @@ public class MetapathException
    *          the metapath expression being evaluated
    * @return this exception instance for chaining
    */
-  public MetapathException registerEvaluationContext(@NonNull IMetapathExpression metapath) {
+  public final MetapathException registerEvaluationContext(@NonNull IMetapathExpression metapath) {
     if (evaluationStack == null) {
       evaluationStack = new ArrayDeque<>(Collections.singleton(metapath));
     }

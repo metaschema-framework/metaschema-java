@@ -135,7 +135,7 @@ public final class ExceptionUtils {
         return unwrappedEx;
       }
       throw new IllegalArgumentException(
-          String.format("Wrapped exception '%s' did not match excpeted type '%s'.",
+          String.format("Wrapped exception '%s' did not match expected type '%s'.",
               cause.getClass().getName(),
               wrappedExceptionClass.getName()));
     }

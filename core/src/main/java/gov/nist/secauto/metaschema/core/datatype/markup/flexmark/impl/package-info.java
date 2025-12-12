@@ -41,7 +41,8 @@
  * <ul>
  * <li>{@link HtmlCodeRenderExtension} - Custom rendering for inline
  * {@code <code>} elements to properly handle special characters</li>
- * <li>{@link SuppressPTagExtension} - Suppresses paragraph tags in single-line markup content</li>
+ * <li>{@link SuppressPTagExtension} - Suppresses paragraph tags in single-line
+ * markup content</li>
  * <li>{@link FixedEmphasisDelimiterProcessor} - Fixed implementation of
  * emphasis delimiter processing to handle edge cases in Markdown emphasis
  * parsing</li>

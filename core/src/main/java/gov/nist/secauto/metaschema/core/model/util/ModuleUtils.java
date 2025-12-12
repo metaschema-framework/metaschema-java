@@ -42,7 +42,7 @@ public final class ModuleUtils {
   }
 
   /**
-   * Parse the name of a field or assemvly.
+   * Parse the name of a field or assembly.
    * <p>
    * The namespace for the name will be determined according to
    * {@link StaticContext#parseModelName(String)}.
