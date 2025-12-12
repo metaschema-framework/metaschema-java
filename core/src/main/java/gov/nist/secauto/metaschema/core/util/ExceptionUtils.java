@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.core.util;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -97,7 +98,7 @@ public final class ExceptionUtils {
      *          the exception to wrap
      */
     public WrappedException(@NonNull Throwable cause) {
-      super(cause);
+      super(Objects.requireNonNull(cause, "cause"));
     }
 
     @Override
@@ -131,7 +132,12 @@ public final class ExceptionUtils {
       Throwable cause = unwrap();
       if (wrappedExceptionClass.isInstance(cause)) {
         E unwrappedEx = wrappedExceptionClass.cast(cause);
-        unwrappedEx.addSuppressed(this);
+        // Avoid adding duplicate suppressed exceptions on repeated unwraps
+        boolean alreadySuppressed = Arrays.stream(unwrappedEx.getSuppressed())
+            .anyMatch(s -> s == this);
+        if (!alreadySuppressed) {
+          unwrappedEx.addSuppressed(this);
+        }
         return unwrappedEx;
       }
       throw new IllegalArgumentException(

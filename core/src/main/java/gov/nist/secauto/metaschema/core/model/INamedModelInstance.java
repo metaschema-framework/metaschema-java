@@ -65,7 +65,7 @@ public interface INamedModelInstance extends IModelInstance, INamedInstance {
   /**
    * Get the JSON key flag instance for this model instance, if one is configured.
    *
-   * @return the JSON key flag instance or {@code null} if a JSON key is
+   * @return the JSON key flag instance or {@code null} if no JSON key is
    *         configured
    */
   @Nullable
