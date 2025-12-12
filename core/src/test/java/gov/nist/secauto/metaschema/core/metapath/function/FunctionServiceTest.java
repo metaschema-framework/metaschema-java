@@ -314,7 +314,7 @@ class FunctionServiceTest {
         .deterministic()
         .returnType(IItem.type())
         .returnOne()
-        .functionHandler((function, arguments, dynamicContext, focus) -> ISequence.empty())
+        .functionHandler((function, arguments, dynamicContext, focus) -> ISequence.of(string("x")))
         .build();
 
     IFunction function2 = IFunction.builder()
@@ -323,7 +323,7 @@ class FunctionServiceTest {
         .deterministic()
         .returnType(IItem.type())
         .returnOne()
-        .functionHandler((function, arguments, dynamicContext, focus) -> ISequence.empty())
+        .functionHandler((function, arguments, dynamicContext, focus) -> ISequence.of(string("x")))
         .build();
 
     library.registerFunction(function1);
@@ -495,7 +495,7 @@ class FunctionServiceTest {
         .focusIndependent()
         .returnType(IItem.type())
         .returnOne()
-        .functionHandler((f, a, d, foc) -> ISequence.empty())
+        .functionHandler((f, a, d, foc) -> ISequence.of(string("x")))
         .build();
 
     IFunction nonDeterministicFunction = IFunction.builder()
@@ -506,7 +506,7 @@ class FunctionServiceTest {
         .focusDependent()
         .returnType(IItem.type())
         .returnOne()
-        .functionHandler((f, a, d, foc) -> ISequence.empty())
+        .functionHandler((f, a, d, foc) -> ISequence.of(string("x")))
         .build();
 
     assertAll(
@@ -624,7 +624,7 @@ class FunctionServiceTest {
         .namespace("http://example.com")
         .deterministic()
         .returnType(IItem.type())
-        .functionHandler((f, a, d, foc) -> ISequence.empty());
+        .functionHandler((f, a, d, foc) -> ISequence.of(string("x")));
 
     return customizer.apply(builder).build();
   }
