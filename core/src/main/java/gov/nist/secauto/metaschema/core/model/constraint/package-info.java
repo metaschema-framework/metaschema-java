@@ -45,7 +45,8 @@
  * <li>Used to generate validation rules for JSON Schema and XML Schema</li>
  * </ul>
  *
- * @see gov.nist.secauto.metaschema.core.model.constraint.impl
+ * @see gov.nist.secauto.metaschema.core.model.constraint.IConstraint
+ * @see gov.nist.secauto.metaschema.core.model.constraint.IConstraintValidator
  */
 
 package gov.nist.secauto.metaschema.core.model.constraint;

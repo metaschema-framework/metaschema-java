@@ -44,7 +44,7 @@
  * The Flexmark library is used for Markdown parsing and rendering, with custom
  * extensions provided in the {@code flexmark} subpackage.
  *
- * @see gov.nist.secauto.metaschema.core.datatype.markup.flexmark
+ * @see gov.nist.secauto.metaschema.core.datatype.markup.flexmark.FlexmarkFactory
  */
 
 package gov.nist.secauto.metaschema.core.datatype.markup;

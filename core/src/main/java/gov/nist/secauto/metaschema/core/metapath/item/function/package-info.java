@@ -66,7 +66,8 @@
  * - Thrown when attempting to create an array with a negative length</li>
  * </ul>
  *
- * @see gov.nist.secauto.metaschema.core.metapath.item.function.impl
+ * @see gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem
+ * @see gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem
  */
 
 package gov.nist.secauto.metaschema.core.metapath.item.function;

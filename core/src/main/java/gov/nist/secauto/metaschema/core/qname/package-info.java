@@ -75,8 +75,8 @@
  * QName literals and namespace resolution</li>
  * <li>{@link gov.nist.secauto.metaschema.core.model} - For storing element and
  * attribute qualified names in model definitions</li>
- * <li>{@link gov.nist.secauto.metaschema.databind} - For mapping between Java
- * classes and XML/JSON element names</li>
+ * <li>The databind module - For mapping between Java classes and XML/JSON
+ * element names</li>
  * <li>XML/JSON serialization components throughout the framework</li>
  * </ul>
  * <h2>Performance Considerations</h2>

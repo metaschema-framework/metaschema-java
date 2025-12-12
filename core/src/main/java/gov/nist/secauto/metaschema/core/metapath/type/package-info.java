@@ -57,7 +57,8 @@
  * - Thrown when a value does not match the expected type</li>
  * </ul>
  *
- * @see gov.nist.secauto.metaschema.core.metapath.type.impl
+ * @see gov.nist.secauto.metaschema.core.metapath.type.IItemType
+ * @see gov.nist.secauto.metaschema.core.metapath.type.ISequenceType
  */
 
 package gov.nist.secauto.metaschema.core.metapath.type;
