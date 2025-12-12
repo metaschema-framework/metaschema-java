@@ -23,7 +23,8 @@
  * Metaschema-specific Flexmark extensions:
  * <ul>
  * <li>{@link HtmlQuoteTagExtension} - Supports HTML {@code
- * <q>} tag parsing and rendering</li>
+ *
+<q>} tag parsing and rendering</li>
  * <li>{@link InsertAnchorExtension} - Enables insertion of anchor elements for
  * headings</li>
  * <li>{@link gov.nist.secauto.metaschema.core.datatype.markup.flexmark.impl.HtmlCodeRenderExtension}
