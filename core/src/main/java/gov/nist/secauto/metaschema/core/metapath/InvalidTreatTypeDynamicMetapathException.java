@@ -10,14 +10,23 @@ import java.util.Deque;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Raised when a Metapath treat expression fails because the sequence does not
+ * match the required type.
+ * <p>
+ * This corresponds to XPath 3.1 error XPDY0050.
+ */
 public class InvalidTreatTypeDynamicMetapathException
     extends DynamicMetapathException {
 
   private static final long serialVersionUID = 1L;
 
   /**
-   * Constructs a new exception with the provided {@code message} and no cause.
+   * Constructs a new exception with the provided {@code evaluationStack} and
+   * {@code message} and no cause.
    *
+   * @param evaluationStack
+   *          the evaluation stack recording the expressions being evaluated
    * @param message
    *          the exception message
    */

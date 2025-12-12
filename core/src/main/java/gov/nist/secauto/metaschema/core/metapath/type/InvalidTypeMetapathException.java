@@ -22,6 +22,10 @@ public class InvalidTypeMetapathException
    */
   private static final long serialVersionUID = 1L;
 
+  /**
+   * The item associated with this invalid type error, or {@code null} if no
+   * specific item was provided.
+   */
   @Nullable
   private final IItem item;
 

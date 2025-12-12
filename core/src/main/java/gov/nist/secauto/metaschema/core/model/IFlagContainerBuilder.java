@@ -7,6 +7,15 @@ package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Builder for constructing flag container instances.
+ * <p>
+ * This interface provides a fluent API for building flag containers by adding
+ * flag instances and then building the final container.
+ *
+ * @param <T>
+ *          the Java type of flag instances
+ */
 public interface IFlagContainerBuilder<T extends IFlagInstance> {
   /**
    * Add a flag instance to the flag container.

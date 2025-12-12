@@ -11,6 +11,13 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a model container for assembly definitions.
+ * <p>
+ * Assembly containers extend absolute containers by adding support for choice
+ * instances and choice group instances, which allow for alternative content
+ * models within the assembly.
+ */
 public interface IContainerModelAssembly extends IContainerModelAbsolute {
 
   /**

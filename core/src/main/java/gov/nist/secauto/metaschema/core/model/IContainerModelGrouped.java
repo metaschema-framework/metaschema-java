@@ -10,6 +10,13 @@ import java.util.Collection;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a model container with grouped instances.
+ * <p>
+ * Grouped instances are part of a choice group and share a common group-as
+ * name. This interface narrows the return types of {@link IContainerModel}
+ * methods to grouped instance types.
+ */
 public interface IContainerModelGrouped extends IContainerModel {
 
   @Override

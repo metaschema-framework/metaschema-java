@@ -3,7 +3,10 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 
-//REFACTOR: Check if this is used, delete?
+/**
+ * Represents a Metapath assembly node item for a grouped assembly instance.
+ */
+// REFACTOR: Check if this is used, delete?
 public interface IAssemblyInstanceGroupedNodeItem
     extends IAssemblyNodeItem {
 

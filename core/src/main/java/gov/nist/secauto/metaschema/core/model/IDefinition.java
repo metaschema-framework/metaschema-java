@@ -13,6 +13,13 @@ import java.util.Locale;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a definition of a flag, field, or assembly in a Metaschema module.
+ * <p>
+ * Definitions are reusable components that specify the structure and
+ * constraints for data elements. They can be referenced by instances or defined
+ * inline.
+ */
 public interface IDefinition extends INamedModelElement, IAttributable, IFeatureValueConstrained {
   /**
    * Describes the visibility of a definition to other modules.
@@ -28,6 +35,9 @@ public interface IDefinition extends INamedModelElement, IAttributable, IFeature
     PUBLIC;
   }
 
+  /**
+   * The default module scope for definitions.
+   */
   @NonNull
   ModuleScope DEFAULT_MODULE_SCOPE = ModuleScope.PUBLIC;
 

@@ -10,6 +10,12 @@ import java.util.function.Predicate;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a named instance of a field or assembly within a model.
+ * <p>
+ * Provides access to the instance's definition and JSON key configuration for
+ * serialization purposes.
+ */
 public interface INamedModelInstance extends IModelInstance, INamedInstance {
 
   /**

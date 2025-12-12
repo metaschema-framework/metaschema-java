@@ -13,6 +13,10 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides utility methods for parsing qualified names within Metaschema
+ * modules.
+ */
 public final class ModuleUtils {
   /**
    * Parse a flag name.

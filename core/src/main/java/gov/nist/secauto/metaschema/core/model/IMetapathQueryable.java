@@ -9,6 +9,12 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a model element that can be queried using Metapath expressions.
+ * <p>
+ * This interface provides access to the node item representation required for
+ * Metapath evaluation.
+ */
 public interface IMetapathQueryable {
   /**
    * Get the Metapath node item for this Metaschema module construct, which can be

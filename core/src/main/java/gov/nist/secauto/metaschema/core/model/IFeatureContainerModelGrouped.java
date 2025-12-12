@@ -9,6 +9,19 @@ import java.util.Collection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides grouped container model functionality through delegation.
+ * <p>
+ * This interface provides default implementations for grouped container model
+ * operations by delegating to an {@link IContainerModelSupport} instance.
+ *
+ * @param <NMI>
+ *          the Java type of named model instances
+ * @param <FI>
+ *          the Java type of field instances
+ * @param <AI>
+ *          the Java type of assembly instances
+ */
 public interface IFeatureContainerModelGrouped<
     NMI extends INamedModelInstanceGrouped,
     FI extends IFieldInstanceGrouped,

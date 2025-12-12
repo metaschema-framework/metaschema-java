@@ -16,6 +16,14 @@ import java.util.Collection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides loading capabilities for resources of type {@code T}.
+ * <p>
+ * Supports loading from various sources including URIs, paths, files, and URLs.
+ *
+ * @param <T>
+ *          the type of resource loaded by this loader
+ */
 public interface ILoader<T> {
   /**
    * Retrieve the set of loaded resources.

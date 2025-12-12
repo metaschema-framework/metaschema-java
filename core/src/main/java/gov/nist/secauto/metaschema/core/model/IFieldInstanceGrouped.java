@@ -7,6 +7,13 @@ package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a field instance that appears within a choice or other grouping
+ * construct.
+ * <p>
+ * Grouped field instances always have XML wrapping enabled and inherit
+ * cardinality from their containing group.
+ */
 public interface IFieldInstanceGrouped extends INamedModelInstanceGrouped, IFieldInstance {
 
   /**

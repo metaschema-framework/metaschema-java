@@ -160,6 +160,7 @@ public final class MetaschemaDataTypeProvider // NOPMD - Used for service initia
    * "https://pages.nist.gov/metaschema/specification/datatypes/#ncname">ncname</a>
    * data type instance.
    */
+  @SuppressWarnings("deprecation")
   @Deprecated(since = "0.7.0")
   @NonNull
   public static final NcNameAdapter NCNAME = new NcNameAdapter();

@@ -13,6 +13,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides utility methods for working with XML sources and streams.
+ */
 public final class XmlUtil {
 
   private XmlUtil() {

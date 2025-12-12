@@ -9,6 +9,9 @@ import java.util.regex.Pattern;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Utility methods for regular expression processing in Metapath functions.
+ */
 public final class RegexUtil {
 
   /**

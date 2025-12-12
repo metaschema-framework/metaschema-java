@@ -131,9 +131,13 @@ public interface IDiagramNode {
    * The nature of a relationship between two nodes.
    */
   enum Relationship {
+    /** Indicates a relationship with zero or one occurrences. */
     ZERO_OR_ONE,
+    /** Indicates a relationship with exactly one occurrence. */
     ONE,
+    /** Indicates a relationship with zero or more occurrences. */
     ZERO_OR_MORE,
+    /** Indicates a relationship with one or more occurrences. */
     ONE_OR_MORE;
 
     /**

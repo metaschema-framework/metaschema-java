@@ -11,6 +11,10 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * MPRX: Exceptions related to regular expression processing in Metapath
+ * functions.
+ */
 public class RegularExpressionMetapathException
     extends MetapathException {
   @NonNull

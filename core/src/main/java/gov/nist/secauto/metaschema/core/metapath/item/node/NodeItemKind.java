@@ -15,7 +15,16 @@ public enum NodeItemKind {
    * (@link {@link IDocumentNodeItem}}).
    */
   DOCUMENT,
+  /**
+   * An {@link INodeItem} representing an assembly instance.
+   */
   ASSEMBLY,
+  /**
+   * An {@link INodeItem} representing a field instance.
+   */
   FIELD,
+  /**
+   * An {@link INodeItem} representing a flag instance.
+   */
   FLAG;
 }

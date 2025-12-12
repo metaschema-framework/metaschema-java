@@ -8,6 +8,13 @@ package gov.nist.secauto.metaschema.core.model;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a field definition in a Metaschema module.
+ * <p>
+ * A field is a structured data object that may have flags (attributes) and a
+ * simple typed value. Field definitions specify the allowed flags, value type,
+ * and JSON serialization behavior for field instances.
+ */
 public interface IFieldDefinition extends IModelDefinition, IValuedDefinition, IField {
 
   @Override

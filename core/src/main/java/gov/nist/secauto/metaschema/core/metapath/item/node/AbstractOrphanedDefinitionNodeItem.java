@@ -11,6 +11,15 @@ import java.net.URI;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A base implementation of a node item for a Metaschema definition that exists
+ * without a parent context (orphaned).
+ *
+ * @param <D>
+ *          the Java type of the definition
+ * @param <I>
+ *          the Java type of the instance
+ */
 public abstract class AbstractOrphanedDefinitionNodeItem<D extends IDefinition, I extends INamedInstance>
     extends AbstractDefinitionNodeItem<D, I> {
 
@@ -19,6 +28,15 @@ public abstract class AbstractOrphanedDefinitionNodeItem<D extends IDefinition, 
   @NonNull
   private final StaticContext staticContext;
 
+  /**
+   * Construct a new orphaned definition node item.
+   *
+   * @param definition
+   *          the Metaschema definition this node represents
+   * @param baseUri
+   *          the base URI for resolving relative references, or {@code null} if
+   *          not applicable
+   */
   public AbstractOrphanedDefinitionNodeItem(
       @NonNull D definition,
       @Nullable URI baseUri) {

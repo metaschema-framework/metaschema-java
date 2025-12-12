@@ -5,6 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+/**
+ * Indicates an error related to Metaschema processing.
+ */
 public class MetaschemaException
     extends Exception {
 

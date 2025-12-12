@@ -54,15 +54,6 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
   }
 
   /**
-   * Get the items in this sequence as a {@link List}.
-   *
-   * @return a list containing all the items of the sequence
-   */
-  @Deprecated(since = "2.2.0", forRemoval = true)
-  @NonNull
-  List<ITEM> getValue();
-
-  /**
    * Ensure the sequence is able to be iterated over multiple times.
    * <p>
    * This method can be used to ensure that the sequence can be streamed or

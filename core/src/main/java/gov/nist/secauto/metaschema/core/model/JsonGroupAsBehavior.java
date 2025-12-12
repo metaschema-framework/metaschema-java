@@ -5,6 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+/**
+ * Defines how repeated instances are grouped in JSON/YAML representations.
+ */
 public enum JsonGroupAsBehavior {
   /**
    * In JSON, the group of instances will be represented as a JSON object, with

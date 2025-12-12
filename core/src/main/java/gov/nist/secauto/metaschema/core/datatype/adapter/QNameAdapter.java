@@ -20,7 +20,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Support for the Metaschema <a href=
- * "https://pages.nist.gov/metaschema/specification/datatypes/#uri-reference">uri-reference</a>
+ * "https://pages.nist.gov/metaschema/specification/datatypes/#qname">qname</a>
  * data type.
  */
 public class QNameAdapter

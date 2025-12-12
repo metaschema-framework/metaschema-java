@@ -46,11 +46,6 @@ public abstract class AbstractSequence<ITEM extends IItem>
     return (ISequence<T>) EMPTY;
   }
 
-  @Override
-  public List<ITEM> getValue() {
-    return asList();
-  }
-
   /**
    * Get the unmodifiable list backing this sequence.
    *

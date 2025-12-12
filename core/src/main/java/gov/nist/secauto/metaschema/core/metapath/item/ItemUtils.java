@@ -90,6 +90,8 @@ public final class ItemUtils {
    * The resulting sequence has items of the {@link IDocumentBasedNodeItem} to
    * allow for both module and document querying.
    *
+   * @param dynamicContext
+   *          the dynamic evaluation context
    * @param items
    *          the node items to get the document roots for
    * @return the document root node items

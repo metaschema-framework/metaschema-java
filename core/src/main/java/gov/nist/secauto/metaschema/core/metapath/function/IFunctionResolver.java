@@ -10,6 +10,9 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Resolves Metapath function signatures based on name and arity.
+ */
 @FunctionalInterface
 public interface IFunctionResolver {
   /**

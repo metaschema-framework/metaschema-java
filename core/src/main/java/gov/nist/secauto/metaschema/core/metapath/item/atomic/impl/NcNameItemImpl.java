@@ -15,6 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * An implementation of a Metapath atomic item containing a non-colonized name
  * data value.
  */
+@SuppressWarnings("removal")
 @Deprecated(forRemoval = true, since = "0.7.0")
 public class NcNameItemImpl
     extends AbstractStringItem

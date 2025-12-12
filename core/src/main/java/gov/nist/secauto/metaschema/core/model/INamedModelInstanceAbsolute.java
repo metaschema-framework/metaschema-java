@@ -10,6 +10,13 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a named model instance with absolute positioning and JSON
+ * serialization support.
+ * <p>
+ * Provides JSON name resolution based on cardinality and grouping behavior,
+ * with support for JSON key configuration.
+ */
 public interface INamedModelInstanceAbsolute extends INamedModelInstance, IModelInstanceAbsolute, IJsonInstance {
   @Override
   default String getJsonName() {

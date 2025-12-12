@@ -9,6 +9,12 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a model element that has a formal name and description.
+ * <p>
+ * This interface provides access to human-readable documentation properties
+ * that describe the purpose and usage of a model element.
+ */
 public interface IDescribable {
   /**
    * The formal display name.

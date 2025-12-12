@@ -7,6 +7,13 @@ package gov.nist.secauto.metaschema.core.model;
 
 import java.util.Collection;
 
+/**
+ * Represents a model container with absolute (non-grouped) instances.
+ * <p>
+ * Absolute instances are identified by their effective name (index) rather than
+ * a use name. This interface narrows the return types of
+ * {@link IContainerModel} methods to absolute instance types.
+ */
 public interface IContainerModelAbsolute extends IContainerModel {
 
   @Override

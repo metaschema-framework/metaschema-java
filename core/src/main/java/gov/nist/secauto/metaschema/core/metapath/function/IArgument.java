@@ -23,6 +23,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Represents a single function argument signature.
  */
 public interface IArgument {
+  /**
+   * Create a new argument with the provided name and sequence type.
+   *
+   * @param name
+   *          the argument's name
+   * @param sequenceType
+   *          the argument's sequence type
+   * @return a new argument instance
+   */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IArgument of(@NonNull IEnhancedQName name, @NonNull ISequenceType sequenceType) {
@@ -63,6 +72,15 @@ public interface IArgument {
     return new Builder();
   }
 
+  /**
+   * Resolve an argument name from a prefix.
+   *
+   * @param prefix
+   *          the prefix to resolve
+   * @return the resolved argument name
+   * @throws UnsupportedOperationException
+   *           if a non-empty prefix is provided
+   */
   @NonNull
   static String resolveArgumentName(@NonNull String prefix) {
     if (!"".equals(prefix)) {

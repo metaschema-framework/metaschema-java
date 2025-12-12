@@ -25,5 +25,12 @@ public interface IMapKey {
   @Override
   int hashCode();
 
+  /**
+   * Determine if this key is the same as another key.
+   *
+   * @param other
+   *          the other key to compare
+   * @return {@code true} if the keys are the same, or {@code false} otherwise
+   */
   boolean isSameKey(@NonNull IMapKey other);
 }

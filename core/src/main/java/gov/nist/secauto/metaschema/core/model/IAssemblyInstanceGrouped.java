@@ -7,6 +7,12 @@ package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents an assembly instance that appears within a choice or other
+ * grouping construct.
+ * <p>
+ * Grouped assembly instances inherit cardinality from their containing group.
+ */
 public interface IAssemblyInstanceGrouped extends INamedModelInstanceGrouped, IAssemblyInstance {
 
   /**

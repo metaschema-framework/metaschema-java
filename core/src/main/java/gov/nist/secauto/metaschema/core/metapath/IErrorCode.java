@@ -16,6 +16,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Implementations of this interface are expected to be immutable.
  */
 public interface IErrorCode {
+  /**
+   * Create a new error code with the provided prefix and code value.
+   *
+   * @param prefix
+   *          the error code prefix
+   * @param code
+   *          the error code value
+   * @return a new error code instance
+   */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IErrorCode of(@NonNull String prefix, int code) {

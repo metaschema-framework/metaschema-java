@@ -10,6 +10,27 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides assembly-specific container model functionality through delegation.
+ * <p>
+ * This interface extends absolute container model features with
+ * assembly-specific capabilities, including choice and choice group instances.
+ * Implementations delegate to an {@link IContainerModelAssemblySupport}
+ * instance.
+ *
+ * @param <MI>
+ *          the Java type of model instances
+ * @param <NMI>
+ *          the Java type of named model instances
+ * @param <FI>
+ *          the Java type of field instances
+ * @param <AI>
+ *          the Java type of assembly instances
+ * @param <CI>
+ *          the Java type of choice instances
+ * @param <CGI>
+ *          the Java type of choice group instances
+ */
 public interface IFeatureContainerModelAssembly<
     MI extends IModelInstanceAbsolute,
     NMI extends INamedModelInstanceAbsolute,

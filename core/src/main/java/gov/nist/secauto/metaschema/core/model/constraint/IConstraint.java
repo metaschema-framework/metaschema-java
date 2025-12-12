@@ -28,12 +28,19 @@ public interface IConstraint extends IAttributable, IDescribable {
    * The type of constraint.
    */
   enum Type {
+    /** Constraint restricting the set of allowed values. */
     ALLOWED_VALUES("allowed-values"),
+    /** Constraint specifying occurrence requirements. */
     CARDINALITY("cardinality"),
+    /** Constraint expressing an expected condition. */
     EXPECT("expect"),
+    /** Constraint creating an index over items. */
     INDEX("index"),
+    /** Constraint requiring uniqueness across items. */
     UNIQUE("unique"),
+    /** Constraint verifying index key references. */
     INDEX_HAS_KEY("index-has-key"),
+    /** Constraint validating pattern matching. */
     MATCHES("matches");
 
     @NonNull
@@ -43,6 +50,11 @@ public interface IConstraint extends IAttributable, IDescribable {
       this.name = name;
     }
 
+    /**
+     * Get the name identifier for this constraint type.
+     *
+     * @return the name
+     */
     @NonNull
     public String getName() {
       return name;

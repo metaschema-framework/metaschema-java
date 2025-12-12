@@ -27,10 +27,15 @@ public interface INodeItem extends IItem, IPathSegment, INodeItemVisitable {
    * The type of node.
    */
   enum NodeType {
+    /** A Metaschema module node. */
     MODULE,
+    /** A document node representing the root of a data instance. */
     DOCUMENT,
+    /** An assembly node containing fields and other assemblies. */
     ASSEMBLY,
+    /** A field node containing flags and a value. */
     FIELD,
+    /** A flag node containing a simple value. */
     FLAG;
   }
 

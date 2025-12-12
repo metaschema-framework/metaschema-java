@@ -11,6 +11,9 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents an error that occurs during Metapath function evaluation.
+ */
 // TODO: remove this intermediate exception?
 public class FunctionMetapathError
     extends MetapathException {

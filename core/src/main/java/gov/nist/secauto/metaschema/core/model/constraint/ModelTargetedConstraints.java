@@ -14,6 +14,10 @@ import java.util.function.Supplier;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a set of constraints targeted at model definitions using Metapath
+ * expressions.
+ */
 public class ModelTargetedConstraints
     extends AbstractTargetedConstraints<IModelConstrained>
     implements IFeatureModelConstrained {

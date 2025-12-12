@@ -28,6 +28,17 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Base implementation of {@link ILoader} providing resource loading with
+ * caching and cycle detection.
+ * <p>
+ * This loader maintains a cache of loaded resources keyed by URI to avoid
+ * redundant parsing. It tracks visited resources during import chains to detect
+ * and prevent circular dependencies.
+ *
+ * @param <T>
+ *          the Java type of the resource being loaded
+ */
 public abstract class AbstractLoader<T> implements ILoader<T> {
   private static final Logger LOGGER = LogManager.getLogger(AbstractLoader.class);
 

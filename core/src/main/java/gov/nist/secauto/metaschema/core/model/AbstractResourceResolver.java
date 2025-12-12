@@ -7,6 +7,13 @@ package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Base implementation of {@link IResourceResolver} providing URI resolution
+ * support.
+ * <p>
+ * This class maintains an optional {@link IUriResolver} that can be configured
+ * to customize URI resolution behavior.
+ */
 public class AbstractResourceResolver implements IResourceResolver {
   /**
    * An {@link IUriResolver} is not provided by default.

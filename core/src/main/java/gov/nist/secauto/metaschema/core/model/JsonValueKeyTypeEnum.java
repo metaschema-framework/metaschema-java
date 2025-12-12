@@ -5,6 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+/**
+ * Defines the type of JSON value key used to identify data values.
+ */
 public enum JsonValueKeyTypeEnum {
   /**
    * No value key is defined, and a type specific value key will be used.

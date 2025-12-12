@@ -5,6 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+/**
+ * Represents data associated with a Metaschema module.
+ * <p>
+ * This interface combines resource location information with
+ * Metaschema-specific metadata.
+ */
 public interface IMetaschemaData extends IResourceLocation {
   // no additional methods
 }

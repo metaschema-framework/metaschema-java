@@ -306,11 +306,29 @@ public final class TestUtils {
     return IDayTimeDurationItem.valueOf(value);
   }
 
+  /**
+   * Create an enhanced QName with the given namespace and local name.
+   *
+   * @param namespace
+   *          the namespace URI
+   * @param localname
+   *          the local name
+   * @return the enhanced QName
+   */
   @NonNull
   public static IEnhancedQName eqname(@NonNull String namespace, @NonNull String localname) {
     return IEnhancedQName.of(namespace, localname);
   }
 
+  /**
+   * Create a QName item with the given namespace and local name.
+   *
+   * @param namespace
+   *          the namespace URI
+   * @param localname
+   *          the local name
+   * @return the QName item
+   */
   @NonNull
   public static IQNameItem qname(@NonNull String namespace, @NonNull String localname) {
     return IQNameItem.valueOf(eqname(namespace, localname));

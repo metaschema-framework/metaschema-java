@@ -21,6 +21,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * "https://pages.nist.gov/metaschema/specification/datatypes/#ncname">ncname</a>
  * data type.
  */
+@SuppressWarnings("removal")
 @Deprecated(since = "0.7.0")
 public class NcNameAdapter
     extends AbstractStringAdapter<INcNameItem> {
