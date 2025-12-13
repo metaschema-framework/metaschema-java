@@ -12,6 +12,16 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Base implementation of {@link INamedInstance} providing qualified name
+ * management.
+ * <p>
+ * This class lazily computes and caches both the instance's effective qualified
+ * name and its referenced definition qualified name.
+ *
+ * @param <PARENT>
+ *          the Java type of the parent container
+ */
 public abstract class AbstractNamedInstance<
     PARENT extends IContainer>
     extends AbstractInstance<PARENT>

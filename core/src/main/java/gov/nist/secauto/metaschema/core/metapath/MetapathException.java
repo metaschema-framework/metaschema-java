@@ -28,6 +28,10 @@ public class MetapathException
   @NonNull
   private final IErrorCode errorCode;
 
+  /**
+   * The evaluation stack recording the expressions being evaluated when the
+   * exception occurred.
+   */
   @Nullable
   private Deque<IExpression> evaluationStack = null;
 
@@ -82,20 +86,62 @@ public class MetapathException
     this.errorCode = errorCode;
   }
 
-  public MetapathException registerEvaluationContext(@NonNull DynamicContext dynamicContext) {
+  /**
+   * Registers the evaluation context from the provided dynamic context.
+   * <p>
+   * A snapshot of the execution stack is captured from the dynamic context if not
+   * already set. This ensures the recorded state reflects the stack at the time
+   * of registration, avoiding confusion from post-throw mutations.
+   *
+   * @param dynamicContext
+   *          the dynamic context containing the execution stack
+   * @return this exception instance for chaining
+   */
+  public final MetapathException registerEvaluationContext(@NonNull DynamicContext dynamicContext) {
     if (evaluationStack == null) {
+      // getExecutionStack() returns a defensive copy
       evaluationStack = dynamicContext.getExecutionStack();
     }
     return this;
   }
 
-  public MetapathException registerEvaluationContext(@NonNull IMetapathExpression metapath) {
+  /**
+   * Registers the evaluation context from the provided evaluation stack.
+   * <p>
+   * A snapshot of the stack is captured if not already set.
+   *
+   * @param stack
+   *          the evaluation stack recording the expressions being evaluated
+   * @return this exception instance for chaining
+   */
+  public final MetapathException registerEvaluationContext(@NonNull Deque<? extends IExpression> stack) {
+    if (evaluationStack == null) {
+      evaluationStack = new ArrayDeque<>(stack);
+    }
+    return this;
+  }
+
+  /**
+   * Registers the evaluation context from the provided metapath expression.
+   * <p>
+   * The expression is recorded as the evaluation context if not already set.
+   *
+   * @param metapath
+   *          the metapath expression being evaluated
+   * @return this exception instance for chaining
+   */
+  public final MetapathException registerEvaluationContext(@NonNull IMetapathExpression metapath) {
     if (evaluationStack == null) {
       evaluationStack = new ArrayDeque<>(Collections.singleton(metapath));
     }
     return this;
   }
 
+  /**
+   * Retrieves the evaluation stack recording the expressions being evaluated.
+   *
+   * @return the evaluation stack, or {@code null} if not set
+   */
   @Nullable
   protected Deque<IExpression> getEvaluationStack() {
     return evaluationStack;

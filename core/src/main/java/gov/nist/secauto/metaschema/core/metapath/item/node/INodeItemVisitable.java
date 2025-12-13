@@ -3,6 +3,9 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Marks a node item as visitable by a {@link INodeItemVisitor}.
+ */
 public interface INodeItemVisitable {
   /**
    * A visitor callback.

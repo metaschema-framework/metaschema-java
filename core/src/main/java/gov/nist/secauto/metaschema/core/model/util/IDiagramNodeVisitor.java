@@ -12,6 +12,13 @@ import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A visitor for processing edges in a diagram node model.
+ * <p>
+ * Implementations of this interface can traverse and process different types of
+ * edges in a Metaschema diagram, dispatching to the appropriate method based on
+ * the edge type.
+ */
 public interface IDiagramNodeVisitor {
   /**
    * Handle an edge based on a {@link INamedModelInstanceAbsolute}.

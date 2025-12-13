@@ -4,15 +4,57 @@
  */
 
 /**
- * Provides compact syntax tree (CST) node implementation for the Metapath
- * syntax.
+ * Provides concrete syntax tree (CST) node implementations for Metapath
+ * expressions.
  * <p>
- * The {@link gov.nist.secauto.metaschema.core.metapath.cst.BuildCSTVisitor}
- * class is responsible for converting the abstract syntax tree (AST) generated
- * by <a href="https://www.antlr.org/">ANTLRv4</a> into a CST.
+ * Metapath is an XPath 3.1-based query language for navigating and querying
+ * Metaschema-based data. This package contains the expression implementations
+ * that form the executable representation of parsed Metapath queries.
+ *
+ * <h2>Package Structure</h2>
  * <p>
- * The {@link gov.nist.secauto.metaschema.core.metapath.cst.CSTPrinter} can be
- * used to visualize the CST as a string. This can be useful for debugging.
+ * This package is organized into several subpackages:
+ * <ul>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.cst.math} - Arithmetic
+ * expressions (addition, subtraction, multiplication, division, etc.)</li>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.cst.path} - Path
+ * navigation expressions (axes, steps, node tests)</li>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.cst.type} - Type
+ * operations (cast, castable, instance of, treat)</li>
+ * <li>{@code gov.nist.secauto.metaschema.core.metapath.cst.logic} - Boolean
+ * logic and comparison expressions</li>
+ * <li>{@code gov.nist.secauto.metaschema.core.metapath.cst.items} - Literal
+ * values, sequences, and collection operations</li>
+ * </ul>
+ *
+ * <h2>Key Classes and Interfaces</h2>
+ * <ul>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression}
+ * - Base class for all CST expression nodes</li>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.cst.BuildCSTVisitor} -
+ * Transforms ANTLRv4 abstract syntax tree (AST) into executable CST nodes</li>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor}
+ * - Visitor pattern interface for processing CST nodes</li>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.cst.CSTPrinter} -
+ * Debugging utility for visualizing CST structure</li>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.cst.For} - For loop
+ * expressions</li>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.cst.Let} - Variable
+ * binding expressions</li>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.cst.StaticFunctionCall}
+ * - Static function invocation</li>
+ * </ul>
+ *
+ * <h2>Usage Context</h2>
+ * <p>
+ * CST nodes are created by
+ * {@link gov.nist.secauto.metaschema.core.metapath.cst.BuildCSTVisitor} during
+ * Metapath expression compilation. Each CST node implements
+ * {@link gov.nist.secauto.metaschema.core.metapath.IExpression} and can be
+ * evaluated against a dynamic context to produce results.
+ *
+ * @see gov.nist.secauto.metaschema.core.metapath.IExpression
+ * @see gov.nist.secauto.metaschema.core.metapath.DynamicContext
  */
 
 package gov.nist.secauto.metaschema.core.metapath.cst;

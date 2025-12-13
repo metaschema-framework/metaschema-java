@@ -25,6 +25,14 @@ public abstract class AbstractMetapathExpression implements IMetapathExpression 
   @NonNull
   private final StaticContext staticContext;
 
+  /**
+   * Construct a new Metapath expression.
+   *
+   * @param path
+   *          the Metapath expression string
+   * @param context
+   *          the static context for expression evaluation
+   */
   public AbstractMetapathExpression(
       @NonNull String path,
       @NonNull StaticContext context) {
@@ -42,6 +50,11 @@ public abstract class AbstractMetapathExpression implements IMetapathExpression 
     return staticContext;
   }
 
+  /**
+   * Get the compiled expression tree for this Metapath expression.
+   *
+   * @return the root expression node
+   */
   @NonNull
   protected abstract IExpression getExpression();
 

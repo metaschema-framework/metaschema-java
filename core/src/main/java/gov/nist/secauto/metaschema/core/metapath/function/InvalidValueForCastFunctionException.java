@@ -5,6 +5,10 @@
 
 package gov.nist.secauto.metaschema.core.metapath.function;
 
+/**
+ * FORG0001: Thrown when a cast operation fails because the supplied value
+ * cannot be converted to the target datatype.
+ */
 public class InvalidValueForCastFunctionException
     extends InvalidArgumentFunctionException {
 

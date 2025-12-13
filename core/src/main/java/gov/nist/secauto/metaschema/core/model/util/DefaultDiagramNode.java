@@ -187,6 +187,9 @@ public class DefaultDiagramNode implements IDiagramNode {
     }
   }
 
+  /**
+   * Represents an edge based on a named model instance.
+   */
   public final class ModelEdge
       extends AbstractEdge<INamedModelInstanceAbsolute> {
     private ModelEdge(
@@ -200,6 +203,10 @@ public class DefaultDiagramNode implements IDiagramNode {
     }
   }
 
+  /**
+   * Represents an edge based on a named model instance that is a member of a
+   * choice.
+   */
   public final class ChoiceEdge
       extends AbstractEdge<INamedModelInstanceAbsolute> {
     @NonNull
@@ -228,6 +235,10 @@ public class DefaultDiagramNode implements IDiagramNode {
     }
   }
 
+  /**
+   * Represents an edge based on a named model instance that is a member of a
+   * choice group.
+   */
   public final class ChoiceGroupEdge
       extends AbstractEdge<INamedModelInstanceGrouped> {
     @NonNull

@@ -54,43 +54,6 @@ public final class StaticContext {
   private final IFunctionResolver functionResolver;
 
   /**
-   * Get the mapping of prefix to namespace URI for all well-known namespaces
-   * provided by default to the static context.
-   * <p>
-   * These namespaces can be overridden using the
-   * {@link Builder#namespace(String, URI)} method.
-   * <p>
-   * This method has been deprecated. While
-   * {@link WellKnown#getWellKnownPrefixesToNamespaces()} can be used in place of
-   * this method, it is generally preferred to call
-   * {@link WellKnown#getWellKnownUriForPrefix(String)} instead.
-   *
-   * @return the mapping of prefix to namespace URI for all well-known namespaces
-   */
-  @NonNull
-  @Deprecated(since = "2.2.0", forRemoval = true)
-  public static Map<String, String> getWellKnownNamespacesMap() {
-    return WellKnown.getWellKnownPrefixesToNamespaces();
-  }
-
-  /**
-   * Get the mapping of namespace URIs to prefixes for all well-known namespaces
-   * provided by default to the static context.
-   * <p>
-   * This method has been deprecated. While
-   * {@link WellKnown#getWellKnownURIsToPrefixes()} can be used in place of this
-   * method, it is generally preferred to call
-   * {@link WellKnown#getWellKnownPrefixForUri(String)} instead.
-   *
-   * @return the mapping of namespace URI to prefix for all well-known namespaces
-   */
-  @NonNull
-  @Deprecated(since = "2.2.0", forRemoval = true)
-  public static Map<String, String> getWellKnownURIToPrefixMap() {
-    return WellKnown.getWellKnownURIsToPrefixes();
-  }
-
-  /**
    * Get the namespace prefix associated with the provided URI, if the URI is
    * well-known.
    * <p>

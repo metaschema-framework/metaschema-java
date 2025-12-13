@@ -9,6 +9,15 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a Metapath node item for a Metaschema model instance (assembly or
+ * field).
+ *
+ * @param <D>
+ *          the Java type of the model definition
+ * @param <I>
+ *          the Java type of the model instance
+ */
 public interface IModelNodeItem<D extends IModelDefinition, I extends INamedModelInstance>
     extends IDefinitionNodeItem<D, I> {
 

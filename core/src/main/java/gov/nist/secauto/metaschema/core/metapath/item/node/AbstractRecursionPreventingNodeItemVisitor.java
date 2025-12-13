@@ -3,6 +3,15 @@ package gov.nist.secauto.metaschema.core.metapath.item.node;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 
+/**
+ * A node item visitor that prevents infinite recursion when traversing assembly
+ * nodes by detecting and avoiding cycles in the node hierarchy.
+ *
+ * @param <CONTEXT>
+ *          the Java type of the visiting context
+ * @param <RESULT>
+ *          the Java type of the visiting result
+ */
 public abstract class AbstractRecursionPreventingNodeItemVisitor<CONTEXT, RESULT>
     extends AbstractNodeItemVisitor<CONTEXT, RESULT> {
 

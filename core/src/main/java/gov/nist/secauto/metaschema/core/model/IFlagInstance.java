@@ -7,13 +7,33 @@ package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a flag instance within a field or assembly definition.
+ * <p>
+ * A flag instance references a flag definition and specifies how that flag is
+ * used within its containing definition, including whether the flag is
+ * required.
+ */
 public interface IFlagInstance extends IFlag, IValuedInstance, IInstanceAbsolute {
 
+  /**
+   * The default value for whether a flag is required.
+   */
   boolean DEFAULT_FLAG_REQUIRED = false;
 
+  /**
+   * Retrieves the parent container that contains this flag instance.
+   *
+   * @return the parent model definition
+   */
   @Override
   IModelDefinition getParentContainer();
 
+  /**
+   * Retrieves the flag definition referenced by this instance.
+   *
+   * @return the flag definition
+   */
   @Override
   IFlagDefinition getDefinition();
 

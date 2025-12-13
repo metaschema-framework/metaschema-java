@@ -10,6 +10,12 @@ import java.util.function.Predicate;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a named instance of a field or assembly within a model.
+ * <p>
+ * Provides access to the instance's definition and JSON key configuration for
+ * serialization purposes.
+ */
 public interface INamedModelInstance extends IModelInstance, INamedInstance {
 
   /**
@@ -41,7 +47,7 @@ public interface INamedModelInstance extends IModelInstance, INamedInstance {
 
   /**
    * Indicates if a flag's value can be used as a property name in the containing
-   * object in JSON who's value will be the object containing the flag. In such
+   * object in JSON whose value will be the object containing the flag. In such
    * cases, the flag will not appear in the object. This is only allowed if the
    * flag is required, as determined by a {@code true} result from
    * {@link IFlagInstance#isRequired()}. The {@link IFlagInstance} can be
@@ -59,7 +65,7 @@ public interface INamedModelInstance extends IModelInstance, INamedInstance {
   /**
    * Get the JSON key flag instance for this model instance, if one is configured.
    *
-   * @return the JSON key flag instance or {@code null} if a JSON key is
+   * @return the JSON key flag instance or {@code null} if no JSON key is
    *         configured
    */
   @Nullable

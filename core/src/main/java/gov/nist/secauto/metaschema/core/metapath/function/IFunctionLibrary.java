@@ -11,6 +11,9 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides access to a collection of Metapath function signatures.
+ */
 public interface IFunctionLibrary {
 
   /**

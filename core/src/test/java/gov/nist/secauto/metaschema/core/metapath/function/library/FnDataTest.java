@@ -102,9 +102,8 @@ class FnDataTest
     assertEquals(3, result.size());
 
     // Verify actual values and order
-    java.util.List<IAnyAtomicItem> items = result.getValue();
-    assertEquals(1, ((IIntegerItem) items.get(0)).asInteger().intValue());
-    assertEquals(2, ((IIntegerItem) items.get(1)).asInteger().intValue());
-    assertEquals(3, ((IIntegerItem) items.get(2)).asInteger().intValue());
+    assertEquals(1, ((IIntegerItem) result.get(0)).asInteger().intValue());
+    assertEquals(2, ((IIntegerItem) result.get(1)).asInteger().intValue());
+    assertEquals(3, ((IIntegerItem) result.get(2)).asInteger().intValue());
   }
 }

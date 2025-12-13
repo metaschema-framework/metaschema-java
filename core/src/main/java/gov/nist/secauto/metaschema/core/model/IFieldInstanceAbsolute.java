@@ -7,6 +7,13 @@ package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a field instance that appears directly within an assembly
+ * definition.
+ * <p>
+ * An absolute field instance is not part of a choice or other grouping
+ * construct, and has its own distinct cardinality and XML wrapping settings.
+ */
 public interface IFieldInstanceAbsolute extends IFieldInstance, INamedModelInstanceAbsolute {
 
   @Override

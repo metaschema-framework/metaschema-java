@@ -9,6 +9,9 @@ import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * FOJS: Exceptions related to JSON function operations in XPath.
+ */
 public class JsonFunctionException
     extends FunctionMetapathError {
   @NonNull

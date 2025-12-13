@@ -18,6 +18,14 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Analyzes a Metaschema module to identify assembly definitions that are
+ * recursive.
+ * <p>
+ * This visitor traverses the module structure and tracks assembly definitions
+ * that contain themselves as descendants, collecting locations where recursion
+ * occurs.
+ */
 public class RecursionCollectingNodeItemVisitor
     extends AbstractRecursionPreventingNodeItemVisitor<Void, Void> {
 
@@ -74,6 +82,10 @@ public class RecursionCollectingNodeItemVisitor
     return null;
   }
 
+  /**
+   * Records information about an assembly definition, including whether it is
+   * recursive and where it is used.
+   */
   public static final class AssemblyRecord {
     @NonNull
     private final IAssemblyDefinition definition;

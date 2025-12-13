@@ -10,6 +10,10 @@ import gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * FOER0000: Thrown when an unidentified error occurs during function
+ * evaluation.
+ */
 public class UnidentifiedFunctionError
     extends FunctionMetapathError {
   @NonNull

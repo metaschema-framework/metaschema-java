@@ -13,8 +13,18 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents an assembly definition in a Metaschema module.
+ * <p>
+ * An assembly is a complex structured data object that may contain flags,
+ * fields, and other nested assemblies. Assembly definitions may be designated
+ * as root elements for documents.
+ */
 public interface IAssemblyDefinition
     extends IModelDefinition, IContainerModelAssembly, IAssembly, IFeatureModelConstrained {
+  /**
+   * The qualified name for the model property in Metaschema.
+   */
   IEnhancedQName MODEL_QNAME = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "model");
 
   /**

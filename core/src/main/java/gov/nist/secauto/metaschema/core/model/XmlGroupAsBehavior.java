@@ -5,6 +5,9 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+/**
+ * Defines how repeated instances are grouped in XML representations.
+ */
 public enum XmlGroupAsBehavior {
   /**
    * In XML, child element instances will be wrapped by a grouping element.

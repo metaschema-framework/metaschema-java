@@ -8,6 +8,13 @@ import java.util.function.Supplier;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Generates child node items for Metapath node items.
+ * <p>
+ * Provides methods to create lazy suppliers that generate child node items for
+ * field, assembly, and module node items in both data model and metaschema
+ * model contexts.
+ */
 public interface INodeItemGenerator {
 
   /**

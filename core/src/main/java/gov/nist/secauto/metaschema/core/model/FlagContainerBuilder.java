@@ -22,6 +22,16 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Default implementation of {@link IFlagContainerBuilder}.
+ * <p>
+ * This builder collects flag instances and constructs an immutable flag
+ * container. It handles duplicate flags (shadowing) by logging errors and using
+ * the last instance encountered. An optional JSON key flag can be specified.
+ *
+ * @param <T>
+ *          the Java type of flag instances
+ */
 public class FlagContainerBuilder<T extends IFlagInstance> implements IFlagContainerBuilder<T> {
   private static final Logger LOGGER = LogManager.getLogger(FlagContainerBuilder.class);
 

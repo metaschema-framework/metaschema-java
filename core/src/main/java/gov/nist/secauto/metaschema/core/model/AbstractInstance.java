@@ -7,6 +7,13 @@ package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Base implementation of {@link IInstance} providing parent container
+ * management.
+ *
+ * @param <P>
+ *          the Java type of the parent container
+ */
 public abstract class AbstractInstance<P extends IContainer> implements IInstance {
   @NonNull
   private final P parent;

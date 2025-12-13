@@ -5,6 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+/**
+ * Represents an instance that has no value.
+ * <p>
+ * This interface marks instances that do not produce a value when queried,
+ * always returning {@code null} from {@link #getValue(Object)}.
+ */
 // REFACTOR: rename to IFeatureValuelessInstance
 public interface IFeatureValueless extends IInstanceAbsolute {
   @Override

@@ -623,6 +623,12 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<configuration>
 						<excludePackageNames>*.xmlbeans:*.xmlbeans.*:*.antlr</excludePackageNames>
+						<encoding>UTF-8</encoding>
+						<docencoding>UTF-8</docencoding>
+						<charset>UTF-8</charset>
+						<additionalJOptions>
+							<additionalJOption>-J-Dfile.encoding=UTF-8</additionalJOption>
+						</additionalJOptions>
 						<failOnWarnings>false</failOnWarnings>
 						<failOnError>false</failOnError>
 					</configuration>

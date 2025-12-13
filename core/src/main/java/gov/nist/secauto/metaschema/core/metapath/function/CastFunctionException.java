@@ -39,6 +39,9 @@ public class CastFunctionException
    */
   private static final long serialVersionUID = 1L;
 
+  /**
+   * The atomic item that could not be cast to the target type.
+   */
   @NonNull
   private final IAnyAtomicItem item;
 

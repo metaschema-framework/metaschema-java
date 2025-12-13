@@ -23,6 +23,10 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A base implementation of a node item factory that creates node items for
+ * Metaschema definitions and instances.
+ */
 public abstract class AbstractNodeItemFactory implements INodeItemFactory, INodeItemGenerator {
   @Override
   public IDocumentNodeItem newDocumentNodeItem(

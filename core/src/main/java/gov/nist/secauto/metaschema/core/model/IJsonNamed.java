@@ -7,6 +7,12 @@ package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a model element that has a JSON property name.
+ * <p>
+ * This interface provides access to the name used when serializing or
+ * deserializing the element in JSON or YAML format.
+ */
 public interface IJsonNamed {
 
   /**

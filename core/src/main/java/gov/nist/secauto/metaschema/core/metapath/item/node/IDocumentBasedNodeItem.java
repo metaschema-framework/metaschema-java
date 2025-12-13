@@ -8,6 +8,9 @@ import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a Metapath node item that is associated with a document.
+ */
 public interface IDocumentBasedNodeItem extends INodeItem {
 
   @Override

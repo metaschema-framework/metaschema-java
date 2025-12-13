@@ -28,6 +28,9 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Validates JSON content against a JSON schema.
+ */
 public class JsonSchemaContentValidator
     extends AbstractContentValidator {
   @NonNull

@@ -5,6 +5,12 @@
 
 package gov.nist.secauto.metaschema.core.model;
 
+/**
+ * Represents a model element that can contain child instances.
+ * <p>
+ * This interface is implemented by model definitions that may contain flags,
+ * fields, or assemblies as part of their structure.
+ */
 public interface IContainer {
   /**
    * Identifies if the container allows child instances or not.

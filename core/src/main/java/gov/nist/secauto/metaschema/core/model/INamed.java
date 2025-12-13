@@ -12,6 +12,13 @@ import javax.xml.XMLConstants;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a model element that has a name and associated naming properties.
+ * <p>
+ * This interface provides methods for accessing the name, use name, qualified
+ * name, and index values used for XML and binary representations of model
+ * elements.
+ */
 public interface INamed {
 
   /**

@@ -13,6 +13,14 @@ public abstract class AbstractFlagInstanceNodeItem
     extends AbstractInstanceNodeItem<IFlagDefinition, IFlagInstance, IModelNodeItem<?, ?>>
     implements IFlagNodeItem {
 
+  /**
+   * Construct a new flag instance node item.
+   *
+   * @param instance
+   *          the flag instance this node represents
+   * @param parent
+   *          the parent node item containing this flag
+   */
   public AbstractFlagInstanceNodeItem(@NonNull IFlagInstance instance, @NonNull IModelNodeItem<?, ?> parent) {
     super(instance, parent);
   }

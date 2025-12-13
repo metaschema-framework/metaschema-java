@@ -7,6 +7,13 @@ package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents an assembly instance that appears directly within an assembly
+ * definition.
+ * <p>
+ * An absolute assembly instance is not part of a choice or other grouping
+ * construct, and has its own distinct cardinality settings.
+ */
 public interface IAssemblyInstanceAbsolute extends IAssemblyInstance, INamedModelInstanceAbsolute {
 
   /**

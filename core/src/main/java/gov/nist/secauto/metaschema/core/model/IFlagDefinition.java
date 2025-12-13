@@ -7,6 +7,13 @@ package gov.nist.secauto.metaschema.core.model;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a flag definition in a Metaschema module.
+ * <p>
+ * A flag is a simple named data value that can be associated with a field or
+ * assembly. Flag definitions define the data type and constraints for flag
+ * values.
+ */
 public interface IFlagDefinition extends IValuedDefinition, IFlag {
   @Override
   IFlagInstance getInlineInstance();

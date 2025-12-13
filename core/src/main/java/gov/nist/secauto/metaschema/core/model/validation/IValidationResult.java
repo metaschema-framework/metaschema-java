@@ -16,6 +16,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Provides data that is the result of a completed content validation.
  */
 public interface IValidationResult {
+  /**
+   * A validation result indicating no validation errors were found.
+   */
   @NonNull
   IValidationResult PASSING_RESULT = new IValidationResult() {
 

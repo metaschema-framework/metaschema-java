@@ -10,6 +10,19 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents an instance that references a definition.
+ * <p>
+ * This interface provides common functionality for instances that reference
+ * definitions rather than defining their own inline structure. It handles
+ * effective value resolution by delegating to the referenced definition when
+ * the instance does not override a value.
+ *
+ * @param <DEFINITION>
+ *          the Java type of the referenced definition
+ * @param <INSTANCE>
+ *          the Java type of the inline instance (when definition is inline)
+ */
 public interface IFeatureDefinitionReferenceInstance<
     DEFINITION extends IDefinition,
     INSTANCE extends INamedInstance>
