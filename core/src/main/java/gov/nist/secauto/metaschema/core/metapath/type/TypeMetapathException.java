@@ -39,7 +39,7 @@ public class TypeMetapathException
    * SequenceType Matching</a>.
    */
   // FIXME: differentiate static vs dynamic errors
-  protected static final int INVALID_TYPE_ERROR = 4;
+  public static final int INVALID_TYPE_ERROR = 4;
   /**
    * <a href= "https://www.w3.org/TR/xpath-31/#ERRXPTY0019">err:MPTY0019</a>: It
    * is a <a href="https://www.w3.org/TR/xpath-31/#dt-type-error">type error</a>

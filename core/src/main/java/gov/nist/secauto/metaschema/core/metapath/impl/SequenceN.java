@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.impl;
 
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
+import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
@@ -23,6 +24,29 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class SequenceN<ITEM extends IItem>
     extends AbstractSequence<ITEM> {
+  /**
+   * The singleton empty sequence instance.
+   * <p>
+   * This field is located in SequenceN rather than AbstractSequence to prevent
+   * class initialization deadlock. Since SequenceN extends AbstractSequence,
+   * AbstractSequence is always initialized first, ensuring no circular dependency
+   * when multiple threads initialize these classes concurrently.
+   */
+  @NonNull
+  private static final ISequence<?> EMPTY = new SequenceN<>();
+
+  /**
+   * Get an immutable sequence that is empty.
+   *
+   * @param <T>
+   *          the item Java type
+   * @return the empty sequence
+   */
+  @SuppressWarnings("unchecked")
+  public static <T extends IItem> ISequence<T> empty() {
+    return (ISequence<T>) EMPTY;
+  }
+
   @NonNull
   private final List<ITEM> items;
 

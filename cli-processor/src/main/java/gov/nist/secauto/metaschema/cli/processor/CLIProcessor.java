@@ -66,7 +66,7 @@ public class CLIProcessor {
   public static final Option HELP_OPTION = ObjectUtils.notNull(Option.builder("h")
       .longOpt("help")
       .desc("display this help message")
-      .build());
+      .get());
   /**
    * This option indicates if colorized output should be disabled.
    */
@@ -74,7 +74,7 @@ public class CLIProcessor {
   public static final Option NO_COLOR_OPTION = ObjectUtils.notNull(Option.builder()
       .longOpt("no-color")
       .desc("do not colorize output")
-      .build());
+      .get());
   /**
    * This option indicates if non-errors should be suppressed.
    */
@@ -82,7 +82,7 @@ public class CLIProcessor {
   public static final Option QUIET_OPTION = ObjectUtils.notNull(Option.builder("q")
       .longOpt("quiet")
       .desc("minimize output to include only errors")
-      .build());
+      .get());
   /**
    * This option indicates if a strack trace should be shown for an error
    * {@link ExitStatus}.
@@ -91,7 +91,7 @@ public class CLIProcessor {
   public static final Option SHOW_STACK_TRACE_OPTION = ObjectUtils.notNull(Option.builder()
       .longOpt("show-stack-trace")
       .desc("display the stack trace associated with an error")
-      .build());
+      .get());
   /**
    * This option indicates if the version information should be shown.
    */
@@ -99,7 +99,7 @@ public class CLIProcessor {
   public static final Option VERSION_OPTION = ObjectUtils.notNull(Option.builder()
       .longOpt("version")
       .desc("display the application version")
-      .build());
+      .get());
 
   @NonNull
   private static final List<Option> OPTIONS = ObjectUtils.notNull(List.of(
