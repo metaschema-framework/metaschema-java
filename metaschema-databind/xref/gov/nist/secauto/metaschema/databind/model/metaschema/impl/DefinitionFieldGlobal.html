@@ -75,7 +75,7 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          binding.getAsType(),
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>          source);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">this</strong>.defaultValue = ModelSupport.defaultValue(binding.getDefault(), <strong class="jxr_keyword">this</strong>.javaTypeAdapter);
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">this</strong>.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">this</strong>.flagContainer = ObjectUtils.notNull(Lazy.of(() -&gt; {
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>        JsonKey jsonKey = binding.getJsonKey();
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>        <strong class="jxr_keyword">return</strong> FlagContainerSupport.newFlagContainer(
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>            binding.getFlags(),
@@ -83,7 +83,7 @@
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>            <strong class="jxr_keyword">this</strong>,
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>            jsonKey == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : jsonKey.getFlagRef());
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      }));
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">this</strong>.valueConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">this</strong>.valueConstraints = ObjectUtils.notNull(Lazy.of(() -&gt; {
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>        IValueConstrained retval = <strong class="jxr_keyword">new</strong> ValueConstraintSet(source);
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>        FieldConstraints constraints = binding.getConstraint();
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>        <strong class="jxr_keyword">if</strong> (constraints != <strong class="jxr_keyword">null</strong>) {
@@ -91,7 +91,7 @@
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        }
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>        <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>      }));
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">this</strong>.boundNodeItem = ObjectUtils.notNull(Lazy.lazy(() -&gt; ObjectUtils.requireNonNull(ModelSupport.toNodeItem(
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">this</strong>.boundNodeItem = ObjectUtils.notNull(Lazy.of(() -&gt; ObjectUtils.requireNonNull(ModelSupport.toNodeItem(
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>          module,
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>          bindingInstance.getQName(),
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>          position))));

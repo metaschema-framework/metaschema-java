@@ -91,14 +91,14 @@
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      IModule module = parent.getContainingModule();
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      ISource source = module.getSource();
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">this</strong>.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">this</strong>.constraints = ObjectUtils.notNull(Lazy.of(() -&gt; {
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>        IValueConstrained retval = <strong class="jxr_keyword">new</strong> ValueConstraintSet(source);
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>        <a name="ValueConstraints" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/annotations/ValueConstraints.html#ValueConstraints">ValueConstraints</a> valueAnnotation = getAnnotation().valueConstraints();
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>        ConstraintSupport.parse(valueAnnotation, source, retval);
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>        <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>      }));
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">this</strong>.properties = ObjectUtils.notNull(
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>          Lazy.lazy(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          Lazy.of(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>              Arrays.stream(annotation.properties())
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>                  .map(ModelUtil::toPropertyEntry)
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>                  .collect(

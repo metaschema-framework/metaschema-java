@@ -42,7 +42,7 @@
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String NS_XML_SCHEMA = <span class="jxr_string">"http://www.w3.org/2001/XMLSchema"</span>;
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>    @NonNull
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;List&lt;IDatatypeProvider&gt;&gt; DATATYPE_PROVIDERS = ObjectUtils.notNull(Lazy.lazy(() -&gt; List.of(
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Lazy&lt;List&lt;IDatatypeProvider&gt;&gt; DATATYPE_PROVIDERS = ObjectUtils.notNull(Lazy.of(() -&gt; List.of(
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>        <strong class="jxr_keyword">new</strong> <a name="XmlCoreDatatypeProvider" href="../../../../../../gov/nist/secauto/metaschema/schemagen/xml/impl/XmlCoreDatatypeProvider.html#XmlCoreDatatypeProvider">XmlCoreDatatypeProvider</a>(),
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>        <strong class="jxr_keyword">new</strong> <a name="XmlProseCompositDatatypeProvider" href="../../../../../../gov/nist/secauto/metaschema/schemagen/xml/impl/XmlProseCompositDatatypeProvider.html#XmlProseCompositDatatypeProvider">XmlProseCompositDatatypeProvider</a>(
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>            ObjectUtils.notNull(List.of(

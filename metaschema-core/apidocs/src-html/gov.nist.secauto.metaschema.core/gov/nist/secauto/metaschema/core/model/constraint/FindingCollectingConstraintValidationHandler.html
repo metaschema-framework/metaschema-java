@@ -108,7 +108,7 @@
 <span class="source-line-no">095</span><span id="line-95">      @NonNull ICardinalityConstraint constraint,</span>
 <span class="source-line-no">096</span><span id="line-96">      @NonNull INodeItem target,</span>
 <span class="source-line-no">097</span><span id="line-97">      @NonNull ISequence&lt;? extends INodeItem&gt; testedItems,</span>
-<span class="source-line-no">098</span><span id="line-98">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">098</span><span id="line-98">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">099</span><span id="line-99">    addFinding(ConstraintValidationFinding.builder(constraint, target)</span>
 <span class="source-line-no">100</span><span id="line-100">        .severity(constraint.getLevel())</span>
 <span class="source-line-no">101</span><span id="line-101">        .kind(toKind(constraint.getLevel()))</span>
@@ -123,7 +123,7 @@
 <span class="source-line-no">110</span><span id="line-110">      @NonNull ICardinalityConstraint constraint,</span>
 <span class="source-line-no">111</span><span id="line-111">      @NonNull INodeItem target,</span>
 <span class="source-line-no">112</span><span id="line-112">      @NonNull ISequence&lt;? extends INodeItem&gt; testedItems,</span>
-<span class="source-line-no">113</span><span id="line-113">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">113</span><span id="line-113">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">114</span><span id="line-114">    addFinding(ConstraintValidationFinding.builder(constraint, target)</span>
 <span class="source-line-no">115</span><span id="line-115">        .severity(constraint.getLevel())</span>
 <span class="source-line-no">116</span><span id="line-116">        .kind(toKind(constraint.getLevel()))</span>
@@ -139,7 +139,7 @@
 <span class="source-line-no">126</span><span id="line-126">      @NonNull INodeItem node,</span>
 <span class="source-line-no">127</span><span id="line-127">      @NonNull INodeItem oldItem,</span>
 <span class="source-line-no">128</span><span id="line-128">      @NonNull INodeItem target,</span>
-<span class="source-line-no">129</span><span id="line-129">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">129</span><span id="line-129">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">130</span><span id="line-130">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
 <span class="source-line-no">131</span><span id="line-131">        .severity(constraint.getLevel())</span>
 <span class="source-line-no">132</span><span id="line-132">        .kind(toKind(constraint.getLevel()))</span>
@@ -154,7 +154,7 @@
 <span class="source-line-no">141</span><span id="line-141">      @NonNull INodeItem node,</span>
 <span class="source-line-no">142</span><span id="line-142">      @NonNull INodeItem oldItem,</span>
 <span class="source-line-no">143</span><span id="line-143">      @NonNull INodeItem target,</span>
-<span class="source-line-no">144</span><span id="line-144">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">144</span><span id="line-144">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">145</span><span id="line-145">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
 <span class="source-line-no">146</span><span id="line-146">        .severity(constraint.getLevel())</span>
 <span class="source-line-no">147</span><span id="line-147">        .kind(toKind(constraint.getLevel()))</span>
@@ -187,7 +187,7 @@
 <span class="source-line-no">174</span><span id="line-174">      @NonNull INodeItem target,</span>
 <span class="source-line-no">175</span><span id="line-175">      @NonNull String value,</span>
 <span class="source-line-no">176</span><span id="line-176">      @NonNull Pattern pattern,</span>
-<span class="source-line-no">177</span><span id="line-177">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">177</span><span id="line-177">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">178</span><span id="line-178">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
 <span class="source-line-no">179</span><span id="line-179">        .severity(constraint.getLevel())</span>
 <span class="source-line-no">180</span><span id="line-180">        .kind(toKind(constraint.getLevel()))</span>
@@ -204,7 +204,7 @@
 <span class="source-line-no">191</span><span id="line-191">      @NonNull String value,</span>
 <span class="source-line-no">192</span><span id="line-192">      @NonNull IDataTypeAdapter&lt;?&gt; adapter,</span>
 <span class="source-line-no">193</span><span id="line-193">      @NonNull IllegalArgumentException cause,</span>
-<span class="source-line-no">194</span><span id="line-194">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">194</span><span id="line-194">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">195</span><span id="line-195">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
 <span class="source-line-no">196</span><span id="line-196">        .severity(constraint.getLevel())</span>
 <span class="source-line-no">197</span><span id="line-197">        .kind(toKind(constraint.getLevel()))</span>
@@ -219,7 +219,7 @@
 <span class="source-line-no">206</span><span id="line-206">      @NonNull IExpectConstraint constraint,</span>
 <span class="source-line-no">207</span><span id="line-207">      @NonNull INodeItem node,</span>
 <span class="source-line-no">208</span><span id="line-208">      @NonNull INodeItem target,</span>
-<span class="source-line-no">209</span><span id="line-209">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">209</span><span id="line-209">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">210</span><span id="line-210">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
 <span class="source-line-no">211</span><span id="line-211">        .severity(constraint.getLevel())</span>
 <span class="source-line-no">212</span><span id="line-212">        .kind(toKind(constraint.getLevel()))</span>
@@ -264,7 +264,7 @@
 <span class="source-line-no">251</span><span id="line-251">      @NonNull INodeItem node,</span>
 <span class="source-line-no">252</span><span id="line-252">      @NonNull INodeItem target,</span>
 <span class="source-line-no">253</span><span id="line-253">      @NonNull List&lt;String&gt; key,</span>
-<span class="source-line-no">254</span><span id="line-254">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">254</span><span id="line-254">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">255</span><span id="line-255">    addFinding(ConstraintValidationFinding.builder(constraint, node)</span>
 <span class="source-line-no">256</span><span id="line-256">        .severity(constraint.getLevel())</span>
 <span class="source-line-no">257</span><span id="line-257">        .kind(toKind(constraint.getLevel()))</span>

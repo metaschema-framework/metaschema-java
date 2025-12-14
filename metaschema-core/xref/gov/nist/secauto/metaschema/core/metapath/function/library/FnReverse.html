@@ -76,17 +76,16 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">   * @return {@code sequence} the new sequence with items in reverse order.</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">   *</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    @SuppressWarnings(<span class="jxr_string">"PMD.OnlyOneReturn"</span>)
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    @NonNull
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T <strong class="jxr_keyword">extends</strong> IItem&gt; List&lt;T&gt; fnReverse(@NonNull List&lt;T&gt; target) {
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">if</strong> (target.size() &lt;= 1) {
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>        <strong class="jxr_keyword">return</strong> target;
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      List&lt;T&gt; newSequence = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;(target);
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      Collections.reverse(newSequence);
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <strong class="jxr_keyword">return</strong> newSequence;
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>    }
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  }
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>    @NonNull
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T <strong class="jxr_keyword">extends</strong> IItem&gt; List&lt;T&gt; fnReverse(@NonNull List&lt;T&gt; target) {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">if</strong> (target.size() &lt;= 1) {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>        <strong class="jxr_keyword">return</strong> target;
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      }
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      List&lt;T&gt; newSequence = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;(target);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      Collections.reverse(newSequence);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">return</strong> newSequence;
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2025</div>

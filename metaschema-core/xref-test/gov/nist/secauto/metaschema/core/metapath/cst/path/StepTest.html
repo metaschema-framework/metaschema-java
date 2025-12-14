@@ -25,7 +25,7 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.testing.model.mocking.MockNodeItemFactory;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.assertj.core.api.Assertions;
@@ -43,7 +43,7 @@
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> IEnhancedQName ROOT = IEnhancedQName.of(NS, <span class="jxr_string">"root"</span>);
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>    IDocumentNodeItem getTestNodeItem() {
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testing/model/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a> factory = <strong class="jxr_keyword">new</strong> <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testing/model/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a>();
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testsupport/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a> factory = <strong class="jxr_keyword">new</strong> <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testsupport/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a>();
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">return</strong> factory.document(URI.create(<span class="jxr_string">"http://example.com/content"</span>), ROOT, List.of(), List.of(
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>          factory.assembly(IEnhancedQName.of(NS, <span class="jxr_string">"node-1"</span>),

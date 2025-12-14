@@ -16,40 +16,49 @@
 <span class="source-line-no">003</span><span id="line-3"></span>
 <span class="source-line-no">004</span><span id="line-4">import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;</span>
 <span class="source-line-no">005</span><span id="line-5"></span>
-<span class="source-line-no">006</span><span id="line-6">public abstract class AbstractRecursionPreventingNodeItemVisitor&lt;CONTEXT, RESULT&gt;</span>
-<span class="source-line-no">007</span><span id="line-7">    extends AbstractNodeItemVisitor&lt;CONTEXT, RESULT&gt; {</span>
-<span class="source-line-no">008</span><span id="line-8"></span>
-<span class="source-line-no">009</span><span id="line-9">  @Override</span>
-<span class="source-line-no">010</span><span id="line-10">  public RESULT visitAssembly(IAssemblyNodeItem item, CONTEXT context) {</span>
-<span class="source-line-no">011</span><span id="line-11">    // only walk new records to avoid looping</span>
-<span class="source-line-no">012</span><span id="line-12">    // check if this item's definition is the same as an ancestor's</span>
-<span class="source-line-no">013</span><span id="line-13">    return isDecendant(item, item.getDefinition())</span>
-<span class="source-line-no">014</span><span id="line-14">        ? defaultResult()</span>
-<span class="source-line-no">015</span><span id="line-15">        : super.visitAssembly(item, context);</span>
-<span class="source-line-no">016</span><span id="line-16">  }</span>
+<span class="source-line-no">006</span><span id="line-6">/**</span>
+<span class="source-line-no">007</span><span id="line-7"> * A node item visitor that prevents infinite recursion when traversing assembly</span>
+<span class="source-line-no">008</span><span id="line-8"> * nodes by detecting and avoiding cycles in the node hierarchy.</span>
+<span class="source-line-no">009</span><span id="line-9"> *</span>
+<span class="source-line-no">010</span><span id="line-10"> * @param &lt;CONTEXT&gt;</span>
+<span class="source-line-no">011</span><span id="line-11"> *          the Java type of the visiting context</span>
+<span class="source-line-no">012</span><span id="line-12"> * @param &lt;RESULT&gt;</span>
+<span class="source-line-no">013</span><span id="line-13"> *          the Java type of the visiting result</span>
+<span class="source-line-no">014</span><span id="line-14"> */</span>
+<span class="source-line-no">015</span><span id="line-15">public abstract class AbstractRecursionPreventingNodeItemVisitor&lt;CONTEXT, RESULT&gt;</span>
+<span class="source-line-no">016</span><span id="line-16">    extends AbstractNodeItemVisitor&lt;CONTEXT, RESULT&gt; {</span>
 <span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">  /**</span>
-<span class="source-line-no">019</span><span id="line-19">   * Determines if the provided node is a descendant of the assembly definition.</span>
-<span class="source-line-no">020</span><span id="line-20">   *</span>
-<span class="source-line-no">021</span><span id="line-21">   * @param node</span>
-<span class="source-line-no">022</span><span id="line-22">   *          the node item to test</span>
-<span class="source-line-no">023</span><span id="line-23">   * @param assemblyDefinition</span>
-<span class="source-line-no">024</span><span id="line-24">   *          the assembly definition to determine as an ancestor of the node</span>
-<span class="source-line-no">025</span><span id="line-25">   * @return {@code true} if the assembly definition is the node's ancestor, or</span>
-<span class="source-line-no">026</span><span id="line-26">   *         {@code false} otherwise</span>
-<span class="source-line-no">027</span><span id="line-27">   */</span>
-<span class="source-line-no">028</span><span id="line-28">  protected boolean isDecendant(IAssemblyNodeItem node, IAssemblyDefinition assemblyDefinition) {</span>
-<span class="source-line-no">029</span><span id="line-29">    return node.ancestor()</span>
-<span class="source-line-no">030</span><span id="line-30">        .map(ancestor -&gt; {</span>
-<span class="source-line-no">031</span><span id="line-31">          boolean retval = false;</span>
-<span class="source-line-no">032</span><span id="line-32">          if (ancestor instanceof IAssemblyNodeItem) {</span>
-<span class="source-line-no">033</span><span id="line-33">            IAssemblyDefinition ancestorDef = ((IAssemblyNodeItem) ancestor).getDefinition();</span>
-<span class="source-line-no">034</span><span id="line-34">            retval = ancestorDef.equals(assemblyDefinition);</span>
-<span class="source-line-no">035</span><span id="line-35">          }</span>
-<span class="source-line-no">036</span><span id="line-36">          return retval;</span>
-<span class="source-line-no">037</span><span id="line-37">        }).anyMatch(value -&gt; value);</span>
-<span class="source-line-no">038</span><span id="line-38">  }</span>
-<span class="source-line-no">039</span><span id="line-39">}</span>
+<span class="source-line-no">018</span><span id="line-18">  @Override</span>
+<span class="source-line-no">019</span><span id="line-19">  public RESULT visitAssembly(IAssemblyNodeItem item, CONTEXT context) {</span>
+<span class="source-line-no">020</span><span id="line-20">    // only walk new records to avoid looping</span>
+<span class="source-line-no">021</span><span id="line-21">    // check if this item's definition is the same as an ancestor's</span>
+<span class="source-line-no">022</span><span id="line-22">    return isDecendant(item, item.getDefinition())</span>
+<span class="source-line-no">023</span><span id="line-23">        ? defaultResult()</span>
+<span class="source-line-no">024</span><span id="line-24">        : super.visitAssembly(item, context);</span>
+<span class="source-line-no">025</span><span id="line-25">  }</span>
+<span class="source-line-no">026</span><span id="line-26"></span>
+<span class="source-line-no">027</span><span id="line-27">  /**</span>
+<span class="source-line-no">028</span><span id="line-28">   * Determines if the provided node is a descendant of the assembly definition.</span>
+<span class="source-line-no">029</span><span id="line-29">   *</span>
+<span class="source-line-no">030</span><span id="line-30">   * @param node</span>
+<span class="source-line-no">031</span><span id="line-31">   *          the node item to test</span>
+<span class="source-line-no">032</span><span id="line-32">   * @param assemblyDefinition</span>
+<span class="source-line-no">033</span><span id="line-33">   *          the assembly definition to determine as an ancestor of the node</span>
+<span class="source-line-no">034</span><span id="line-34">   * @return {@code true} if the assembly definition is the node's ancestor, or</span>
+<span class="source-line-no">035</span><span id="line-35">   *         {@code false} otherwise</span>
+<span class="source-line-no">036</span><span id="line-36">   */</span>
+<span class="source-line-no">037</span><span id="line-37">  protected boolean isDecendant(IAssemblyNodeItem node, IAssemblyDefinition assemblyDefinition) {</span>
+<span class="source-line-no">038</span><span id="line-38">    return node.ancestor()</span>
+<span class="source-line-no">039</span><span id="line-39">        .map(ancestor -&gt; {</span>
+<span class="source-line-no">040</span><span id="line-40">          boolean retval = false;</span>
+<span class="source-line-no">041</span><span id="line-41">          if (ancestor instanceof IAssemblyNodeItem) {</span>
+<span class="source-line-no">042</span><span id="line-42">            IAssemblyDefinition ancestorDef = ((IAssemblyNodeItem) ancestor).getDefinition();</span>
+<span class="source-line-no">043</span><span id="line-43">            retval = ancestorDef.equals(assemblyDefinition);</span>
+<span class="source-line-no">044</span><span id="line-44">          }</span>
+<span class="source-line-no">045</span><span id="line-45">          return retval;</span>
+<span class="source-line-no">046</span><span id="line-46">        }).anyMatch(value -&gt; value);</span>
+<span class="source-line-no">047</span><span id="line-47">  }</span>
+<span class="source-line-no">048</span><span id="line-48">}</span>
 
 
 

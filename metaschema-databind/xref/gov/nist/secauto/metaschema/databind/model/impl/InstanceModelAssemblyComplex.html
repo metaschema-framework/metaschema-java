@@ -121,15 +121,15 @@
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">this</strong>.javaField = javaField;
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">this</strong>.annotation = annotation;
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">this</strong>.groupAs = groupAs;
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">this</strong>.collectionInfo = ObjectUtils.notNull(Lazy.lazy(() -&gt; IModelInstanceCollectionInfo.of(<strong class="jxr_keyword">this</strong>)));
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">this</strong>.collectionInfo = ObjectUtils.notNull(Lazy.of(() -&gt; IModelInstanceCollectionInfo.of(<strong class="jxr_keyword">this</strong>)));
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>     <strong class="jxr_keyword">this</strong>.definition = definition;
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>     <strong class="jxr_keyword">this</strong>.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     <strong class="jxr_keyword">this</strong>.jsonProperties = ObjectUtils.notNull(Lazy.of(() -&gt; {
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>       <a name="IBoundInstanceFlag" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/IBoundInstanceFlag.html#IBoundInstanceFlag">IBoundInstanceFlag</a> jsonKey = getEffectiveJsonKey();
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>       Predicate&lt;IBoundInstanceFlag&gt; flagFilter = jsonKey == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : flag -&gt; !jsonKey.equals(flag);
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>       <strong class="jxr_keyword">return</strong> getDefinition().getJsonProperties(flagFilter);
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>     }));
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">this</strong>.properties = ObjectUtils.notNull(
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>         Lazy.lazy(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>         Lazy.of(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>             Arrays.stream(annotation.properties())
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>                 .map(ModelUtil::toPropertyEntry)
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>                 .collect(

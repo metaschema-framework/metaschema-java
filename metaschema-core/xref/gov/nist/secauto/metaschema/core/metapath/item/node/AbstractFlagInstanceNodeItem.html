@@ -21,15 +21,23 @@
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">extends</strong> AbstractInstanceNodeItem&lt;IFlagDefinition, IFlagInstance, IModelNodeItem&lt;?, ?&gt;&gt;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">implements</strong> <a name="IFlagNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/IFlagNodeItem.html#IFlagNodeItem">IFlagNodeItem</a> {
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>    <strong class="jxr_keyword">public</strong> <a name="AbstractFlagInstanceNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/AbstractFlagInstanceNodeItem.html#AbstractFlagInstanceNodeItem">AbstractFlagInstanceNodeItem</a>(@NonNull <a name="IFlagInstance" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/IFlagInstance.html#IFlagInstance">IFlagInstance</a> instance, @NonNull IModelNodeItem&lt;?, ?&gt; parent) {
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>      <strong class="jxr_keyword">super</strong>(instance, parent);
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>    }
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>    @Override
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>    <strong class="jxr_keyword">protected</strong> String getValueSignature() {
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>      <strong class="jxr_keyword">return</strong> toAtomicItem().toSignature();
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>    }
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  }
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment">   * Construct a new flag instance node item.</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">   * @param instance</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment">   *          the flag instance this node represents</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">   * @param parent</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment">   *          the parent node item containing this flag</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>    <strong class="jxr_keyword">public</strong> <a name="AbstractFlagInstanceNodeItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/AbstractFlagInstanceNodeItem.html#AbstractFlagInstanceNodeItem">AbstractFlagInstanceNodeItem</a>(@NonNull <a name="IFlagInstance" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/IFlagInstance.html#IFlagInstance">IFlagInstance</a> instance, @NonNull IModelNodeItem&lt;?, ?&gt; parent) {
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>      <strong class="jxr_keyword">super</strong>(instance, parent);
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>    }
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>    @Override
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>    <strong class="jxr_keyword">protected</strong> String getValueSignature() {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">return</strong> toAtomicItem().toSignature();
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    }
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2025</div>

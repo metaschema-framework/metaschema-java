@@ -19,22 +19,36 @@
 <span class="source-line-no">006</span><span id="line-6"></span>
 <span class="source-line-no">007</span><span id="line-7">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">008</span><span id="line-8"></span>
-<span class="source-line-no">009</span><span id="line-9">public abstract class AbstractDefinitionNodeItem&lt;D extends IDefinition, I extends INamedInstance&gt;</span>
-<span class="source-line-no">010</span><span id="line-10">    extends AbstractNodeItem</span>
-<span class="source-line-no">011</span><span id="line-11">    implements IFeatureOrhpanedDefinitionNodeItem&lt;D, I&gt; {</span>
-<span class="source-line-no">012</span><span id="line-12"></span>
-<span class="source-line-no">013</span><span id="line-13">  @NonNull</span>
-<span class="source-line-no">014</span><span id="line-14">  private final D definition;</span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">  public AbstractDefinitionNodeItem(@NonNull D definition) {</span>
-<span class="source-line-no">017</span><span id="line-17">    this.definition = definition;</span>
-<span class="source-line-no">018</span><span id="line-18">  }</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">  @Override</span>
-<span class="source-line-no">021</span><span id="line-21">  public D getDefinition() {</span>
-<span class="source-line-no">022</span><span id="line-22">    return definition;</span>
-<span class="source-line-no">023</span><span id="line-23">  }</span>
-<span class="source-line-no">024</span><span id="line-24">}</span>
+<span class="source-line-no">009</span><span id="line-9">/**</span>
+<span class="source-line-no">010</span><span id="line-10"> * A base implementation of a node item backed by a Metaschema definition.</span>
+<span class="source-line-no">011</span><span id="line-11"> *</span>
+<span class="source-line-no">012</span><span id="line-12"> * @param &lt;D&gt;</span>
+<span class="source-line-no">013</span><span id="line-13"> *          the Java type of the definition</span>
+<span class="source-line-no">014</span><span id="line-14"> * @param &lt;I&gt;</span>
+<span class="source-line-no">015</span><span id="line-15"> *          the Java type of the instance</span>
+<span class="source-line-no">016</span><span id="line-16"> */</span>
+<span class="source-line-no">017</span><span id="line-17">public abstract class AbstractDefinitionNodeItem&lt;D extends IDefinition, I extends INamedInstance&gt;</span>
+<span class="source-line-no">018</span><span id="line-18">    extends AbstractNodeItem</span>
+<span class="source-line-no">019</span><span id="line-19">    implements IFeatureOrhpanedDefinitionNodeItem&lt;D, I&gt; {</span>
+<span class="source-line-no">020</span><span id="line-20"></span>
+<span class="source-line-no">021</span><span id="line-21">  @NonNull</span>
+<span class="source-line-no">022</span><span id="line-22">  private final D definition;</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">  /**</span>
+<span class="source-line-no">025</span><span id="line-25">   * Construct a new node item for the provided definition.</span>
+<span class="source-line-no">026</span><span id="line-26">   *</span>
+<span class="source-line-no">027</span><span id="line-27">   * @param definition</span>
+<span class="source-line-no">028</span><span id="line-28">   *          the Metaschema definition this node represents</span>
+<span class="source-line-no">029</span><span id="line-29">   */</span>
+<span class="source-line-no">030</span><span id="line-30">  public AbstractDefinitionNodeItem(@NonNull D definition) {</span>
+<span class="source-line-no">031</span><span id="line-31">    this.definition = definition;</span>
+<span class="source-line-no">032</span><span id="line-32">  }</span>
+<span class="source-line-no">033</span><span id="line-33"></span>
+<span class="source-line-no">034</span><span id="line-34">  @Override</span>
+<span class="source-line-no">035</span><span id="line-35">  public D getDefinition() {</span>
+<span class="source-line-no">036</span><span id="line-36">    return definition;</span>
+<span class="source-line-no">037</span><span id="line-37">  }</span>
+<span class="source-line-no">038</span><span id="line-38">}</span>
 
 
 

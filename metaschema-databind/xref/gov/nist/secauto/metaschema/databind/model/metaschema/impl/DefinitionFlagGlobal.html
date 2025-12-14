@@ -81,7 +81,7 @@
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>          binding.getAsType(),
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>          source);
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">this</strong>.defaultValue = ModelSupport.defaultValue(binding.getDefault(), <strong class="jxr_keyword">this</strong>.javaTypeAdapter);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">this</strong>.valueConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">this</strong>.valueConstraints = ObjectUtils.notNull(Lazy.of(() -&gt; {
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>        IValueConstrained retval = <strong class="jxr_keyword">new</strong> ValueConstraintSet(source);
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>        FlagConstraints constraints = binding.getConstraint();
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>        <strong class="jxr_keyword">if</strong> (constraints != <strong class="jxr_keyword">null</strong>) {
@@ -89,7 +89,7 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>        }
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>        <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      }));
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">this</strong>.boundNodeItem = ObjectUtils.notNull(Lazy.lazy(() -&gt; ObjectUtils.requireNonNull(ModelSupport.toNodeItem(
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">this</strong>.boundNodeItem = ObjectUtils.notNull(Lazy.of(() -&gt; ObjectUtils.requireNonNull(ModelSupport.toNodeItem(
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>          module,
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>          bindingInstance.getQName(),
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>          position))));

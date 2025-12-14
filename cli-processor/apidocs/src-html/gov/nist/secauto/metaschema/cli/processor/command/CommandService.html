@@ -37,7 +37,7 @@
 <span class="source-line-no">024</span><span id="line-24"> * @see ServiceLoader for more information</span>
 <span class="source-line-no">025</span><span id="line-25"> */</span>
 <span class="source-line-no">026</span><span id="line-26">public final class CommandService {</span>
-<span class="source-line-no">027</span><span id="line-27">  private static final Lazy&lt;CommandService&gt; INSTANCE = Lazy.lazy(CommandService::new);</span>
+<span class="source-line-no">027</span><span id="line-27">  private static final Lazy&lt;CommandService&gt; INSTANCE = Lazy.of(CommandService::new);</span>
 <span class="source-line-no">028</span><span id="line-28">  @NonNull</span>
 <span class="source-line-no">029</span><span id="line-29">  private final ServiceLoader&lt;ICommand&gt; loader;</span>
 <span class="source-line-no">030</span><span id="line-30"></span>

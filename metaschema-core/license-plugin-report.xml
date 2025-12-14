@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1743912515274">
-    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="2.2.0"/>
+<licensePluginReport goal="FORMAT" timestamp="1765735383314">
+    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="3.0.0.M1"/>
     <files>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/adapter/Base64AdapterTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/adapter/BooleanAdapterTest.java" result="NOOP"/>
@@ -14,6 +14,7 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/markup/MarkupStringTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/markup/flexmark/MarkupParserTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/datatype/markup/flexmark/MarkupXmlStreamWriterTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/ErrorHandlingTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/ExpressionTestBase.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/ExpressionUtilsTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/ISequenceTest.java" result="NOOP"/>
@@ -30,7 +31,10 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/logic/ValueComparisonTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/math/AdditionTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/math/DivisionTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/math/IntegerDivisionTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/math/ModuloTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/math/MultiplicationTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/math/NegateTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/math/SubtractionTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/path/FlagStepTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/path/RootSlashOnlyPathTest.java" result="NOOP"/>
@@ -39,6 +43,7 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/type/CastableTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/cst/type/InstanceOfTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/DefaultFunctionTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/FunctionServiceTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/impl/OperationFunctionsTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/ArrayAppendTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/ArrayFlattenTest.java" result="NOOP"/>
@@ -58,12 +63,14 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnAdjustDateToTimezoneTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnAdjustTimeToTimezoneTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnAvgTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnBaseUriTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnBooleanTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnCeilingTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnConcatTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnContainsTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnCountTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnCurrentTimeTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDataTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDateTimeTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDayFromDateTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDayFromDateTimeTest.java" result="NOOP"/>
@@ -71,6 +78,7 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDeepEqualTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDistinctValuesTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDocumentAvailableTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDocumentUriTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnEmptyTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnEndsWithTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnExactlyOneTest.java" result="NOOP"/>
@@ -104,6 +112,7 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnNotTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnOneOrMoreTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnOutermostTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnPathTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnQNameTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnRemoveTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnReverseTest.java" result="NOOP"/>
@@ -148,38 +157,47 @@
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/atomic/INumericItemTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/atomic/IStringItemTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/atomic/IUuidItemTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/atomic/NumericCastSymmetryTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/function/IArrayItemTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/function/IMapKeyTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/metapath/item/function/LookupTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/constraint/CardinalityConstraintTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidatorTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/constraint/ExpectConstraintTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/constraint/ExternalConstraintsModulePostProcessorTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/constraint/IndexUniqueConstraintTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/constraint/MatchesConstraintTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/model/constraint/impl/AbstractConfigurableMessageConstraintTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/util/XmlObjectParserTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/ExamplesTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/MetaConstraintLoaderTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/MetaschemaModuleTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/ModuleLoaderTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/UsedDefinitionModelWalkerTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/XmlbeansMarkupVisitorTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/xml/impl/ModelFactoryTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/model/validation/SchemaContentValidatorTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/qname/QNameCacheTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/AbstractMetaschemaBuilder.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/AbstractModelBuilder.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/AssemblyBuilder.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/FieldBuilder.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/FlagBuilder.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/IAssemblyBuilder.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/IFieldBuilder.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/IFlagBuilder.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/IMetaschemaBuilder.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/IModelBuilder.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/IModuleMockFactory.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/MockedModelTestSupport.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/mocking/AbstractJMockFactory.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/mocking/AbstractMockitoFactory.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/mocking/IMockFactory.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/mocking/MockNodeItemFactory.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/core/testing/model/mocking/MockedDocumentGenerator.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/MockedModelTestSupport.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/AbstractMetaschemaBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/AbstractModelBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/AssemblyBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/AssemblyReference.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/ConstraintSetBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/ContextBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/FieldBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/FieldReference.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/FlagBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IAssemblyBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IConstraintSetBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IContextBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IFieldBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IFlagBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IMetaschemaBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IModelBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IModelReference.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IModuleBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IModuleMockFactory.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/ModuleBuilder.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/mocking/AbstractJMockFactory.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/mocking/AbstractMockitoFactory.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/mocking/IMockFactory.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/mocking/MockNodeItemFactory.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/mocking/MockedDocumentGenerator.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/tests/ConstraintSetBuilderTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/core/testsupport/tests/ModuleBuilderTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/util/MermaidErDiagramGeneratorTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/util/StringUtilsTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/core/util/UriUtilsTest.java" result="NOOP"/>

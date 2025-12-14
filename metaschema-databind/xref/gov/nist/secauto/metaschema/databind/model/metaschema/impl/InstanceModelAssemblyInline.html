@@ -34,7 +34,7 @@
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.ISource;
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.xml.XmlModuleConstants;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.MetaschemaModelConstants;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.IGroupAs;
@@ -115,10 +115,10 @@
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">this</strong>.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">this</strong>.groupAs = ModelSupport.groupAs(binding.getGroupAs(), parent.getOwningDefinition().getContainingModule());
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">this</strong>.boundNodeItem = ObjectUtils.notNull(
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>         Lazy.lazy(() -&gt; (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         Lazy.of(() -&gt; (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>             .getModelItemsByName(bindingInstance.getQName())
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>             .get(position)));
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">this</strong>.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">this</strong>.flagContainer = ObjectUtils.notNull(Lazy.of(() -&gt; {
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>       JsonKey jsonKey = getBinding().getJsonKey();
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>       <strong class="jxr_keyword">return</strong> FlagContainerSupport.newFlagContainer(
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>           binding.getFlags(),
@@ -126,16 +126,16 @@
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>           <strong class="jxr_keyword">this</strong>,
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>           jsonKey == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : jsonKey.getFlagRef());
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>     }));
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">this</strong>.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; AssemblyModelGenerator.of(
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">this</strong>.modelContainer = ObjectUtils.notNull(Lazy.of(() -&gt; AssemblyModelGenerator.of(
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>         binding.getModel(),
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>         ObjectUtils.requireNonNull(bindingInstance.getDefinition()
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>             .getAssemblyInstanceByName(XmlModuleConstants.MODEL_QNAME.getIndexPosition())),
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>             .getAssemblyInstanceByName(MetaschemaModelConstants.MODEL_QNAME.getIndexPosition())),
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>         <strong class="jxr_keyword">this</strong>,
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>         nodeItemFactory)));
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>     ISource source = parent.getOwningDefinition().getContainingModule().getSource();
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> 
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">this</strong>.modelConstraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">this</strong>.modelConstraints = ObjectUtils.notNull(Lazy.of(() -&gt; {
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>       IModelConstrained retval = <strong class="jxr_keyword">new</strong> AssemblyConstraintSet(source);
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>       AssemblyConstraints constraints = getBinding().getConstraint();
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>       <strong class="jxr_keyword">if</strong> (constraints != <strong class="jxr_keyword">null</strong>) {

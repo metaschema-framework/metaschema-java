@@ -27,7 +27,7 @@
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.function.IMapItem;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.testing.model.mocking.MockNodeItemFactory;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.ParameterizedTest;
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.Arguments;
@@ -130,7 +130,7 @@
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>   @ParameterizedTest
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>   @MethodSource(<span class="jxr_string">"provideValuesNode"</span>)
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>   <strong class="jxr_keyword">void</strong> testMatchNodeItem(@NonNull String test, <strong class="jxr_keyword">boolean</strong> expected) {
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testing/model/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a> factory = <strong class="jxr_keyword">new</strong> <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testing/model/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a>();
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testsupport/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a> factory = <strong class="jxr_keyword">new</strong> <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testsupport/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a>();
 <a class="jxr_linenumber" name="L126" href="#L126">126</a> 
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>     IDocumentNodeItem documentNodeItem = factory.document(URI.create(<span class="jxr_string">"http://example.com/content"</span>), ROOT,
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>         List.of(

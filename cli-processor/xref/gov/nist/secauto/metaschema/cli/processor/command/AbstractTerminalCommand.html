@@ -30,7 +30,7 @@
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> * cannot have child commands.</em>
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> <a name="AbstractTerminalCommand" href="../../../../../../../gov/nist/secauto/metaschema/cli/processor/command/AbstractTerminalCommand.html#AbstractTerminalCommand">AbstractTerminalCommand</a> <strong class="jxr_keyword">implements</strong> <a name="ICommand" href="../../../../../../../gov/nist/secauto/metaschema/cli/processor/command/ICommand.html#ICommand">ICommand</a> {
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Lazy&lt;Path&gt; currentWorkingDirectory = Lazy.lazy(() -&gt; Paths.get(System.getProperty(<span class="jxr_string">"user.dir"</span>)));
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Lazy&lt;Path&gt; currentWorkingDirectory = Lazy.of(() -&gt; Paths.get(System.getProperty(<span class="jxr_string">"user.dir"</span>)));
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment">   * A utility method that can be used to get the current working directory.</em>

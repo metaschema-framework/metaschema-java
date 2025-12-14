@@ -45,7 +45,7 @@
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>        @NonNull D definition,
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>        @NonNull <a name="IJsonGenerationState" href="../../../../../../../gov/nist/secauto/metaschema/schemagen/json/impl/IJsonGenerationState.html#IJsonGenerationState">IJsonGenerationState</a> state) {
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">this</strong>.definition = definition;
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">this</strong>.name = ObjectUtils.notNull(Lazy.lazy(() -&gt; generateDefinitionName(state)));
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">this</strong>.name = ObjectUtils.notNull(Lazy.of(() -&gt; generateDefinitionName(state)));
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>    }
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>    @Override

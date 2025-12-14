@@ -51,7 +51,7 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>        @NonNull <a name="IJsonGenerationState" href="../../../../../../../gov/nist/secauto/metaschema/schemagen/json/impl/IJsonGenerationState.html#IJsonGenerationState">IJsonGenerationState</a> state) {
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">super</strong>(instance, instance.getJsonName());
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">this</strong>.jsonKey = instance.getJsonKey();
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">this</strong>.definitionSchema = ObjectUtils.notNull(Lazy.lazy(() -&gt; state.getAssemblyDefinition(
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">this</strong>.definitionSchema = ObjectUtils.notNull(Lazy.of(() -&gt; state.getAssemblyDefinition(
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>          instance.getDefinition(),
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>          jsonKey == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : jsonKey.getQName())));
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    }

@@ -98,41 +98,40 @@
 <span class="source-line-no">085</span><span id="line-85">   *          the sequence of Metapath items to be inserted into the target</span>
 <span class="source-line-no">086</span><span id="line-86">   * @return the sequence of Metapath items with insertions</span>
 <span class="source-line-no">087</span><span id="line-87">   */</span>
-<span class="source-line-no">088</span><span id="line-88">  @SuppressWarnings("PMD.OnlyOneReturn")</span>
-<span class="source-line-no">089</span><span id="line-89">  @NonNull</span>
-<span class="source-line-no">090</span><span id="line-90">  public static &lt;T extends IItem&gt; List&lt;T&gt; fnInsertBefore(</span>
-<span class="source-line-no">091</span><span id="line-91">      @NonNull List&lt;T&gt; target,</span>
-<span class="source-line-no">092</span><span id="line-92">      @NonNull IIntegerItem positionItem,</span>
-<span class="source-line-no">093</span><span id="line-93">      @NonNull List&lt;T&gt; inserts) {</span>
-<span class="source-line-no">094</span><span id="line-94">    if (target.isEmpty()) {</span>
-<span class="source-line-no">095</span><span id="line-95">      return inserts;</span>
-<span class="source-line-no">096</span><span id="line-96">    }</span>
-<span class="source-line-no">097</span><span id="line-97"></span>
-<span class="source-line-no">098</span><span id="line-98">    if (inserts.isEmpty()) {</span>
-<span class="source-line-no">099</span><span id="line-99">      return target;</span>
-<span class="source-line-no">100</span><span id="line-100">    }</span>
-<span class="source-line-no">101</span><span id="line-101"></span>
-<span class="source-line-no">102</span><span id="line-102">    int position = positionItem.toIntValueExact();</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">    if (position &lt; 1) {</span>
-<span class="source-line-no">105</span><span id="line-105">      position = 1;</span>
-<span class="source-line-no">106</span><span id="line-106">    } else if (position &gt; target.size()) {</span>
-<span class="source-line-no">107</span><span id="line-107">      position = target.size() + 1;</span>
-<span class="source-line-no">108</span><span id="line-108">    }</span>
-<span class="source-line-no">109</span><span id="line-109"></span>
-<span class="source-line-no">110</span><span id="line-110">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target.size() + inserts.size());</span>
-<span class="source-line-no">111</span><span id="line-111"></span>
-<span class="source-line-no">112</span><span id="line-112">    if (position == 1) {</span>
-<span class="source-line-no">113</span><span id="line-113">      newSequence.addAll(inserts);</span>
-<span class="source-line-no">114</span><span id="line-114">      newSequence.addAll(target);</span>
-<span class="source-line-no">115</span><span id="line-115">    } else {</span>
-<span class="source-line-no">116</span><span id="line-116">      newSequence.addAll(target.subList(0, position - 1));</span>
-<span class="source-line-no">117</span><span id="line-117">      newSequence.addAll(inserts);</span>
-<span class="source-line-no">118</span><span id="line-118">      newSequence.addAll(target.subList(position - 1, target.size()));</span>
-<span class="source-line-no">119</span><span id="line-119">    }</span>
-<span class="source-line-no">120</span><span id="line-120">    return newSequence;</span>
-<span class="source-line-no">121</span><span id="line-121">  }</span>
-<span class="source-line-no">122</span><span id="line-122">}</span>
+<span class="source-line-no">088</span><span id="line-88">  @NonNull</span>
+<span class="source-line-no">089</span><span id="line-89">  public static &lt;T extends IItem&gt; List&lt;T&gt; fnInsertBefore(</span>
+<span class="source-line-no">090</span><span id="line-90">      @NonNull List&lt;T&gt; target,</span>
+<span class="source-line-no">091</span><span id="line-91">      @NonNull IIntegerItem positionItem,</span>
+<span class="source-line-no">092</span><span id="line-92">      @NonNull List&lt;T&gt; inserts) {</span>
+<span class="source-line-no">093</span><span id="line-93">    if (target.isEmpty()) {</span>
+<span class="source-line-no">094</span><span id="line-94">      return inserts;</span>
+<span class="source-line-no">095</span><span id="line-95">    }</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">    if (inserts.isEmpty()) {</span>
+<span class="source-line-no">098</span><span id="line-98">      return target;</span>
+<span class="source-line-no">099</span><span id="line-99">    }</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">    int position = positionItem.toIntValueExact();</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">    if (position &lt; 1) {</span>
+<span class="source-line-no">104</span><span id="line-104">      position = 1;</span>
+<span class="source-line-no">105</span><span id="line-105">    } else if (position &gt; target.size()) {</span>
+<span class="source-line-no">106</span><span id="line-106">      position = target.size() + 1;</span>
+<span class="source-line-no">107</span><span id="line-107">    }</span>
+<span class="source-line-no">108</span><span id="line-108"></span>
+<span class="source-line-no">109</span><span id="line-109">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target.size() + inserts.size());</span>
+<span class="source-line-no">110</span><span id="line-110"></span>
+<span class="source-line-no">111</span><span id="line-111">    if (position == 1) {</span>
+<span class="source-line-no">112</span><span id="line-112">      newSequence.addAll(inserts);</span>
+<span class="source-line-no">113</span><span id="line-113">      newSequence.addAll(target);</span>
+<span class="source-line-no">114</span><span id="line-114">    } else {</span>
+<span class="source-line-no">115</span><span id="line-115">      newSequence.addAll(target.subList(0, position - 1));</span>
+<span class="source-line-no">116</span><span id="line-116">      newSequence.addAll(inserts);</span>
+<span class="source-line-no">117</span><span id="line-117">      newSequence.addAll(target.subList(position - 1, target.size()));</span>
+<span class="source-line-no">118</span><span id="line-118">    }</span>
+<span class="source-line-no">119</span><span id="line-119">    return newSequence;</span>
+<span class="source-line-no">120</span><span id="line-120">  }</span>
+<span class="source-line-no">121</span><span id="line-121">}</span>
 
 
 

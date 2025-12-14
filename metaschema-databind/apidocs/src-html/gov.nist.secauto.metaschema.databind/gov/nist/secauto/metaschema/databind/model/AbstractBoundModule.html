@@ -73,7 +73,7 @@
 <span class="source-line-no">060</span><span id="line-60">      @NonNull IBindingContext bindingContext) {</span>
 <span class="source-line-no">061</span><span id="line-61">    super(importedModules);</span>
 <span class="source-line-no">062</span><span id="line-62">    this.bindingContext = bindingContext;</span>
-<span class="source-line-no">063</span><span id="line-63">    this.assemblyDefinitions = ObjectUtils.notNull(Lazy.lazy(() -&gt; Arrays.stream(getAssemblyClasses())</span>
+<span class="source-line-no">063</span><span id="line-63">    this.assemblyDefinitions = ObjectUtils.notNull(Lazy.of(() -&gt; Arrays.stream(getAssemblyClasses())</span>
 <span class="source-line-no">064</span><span id="line-64">        .map(clazz -&gt; {</span>
 <span class="source-line-no">065</span><span id="line-65">          assert clazz != null;</span>
 <span class="source-line-no">066</span><span id="line-66">          return (IBoundDefinitionModelAssembly) ObjectUtils</span>
@@ -82,7 +82,7 @@
 <span class="source-line-no">069</span><span id="line-69">        .collect(Collectors.toUnmodifiableMap(</span>
 <span class="source-line-no">070</span><span id="line-70">            def -&gt; def.getDefinitionQName().getIndexPosition(),</span>
 <span class="source-line-no">071</span><span id="line-71">            Function.identity()))));</span>
-<span class="source-line-no">072</span><span id="line-72">    this.fieldDefinitions = ObjectUtils.notNull(Lazy.lazy(() -&gt; Arrays.stream(getFieldClasses())</span>
+<span class="source-line-no">072</span><span id="line-72">    this.fieldDefinitions = ObjectUtils.notNull(Lazy.of(() -&gt; Arrays.stream(getFieldClasses())</span>
 <span class="source-line-no">073</span><span id="line-73">        .map(clazz -&gt; {</span>
 <span class="source-line-no">074</span><span id="line-74">          assert clazz != null;</span>
 <span class="source-line-no">075</span><span id="line-75">          return (IBoundDefinitionModelField&lt;?&gt;) ObjectUtils</span>
@@ -91,7 +91,7 @@
 <span class="source-line-no">078</span><span id="line-78">        .collect(Collectors.toUnmodifiableMap(</span>
 <span class="source-line-no">079</span><span id="line-79">            def -&gt; def.getDefinitionQName().getIndexPosition(),</span>
 <span class="source-line-no">080</span><span id="line-80">            Function.identity()))));</span>
-<span class="source-line-no">081</span><span id="line-81">    this.staticContext = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="source-line-no">081</span><span id="line-81">    this.staticContext = ObjectUtils.notNull(Lazy.of(() -&gt; {</span>
 <span class="source-line-no">082</span><span id="line-82">      StaticContext.Builder builder = StaticContext.builder()</span>
 <span class="source-line-no">083</span><span id="line-83">          .defaultModelNamespace(getXmlNamespace());</span>
 <span class="source-line-no">084</span><span id="line-84"></span>

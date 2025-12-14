@@ -25,7 +25,7 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.testing.model.mocking.MockNodeItemFactory;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.CollectionUtil;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">void</strong> testPredicateWithValues() {
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>      DynamicContext dynamicContext = newDynamicContext();
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testing/model/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a> mockFactory = <strong class="jxr_keyword">new</strong> <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testing/model/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a>();
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testsupport/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a> mockFactory = <strong class="jxr_keyword">new</strong> <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testsupport/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a>();
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      IAssemblyNodeItem item = mockFactory.assembly(
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>          IEnhancedQName.of(<span class="jxr_string">"assembly"</span>, NS),
@@ -69,7 +69,7 @@
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>    @Test
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>    <strong class="jxr_keyword">void</strong> testPredicateWithoutValues() {
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      DynamicContext dynamicContext = newDynamicContext().disablePredicateEvaluation();
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testing/model/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a> mockFactory = <strong class="jxr_keyword">new</strong> <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testing/model/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a>();
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testsupport/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a> mockFactory = <strong class="jxr_keyword">new</strong> <a name="MockNodeItemFactory" href="../../../../../../../../gov/nist/secauto/metaschema/core/testsupport/mocking/MockNodeItemFactory.html#MockNodeItemFactory">MockNodeItemFactory</a>();
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      IAssemblyNodeItem item = mockFactory.assembly(
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          IEnhancedQName.of(<span class="jxr_string">"assembly"</span>, NS),

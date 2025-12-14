@@ -144,35 +144,39 @@
 <span class="source-line-no">131</span><span id="line-131">   * The nature of a relationship between two nodes.</span>
 <span class="source-line-no">132</span><span id="line-132">   */</span>
 <span class="source-line-no">133</span><span id="line-133">  enum Relationship {</span>
-<span class="source-line-no">134</span><span id="line-134">    ZERO_OR_ONE,</span>
-<span class="source-line-no">135</span><span id="line-135">    ONE,</span>
-<span class="source-line-no">136</span><span id="line-136">    ZERO_OR_MORE,</span>
-<span class="source-line-no">137</span><span id="line-137">    ONE_OR_MORE;</span>
-<span class="source-line-no">138</span><span id="line-138"></span>
-<span class="source-line-no">139</span><span id="line-139">    /**</span>
-<span class="source-line-no">140</span><span id="line-140">     * Get the relationship based on the provided grouping information.</span>
-<span class="source-line-no">141</span><span id="line-141">     *</span>
-<span class="source-line-no">142</span><span id="line-142">     * @param groupable</span>
-<span class="source-line-no">143</span><span id="line-143">     *          the grouping information</span>
-<span class="source-line-no">144</span><span id="line-144">     * @return the relationship</span>
-<span class="source-line-no">145</span><span id="line-145">     */</span>
-<span class="source-line-no">146</span><span id="line-146">    @NonNull</span>
-<span class="source-line-no">147</span><span id="line-147">    public static Relationship toRelationship(@NonNull IGroupable groupable) {</span>
-<span class="source-line-no">148</span><span id="line-148">      return toRelationship(groupable.getMinOccurs(), groupable.getMaxOccurs());</span>
-<span class="source-line-no">149</span><span id="line-149">    }</span>
-<span class="source-line-no">150</span><span id="line-150"></span>
-<span class="source-line-no">151</span><span id="line-151">    @NonNull</span>
-<span class="source-line-no">152</span><span id="line-152">    private static Relationship toRelationship(int minOccurs, int maxOccurs) {</span>
-<span class="source-line-no">153</span><span id="line-153">      return minOccurs &lt; 1</span>
-<span class="source-line-no">154</span><span id="line-154">          ? maxOccurs == 1</span>
-<span class="source-line-no">155</span><span id="line-155">              ? IDiagramNode.Relationship.ZERO_OR_ONE</span>
-<span class="source-line-no">156</span><span id="line-156">              : IDiagramNode.Relationship.ZERO_OR_MORE</span>
-<span class="source-line-no">157</span><span id="line-157">          : maxOccurs == 1</span>
-<span class="source-line-no">158</span><span id="line-158">              ? IDiagramNode.Relationship.ONE</span>
-<span class="source-line-no">159</span><span id="line-159">              : IDiagramNode.Relationship.ONE_OR_MORE;</span>
-<span class="source-line-no">160</span><span id="line-160">    }</span>
-<span class="source-line-no">161</span><span id="line-161">  }</span>
-<span class="source-line-no">162</span><span id="line-162">}</span>
+<span class="source-line-no">134</span><span id="line-134">    /** Indicates a relationship with zero or one occurrences. */</span>
+<span class="source-line-no">135</span><span id="line-135">    ZERO_OR_ONE,</span>
+<span class="source-line-no">136</span><span id="line-136">    /** Indicates a relationship with exactly one occurrence. */</span>
+<span class="source-line-no">137</span><span id="line-137">    ONE,</span>
+<span class="source-line-no">138</span><span id="line-138">    /** Indicates a relationship with zero or more occurrences. */</span>
+<span class="source-line-no">139</span><span id="line-139">    ZERO_OR_MORE,</span>
+<span class="source-line-no">140</span><span id="line-140">    /** Indicates a relationship with one or more occurrences. */</span>
+<span class="source-line-no">141</span><span id="line-141">    ONE_OR_MORE;</span>
+<span class="source-line-no">142</span><span id="line-142"></span>
+<span class="source-line-no">143</span><span id="line-143">    /**</span>
+<span class="source-line-no">144</span><span id="line-144">     * Get the relationship based on the provided grouping information.</span>
+<span class="source-line-no">145</span><span id="line-145">     *</span>
+<span class="source-line-no">146</span><span id="line-146">     * @param groupable</span>
+<span class="source-line-no">147</span><span id="line-147">     *          the grouping information</span>
+<span class="source-line-no">148</span><span id="line-148">     * @return the relationship</span>
+<span class="source-line-no">149</span><span id="line-149">     */</span>
+<span class="source-line-no">150</span><span id="line-150">    @NonNull</span>
+<span class="source-line-no">151</span><span id="line-151">    public static Relationship toRelationship(@NonNull IGroupable groupable) {</span>
+<span class="source-line-no">152</span><span id="line-152">      return toRelationship(groupable.getMinOccurs(), groupable.getMaxOccurs());</span>
+<span class="source-line-no">153</span><span id="line-153">    }</span>
+<span class="source-line-no">154</span><span id="line-154"></span>
+<span class="source-line-no">155</span><span id="line-155">    @NonNull</span>
+<span class="source-line-no">156</span><span id="line-156">    private static Relationship toRelationship(int minOccurs, int maxOccurs) {</span>
+<span class="source-line-no">157</span><span id="line-157">      return minOccurs &lt; 1</span>
+<span class="source-line-no">158</span><span id="line-158">          ? maxOccurs == 1</span>
+<span class="source-line-no">159</span><span id="line-159">              ? IDiagramNode.Relationship.ZERO_OR_ONE</span>
+<span class="source-line-no">160</span><span id="line-160">              : IDiagramNode.Relationship.ZERO_OR_MORE</span>
+<span class="source-line-no">161</span><span id="line-161">          : maxOccurs == 1</span>
+<span class="source-line-no">162</span><span id="line-162">              ? IDiagramNode.Relationship.ONE</span>
+<span class="source-line-no">163</span><span id="line-163">              : IDiagramNode.Relationship.ONE_OR_MORE;</span>
+<span class="source-line-no">164</span><span id="line-164">    }</span>
+<span class="source-line-no">165</span><span id="line-165">  }</span>
+<span class="source-line-no">166</span><span id="line-166">}</span>
 
 
 

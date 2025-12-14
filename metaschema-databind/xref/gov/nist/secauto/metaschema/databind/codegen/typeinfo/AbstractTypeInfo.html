@@ -28,14 +28,14 @@
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>    <strong class="jxr_keyword">protected</strong> <a name="AbstractTypeInfo" href="../../../../../../../gov/nist/secauto/metaschema/databind/codegen/typeinfo/AbstractTypeInfo.html#AbstractTypeInfo">AbstractTypeInfo</a>(@NonNull PARENT parentDefinition) {
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>      <strong class="jxr_keyword">this</strong>.parentDefinition = parentDefinition;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>      <strong class="jxr_keyword">this</strong>.propertyName = Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>      <strong class="jxr_keyword">this</strong>.propertyName = Lazy.of(() -&gt; {
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>        String baseName = ClassUtils.toPropertyName(getBaseName());
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>        <a name="IDefinitionTypeInfo" href="../../../../../../../gov/nist/secauto/metaschema/databind/codegen/typeinfo/def/IDefinitionTypeInfo.html#IDefinitionTypeInfo">IDefinitionTypeInfo</a> parent = getParentTypeInfo();
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>        <em class="jxr_comment">// first check if a property already exists with the same name</em>
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>        <strong class="jxr_keyword">return</strong> parent.getTypeResolver().getPropertyName(parent, baseName);
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>      });
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">this</strong>.fieldName = Lazy.lazy(() -&gt; <span class="jxr_string">"_"</span> + ClassUtils.toVariableName(getPropertyName()));
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">this</strong>.fieldName = Lazy.of(() -&gt; <span class="jxr_string">"_"</span> + ClassUtils.toVariableName(getPropertyName()));
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>    }
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>    @Override

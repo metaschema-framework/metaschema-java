@@ -103,24 +103,23 @@
 <span class="source-line-no">090</span><span id="line-90">    return prime * result + Objects.hash(contextItem, arguments);</span>
 <span class="source-line-no">091</span><span id="line-91">  }</span>
 <span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93">  @SuppressWarnings("PMD.OnlyOneReturn")</span>
-<span class="source-line-no">094</span><span id="line-94">  @Override</span>
-<span class="source-line-no">095</span><span id="line-95">  public boolean equals(Object obj) {</span>
-<span class="source-line-no">096</span><span id="line-96">    if (this == obj) {</span>
-<span class="source-line-no">097</span><span id="line-97">      return true;</span>
-<span class="source-line-no">098</span><span id="line-98">    }</span>
-<span class="source-line-no">099</span><span id="line-99">    if (obj == null || getClass() != obj.getClass()) {</span>
-<span class="source-line-no">100</span><span id="line-100">      return false;</span>
-<span class="source-line-no">101</span><span id="line-101">    }</span>
-<span class="source-line-no">102</span><span id="line-102">    CalledContext other = (CalledContext) obj;</span>
-<span class="source-line-no">103</span><span id="line-103">    if (!getFunction().equals(other.getFunction())) {</span>
-<span class="source-line-no">104</span><span id="line-104">      return false;</span>
-<span class="source-line-no">105</span><span id="line-105">    }</span>
-<span class="source-line-no">106</span><span id="line-106">    return Objects.equals(function, other.function)</span>
-<span class="source-line-no">107</span><span id="line-107">        &amp;&amp; Objects.equals(arguments, other.arguments)</span>
-<span class="source-line-no">108</span><span id="line-108">        &amp;&amp; Objects.equals(contextItem, other.contextItem);</span>
-<span class="source-line-no">109</span><span id="line-109">  }</span>
-<span class="source-line-no">110</span><span id="line-110">}</span>
+<span class="source-line-no">093</span><span id="line-93">  @Override</span>
+<span class="source-line-no">094</span><span id="line-94">  public boolean equals(Object obj) {</span>
+<span class="source-line-no">095</span><span id="line-95">    if (this == obj) {</span>
+<span class="source-line-no">096</span><span id="line-96">      return true;</span>
+<span class="source-line-no">097</span><span id="line-97">    }</span>
+<span class="source-line-no">098</span><span id="line-98">    if (obj == null || getClass() != obj.getClass()) {</span>
+<span class="source-line-no">099</span><span id="line-99">      return false;</span>
+<span class="source-line-no">100</span><span id="line-100">    }</span>
+<span class="source-line-no">101</span><span id="line-101">    CalledContext other = (CalledContext) obj;</span>
+<span class="source-line-no">102</span><span id="line-102">    if (!getFunction().equals(other.getFunction())) {</span>
+<span class="source-line-no">103</span><span id="line-103">      return false;</span>
+<span class="source-line-no">104</span><span id="line-104">    }</span>
+<span class="source-line-no">105</span><span id="line-105">    return Objects.equals(function, other.function)</span>
+<span class="source-line-no">106</span><span id="line-106">        &amp;&amp; Objects.equals(arguments, other.arguments)</span>
+<span class="source-line-no">107</span><span id="line-107">        &amp;&amp; Objects.equals(contextItem, other.contextItem);</span>
+<span class="source-line-no">108</span><span id="line-108">  }</span>
+<span class="source-line-no">109</span><span id="line-109">}</span>
 
 
 

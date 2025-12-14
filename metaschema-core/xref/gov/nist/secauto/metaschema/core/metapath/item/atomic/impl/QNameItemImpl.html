@@ -84,22 +84,21 @@
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">return</strong> value.hashCode();
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>    }
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>    @SuppressWarnings(<span class="jxr_string">"PMD.OnlyOneReturn"</span>)
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>    @Override
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> equals(Object obj) {
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong> == obj
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>          || obj instanceof <a name="IQNameItem" href="../../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IQNameItem.html#IQNameItem">IQNameItem</a> &amp;&amp; compareTo((<a name="IQNameItem" href="../../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IQNameItem.html#IQNameItem">IQNameItem</a>) obj) == 0;
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> MapKey
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>        <strong class="jxr_keyword">extends</strong> <a name="AbstractMapKey" href="../../../../../../../../../gov/nist/secauto/metaschema/core/metapath/impl/AbstractMapKey.html#AbstractMapKey">AbstractMapKey</a>
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>        <strong class="jxr_keyword">implements</strong> <a name="IOpaqueMapKey" href="../../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/function/IOpaqueMapKey.html#IOpaqueMapKey">IOpaqueMapKey</a> {
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      @Override
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">public</strong> <a name="IQNameItem" href="../../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IQNameItem.html#IQNameItem">IQNameItem</a> getKey() {
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>        <strong class="jxr_keyword">return</strong> QNameItemImpl.<strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      }
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>    }
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  }
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    @Override
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> equals(Object obj) {
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong> == obj
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>          || obj instanceof <a name="IQNameItem" href="../../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IQNameItem.html#IQNameItem">IQNameItem</a> &amp;&amp; compareTo((<a name="IQNameItem" href="../../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IQNameItem.html#IQNameItem">IQNameItem</a>) obj) == 0;
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    }
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> MapKey
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>        <strong class="jxr_keyword">extends</strong> <a name="AbstractMapKey" href="../../../../../../../../../gov/nist/secauto/metaschema/core/metapath/impl/AbstractMapKey.html#AbstractMapKey">AbstractMapKey</a>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>        <strong class="jxr_keyword">implements</strong> <a name="IOpaqueMapKey" href="../../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/function/IOpaqueMapKey.html#IOpaqueMapKey">IOpaqueMapKey</a> {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      @Override
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">public</strong> <a name="IQNameItem" href="../../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IQNameItem.html#IQNameItem">IQNameItem</a> getKey() {
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>        <strong class="jxr_keyword">return</strong> QNameItemImpl.<strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>    }
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2025</div>

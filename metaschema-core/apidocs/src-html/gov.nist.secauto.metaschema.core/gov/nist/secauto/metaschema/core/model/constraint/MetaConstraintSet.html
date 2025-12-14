@@ -144,12 +144,12 @@
 <span class="source-line-no">131</span><span id="line-131">        @NonNull List&lt;IMetapathExpression&gt; metapaths,</span>
 <span class="source-line-no">132</span><span id="line-132">        @NonNull IModelConstrained modelConstrained) {</span>
 <span class="source-line-no">133</span><span id="line-133">      this.metapaths = metapaths;</span>
-<span class="source-line-no">134</span><span id="line-134">      this.contextualizedMetapaths = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="source-line-no">134</span><span id="line-134">      this.contextualizedMetapaths = ObjectUtils.notNull(Lazy.of(() -&gt; {</span>
 <span class="source-line-no">135</span><span id="line-135">        return concatMetapaths(parent, ObjectUtils.notNull(metapaths.stream()), source)</span>
 <span class="source-line-no">136</span><span id="line-136">            .collect(Collectors.toUnmodifiableList());</span>
 <span class="source-line-no">137</span><span id="line-137">      }));</span>
 <span class="source-line-no">138</span><span id="line-138"></span>
-<span class="source-line-no">139</span><span id="line-139">      this.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; new ModelTargetedConstraints(</span>
+<span class="source-line-no">139</span><span id="line-139">      this.constraints = ObjectUtils.notNull(Lazy.of(() -&gt; new ModelTargetedConstraints(</span>
 <span class="source-line-no">140</span><span id="line-140">          source,</span>
 <span class="source-line-no">141</span><span id="line-141">          this::getContextualizedMetapaths,</span>
 <span class="source-line-no">142</span><span id="line-142">          modelConstrained)));</span>

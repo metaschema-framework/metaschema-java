@@ -88,332 +88,356 @@
 <span class="source-line-no">075</span><span id="line-75">   *          the Metapath dynamic execution context to use for Metapath</span>
 <span class="source-line-no">076</span><span id="line-76">   *          evaluation</span>
 <span class="source-line-no">077</span><span id="line-77">   * @return the new message</span>
-<span class="source-line-no">078</span><span id="line-78">   */</span>
-<span class="source-line-no">079</span><span id="line-79">  @NonNull</span>
-<span class="source-line-no">080</span><span id="line-80">  protected String newCardinalityMinimumViolationMessage(</span>
-<span class="source-line-no">081</span><span id="line-81">      @NonNull ICardinalityConstraint constraint,</span>
-<span class="source-line-no">082</span><span id="line-82">      @NonNull INodeItem target,</span>
-<span class="source-line-no">083</span><span id="line-83">      @NonNull ISequence&lt;? extends INodeItem&gt; testedItems,</span>
-<span class="source-line-no">084</span><span id="line-84">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">085</span><span id="line-85">    return constraint.getMessage() == null</span>
-<span class="source-line-no">086</span><span id="line-86">        ? ObjectUtils.notNull(String.format(</span>
-<span class="source-line-no">087</span><span id="line-87">            "The cardinality '%d' is below the required minimum '%d' for items matching '%s'.",</span>
-<span class="source-line-no">088</span><span id="line-88">            testedItems.size(),</span>
-<span class="source-line-no">089</span><span id="line-89">            constraint.getMinOccurs(),</span>
-<span class="source-line-no">090</span><span id="line-90">            constraint.getTarget().getPath()))</span>
-<span class="source-line-no">091</span><span id="line-91">        : constraint.generateMessage(target, dynamicContext);</span>
-<span class="source-line-no">092</span><span id="line-92">  }</span>
-<span class="source-line-no">093</span><span id="line-93"></span>
-<span class="source-line-no">094</span><span id="line-94">  /**</span>
-<span class="source-line-no">095</span><span id="line-95">   * Construct a new violation message for the provided {@code constraint} applied</span>
-<span class="source-line-no">096</span><span id="line-96">   * to the {@code node}.</span>
-<span class="source-line-no">097</span><span id="line-97">   *</span>
-<span class="source-line-no">098</span><span id="line-98">   * @param constraint</span>
-<span class="source-line-no">099</span><span id="line-99">   *          the constraint the requested message pertains to</span>
-<span class="source-line-no">100</span><span id="line-100">   * @param target</span>
-<span class="source-line-no">101</span><span id="line-101">   *          the item the constraint targeted</span>
-<span class="source-line-no">102</span><span id="line-102">   * @param testedItems</span>
-<span class="source-line-no">103</span><span id="line-103">   *          the items tested by the constraint</span>
-<span class="source-line-no">104</span><span id="line-104">   * @param dynamicContext</span>
-<span class="source-line-no">105</span><span id="line-105">   *          the Metapath dynamic execution context to use for Metapath</span>
-<span class="source-line-no">106</span><span id="line-106">   *          evaluation</span>
-<span class="source-line-no">107</span><span id="line-107">   * @return the new message</span>
-<span class="source-line-no">108</span><span id="line-108">   */</span>
-<span class="source-line-no">109</span><span id="line-109">  @NonNull</span>
-<span class="source-line-no">110</span><span id="line-110">  protected String newCardinalityMaximumViolationMessage(</span>
-<span class="source-line-no">111</span><span id="line-111">      @NonNull ICardinalityConstraint constraint,</span>
-<span class="source-line-no">112</span><span id="line-112">      @NonNull INodeItem target,</span>
-<span class="source-line-no">113</span><span id="line-113">      @NonNull ISequence&lt;? extends INodeItem&gt; testedItems,</span>
-<span class="source-line-no">114</span><span id="line-114">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">115</span><span id="line-115">    return constraint.getMessage() == null</span>
-<span class="source-line-no">116</span><span id="line-116">        ? ObjectUtils.notNull(String.format(</span>
-<span class="source-line-no">117</span><span id="line-117">            "The cardinality '%d' is greater than the required maximum '%d' at: %s.",</span>
-<span class="source-line-no">118</span><span id="line-118">            testedItems.size(),</span>
-<span class="source-line-no">119</span><span id="line-119">            constraint.getMinOccurs(),</span>
-<span class="source-line-no">120</span><span id="line-120">            testedItems.safeStream()</span>
-<span class="source-line-no">121</span><span id="line-121">                .map(item -&gt; new StringBuilder(12)</span>
-<span class="source-line-no">122</span><span id="line-122">                    .append('\'')</span>
-<span class="source-line-no">123</span><span id="line-123">                    .append(toPath(ObjectUtils.notNull(item)))</span>
-<span class="source-line-no">124</span><span id="line-124">                    .append('\'')</span>
-<span class="source-line-no">125</span><span id="line-125">                    .toString())</span>
-<span class="source-line-no">126</span><span id="line-126">                .collect(CustomCollectors.joiningWithOxfordComma("and"))))</span>
-<span class="source-line-no">127</span><span id="line-127">        : constraint.generateMessage(target, dynamicContext);</span>
-<span class="source-line-no">128</span><span id="line-128">  }</span>
-<span class="source-line-no">129</span><span id="line-129"></span>
-<span class="source-line-no">130</span><span id="line-130">  /**</span>
-<span class="source-line-no">131</span><span id="line-131">   * Construct a new violation message for the provided {@code constraint} applied</span>
-<span class="source-line-no">132</span><span id="line-132">   * to the {@code node}.</span>
-<span class="source-line-no">133</span><span id="line-133">   *</span>
-<span class="source-line-no">134</span><span id="line-134">   * @param constraint</span>
-<span class="source-line-no">135</span><span id="line-135">   *          the constraint the requested message pertains to</span>
-<span class="source-line-no">136</span><span id="line-136">   * @param node</span>
-<span class="source-line-no">137</span><span id="line-137">   *          the item the constraint targeted</span>
-<span class="source-line-no">138</span><span id="line-138">   * @param oldItem</span>
-<span class="source-line-no">139</span><span id="line-139">   *          the original item matching the constraint</span>
-<span class="source-line-no">140</span><span id="line-140">   * @param target</span>
-<span class="source-line-no">141</span><span id="line-141">   *          the new item matching the constraint</span>
-<span class="source-line-no">142</span><span id="line-142">   * @param dynamicContext</span>
-<span class="source-line-no">143</span><span id="line-143">   *          the Metapath dynamic execution context to use for Metapath</span>
-<span class="source-line-no">144</span><span id="line-144">   *          evaluation</span>
-<span class="source-line-no">145</span><span id="line-145">   * @return the new message</span>
-<span class="source-line-no">146</span><span id="line-146">   */</span>
-<span class="source-line-no">147</span><span id="line-147">  @NonNull</span>
-<span class="source-line-no">148</span><span id="line-148">  protected String newIndexDuplicateKeyViolationMessage(</span>
-<span class="source-line-no">149</span><span id="line-149">      @NonNull IIndexConstraint constraint,</span>
-<span class="source-line-no">150</span><span id="line-150">      @NonNull INodeItem node,</span>
-<span class="source-line-no">151</span><span id="line-151">      @NonNull INodeItem oldItem,</span>
-<span class="source-line-no">152</span><span id="line-152">      @NonNull INodeItem target,</span>
-<span class="source-line-no">153</span><span id="line-153">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">154</span><span id="line-154">    // TODO: render the key paths</span>
-<span class="source-line-no">155</span><span id="line-155">    return constraint.getMessage() == null</span>
-<span class="source-line-no">156</span><span id="line-156">        ? ObjectUtils.notNull(String.format("Index '%s' has duplicate key for items at paths '%s' and '%s'",</span>
-<span class="source-line-no">157</span><span id="line-157">            constraint.getName(),</span>
-<span class="source-line-no">158</span><span id="line-158">            toPath(oldItem),</span>
-<span class="source-line-no">159</span><span id="line-159">            toPath(target)))</span>
-<span class="source-line-no">160</span><span id="line-160">        : constraint.generateMessage(target, dynamicContext);</span>
-<span class="source-line-no">161</span><span id="line-161">  }</span>
-<span class="source-line-no">162</span><span id="line-162"></span>
-<span class="source-line-no">163</span><span id="line-163">  /**</span>
-<span class="source-line-no">164</span><span id="line-164">   * Construct a new violation message for the provided {@code constraint} applied</span>
-<span class="source-line-no">165</span><span id="line-165">   * to the {@code node}.</span>
-<span class="source-line-no">166</span><span id="line-166">   *</span>
-<span class="source-line-no">167</span><span id="line-167">   * @param constraint</span>
-<span class="source-line-no">168</span><span id="line-168">   *          the constraint the requested message pertains to</span>
-<span class="source-line-no">169</span><span id="line-169">   * @param node</span>
-<span class="source-line-no">170</span><span id="line-170">   *          the item the constraint targeted</span>
-<span class="source-line-no">171</span><span id="line-171">   * @param oldItem</span>
-<span class="source-line-no">172</span><span id="line-172">   *          the original item matching the constraint</span>
-<span class="source-line-no">173</span><span id="line-173">   * @param target</span>
-<span class="source-line-no">174</span><span id="line-174">   *          the new item matching the constraint</span>
-<span class="source-line-no">175</span><span id="line-175">   * @param dynamicContext</span>
-<span class="source-line-no">176</span><span id="line-176">   *          the Metapath dynamic execution context to use for Metapath</span>
-<span class="source-line-no">177</span><span id="line-177">   *          evaluation</span>
-<span class="source-line-no">178</span><span id="line-178">   * @return the new message</span>
-<span class="source-line-no">179</span><span id="line-179">   */</span>
-<span class="source-line-no">180</span><span id="line-180">  @NonNull</span>
-<span class="source-line-no">181</span><span id="line-181">  protected String newUniqueKeyViolationMessage(</span>
-<span class="source-line-no">182</span><span id="line-182">      @NonNull IUniqueConstraint constraint,</span>
-<span class="source-line-no">183</span><span id="line-183">      @NonNull INodeItem node,</span>
-<span class="source-line-no">184</span><span id="line-184">      @NonNull INodeItem oldItem,</span>
-<span class="source-line-no">185</span><span id="line-185">      @NonNull INodeItem target,</span>
-<span class="source-line-no">186</span><span id="line-186">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">187</span><span id="line-187">    return constraint.getMessage() == null</span>
-<span class="source-line-no">188</span><span id="line-188">        ? ObjectUtils.notNull(String.format("Unique constraint violation at paths '%s' and '%s'",</span>
-<span class="source-line-no">189</span><span id="line-189">            toPath(oldItem),</span>
-<span class="source-line-no">190</span><span id="line-190">            toPath(target)))</span>
-<span class="source-line-no">191</span><span id="line-191">        : constraint.generateMessage(target, dynamicContext);</span>
-<span class="source-line-no">192</span><span id="line-192">  }</span>
-<span class="source-line-no">193</span><span id="line-193"></span>
-<span class="source-line-no">194</span><span id="line-194">  /**</span>
-<span class="source-line-no">195</span><span id="line-195">   * Construct a new violation message for the provided {@code constraint} applied</span>
-<span class="source-line-no">196</span><span id="line-196">   * to the {@code node}.</span>
-<span class="source-line-no">197</span><span id="line-197">   *</span>
-<span class="source-line-no">198</span><span id="line-198">   * @param constraint</span>
-<span class="source-line-no">199</span><span id="line-199">   *          the constraint the requested message pertains to</span>
-<span class="source-line-no">200</span><span id="line-200">   * @param node</span>
-<span class="source-line-no">201</span><span id="line-201">   *          the item the constraint targeted</span>
-<span class="source-line-no">202</span><span id="line-202">   * @param target</span>
-<span class="source-line-no">203</span><span id="line-203">   *          the target matching the constraint</span>
-<span class="source-line-no">204</span><span id="line-204">   * @param value</span>
-<span class="source-line-no">205</span><span id="line-205">   *          the target's value</span>
-<span class="source-line-no">206</span><span id="line-206">   * @param pattern</span>
-<span class="source-line-no">207</span><span id="line-207">   *          the expected pattern</span>
-<span class="source-line-no">208</span><span id="line-208">   * @param dynamicContext</span>
-<span class="source-line-no">209</span><span id="line-209">   *          the Metapath dynamic execution context to use for Metapath</span>
-<span class="source-line-no">210</span><span id="line-210">   *          evaluation</span>
-<span class="source-line-no">211</span><span id="line-211">   * @return the new message</span>
-<span class="source-line-no">212</span><span id="line-212">   */</span>
-<span class="source-line-no">213</span><span id="line-213">  @NonNull</span>
-<span class="source-line-no">214</span><span id="line-214">  protected String newMatchPatternViolationMessage(</span>
-<span class="source-line-no">215</span><span id="line-215">      @NonNull IMatchesConstraint constraint,</span>
-<span class="source-line-no">216</span><span id="line-216">      @NonNull INodeItem node,</span>
-<span class="source-line-no">217</span><span id="line-217">      @NonNull INodeItem target,</span>
-<span class="source-line-no">218</span><span id="line-218">      @NonNull String value,</span>
-<span class="source-line-no">219</span><span id="line-219">      @NonNull Pattern pattern,</span>
-<span class="source-line-no">220</span><span id="line-220">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">221</span><span id="line-221">    return constraint.getMessage() == null</span>
-<span class="source-line-no">222</span><span id="line-222">        ? ObjectUtils.notNull(String.format("Value '%s' did not match the pattern '%s' at path '%s'",</span>
-<span class="source-line-no">223</span><span id="line-223">            value,</span>
-<span class="source-line-no">224</span><span id="line-224">            pattern.pattern(),</span>
-<span class="source-line-no">225</span><span id="line-225">            toPath(target)))</span>
-<span class="source-line-no">226</span><span id="line-226">        : constraint.generateMessage(target, dynamicContext);</span>
-<span class="source-line-no">227</span><span id="line-227">  }</span>
-<span class="source-line-no">228</span><span id="line-228"></span>
-<span class="source-line-no">229</span><span id="line-229">  /**</span>
-<span class="source-line-no">230</span><span id="line-230">   * Construct a new violation message for the provided {@code constraint} applied</span>
-<span class="source-line-no">231</span><span id="line-231">   * to the {@code node}.</span>
-<span class="source-line-no">232</span><span id="line-232">   *</span>
-<span class="source-line-no">233</span><span id="line-233">   * @param constraint</span>
-<span class="source-line-no">234</span><span id="line-234">   *          the constraint the requested message pertains to</span>
-<span class="source-line-no">235</span><span id="line-235">   * @param node</span>
-<span class="source-line-no">236</span><span id="line-236">   *          the item the constraint targeted</span>
-<span class="source-line-no">237</span><span id="line-237">   * @param target</span>
-<span class="source-line-no">238</span><span id="line-238">   *          the target matching the constraint</span>
-<span class="source-line-no">239</span><span id="line-239">   * @param value</span>
-<span class="source-line-no">240</span><span id="line-240">   *          the target's value</span>
-<span class="source-line-no">241</span><span id="line-241">   * @param adapter</span>
-<span class="source-line-no">242</span><span id="line-242">   *          the expected data type adapter</span>
-<span class="source-line-no">243</span><span id="line-243">   * @param dynamicContext</span>
-<span class="source-line-no">244</span><span id="line-244">   *          the Metapath dynamic execution context to use for Metapath</span>
-<span class="source-line-no">245</span><span id="line-245">   *          evaluation</span>
-<span class="source-line-no">246</span><span id="line-246">   * @return the new message</span>
-<span class="source-line-no">247</span><span id="line-247">   */</span>
-<span class="source-line-no">248</span><span id="line-248">  @NonNull</span>
-<span class="source-line-no">249</span><span id="line-249">  protected String newMatchDatatypeViolationMessage(</span>
-<span class="source-line-no">250</span><span id="line-250">      @NonNull IMatchesConstraint constraint,</span>
-<span class="source-line-no">251</span><span id="line-251">      @NonNull INodeItem node,</span>
-<span class="source-line-no">252</span><span id="line-252">      @NonNull INodeItem target,</span>
-<span class="source-line-no">253</span><span id="line-253">      @NonNull String value,</span>
-<span class="source-line-no">254</span><span id="line-254">      @NonNull IDataTypeAdapter&lt;?&gt; adapter,</span>
-<span class="source-line-no">255</span><span id="line-255">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">256</span><span id="line-256">    return constraint.getMessage() == null</span>
-<span class="source-line-no">257</span><span id="line-257">        ? ObjectUtils.notNull(String.format("Value '%s' did not conform to the data type '%s' at path '%s'",</span>
-<span class="source-line-no">258</span><span id="line-258">            value,</span>
-<span class="source-line-no">259</span><span id="line-259">            adapter.getPreferredName(),</span>
-<span class="source-line-no">260</span><span id="line-260">            toPath(target)))</span>
-<span class="source-line-no">261</span><span id="line-261">        : constraint.generateMessage(target, dynamicContext);</span>
-<span class="source-line-no">262</span><span id="line-262">  }</span>
-<span class="source-line-no">263</span><span id="line-263"></span>
-<span class="source-line-no">264</span><span id="line-264">  /**</span>
-<span class="source-line-no">265</span><span id="line-265">   * Construct a new violation message for the provided {@code constraint} applied</span>
-<span class="source-line-no">266</span><span id="line-266">   * to the {@code node}.</span>
-<span class="source-line-no">267</span><span id="line-267">   *</span>
-<span class="source-line-no">268</span><span id="line-268">   * @param constraint</span>
-<span class="source-line-no">269</span><span id="line-269">   *          the constraint the requested message pertains to</span>
-<span class="source-line-no">270</span><span id="line-270">   * @param node</span>
-<span class="source-line-no">271</span><span id="line-271">   *          the item the constraint targeted</span>
-<span class="source-line-no">272</span><span id="line-272">   * @param target</span>
-<span class="source-line-no">273</span><span id="line-273">   *          the target matching the constraint</span>
-<span class="source-line-no">274</span><span id="line-274">   * @param dynamicContext</span>
-<span class="source-line-no">275</span><span id="line-275">   *          the Metapath dynamic execution context to use for Metapath</span>
-<span class="source-line-no">276</span><span id="line-276">   *          evaluation</span>
-<span class="source-line-no">277</span><span id="line-277">   * @return the new message</span>
-<span class="source-line-no">278</span><span id="line-278">   */</span>
-<span class="source-line-no">279</span><span id="line-279">  @NonNull</span>
-<span class="source-line-no">280</span><span id="line-280">  protected String newExpectViolationMessage(</span>
-<span class="source-line-no">281</span><span id="line-281">      @NonNull IExpectConstraint constraint,</span>
-<span class="source-line-no">282</span><span id="line-282">      @NonNull INodeItem node,</span>
-<span class="source-line-no">283</span><span id="line-283">      @NonNull INodeItem target,</span>
-<span class="source-line-no">284</span><span id="line-284">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">285</span><span id="line-285">    return constraint.getMessage() == null</span>
-<span class="source-line-no">286</span><span id="line-286">        ? ObjectUtils.notNull(String.format("Expect constraint '%s' did not match the data at path '%s'",</span>
-<span class="source-line-no">287</span><span id="line-287">            constraint.getTest().getPath(),</span>
-<span class="source-line-no">288</span><span id="line-288">            toPath(target)))</span>
-<span class="source-line-no">289</span><span id="line-289">        : constraint.generateMessage(target, dynamicContext);</span>
-<span class="source-line-no">290</span><span id="line-290">  }</span>
-<span class="source-line-no">291</span><span id="line-291"></span>
-<span class="source-line-no">292</span><span id="line-292">  /**</span>
-<span class="source-line-no">293</span><span id="line-293">   * Construct a new violation message for the provided {@code constraint} applied</span>
-<span class="source-line-no">294</span><span id="line-294">   * to the {@code node}.</span>
-<span class="source-line-no">295</span><span id="line-295">   *</span>
-<span class="source-line-no">296</span><span id="line-296">   * @param constraints</span>
-<span class="source-line-no">297</span><span id="line-297">   *          the constraints the requested message pertains to</span>
-<span class="source-line-no">298</span><span id="line-298">   * @param target</span>
-<span class="source-line-no">299</span><span id="line-299">   *          the target matching the constraint</span>
-<span class="source-line-no">300</span><span id="line-300">   * @return the new message</span>
-<span class="source-line-no">301</span><span id="line-301">   */</span>
-<span class="source-line-no">302</span><span id="line-302">  @NonNull</span>
-<span class="source-line-no">303</span><span id="line-303">  protected String newAllowedValuesViolationMessage(</span>
-<span class="source-line-no">304</span><span id="line-304">      @NonNull List&lt;IAllowedValuesConstraint&gt; constraints,</span>
-<span class="source-line-no">305</span><span id="line-305">      @NonNull INodeItem target) {</span>
-<span class="source-line-no">306</span><span id="line-306">    String allowedValues = constraints.stream()</span>
-<span class="source-line-no">307</span><span id="line-307">        .flatMap(constraint -&gt; constraint.getAllowedValues().values().stream())</span>
-<span class="source-line-no">308</span><span id="line-308">        .map(IAllowedValue::getValue)</span>
-<span class="source-line-no">309</span><span id="line-309">        .sorted()</span>
-<span class="source-line-no">310</span><span id="line-310">        .distinct()</span>
-<span class="source-line-no">311</span><span id="line-311">        .collect(CustomCollectors.joiningWithOxfordComma("or"));</span>
+<span class="source-line-no">078</span><span id="line-78">   * @throws ConstraintValidationException</span>
+<span class="source-line-no">079</span><span id="line-79">   *           if the custom message contains a Metapath expression that is</span>
+<span class="source-line-no">080</span><span id="line-80">   *           invalid or if the expression failed to evaluate</span>
+<span class="source-line-no">081</span><span id="line-81">   */</span>
+<span class="source-line-no">082</span><span id="line-82">  @NonNull</span>
+<span class="source-line-no">083</span><span id="line-83">  protected String newCardinalityMinimumViolationMessage(</span>
+<span class="source-line-no">084</span><span id="line-84">      @NonNull ICardinalityConstraint constraint,</span>
+<span class="source-line-no">085</span><span id="line-85">      @NonNull INodeItem target,</span>
+<span class="source-line-no">086</span><span id="line-86">      @NonNull ISequence&lt;? extends INodeItem&gt; testedItems,</span>
+<span class="source-line-no">087</span><span id="line-87">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
+<span class="source-line-no">088</span><span id="line-88">    return constraint.getMessage() == null</span>
+<span class="source-line-no">089</span><span id="line-89">        ? ObjectUtils.notNull(String.format(</span>
+<span class="source-line-no">090</span><span id="line-90">            "The cardinality '%d' is below the required minimum '%d' for items matching '%s'.",</span>
+<span class="source-line-no">091</span><span id="line-91">            testedItems.size(),</span>
+<span class="source-line-no">092</span><span id="line-92">            constraint.getMinOccurs(),</span>
+<span class="source-line-no">093</span><span id="line-93">            constraint.getTarget().getPath()))</span>
+<span class="source-line-no">094</span><span id="line-94">        : constraint.generateMessage(target, dynamicContext);</span>
+<span class="source-line-no">095</span><span id="line-95">  }</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">  /**</span>
+<span class="source-line-no">098</span><span id="line-98">   * Construct a new violation message for the provided {@code constraint} applied</span>
+<span class="source-line-no">099</span><span id="line-99">   * to the {@code node}.</span>
+<span class="source-line-no">100</span><span id="line-100">   *</span>
+<span class="source-line-no">101</span><span id="line-101">   * @param constraint</span>
+<span class="source-line-no">102</span><span id="line-102">   *          the constraint the requested message pertains to</span>
+<span class="source-line-no">103</span><span id="line-103">   * @param target</span>
+<span class="source-line-no">104</span><span id="line-104">   *          the item the constraint targeted</span>
+<span class="source-line-no">105</span><span id="line-105">   * @param testedItems</span>
+<span class="source-line-no">106</span><span id="line-106">   *          the items tested by the constraint</span>
+<span class="source-line-no">107</span><span id="line-107">   * @param dynamicContext</span>
+<span class="source-line-no">108</span><span id="line-108">   *          the Metapath dynamic execution context to use for Metapath</span>
+<span class="source-line-no">109</span><span id="line-109">   *          evaluation</span>
+<span class="source-line-no">110</span><span id="line-110">   * @return the new message</span>
+<span class="source-line-no">111</span><span id="line-111">   * @throws ConstraintValidationException</span>
+<span class="source-line-no">112</span><span id="line-112">   *           if the custom message contains a Metapath expression that is</span>
+<span class="source-line-no">113</span><span id="line-113">   *           invalid or if the expression failed to evaluate</span>
+<span class="source-line-no">114</span><span id="line-114">   */</span>
+<span class="source-line-no">115</span><span id="line-115">  @NonNull</span>
+<span class="source-line-no">116</span><span id="line-116">  protected String newCardinalityMaximumViolationMessage(</span>
+<span class="source-line-no">117</span><span id="line-117">      @NonNull ICardinalityConstraint constraint,</span>
+<span class="source-line-no">118</span><span id="line-118">      @NonNull INodeItem target,</span>
+<span class="source-line-no">119</span><span id="line-119">      @NonNull ISequence&lt;? extends INodeItem&gt; testedItems,</span>
+<span class="source-line-no">120</span><span id="line-120">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
+<span class="source-line-no">121</span><span id="line-121">    return constraint.getMessage() == null</span>
+<span class="source-line-no">122</span><span id="line-122">        ? ObjectUtils.notNull(String.format(</span>
+<span class="source-line-no">123</span><span id="line-123">            "The cardinality '%d' is greater than the required maximum '%d' at: %s.",</span>
+<span class="source-line-no">124</span><span id="line-124">            testedItems.size(),</span>
+<span class="source-line-no">125</span><span id="line-125">            constraint.getMinOccurs(),</span>
+<span class="source-line-no">126</span><span id="line-126">            testedItems.safeStream()</span>
+<span class="source-line-no">127</span><span id="line-127">                .map(item -&gt; new StringBuilder(12)</span>
+<span class="source-line-no">128</span><span id="line-128">                    .append('\'')</span>
+<span class="source-line-no">129</span><span id="line-129">                    .append(toPath(ObjectUtils.notNull(item)))</span>
+<span class="source-line-no">130</span><span id="line-130">                    .append('\'')</span>
+<span class="source-line-no">131</span><span id="line-131">                    .toString())</span>
+<span class="source-line-no">132</span><span id="line-132">                .collect(CustomCollectors.joiningWithOxfordComma("and"))))</span>
+<span class="source-line-no">133</span><span id="line-133">        : constraint.generateMessage(target, dynamicContext);</span>
+<span class="source-line-no">134</span><span id="line-134">  }</span>
+<span class="source-line-no">135</span><span id="line-135"></span>
+<span class="source-line-no">136</span><span id="line-136">  /**</span>
+<span class="source-line-no">137</span><span id="line-137">   * Construct a new violation message for the provided {@code constraint} applied</span>
+<span class="source-line-no">138</span><span id="line-138">   * to the {@code node}.</span>
+<span class="source-line-no">139</span><span id="line-139">   *</span>
+<span class="source-line-no">140</span><span id="line-140">   * @param constraint</span>
+<span class="source-line-no">141</span><span id="line-141">   *          the constraint the requested message pertains to</span>
+<span class="source-line-no">142</span><span id="line-142">   * @param node</span>
+<span class="source-line-no">143</span><span id="line-143">   *          the item the constraint targeted</span>
+<span class="source-line-no">144</span><span id="line-144">   * @param oldItem</span>
+<span class="source-line-no">145</span><span id="line-145">   *          the original item matching the constraint</span>
+<span class="source-line-no">146</span><span id="line-146">   * @param target</span>
+<span class="source-line-no">147</span><span id="line-147">   *          the new item matching the constraint</span>
+<span class="source-line-no">148</span><span id="line-148">   * @param dynamicContext</span>
+<span class="source-line-no">149</span><span id="line-149">   *          the Metapath dynamic execution context to use for Metapath</span>
+<span class="source-line-no">150</span><span id="line-150">   *          evaluation</span>
+<span class="source-line-no">151</span><span id="line-151">   * @return the new message</span>
+<span class="source-line-no">152</span><span id="line-152">   * @throws ConstraintValidationException</span>
+<span class="source-line-no">153</span><span id="line-153">   *           if the custom message contains a Metapath expression that is</span>
+<span class="source-line-no">154</span><span id="line-154">   *           invalid or if the expression failed to evaluate</span>
+<span class="source-line-no">155</span><span id="line-155">   */</span>
+<span class="source-line-no">156</span><span id="line-156">  @NonNull</span>
+<span class="source-line-no">157</span><span id="line-157">  protected String newIndexDuplicateKeyViolationMessage(</span>
+<span class="source-line-no">158</span><span id="line-158">      @NonNull IIndexConstraint constraint,</span>
+<span class="source-line-no">159</span><span id="line-159">      @NonNull INodeItem node,</span>
+<span class="source-line-no">160</span><span id="line-160">      @NonNull INodeItem oldItem,</span>
+<span class="source-line-no">161</span><span id="line-161">      @NonNull INodeItem target,</span>
+<span class="source-line-no">162</span><span id="line-162">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
+<span class="source-line-no">163</span><span id="line-163">    // TODO: render the key paths</span>
+<span class="source-line-no">164</span><span id="line-164">    return constraint.getMessage() == null</span>
+<span class="source-line-no">165</span><span id="line-165">        ? ObjectUtils.notNull(String.format("Index '%s' has duplicate key for items at paths '%s' and '%s'",</span>
+<span class="source-line-no">166</span><span id="line-166">            constraint.getName(),</span>
+<span class="source-line-no">167</span><span id="line-167">            toPath(oldItem),</span>
+<span class="source-line-no">168</span><span id="line-168">            toPath(target)))</span>
+<span class="source-line-no">169</span><span id="line-169">        : constraint.generateMessage(target, dynamicContext);</span>
+<span class="source-line-no">170</span><span id="line-170">  }</span>
+<span class="source-line-no">171</span><span id="line-171"></span>
+<span class="source-line-no">172</span><span id="line-172">  /**</span>
+<span class="source-line-no">173</span><span id="line-173">   * Construct a new violation message for the provided {@code constraint} applied</span>
+<span class="source-line-no">174</span><span id="line-174">   * to the {@code node}.</span>
+<span class="source-line-no">175</span><span id="line-175">   *</span>
+<span class="source-line-no">176</span><span id="line-176">   * @param constraint</span>
+<span class="source-line-no">177</span><span id="line-177">   *          the constraint the requested message pertains to</span>
+<span class="source-line-no">178</span><span id="line-178">   * @param node</span>
+<span class="source-line-no">179</span><span id="line-179">   *          the item the constraint targeted</span>
+<span class="source-line-no">180</span><span id="line-180">   * @param oldItem</span>
+<span class="source-line-no">181</span><span id="line-181">   *          the original item matching the constraint</span>
+<span class="source-line-no">182</span><span id="line-182">   * @param target</span>
+<span class="source-line-no">183</span><span id="line-183">   *          the new item matching the constraint</span>
+<span class="source-line-no">184</span><span id="line-184">   * @param dynamicContext</span>
+<span class="source-line-no">185</span><span id="line-185">   *          the Metapath dynamic execution context to use for Metapath</span>
+<span class="source-line-no">186</span><span id="line-186">   *          evaluation</span>
+<span class="source-line-no">187</span><span id="line-187">   * @return the new message</span>
+<span class="source-line-no">188</span><span id="line-188">   * @throws ConstraintValidationException</span>
+<span class="source-line-no">189</span><span id="line-189">   *           if the custom message contains a Metapath expression that is</span>
+<span class="source-line-no">190</span><span id="line-190">   *           invalid or if the expression failed to evaluate</span>
+<span class="source-line-no">191</span><span id="line-191">   */</span>
+<span class="source-line-no">192</span><span id="line-192">  @NonNull</span>
+<span class="source-line-no">193</span><span id="line-193">  protected String newUniqueKeyViolationMessage(</span>
+<span class="source-line-no">194</span><span id="line-194">      @NonNull IUniqueConstraint constraint,</span>
+<span class="source-line-no">195</span><span id="line-195">      @NonNull INodeItem node,</span>
+<span class="source-line-no">196</span><span id="line-196">      @NonNull INodeItem oldItem,</span>
+<span class="source-line-no">197</span><span id="line-197">      @NonNull INodeItem target,</span>
+<span class="source-line-no">198</span><span id="line-198">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
+<span class="source-line-no">199</span><span id="line-199">    return constraint.getMessage() == null</span>
+<span class="source-line-no">200</span><span id="line-200">        ? ObjectUtils.notNull(String.format("Unique constraint violation at paths '%s' and '%s'",</span>
+<span class="source-line-no">201</span><span id="line-201">            toPath(oldItem),</span>
+<span class="source-line-no">202</span><span id="line-202">            toPath(target)))</span>
+<span class="source-line-no">203</span><span id="line-203">        : constraint.generateMessage(target, dynamicContext);</span>
+<span class="source-line-no">204</span><span id="line-204">  }</span>
+<span class="source-line-no">205</span><span id="line-205"></span>
+<span class="source-line-no">206</span><span id="line-206">  /**</span>
+<span class="source-line-no">207</span><span id="line-207">   * Construct a new violation message for the provided {@code constraint} applied</span>
+<span class="source-line-no">208</span><span id="line-208">   * to the {@code node}.</span>
+<span class="source-line-no">209</span><span id="line-209">   *</span>
+<span class="source-line-no">210</span><span id="line-210">   * @param constraint</span>
+<span class="source-line-no">211</span><span id="line-211">   *          the constraint the requested message pertains to</span>
+<span class="source-line-no">212</span><span id="line-212">   * @param node</span>
+<span class="source-line-no">213</span><span id="line-213">   *          the item the constraint targeted</span>
+<span class="source-line-no">214</span><span id="line-214">   * @param target</span>
+<span class="source-line-no">215</span><span id="line-215">   *          the target matching the constraint</span>
+<span class="source-line-no">216</span><span id="line-216">   * @param value</span>
+<span class="source-line-no">217</span><span id="line-217">   *          the target's value</span>
+<span class="source-line-no">218</span><span id="line-218">   * @param pattern</span>
+<span class="source-line-no">219</span><span id="line-219">   *          the expected pattern</span>
+<span class="source-line-no">220</span><span id="line-220">   * @param dynamicContext</span>
+<span class="source-line-no">221</span><span id="line-221">   *          the Metapath dynamic execution context to use for Metapath</span>
+<span class="source-line-no">222</span><span id="line-222">   *          evaluation</span>
+<span class="source-line-no">223</span><span id="line-223">   * @return the new message</span>
+<span class="source-line-no">224</span><span id="line-224">   * @throws ConstraintValidationException</span>
+<span class="source-line-no">225</span><span id="line-225">   *           if the custom message contains a Metapath expression that is</span>
+<span class="source-line-no">226</span><span id="line-226">   *           invalid or if the expression failed to evaluate</span>
+<span class="source-line-no">227</span><span id="line-227">   */</span>
+<span class="source-line-no">228</span><span id="line-228">  @NonNull</span>
+<span class="source-line-no">229</span><span id="line-229">  protected String newMatchPatternViolationMessage(</span>
+<span class="source-line-no">230</span><span id="line-230">      @NonNull IMatchesConstraint constraint,</span>
+<span class="source-line-no">231</span><span id="line-231">      @NonNull INodeItem node,</span>
+<span class="source-line-no">232</span><span id="line-232">      @NonNull INodeItem target,</span>
+<span class="source-line-no">233</span><span id="line-233">      @NonNull String value,</span>
+<span class="source-line-no">234</span><span id="line-234">      @NonNull Pattern pattern,</span>
+<span class="source-line-no">235</span><span id="line-235">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
+<span class="source-line-no">236</span><span id="line-236">    return constraint.getMessage() == null</span>
+<span class="source-line-no">237</span><span id="line-237">        ? ObjectUtils.notNull(String.format("Value '%s' did not match the pattern '%s' at path '%s'",</span>
+<span class="source-line-no">238</span><span id="line-238">            value,</span>
+<span class="source-line-no">239</span><span id="line-239">            pattern.pattern(),</span>
+<span class="source-line-no">240</span><span id="line-240">            toPath(target)))</span>
+<span class="source-line-no">241</span><span id="line-241">        : constraint.generateMessage(target, dynamicContext);</span>
+<span class="source-line-no">242</span><span id="line-242">  }</span>
+<span class="source-line-no">243</span><span id="line-243"></span>
+<span class="source-line-no">244</span><span id="line-244">  /**</span>
+<span class="source-line-no">245</span><span id="line-245">   * Construct a new violation message for the provided {@code constraint} applied</span>
+<span class="source-line-no">246</span><span id="line-246">   * to the {@code node}.</span>
+<span class="source-line-no">247</span><span id="line-247">   *</span>
+<span class="source-line-no">248</span><span id="line-248">   * @param constraint</span>
+<span class="source-line-no">249</span><span id="line-249">   *          the constraint the requested message pertains to</span>
+<span class="source-line-no">250</span><span id="line-250">   * @param node</span>
+<span class="source-line-no">251</span><span id="line-251">   *          the item the constraint targeted</span>
+<span class="source-line-no">252</span><span id="line-252">   * @param target</span>
+<span class="source-line-no">253</span><span id="line-253">   *          the target matching the constraint</span>
+<span class="source-line-no">254</span><span id="line-254">   * @param value</span>
+<span class="source-line-no">255</span><span id="line-255">   *          the target's value</span>
+<span class="source-line-no">256</span><span id="line-256">   * @param adapter</span>
+<span class="source-line-no">257</span><span id="line-257">   *          the expected data type adapter</span>
+<span class="source-line-no">258</span><span id="line-258">   * @param dynamicContext</span>
+<span class="source-line-no">259</span><span id="line-259">   *          the Metapath dynamic execution context to use for Metapath</span>
+<span class="source-line-no">260</span><span id="line-260">   *          evaluation</span>
+<span class="source-line-no">261</span><span id="line-261">   * @return the new message</span>
+<span class="source-line-no">262</span><span id="line-262">   * @throws ConstraintValidationException</span>
+<span class="source-line-no">263</span><span id="line-263">   *           if the custom message contains a Metapath expression that is</span>
+<span class="source-line-no">264</span><span id="line-264">   *           invalid or if the expression failed to evaluate</span>
+<span class="source-line-no">265</span><span id="line-265">   */</span>
+<span class="source-line-no">266</span><span id="line-266">  @NonNull</span>
+<span class="source-line-no">267</span><span id="line-267">  protected String newMatchDatatypeViolationMessage(</span>
+<span class="source-line-no">268</span><span id="line-268">      @NonNull IMatchesConstraint constraint,</span>
+<span class="source-line-no">269</span><span id="line-269">      @NonNull INodeItem node,</span>
+<span class="source-line-no">270</span><span id="line-270">      @NonNull INodeItem target,</span>
+<span class="source-line-no">271</span><span id="line-271">      @NonNull String value,</span>
+<span class="source-line-no">272</span><span id="line-272">      @NonNull IDataTypeAdapter&lt;?&gt; adapter,</span>
+<span class="source-line-no">273</span><span id="line-273">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
+<span class="source-line-no">274</span><span id="line-274">    return constraint.getMessage() == null</span>
+<span class="source-line-no">275</span><span id="line-275">        ? ObjectUtils.notNull(String.format("Value '%s' did not conform to the data type '%s' at path '%s'",</span>
+<span class="source-line-no">276</span><span id="line-276">            value,</span>
+<span class="source-line-no">277</span><span id="line-277">            adapter.getPreferredName(),</span>
+<span class="source-line-no">278</span><span id="line-278">            toPath(target)))</span>
+<span class="source-line-no">279</span><span id="line-279">        : constraint.generateMessage(target, dynamicContext);</span>
+<span class="source-line-no">280</span><span id="line-280">  }</span>
+<span class="source-line-no">281</span><span id="line-281"></span>
+<span class="source-line-no">282</span><span id="line-282">  /**</span>
+<span class="source-line-no">283</span><span id="line-283">   * Construct a new violation message for the provided {@code constraint} applied</span>
+<span class="source-line-no">284</span><span id="line-284">   * to the {@code node}.</span>
+<span class="source-line-no">285</span><span id="line-285">   *</span>
+<span class="source-line-no">286</span><span id="line-286">   * @param constraint</span>
+<span class="source-line-no">287</span><span id="line-287">   *          the constraint the requested message pertains to</span>
+<span class="source-line-no">288</span><span id="line-288">   * @param node</span>
+<span class="source-line-no">289</span><span id="line-289">   *          the item the constraint targeted</span>
+<span class="source-line-no">290</span><span id="line-290">   * @param target</span>
+<span class="source-line-no">291</span><span id="line-291">   *          the target matching the constraint</span>
+<span class="source-line-no">292</span><span id="line-292">   * @param dynamicContext</span>
+<span class="source-line-no">293</span><span id="line-293">   *          the Metapath dynamic execution context to use for Metapath</span>
+<span class="source-line-no">294</span><span id="line-294">   *          evaluation</span>
+<span class="source-line-no">295</span><span id="line-295">   * @return the new message</span>
+<span class="source-line-no">296</span><span id="line-296">   * @throws ConstraintValidationException</span>
+<span class="source-line-no">297</span><span id="line-297">   *           if the custom message contains a Metapath expression that is</span>
+<span class="source-line-no">298</span><span id="line-298">   *           invalid or if the expression failed to evaluate</span>
+<span class="source-line-no">299</span><span id="line-299">   */</span>
+<span class="source-line-no">300</span><span id="line-300">  @NonNull</span>
+<span class="source-line-no">301</span><span id="line-301">  protected String newExpectViolationMessage(</span>
+<span class="source-line-no">302</span><span id="line-302">      @NonNull IExpectConstraint constraint,</span>
+<span class="source-line-no">303</span><span id="line-303">      @NonNull INodeItem node,</span>
+<span class="source-line-no">304</span><span id="line-304">      @NonNull INodeItem target,</span>
+<span class="source-line-no">305</span><span id="line-305">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
+<span class="source-line-no">306</span><span id="line-306">    return constraint.getMessage() == null</span>
+<span class="source-line-no">307</span><span id="line-307">        ? ObjectUtils.notNull(String.format("Expect constraint '%s' did not match the data at path '%s'",</span>
+<span class="source-line-no">308</span><span id="line-308">            constraint.getTest().getPath(),</span>
+<span class="source-line-no">309</span><span id="line-309">            toPath(target)))</span>
+<span class="source-line-no">310</span><span id="line-310">        : constraint.generateMessage(target, dynamicContext);</span>
+<span class="source-line-no">311</span><span id="line-311">  }</span>
 <span class="source-line-no">312</span><span id="line-312"></span>
-<span class="source-line-no">313</span><span id="line-313">    return ObjectUtils.notNull(String.format("Value '%s' doesn't match one of '%s' at path '%s'",</span>
-<span class="source-line-no">314</span><span id="line-314">        target.toAtomicItem().asString(),</span>
-<span class="source-line-no">315</span><span id="line-315">        allowedValues,</span>
-<span class="source-line-no">316</span><span id="line-316">        toPath(target)));</span>
-<span class="source-line-no">317</span><span id="line-317">  }</span>
-<span class="source-line-no">318</span><span id="line-318"></span>
-<span class="source-line-no">319</span><span id="line-319">  /**</span>
-<span class="source-line-no">320</span><span id="line-320">   * Construct a new violation message for the provided {@code constraint} applied</span>
-<span class="source-line-no">321</span><span id="line-321">   * to the {@code node}.</span>
-<span class="source-line-no">322</span><span id="line-322">   *</span>
-<span class="source-line-no">323</span><span id="line-323">   * @param constraint</span>
-<span class="source-line-no">324</span><span id="line-324">   *          the constraint the requested message pertains to</span>
-<span class="source-line-no">325</span><span id="line-325">   * @param node</span>
-<span class="source-line-no">326</span><span id="line-326">   *          the item the constraint targeted</span>
-<span class="source-line-no">327</span><span id="line-327">   * @return the new message</span>
-<span class="source-line-no">328</span><span id="line-328">   */</span>
-<span class="source-line-no">329</span><span id="line-329">  @NonNull</span>
-<span class="source-line-no">330</span><span id="line-330">  protected String newIndexDuplicateViolationMessage(</span>
-<span class="source-line-no">331</span><span id="line-331">      @NonNull IIndexConstraint constraint,</span>
-<span class="source-line-no">332</span><span id="line-332">      @NonNull INodeItem node) {</span>
-<span class="source-line-no">333</span><span id="line-333">    return ObjectUtils.notNull(String.format("Duplicate index named '%s' found at path '%s'",</span>
-<span class="source-line-no">334</span><span id="line-334">        constraint.getName(),</span>
-<span class="source-line-no">335</span><span id="line-335">        node.getMetapath()));</span>
-<span class="source-line-no">336</span><span id="line-336">  }</span>
-<span class="source-line-no">337</span><span id="line-337"></span>
-<span class="source-line-no">338</span><span id="line-338">  /**</span>
-<span class="source-line-no">339</span><span id="line-339">   * Construct a new violation message for the provided {@code constraint} applied</span>
-<span class="source-line-no">340</span><span id="line-340">   * to the {@code node}.</span>
-<span class="source-line-no">341</span><span id="line-341">   *</span>
-<span class="source-line-no">342</span><span id="line-342">   * @param constraint</span>
-<span class="source-line-no">343</span><span id="line-343">   *          the constraint the requested message pertains to</span>
-<span class="source-line-no">344</span><span id="line-344">   * @param node</span>
-<span class="source-line-no">345</span><span id="line-345">   *          the item the constraint targeted</span>
-<span class="source-line-no">346</span><span id="line-346">   * @param target</span>
-<span class="source-line-no">347</span><span id="line-347">   *          the target matching the constraint</span>
-<span class="source-line-no">348</span><span id="line-348">   * @param key</span>
-<span class="source-line-no">349</span><span id="line-349">   *          the key derived from the target that failed to be found in the index</span>
-<span class="source-line-no">350</span><span id="line-350">   * @param dynamicContext</span>
-<span class="source-line-no">351</span><span id="line-351">   *          the Metapath dynamic execution context to use for Metapath</span>
-<span class="source-line-no">352</span><span id="line-352">   *          evaluation</span>
-<span class="source-line-no">353</span><span id="line-353">   * @return the new message</span>
-<span class="source-line-no">354</span><span id="line-354">   */</span>
-<span class="source-line-no">355</span><span id="line-355">  @NonNull</span>
-<span class="source-line-no">356</span><span id="line-356">  protected String newIndexMissMessage(</span>
-<span class="source-line-no">357</span><span id="line-357">      @NonNull IIndexHasKeyConstraint constraint,</span>
-<span class="source-line-no">358</span><span id="line-358">      @NonNull INodeItem node,</span>
-<span class="source-line-no">359</span><span id="line-359">      @NonNull INodeItem target,</span>
-<span class="source-line-no">360</span><span id="line-360">      @NonNull List&lt;String&gt; key,</span>
-<span class="source-line-no">361</span><span id="line-361">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">362</span><span id="line-362">    String keyValues = key.stream()</span>
-<span class="source-line-no">363</span><span id="line-363">        .collect(Collectors.joining(","));</span>
-<span class="source-line-no">364</span><span id="line-364"></span>
-<span class="source-line-no">365</span><span id="line-365">    return constraint.getMessage() == null</span>
-<span class="source-line-no">366</span><span id="line-366">        ? ObjectUtils.notNull(String.format("Key reference [%s] not found in index '%s' for item at path '%s'",</span>
-<span class="source-line-no">367</span><span id="line-367">            keyValues,</span>
-<span class="source-line-no">368</span><span id="line-368">            constraint.getIndexName(),</span>
-<span class="source-line-no">369</span><span id="line-369">            target.getMetapath()))</span>
-<span class="source-line-no">370</span><span id="line-370">        : constraint.generateMessage(target, dynamicContext);</span>
-<span class="source-line-no">371</span><span id="line-371">  }</span>
-<span class="source-line-no">372</span><span id="line-372"></span>
-<span class="source-line-no">373</span><span id="line-373">  /**</span>
-<span class="source-line-no">374</span><span id="line-374">   * Construct a new generic violation message for the provided {@code constraint}</span>
-<span class="source-line-no">375</span><span id="line-375">   * applied to the {@code node}.</span>
-<span class="source-line-no">376</span><span id="line-376">   *</span>
-<span class="source-line-no">377</span><span id="line-377">   * @param constraint</span>
-<span class="source-line-no">378</span><span id="line-378">   *          the constraint the requested message pertains to</span>
-<span class="source-line-no">379</span><span id="line-379">   * @param node</span>
-<span class="source-line-no">380</span><span id="line-380">   *          the item the constraint targeted</span>
-<span class="source-line-no">381</span><span id="line-381">   * @param target</span>
-<span class="source-line-no">382</span><span id="line-382">   *          the target matching the constraint</span>
-<span class="source-line-no">383</span><span id="line-383">   * @param message</span>
-<span class="source-line-no">384</span><span id="line-384">   *          the message to be added before information about the target path</span>
-<span class="source-line-no">385</span><span id="line-385">   * @param dynamicContext</span>
-<span class="source-line-no">386</span><span id="line-386">   *          the Metapath dynamic execution context to use for Metapath</span>
-<span class="source-line-no">387</span><span id="line-387">   *          evaluation</span>
-<span class="source-line-no">388</span><span id="line-388">   * @return the new message</span>
-<span class="source-line-no">389</span><span id="line-389">   */</span>
-<span class="source-line-no">390</span><span id="line-390">  @SuppressWarnings("null")</span>
-<span class="source-line-no">391</span><span id="line-391">  @NonNull</span>
-<span class="source-line-no">392</span><span id="line-392">  protected String newMissingIndexViolationMessage(</span>
-<span class="source-line-no">393</span><span id="line-393">      @NonNull IIndexHasKeyConstraint constraint,</span>
-<span class="source-line-no">394</span><span id="line-394">      @NonNull INodeItem node,</span>
-<span class="source-line-no">395</span><span id="line-395">      @NonNull INodeItem target,</span>
-<span class="source-line-no">396</span><span id="line-396">      @NonNull String message,</span>
-<span class="source-line-no">397</span><span id="line-397">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">398</span><span id="line-398">    return String.format("%s for constraint '%s' for item at path '%s'",</span>
-<span class="source-line-no">399</span><span id="line-399">        message,</span>
-<span class="source-line-no">400</span><span id="line-400">        Objects.requireNonNullElse(constraint.getId(), "?"),</span>
-<span class="source-line-no">401</span><span id="line-401">        target.getMetapath());</span>
-<span class="source-line-no">402</span><span id="line-402">  }</span>
-<span class="source-line-no">403</span><span id="line-403">}</span>
+<span class="source-line-no">313</span><span id="line-313">  /**</span>
+<span class="source-line-no">314</span><span id="line-314">   * Construct a new violation message for the provided {@code constraint} applied</span>
+<span class="source-line-no">315</span><span id="line-315">   * to the {@code node}.</span>
+<span class="source-line-no">316</span><span id="line-316">   *</span>
+<span class="source-line-no">317</span><span id="line-317">   * @param constraints</span>
+<span class="source-line-no">318</span><span id="line-318">   *          the constraints the requested message pertains to</span>
+<span class="source-line-no">319</span><span id="line-319">   * @param target</span>
+<span class="source-line-no">320</span><span id="line-320">   *          the target matching the constraint</span>
+<span class="source-line-no">321</span><span id="line-321">   * @return the new message</span>
+<span class="source-line-no">322</span><span id="line-322">   */</span>
+<span class="source-line-no">323</span><span id="line-323">  @NonNull</span>
+<span class="source-line-no">324</span><span id="line-324">  protected String newAllowedValuesViolationMessage(</span>
+<span class="source-line-no">325</span><span id="line-325">      @NonNull List&lt;IAllowedValuesConstraint&gt; constraints,</span>
+<span class="source-line-no">326</span><span id="line-326">      @NonNull INodeItem target) {</span>
+<span class="source-line-no">327</span><span id="line-327">    String allowedValues = constraints.stream()</span>
+<span class="source-line-no">328</span><span id="line-328">        .flatMap(constraint -&gt; constraint.getAllowedValues().values().stream())</span>
+<span class="source-line-no">329</span><span id="line-329">        .map(IAllowedValue::getValue)</span>
+<span class="source-line-no">330</span><span id="line-330">        .sorted()</span>
+<span class="source-line-no">331</span><span id="line-331">        .distinct()</span>
+<span class="source-line-no">332</span><span id="line-332">        .collect(CustomCollectors.joiningWithOxfordComma("or"));</span>
+<span class="source-line-no">333</span><span id="line-333"></span>
+<span class="source-line-no">334</span><span id="line-334">    return ObjectUtils.notNull(String.format("Value '%s' doesn't match one of '%s' at path '%s'",</span>
+<span class="source-line-no">335</span><span id="line-335">        target.toAtomicItem().asString(),</span>
+<span class="source-line-no">336</span><span id="line-336">        allowedValues,</span>
+<span class="source-line-no">337</span><span id="line-337">        toPath(target)));</span>
+<span class="source-line-no">338</span><span id="line-338">  }</span>
+<span class="source-line-no">339</span><span id="line-339"></span>
+<span class="source-line-no">340</span><span id="line-340">  /**</span>
+<span class="source-line-no">341</span><span id="line-341">   * Construct a new violation message for the provided {@code constraint} applied</span>
+<span class="source-line-no">342</span><span id="line-342">   * to the {@code node}.</span>
+<span class="source-line-no">343</span><span id="line-343">   *</span>
+<span class="source-line-no">344</span><span id="line-344">   * @param constraint</span>
+<span class="source-line-no">345</span><span id="line-345">   *          the constraint the requested message pertains to</span>
+<span class="source-line-no">346</span><span id="line-346">   * @param node</span>
+<span class="source-line-no">347</span><span id="line-347">   *          the item the constraint targeted</span>
+<span class="source-line-no">348</span><span id="line-348">   * @return the new message</span>
+<span class="source-line-no">349</span><span id="line-349">   */</span>
+<span class="source-line-no">350</span><span id="line-350">  @NonNull</span>
+<span class="source-line-no">351</span><span id="line-351">  protected String newIndexDuplicateViolationMessage(</span>
+<span class="source-line-no">352</span><span id="line-352">      @NonNull IIndexConstraint constraint,</span>
+<span class="source-line-no">353</span><span id="line-353">      @NonNull INodeItem node) {</span>
+<span class="source-line-no">354</span><span id="line-354">    return ObjectUtils.notNull(String.format("Duplicate index named '%s' found at path '%s'",</span>
+<span class="source-line-no">355</span><span id="line-355">        constraint.getName(),</span>
+<span class="source-line-no">356</span><span id="line-356">        node.getMetapath()));</span>
+<span class="source-line-no">357</span><span id="line-357">  }</span>
+<span class="source-line-no">358</span><span id="line-358"></span>
+<span class="source-line-no">359</span><span id="line-359">  /**</span>
+<span class="source-line-no">360</span><span id="line-360">   * Construct a new violation message for the provided {@code constraint} applied</span>
+<span class="source-line-no">361</span><span id="line-361">   * to the {@code node}.</span>
+<span class="source-line-no">362</span><span id="line-362">   *</span>
+<span class="source-line-no">363</span><span id="line-363">   * @param constraint</span>
+<span class="source-line-no">364</span><span id="line-364">   *          the constraint the requested message pertains to</span>
+<span class="source-line-no">365</span><span id="line-365">   * @param node</span>
+<span class="source-line-no">366</span><span id="line-366">   *          the item the constraint targeted</span>
+<span class="source-line-no">367</span><span id="line-367">   * @param target</span>
+<span class="source-line-no">368</span><span id="line-368">   *          the target matching the constraint</span>
+<span class="source-line-no">369</span><span id="line-369">   * @param key</span>
+<span class="source-line-no">370</span><span id="line-370">   *          the key derived from the target that failed to be found in the index</span>
+<span class="source-line-no">371</span><span id="line-371">   * @param dynamicContext</span>
+<span class="source-line-no">372</span><span id="line-372">   *          the Metapath dynamic execution context to use for Metapath</span>
+<span class="source-line-no">373</span><span id="line-373">   *          evaluation</span>
+<span class="source-line-no">374</span><span id="line-374">   * @return the new message</span>
+<span class="source-line-no">375</span><span id="line-375">   * @throws ConstraintValidationException</span>
+<span class="source-line-no">376</span><span id="line-376">   *           if the custom message contains a Metapath expression that is</span>
+<span class="source-line-no">377</span><span id="line-377">   *           invalid or if the expression failed to evaluate</span>
+<span class="source-line-no">378</span><span id="line-378">   */</span>
+<span class="source-line-no">379</span><span id="line-379">  @NonNull</span>
+<span class="source-line-no">380</span><span id="line-380">  protected String newIndexMissMessage(</span>
+<span class="source-line-no">381</span><span id="line-381">      @NonNull IIndexHasKeyConstraint constraint,</span>
+<span class="source-line-no">382</span><span id="line-382">      @NonNull INodeItem node,</span>
+<span class="source-line-no">383</span><span id="line-383">      @NonNull INodeItem target,</span>
+<span class="source-line-no">384</span><span id="line-384">      @NonNull List&lt;String&gt; key,</span>
+<span class="source-line-no">385</span><span id="line-385">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
+<span class="source-line-no">386</span><span id="line-386">    String keyValues = key.stream()</span>
+<span class="source-line-no">387</span><span id="line-387">        .collect(Collectors.joining(","));</span>
+<span class="source-line-no">388</span><span id="line-388"></span>
+<span class="source-line-no">389</span><span id="line-389">    return constraint.getMessage() == null</span>
+<span class="source-line-no">390</span><span id="line-390">        ? ObjectUtils.notNull(String.format("Key reference [%s] not found in index '%s' for item at path '%s'",</span>
+<span class="source-line-no">391</span><span id="line-391">            keyValues,</span>
+<span class="source-line-no">392</span><span id="line-392">            constraint.getIndexName(),</span>
+<span class="source-line-no">393</span><span id="line-393">            target.getMetapath()))</span>
+<span class="source-line-no">394</span><span id="line-394">        : constraint.generateMessage(target, dynamicContext);</span>
+<span class="source-line-no">395</span><span id="line-395">  }</span>
+<span class="source-line-no">396</span><span id="line-396"></span>
+<span class="source-line-no">397</span><span id="line-397">  /**</span>
+<span class="source-line-no">398</span><span id="line-398">   * Construct a new generic violation message for the provided {@code constraint}</span>
+<span class="source-line-no">399</span><span id="line-399">   * applied to the {@code node}.</span>
+<span class="source-line-no">400</span><span id="line-400">   *</span>
+<span class="source-line-no">401</span><span id="line-401">   * @param constraint</span>
+<span class="source-line-no">402</span><span id="line-402">   *          the constraint the requested message pertains to</span>
+<span class="source-line-no">403</span><span id="line-403">   * @param node</span>
+<span class="source-line-no">404</span><span id="line-404">   *          the item the constraint targeted</span>
+<span class="source-line-no">405</span><span id="line-405">   * @param target</span>
+<span class="source-line-no">406</span><span id="line-406">   *          the target matching the constraint</span>
+<span class="source-line-no">407</span><span id="line-407">   * @param message</span>
+<span class="source-line-no">408</span><span id="line-408">   *          the message to be added before information about the target path</span>
+<span class="source-line-no">409</span><span id="line-409">   * @param dynamicContext</span>
+<span class="source-line-no">410</span><span id="line-410">   *          the Metapath dynamic execution context to use for Metapath</span>
+<span class="source-line-no">411</span><span id="line-411">   *          evaluation</span>
+<span class="source-line-no">412</span><span id="line-412">   * @return the new message</span>
+<span class="source-line-no">413</span><span id="line-413">   */</span>
+<span class="source-line-no">414</span><span id="line-414">  @SuppressWarnings("null")</span>
+<span class="source-line-no">415</span><span id="line-415">  @NonNull</span>
+<span class="source-line-no">416</span><span id="line-416">  protected String newMissingIndexViolationMessage(</span>
+<span class="source-line-no">417</span><span id="line-417">      @NonNull IIndexHasKeyConstraint constraint,</span>
+<span class="source-line-no">418</span><span id="line-418">      @NonNull INodeItem node,</span>
+<span class="source-line-no">419</span><span id="line-419">      @NonNull INodeItem target,</span>
+<span class="source-line-no">420</span><span id="line-420">      @NonNull String message,</span>
+<span class="source-line-no">421</span><span id="line-421">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">422</span><span id="line-422">    return String.format("%s for constraint '%s' for item at path '%s'",</span>
+<span class="source-line-no">423</span><span id="line-423">        message,</span>
+<span class="source-line-no">424</span><span id="line-424">        Objects.requireNonNullElse(constraint.getId(), "?"),</span>
+<span class="source-line-no">425</span><span id="line-425">        target.getMetapath());</span>
+<span class="source-line-no">426</span><span id="line-426">  }</span>
+<span class="source-line-no">427</span><span id="line-427">}</span>
 
 
 

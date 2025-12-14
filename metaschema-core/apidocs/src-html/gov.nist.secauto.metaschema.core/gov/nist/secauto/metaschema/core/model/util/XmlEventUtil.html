@@ -314,414 +314,413 @@
 <span class="source-line-no">301</span><span id="line-301">   * @throws XMLStreamException</span>
 <span class="source-line-no">302</span><span id="line-302">   *           if an error occurred while reading the event stream</span>
 <span class="source-line-no">303</span><span id="line-303">   */</span>
-<span class="source-line-no">304</span><span id="line-304">  @SuppressWarnings("PMD.OnlyOneReturn")</span>
-<span class="source-line-no">305</span><span id="line-305">  public static XMLEvent skipElement(@NonNull XMLEventReader2 reader) throws XMLStreamException {</span>
-<span class="source-line-no">306</span><span id="line-306">    XMLEvent xmlEvent = reader.peek();</span>
-<span class="source-line-no">307</span><span id="line-307">    if (!xmlEvent.isStartElement()) {</span>
-<span class="source-line-no">308</span><span id="line-308">      return xmlEvent;</span>
-<span class="source-line-no">309</span><span id="line-309">    }</span>
-<span class="source-line-no">310</span><span id="line-310">    // if (LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">311</span><span id="line-311">    // LOGGER.atInfo().log(String.format("At location %s", toString(xmlEvent)));</span>
-<span class="source-line-no">312</span><span id="line-312">    // }</span>
-<span class="source-line-no">313</span><span id="line-313"></span>
-<span class="source-line-no">314</span><span id="line-314">    int depth = 0;</span>
-<span class="source-line-no">315</span><span id="line-315">    do {</span>
-<span class="source-line-no">316</span><span id="line-316">      xmlEvent = reader.nextEvent();</span>
-<span class="source-line-no">317</span><span id="line-317">      // if (LOGGER.isInfoEnabled()) {</span>
-<span class="source-line-no">318</span><span id="line-318">      // LOGGER.atInfo().log(String.format("Skipping %s", toString(xmlEvent)));</span>
-<span class="source-line-no">319</span><span id="line-319">      // }</span>
-<span class="source-line-no">320</span><span id="line-320">      if (xmlEvent.isStartElement()) {</span>
-<span class="source-line-no">321</span><span id="line-321">        depth++;</span>
-<span class="source-line-no">322</span><span id="line-322">      } else if (xmlEvent.isEndElement()) {</span>
-<span class="source-line-no">323</span><span id="line-323">        depth--;</span>
-<span class="source-line-no">324</span><span id="line-324">      }</span>
-<span class="source-line-no">325</span><span id="line-325">    } while (depth &gt; 0 &amp;&amp; reader.hasNext());</span>
-<span class="source-line-no">326</span><span id="line-326">    return reader.peek();</span>
-<span class="source-line-no">327</span><span id="line-327">  }</span>
-<span class="source-line-no">328</span><span id="line-328"></span>
-<span class="source-line-no">329</span><span id="line-329">  /**</span>
-<span class="source-line-no">330</span><span id="line-330">   * Skip over any processing instructions.</span>
-<span class="source-line-no">331</span><span id="line-331">   *</span>
-<span class="source-line-no">332</span><span id="line-332">   * @param reader</span>
-<span class="source-line-no">333</span><span id="line-333">   *          the XML event reader to advance</span>
-<span class="source-line-no">334</span><span id="line-334">   * @return the last processing instruction event or the reader's next event if</span>
-<span class="source-line-no">335</span><span id="line-335">   *         no processing instruction was found</span>
-<span class="source-line-no">336</span><span id="line-336">   * @throws XMLStreamException</span>
-<span class="source-line-no">337</span><span id="line-337">   *           if an error occurred while advancing the stream</span>
-<span class="source-line-no">338</span><span id="line-338">   */</span>
-<span class="source-line-no">339</span><span id="line-339">  @NonNull</span>
-<span class="source-line-no">340</span><span id="line-340">  public static XMLEvent skipProcessingInstructions(@NonNull XMLEventReader2 reader) throws XMLStreamException {</span>
-<span class="source-line-no">341</span><span id="line-341">    XMLEvent nextEvent;</span>
-<span class="source-line-no">342</span><span id="line-342">    while ((nextEvent = reader.peek()).isProcessingInstruction()) {</span>
-<span class="source-line-no">343</span><span id="line-343">      nextEvent = reader.nextEvent();</span>
-<span class="source-line-no">344</span><span id="line-344">    }</span>
-<span class="source-line-no">345</span><span id="line-345">    return nextEvent;</span>
-<span class="source-line-no">346</span><span id="line-346">  }</span>
-<span class="source-line-no">347</span><span id="line-347"></span>
-<span class="source-line-no">348</span><span id="line-348">  /**</span>
-<span class="source-line-no">349</span><span id="line-349">   * Skip over any whitespace.</span>
-<span class="source-line-no">350</span><span id="line-350">   *</span>
-<span class="source-line-no">351</span><span id="line-351">   * @param reader</span>
-<span class="source-line-no">352</span><span id="line-352">   *          the XML event reader to advance</span>
-<span class="source-line-no">353</span><span id="line-353">   * @return the last character event containing whitespace or the reader's next</span>
-<span class="source-line-no">354</span><span id="line-354">   *         event if no character event was found</span>
-<span class="source-line-no">355</span><span id="line-355">   * @throws XMLStreamException</span>
-<span class="source-line-no">356</span><span id="line-356">   *           if an error occurred while advancing the stream</span>
-<span class="source-line-no">357</span><span id="line-357">   */</span>
-<span class="source-line-no">358</span><span id="line-358">  @SuppressWarnings("null")</span>
-<span class="source-line-no">359</span><span id="line-359">  @NonNull</span>
-<span class="source-line-no">360</span><span id="line-360">  public static XMLEvent skipWhitespace(@NonNull XMLEventReader2 reader) throws XMLStreamException {</span>
-<span class="source-line-no">361</span><span id="line-361">    @NonNull</span>
-<span class="source-line-no">362</span><span id="line-362">    XMLEvent nextEvent;</span>
-<span class="source-line-no">363</span><span id="line-363">    while ((nextEvent = reader.peek()).isCharacters()) {</span>
-<span class="source-line-no">364</span><span id="line-364">      Characters characters = nextEvent.asCharacters();</span>
-<span class="source-line-no">365</span><span id="line-365">      String data = characters.getData();</span>
-<span class="source-line-no">366</span><span id="line-366">      if (!WHITESPACE_ONLY.matcher(data).matches()) {</span>
-<span class="source-line-no">367</span><span id="line-367">        break;</span>
-<span class="source-line-no">368</span><span id="line-368">      }</span>
-<span class="source-line-no">369</span><span id="line-369">      nextEvent = reader.nextEvent();</span>
-<span class="source-line-no">370</span><span id="line-370">    }</span>
-<span class="source-line-no">371</span><span id="line-371">    return nextEvent;</span>
-<span class="source-line-no">372</span><span id="line-372">  }</span>
-<span class="source-line-no">373</span><span id="line-373"></span>
-<span class="source-line-no">374</span><span id="line-374">  /**</span>
-<span class="source-line-no">375</span><span id="line-375">   * Determine if the {@code event} is an end element whose name matches the</span>
-<span class="source-line-no">376</span><span id="line-376">   * provided {@code expectedQName}.</span>
-<span class="source-line-no">377</span><span id="line-377">   *</span>
-<span class="source-line-no">378</span><span id="line-378">   * @param event</span>
-<span class="source-line-no">379</span><span id="line-379">   *          the XML event</span>
-<span class="source-line-no">380</span><span id="line-380">   * @param expectedQName</span>
-<span class="source-line-no">381</span><span id="line-381">   *          the expected element name</span>
-<span class="source-line-no">382</span><span id="line-382">   * @return {@code true} if the next event matches the {@code expectedQName}</span>
-<span class="source-line-no">383</span><span id="line-383">   */</span>
-<span class="source-line-no">384</span><span id="line-384">  public static boolean isEventEndElement(@Nullable XMLEvent event, @NonNull QName expectedQName) {</span>
-<span class="source-line-no">385</span><span id="line-385">    return event != null</span>
-<span class="source-line-no">386</span><span id="line-386">        &amp;&amp; event.isEndElement()</span>
-<span class="source-line-no">387</span><span id="line-387">        &amp;&amp; expectedQName.equals(event.asEndElement().getName());</span>
-<span class="source-line-no">388</span><span id="line-388">  }</span>
-<span class="source-line-no">389</span><span id="line-389"></span>
-<span class="source-line-no">390</span><span id="line-390">  /**</span>
-<span class="source-line-no">391</span><span id="line-391">   * Determine if the {@code event} is an end of document event.</span>
-<span class="source-line-no">392</span><span id="line-392">   *</span>
-<span class="source-line-no">393</span><span id="line-393">   * @param event</span>
-<span class="source-line-no">394</span><span id="line-394">   *          the XML event</span>
-<span class="source-line-no">395</span><span id="line-395">   * @return {@code true} if the next event is an end of document event</span>
-<span class="source-line-no">396</span><span id="line-396">   */</span>
-<span class="source-line-no">397</span><span id="line-397">  public static boolean isEventEndDocument(@Nullable XMLEvent event) {</span>
-<span class="source-line-no">398</span><span id="line-398">    return event != null</span>
-<span class="source-line-no">399</span><span id="line-399">        &amp;&amp; event.isEndElement();</span>
-<span class="source-line-no">400</span><span id="line-400">  }</span>
-<span class="source-line-no">401</span><span id="line-401"></span>
-<span class="source-line-no">402</span><span id="line-402">  /**</span>
-<span class="source-line-no">403</span><span id="line-403">   * Determine if the {@code event} is a start element whose name matches the</span>
-<span class="source-line-no">404</span><span id="line-404">   * provided {@code expectedQName}.</span>
-<span class="source-line-no">405</span><span id="line-405">   *</span>
-<span class="source-line-no">406</span><span id="line-406">   * @param event</span>
-<span class="source-line-no">407</span><span id="line-407">   *          the event</span>
-<span class="source-line-no">408</span><span id="line-408">   * @param expectedQName</span>
-<span class="source-line-no">409</span><span id="line-409">   *          the expected element name</span>
-<span class="source-line-no">410</span><span id="line-410">   * @return {@code true} if the next event is a start element that matches the</span>
-<span class="source-line-no">411</span><span id="line-411">   *         {@code expectedQName}</span>
-<span class="source-line-no">412</span><span id="line-412">   * @throws XMLStreamException</span>
-<span class="source-line-no">413</span><span id="line-413">   *           if an error occurred while looking at the next event</span>
-<span class="source-line-no">414</span><span id="line-414">   */</span>
-<span class="source-line-no">415</span><span id="line-415">  public static boolean isEventStartElement(</span>
-<span class="source-line-no">416</span><span id="line-416">      @Nullable XMLEvent event,</span>
-<span class="source-line-no">417</span><span id="line-417">      @NonNull QName expectedQName) throws XMLStreamException {</span>
-<span class="source-line-no">418</span><span id="line-418">    return event != null</span>
-<span class="source-line-no">419</span><span id="line-419">        &amp;&amp; event.isStartElement()</span>
-<span class="source-line-no">420</span><span id="line-420">        &amp;&amp; expectedQName.equals(event.asStartElement().getName());</span>
-<span class="source-line-no">421</span><span id="line-421">  }</span>
-<span class="source-line-no">422</span><span id="line-422"></span>
-<span class="source-line-no">423</span><span id="line-423">  /**</span>
-<span class="source-line-no">424</span><span id="line-424">   * Consume the next event from {@code reader} and assert that this event is of</span>
-<span class="source-line-no">425</span><span id="line-425">   * the type identified by {@code presumedEventType}.</span>
-<span class="source-line-no">426</span><span id="line-426">   *</span>
-<span class="source-line-no">427</span><span id="line-427">   * @param reader</span>
-<span class="source-line-no">428</span><span id="line-428">   *          the XML event reader</span>
-<span class="source-line-no">429</span><span id="line-429">   * @param resource</span>
-<span class="source-line-no">430</span><span id="line-430">   *          the resource being parsed</span>
-<span class="source-line-no">431</span><span id="line-431">   * @param presumedEventType</span>
-<span class="source-line-no">432</span><span id="line-432">   *          the expected event type as defined by {@link XMLStreamConstants}</span>
-<span class="source-line-no">433</span><span id="line-433">   * @return the next event</span>
-<span class="source-line-no">434</span><span id="line-434">   * @throws XMLStreamException</span>
-<span class="source-line-no">435</span><span id="line-435">   *           if an error occurred while looking at the next event</span>
-<span class="source-line-no">436</span><span id="line-436">   */</span>
-<span class="source-line-no">437</span><span id="line-437">  public static XMLEvent consumeAndAssert(</span>
-<span class="source-line-no">438</span><span id="line-438">      @NonNull XMLEventReader2 reader,</span>
-<span class="source-line-no">439</span><span id="line-439">      @NonNull URI resource,</span>
-<span class="source-line-no">440</span><span id="line-440">      int presumedEventType)</span>
-<span class="source-line-no">441</span><span id="line-441">      throws XMLStreamException {</span>
-<span class="source-line-no">442</span><span id="line-442">    return consumeAndAssert(reader, resource, presumedEventType, null);</span>
-<span class="source-line-no">443</span><span id="line-443">  }</span>
-<span class="source-line-no">444</span><span id="line-444"></span>
-<span class="source-line-no">445</span><span id="line-445">  /**</span>
-<span class="source-line-no">446</span><span id="line-446">   * Consume the next event from {@code reader} and assert that this event is of</span>
-<span class="source-line-no">447</span><span id="line-447">   * the type identified by {@code presumedEventType} and has the name identified</span>
-<span class="source-line-no">448</span><span id="line-448">   * by {@code presumedName}.</span>
-<span class="source-line-no">449</span><span id="line-449">   *</span>
-<span class="source-line-no">450</span><span id="line-450">   * @param reader</span>
-<span class="source-line-no">451</span><span id="line-451">   *          the XML event reader</span>
-<span class="source-line-no">452</span><span id="line-452">   * @param resource</span>
-<span class="source-line-no">453</span><span id="line-453">   *          the resource being parsed</span>
-<span class="source-line-no">454</span><span id="line-454">   * @param presumedEventType</span>
-<span class="source-line-no">455</span><span id="line-455">   *          the expected event type as defined by {@link XMLStreamConstants}</span>
-<span class="source-line-no">456</span><span id="line-456">   * @param presumedName</span>
-<span class="source-line-no">457</span><span id="line-457">   *          the expected name of the node associated with the event</span>
-<span class="source-line-no">458</span><span id="line-458">   * @return the next event</span>
-<span class="source-line-no">459</span><span id="line-459">   * @throws XMLStreamException</span>
-<span class="source-line-no">460</span><span id="line-460">   *           if an error occurred while looking at the next event</span>
-<span class="source-line-no">461</span><span id="line-461">   */</span>
-<span class="source-line-no">462</span><span id="line-462">  public static XMLEvent consumeAndAssert(</span>
-<span class="source-line-no">463</span><span id="line-463">      @NonNull XMLEventReader2 reader,</span>
-<span class="source-line-no">464</span><span id="line-464">      @NonNull URI resource,</span>
-<span class="source-line-no">465</span><span id="line-465">      int presumedEventType,</span>
-<span class="source-line-no">466</span><span id="line-466">      @Nullable QName presumedName)</span>
-<span class="source-line-no">467</span><span id="line-467">      throws XMLStreamException {</span>
-<span class="source-line-no">468</span><span id="line-468">    XMLEvent retval = reader.nextEvent();</span>
-<span class="source-line-no">469</span><span id="line-469"></span>
-<span class="source-line-no">470</span><span id="line-470">    int eventType = retval.getEventType();</span>
-<span class="source-line-no">471</span><span id="line-471">    QName name = toQName(retval);</span>
-<span class="source-line-no">472</span><span id="line-472">    assert eventType == presumedEventType</span>
-<span class="source-line-no">473</span><span id="line-473">        &amp;&amp; (presumedName == null</span>
-<span class="source-line-no">474</span><span id="line-474">            || presumedName.equals(name)) : generateExpectedMessage(</span>
-<span class="source-line-no">475</span><span id="line-475">                retval,</span>
-<span class="source-line-no">476</span><span id="line-476">                resource,</span>
-<span class="source-line-no">477</span><span id="line-477">                presumedEventType,</span>
-<span class="source-line-no">478</span><span id="line-478">                presumedName);</span>
-<span class="source-line-no">479</span><span id="line-479">    return retval;</span>
-<span class="source-line-no">480</span><span id="line-480">  }</span>
-<span class="source-line-no">481</span><span id="line-481"></span>
-<span class="source-line-no">482</span><span id="line-482">  /**</span>
-<span class="source-line-no">483</span><span id="line-483">   * Ensure that the next event is an XML start element that matches the presumed</span>
-<span class="source-line-no">484</span><span id="line-484">   * name.</span>
-<span class="source-line-no">485</span><span id="line-485">   *</span>
-<span class="source-line-no">486</span><span id="line-486">   * @param reader</span>
-<span class="source-line-no">487</span><span id="line-487">   *          the XML event reader</span>
-<span class="source-line-no">488</span><span id="line-488">   * @param resource</span>
-<span class="source-line-no">489</span><span id="line-489">   *          the resource being parsed</span>
-<span class="source-line-no">490</span><span id="line-490">   * @param presumedName</span>
-<span class="source-line-no">491</span><span id="line-491">   *          the qualified name of the expected next event</span>
-<span class="source-line-no">492</span><span id="line-492">   * @return the XML start element event</span>
-<span class="source-line-no">493</span><span id="line-493">   * @throws IOException</span>
-<span class="source-line-no">494</span><span id="line-494">   *           if an error occurred while parsing the resource</span>
-<span class="source-line-no">495</span><span id="line-495">   * @throws XMLStreamException</span>
-<span class="source-line-no">496</span><span id="line-496">   *           if an error occurred while parsing the XML event stream</span>
-<span class="source-line-no">497</span><span id="line-497">   */</span>
-<span class="source-line-no">498</span><span id="line-498">  @NonNull</span>
-<span class="source-line-no">499</span><span id="line-499">  public static StartElement requireStartElement(</span>
-<span class="source-line-no">500</span><span id="line-500">      @NonNull XMLEventReader2 reader,</span>
-<span class="source-line-no">501</span><span id="line-501">      @NonNull URI resource,</span>
-<span class="source-line-no">502</span><span id="line-502">      @NonNull QName presumedName) throws IOException, XMLStreamException {</span>
-<span class="source-line-no">503</span><span id="line-503">    XMLEvent retval = reader.nextEvent();</span>
-<span class="source-line-no">504</span><span id="line-504">    if (!retval.isStartElement()</span>
-<span class="source-line-no">505</span><span id="line-505">        || !presumedName.equals(retval.asStartElement().getName())) {</span>
-<span class="source-line-no">506</span><span id="line-506">      throw new IOException(generateExpectedMessage(</span>
-<span class="source-line-no">507</span><span id="line-507">          retval,</span>
-<span class="source-line-no">508</span><span id="line-508">          resource,</span>
-<span class="source-line-no">509</span><span id="line-509">          XMLStreamConstants.START_ELEMENT,</span>
-<span class="source-line-no">510</span><span id="line-510">          presumedName).toString());</span>
-<span class="source-line-no">511</span><span id="line-511">    }</span>
-<span class="source-line-no">512</span><span id="line-512">    return ObjectUtils.notNull(retval.asStartElement());</span>
-<span class="source-line-no">513</span><span id="line-513">  }</span>
-<span class="source-line-no">514</span><span id="line-514"></span>
-<span class="source-line-no">515</span><span id="line-515">  /**</span>
-<span class="source-line-no">516</span><span id="line-516">   * Ensure that the next event is an XML start element that matches the presumed</span>
-<span class="source-line-no">517</span><span id="line-517">   * name.</span>
-<span class="source-line-no">518</span><span id="line-518">   *</span>
-<span class="source-line-no">519</span><span id="line-519">   * @param reader</span>
-<span class="source-line-no">520</span><span id="line-520">   *          the XML event reader</span>
-<span class="source-line-no">521</span><span id="line-521">   * @param resource</span>
-<span class="source-line-no">522</span><span id="line-522">   *          the resource being parsed</span>
-<span class="source-line-no">523</span><span id="line-523">   * @param presumedName</span>
-<span class="source-line-no">524</span><span id="line-524">   *          the qualified name of the expected next event</span>
-<span class="source-line-no">525</span><span id="line-525">   * @return the XML start element event</span>
-<span class="source-line-no">526</span><span id="line-526">   * @throws IOException</span>
-<span class="source-line-no">527</span><span id="line-527">   *           if an error occurred while parsing the resource</span>
-<span class="source-line-no">528</span><span id="line-528">   * @throws XMLStreamException</span>
-<span class="source-line-no">529</span><span id="line-529">   *           if an error occurred while parsing the XML event stream</span>
-<span class="source-line-no">530</span><span id="line-530">   */</span>
-<span class="source-line-no">531</span><span id="line-531">  @NonNull</span>
-<span class="source-line-no">532</span><span id="line-532">  public static EndElement requireEndElement(</span>
-<span class="source-line-no">533</span><span id="line-533">      @NonNull XMLEventReader2 reader,</span>
-<span class="source-line-no">534</span><span id="line-534">      @NonNull URI resource,</span>
-<span class="source-line-no">535</span><span id="line-535">      @NonNull QName presumedName) throws IOException, XMLStreamException {</span>
-<span class="source-line-no">536</span><span id="line-536">    XMLEvent retval = reader.nextEvent();</span>
-<span class="source-line-no">537</span><span id="line-537">    if (!retval.isEndElement()</span>
-<span class="source-line-no">538</span><span id="line-538">        || !presumedName.equals(retval.asEndElement().getName())) {</span>
-<span class="source-line-no">539</span><span id="line-539">      throw new IOException(generateExpectedMessage(</span>
-<span class="source-line-no">540</span><span id="line-540">          retval,</span>
-<span class="source-line-no">541</span><span id="line-541">          resource,</span>
-<span class="source-line-no">542</span><span id="line-542">          XMLStreamConstants.END_ELEMENT,</span>
-<span class="source-line-no">543</span><span id="line-543">          presumedName).toString());</span>
-<span class="source-line-no">544</span><span id="line-544">    }</span>
-<span class="source-line-no">545</span><span id="line-545">    return ObjectUtils.notNull(retval.asEndElement());</span>
-<span class="source-line-no">546</span><span id="line-546">  }</span>
-<span class="source-line-no">547</span><span id="line-547"></span>
-<span class="source-line-no">548</span><span id="line-548">  /**</span>
-<span class="source-line-no">549</span><span id="line-549">   * Ensure that the next event from {@code reader} is of the type identified by</span>
-<span class="source-line-no">550</span><span id="line-550">   * {@code presumedEventType}.</span>
-<span class="source-line-no">551</span><span id="line-551">   *</span>
-<span class="source-line-no">552</span><span id="line-552">   * @param reader</span>
-<span class="source-line-no">553</span><span id="line-553">   *          the event reader</span>
-<span class="source-line-no">554</span><span id="line-554">   * @param resource</span>
-<span class="source-line-no">555</span><span id="line-555">   *          the resource being parsed</span>
-<span class="source-line-no">556</span><span id="line-556">   * @param presumedEventType</span>
-<span class="source-line-no">557</span><span id="line-557">   *          the expected event type as defined by {@link XMLStreamConstants}</span>
-<span class="source-line-no">558</span><span id="line-558">   * @return the next event</span>
-<span class="source-line-no">559</span><span id="line-559">   * @throws XMLStreamException</span>
-<span class="source-line-no">560</span><span id="line-560">   *           if an error occurred while looking at the next event</span>
-<span class="source-line-no">561</span><span id="line-561">   * @throws AssertionError</span>
-<span class="source-line-no">562</span><span id="line-562">   *           if the next event does not match the presumed event</span>
-<span class="source-line-no">563</span><span id="line-563">   */</span>
-<span class="source-line-no">564</span><span id="line-564">  public static XMLEvent assertNext(</span>
-<span class="source-line-no">565</span><span id="line-565">      @NonNull XMLEventReader2 reader,</span>
-<span class="source-line-no">566</span><span id="line-566">      @NonNull URI resource,</span>
-<span class="source-line-no">567</span><span id="line-567">      int presumedEventType)</span>
-<span class="source-line-no">568</span><span id="line-568">      throws XMLStreamException {</span>
-<span class="source-line-no">569</span><span id="line-569">    return assertNext(reader, resource, presumedEventType, null);</span>
-<span class="source-line-no">570</span><span id="line-570">  }</span>
-<span class="source-line-no">571</span><span id="line-571"></span>
-<span class="source-line-no">572</span><span id="line-572">  /**</span>
-<span class="source-line-no">573</span><span id="line-573">   * Ensure that the next event from {@code reader} is of the type identified by</span>
-<span class="source-line-no">574</span><span id="line-574">   * {@code presumedEventType} and has the name identified by</span>
-<span class="source-line-no">575</span><span id="line-575">   * {@code presumedName}.</span>
-<span class="source-line-no">576</span><span id="line-576">   *</span>
-<span class="source-line-no">577</span><span id="line-577">   * @param reader</span>
-<span class="source-line-no">578</span><span id="line-578">   *          the event reader</span>
-<span class="source-line-no">579</span><span id="line-579">   * @param resource</span>
-<span class="source-line-no">580</span><span id="line-580">   *          the resource being parsed</span>
-<span class="source-line-no">581</span><span id="line-581">   * @param presumedEventType</span>
-<span class="source-line-no">582</span><span id="line-582">   *          the expected event type as defined by {@link XMLStreamConstants}</span>
-<span class="source-line-no">583</span><span id="line-583">   * @param presumedName</span>
-<span class="source-line-no">584</span><span id="line-584">   *          the expected name of the node associated with the event</span>
-<span class="source-line-no">585</span><span id="line-585">   * @return the next event</span>
-<span class="source-line-no">586</span><span id="line-586">   * @throws XMLStreamException</span>
-<span class="source-line-no">587</span><span id="line-587">   *           if an error occurred while looking at the next event</span>
-<span class="source-line-no">588</span><span id="line-588">   * @throws AssertionError</span>
-<span class="source-line-no">589</span><span id="line-589">   *           if the next event does not match the presumed event</span>
-<span class="source-line-no">590</span><span id="line-590">   */</span>
-<span class="source-line-no">591</span><span id="line-591">  public static XMLEvent assertNext(</span>
-<span class="source-line-no">592</span><span id="line-592">      @NonNull XMLEventReader2 reader,</span>
-<span class="source-line-no">593</span><span id="line-593">      @NonNull URI resource,</span>
-<span class="source-line-no">594</span><span id="line-594">      int presumedEventType,</span>
-<span class="source-line-no">595</span><span id="line-595">      @Nullable QName presumedName)</span>
-<span class="source-line-no">596</span><span id="line-596">      throws XMLStreamException {</span>
-<span class="source-line-no">597</span><span id="line-597">    XMLEvent nextEvent = reader.peek();</span>
-<span class="source-line-no">598</span><span id="line-598"></span>
-<span class="source-line-no">599</span><span id="line-599">    int eventType = nextEvent.getEventType();</span>
-<span class="source-line-no">600</span><span id="line-600">    assert eventType == presumedEventType</span>
-<span class="source-line-no">601</span><span id="line-601">        &amp;&amp; (presumedName == null</span>
-<span class="source-line-no">602</span><span id="line-602">            || presumedName.equals(toQName(nextEvent))) : generateExpectedMessage(</span>
-<span class="source-line-no">603</span><span id="line-603">                nextEvent,</span>
-<span class="source-line-no">604</span><span id="line-604">                resource,</span>
-<span class="source-line-no">605</span><span id="line-605">                presumedEventType,</span>
-<span class="source-line-no">606</span><span id="line-606">                presumedName);</span>
-<span class="source-line-no">607</span><span id="line-607">    return nextEvent;</span>
-<span class="source-line-no">608</span><span id="line-608">  }</span>
-<span class="source-line-no">609</span><span id="line-609"></span>
-<span class="source-line-no">610</span><span id="line-610">  /**</span>
-<span class="source-line-no">611</span><span id="line-611">   * Generate a location string for the current location in the XML event stream.</span>
-<span class="source-line-no">612</span><span id="line-612">   *</span>
-<span class="source-line-no">613</span><span id="line-613">   * @param event</span>
-<span class="source-line-no">614</span><span id="line-614">   *          an XML event</span>
-<span class="source-line-no">615</span><span id="line-615">   * @param resource</span>
-<span class="source-line-no">616</span><span id="line-616">   *          the resource being parsed</span>
-<span class="source-line-no">617</span><span id="line-617">   * @return the location string</span>
-<span class="source-line-no">618</span><span id="line-618">   */</span>
-<span class="source-line-no">619</span><span id="line-619">  public static CharSequence generateLocationMessage(</span>
-<span class="source-line-no">620</span><span id="line-620">      @Nullable XMLEvent event,</span>
-<span class="source-line-no">621</span><span id="line-621">      @NonNull URI resource) {</span>
-<span class="source-line-no">622</span><span id="line-622">    Location location = event == null ? null : toLocation(event);</span>
-<span class="source-line-no">623</span><span id="line-623">    return location == null</span>
-<span class="source-line-no">624</span><span id="line-624">        ? " at '" + resource.toString() + "'"</span>
-<span class="source-line-no">625</span><span id="line-625">        : generateLocationMessage(location, resource);</span>
-<span class="source-line-no">626</span><span id="line-626">  }</span>
-<span class="source-line-no">627</span><span id="line-627"></span>
-<span class="source-line-no">628</span><span id="line-628">  /**</span>
-<span class="source-line-no">629</span><span id="line-629">   * Generate a location string for the current location in the XML event stream.</span>
-<span class="source-line-no">630</span><span id="line-630">   *</span>
-<span class="source-line-no">631</span><span id="line-631">   * @param location</span>
-<span class="source-line-no">632</span><span id="line-632">   *          an XML event stream location</span>
-<span class="source-line-no">633</span><span id="line-633">   * @param resource</span>
-<span class="source-line-no">634</span><span id="line-634">   *          the resource being parsed</span>
-<span class="source-line-no">635</span><span id="line-635">   * @return the location string</span>
-<span class="source-line-no">636</span><span id="line-636">   */</span>
-<span class="source-line-no">637</span><span id="line-637">  public static CharSequence generateLocationMessage(</span>
-<span class="source-line-no">638</span><span id="line-638">      @NonNull Location location,</span>
-<span class="source-line-no">639</span><span id="line-639">      @NonNull URI resource) {</span>
-<span class="source-line-no">640</span><span id="line-640">    return new StringBuilder(12)</span>
-<span class="source-line-no">641</span><span id="line-641">        .append(" in '")</span>
-<span class="source-line-no">642</span><span id="line-642">        .append(resource.toString())</span>
-<span class="source-line-no">643</span><span id="line-643">        .append("' at ")</span>
-<span class="source-line-no">644</span><span id="line-644">        .append(XmlEventUtil.toString(location, resource));</span>
-<span class="source-line-no">645</span><span id="line-645">  }</span>
-<span class="source-line-no">646</span><span id="line-646"></span>
-<span class="source-line-no">647</span><span id="line-647">  /**</span>
-<span class="source-line-no">648</span><span id="line-648">   * Generate a message intended for error reporting based on a presumed event.</span>
-<span class="source-line-no">649</span><span id="line-649">   *</span>
-<span class="source-line-no">650</span><span id="line-650">   * @param event</span>
-<span class="source-line-no">651</span><span id="line-651">   *          the current XML event</span>
-<span class="source-line-no">652</span><span id="line-652">   * @param resource</span>
-<span class="source-line-no">653</span><span id="line-653">   *          the resource being parsed</span>
-<span class="source-line-no">654</span><span id="line-654">   * @param presumedEventType</span>
-<span class="source-line-no">655</span><span id="line-655">   *          the expected event type ({@link XMLEvent#getEventType()})</span>
-<span class="source-line-no">656</span><span id="line-656">   * @param presumedName</span>
-<span class="source-line-no">657</span><span id="line-657">   *          the expected event qualified name or {@code null} if there is no</span>
-<span class="source-line-no">658</span><span id="line-658">   *          expectation</span>
-<span class="source-line-no">659</span><span id="line-659">   * @return the message string</span>
-<span class="source-line-no">660</span><span id="line-660">   */</span>
-<span class="source-line-no">661</span><span id="line-661">  public static CharSequence generateExpectedMessage(</span>
-<span class="source-line-no">662</span><span id="line-662">      @Nullable XMLEvent event,</span>
-<span class="source-line-no">663</span><span id="line-663">      @NonNull URI resource,</span>
-<span class="source-line-no">664</span><span id="line-664">      int presumedEventType,</span>
-<span class="source-line-no">665</span><span id="line-665">      @Nullable QName presumedName) {</span>
-<span class="source-line-no">666</span><span id="line-666">    StringBuilder builder = new StringBuilder(64);</span>
-<span class="source-line-no">667</span><span id="line-667">    builder</span>
-<span class="source-line-no">668</span><span id="line-668">        .append("Expected XML ")</span>
-<span class="source-line-no">669</span><span id="line-669">        .append(toEventName(presumedEventType));</span>
-<span class="source-line-no">670</span><span id="line-670"></span>
-<span class="source-line-no">671</span><span id="line-671">    if (presumedName != null) {</span>
-<span class="source-line-no">672</span><span id="line-672">      builder.append(" for QName '")</span>
-<span class="source-line-no">673</span><span id="line-673">          .append(presumedName.toString());</span>
-<span class="source-line-no">674</span><span id="line-674">    }</span>
-<span class="source-line-no">675</span><span id="line-675"></span>
-<span class="source-line-no">676</span><span id="line-676">    if (event == null) {</span>
-<span class="source-line-no">677</span><span id="line-677">      builder.append("', instead found null event");</span>
-<span class="source-line-no">678</span><span id="line-678">    } else {</span>
-<span class="source-line-no">679</span><span id="line-679">      builder.append("', instead found ")</span>
-<span class="source-line-no">680</span><span id="line-680">          .append(toString(event, resource));</span>
-<span class="source-line-no">681</span><span id="line-681">    }</span>
-<span class="source-line-no">682</span><span id="line-682">    return builder;</span>
-<span class="source-line-no">683</span><span id="line-683">  }</span>
-<span class="source-line-no">684</span><span id="line-684"></span>
-<span class="source-line-no">685</span><span id="line-685">  /**</span>
-<span class="source-line-no">686</span><span id="line-686">   * Skips events specified by {@code events}.</span>
-<span class="source-line-no">687</span><span id="line-687">   *</span>
-<span class="source-line-no">688</span><span id="line-688">   * @param reader</span>
-<span class="source-line-no">689</span><span id="line-689">   *          the event reader</span>
-<span class="source-line-no">690</span><span id="line-690">   * @param events</span>
-<span class="source-line-no">691</span><span id="line-691">   *          the events to skip</span>
-<span class="source-line-no">692</span><span id="line-692">   * @return the next non-mataching event returned by</span>
-<span class="source-line-no">693</span><span id="line-693">   *         {@link XMLEventReader2#peek()}, or {@code null} if there was no next</span>
-<span class="source-line-no">694</span><span id="line-694">   *         event</span>
-<span class="source-line-no">695</span><span id="line-695">   * @throws XMLStreamException</span>
-<span class="source-line-no">696</span><span id="line-696">   *           if an error occurred while reading</span>
-<span class="source-line-no">697</span><span id="line-697">   */</span>
-<span class="source-line-no">698</span><span id="line-698">  public static XMLEvent skipEvents(XMLEventReader2 reader, int... events) throws XMLStreamException {</span>
-<span class="source-line-no">699</span><span id="line-699">    Set&lt;Integer&gt; skipEvents = IntStream.of(events).boxed().collect(Collectors.toSet());</span>
-<span class="source-line-no">700</span><span id="line-700"></span>
-<span class="source-line-no">701</span><span id="line-701">    XMLEvent nextEvent = null;</span>
-<span class="source-line-no">702</span><span id="line-702">    while (reader.hasNext()) {</span>
-<span class="source-line-no">703</span><span id="line-703">      nextEvent = reader.peek();</span>
-<span class="source-line-no">704</span><span id="line-704">      if (!skipEvents.contains(nextEvent.getEventType())) {</span>
-<span class="source-line-no">705</span><span id="line-705">        break;</span>
-<span class="source-line-no">706</span><span id="line-706">      }</span>
-<span class="source-line-no">707</span><span id="line-707">      reader.nextEvent();</span>
-<span class="source-line-no">708</span><span id="line-708">    }</span>
-<span class="source-line-no">709</span><span id="line-709">    return nextEvent;</span>
-<span class="source-line-no">710</span><span id="line-710">  }</span>
-<span class="source-line-no">711</span><span id="line-711">}</span>
+<span class="source-line-no">304</span><span id="line-304">  public static XMLEvent skipElement(@NonNull XMLEventReader2 reader) throws XMLStreamException {</span>
+<span class="source-line-no">305</span><span id="line-305">    XMLEvent xmlEvent = reader.peek();</span>
+<span class="source-line-no">306</span><span id="line-306">    if (!xmlEvent.isStartElement()) {</span>
+<span class="source-line-no">307</span><span id="line-307">      return xmlEvent;</span>
+<span class="source-line-no">308</span><span id="line-308">    }</span>
+<span class="source-line-no">309</span><span id="line-309">    // if (LOGGER.isInfoEnabled()) {</span>
+<span class="source-line-no">310</span><span id="line-310">    // LOGGER.atInfo().log(String.format("At location %s", toString(xmlEvent)));</span>
+<span class="source-line-no">311</span><span id="line-311">    // }</span>
+<span class="source-line-no">312</span><span id="line-312"></span>
+<span class="source-line-no">313</span><span id="line-313">    int depth = 0;</span>
+<span class="source-line-no">314</span><span id="line-314">    do {</span>
+<span class="source-line-no">315</span><span id="line-315">      xmlEvent = reader.nextEvent();</span>
+<span class="source-line-no">316</span><span id="line-316">      // if (LOGGER.isInfoEnabled()) {</span>
+<span class="source-line-no">317</span><span id="line-317">      // LOGGER.atInfo().log(String.format("Skipping %s", toString(xmlEvent)));</span>
+<span class="source-line-no">318</span><span id="line-318">      // }</span>
+<span class="source-line-no">319</span><span id="line-319">      if (xmlEvent.isStartElement()) {</span>
+<span class="source-line-no">320</span><span id="line-320">        depth++;</span>
+<span class="source-line-no">321</span><span id="line-321">      } else if (xmlEvent.isEndElement()) {</span>
+<span class="source-line-no">322</span><span id="line-322">        depth--;</span>
+<span class="source-line-no">323</span><span id="line-323">      }</span>
+<span class="source-line-no">324</span><span id="line-324">    } while (depth &gt; 0 &amp;&amp; reader.hasNext());</span>
+<span class="source-line-no">325</span><span id="line-325">    return reader.peek();</span>
+<span class="source-line-no">326</span><span id="line-326">  }</span>
+<span class="source-line-no">327</span><span id="line-327"></span>
+<span class="source-line-no">328</span><span id="line-328">  /**</span>
+<span class="source-line-no">329</span><span id="line-329">   * Skip over any processing instructions.</span>
+<span class="source-line-no">330</span><span id="line-330">   *</span>
+<span class="source-line-no">331</span><span id="line-331">   * @param reader</span>
+<span class="source-line-no">332</span><span id="line-332">   *          the XML event reader to advance</span>
+<span class="source-line-no">333</span><span id="line-333">   * @return the last processing instruction event or the reader's next event if</span>
+<span class="source-line-no">334</span><span id="line-334">   *         no processing instruction was found</span>
+<span class="source-line-no">335</span><span id="line-335">   * @throws XMLStreamException</span>
+<span class="source-line-no">336</span><span id="line-336">   *           if an error occurred while advancing the stream</span>
+<span class="source-line-no">337</span><span id="line-337">   */</span>
+<span class="source-line-no">338</span><span id="line-338">  @NonNull</span>
+<span class="source-line-no">339</span><span id="line-339">  public static XMLEvent skipProcessingInstructions(@NonNull XMLEventReader2 reader) throws XMLStreamException {</span>
+<span class="source-line-no">340</span><span id="line-340">    XMLEvent nextEvent;</span>
+<span class="source-line-no">341</span><span id="line-341">    while ((nextEvent = reader.peek()).isProcessingInstruction()) {</span>
+<span class="source-line-no">342</span><span id="line-342">      nextEvent = reader.nextEvent();</span>
+<span class="source-line-no">343</span><span id="line-343">    }</span>
+<span class="source-line-no">344</span><span id="line-344">    return nextEvent;</span>
+<span class="source-line-no">345</span><span id="line-345">  }</span>
+<span class="source-line-no">346</span><span id="line-346"></span>
+<span class="source-line-no">347</span><span id="line-347">  /**</span>
+<span class="source-line-no">348</span><span id="line-348">   * Skip over any whitespace.</span>
+<span class="source-line-no">349</span><span id="line-349">   *</span>
+<span class="source-line-no">350</span><span id="line-350">   * @param reader</span>
+<span class="source-line-no">351</span><span id="line-351">   *          the XML event reader to advance</span>
+<span class="source-line-no">352</span><span id="line-352">   * @return the last character event containing whitespace or the reader's next</span>
+<span class="source-line-no">353</span><span id="line-353">   *         event if no character event was found</span>
+<span class="source-line-no">354</span><span id="line-354">   * @throws XMLStreamException</span>
+<span class="source-line-no">355</span><span id="line-355">   *           if an error occurred while advancing the stream</span>
+<span class="source-line-no">356</span><span id="line-356">   */</span>
+<span class="source-line-no">357</span><span id="line-357">  @SuppressWarnings("null")</span>
+<span class="source-line-no">358</span><span id="line-358">  @NonNull</span>
+<span class="source-line-no">359</span><span id="line-359">  public static XMLEvent skipWhitespace(@NonNull XMLEventReader2 reader) throws XMLStreamException {</span>
+<span class="source-line-no">360</span><span id="line-360">    @NonNull</span>
+<span class="source-line-no">361</span><span id="line-361">    XMLEvent nextEvent;</span>
+<span class="source-line-no">362</span><span id="line-362">    while ((nextEvent = reader.peek()).isCharacters()) {</span>
+<span class="source-line-no">363</span><span id="line-363">      Characters characters = nextEvent.asCharacters();</span>
+<span class="source-line-no">364</span><span id="line-364">      String data = characters.getData();</span>
+<span class="source-line-no">365</span><span id="line-365">      if (!WHITESPACE_ONLY.matcher(data).matches()) {</span>
+<span class="source-line-no">366</span><span id="line-366">        break;</span>
+<span class="source-line-no">367</span><span id="line-367">      }</span>
+<span class="source-line-no">368</span><span id="line-368">      nextEvent = reader.nextEvent();</span>
+<span class="source-line-no">369</span><span id="line-369">    }</span>
+<span class="source-line-no">370</span><span id="line-370">    return nextEvent;</span>
+<span class="source-line-no">371</span><span id="line-371">  }</span>
+<span class="source-line-no">372</span><span id="line-372"></span>
+<span class="source-line-no">373</span><span id="line-373">  /**</span>
+<span class="source-line-no">374</span><span id="line-374">   * Determine if the {@code event} is an end element whose name matches the</span>
+<span class="source-line-no">375</span><span id="line-375">   * provided {@code expectedQName}.</span>
+<span class="source-line-no">376</span><span id="line-376">   *</span>
+<span class="source-line-no">377</span><span id="line-377">   * @param event</span>
+<span class="source-line-no">378</span><span id="line-378">   *          the XML event</span>
+<span class="source-line-no">379</span><span id="line-379">   * @param expectedQName</span>
+<span class="source-line-no">380</span><span id="line-380">   *          the expected element name</span>
+<span class="source-line-no">381</span><span id="line-381">   * @return {@code true} if the next event matches the {@code expectedQName}</span>
+<span class="source-line-no">382</span><span id="line-382">   */</span>
+<span class="source-line-no">383</span><span id="line-383">  public static boolean isEventEndElement(@Nullable XMLEvent event, @NonNull QName expectedQName) {</span>
+<span class="source-line-no">384</span><span id="line-384">    return event != null</span>
+<span class="source-line-no">385</span><span id="line-385">        &amp;&amp; event.isEndElement()</span>
+<span class="source-line-no">386</span><span id="line-386">        &amp;&amp; expectedQName.equals(event.asEndElement().getName());</span>
+<span class="source-line-no">387</span><span id="line-387">  }</span>
+<span class="source-line-no">388</span><span id="line-388"></span>
+<span class="source-line-no">389</span><span id="line-389">  /**</span>
+<span class="source-line-no">390</span><span id="line-390">   * Determine if the {@code event} is an end of document event.</span>
+<span class="source-line-no">391</span><span id="line-391">   *</span>
+<span class="source-line-no">392</span><span id="line-392">   * @param event</span>
+<span class="source-line-no">393</span><span id="line-393">   *          the XML event</span>
+<span class="source-line-no">394</span><span id="line-394">   * @return {@code true} if the next event is an end of document event</span>
+<span class="source-line-no">395</span><span id="line-395">   */</span>
+<span class="source-line-no">396</span><span id="line-396">  public static boolean isEventEndDocument(@Nullable XMLEvent event) {</span>
+<span class="source-line-no">397</span><span id="line-397">    return event != null</span>
+<span class="source-line-no">398</span><span id="line-398">        &amp;&amp; event.isEndElement();</span>
+<span class="source-line-no">399</span><span id="line-399">  }</span>
+<span class="source-line-no">400</span><span id="line-400"></span>
+<span class="source-line-no">401</span><span id="line-401">  /**</span>
+<span class="source-line-no">402</span><span id="line-402">   * Determine if the {@code event} is a start element whose name matches the</span>
+<span class="source-line-no">403</span><span id="line-403">   * provided {@code expectedQName}.</span>
+<span class="source-line-no">404</span><span id="line-404">   *</span>
+<span class="source-line-no">405</span><span id="line-405">   * @param event</span>
+<span class="source-line-no">406</span><span id="line-406">   *          the event</span>
+<span class="source-line-no">407</span><span id="line-407">   * @param expectedQName</span>
+<span class="source-line-no">408</span><span id="line-408">   *          the expected element name</span>
+<span class="source-line-no">409</span><span id="line-409">   * @return {@code true} if the next event is a start element that matches the</span>
+<span class="source-line-no">410</span><span id="line-410">   *         {@code expectedQName}</span>
+<span class="source-line-no">411</span><span id="line-411">   * @throws XMLStreamException</span>
+<span class="source-line-no">412</span><span id="line-412">   *           if an error occurred while looking at the next event</span>
+<span class="source-line-no">413</span><span id="line-413">   */</span>
+<span class="source-line-no">414</span><span id="line-414">  public static boolean isEventStartElement(</span>
+<span class="source-line-no">415</span><span id="line-415">      @Nullable XMLEvent event,</span>
+<span class="source-line-no">416</span><span id="line-416">      @NonNull QName expectedQName) throws XMLStreamException {</span>
+<span class="source-line-no">417</span><span id="line-417">    return event != null</span>
+<span class="source-line-no">418</span><span id="line-418">        &amp;&amp; event.isStartElement()</span>
+<span class="source-line-no">419</span><span id="line-419">        &amp;&amp; expectedQName.equals(event.asStartElement().getName());</span>
+<span class="source-line-no">420</span><span id="line-420">  }</span>
+<span class="source-line-no">421</span><span id="line-421"></span>
+<span class="source-line-no">422</span><span id="line-422">  /**</span>
+<span class="source-line-no">423</span><span id="line-423">   * Consume the next event from {@code reader} and assert that this event is of</span>
+<span class="source-line-no">424</span><span id="line-424">   * the type identified by {@code presumedEventType}.</span>
+<span class="source-line-no">425</span><span id="line-425">   *</span>
+<span class="source-line-no">426</span><span id="line-426">   * @param reader</span>
+<span class="source-line-no">427</span><span id="line-427">   *          the XML event reader</span>
+<span class="source-line-no">428</span><span id="line-428">   * @param resource</span>
+<span class="source-line-no">429</span><span id="line-429">   *          the resource being parsed</span>
+<span class="source-line-no">430</span><span id="line-430">   * @param presumedEventType</span>
+<span class="source-line-no">431</span><span id="line-431">   *          the expected event type as defined by {@link XMLStreamConstants}</span>
+<span class="source-line-no">432</span><span id="line-432">   * @return the next event</span>
+<span class="source-line-no">433</span><span id="line-433">   * @throws XMLStreamException</span>
+<span class="source-line-no">434</span><span id="line-434">   *           if an error occurred while looking at the next event</span>
+<span class="source-line-no">435</span><span id="line-435">   */</span>
+<span class="source-line-no">436</span><span id="line-436">  public static XMLEvent consumeAndAssert(</span>
+<span class="source-line-no">437</span><span id="line-437">      @NonNull XMLEventReader2 reader,</span>
+<span class="source-line-no">438</span><span id="line-438">      @NonNull URI resource,</span>
+<span class="source-line-no">439</span><span id="line-439">      int presumedEventType)</span>
+<span class="source-line-no">440</span><span id="line-440">      throws XMLStreamException {</span>
+<span class="source-line-no">441</span><span id="line-441">    return consumeAndAssert(reader, resource, presumedEventType, null);</span>
+<span class="source-line-no">442</span><span id="line-442">  }</span>
+<span class="source-line-no">443</span><span id="line-443"></span>
+<span class="source-line-no">444</span><span id="line-444">  /**</span>
+<span class="source-line-no">445</span><span id="line-445">   * Consume the next event from {@code reader} and assert that this event is of</span>
+<span class="source-line-no">446</span><span id="line-446">   * the type identified by {@code presumedEventType} and has the name identified</span>
+<span class="source-line-no">447</span><span id="line-447">   * by {@code presumedName}.</span>
+<span class="source-line-no">448</span><span id="line-448">   *</span>
+<span class="source-line-no">449</span><span id="line-449">   * @param reader</span>
+<span class="source-line-no">450</span><span id="line-450">   *          the XML event reader</span>
+<span class="source-line-no">451</span><span id="line-451">   * @param resource</span>
+<span class="source-line-no">452</span><span id="line-452">   *          the resource being parsed</span>
+<span class="source-line-no">453</span><span id="line-453">   * @param presumedEventType</span>
+<span class="source-line-no">454</span><span id="line-454">   *          the expected event type as defined by {@link XMLStreamConstants}</span>
+<span class="source-line-no">455</span><span id="line-455">   * @param presumedName</span>
+<span class="source-line-no">456</span><span id="line-456">   *          the expected name of the node associated with the event</span>
+<span class="source-line-no">457</span><span id="line-457">   * @return the next event</span>
+<span class="source-line-no">458</span><span id="line-458">   * @throws XMLStreamException</span>
+<span class="source-line-no">459</span><span id="line-459">   *           if an error occurred while looking at the next event</span>
+<span class="source-line-no">460</span><span id="line-460">   */</span>
+<span class="source-line-no">461</span><span id="line-461">  public static XMLEvent consumeAndAssert(</span>
+<span class="source-line-no">462</span><span id="line-462">      @NonNull XMLEventReader2 reader,</span>
+<span class="source-line-no">463</span><span id="line-463">      @NonNull URI resource,</span>
+<span class="source-line-no">464</span><span id="line-464">      int presumedEventType,</span>
+<span class="source-line-no">465</span><span id="line-465">      @Nullable QName presumedName)</span>
+<span class="source-line-no">466</span><span id="line-466">      throws XMLStreamException {</span>
+<span class="source-line-no">467</span><span id="line-467">    XMLEvent retval = reader.nextEvent();</span>
+<span class="source-line-no">468</span><span id="line-468"></span>
+<span class="source-line-no">469</span><span id="line-469">    int eventType = retval.getEventType();</span>
+<span class="source-line-no">470</span><span id="line-470">    QName name = toQName(retval);</span>
+<span class="source-line-no">471</span><span id="line-471">    assert eventType == presumedEventType</span>
+<span class="source-line-no">472</span><span id="line-472">        &amp;&amp; (presumedName == null</span>
+<span class="source-line-no">473</span><span id="line-473">            || presumedName.equals(name)) : generateExpectedMessage(</span>
+<span class="source-line-no">474</span><span id="line-474">                retval,</span>
+<span class="source-line-no">475</span><span id="line-475">                resource,</span>
+<span class="source-line-no">476</span><span id="line-476">                presumedEventType,</span>
+<span class="source-line-no">477</span><span id="line-477">                presumedName);</span>
+<span class="source-line-no">478</span><span id="line-478">    return retval;</span>
+<span class="source-line-no">479</span><span id="line-479">  }</span>
+<span class="source-line-no">480</span><span id="line-480"></span>
+<span class="source-line-no">481</span><span id="line-481">  /**</span>
+<span class="source-line-no">482</span><span id="line-482">   * Ensure that the next event is an XML start element that matches the presumed</span>
+<span class="source-line-no">483</span><span id="line-483">   * name.</span>
+<span class="source-line-no">484</span><span id="line-484">   *</span>
+<span class="source-line-no">485</span><span id="line-485">   * @param reader</span>
+<span class="source-line-no">486</span><span id="line-486">   *          the XML event reader</span>
+<span class="source-line-no">487</span><span id="line-487">   * @param resource</span>
+<span class="source-line-no">488</span><span id="line-488">   *          the resource being parsed</span>
+<span class="source-line-no">489</span><span id="line-489">   * @param presumedName</span>
+<span class="source-line-no">490</span><span id="line-490">   *          the qualified name of the expected next event</span>
+<span class="source-line-no">491</span><span id="line-491">   * @return the XML start element event</span>
+<span class="source-line-no">492</span><span id="line-492">   * @throws IOException</span>
+<span class="source-line-no">493</span><span id="line-493">   *           if an error occurred while parsing the resource</span>
+<span class="source-line-no">494</span><span id="line-494">   * @throws XMLStreamException</span>
+<span class="source-line-no">495</span><span id="line-495">   *           if an error occurred while parsing the XML event stream</span>
+<span class="source-line-no">496</span><span id="line-496">   */</span>
+<span class="source-line-no">497</span><span id="line-497">  @NonNull</span>
+<span class="source-line-no">498</span><span id="line-498">  public static StartElement requireStartElement(</span>
+<span class="source-line-no">499</span><span id="line-499">      @NonNull XMLEventReader2 reader,</span>
+<span class="source-line-no">500</span><span id="line-500">      @NonNull URI resource,</span>
+<span class="source-line-no">501</span><span id="line-501">      @NonNull QName presumedName) throws IOException, XMLStreamException {</span>
+<span class="source-line-no">502</span><span id="line-502">    XMLEvent retval = reader.nextEvent();</span>
+<span class="source-line-no">503</span><span id="line-503">    if (!retval.isStartElement()</span>
+<span class="source-line-no">504</span><span id="line-504">        || !presumedName.equals(retval.asStartElement().getName())) {</span>
+<span class="source-line-no">505</span><span id="line-505">      throw new IOException(generateExpectedMessage(</span>
+<span class="source-line-no">506</span><span id="line-506">          retval,</span>
+<span class="source-line-no">507</span><span id="line-507">          resource,</span>
+<span class="source-line-no">508</span><span id="line-508">          XMLStreamConstants.START_ELEMENT,</span>
+<span class="source-line-no">509</span><span id="line-509">          presumedName).toString());</span>
+<span class="source-line-no">510</span><span id="line-510">    }</span>
+<span class="source-line-no">511</span><span id="line-511">    return ObjectUtils.notNull(retval.asStartElement());</span>
+<span class="source-line-no">512</span><span id="line-512">  }</span>
+<span class="source-line-no">513</span><span id="line-513"></span>
+<span class="source-line-no">514</span><span id="line-514">  /**</span>
+<span class="source-line-no">515</span><span id="line-515">   * Ensure that the next event is an XML start element that matches the presumed</span>
+<span class="source-line-no">516</span><span id="line-516">   * name.</span>
+<span class="source-line-no">517</span><span id="line-517">   *</span>
+<span class="source-line-no">518</span><span id="line-518">   * @param reader</span>
+<span class="source-line-no">519</span><span id="line-519">   *          the XML event reader</span>
+<span class="source-line-no">520</span><span id="line-520">   * @param resource</span>
+<span class="source-line-no">521</span><span id="line-521">   *          the resource being parsed</span>
+<span class="source-line-no">522</span><span id="line-522">   * @param presumedName</span>
+<span class="source-line-no">523</span><span id="line-523">   *          the qualified name of the expected next event</span>
+<span class="source-line-no">524</span><span id="line-524">   * @return the XML start element event</span>
+<span class="source-line-no">525</span><span id="line-525">   * @throws IOException</span>
+<span class="source-line-no">526</span><span id="line-526">   *           if an error occurred while parsing the resource</span>
+<span class="source-line-no">527</span><span id="line-527">   * @throws XMLStreamException</span>
+<span class="source-line-no">528</span><span id="line-528">   *           if an error occurred while parsing the XML event stream</span>
+<span class="source-line-no">529</span><span id="line-529">   */</span>
+<span class="source-line-no">530</span><span id="line-530">  @NonNull</span>
+<span class="source-line-no">531</span><span id="line-531">  public static EndElement requireEndElement(</span>
+<span class="source-line-no">532</span><span id="line-532">      @NonNull XMLEventReader2 reader,</span>
+<span class="source-line-no">533</span><span id="line-533">      @NonNull URI resource,</span>
+<span class="source-line-no">534</span><span id="line-534">      @NonNull QName presumedName) throws IOException, XMLStreamException {</span>
+<span class="source-line-no">535</span><span id="line-535">    XMLEvent retval = reader.nextEvent();</span>
+<span class="source-line-no">536</span><span id="line-536">    if (!retval.isEndElement()</span>
+<span class="source-line-no">537</span><span id="line-537">        || !presumedName.equals(retval.asEndElement().getName())) {</span>
+<span class="source-line-no">538</span><span id="line-538">      throw new IOException(generateExpectedMessage(</span>
+<span class="source-line-no">539</span><span id="line-539">          retval,</span>
+<span class="source-line-no">540</span><span id="line-540">          resource,</span>
+<span class="source-line-no">541</span><span id="line-541">          XMLStreamConstants.END_ELEMENT,</span>
+<span class="source-line-no">542</span><span id="line-542">          presumedName).toString());</span>
+<span class="source-line-no">543</span><span id="line-543">    }</span>
+<span class="source-line-no">544</span><span id="line-544">    return ObjectUtils.notNull(retval.asEndElement());</span>
+<span class="source-line-no">545</span><span id="line-545">  }</span>
+<span class="source-line-no">546</span><span id="line-546"></span>
+<span class="source-line-no">547</span><span id="line-547">  /**</span>
+<span class="source-line-no">548</span><span id="line-548">   * Ensure that the next event from {@code reader} is of the type identified by</span>
+<span class="source-line-no">549</span><span id="line-549">   * {@code presumedEventType}.</span>
+<span class="source-line-no">550</span><span id="line-550">   *</span>
+<span class="source-line-no">551</span><span id="line-551">   * @param reader</span>
+<span class="source-line-no">552</span><span id="line-552">   *          the event reader</span>
+<span class="source-line-no">553</span><span id="line-553">   * @param resource</span>
+<span class="source-line-no">554</span><span id="line-554">   *          the resource being parsed</span>
+<span class="source-line-no">555</span><span id="line-555">   * @param presumedEventType</span>
+<span class="source-line-no">556</span><span id="line-556">   *          the expected event type as defined by {@link XMLStreamConstants}</span>
+<span class="source-line-no">557</span><span id="line-557">   * @return the next event</span>
+<span class="source-line-no">558</span><span id="line-558">   * @throws XMLStreamException</span>
+<span class="source-line-no">559</span><span id="line-559">   *           if an error occurred while looking at the next event</span>
+<span class="source-line-no">560</span><span id="line-560">   * @throws AssertionError</span>
+<span class="source-line-no">561</span><span id="line-561">   *           if the next event does not match the presumed event</span>
+<span class="source-line-no">562</span><span id="line-562">   */</span>
+<span class="source-line-no">563</span><span id="line-563">  public static XMLEvent assertNext(</span>
+<span class="source-line-no">564</span><span id="line-564">      @NonNull XMLEventReader2 reader,</span>
+<span class="source-line-no">565</span><span id="line-565">      @NonNull URI resource,</span>
+<span class="source-line-no">566</span><span id="line-566">      int presumedEventType)</span>
+<span class="source-line-no">567</span><span id="line-567">      throws XMLStreamException {</span>
+<span class="source-line-no">568</span><span id="line-568">    return assertNext(reader, resource, presumedEventType, null);</span>
+<span class="source-line-no">569</span><span id="line-569">  }</span>
+<span class="source-line-no">570</span><span id="line-570"></span>
+<span class="source-line-no">571</span><span id="line-571">  /**</span>
+<span class="source-line-no">572</span><span id="line-572">   * Ensure that the next event from {@code reader} is of the type identified by</span>
+<span class="source-line-no">573</span><span id="line-573">   * {@code presumedEventType} and has the name identified by</span>
+<span class="source-line-no">574</span><span id="line-574">   * {@code presumedName}.</span>
+<span class="source-line-no">575</span><span id="line-575">   *</span>
+<span class="source-line-no">576</span><span id="line-576">   * @param reader</span>
+<span class="source-line-no">577</span><span id="line-577">   *          the event reader</span>
+<span class="source-line-no">578</span><span id="line-578">   * @param resource</span>
+<span class="source-line-no">579</span><span id="line-579">   *          the resource being parsed</span>
+<span class="source-line-no">580</span><span id="line-580">   * @param presumedEventType</span>
+<span class="source-line-no">581</span><span id="line-581">   *          the expected event type as defined by {@link XMLStreamConstants}</span>
+<span class="source-line-no">582</span><span id="line-582">   * @param presumedName</span>
+<span class="source-line-no">583</span><span id="line-583">   *          the expected name of the node associated with the event</span>
+<span class="source-line-no">584</span><span id="line-584">   * @return the next event</span>
+<span class="source-line-no">585</span><span id="line-585">   * @throws XMLStreamException</span>
+<span class="source-line-no">586</span><span id="line-586">   *           if an error occurred while looking at the next event</span>
+<span class="source-line-no">587</span><span id="line-587">   * @throws AssertionError</span>
+<span class="source-line-no">588</span><span id="line-588">   *           if the next event does not match the presumed event</span>
+<span class="source-line-no">589</span><span id="line-589">   */</span>
+<span class="source-line-no">590</span><span id="line-590">  public static XMLEvent assertNext(</span>
+<span class="source-line-no">591</span><span id="line-591">      @NonNull XMLEventReader2 reader,</span>
+<span class="source-line-no">592</span><span id="line-592">      @NonNull URI resource,</span>
+<span class="source-line-no">593</span><span id="line-593">      int presumedEventType,</span>
+<span class="source-line-no">594</span><span id="line-594">      @Nullable QName presumedName)</span>
+<span class="source-line-no">595</span><span id="line-595">      throws XMLStreamException {</span>
+<span class="source-line-no">596</span><span id="line-596">    XMLEvent nextEvent = reader.peek();</span>
+<span class="source-line-no">597</span><span id="line-597"></span>
+<span class="source-line-no">598</span><span id="line-598">    int eventType = nextEvent.getEventType();</span>
+<span class="source-line-no">599</span><span id="line-599">    assert eventType == presumedEventType</span>
+<span class="source-line-no">600</span><span id="line-600">        &amp;&amp; (presumedName == null</span>
+<span class="source-line-no">601</span><span id="line-601">            || presumedName.equals(toQName(nextEvent))) : generateExpectedMessage(</span>
+<span class="source-line-no">602</span><span id="line-602">                nextEvent,</span>
+<span class="source-line-no">603</span><span id="line-603">                resource,</span>
+<span class="source-line-no">604</span><span id="line-604">                presumedEventType,</span>
+<span class="source-line-no">605</span><span id="line-605">                presumedName);</span>
+<span class="source-line-no">606</span><span id="line-606">    return nextEvent;</span>
+<span class="source-line-no">607</span><span id="line-607">  }</span>
+<span class="source-line-no">608</span><span id="line-608"></span>
+<span class="source-line-no">609</span><span id="line-609">  /**</span>
+<span class="source-line-no">610</span><span id="line-610">   * Generate a location string for the current location in the XML event stream.</span>
+<span class="source-line-no">611</span><span id="line-611">   *</span>
+<span class="source-line-no">612</span><span id="line-612">   * @param event</span>
+<span class="source-line-no">613</span><span id="line-613">   *          an XML event</span>
+<span class="source-line-no">614</span><span id="line-614">   * @param resource</span>
+<span class="source-line-no">615</span><span id="line-615">   *          the resource being parsed</span>
+<span class="source-line-no">616</span><span id="line-616">   * @return the location string</span>
+<span class="source-line-no">617</span><span id="line-617">   */</span>
+<span class="source-line-no">618</span><span id="line-618">  public static CharSequence generateLocationMessage(</span>
+<span class="source-line-no">619</span><span id="line-619">      @Nullable XMLEvent event,</span>
+<span class="source-line-no">620</span><span id="line-620">      @NonNull URI resource) {</span>
+<span class="source-line-no">621</span><span id="line-621">    Location location = event == null ? null : toLocation(event);</span>
+<span class="source-line-no">622</span><span id="line-622">    return location == null</span>
+<span class="source-line-no">623</span><span id="line-623">        ? " at '" + resource.toString() + "'"</span>
+<span class="source-line-no">624</span><span id="line-624">        : generateLocationMessage(location, resource);</span>
+<span class="source-line-no">625</span><span id="line-625">  }</span>
+<span class="source-line-no">626</span><span id="line-626"></span>
+<span class="source-line-no">627</span><span id="line-627">  /**</span>
+<span class="source-line-no">628</span><span id="line-628">   * Generate a location string for the current location in the XML event stream.</span>
+<span class="source-line-no">629</span><span id="line-629">   *</span>
+<span class="source-line-no">630</span><span id="line-630">   * @param location</span>
+<span class="source-line-no">631</span><span id="line-631">   *          an XML event stream location</span>
+<span class="source-line-no">632</span><span id="line-632">   * @param resource</span>
+<span class="source-line-no">633</span><span id="line-633">   *          the resource being parsed</span>
+<span class="source-line-no">634</span><span id="line-634">   * @return the location string</span>
+<span class="source-line-no">635</span><span id="line-635">   */</span>
+<span class="source-line-no">636</span><span id="line-636">  public static CharSequence generateLocationMessage(</span>
+<span class="source-line-no">637</span><span id="line-637">      @NonNull Location location,</span>
+<span class="source-line-no">638</span><span id="line-638">      @NonNull URI resource) {</span>
+<span class="source-line-no">639</span><span id="line-639">    return new StringBuilder(12)</span>
+<span class="source-line-no">640</span><span id="line-640">        .append(" in '")</span>
+<span class="source-line-no">641</span><span id="line-641">        .append(resource.toString())</span>
+<span class="source-line-no">642</span><span id="line-642">        .append("' at ")</span>
+<span class="source-line-no">643</span><span id="line-643">        .append(XmlEventUtil.toString(location, resource));</span>
+<span class="source-line-no">644</span><span id="line-644">  }</span>
+<span class="source-line-no">645</span><span id="line-645"></span>
+<span class="source-line-no">646</span><span id="line-646">  /**</span>
+<span class="source-line-no">647</span><span id="line-647">   * Generate a message intended for error reporting based on a presumed event.</span>
+<span class="source-line-no">648</span><span id="line-648">   *</span>
+<span class="source-line-no">649</span><span id="line-649">   * @param event</span>
+<span class="source-line-no">650</span><span id="line-650">   *          the current XML event</span>
+<span class="source-line-no">651</span><span id="line-651">   * @param resource</span>
+<span class="source-line-no">652</span><span id="line-652">   *          the resource being parsed</span>
+<span class="source-line-no">653</span><span id="line-653">   * @param presumedEventType</span>
+<span class="source-line-no">654</span><span id="line-654">   *          the expected event type ({@link XMLEvent#getEventType()})</span>
+<span class="source-line-no">655</span><span id="line-655">   * @param presumedName</span>
+<span class="source-line-no">656</span><span id="line-656">   *          the expected event qualified name or {@code null} if there is no</span>
+<span class="source-line-no">657</span><span id="line-657">   *          expectation</span>
+<span class="source-line-no">658</span><span id="line-658">   * @return the message string</span>
+<span class="source-line-no">659</span><span id="line-659">   */</span>
+<span class="source-line-no">660</span><span id="line-660">  public static CharSequence generateExpectedMessage(</span>
+<span class="source-line-no">661</span><span id="line-661">      @Nullable XMLEvent event,</span>
+<span class="source-line-no">662</span><span id="line-662">      @NonNull URI resource,</span>
+<span class="source-line-no">663</span><span id="line-663">      int presumedEventType,</span>
+<span class="source-line-no">664</span><span id="line-664">      @Nullable QName presumedName) {</span>
+<span class="source-line-no">665</span><span id="line-665">    StringBuilder builder = new StringBuilder(64);</span>
+<span class="source-line-no">666</span><span id="line-666">    builder</span>
+<span class="source-line-no">667</span><span id="line-667">        .append("Expected XML ")</span>
+<span class="source-line-no">668</span><span id="line-668">        .append(toEventName(presumedEventType));</span>
+<span class="source-line-no">669</span><span id="line-669"></span>
+<span class="source-line-no">670</span><span id="line-670">    if (presumedName != null) {</span>
+<span class="source-line-no">671</span><span id="line-671">      builder.append(" for QName '")</span>
+<span class="source-line-no">672</span><span id="line-672">          .append(presumedName.toString());</span>
+<span class="source-line-no">673</span><span id="line-673">    }</span>
+<span class="source-line-no">674</span><span id="line-674"></span>
+<span class="source-line-no">675</span><span id="line-675">    if (event == null) {</span>
+<span class="source-line-no">676</span><span id="line-676">      builder.append("', instead found null event");</span>
+<span class="source-line-no">677</span><span id="line-677">    } else {</span>
+<span class="source-line-no">678</span><span id="line-678">      builder.append("', instead found ")</span>
+<span class="source-line-no">679</span><span id="line-679">          .append(toString(event, resource));</span>
+<span class="source-line-no">680</span><span id="line-680">    }</span>
+<span class="source-line-no">681</span><span id="line-681">    return builder;</span>
+<span class="source-line-no">682</span><span id="line-682">  }</span>
+<span class="source-line-no">683</span><span id="line-683"></span>
+<span class="source-line-no">684</span><span id="line-684">  /**</span>
+<span class="source-line-no">685</span><span id="line-685">   * Skips events specified by {@code events}.</span>
+<span class="source-line-no">686</span><span id="line-686">   *</span>
+<span class="source-line-no">687</span><span id="line-687">   * @param reader</span>
+<span class="source-line-no">688</span><span id="line-688">   *          the event reader</span>
+<span class="source-line-no">689</span><span id="line-689">   * @param events</span>
+<span class="source-line-no">690</span><span id="line-690">   *          the events to skip</span>
+<span class="source-line-no">691</span><span id="line-691">   * @return the next non-mataching event returned by</span>
+<span class="source-line-no">692</span><span id="line-692">   *         {@link XMLEventReader2#peek()}, or {@code null} if there was no next</span>
+<span class="source-line-no">693</span><span id="line-693">   *         event</span>
+<span class="source-line-no">694</span><span id="line-694">   * @throws XMLStreamException</span>
+<span class="source-line-no">695</span><span id="line-695">   *           if an error occurred while reading</span>
+<span class="source-line-no">696</span><span id="line-696">   */</span>
+<span class="source-line-no">697</span><span id="line-697">  public static XMLEvent skipEvents(XMLEventReader2 reader, int... events) throws XMLStreamException {</span>
+<span class="source-line-no">698</span><span id="line-698">    Set&lt;Integer&gt; skipEvents = IntStream.of(events).boxed().collect(Collectors.toSet());</span>
+<span class="source-line-no">699</span><span id="line-699"></span>
+<span class="source-line-no">700</span><span id="line-700">    XMLEvent nextEvent = null;</span>
+<span class="source-line-no">701</span><span id="line-701">    while (reader.hasNext()) {</span>
+<span class="source-line-no">702</span><span id="line-702">      nextEvent = reader.peek();</span>
+<span class="source-line-no">703</span><span id="line-703">      if (!skipEvents.contains(nextEvent.getEventType())) {</span>
+<span class="source-line-no">704</span><span id="line-704">        break;</span>
+<span class="source-line-no">705</span><span id="line-705">      }</span>
+<span class="source-line-no">706</span><span id="line-706">      reader.nextEvent();</span>
+<span class="source-line-no">707</span><span id="line-707">    }</span>
+<span class="source-line-no">708</span><span id="line-708">    return nextEvent;</span>
+<span class="source-line-no">709</span><span id="line-709">  }</span>
+<span class="source-line-no">710</span><span id="line-710">}</span>
 
 
 

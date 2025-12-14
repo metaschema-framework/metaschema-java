@@ -94,7 +94,7 @@
 <span class="source-line-no">081</span><span id="line-81">          .required()</span>
 <span class="source-line-no">082</span><span id="line-82">          .desc("metaschema resource")</span>
 <span class="source-line-no">083</span><span id="line-83">          .numberOfArgs(1)</span>
-<span class="source-line-no">084</span><span id="line-84">          .build());</span>
+<span class="source-line-no">084</span><span id="line-84">          .get());</span>
 <span class="source-line-no">085</span><span id="line-85">  /**</span>
 <span class="source-line-no">086</span><span id="line-86">   * Used by commands to declare an optional Metaschema module for processing.</span>
 <span class="source-line-no">087</span><span id="line-87">   *</span>
@@ -107,7 +107,7 @@
 <span class="source-line-no">094</span><span id="line-94">          .argName("FILE_OR_URL")</span>
 <span class="source-line-no">095</span><span id="line-95">          .desc("metaschema resource")</span>
 <span class="source-line-no">096</span><span id="line-96">          .numberOfArgs(1)</span>
-<span class="source-line-no">097</span><span id="line-97">          .build());</span>
+<span class="source-line-no">097</span><span id="line-97">          .get());</span>
 <span class="source-line-no">098</span><span id="line-98">  /**</span>
 <span class="source-line-no">099</span><span id="line-99">   * Used by commands to protect existing files from being overwritten, unless</span>
 <span class="source-line-no">100</span><span id="line-100">   * this option is provided.</span>
@@ -117,7 +117,7 @@
 <span class="source-line-no">104</span><span id="line-104">      Option.builder()</span>
 <span class="source-line-no">105</span><span id="line-105">          .longOpt("overwrite")</span>
 <span class="source-line-no">106</span><span id="line-106">          .desc("overwrite the destination if it exists")</span>
-<span class="source-line-no">107</span><span id="line-107">          .build());</span>
+<span class="source-line-no">107</span><span id="line-107">          .get());</span>
 <span class="source-line-no">108</span><span id="line-108">  /**</span>
 <span class="source-line-no">109</span><span id="line-109">   * Used by commands to identify the target format for a content conversion</span>
 <span class="source-line-no">110</span><span id="line-110">   * operation.</span>
@@ -134,7 +134,7 @@
 <span class="source-line-no">121</span><span id="line-121">              .map(Enum::name)</span>
 <span class="source-line-no">122</span><span id="line-122">              .collect(CustomCollectors.joiningWithOxfordComma("or")))</span>
 <span class="source-line-no">123</span><span id="line-123">          .numberOfArgs(1)</span>
-<span class="source-line-no">124</span><span id="line-124">          .build());</span>
+<span class="source-line-no">124</span><span id="line-124">          .get());</span>
 <span class="source-line-no">125</span><span id="line-125">  /**</span>
 <span class="source-line-no">126</span><span id="line-126">   * Used by commands to identify the source format for a content-related</span>
 <span class="source-line-no">127</span><span id="line-127">   * operation.</span>
@@ -151,7 +151,7 @@
 <span class="source-line-no">138</span><span id="line-138">              .map(Enum::name)</span>
 <span class="source-line-no">139</span><span id="line-139">              .collect(CustomCollectors.joiningWithOxfordComma("or")))</span>
 <span class="source-line-no">140</span><span id="line-140">          .numberOfArgs(1)</span>
-<span class="source-line-no">141</span><span id="line-141">          .build());</span>
+<span class="source-line-no">141</span><span id="line-141">          .get());</span>
 <span class="source-line-no">142</span><span id="line-142">  /**</span>
 <span class="source-line-no">143</span><span id="line-143">   * Used by commands that produce schemas to identify the schema format to</span>
 <span class="source-line-no">144</span><span id="line-144">   * produce.</span>
@@ -169,7 +169,7 @@
 <span class="source-line-no">156</span><span id="line-156">              .map(Enum::name)</span>
 <span class="source-line-no">157</span><span id="line-157">              .collect(CustomCollectors.joiningWithOxfordComma("or")))</span>
 <span class="source-line-no">158</span><span id="line-158">          .numberOfArgs(1)</span>
-<span class="source-line-no">159</span><span id="line-159">          .build());</span>
+<span class="source-line-no">159</span><span id="line-159">          .get());</span>
 <span class="source-line-no">160</span><span id="line-160"></span>
 <span class="source-line-no">161</span><span id="line-161">  /**</span>
 <span class="source-line-no">162</span><span id="line-162">   * Get the provided source path or URI string as an absolute {@link URI} for the</span>

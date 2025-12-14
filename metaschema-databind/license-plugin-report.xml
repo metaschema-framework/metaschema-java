@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1743912621262">
-    <module artifactId="metaschema-databind" groupId="dev.metaschema.java" version="2.2.0"/>
+<licensePluginReport goal="FORMAT" timestamp="1765735497483">
+    <module artifactId="metaschema-databind" groupId="dev.metaschema.java" version="3.0.0.M1"/>
     <files>
-        <file path="src/test/java/gov/nist/secauto/metaschema/databind/DefaultBindingContextTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/Examples.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/FnDocTest.java" result="NOOP"/>
+        <file path="src/test/java/gov/nist/secauto/metaschema/databind/IBindingContextTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/codegen/AbstractMetaschemaTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/codegen/BasicMetaschemaTest.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/databind/codegen/GenerationTest.java" result="NOOP"/>

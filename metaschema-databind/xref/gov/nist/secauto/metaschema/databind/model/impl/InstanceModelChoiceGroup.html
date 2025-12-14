@@ -151,23 +151,23 @@
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>     <strong class="jxr_keyword">this</strong>.javaField = javaField;
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>     <strong class="jxr_keyword">this</strong>.annotation = annotation;
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>     <strong class="jxr_keyword">this</strong>.groupAs = groupAs;
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>     <strong class="jxr_keyword">this</strong>.collectionInfo = ObjectUtils.notNull(Lazy.lazy(() -&gt; IModelInstanceCollectionInfo.of(<strong class="jxr_keyword">this</strong>)));
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>     <strong class="jxr_keyword">this</strong>.modelContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; newContainerModel(
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     <strong class="jxr_keyword">this</strong>.collectionInfo = ObjectUtils.notNull(Lazy.of(() -&gt; IModelInstanceCollectionInfo.of(<strong class="jxr_keyword">this</strong>)));
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     <strong class="jxr_keyword">this</strong>.modelContainer = ObjectUtils.notNull(Lazy.of(() -&gt; newContainerModel(
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>         <strong class="jxr_keyword">this</strong>.annotation.assemblies(),
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>         <strong class="jxr_keyword">this</strong>.annotation.fields(),
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>         <strong class="jxr_keyword">this</strong>)));
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">this</strong>.classToInstanceMap = ObjectUtils.notNull(Lazy.lazy(() -&gt; Collections.unmodifiableMap(
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">this</strong>.classToInstanceMap = ObjectUtils.notNull(Lazy.of(() -&gt; Collections.unmodifiableMap(
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>         getNamedModelInstances().stream()
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>             .map(instance -&gt; instance)
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>             .collect(Collectors.toMap(
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>                 item -&gt; item.getDefinition().getBoundClass(),
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>                 CustomCollectors.identity())))));
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">this</strong>.qnameToInstanceMap = ObjectUtils.notNull(Lazy.lazy(() -&gt; Collections.unmodifiableMap(
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">this</strong>.qnameToInstanceMap = ObjectUtils.notNull(Lazy.of(() -&gt; Collections.unmodifiableMap(
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>         getNamedModelInstances().stream()
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>             .collect(Collectors.toMap(
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>                 IBoundInstanceModelGroupedNamed::getQName,
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>                 CustomCollectors.identity())))));
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>     <strong class="jxr_keyword">this</strong>.discriminatorToInstanceMap = ObjectUtils.notNull(Lazy.lazy(() -&gt; Collections.unmodifiableMap(
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     <strong class="jxr_keyword">this</strong>.discriminatorToInstanceMap = ObjectUtils.notNull(Lazy.of(() -&gt; Collections.unmodifiableMap(
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>         getNamedModelInstances().stream()
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>             .collect(Collectors.toMap(
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>                 IBoundInstanceModelGroupedNamed::getEffectiveDisciminatorValue,

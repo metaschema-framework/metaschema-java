@@ -13,8 +13,8 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.metaschema.core.metapath.cst.path;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.DynamicMetapathException;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.IExpression;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.ISequence;
@@ -76,11 +76,12 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    @Override
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">protected</strong> ISequence&lt;?&gt; evaluate(<a name="DynamicContext" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext, ISequence&lt;?&gt; focus) {
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">if</strong> (focus.isEmpty()) {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="DynamicMetapathException" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicMetapathException.html#DynamicMetapathException">DynamicMetapathException</a>(DynamicMetapathException.DYNAMIC_CONTEXT_ABSENT, <span class="jxr_string">"The context is empty"</span>);
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      }
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">return</strong> focus;
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  }
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="ContextAbsentDynamicMetapathException" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/ContextAbsentDynamicMetapathException.html#ContextAbsentDynamicMetapathException">ContextAbsentDynamicMetapathException</a>(<span class="jxr_string">"The context item is empty"</span>)
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>            .registerEvaluationContext(dynamicContext);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      }
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">return</strong> focus;
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    }
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2025</div>

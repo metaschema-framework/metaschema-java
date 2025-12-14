@@ -81,17 +81,16 @@
 <span class="source-line-no">068</span><span id="line-68">   * @return {@code sequence} the new sequence with items in reverse order.</span>
 <span class="source-line-no">069</span><span id="line-69">   *</span>
 <span class="source-line-no">070</span><span id="line-70">   */</span>
-<span class="source-line-no">071</span><span id="line-71">  @SuppressWarnings("PMD.OnlyOneReturn")</span>
-<span class="source-line-no">072</span><span id="line-72">  @NonNull</span>
-<span class="source-line-no">073</span><span id="line-73">  public static &lt;T extends IItem&gt; List&lt;T&gt; fnReverse(@NonNull List&lt;T&gt; target) {</span>
-<span class="source-line-no">074</span><span id="line-74">    if (target.size() &lt;= 1) {</span>
-<span class="source-line-no">075</span><span id="line-75">      return target;</span>
-<span class="source-line-no">076</span><span id="line-76">    }</span>
-<span class="source-line-no">077</span><span id="line-77">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target);</span>
-<span class="source-line-no">078</span><span id="line-78">    Collections.reverse(newSequence);</span>
-<span class="source-line-no">079</span><span id="line-79">    return newSequence;</span>
-<span class="source-line-no">080</span><span id="line-80">  }</span>
-<span class="source-line-no">081</span><span id="line-81">}</span>
+<span class="source-line-no">071</span><span id="line-71">  @NonNull</span>
+<span class="source-line-no">072</span><span id="line-72">  public static &lt;T extends IItem&gt; List&lt;T&gt; fnReverse(@NonNull List&lt;T&gt; target) {</span>
+<span class="source-line-no">073</span><span id="line-73">    if (target.size() &lt;= 1) {</span>
+<span class="source-line-no">074</span><span id="line-74">      return target;</span>
+<span class="source-line-no">075</span><span id="line-75">    }</span>
+<span class="source-line-no">076</span><span id="line-76">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target);</span>
+<span class="source-line-no">077</span><span id="line-77">    Collections.reverse(newSequence);</span>
+<span class="source-line-no">078</span><span id="line-78">    return newSequence;</span>
+<span class="source-line-no">079</span><span id="line-79">  }</span>
+<span class="source-line-no">080</span><span id="line-80">}</span>
 
 
 

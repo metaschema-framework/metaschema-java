@@ -113,9 +113,9 @@
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>     <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>   }
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> 
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>   @Override
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>   <strong class="jxr_keyword">public</strong> @NonNull
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>   String getClassName(@NonNull IModule module) {
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>   @NonNull
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>   @Override
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>   <strong class="jxr_keyword">public</strong> String getClassName(@NonNull IModule module) {
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     <em class="jxr_comment">// TODO: make this configurable</em>
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>     <strong class="jxr_keyword">return</strong> ClassUtils.toClassName(module.getShortName() + <span class="jxr_string">"Module"</span>);
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>   }

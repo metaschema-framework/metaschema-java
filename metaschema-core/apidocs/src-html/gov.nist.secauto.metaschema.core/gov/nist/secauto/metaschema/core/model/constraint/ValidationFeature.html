@@ -29,23 +29,28 @@
 <span class="source-line-no">016</span><span id="line-16"> * @param &lt;V&gt;</span>
 <span class="source-line-no">017</span><span id="line-17"> *          the Java type of the configuration value</span>
 <span class="source-line-no">018</span><span id="line-18"> */</span>
-<span class="source-line-no">019</span><span id="line-19">@SuppressWarnings("PMD.DataClass") // not a data class</span>
-<span class="source-line-no">020</span><span id="line-20">public final class ValidationFeature&lt;V&gt;</span>
-<span class="source-line-no">021</span><span id="line-21">    extends AbstractConfigurationFeature&lt;V&gt; {</span>
-<span class="source-line-no">022</span><span id="line-22">  /**</span>
-<span class="source-line-no">023</span><span id="line-23">   * If enabled, generate findings for passing constraints.</span>
-<span class="source-line-no">024</span><span id="line-24">   */</span>
-<span class="source-line-no">025</span><span id="line-25">  @NonNull</span>
-<span class="source-line-no">026</span><span id="line-26">  public static final ValidationFeature&lt;Boolean&gt; VALIDATE_GENERATE_PASS_FINDINGS</span>
-<span class="source-line-no">027</span><span id="line-27">      = new ValidationFeature&lt;&gt;("include-pass-findings", Boolean.class, false);</span>
-<span class="source-line-no">028</span><span id="line-28"></span>
-<span class="source-line-no">029</span><span id="line-29">  private ValidationFeature(</span>
-<span class="source-line-no">030</span><span id="line-30">      @NonNull String name,</span>
-<span class="source-line-no">031</span><span id="line-31">      @NonNull Class&lt;V&gt; valueClass,</span>
-<span class="source-line-no">032</span><span id="line-32">      @NonNull V defaultValue) {</span>
-<span class="source-line-no">033</span><span id="line-33">    super(name, valueClass, defaultValue);</span>
-<span class="source-line-no">034</span><span id="line-34">  }</span>
-<span class="source-line-no">035</span><span id="line-35">}</span>
+<span class="source-line-no">019</span><span id="line-19">public final class ValidationFeature&lt;V&gt;</span>
+<span class="source-line-no">020</span><span id="line-20">    extends AbstractConfigurationFeature&lt;V&gt; {</span>
+<span class="source-line-no">021</span><span id="line-21">  /**</span>
+<span class="source-line-no">022</span><span id="line-22">   * If enabled, generate findings for passing constraints.</span>
+<span class="source-line-no">023</span><span id="line-23">   */</span>
+<span class="source-line-no">024</span><span id="line-24">  @NonNull</span>
+<span class="source-line-no">025</span><span id="line-25">  public static final ValidationFeature&lt;Boolean&gt; VALIDATE_GENERATE_PASS_FINDINGS</span>
+<span class="source-line-no">026</span><span id="line-26">      = new ValidationFeature&lt;&gt;("include-pass-findings", Boolean.class, false);</span>
+<span class="source-line-no">027</span><span id="line-27">  /**</span>
+<span class="source-line-no">028</span><span id="line-28">   * If enabled, throw an exception when an error occurs.</span>
+<span class="source-line-no">029</span><span id="line-29">   */</span>
+<span class="source-line-no">030</span><span id="line-30">  @NonNull</span>
+<span class="source-line-no">031</span><span id="line-31">  public static final ValidationFeature&lt;Boolean&gt; THROW_EXCEPTION_ON_ERROR</span>
+<span class="source-line-no">032</span><span id="line-32">      = new ValidationFeature&lt;&gt;("throw-exception-on-error", Boolean.class, false);</span>
+<span class="source-line-no">033</span><span id="line-33"></span>
+<span class="source-line-no">034</span><span id="line-34">  private ValidationFeature(</span>
+<span class="source-line-no">035</span><span id="line-35">      @NonNull String name,</span>
+<span class="source-line-no">036</span><span id="line-36">      @NonNull Class&lt;V&gt; valueClass,</span>
+<span class="source-line-no">037</span><span id="line-37">      @NonNull V defaultValue) {</span>
+<span class="source-line-no">038</span><span id="line-38">    super(name, valueClass, defaultValue);</span>
+<span class="source-line-no">039</span><span id="line-39">  }</span>
+<span class="source-line-no">040</span><span id="line-40">}</span>
 
 
 

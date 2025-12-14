@@ -88,22 +88,21 @@
 <span class="source-line-no">075</span><span id="line-75">   *          the position of the item in the sequence to be removed</span>
 <span class="source-line-no">076</span><span id="line-76">   * @return {@code sequence} the new sequence with the item removed</span>
 <span class="source-line-no">077</span><span id="line-77">   */</span>
-<span class="source-line-no">078</span><span id="line-78">  @SuppressWarnings("PMD.OnlyOneReturn")</span>
-<span class="source-line-no">079</span><span id="line-79">  @NonNull</span>
-<span class="source-line-no">080</span><span id="line-80">  public static &lt;T extends IItem&gt; List&lt;T&gt; fnRemove(</span>
-<span class="source-line-no">081</span><span id="line-81">      @NonNull List&lt;T&gt; target,</span>
-<span class="source-line-no">082</span><span id="line-82">      @NonNull IIntegerItem positionItem) {</span>
-<span class="source-line-no">083</span><span id="line-83">    int position = positionItem.toIntValueExact();</span>
-<span class="source-line-no">084</span><span id="line-84"></span>
-<span class="source-line-no">085</span><span id="line-85">    if (position == 0 || position &gt; target.size()) {</span>
-<span class="source-line-no">086</span><span id="line-86">      return target;</span>
-<span class="source-line-no">087</span><span id="line-87">    }</span>
-<span class="source-line-no">088</span><span id="line-88"></span>
-<span class="source-line-no">089</span><span id="line-89">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target);</span>
-<span class="source-line-no">090</span><span id="line-90">    newSequence.remove(position - 1);</span>
-<span class="source-line-no">091</span><span id="line-91">    return newSequence;</span>
-<span class="source-line-no">092</span><span id="line-92">  }</span>
-<span class="source-line-no">093</span><span id="line-93">}</span>
+<span class="source-line-no">078</span><span id="line-78">  @NonNull</span>
+<span class="source-line-no">079</span><span id="line-79">  public static &lt;T extends IItem&gt; List&lt;T&gt; fnRemove(</span>
+<span class="source-line-no">080</span><span id="line-80">      @NonNull List&lt;T&gt; target,</span>
+<span class="source-line-no">081</span><span id="line-81">      @NonNull IIntegerItem positionItem) {</span>
+<span class="source-line-no">082</span><span id="line-82">    int position = positionItem.toIntValueExact();</span>
+<span class="source-line-no">083</span><span id="line-83"></span>
+<span class="source-line-no">084</span><span id="line-84">    if (position == 0 || position &gt; target.size()) {</span>
+<span class="source-line-no">085</span><span id="line-85">      return target;</span>
+<span class="source-line-no">086</span><span id="line-86">    }</span>
+<span class="source-line-no">087</span><span id="line-87"></span>
+<span class="source-line-no">088</span><span id="line-88">    List&lt;T&gt; newSequence = new ArrayList&lt;&gt;(target);</span>
+<span class="source-line-no">089</span><span id="line-89">    newSequence.remove(position - 1);</span>
+<span class="source-line-no">090</span><span id="line-90">    return newSequence;</span>
+<span class="source-line-no">091</span><span id="line-91">  }</span>
+<span class="source-line-no">092</span><span id="line-92">}</span>
 
 
 

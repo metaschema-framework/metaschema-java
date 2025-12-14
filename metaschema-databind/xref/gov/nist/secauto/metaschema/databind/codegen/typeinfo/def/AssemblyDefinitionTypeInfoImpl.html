@@ -51,7 +51,7 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">public</strong> <a name="AssemblyDefinitionTypeInfoImpl" href="../../../../../../../../gov/nist/secauto/metaschema/databind/codegen/typeinfo/def/AssemblyDefinitionTypeInfoImpl.html#AssemblyDefinitionTypeInfoImpl">AssemblyDefinitionTypeInfoImpl</a>(@NonNull IAssemblyDefinition definition, @NonNull <a name="ITypeResolver" href="../../../../../../../../gov/nist/secauto/metaschema/databind/codegen/typeinfo/ITypeResolver.html#ITypeResolver">ITypeResolver</a> typeResolver) {
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">super</strong>(definition, typeResolver);
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">this</strong>.instanceToTypeInfoMap = ObjectUtils.notNull(Lazy.lazy(() -&gt; Stream.concat(
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">this</strong>.instanceToTypeInfoMap = ObjectUtils.notNull(Lazy.of(() -&gt; Stream.concat(
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>          getFlagInstanceTypeInfos().stream(),
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>          processModel(definition))
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>          .collect(CustomCollectors.toMap(
@@ -64,7 +64,7 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>                <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(v2);
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>              },
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>              LinkedHashMap::<strong class="jxr_keyword">new</strong>))));
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">this</strong>.propertyNameToTypeInfoMap = ObjectUtils.notNull(Lazy.lazy(() -&gt; getInstanceTypeInfoMap().values().stream()
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">this</strong>.propertyNameToTypeInfoMap = ObjectUtils.notNull(Lazy.of(() -&gt; getInstanceTypeInfoMap().values().stream()
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>          .collect(Collectors.toMap(
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>              IInstanceTypeInfo::getPropertyName,
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>              Function.identity(),

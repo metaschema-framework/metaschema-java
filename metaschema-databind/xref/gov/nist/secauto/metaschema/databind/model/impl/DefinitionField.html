@@ -137,23 +137,23 @@
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>     }
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>     FieldSupport.bindField(field);
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>     <strong class="jxr_keyword">this</strong>.fieldValue = <strong class="jxr_keyword">new</strong> FieldValue(field, BoundFieldValue.<strong class="jxr_keyword">class</strong>, bindingContext);
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">this</strong>.flagContainer = ObjectUtils.notNull(Lazy.lazy(() -&gt; <strong class="jxr_keyword">new</strong> <a name="FlagContainerSupport" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/impl/FlagContainerSupport.html#FlagContainerSupport">FlagContainerSupport</a>(<strong class="jxr_keyword">this</strong>, <strong class="jxr_keyword">this</strong>::handleFlagInstance)));
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">this</strong>.flagContainer = ObjectUtils.notNull(Lazy.of(() -&gt; <strong class="jxr_keyword">new</strong> <a name="FlagContainerSupport" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/impl/FlagContainerSupport.html#FlagContainerSupport">FlagContainerSupport</a>(<strong class="jxr_keyword">this</strong>, <strong class="jxr_keyword">this</strong>::handleFlagInstance)));
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> 
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>     ISource source = module.getSource();
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> 
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">this</strong>.constraints = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">this</strong>.constraints = ObjectUtils.notNull(Lazy.of(() -&gt; {
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>       IModelConstrained retval = <strong class="jxr_keyword">new</strong> AssemblyConstraintSet(source);
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>       <a name="ValueConstraints" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/annotations/ValueConstraints.html#ValueConstraints">ValueConstraints</a> valueAnnotation = getAnnotation().valueConstraints();
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>       ConstraintSupport.parse(valueAnnotation, source, retval);
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>       <strong class="jxr_keyword">return</strong> retval;
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>     }));
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">this</strong>.jsonProperties = ObjectUtils.notNull(Lazy.lazy(() -&gt; {
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">this</strong>.jsonProperties = ObjectUtils.notNull(Lazy.of(() -&gt; {
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>       <a name="IBoundInstanceFlag" href="../../../../../../../gov/nist/secauto/metaschema/databind/model/IBoundInstanceFlag.html#IBoundInstanceFlag">IBoundInstanceFlag</a> jsonValueKey = getJsonValueKeyFlagInstance();
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>       Predicate&lt;IBoundInstanceFlag&gt; flagFilter = jsonValueKey == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : flag -&gt; !flag.equals(jsonValueKey);
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>       <strong class="jxr_keyword">return</strong> getJsonProperties(flagFilter);
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>     }));
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>     <strong class="jxr_keyword">this</strong>.properties = ObjectUtils.notNull(
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>         Lazy.lazy(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>         Lazy.of(() -&gt; CollectionUtil.unmodifiableMap(ObjectUtils.notNull(
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>             Arrays.stream(annotation.properties())
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>                 .map(ModelUtil::toPropertyEntry)
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>                 .collect(

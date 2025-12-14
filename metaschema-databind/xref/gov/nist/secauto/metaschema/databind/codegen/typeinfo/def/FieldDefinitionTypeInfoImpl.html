@@ -47,7 +47,7 @@
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">public</strong> <a name="FieldDefinitionTypeInfoImpl" href="../../../../../../../../gov/nist/secauto/metaschema/databind/codegen/typeinfo/def/FieldDefinitionTypeInfoImpl.html#FieldDefinitionTypeInfoImpl">FieldDefinitionTypeInfoImpl</a>(@NonNull IFieldDefinition definition, @NonNull <a name="ITypeResolver" href="../../../../../../../../gov/nist/secauto/metaschema/databind/codegen/typeinfo/ITypeResolver.html#ITypeResolver">ITypeResolver</a> typeResolver) {
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">super</strong>(definition, typeResolver);
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">this</strong>.instanceToTypeInfoMap = ObjectUtils.notNull(Lazy.lazy(() -&gt; getFlagInstanceTypeInfos().stream()
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">this</strong>.instanceToTypeInfoMap = ObjectUtils.notNull(Lazy.of(() -&gt; getFlagInstanceTypeInfos().stream()
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>          .collect(CustomCollectors.toMap(
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>              IFlagInstanceTypeInfo::getInstance,
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>              CustomCollectors.identity(),
@@ -58,7 +58,7 @@
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>                <strong class="jxr_keyword">return</strong> ObjectUtils.notNull(v2);
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>              },
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>              LinkedHashMap::<strong class="jxr_keyword">new</strong>))));
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <strong class="jxr_keyword">this</strong>.propertyNameToTypeInfoMap = ObjectUtils.notNull(Lazy.lazy(() -&gt; Stream.concat(
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <strong class="jxr_keyword">this</strong>.propertyNameToTypeInfoMap = ObjectUtils.notNull(Lazy.of(() -&gt; Stream.concat(
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>          getInstanceTypeInfoMap().values().stream(),
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>          Stream.of((<a name="IPropertyTypeInfo" href="../../../../../../../../gov/nist/secauto/metaschema/databind/codegen/typeinfo/IPropertyTypeInfo.html#IPropertyTypeInfo">IPropertyTypeInfo</a>) IFieldValueTypeInfo.newTypeInfo(<strong class="jxr_keyword">this</strong>)))
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>          .collect(Collectors.toMap(

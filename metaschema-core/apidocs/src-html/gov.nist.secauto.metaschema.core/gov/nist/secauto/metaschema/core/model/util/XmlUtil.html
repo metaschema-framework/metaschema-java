@@ -26,30 +26,33 @@
 <span class="source-line-no">013</span><span id="line-13"></span>
 <span class="source-line-no">014</span><span id="line-14">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">public final class XmlUtil {</span>
-<span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">  private XmlUtil() {</span>
-<span class="source-line-no">019</span><span id="line-19">    // disable construction</span>
-<span class="source-line-no">020</span><span id="line-20">  }</span>
-<span class="source-line-no">021</span><span id="line-21"></span>
-<span class="source-line-no">022</span><span id="line-22">  /**</span>
-<span class="source-line-no">023</span><span id="line-23">   * Create a {@link Source} based on the provided {@code url}.</span>
-<span class="source-line-no">024</span><span id="line-24">   * &lt;p&gt;</span>
-<span class="source-line-no">025</span><span id="line-25">   * The caller of this method must ensure that the stream associated with this</span>
-<span class="source-line-no">026</span><span id="line-26">   * source is closed.</span>
-<span class="source-line-no">027</span><span id="line-27">   *</span>
-<span class="source-line-no">028</span><span id="line-28">   * @param url</span>
-<span class="source-line-no">029</span><span id="line-29">   *          the URL to use for the source</span>
-<span class="source-line-no">030</span><span id="line-30">   * @return a new source</span>
-<span class="source-line-no">031</span><span id="line-31">   * @throws IOException</span>
-<span class="source-line-no">032</span><span id="line-32">   *           if an error occurred while creating the underlying stream</span>
-<span class="source-line-no">033</span><span id="line-33">   */</span>
-<span class="source-line-no">034</span><span id="line-34">  @SuppressWarnings("resource") // user of source is expected to close</span>
-<span class="source-line-no">035</span><span id="line-35">  @NonNull</span>
-<span class="source-line-no">036</span><span id="line-36">  public static StreamSource getStreamSource(@NonNull URL url) throws IOException {</span>
-<span class="source-line-no">037</span><span id="line-37">    return new StreamSource(url.openStream(), url.toString());</span>
-<span class="source-line-no">038</span><span id="line-38">  }</span>
-<span class="source-line-no">039</span><span id="line-39">}</span>
+<span class="source-line-no">016</span><span id="line-16">/**</span>
+<span class="source-line-no">017</span><span id="line-17"> * Provides utility methods for working with XML sources and streams.</span>
+<span class="source-line-no">018</span><span id="line-18"> */</span>
+<span class="source-line-no">019</span><span id="line-19">public final class XmlUtil {</span>
+<span class="source-line-no">020</span><span id="line-20"></span>
+<span class="source-line-no">021</span><span id="line-21">  private XmlUtil() {</span>
+<span class="source-line-no">022</span><span id="line-22">    // disable construction</span>
+<span class="source-line-no">023</span><span id="line-23">  }</span>
+<span class="source-line-no">024</span><span id="line-24"></span>
+<span class="source-line-no">025</span><span id="line-25">  /**</span>
+<span class="source-line-no">026</span><span id="line-26">   * Create a {@link Source} based on the provided {@code url}.</span>
+<span class="source-line-no">027</span><span id="line-27">   * &lt;p&gt;</span>
+<span class="source-line-no">028</span><span id="line-28">   * The caller of this method must ensure that the stream associated with this</span>
+<span class="source-line-no">029</span><span id="line-29">   * source is closed.</span>
+<span class="source-line-no">030</span><span id="line-30">   *</span>
+<span class="source-line-no">031</span><span id="line-31">   * @param url</span>
+<span class="source-line-no">032</span><span id="line-32">   *          the URL to use for the source</span>
+<span class="source-line-no">033</span><span id="line-33">   * @return a new source</span>
+<span class="source-line-no">034</span><span id="line-34">   * @throws IOException</span>
+<span class="source-line-no">035</span><span id="line-35">   *           if an error occurred while creating the underlying stream</span>
+<span class="source-line-no">036</span><span id="line-36">   */</span>
+<span class="source-line-no">037</span><span id="line-37">  @SuppressWarnings("resource") // user of source is expected to close</span>
+<span class="source-line-no">038</span><span id="line-38">  @NonNull</span>
+<span class="source-line-no">039</span><span id="line-39">  public static StreamSource getStreamSource(@NonNull URL url) throws IOException {</span>
+<span class="source-line-no">040</span><span id="line-40">    return new StreamSource(url.openStream(), url.toString());</span>
+<span class="source-line-no">041</span><span id="line-41">  }</span>
+<span class="source-line-no">042</span><span id="line-42">}</span>
 
 
 

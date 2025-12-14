@@ -89,19 +89,22 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      <a name="IItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/IItem.html#IItem">IItem</a> collection = target.getFirstItem(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">if</strong> (!(collection instanceof <a name="IFunction" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/IFunction.html#IFunction">IFunction</a>)) {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="InvalidTypeMetapathException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/type/InvalidTypeMetapathException.html#InvalidTypeMetapathException">InvalidTypeMetapathException</a>(collection, <span class="jxr_string">"The base expression did not evaluate to a function."</span>);
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      }
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">return</strong> ((<a name="IFunction" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/IFunction.html#IFunction">IFunction</a>) collection).execute(ObjectUtils.notNull(getArguments().stream()
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>          .map(expr -&gt; expr.accept(dynamicContext, focus))
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>          .collect(Collectors.toUnmodifiableList())), dynamicContext, focus);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>    }
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>    @Override
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>    <strong class="jxr_keyword">public</strong> &lt;RESULT, CONTEXT&gt; RESULT accept(@NonNull IExpressionVisitor&lt;RESULT, CONTEXT&gt; visitor, CONTEXT context) {
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>      <strong class="jxr_keyword">return</strong> visitor.visitFunctionCallAccessor(<strong class="jxr_keyword">this</strong>, context);
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>    }
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>  }
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="InvalidTypeMetapathException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/type/InvalidTypeMetapathException.html#InvalidTypeMetapathException">InvalidTypeMetapathException</a>(
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>            collection,
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>            <span class="jxr_string">"The base expression did not evaluate to a function."</span>)
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>                .registerEvaluationContext(dynamicContext);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      }
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">return</strong> ((<a name="IFunction" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/IFunction.html#IFunction">IFunction</a>) collection).execute(ObjectUtils.notNull(getArguments().stream()
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>          .map(expr -&gt; expr.accept(dynamicContext, focus))
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          .collect(Collectors.toUnmodifiableList())), dynamicContext, focus);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>    }
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>    @Override
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>    <strong class="jxr_keyword">public</strong> &lt;RESULT, CONTEXT&gt; RESULT accept(@NonNull IExpressionVisitor&lt;RESULT, CONTEXT&gt; visitor, CONTEXT context) {
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">return</strong> visitor.visitFunctionCallAccessor(<strong class="jxr_keyword">this</strong>, context);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>    }
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2025</div>

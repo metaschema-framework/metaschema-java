@@ -138,7 +138,7 @@
 <span class="source-line-no">125</span><span id="line-125">      @NonNull URI resource,</span>
 <span class="source-line-no">126</span><span id="line-126">      @NonNull JsonToken token) throws IOException {</span>
 <span class="source-line-no">127</span><span id="line-127">    JsonToken currentToken = null;</span>
-<span class="source-line-no">128</span><span id="line-128">    while (parser.hasCurrentToken() &amp;&amp; !token.equals(currentToken = parser.currentToken())) {</span>
+<span class="source-line-no">128</span><span id="line-128">    while (parser.hasCurrentToken() &amp;&amp; (currentToken = parser.currentToken()) != token) {</span>
 <span class="source-line-no">129</span><span id="line-129">      currentToken = parser.nextToken();</span>
 <span class="source-line-no">130</span><span id="line-130">      if (LOGGER.isWarnEnabled()) {</span>
 <span class="source-line-no">131</span><span id="line-131">        LOGGER.warn("skipping over: {}",</span>
@@ -170,7 +170,7 @@
 <span class="source-line-no">157</span><span id="line-157"></span>
 <span class="source-line-no">158</span><span id="line-158">    JsonToken currentToken = parser.currentToken();</span>
 <span class="source-line-no">159</span><span id="line-159">    // skip the field name</span>
-<span class="source-line-no">160</span><span id="line-160">    if (JsonToken.FIELD_NAME.equals(currentToken)) {</span>
+<span class="source-line-no">160</span><span id="line-160">    if (currentToken == JsonToken.FIELD_NAME) {</span>
 <span class="source-line-no">161</span><span id="line-161">      currentToken = parser.nextToken();</span>
 <span class="source-line-no">162</span><span id="line-162">    }</span>
 <span class="source-line-no">163</span><span id="line-163"></span>
@@ -251,7 +251,7 @@
 <span class="source-line-no">238</span><span id="line-238">      @NonNull JsonToken... expectedTokens) {</span>
 <span class="source-line-no">239</span><span id="line-239">    JsonToken current = parser.currentToken();</span>
 <span class="source-line-no">240</span><span id="line-240">    assert Arrays.stream(expectedTokens)</span>
-<span class="source-line-no">241</span><span id="line-241">        .anyMatch(expected -&gt; expected.equals(current)) : generateExpectedMessage(</span>
+<span class="source-line-no">241</span><span id="line-241">        .anyMatch(expected -&gt; expected == current) : generateExpectedMessage(</span>
 <span class="source-line-no">242</span><span id="line-242">            parser,</span>
 <span class="source-line-no">243</span><span id="line-243">            resource,</span>
 <span class="source-line-no">244</span><span id="line-244">            expectedTokens,</span>
@@ -288,7 +288,7 @@
 <span class="source-line-no">275</span><span id="line-275">      @NonNull JsonToken expectedToken)</span>
 <span class="source-line-no">276</span><span id="line-276">      throws IOException {</span>
 <span class="source-line-no">277</span><span id="line-277">    JsonToken token = parser.currentToken();</span>
-<span class="source-line-no">278</span><span id="line-278">    assert expectedToken.equals(token) : generateExpectedMessage(</span>
+<span class="source-line-no">278</span><span id="line-278">    assert token == expectedToken : generateExpectedMessage(</span>
 <span class="source-line-no">279</span><span id="line-279">        parser,</span>
 <span class="source-line-no">280</span><span id="line-280">        resource,</span>
 <span class="source-line-no">281</span><span id="line-281">        expectedToken,</span>
@@ -317,7 +317,7 @@
 <span class="source-line-no">304</span><span id="line-304">      @NonNull JsonToken expectedToken)</span>
 <span class="source-line-no">305</span><span id="line-305">      throws IOException {</span>
 <span class="source-line-no">306</span><span id="line-306">    JsonToken token = parser.nextToken();</span>
-<span class="source-line-no">307</span><span id="line-307">    assert expectedToken.equals(token) : generateExpectedMessage(</span>
+<span class="source-line-no">307</span><span id="line-307">    assert token == expectedToken : generateExpectedMessage(</span>
 <span class="source-line-no">308</span><span id="line-308">        parser,</span>
 <span class="source-line-no">309</span><span id="line-309">        resource,</span>
 <span class="source-line-no">310</span><span id="line-310">        expectedToken,</span>

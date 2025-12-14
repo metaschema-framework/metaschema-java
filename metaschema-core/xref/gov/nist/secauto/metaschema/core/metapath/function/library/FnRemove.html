@@ -83,22 +83,21 @@
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">   *          the position of the item in the sequence to be removed</em>
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   * @return {@code sequence} the new sequence with the item removed</em>
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>    @SuppressWarnings(<span class="jxr_string">"PMD.OnlyOneReturn"</span>)
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>    @NonNull
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T <strong class="jxr_keyword">extends</strong> IItem&gt; List&lt;T&gt; fnRemove(
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>        @NonNull List&lt;T&gt; target,
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>        @NonNull <a name="IIntegerItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IIntegerItem.html#IIntegerItem">IIntegerItem</a> positionItem) {
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">int</strong> position = positionItem.toIntValueExact();
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>  
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">if</strong> (position == 0 || position &gt; target.size()) {
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>        <strong class="jxr_keyword">return</strong> target;
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      }
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>  
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      List&lt;T&gt; newSequence = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;(target);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      newSequence.remove(position - 1);
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>      <strong class="jxr_keyword">return</strong> newSequence;
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>    }
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>  }
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>    @NonNull
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T <strong class="jxr_keyword">extends</strong> IItem&gt; List&lt;T&gt; fnRemove(
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>        @NonNull List&lt;T&gt; target,
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>        @NonNull <a name="IIntegerItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/atomic/IIntegerItem.html#IIntegerItem">IIntegerItem</a> positionItem) {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">int</strong> position = positionItem.toIntValueExact();
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">if</strong> (position == 0 || position &gt; target.size()) {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>        <strong class="jxr_keyword">return</strong> target;
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      }
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      List&lt;T&gt; newSequence = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;(target);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      newSequence.remove(position - 1);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">return</strong> newSequence;
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>    }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2025</div>

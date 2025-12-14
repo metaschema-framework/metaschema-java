@@ -71,7 +71,7 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    @Override
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>    <strong class="jxr_keyword">protected</strong> ISequence&lt;? <strong class="jxr_keyword">extends</strong> INodeItem&gt; evaluate(<a name="DynamicContext" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext, ISequence&lt;?&gt; focus) {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      Stream&lt;INodeItem&gt; nodes = ObjectUtils.notNull(focus.stream()
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          .map(ItemUtils::checkItemIsNodeItemForStep));
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          .map(item -&gt; ItemUtils.checkItemIsNodeItem(dynamicContext, item)));
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">return</strong> ISequence.of(filterStream(nodes));
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>    }
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  

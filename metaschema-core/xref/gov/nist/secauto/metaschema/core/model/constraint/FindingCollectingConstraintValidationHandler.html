@@ -103,7 +103,7 @@
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>        @NonNull <a name="ICardinalityConstraint" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ICardinalityConstraint.html#ICardinalityConstraint">ICardinalityConstraint</a> constraint,
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>        @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>        @NonNull ISequence&lt;? <strong class="jxr_keyword">extends</strong> INodeItem&gt; testedItems,
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>        @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>        @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>      addFinding(ConstraintValidationFinding.builder(constraint, target)
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>         .severity(constraint.getLevel())
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>         .kind(toKind(constraint.getLevel()))
@@ -118,7 +118,7 @@
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>       @NonNull <a name="ICardinalityConstraint" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ICardinalityConstraint.html#ICardinalityConstraint">ICardinalityConstraint</a> constraint,
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>       @NonNull ISequence&lt;? <strong class="jxr_keyword">extends</strong> INodeItem&gt; testedItems,
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     addFinding(ConstraintValidationFinding.builder(constraint, target)
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>         .severity(constraint.getLevel())
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>         .kind(toKind(constraint.getLevel()))
@@ -134,7 +134,7 @@
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> oldItem,
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>     addFinding(ConstraintValidationFinding.builder(constraint, node)
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>         .severity(constraint.getLevel())
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>         .kind(toKind(constraint.getLevel()))
@@ -149,7 +149,7 @@
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> oldItem,
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>     addFinding(ConstraintValidationFinding.builder(constraint, node)
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>         .severity(constraint.getLevel())
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>         .kind(toKind(constraint.getLevel()))
@@ -182,7 +182,7 @@
 <a class="jxr_linenumber" name="L174" href="#L174">174</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
 <a class="jxr_linenumber" name="L175" href="#L175">175</a>       @NonNull String value,
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>       @NonNull Pattern pattern,
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>     addFinding(ConstraintValidationFinding.builder(constraint, node)
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>         .severity(constraint.getLevel())
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>         .kind(toKind(constraint.getLevel()))
@@ -199,7 +199,7 @@
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>       @NonNull String value,
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>       @NonNull IDataTypeAdapter&lt;?&gt; adapter,
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>       @NonNull IllegalArgumentException cause,
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>     addFinding(ConstraintValidationFinding.builder(constraint, node)
 <a class="jxr_linenumber" name="L196" href="#L196">196</a>         .severity(constraint.getLevel())
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>         .kind(toKind(constraint.getLevel()))
@@ -214,7 +214,7 @@
 <a class="jxr_linenumber" name="L206" href="#L206">206</a>       @NonNull <a name="IExpectConstraint" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/IExpectConstraint.html#IExpectConstraint">IExpectConstraint</a> constraint,
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L210" href="#L210">210</a>     addFinding(ConstraintValidationFinding.builder(constraint, node)
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>         .severity(constraint.getLevel())
 <a class="jxr_linenumber" name="L212" href="#L212">212</a>         .kind(toKind(constraint.getLevel()))
@@ -259,7 +259,7 @@
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
 <a class="jxr_linenumber" name="L253" href="#L253">253</a>       @NonNull List&lt;String&gt; key,
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L255" href="#L255">255</a>     addFinding(ConstraintValidationFinding.builder(constraint, node)
 <a class="jxr_linenumber" name="L256" href="#L256">256</a>         .severity(constraint.getLevel())
 <a class="jxr_linenumber" name="L257" href="#L257">257</a>         .kind(toKind(constraint.getLevel()))

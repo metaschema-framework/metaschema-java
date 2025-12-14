@@ -20,49 +20,69 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">public interface IFlagInstance extends IFlag, IValuedInstance, IInstanceAbsolute {</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">  boolean DEFAULT_FLAG_REQUIRED = false;</span>
-<span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">  @Override</span>
-<span class="source-line-no">015</span><span id="line-15">  IModelDefinition getParentContainer();</span>
-<span class="source-line-no">016</span><span id="line-16"></span>
-<span class="source-line-no">017</span><span id="line-17">  @Override</span>
-<span class="source-line-no">018</span><span id="line-18">  IFlagDefinition getDefinition();</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">  @Override</span>
-<span class="source-line-no">021</span><span id="line-21">  default IModelDefinition getContainingDefinition() {</span>
-<span class="source-line-no">022</span><span id="line-22">    return getParentContainer();</span>
-<span class="source-line-no">023</span><span id="line-23">  }</span>
-<span class="source-line-no">024</span><span id="line-24"></span>
-<span class="source-line-no">025</span><span id="line-25">  /**</span>
-<span class="source-line-no">026</span><span id="line-26">   * Determines if a flag value is required to be provided.</span>
-<span class="source-line-no">027</span><span id="line-27">   *</span>
-<span class="source-line-no">028</span><span id="line-28">   * @return {@code true} if a value is required, or {@code false} otherwise</span>
-<span class="source-line-no">029</span><span id="line-29">   * @see #DEFAULT_FLAG_REQUIRED</span>
-<span class="source-line-no">030</span><span id="line-30">   */</span>
-<span class="source-line-no">031</span><span id="line-31">  default boolean isRequired() {</span>
-<span class="source-line-no">032</span><span id="line-32">    return DEFAULT_FLAG_REQUIRED;</span>
-<span class="source-line-no">033</span><span id="line-33">  }</span>
-<span class="source-line-no">034</span><span id="line-34"></span>
-<span class="source-line-no">035</span><span id="line-35">  /**</span>
-<span class="source-line-no">036</span><span id="line-36">   * A visitor callback.</span>
-<span class="source-line-no">037</span><span id="line-37">   *</span>
-<span class="source-line-no">038</span><span id="line-38">   * @param &lt;CONTEXT&gt;</span>
-<span class="source-line-no">039</span><span id="line-39">   *          the type of the context parameter</span>
-<span class="source-line-no">040</span><span id="line-40">   * @param &lt;RESULT&gt;</span>
-<span class="source-line-no">041</span><span id="line-41">   *          the type of the visitor result</span>
-<span class="source-line-no">042</span><span id="line-42">   * @param visitor</span>
-<span class="source-line-no">043</span><span id="line-43">   *          the calling visitor</span>
-<span class="source-line-no">044</span><span id="line-44">   * @param context</span>
-<span class="source-line-no">045</span><span id="line-45">   *          a parameter used to pass contextual information between visitors</span>
-<span class="source-line-no">046</span><span id="line-46">   * @return the visitor result</span>
-<span class="source-line-no">047</span><span id="line-47">   */</span>
-<span class="source-line-no">048</span><span id="line-48">  @Override</span>
-<span class="source-line-no">049</span><span id="line-49">  default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull IModelElementVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {</span>
-<span class="source-line-no">050</span><span id="line-50">    return visitor.visitFlagInstance(this, context);</span>
-<span class="source-line-no">051</span><span id="line-51">  }</span>
-<span class="source-line-no">052</span><span id="line-52">}</span>
+<span class="source-line-no">010</span><span id="line-10">/**</span>
+<span class="source-line-no">011</span><span id="line-11"> * Represents a flag instance within a field or assembly definition.</span>
+<span class="source-line-no">012</span><span id="line-12"> * &lt;p&gt;</span>
+<span class="source-line-no">013</span><span id="line-13"> * A flag instance references a flag definition and specifies how that flag is</span>
+<span class="source-line-no">014</span><span id="line-14"> * used within its containing definition, including whether the flag is</span>
+<span class="source-line-no">015</span><span id="line-15"> * required.</span>
+<span class="source-line-no">016</span><span id="line-16"> */</span>
+<span class="source-line-no">017</span><span id="line-17">public interface IFlagInstance extends IFlag, IValuedInstance, IInstanceAbsolute {</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">  /**</span>
+<span class="source-line-no">020</span><span id="line-20">   * The default value for whether a flag is required.</span>
+<span class="source-line-no">021</span><span id="line-21">   */</span>
+<span class="source-line-no">022</span><span id="line-22">  boolean DEFAULT_FLAG_REQUIRED = false;</span>
+<span class="source-line-no">023</span><span id="line-23"></span>
+<span class="source-line-no">024</span><span id="line-24">  /**</span>
+<span class="source-line-no">025</span><span id="line-25">   * Retrieves the parent container that contains this flag instance.</span>
+<span class="source-line-no">026</span><span id="line-26">   *</span>
+<span class="source-line-no">027</span><span id="line-27">   * @return the parent model definition</span>
+<span class="source-line-no">028</span><span id="line-28">   */</span>
+<span class="source-line-no">029</span><span id="line-29">  @Override</span>
+<span class="source-line-no">030</span><span id="line-30">  IModelDefinition getParentContainer();</span>
+<span class="source-line-no">031</span><span id="line-31"></span>
+<span class="source-line-no">032</span><span id="line-32">  /**</span>
+<span class="source-line-no">033</span><span id="line-33">   * Retrieves the flag definition referenced by this instance.</span>
+<span class="source-line-no">034</span><span id="line-34">   *</span>
+<span class="source-line-no">035</span><span id="line-35">   * @return the flag definition</span>
+<span class="source-line-no">036</span><span id="line-36">   */</span>
+<span class="source-line-no">037</span><span id="line-37">  @Override</span>
+<span class="source-line-no">038</span><span id="line-38">  IFlagDefinition getDefinition();</span>
+<span class="source-line-no">039</span><span id="line-39"></span>
+<span class="source-line-no">040</span><span id="line-40">  @Override</span>
+<span class="source-line-no">041</span><span id="line-41">  default IModelDefinition getContainingDefinition() {</span>
+<span class="source-line-no">042</span><span id="line-42">    return getParentContainer();</span>
+<span class="source-line-no">043</span><span id="line-43">  }</span>
+<span class="source-line-no">044</span><span id="line-44"></span>
+<span class="source-line-no">045</span><span id="line-45">  /**</span>
+<span class="source-line-no">046</span><span id="line-46">   * Determines if a flag value is required to be provided.</span>
+<span class="source-line-no">047</span><span id="line-47">   *</span>
+<span class="source-line-no">048</span><span id="line-48">   * @return {@code true} if a value is required, or {@code false} otherwise</span>
+<span class="source-line-no">049</span><span id="line-49">   * @see #DEFAULT_FLAG_REQUIRED</span>
+<span class="source-line-no">050</span><span id="line-50">   */</span>
+<span class="source-line-no">051</span><span id="line-51">  default boolean isRequired() {</span>
+<span class="source-line-no">052</span><span id="line-52">    return DEFAULT_FLAG_REQUIRED;</span>
+<span class="source-line-no">053</span><span id="line-53">  }</span>
+<span class="source-line-no">054</span><span id="line-54"></span>
+<span class="source-line-no">055</span><span id="line-55">  /**</span>
+<span class="source-line-no">056</span><span id="line-56">   * A visitor callback.</span>
+<span class="source-line-no">057</span><span id="line-57">   *</span>
+<span class="source-line-no">058</span><span id="line-58">   * @param &lt;CONTEXT&gt;</span>
+<span class="source-line-no">059</span><span id="line-59">   *          the type of the context parameter</span>
+<span class="source-line-no">060</span><span id="line-60">   * @param &lt;RESULT&gt;</span>
+<span class="source-line-no">061</span><span id="line-61">   *          the type of the visitor result</span>
+<span class="source-line-no">062</span><span id="line-62">   * @param visitor</span>
+<span class="source-line-no">063</span><span id="line-63">   *          the calling visitor</span>
+<span class="source-line-no">064</span><span id="line-64">   * @param context</span>
+<span class="source-line-no">065</span><span id="line-65">   *          a parameter used to pass contextual information between visitors</span>
+<span class="source-line-no">066</span><span id="line-66">   * @return the visitor result</span>
+<span class="source-line-no">067</span><span id="line-67">   */</span>
+<span class="source-line-no">068</span><span id="line-68">  @Override</span>
+<span class="source-line-no">069</span><span id="line-69">  default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull IModelElementVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {</span>
+<span class="source-line-no">070</span><span id="line-70">    return visitor.visitFlagInstance(this, context);</span>
+<span class="source-line-no">071</span><span id="line-71">  }</span>
+<span class="source-line-no">072</span><span id="line-72">}</span>
 
 
 

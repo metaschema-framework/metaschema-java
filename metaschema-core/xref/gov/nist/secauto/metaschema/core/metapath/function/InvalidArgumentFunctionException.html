@@ -13,126 +13,125 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.metaschema.core.metapath.function;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.AbstractCodedMetapathException;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.IErrorCode;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> * FORG: Exceptions related to argument types.</em>
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="InvalidArgumentFunctionException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/InvalidArgumentFunctionException.html#InvalidArgumentFunctionException">InvalidArgumentFunctionException</a>
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">extends</strong> <a name="AbstractCodedMetapathException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/AbstractCodedMetapathException.html#AbstractCodedMetapathException">AbstractCodedMetapathException</a> {
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0001"&gt;err:FORG0001&lt;/a&gt;: A</em>
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">   * general-purpose error raised when casting, if a cast between two datatypes is</em>
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment">   * allowed in principle, but the supplied value cannot be converted: for example</em>
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">   * when attempting to cast the string "nine" to an integer.</em>
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_VALUE_FOR_CAST = 1;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0002"&gt;err:FORG0002&lt;/a&gt;:</em>
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment">   * Raised when either argument to fn:resolve-uri is not a valid URI/IRI.</em>
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_ARGUMENT_TO_RESOLVE_URI = 2;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0003"&gt;err:FORG0003&lt;/a&gt;:</em>
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment">   * Raised by &lt;a href=</em>
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-zero-or-one"&gt;fn:zero-or-one&lt;/a&gt;</em>
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">   * if the supplied value contains more than one item.</em>
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_ARGUMENT_ZERO_OR_ONE = 3;
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0004"&gt;err:FORG0005&lt;/a&gt;:</em>
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">   * Raised by &lt;a href=</em>
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-one-or-more"&gt;fn:one-or-more&lt;/a&gt;</em>
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">   * if the supplied value is an empty sequence.</em>
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_ARGUMENT_ONE_OR_MORE = 4;
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0005"&gt;err:FORG0005&lt;/a&gt;:</em>
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment">   * Raised by &lt;a href=</em>
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-exactly-one"&gt;fn:exactly-one&lt;/a&gt;</em>
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment">   * if the supplied value is not a singleton sequence.</em>
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_ARGUMENT_EXACTLY_ONE = 5;
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0006"&gt;err:FORG0006&lt;/a&gt;:</em>
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">   * Raised by functions such as</em>
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment">   * &lt;a href="<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-max"&gt;fn:max&lt;/a&gt;,</em>
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment">   * &lt;a href="<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-min"&gt;fn:min&lt;/a&gt;,</em>
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment">   * &lt;a href="<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-avg"&gt;fn:avg&lt;/a&gt;,</em>
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment">   * &lt;a href="<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-sum"&gt;fn:sum&lt;/a&gt; if</em>
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment">   * the supplied sequence contains values inappropriate to this function.</em>
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_ARGUMENT_TYPE = 6;
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0008"&gt;err:FORG0008&lt;/a&gt;:</em>
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">   * Raised by &lt;a href=</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-dateTime"&gt;fn:dateTime&lt;/a&gt; if</em>
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">   * the two arguments both have timezones and the timezones are different.</em>
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> DATE_TIME_INCONSISTENT_TIMEZONE = 8;
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">   * the serial version UUID.</em>
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment">   * Constructs a new exception with the provided {@code code}, {@code message},</em>
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">   * and {@code cause}.</em>
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">   * @param code</em>
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">   *          the error code value</em>
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">   * @param message</em>
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">   *          the exception message</em>
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">   * @param cause</em>
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment">   *          the original exception cause</em>
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>    <strong class="jxr_keyword">public</strong> <a name="InvalidArgumentFunctionException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/InvalidArgumentFunctionException.html#InvalidArgumentFunctionException">InvalidArgumentFunctionException</a>(<strong class="jxr_keyword">int</strong> code, String message, Throwable cause) {
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>      <strong class="jxr_keyword">super</strong>(code, message, cause);
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>    }
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>  
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment">   * Constructs a new exception with the provided {@code code}, {@code message},</em>
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment">   * and no cause.</em>
-<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment">   * @param code</em>
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">   *          the error code value</em>
-<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment">   * @param message</em>
-<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment">   *          the exception message</em>
-<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>   <strong class="jxr_keyword">public</strong> <a name="InvalidArgumentFunctionException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/InvalidArgumentFunctionException.html#InvalidArgumentFunctionException">InvalidArgumentFunctionException</a>(<strong class="jxr_keyword">int</strong> code, String message) {
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">super</strong>(code, message);
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>   }
-<a class="jxr_linenumber" name="L109" href="#L109">109</a> 
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">   * Constructs a new exception with the provided {@code code}, no message, and</em>
-<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">   * the {@code cause}.</em>
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">   * @param code</em>
-<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">   *          the error code value</em>
-<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">   * @param cause</em>
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">   *          the original exception cause</em>
-<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>   <strong class="jxr_keyword">public</strong> <a name="InvalidArgumentFunctionException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/InvalidArgumentFunctionException.html#InvalidArgumentFunctionException">InvalidArgumentFunctionException</a>(<strong class="jxr_keyword">int</strong> code, Throwable cause) {
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>     <strong class="jxr_keyword">super</strong>(code, cause);
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>   }
-<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>   @Override
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>   <strong class="jxr_keyword">public</strong> String getCodePrefix() {
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"FORG"</span>;
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>   }
-<a class="jxr_linenumber" name="L127" href="#L127">127</a> }
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> * FORG: Exceptions related to argument types.</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="InvalidArgumentFunctionException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/InvalidArgumentFunctionException.html#InvalidArgumentFunctionException">InvalidArgumentFunctionException</a>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>      <strong class="jxr_keyword">extends</strong> <a name="FunctionMetapathError" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/FunctionMetapathError.html#FunctionMetapathError">FunctionMetapathError</a> {
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>    @NonNull
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PREFIX = <span class="jxr_string">"FORG"</span>;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0001"&gt;err:FORG0001&lt;/a&gt;: A</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment">   * general-purpose error raised when casting, if a cast between two datatypes is</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment">   * allowed in principle, but the supplied value cannot be converted: for example</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment">   * when attempting to cast the string "nine" to an integer.</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_VALUE_FOR_CAST = 1;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0002"&gt;err:FORG0002&lt;/a&gt;:</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment">   * Raised when either argument to fn:resolve-uri is not a valid URI/IRI.</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_ARGUMENT_TO_RESOLVE_URI = 2;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0003"&gt;err:FORG0003&lt;/a&gt;:</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">   * Raised by &lt;a href=</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-zero-or-one"&gt;fn:zero-or-one&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">   * if the supplied value contains more than one item.</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_ARGUMENT_ZERO_OR_ONE = 3;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0004"&gt;err:FORG0005&lt;/a&gt;:</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment">   * Raised by &lt;a href=</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-one-or-more"&gt;fn:one-or-more&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment">   * if the supplied value is an empty sequence.</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_ARGUMENT_ONE_OR_MORE = 4;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0005"&gt;err:FORG0005&lt;/a&gt;:</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">   * Raised by &lt;a href=</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-exactly-one"&gt;fn:exactly-one&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment">   * if the supplied value is not a singleton sequence.</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_ARGUMENT_EXACTLY_ONE = 5;
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0006"&gt;err:FORG0006&lt;/a&gt;:</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment">   * Raised by functions such as</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment">   * &lt;a href="<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-max"&gt;fn:max&lt;/a&gt;,</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">   * &lt;a href="<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-min"&gt;fn:min&lt;/a&gt;,</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">   * &lt;a href="<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-avg"&gt;fn:avg&lt;/a&gt;,</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">   * &lt;a href="<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-sum"&gt;fn:sum&lt;/a&gt; if</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">   * the supplied sequence contains values inappropriate to this function.</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> INVALID_ARGUMENT_TYPE = 6;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">   * &lt;a href=</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#ERRFORG0008"&gt;err:FORG0008&lt;/a&gt;:</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">   * Raised by &lt;a href=</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   * "<a href="https://www.w3.org/TR/xpath-functions-31/" target="alexandria_uri">https://www.w3.org/TR/xpath-functions-31/</a>#func-dateTime"&gt;fn:dateTime&lt;/a&gt; if</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   * the two arguments both have timezones and the timezones are different.</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> DATE_TIME_INCONSISTENT_TIMEZONE = 8;
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">   * the serial version UUID.</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">   * Constructs a new exception with the provided {@code code}, {@code message},</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">   * and {@code cause}.</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">   * @param code</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment">   *          the error code value</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment">   * @param message</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">   *          the exception message</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">   * @param cause</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">   *          the original exception cause</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>    <strong class="jxr_keyword">public</strong> <a name="InvalidArgumentFunctionException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/InvalidArgumentFunctionException.html#InvalidArgumentFunctionException">InvalidArgumentFunctionException</a>(<strong class="jxr_keyword">int</strong> code, String message, Throwable cause) {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      <strong class="jxr_keyword">super</strong>(IErrorCode.of(PREFIX, code), message, cause);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>    }
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">   * Constructs a new exception with the provided {@code code}, {@code message},</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment">   * and no cause.</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment">   * @param code</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment">   *          the error code value</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment">   * @param message</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment">   *          the exception message</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>   <strong class="jxr_keyword">public</strong> <a name="InvalidArgumentFunctionException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/InvalidArgumentFunctionException.html#InvalidArgumentFunctionException">InvalidArgumentFunctionException</a>(<strong class="jxr_keyword">int</strong> code, String message) {
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">super</strong>(IErrorCode.of(PREFIX, code), message);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>   }
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">   * Constructs a new exception with the provided {@code code}, no message, and</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">   * the {@code cause}.</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">   * @param code</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">   *          the error code value</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">   * @param cause</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">   *          the original exception cause</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>   <strong class="jxr_keyword">public</strong> <a name="InvalidArgumentFunctionException" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/InvalidArgumentFunctionException.html#InvalidArgumentFunctionException">InvalidArgumentFunctionException</a>(<strong class="jxr_keyword">int</strong> code, Throwable cause) {
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <strong class="jxr_keyword">super</strong>(IErrorCode.of(PREFIX, code), cause);
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>   }
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> }
 </pre>
 <hr/>
 <div id="footer">© 2025</div>

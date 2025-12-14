@@ -163,12 +163,12 @@
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>         subDynamicContext.bindVariableValue(<strong class="jxr_keyword">var</strong>, ISequence.of(item));
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>       }
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>       <strong class="jxr_keyword">boolean</strong> result = FnBoolean.fnBooleanAsPrimitive(getSatisfies().accept(subDynamicContext, focus));
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>       <strong class="jxr_keyword">if</strong> (Quantifier.EVERY.equals(quantifier) &amp;&amp; !result) {
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>       <strong class="jxr_keyword">if</strong> (quantifier == Quantifier.EVERY &amp;&amp; !result) {
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>         <em class="jxr_comment">// fail on first false</em>
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>         retval = false;
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>         <strong class="jxr_keyword">break</strong>;
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>       }
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>       <strong class="jxr_keyword">if</strong> (Quantifier.SOME.equals(quantifier)) {
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>       <strong class="jxr_keyword">if</strong> (quantifier == Quantifier.SOME) {
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>         <strong class="jxr_keyword">if</strong> (result) {
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>           <em class="jxr_comment">// pass on first true</em>
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>           retval = <strong class="jxr_keyword">true</strong>;
@@ -278,30 +278,29 @@
 <a class="jxr_linenumber" name="L270" href="#L270">270</a>       <strong class="jxr_keyword">this</strong>.size = size;
 <a class="jxr_linenumber" name="L271" href="#L271">271</a>     }
 <a class="jxr_linenumber" name="L272" href="#L272">272</a> 
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>     @SuppressWarnings(<span class="jxr_string">"PMD.OnlyOneReturn"</span>) <em class="jxr_comment">// readability</em>
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>     @Override
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>     <strong class="jxr_keyword">public</strong> Iterator&lt;List&lt;T&gt;&gt; iterator() {
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>       <strong class="jxr_keyword">if</strong> (size == 0) {
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>         <strong class="jxr_keyword">return</strong> Collections.emptyListIterator();
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>       }
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> CartesianProductIterator&lt;&gt;(dimensions);
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>     }
-<a class="jxr_linenumber" name="L281" href="#L281">281</a> 
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>     <em class="jxr_comment">// /**</em>
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>     <em class="jxr_comment">// * Get a stream of list items, representing each Cartesian product, based on</em>
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>     <em class="jxr_comment">// * this iterator.</em>
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>     <em class="jxr_comment">// *</em>
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>     <em class="jxr_comment">// * @return a stream of list items representing each Cartesian product</em>
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <em class="jxr_comment">// */</em>
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>     <em class="jxr_comment">// @NonNull</em>
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>     <em class="jxr_comment">// public Stream&lt;List&lt;T&gt;&gt; stream() {</em>
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>     <em class="jxr_comment">// int characteristics = Spliterator.ORDERED | Spliterator.SIZED |</em>
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     <em class="jxr_comment">// Spliterator.IMMUTABLE;</em>
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>     <em class="jxr_comment">// return StreamSupport.stream(Spliterators.spliterator(iterator(), size,</em>
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <em class="jxr_comment">// characteristics), false);</em>
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>     <em class="jxr_comment">// }</em>
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>   }
-<a class="jxr_linenumber" name="L296" href="#L296">296</a> }
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>     @Override
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>     <strong class="jxr_keyword">public</strong> Iterator&lt;List&lt;T&gt;&gt; iterator() {
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>       <strong class="jxr_keyword">if</strong> (size == 0) {
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>         <strong class="jxr_keyword">return</strong> Collections.emptyListIterator();
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>       }
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> CartesianProductIterator&lt;&gt;(dimensions);
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>     }
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> 
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>     <em class="jxr_comment">// /**</em>
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     <em class="jxr_comment">// * Get a stream of list items, representing each Cartesian product, based on</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     <em class="jxr_comment">// * this iterator.</em>
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>     <em class="jxr_comment">// *</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     <em class="jxr_comment">// * @return a stream of list items representing each Cartesian product</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>     <em class="jxr_comment">// */</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <em class="jxr_comment">// @NonNull</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     <em class="jxr_comment">// public Stream&lt;List&lt;T&gt;&gt; stream() {</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     <em class="jxr_comment">// int characteristics = Spliterator.ORDERED | Spliterator.SIZED |</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>     <em class="jxr_comment">// Spliterator.IMMUTABLE;</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>     <em class="jxr_comment">// return StreamSupport.stream(Spliterators.spliterator(iterator(), size,</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     <em class="jxr_comment">// characteristics), false);</em>
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <em class="jxr_comment">// }</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>   }
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> }
 </pre>
 <hr/>
 <div id="footer">© 2025</div>

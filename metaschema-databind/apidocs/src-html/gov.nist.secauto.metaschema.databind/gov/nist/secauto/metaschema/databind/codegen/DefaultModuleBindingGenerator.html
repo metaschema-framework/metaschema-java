@@ -18,8 +18,8 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.databind.codegen;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.MetapathException;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.model.IModule;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.IModule;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.model.MetaschemaException;</span>
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.databind.model.IBoundModule;</span>
 <span class="source-line-no">012</span><span id="line-12"></span>
@@ -37,7 +37,7 @@
 <span class="source-line-no">024</span><span id="line-24">  }</span>
 <span class="source-line-no">025</span><span id="line-25"></span>
 <span class="source-line-no">026</span><span id="line-26">  @Override</span>
-<span class="source-line-no">027</span><span id="line-27">  public Class&lt;? extends IBoundModule&gt; generate(IModule module) {</span>
+<span class="source-line-no">027</span><span id="line-27">  public Class&lt;? extends IBoundModule&gt; generate(IModule module) throws MetaschemaException {</span>
 <span class="source-line-no">028</span><span id="line-28">    ClassLoader classLoader = ModuleCompilerHelper.newClassLoader(</span>
 <span class="source-line-no">029</span><span id="line-29">        compilePath,</span>
 <span class="source-line-no">030</span><span id="line-30">        ObjectUtils.notNull(Thread.currentThread().getContextClassLoader()));</span>
@@ -46,7 +46,7 @@
 <span class="source-line-no">033</span><span id="line-33">    try {</span>
 <span class="source-line-no">034</span><span id="line-34">      production = ModuleCompilerHelper.compileMetaschema(module, compilePath);</span>
 <span class="source-line-no">035</span><span id="line-35">    } catch (IOException ex) {</span>
-<span class="source-line-no">036</span><span id="line-36">      throw new MetapathException(</span>
+<span class="source-line-no">036</span><span id="line-36">      throw new MetaschemaException(</span>
 <span class="source-line-no">037</span><span id="line-37">          String.format("Unable to generate and compile classes for module '%s'.", module.getLocation()),</span>
 <span class="source-line-no">038</span><span id="line-38">          ex);</span>
 <span class="source-line-no">039</span><span id="line-39">    }</span>

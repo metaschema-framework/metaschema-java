@@ -30,24 +30,25 @@
 <span class="source-line-no">017</span><span id="line-17">/**</span>
 <span class="source-line-no">018</span><span id="line-18"> * A common interface for all key specifier implementations.</span>
 <span class="source-line-no">019</span><span id="line-19"> */</span>
-<span class="source-line-no">020</span><span id="line-20">public interface IKeySpecifier {</span>
-<span class="source-line-no">021</span><span id="line-21"></span>
-<span class="source-line-no">022</span><span id="line-22">  /**</span>
-<span class="source-line-no">023</span><span id="line-23">   * Perform a lookup on the provided target item.</span>
-<span class="source-line-no">024</span><span id="line-24">   *</span>
-<span class="source-line-no">025</span><span id="line-25">   * @param targetItem</span>
-<span class="source-line-no">026</span><span id="line-26">   *          the item to query</span>
-<span class="source-line-no">027</span><span id="line-27">   * @param dynamicContext</span>
-<span class="source-line-no">028</span><span id="line-28">   *          the dynamic context to use for expression evaluation</span>
-<span class="source-line-no">029</span><span id="line-29">   * @param focus</span>
-<span class="source-line-no">030</span><span id="line-30">   *          the focus item for expression evaluation</span>
-<span class="source-line-no">031</span><span id="line-31">   * @return a stream of collection values matching this key specifier</span>
-<span class="source-line-no">032</span><span id="line-32">   */</span>
-<span class="source-line-no">033</span><span id="line-33">  Stream&lt;? extends ICollectionValue&gt; lookup(</span>
-<span class="source-line-no">034</span><span id="line-34">      @NonNull IItem targetItem,</span>
-<span class="source-line-no">035</span><span id="line-35">      @NonNull DynamicContext dynamicContext,</span>
-<span class="source-line-no">036</span><span id="line-36">      @NonNull ISequence&lt;?&gt; focus);</span>
-<span class="source-line-no">037</span><span id="line-37">}</span>
+<span class="source-line-no">020</span><span id="line-20">@FunctionalInterface</span>
+<span class="source-line-no">021</span><span id="line-21">public interface IKeySpecifier {</span>
+<span class="source-line-no">022</span><span id="line-22"></span>
+<span class="source-line-no">023</span><span id="line-23">  /**</span>
+<span class="source-line-no">024</span><span id="line-24">   * Perform a lookup on the provided target item.</span>
+<span class="source-line-no">025</span><span id="line-25">   *</span>
+<span class="source-line-no">026</span><span id="line-26">   * @param targetItem</span>
+<span class="source-line-no">027</span><span id="line-27">   *          the item to query</span>
+<span class="source-line-no">028</span><span id="line-28">   * @param dynamicContext</span>
+<span class="source-line-no">029</span><span id="line-29">   *          the dynamic context to use for expression evaluation</span>
+<span class="source-line-no">030</span><span id="line-30">   * @param focus</span>
+<span class="source-line-no">031</span><span id="line-31">   *          the focus item for expression evaluation</span>
+<span class="source-line-no">032</span><span id="line-32">   * @return a stream of collection values matching this key specifier</span>
+<span class="source-line-no">033</span><span id="line-33">   */</span>
+<span class="source-line-no">034</span><span id="line-34">  Stream&lt;? extends ICollectionValue&gt; lookup(</span>
+<span class="source-line-no">035</span><span id="line-35">      @NonNull IItem targetItem,</span>
+<span class="source-line-no">036</span><span id="line-36">      @NonNull DynamicContext dynamicContext,</span>
+<span class="source-line-no">037</span><span id="line-37">      @NonNull ISequence&lt;?&gt; focus);</span>
+<span class="source-line-no">038</span><span id="line-38">}</span>
 
 
 

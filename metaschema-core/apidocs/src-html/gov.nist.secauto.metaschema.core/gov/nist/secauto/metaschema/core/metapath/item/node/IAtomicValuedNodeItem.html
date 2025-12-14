@@ -19,20 +19,23 @@
 <span class="source-line-no">006</span><span id="line-6"></span>
 <span class="source-line-no">007</span><span id="line-7">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">008</span><span id="line-8"></span>
-<span class="source-line-no">009</span><span id="line-9">public interface IAtomicValuedNodeItem extends IAtomicValuedItem, INodeItem {</span>
-<span class="source-line-no">010</span><span id="line-10">  /**</span>
-<span class="source-line-no">011</span><span id="line-11">   * Get the item type of the item's value.</span>
-<span class="source-line-no">012</span><span id="line-12">   *</span>
-<span class="source-line-no">013</span><span id="line-13">   * @return the item type</span>
-<span class="source-line-no">014</span><span id="line-14">   */</span>
-<span class="source-line-no">015</span><span id="line-15">  @NonNull</span>
-<span class="source-line-no">016</span><span id="line-16">  IAtomicOrUnionType&lt;?&gt; getValueItemType();</span>
-<span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">  @Override</span>
-<span class="source-line-no">019</span><span id="line-19">  default String stringValue() {</span>
-<span class="source-line-no">020</span><span id="line-20">    return toAtomicItem().asString();</span>
-<span class="source-line-no">021</span><span id="line-21">  }</span>
-<span class="source-line-no">022</span><span id="line-22">}</span>
+<span class="source-line-no">009</span><span id="line-9">/**</span>
+<span class="source-line-no">010</span><span id="line-10"> * Represents a Metapath node item that has an atomic value.</span>
+<span class="source-line-no">011</span><span id="line-11"> */</span>
+<span class="source-line-no">012</span><span id="line-12">public interface IAtomicValuedNodeItem extends IAtomicValuedItem, INodeItem {</span>
+<span class="source-line-no">013</span><span id="line-13">  /**</span>
+<span class="source-line-no">014</span><span id="line-14">   * Get the item type of the item's value.</span>
+<span class="source-line-no">015</span><span id="line-15">   *</span>
+<span class="source-line-no">016</span><span id="line-16">   * @return the item type</span>
+<span class="source-line-no">017</span><span id="line-17">   */</span>
+<span class="source-line-no">018</span><span id="line-18">  @NonNull</span>
+<span class="source-line-no">019</span><span id="line-19">  IAtomicOrUnionType&lt;?&gt; getValueItemType();</span>
+<span class="source-line-no">020</span><span id="line-20"></span>
+<span class="source-line-no">021</span><span id="line-21">  @Override</span>
+<span class="source-line-no">022</span><span id="line-22">  default String stringValue() {</span>
+<span class="source-line-no">023</span><span id="line-23">    return toAtomicItem().asString();</span>
+<span class="source-line-no">024</span><span id="line-24">  }</span>
+<span class="source-line-no">025</span><span id="line-25">}</span>
 
 
 

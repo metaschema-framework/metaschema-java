@@ -49,7 +49,7 @@
 <span class="source-line-no">036</span><span id="line-36">public final class MermaidErDiagramGenerator {</span>
 <span class="source-line-no">037</span><span id="line-37">  @NonNull</span>
 <span class="source-line-no">038</span><span id="line-38">  private static final Lazy&lt;Map&lt;IDiagramNode.Relationship, Pair&lt;String, String&gt;&gt;&gt; RELATIONSHIP_SYMBOLS</span>
-<span class="source-line-no">039</span><span id="line-39">      = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="source-line-no">039</span><span id="line-39">      = ObjectUtils.notNull(Lazy.of(() -&gt; {</span>
 <span class="source-line-no">040</span><span id="line-40">        Map&lt;IDiagramNode.Relationship, Pair&lt;String, String&gt;&gt; retval = new EnumMap&lt;&gt;(IDiagramNode.Relationship.class);</span>
 <span class="source-line-no">041</span><span id="line-41"></span>
 <span class="source-line-no">042</span><span id="line-42">        retval.put(IDiagramNode.Relationship.ZERO_OR_ONE, Pair.of("|o", "o|"));</span>

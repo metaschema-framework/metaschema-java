@@ -89,7 +89,7 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>            .required()
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>            .desc(<span class="jxr_string">"metaschema resource"</span>)
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>            .numberOfArgs(1)
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>            .build());
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>            .get());
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">   * Used by commands to declare an optional Metaschema module for processing.</em>
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">   *</em>
@@ -102,7 +102,7 @@
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>            .argName(<span class="jxr_string">"FILE_OR_URL"</span>)
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>            .desc(<span class="jxr_string">"metaschema resource"</span>)
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>            .numberOfArgs(1)
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>            .build());
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>            .get());
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment">   * Used by commands to protect existing files from being overwritten, unless</em>
 <a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment">   * this option is provided.</em>
@@ -112,7 +112,7 @@
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>       Option.builder()
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>           .longOpt(<span class="jxr_string">"overwrite"</span>)
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>           .desc(<span class="jxr_string">"overwrite the destination if it exists"</span>)
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>           .build());
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>           .get());
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment">   * Used by commands to identify the target format for a content conversion</em>
 <a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_javadoccomment">   * operation.</em>
@@ -129,7 +129,7 @@
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>               .map(Enum::name)
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>               .collect(CustomCollectors.joiningWithOxfordComma(<span class="jxr_string">"or"</span>)))
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>           .numberOfArgs(1)
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>           .build());
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>           .get());
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">   * Used by commands to identify the source format for a content-related</em>
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">   * operation.</em>
@@ -146,7 +146,7 @@
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>               .map(Enum::name)
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>               .collect(CustomCollectors.joiningWithOxfordComma(<span class="jxr_string">"or"</span>)))
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>           .numberOfArgs(1)
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>           .build());
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>           .get());
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">   * Used by commands that produce schemas to identify the schema format to</em>
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">   * produce.</em>
@@ -164,7 +164,7 @@
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>               .map(Enum::name)
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>               .collect(CustomCollectors.joiningWithOxfordComma(<span class="jxr_string">"or"</span>)))
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>           .numberOfArgs(1)
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>           .build());
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>           .get());
 <a class="jxr_linenumber" name="L160" href="#L160">160</a> 
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment">   * Get the provided source path or URI string as an absolute {@link URI} for the</em>

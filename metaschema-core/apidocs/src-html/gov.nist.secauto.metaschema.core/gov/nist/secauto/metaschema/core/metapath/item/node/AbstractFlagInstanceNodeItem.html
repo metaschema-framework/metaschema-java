@@ -26,15 +26,23 @@
 <span class="source-line-no">013</span><span id="line-13">    extends AbstractInstanceNodeItem&lt;IFlagDefinition, IFlagInstance, IModelNodeItem&lt;?, ?&gt;&gt;</span>
 <span class="source-line-no">014</span><span id="line-14">    implements IFlagNodeItem {</span>
 <span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">  public AbstractFlagInstanceNodeItem(@NonNull IFlagInstance instance, @NonNull IModelNodeItem&lt;?, ?&gt; parent) {</span>
-<span class="source-line-no">017</span><span id="line-17">    super(instance, parent);</span>
-<span class="source-line-no">018</span><span id="line-18">  }</span>
-<span class="source-line-no">019</span><span id="line-19"></span>
-<span class="source-line-no">020</span><span id="line-20">  @Override</span>
-<span class="source-line-no">021</span><span id="line-21">  protected String getValueSignature() {</span>
-<span class="source-line-no">022</span><span id="line-22">    return toAtomicItem().toSignature();</span>
-<span class="source-line-no">023</span><span id="line-23">  }</span>
-<span class="source-line-no">024</span><span id="line-24">}</span>
+<span class="source-line-no">016</span><span id="line-16">  /**</span>
+<span class="source-line-no">017</span><span id="line-17">   * Construct a new flag instance node item.</span>
+<span class="source-line-no">018</span><span id="line-18">   *</span>
+<span class="source-line-no">019</span><span id="line-19">   * @param instance</span>
+<span class="source-line-no">020</span><span id="line-20">   *          the flag instance this node represents</span>
+<span class="source-line-no">021</span><span id="line-21">   * @param parent</span>
+<span class="source-line-no">022</span><span id="line-22">   *          the parent node item containing this flag</span>
+<span class="source-line-no">023</span><span id="line-23">   */</span>
+<span class="source-line-no">024</span><span id="line-24">  public AbstractFlagInstanceNodeItem(@NonNull IFlagInstance instance, @NonNull IModelNodeItem&lt;?, ?&gt; parent) {</span>
+<span class="source-line-no">025</span><span id="line-25">    super(instance, parent);</span>
+<span class="source-line-no">026</span><span id="line-26">  }</span>
+<span class="source-line-no">027</span><span id="line-27"></span>
+<span class="source-line-no">028</span><span id="line-28">  @Override</span>
+<span class="source-line-no">029</span><span id="line-29">  protected String getValueSignature() {</span>
+<span class="source-line-no">030</span><span id="line-30">    return toAtomicItem().toSignature();</span>
+<span class="source-line-no">031</span><span id="line-31">  }</span>
+<span class="source-line-no">032</span><span id="line-32">}</span>
 
 
 

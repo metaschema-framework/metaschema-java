@@ -23,13 +23,13 @@
 <span class="source-line-no">010</span><span id="line-10">/**</span>
 <span class="source-line-no">011</span><span id="line-11"> * An {@link IMapItem} key based on an {@link ITemporalItem} value.</span>
 <span class="source-line-no">012</span><span id="line-12"> */</span>
-<span class="source-line-no">013</span><span id="line-13">public interface ITemporalMapKey extends IMapKey {</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">  @Override</span>
-<span class="source-line-no">016</span><span id="line-16">  ITemporalItem getKey();</span>
-<span class="source-line-no">017</span><span id="line-17"></span>
-<span class="source-line-no">018</span><span id="line-18">  @Override</span>
-<span class="source-line-no">019</span><span id="line-19">  @SuppressWarnings("PMD.OnlyOneReturn")</span>
+<span class="source-line-no">013</span><span id="line-13">@FunctionalInterface</span>
+<span class="source-line-no">014</span><span id="line-14">public interface ITemporalMapKey extends IMapKey {</span>
+<span class="source-line-no">015</span><span id="line-15"></span>
+<span class="source-line-no">016</span><span id="line-16">  @Override</span>
+<span class="source-line-no">017</span><span id="line-17">  ITemporalItem getKey();</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">  @Override</span>
 <span class="source-line-no">020</span><span id="line-20">  default boolean isSameKey(IMapKey other) {</span>
 <span class="source-line-no">021</span><span id="line-21">    if (!(other instanceof ITemporalMapKey)) {</span>
 <span class="source-line-no">022</span><span id="line-22">      return false;</span>

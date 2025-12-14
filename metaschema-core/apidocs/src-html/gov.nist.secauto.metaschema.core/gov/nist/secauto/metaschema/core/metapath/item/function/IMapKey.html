@@ -38,8 +38,15 @@
 <span class="source-line-no">025</span><span id="line-25">  @Override</span>
 <span class="source-line-no">026</span><span id="line-26">  int hashCode();</span>
 <span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">  boolean isSameKey(@NonNull IMapKey other);</span>
-<span class="source-line-no">029</span><span id="line-29">}</span>
+<span class="source-line-no">028</span><span id="line-28">  /**</span>
+<span class="source-line-no">029</span><span id="line-29">   * Determine if this key is the same as another key.</span>
+<span class="source-line-no">030</span><span id="line-30">   *</span>
+<span class="source-line-no">031</span><span id="line-31">   * @param other</span>
+<span class="source-line-no">032</span><span id="line-32">   *          the other key to compare</span>
+<span class="source-line-no">033</span><span id="line-33">   * @return {@code true} if the keys are the same, or {@code false} otherwise</span>
+<span class="source-line-no">034</span><span id="line-34">   */</span>
+<span class="source-line-no">035</span><span id="line-35">  boolean isSameKey(@NonNull IMapKey other);</span>
+<span class="source-line-no">036</span><span id="line-36">}</span>
 
 
 

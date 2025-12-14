@@ -27,8 +27,8 @@
 <span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
 <span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.metaschema.core.metapath.item.ISequence;</span>
 <span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;</span>
-<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.function.ArrayException;</span>
-<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;</span>
+<span class="source-line-no">017</span><span id="line-17">import gov.nist.secauto.metaschema.core.metapath.item.function.IArrayItem;</span>
+<span class="source-line-no">018</span><span id="line-18">import gov.nist.secauto.metaschema.core.metapath.item.function.IndexOutOfBoundsArrayMetapathException;</span>
 <span class="source-line-no">019</span><span id="line-19">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
 <span class="source-line-no">020</span><span id="line-20"></span>
 <span class="source-line-no">021</span><span id="line-21">import java.util.List;</span>
@@ -91,12 +91,12 @@
 <span class="source-line-no">078</span><span id="line-78">   * @param positionItem</span>
 <span class="source-line-no">079</span><span id="line-79">   *          the integer position of the item to retrieve</span>
 <span class="source-line-no">080</span><span id="line-80">   * @return the retrieved item</span>
-<span class="source-line-no">081</span><span id="line-81">   * @throws ArrayException</span>
+<span class="source-line-no">081</span><span id="line-81">   * @throws IndexOutOfBoundsArrayMetapathException</span>
 <span class="source-line-no">082</span><span id="line-82">   *           if the position is not in the range of 1 to array:size</span>
 <span class="source-line-no">083</span><span id="line-83">   */</span>
 <span class="source-line-no">084</span><span id="line-84">  @NonNull</span>
 <span class="source-line-no">085</span><span id="line-85">  public static &lt;T extends ICollectionValue&gt; T get(</span>
-<span class="source-line-no">086</span><span id="line-86">      @NonNull List&lt;T&gt; target,</span>
+<span class="source-line-no">086</span><span id="line-86">      @NonNull IArrayItem&lt;T&gt; target,</span>
 <span class="source-line-no">087</span><span id="line-87">      @NonNull IIntegerItem positionItem) {</span>
 <span class="source-line-no">088</span><span id="line-88">    return get(target, positionItem.toIntValueExact());</span>
 <span class="source-line-no">089</span><span id="line-89">  }</span>
@@ -112,18 +112,18 @@
 <span class="source-line-no">099</span><span id="line-99">   * @param position</span>
 <span class="source-line-no">100</span><span id="line-100">   *          the integer position of the item to retrieve</span>
 <span class="source-line-no">101</span><span id="line-101">   * @return the retrieved item</span>
-<span class="source-line-no">102</span><span id="line-102">   * @throws ArrayException</span>
+<span class="source-line-no">102</span><span id="line-102">   * @throws IndexOutOfBoundsArrayMetapathException</span>
 <span class="source-line-no">103</span><span id="line-103">   *           if the position is not in the range of 1 to array:size</span>
 <span class="source-line-no">104</span><span id="line-104">   */</span>
 <span class="source-line-no">105</span><span id="line-105">  @NonNull</span>
 <span class="source-line-no">106</span><span id="line-106">  public static &lt;T extends ICollectionValue&gt; T get(</span>
-<span class="source-line-no">107</span><span id="line-107">      @NonNull List&lt;T&gt; target,</span>
+<span class="source-line-no">107</span><span id="line-107">      @NonNull IArrayItem&lt;T&gt; target,</span>
 <span class="source-line-no">108</span><span id="line-108">      int position) {</span>
 <span class="source-line-no">109</span><span id="line-109">    try {</span>
 <span class="source-line-no">110</span><span id="line-110">      return ObjectUtils.requireNonNull(target.get(position - 1));</span>
 <span class="source-line-no">111</span><span id="line-111">    } catch (IndexOutOfBoundsException ex) {</span>
-<span class="source-line-no">112</span><span id="line-112">      throw new ArrayException(</span>
-<span class="source-line-no">113</span><span id="line-113">          ArrayException.INDEX_OUT_OF_BOUNDS,</span>
+<span class="source-line-no">112</span><span id="line-112">      throw new IndexOutOfBoundsArrayMetapathException(</span>
+<span class="source-line-no">113</span><span id="line-113">          target,</span>
 <span class="source-line-no">114</span><span id="line-114">          String.format("The index %d is outside the range of values for the array size '%d'.",</span>
 <span class="source-line-no">115</span><span id="line-115">              position,</span>
 <span class="source-line-no">116</span><span id="line-116">              target.size()),</span>

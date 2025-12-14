@@ -221,7 +221,7 @@
 <span class="source-line-no">208</span><span id="line-208">    assert collectionUri != null;</span>
 <span class="source-line-no">209</span><span id="line-209"></span>
 <span class="source-line-no">210</span><span id="line-210">    LOGGER.atInfo().log("Collection: " + collectionUri);</span>
-<span class="source-line-no">211</span><span id="line-211">    Lazy&lt;Path&gt; collectionGenerationPath = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="source-line-no">211</span><span id="line-211">    Lazy&lt;Path&gt; collectionGenerationPath = ObjectUtils.notNull(Lazy.of(() -&gt; {</span>
 <span class="source-line-no">212</span><span id="line-212">      Path retval;</span>
 <span class="source-line-no">213</span><span id="line-213">      try {</span>
 <span class="source-line-no">214</span><span id="line-214">        retval = ObjectUtils.requireNonNull(Files.createTempDirectory(generationPath, "collection-"));</span>
@@ -329,7 +329,7 @@
 <span class="source-line-no">316</span><span id="line-316">      @NonNull URI collectionUri,</span>
 <span class="source-line-no">317</span><span id="line-317">      @NonNull Lazy&lt;Path&gt; collectionGenerationPath,</span>
 <span class="source-line-no">318</span><span id="line-318">      @NonNull IBindingContext bindingContext) {</span>
-<span class="source-line-no">319</span><span id="line-319">    Lazy&lt;Path&gt; scenarioGenerationPath = ObjectUtils.notNull(Lazy.lazy(() -&gt; {</span>
+<span class="source-line-no">319</span><span id="line-319">    Lazy&lt;Path&gt; scenarioGenerationPath = ObjectUtils.notNull(Lazy.of(() -&gt; {</span>
 <span class="source-line-no">320</span><span id="line-320">      Path retval;</span>
 <span class="source-line-no">321</span><span id="line-321">      try {</span>
 <span class="source-line-no">322</span><span id="line-322">        retval = Files.createTempDirectory(collectionGenerationPath.get(), "scenario-");</span>
@@ -352,9 +352,9 @@
 <span class="source-line-no">339</span><span id="line-339">      throw new JUnitException("Unable to generate classes for metaschema: " + metaschemaUri, ex);</span>
 <span class="source-line-no">340</span><span id="line-340">    }</span>
 <span class="source-line-no">341</span><span id="line-341"></span>
-<span class="source-line-no">342</span><span id="line-342">    Lazy&lt;Path&gt; lazySchema = Lazy.lazy(() -&gt; generateSchema(module, scenarioGenerationPath));</span>
+<span class="source-line-no">342</span><span id="line-342">    Lazy&lt;Path&gt; lazySchema = Lazy.of(() -&gt; generateSchema(module, scenarioGenerationPath));</span>
 <span class="source-line-no">343</span><span id="line-343"></span>
-<span class="source-line-no">344</span><span id="line-344">    Lazy&lt;IContentValidator&gt; lazyContentValidator = Lazy.lazy(() -&gt; {</span>
+<span class="source-line-no">344</span><span id="line-344">    Lazy&lt;IContentValidator&gt; lazyContentValidator = Lazy.of(() -&gt; {</span>
 <span class="source-line-no">345</span><span id="line-345">      Path schemaPath = lazySchema.get();</span>
 <span class="source-line-no">346</span><span id="line-346">      return getContentValidatorSupplier().apply(schemaPath);</span>
 <span class="source-line-no">347</span><span id="line-347">    });</span>

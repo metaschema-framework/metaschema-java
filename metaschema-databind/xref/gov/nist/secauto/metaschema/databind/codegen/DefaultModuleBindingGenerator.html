@@ -13,8 +13,8 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.metaschema.databind.codegen;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathException;
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.IModule;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.IModule;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.MetaschemaException;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.databind.model.IBoundModule;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  
@@ -32,7 +32,7 @@
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>    }
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>    @Override
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">public</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> IBoundModule&gt; generate(IModule module) {
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">public</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> IBoundModule&gt; generate(IModule module) <strong class="jxr_keyword">throws</strong> MetaschemaException {
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>      ClassLoader classLoader = ModuleCompilerHelper.newClassLoader(
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>          compilePath,
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>          ObjectUtils.notNull(Thread.currentThread().getContextClassLoader()));
@@ -41,7 +41,7 @@
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>        production = ModuleCompilerHelper.compileMetaschema(module, compilePath);
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>      } <strong class="jxr_keyword">catch</strong> (IOException ex) {
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MetapathException(
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MetaschemaException(
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>            String.format(<span class="jxr_string">"Unable to generate and compile classes for module '%s'."</span>, module.getLocation()),
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>            ex);
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      }

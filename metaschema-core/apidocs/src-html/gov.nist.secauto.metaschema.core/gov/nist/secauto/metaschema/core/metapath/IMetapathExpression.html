@@ -18,10 +18,10 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package gov.nist.secauto.metaschema.core.metapath;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.MetapathExpression.ConversionFunction;</span>
-<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.impl.LazyCompilationMetapathExpression;</span>
+<span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.metapath.function.FunctionUtils;</span>
+<span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.metapath.function.library.FnBoolean;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.metapath.impl.LazyCompilationMetapathExpression;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.metapath.impl.MetapathExpression;</span>
 <span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.metapath.item.IItem;</span>
 <span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.metapath.item.ISequence;</span>
 <span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;</span>
@@ -38,7 +38,7 @@
 <span class="source-line-no">025</span><span id="line-25">/**</span>
 <span class="source-line-no">026</span><span id="line-26"> * Supports compiling and executing Metapath expressions.</span>
 <span class="source-line-no">027</span><span id="line-27"> */</span>
-<span class="source-line-no">028</span><span id="line-28">public interface IMetapathExpression {</span>
+<span class="source-line-no">028</span><span id="line-28">public interface IMetapathExpression extends IExpression {</span>
 <span class="source-line-no">029</span><span id="line-29"></span>
 <span class="source-line-no">030</span><span id="line-30">  /**</span>
 <span class="source-line-no">031</span><span id="line-31">   * Identifies the expected type for a Metapath evaluation result.</span>
@@ -48,280 +48,299 @@
 <span class="source-line-no">035</span><span id="line-35">     * The result is expected to be a {@link BigDecimal} value.</span>
 <span class="source-line-no">036</span><span id="line-36">     */</span>
 <span class="source-line-no">037</span><span id="line-37">    NUMBER(BigDecimal.class, sequence -&gt; {</span>
-<span class="source-line-no">038</span><span id="line-38">      INumericItem numeric = FunctionUtils.toNumeric(sequence, true);</span>
-<span class="source-line-no">039</span><span id="line-39">      return numeric == null ? null : numeric.asDecimal();</span>
-<span class="source-line-no">040</span><span id="line-40">    }),</span>
-<span class="source-line-no">041</span><span id="line-41">    /**</span>
-<span class="source-line-no">042</span><span id="line-42">     * The result is expected to be a {@link String} value.</span>
-<span class="source-line-no">043</span><span id="line-43">     */</span>
-<span class="source-line-no">044</span><span id="line-44">    STRING(String.class, sequence -&gt; {</span>
-<span class="source-line-no">045</span><span id="line-45">      IAnyAtomicItem item = ISequence.of(sequence.atomize()).getFirstItem(true);</span>
-<span class="source-line-no">046</span><span id="line-46">      return item == null ? "" : item.asString();</span>
-<span class="source-line-no">047</span><span id="line-47">    }),</span>
-<span class="source-line-no">048</span><span id="line-48">    /**</span>
-<span class="source-line-no">049</span><span id="line-49">     * The result is expected to be a {@link Boolean} value.</span>
-<span class="source-line-no">050</span><span id="line-50">     */</span>
-<span class="source-line-no">051</span><span id="line-51">    BOOLEAN(Boolean.class, sequence -&gt; FnBoolean.fnBoolean(sequence).toBoolean()),</span>
-<span class="source-line-no">052</span><span id="line-52">    /**</span>
-<span class="source-line-no">053</span><span id="line-53">     * The result is expected to be an {@link IItem} value.</span>
-<span class="source-line-no">054</span><span id="line-54">     */</span>
-<span class="source-line-no">055</span><span id="line-55">    ITEM(IItem.class, sequence -&gt; sequence.getFirstItem(true));</span>
-<span class="source-line-no">056</span><span id="line-56"></span>
-<span class="source-line-no">057</span><span id="line-57">    @NonNull</span>
-<span class="source-line-no">058</span><span id="line-58">    private final Class&lt;?&gt; clazz;</span>
-<span class="source-line-no">059</span><span id="line-59">    private final ConversionFunction converter;</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">    ResultType(@NonNull Class&lt;?&gt; clazz, @NonNull ConversionFunction converter) {</span>
-<span class="source-line-no">062</span><span id="line-62">      this.clazz = clazz;</span>
-<span class="source-line-no">063</span><span id="line-63">      this.converter = converter;</span>
-<span class="source-line-no">064</span><span id="line-64">    }</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">    /**</span>
-<span class="source-line-no">067</span><span id="line-67">     * Get the expected class for the result type.</span>
-<span class="source-line-no">068</span><span id="line-68">     *</span>
-<span class="source-line-no">069</span><span id="line-69">     * @return the expected class</span>
-<span class="source-line-no">070</span><span id="line-70">     *</span>
-<span class="source-line-no">071</span><span id="line-71">     */</span>
-<span class="source-line-no">072</span><span id="line-72">    @NonNull</span>
-<span class="source-line-no">073</span><span id="line-73">    public Class&lt;?&gt; expectedClass() {</span>
-<span class="source-line-no">074</span><span id="line-74">      return clazz;</span>
-<span class="source-line-no">075</span><span id="line-75">    }</span>
-<span class="source-line-no">076</span><span id="line-76"></span>
-<span class="source-line-no">077</span><span id="line-77">    /**</span>
-<span class="source-line-no">078</span><span id="line-78">     * Convert the provided sequence to the expected type.</span>
-<span class="source-line-no">079</span><span id="line-79">     *</span>
-<span class="source-line-no">080</span><span id="line-80">     * @param &lt;T&gt;</span>
-<span class="source-line-no">081</span><span id="line-81">     *          the Java type of the expected return value</span>
-<span class="source-line-no">082</span><span id="line-82">     * @param sequence</span>
-<span class="source-line-no">083</span><span id="line-83">     *          the Metapath result sequence to convert</span>
-<span class="source-line-no">084</span><span id="line-84">     * @return the converted sequence as the expected type</span>
-<span class="source-line-no">085</span><span id="line-85">     * @throws TypeMetapathException</span>
-<span class="source-line-no">086</span><span id="line-86">     *           if the provided sequence is incompatible with the expected result</span>
-<span class="source-line-no">087</span><span id="line-87">     *           type</span>
-<span class="source-line-no">088</span><span id="line-88">     */</span>
-<span class="source-line-no">089</span><span id="line-89">    @Nullable</span>
-<span class="source-line-no">090</span><span id="line-90">    public &lt;T&gt; T convert(@NonNull ISequence&lt;?&gt; sequence) {</span>
-<span class="source-line-no">091</span><span id="line-91">      try {</span>
-<span class="source-line-no">092</span><span id="line-92">        return ObjectUtils.asNullableType(converter.convert(sequence));</span>
-<span class="source-line-no">093</span><span id="line-93">      } catch (ClassCastException ex) {</span>
-<span class="source-line-no">094</span><span id="line-94">        throw new InvalidTypeMetapathException(null,</span>
-<span class="source-line-no">095</span><span id="line-95">            String.format("Unable to cast to expected result type '%s' using expected type '%s'.",</span>
-<span class="source-line-no">096</span><span id="line-96">                name(),</span>
-<span class="source-line-no">097</span><span id="line-97">                expectedClass().getName()),</span>
-<span class="source-line-no">098</span><span id="line-98">            ex);</span>
-<span class="source-line-no">099</span><span id="line-99">      }</span>
-<span class="source-line-no">100</span><span id="line-100">    }</span>
-<span class="source-line-no">101</span><span id="line-101">  }</span>
-<span class="source-line-no">102</span><span id="line-102"></span>
-<span class="source-line-no">103</span><span id="line-103">  /**</span>
-<span class="source-line-no">104</span><span id="line-104">   * Get the Metapath expression identifying the current context node.</span>
-<span class="source-line-no">105</span><span id="line-105">   *</span>
-<span class="source-line-no">106</span><span id="line-106">   * @return the context expression</span>
-<span class="source-line-no">107</span><span id="line-107">   */</span>
-<span class="source-line-no">108</span><span id="line-108">  @NonNull</span>
-<span class="source-line-no">109</span><span id="line-109">  static IMetapathExpression contextNode() {</span>
-<span class="source-line-no">110</span><span id="line-110">    return MetapathExpression.CONTEXT_NODE;</span>
-<span class="source-line-no">111</span><span id="line-111">  }</span>
+<span class="source-line-no">038</span><span id="line-38">      IItem item = sequence.getFirstItem(true);</span>
+<span class="source-line-no">039</span><span id="line-39">      if (item == null) {</span>
+<span class="source-line-no">040</span><span id="line-40">        return null;</span>
+<span class="source-line-no">041</span><span id="line-41">      }</span>
+<span class="source-line-no">042</span><span id="line-42">      IAnyAtomicItem atomicItem = ISequence.getFirstItem(item.atomize(), true);</span>
+<span class="source-line-no">043</span><span id="line-43">      if (atomicItem == null) {</span>
+<span class="source-line-no">044</span><span id="line-44">        throw new InvalidTypeMetapathException(item, "Unable to cast to numeric: atomization returned null");</span>
+<span class="source-line-no">045</span><span id="line-45">      }</span>
+<span class="source-line-no">046</span><span id="line-46">      INumericItem numeric = FunctionUtils.castToNumeric(atomicItem);</span>
+<span class="source-line-no">047</span><span id="line-47">      return numeric.asDecimal();</span>
+<span class="source-line-no">048</span><span id="line-48">    }),</span>
+<span class="source-line-no">049</span><span id="line-49">    /**</span>
+<span class="source-line-no">050</span><span id="line-50">     * The result is expected to be a {@link String} value.</span>
+<span class="source-line-no">051</span><span id="line-51">     */</span>
+<span class="source-line-no">052</span><span id="line-52">    STRING(String.class, sequence -&gt; {</span>
+<span class="source-line-no">053</span><span id="line-53">      IAnyAtomicItem item = ISequence.of(sequence.atomize()).getFirstItem(true);</span>
+<span class="source-line-no">054</span><span id="line-54">      return item == null ? "" : item.asString();</span>
+<span class="source-line-no">055</span><span id="line-55">    }),</span>
+<span class="source-line-no">056</span><span id="line-56">    /**</span>
+<span class="source-line-no">057</span><span id="line-57">     * The result is expected to be a {@link Boolean} value.</span>
+<span class="source-line-no">058</span><span id="line-58">     */</span>
+<span class="source-line-no">059</span><span id="line-59">    BOOLEAN(Boolean.class, sequence -&gt; FnBoolean.fnBoolean(sequence).toBoolean()),</span>
+<span class="source-line-no">060</span><span id="line-60">    /**</span>
+<span class="source-line-no">061</span><span id="line-61">     * The result is expected to be an {@link IItem} value.</span>
+<span class="source-line-no">062</span><span id="line-62">     */</span>
+<span class="source-line-no">063</span><span id="line-63">    ITEM(IItem.class, sequence -&gt; sequence.getFirstItem(true));</span>
+<span class="source-line-no">064</span><span id="line-64"></span>
+<span class="source-line-no">065</span><span id="line-65">    @NonNull</span>
+<span class="source-line-no">066</span><span id="line-66">    private final Class&lt;?&gt; clazz;</span>
+<span class="source-line-no">067</span><span id="line-67">    private final ConversionFunction converter;</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">    ResultType(@NonNull Class&lt;?&gt; clazz, @NonNull ConversionFunction converter) {</span>
+<span class="source-line-no">070</span><span id="line-70">      this.clazz = clazz;</span>
+<span class="source-line-no">071</span><span id="line-71">      this.converter = converter;</span>
+<span class="source-line-no">072</span><span id="line-72">    }</span>
+<span class="source-line-no">073</span><span id="line-73"></span>
+<span class="source-line-no">074</span><span id="line-74">    /**</span>
+<span class="source-line-no">075</span><span id="line-75">     * Get the expected class for the result type.</span>
+<span class="source-line-no">076</span><span id="line-76">     *</span>
+<span class="source-line-no">077</span><span id="line-77">     * @return the expected class</span>
+<span class="source-line-no">078</span><span id="line-78">     *</span>
+<span class="source-line-no">079</span><span id="line-79">     */</span>
+<span class="source-line-no">080</span><span id="line-80">    @NonNull</span>
+<span class="source-line-no">081</span><span id="line-81">    public Class&lt;?&gt; expectedClass() {</span>
+<span class="source-line-no">082</span><span id="line-82">      return clazz;</span>
+<span class="source-line-no">083</span><span id="line-83">    }</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">    /**</span>
+<span class="source-line-no">086</span><span id="line-86">     * Convert the provided sequence to the expected type.</span>
+<span class="source-line-no">087</span><span id="line-87">     *</span>
+<span class="source-line-no">088</span><span id="line-88">     * @param &lt;T&gt;</span>
+<span class="source-line-no">089</span><span id="line-89">     *          the Java type of the expected return value</span>
+<span class="source-line-no">090</span><span id="line-90">     * @param sequence</span>
+<span class="source-line-no">091</span><span id="line-91">     *          the Metapath result sequence to convert</span>
+<span class="source-line-no">092</span><span id="line-92">     * @return the converted sequence as the expected type</span>
+<span class="source-line-no">093</span><span id="line-93">     * @throws TypeMetapathException</span>
+<span class="source-line-no">094</span><span id="line-94">     *           if the provided sequence is incompatible with the expected result</span>
+<span class="source-line-no">095</span><span id="line-95">     *           type</span>
+<span class="source-line-no">096</span><span id="line-96">     */</span>
+<span class="source-line-no">097</span><span id="line-97">    // TODO: trace exceptions thrown to ensure the Javadoc matches; should be static</span>
+<span class="source-line-no">098</span><span id="line-98">    // type error</span>
+<span class="source-line-no">099</span><span id="line-99">    @Nullable</span>
+<span class="source-line-no">100</span><span id="line-100">    public &lt;T&gt; T convert(@NonNull ISequence&lt;?&gt; sequence) {</span>
+<span class="source-line-no">101</span><span id="line-101">      try {</span>
+<span class="source-line-no">102</span><span id="line-102">        return ObjectUtils.asNullableType(converter.convert(sequence));</span>
+<span class="source-line-no">103</span><span id="line-103">      } catch (ClassCastException ex) {</span>
+<span class="source-line-no">104</span><span id="line-104">        throw new InvalidTypeMetapathException(</span>
+<span class="source-line-no">105</span><span id="line-105">            null,</span>
+<span class="source-line-no">106</span><span id="line-106">            String.format("Unable to cast type '%s' to expected result type '%s'.",</span>
+<span class="source-line-no">107</span><span id="line-107">                expectedClass().getName(),</span>
+<span class="source-line-no">108</span><span id="line-108">                name()),</span>
+<span class="source-line-no">109</span><span id="line-109">            ex);</span>
+<span class="source-line-no">110</span><span id="line-110">      }</span>
+<span class="source-line-no">111</span><span id="line-111">    }</span>
 <span class="source-line-no">112</span><span id="line-112"></span>
-<span class="source-line-no">113</span><span id="line-113">  /**</span>
-<span class="source-line-no">114</span><span id="line-114">   * Compile a Metapath expression string.</span>
-<span class="source-line-no">115</span><span id="line-115">   *</span>
-<span class="source-line-no">116</span><span id="line-116">   * @param path</span>
-<span class="source-line-no">117</span><span id="line-117">   *          the metapath expression</span>
-<span class="source-line-no">118</span><span id="line-118">   * @return the compiled expression object</span>
-<span class="source-line-no">119</span><span id="line-119">   * @throws MetapathException</span>
-<span class="source-line-no">120</span><span id="line-120">   *           if an error occurred while compiling the Metapath expression</span>
-<span class="source-line-no">121</span><span id="line-121">   */</span>
-<span class="source-line-no">122</span><span id="line-122">  @NonNull</span>
-<span class="source-line-no">123</span><span id="line-123">  static IMetapathExpression compile(@NonNull String path) {</span>
-<span class="source-line-no">124</span><span id="line-124">    return MetapathExpression.compile(path, StaticContext.instance());</span>
-<span class="source-line-no">125</span><span id="line-125">  }</span>
-<span class="source-line-no">126</span><span id="line-126"></span>
-<span class="source-line-no">127</span><span id="line-127">  /**</span>
-<span class="source-line-no">128</span><span id="line-128">   * Compiles a Metapath expression string using the provided static context.</span>
-<span class="source-line-no">129</span><span id="line-129">   *</span>
-<span class="source-line-no">130</span><span id="line-130">   * @param path</span>
-<span class="source-line-no">131</span><span id="line-131">   *          the metapath expression</span>
-<span class="source-line-no">132</span><span id="line-132">   * @param staticContext</span>
-<span class="source-line-no">133</span><span id="line-133">   *          the static evaluation context</span>
-<span class="source-line-no">134</span><span id="line-134">   * @return the compiled expression object</span>
-<span class="source-line-no">135</span><span id="line-135">   * @throws MetapathException</span>
-<span class="source-line-no">136</span><span id="line-136">   *           if an error occurred while compiling the Metapath expression</span>
-<span class="source-line-no">137</span><span id="line-137">   */</span>
-<span class="source-line-no">138</span><span id="line-138">  @NonNull</span>
-<span class="source-line-no">139</span><span id="line-139">  static IMetapathExpression compile(@NonNull String path, @NonNull StaticContext staticContext) {</span>
-<span class="source-line-no">140</span><span id="line-140">    return MetapathExpression.compile(path, staticContext);</span>
-<span class="source-line-no">141</span><span id="line-141">  }</span>
-<span class="source-line-no">142</span><span id="line-142"></span>
-<span class="source-line-no">143</span><span id="line-143">  /**</span>
-<span class="source-line-no">144</span><span id="line-144">   * Gets a new Metapath expression that is compiled on use.</span>
-<span class="source-line-no">145</span><span id="line-145">   * &lt;p&gt;</span>
-<span class="source-line-no">146</span><span id="line-146">   * Lazy compilation may cause additional {@link MetapathException} errors at</span>
-<span class="source-line-no">147</span><span id="line-147">   * evaluation time, since compilation errors are not raised until evaluation.</span>
-<span class="source-line-no">148</span><span id="line-148">   *</span>
-<span class="source-line-no">149</span><span id="line-149">   * @param path</span>
-<span class="source-line-no">150</span><span id="line-150">   *          the metapath expression</span>
-<span class="source-line-no">151</span><span id="line-151">   * @param staticContext</span>
-<span class="source-line-no">152</span><span id="line-152">   *          the static evaluation context</span>
-<span class="source-line-no">153</span><span id="line-153">   * @return the expression object</span>
+<span class="source-line-no">113</span><span id="line-113">    @FunctionalInterface</span>
+<span class="source-line-no">114</span><span id="line-114">    interface ConversionFunction {</span>
+<span class="source-line-no">115</span><span id="line-115">      @Nullable</span>
+<span class="source-line-no">116</span><span id="line-116">      Object convert(@NonNull ISequence&lt;?&gt; sequence);</span>
+<span class="source-line-no">117</span><span id="line-117">    }</span>
+<span class="source-line-no">118</span><span id="line-118">  }</span>
+<span class="source-line-no">119</span><span id="line-119"></span>
+<span class="source-line-no">120</span><span id="line-120">  /**</span>
+<span class="source-line-no">121</span><span id="line-121">   * Get the Metapath expression identifying the current context node.</span>
+<span class="source-line-no">122</span><span id="line-122">   *</span>
+<span class="source-line-no">123</span><span id="line-123">   * @return the context expression</span>
+<span class="source-line-no">124</span><span id="line-124">   */</span>
+<span class="source-line-no">125</span><span id="line-125">  @NonNull</span>
+<span class="source-line-no">126</span><span id="line-126">  static IMetapathExpression contextNode() {</span>
+<span class="source-line-no">127</span><span id="line-127">    return MetapathExpression.CONTEXT_METAPATH;</span>
+<span class="source-line-no">128</span><span id="line-128">  }</span>
+<span class="source-line-no">129</span><span id="line-129"></span>
+<span class="source-line-no">130</span><span id="line-130">  /**</span>
+<span class="source-line-no">131</span><span id="line-131">   * Compile a Metapath expression string.</span>
+<span class="source-line-no">132</span><span id="line-132">   *</span>
+<span class="source-line-no">133</span><span id="line-133">   * @param path</span>
+<span class="source-line-no">134</span><span id="line-134">   *          the metapath expression</span>
+<span class="source-line-no">135</span><span id="line-135">   * @return the compiled expression object</span>
+<span class="source-line-no">136</span><span id="line-136">   * @throws InvalidMetapathGrammarException</span>
+<span class="source-line-no">137</span><span id="line-137">   *           if an error occurred while compiling the Metapath expression</span>
+<span class="source-line-no">138</span><span id="line-138">   */</span>
+<span class="source-line-no">139</span><span id="line-139">  @NonNull</span>
+<span class="source-line-no">140</span><span id="line-140">  static IMetapathExpression compile(@NonNull String path) {</span>
+<span class="source-line-no">141</span><span id="line-141">    return compile(path, StaticContext.instance());</span>
+<span class="source-line-no">142</span><span id="line-142">  }</span>
+<span class="source-line-no">143</span><span id="line-143"></span>
+<span class="source-line-no">144</span><span id="line-144">  /**</span>
+<span class="source-line-no">145</span><span id="line-145">   * Compiles a Metapath expression string using the provided static context.</span>
+<span class="source-line-no">146</span><span id="line-146">   *</span>
+<span class="source-line-no">147</span><span id="line-147">   * @param path</span>
+<span class="source-line-no">148</span><span id="line-148">   *          the metapath expression</span>
+<span class="source-line-no">149</span><span id="line-149">   * @param staticContext</span>
+<span class="source-line-no">150</span><span id="line-150">   *          the static evaluation context</span>
+<span class="source-line-no">151</span><span id="line-151">   * @return the compiled expression object</span>
+<span class="source-line-no">152</span><span id="line-152">   * @throws InvalidMetapathGrammarException</span>
+<span class="source-line-no">153</span><span id="line-153">   *           if an error occurred while compiling the Metapath expression</span>
 <span class="source-line-no">154</span><span id="line-154">   */</span>
 <span class="source-line-no">155</span><span id="line-155">  @NonNull</span>
-<span class="source-line-no">156</span><span id="line-156">  static IMetapathExpression lazyCompile(@NonNull String path, @NonNull StaticContext staticContext) {</span>
-<span class="source-line-no">157</span><span id="line-157">    return new LazyCompilationMetapathExpression(path, staticContext);</span>
+<span class="source-line-no">156</span><span id="line-156">  static IMetapathExpression compile(@NonNull String path, @NonNull StaticContext staticContext) {</span>
+<span class="source-line-no">157</span><span id="line-157">    return MetapathExpression.compile(path, staticContext);</span>
 <span class="source-line-no">158</span><span id="line-158">  }</span>
 <span class="source-line-no">159</span><span id="line-159"></span>
 <span class="source-line-no">160</span><span id="line-160">  /**</span>
-<span class="source-line-no">161</span><span id="line-161">   * Get the original Metapath expression as a string.</span>
-<span class="source-line-no">162</span><span id="line-162">   *</span>
-<span class="source-line-no">163</span><span id="line-163">   * @return the expression</span>
-<span class="source-line-no">164</span><span id="line-164">   */</span>
-<span class="source-line-no">165</span><span id="line-165">  @NonNull</span>
-<span class="source-line-no">166</span><span id="line-166">  String getPath();</span>
-<span class="source-line-no">167</span><span id="line-167"></span>
-<span class="source-line-no">168</span><span id="line-168">  /**</span>
-<span class="source-line-no">169</span><span id="line-169">   * Get the static context used to compile this Metapath.</span>
-<span class="source-line-no">170</span><span id="line-170">   *</span>
-<span class="source-line-no">171</span><span id="line-171">   * @return the static context</span>
-<span class="source-line-no">172</span><span id="line-172">   */</span>
-<span class="source-line-no">173</span><span id="line-173">  @NonNull</span>
-<span class="source-line-no">174</span><span id="line-174">  StaticContext getStaticContext();</span>
-<span class="source-line-no">175</span><span id="line-175"></span>
-<span class="source-line-no">176</span><span id="line-176">  /**</span>
-<span class="source-line-no">177</span><span id="line-177">   * Evaluate this Metapath expression without a specific focus. The required</span>
-<span class="source-line-no">178</span><span id="line-178">   * result type will be determined by the {@code resultType} argument.</span>
+<span class="source-line-no">161</span><span id="line-161">   * Gets a new Metapath expression that is compiled on use.</span>
+<span class="source-line-no">162</span><span id="line-162">   * &lt;p&gt;</span>
+<span class="source-line-no">163</span><span id="line-163">   * Lazy compilation may cause additional {@link MetapathException} errors at</span>
+<span class="source-line-no">164</span><span id="line-164">   * evaluation time, since compilation errors are not raised until evaluation.</span>
+<span class="source-line-no">165</span><span id="line-165">   *</span>
+<span class="source-line-no">166</span><span id="line-166">   * @param path</span>
+<span class="source-line-no">167</span><span id="line-167">   *          the metapath expression</span>
+<span class="source-line-no">168</span><span id="line-168">   * @param staticContext</span>
+<span class="source-line-no">169</span><span id="line-169">   *          the static evaluation context</span>
+<span class="source-line-no">170</span><span id="line-170">   * @return the expression object</span>
+<span class="source-line-no">171</span><span id="line-171">   */</span>
+<span class="source-line-no">172</span><span id="line-172">  @NonNull</span>
+<span class="source-line-no">173</span><span id="line-173">  static IMetapathExpression lazyCompile(@NonNull String path, @NonNull StaticContext staticContext) {</span>
+<span class="source-line-no">174</span><span id="line-174">    return new LazyCompilationMetapathExpression(path, staticContext);</span>
+<span class="source-line-no">175</span><span id="line-175">  }</span>
+<span class="source-line-no">176</span><span id="line-176"></span>
+<span class="source-line-no">177</span><span id="line-177">  /**</span>
+<span class="source-line-no">178</span><span id="line-178">   * Get the original Metapath expression as a string.</span>
 <span class="source-line-no">179</span><span id="line-179">   *</span>
-<span class="source-line-no">180</span><span id="line-180">   * @param &lt;T&gt;</span>
-<span class="source-line-no">181</span><span id="line-181">   *          the expected result type</span>
-<span class="source-line-no">182</span><span id="line-182">   * @param resultType</span>
-<span class="source-line-no">183</span><span id="line-183">   *          the type of result to produce</span>
-<span class="source-line-no">184</span><span id="line-184">   * @return the converted result</span>
-<span class="source-line-no">185</span><span id="line-185">   * @throws TypeMetapathException</span>
-<span class="source-line-no">186</span><span id="line-186">   *           if the provided sequence is incompatible with the requested result</span>
-<span class="source-line-no">187</span><span id="line-187">   *           type</span>
-<span class="source-line-no">188</span><span id="line-188">   * @throws MetapathException</span>
-<span class="source-line-no">189</span><span id="line-189">   *           if an error occurred during evaluation</span>
-<span class="source-line-no">190</span><span id="line-190">   * @see ResultType#convert(ISequence)</span>
-<span class="source-line-no">191</span><span id="line-191">   */</span>
-<span class="source-line-no">192</span><span id="line-192">  @Nullable</span>
-<span class="source-line-no">193</span><span id="line-193">  default &lt;T&gt; T evaluateAs(@NonNull ResultType resultType) {</span>
-<span class="source-line-no">194</span><span id="line-194">    return evaluateAs(null, resultType);</span>
-<span class="source-line-no">195</span><span id="line-195">  }</span>
-<span class="source-line-no">196</span><span id="line-196"></span>
-<span class="source-line-no">197</span><span id="line-197">  /**</span>
-<span class="source-line-no">198</span><span id="line-198">   * Evaluate this Metapath expression using the provided {@code focus} as the</span>
-<span class="source-line-no">199</span><span id="line-199">   * initial evaluation context. The required result type will be determined by</span>
-<span class="source-line-no">200</span><span id="line-200">   * the {@code resultType} argument.</span>
-<span class="source-line-no">201</span><span id="line-201">   *</span>
-<span class="source-line-no">202</span><span id="line-202">   * @param &lt;T&gt;</span>
-<span class="source-line-no">203</span><span id="line-203">   *          the expected result type</span>
-<span class="source-line-no">204</span><span id="line-204">   * @param focus</span>
-<span class="source-line-no">205</span><span id="line-205">   *          the focus of the expression</span>
-<span class="source-line-no">206</span><span id="line-206">   * @param resultType</span>
-<span class="source-line-no">207</span><span id="line-207">   *          the type of result to produce</span>
-<span class="source-line-no">208</span><span id="line-208">   * @return the converted result</span>
-<span class="source-line-no">209</span><span id="line-209">   * @throws TypeMetapathException</span>
-<span class="source-line-no">210</span><span id="line-210">   *           if the provided sequence is incompatible with the requested result</span>
-<span class="source-line-no">211</span><span id="line-211">   *           type</span>
-<span class="source-line-no">212</span><span id="line-212">   * @throws MetapathException</span>
-<span class="source-line-no">213</span><span id="line-213">   *           if an error occurred during evaluation</span>
-<span class="source-line-no">214</span><span id="line-214">   * @see ResultType#convert(ISequence)</span>
-<span class="source-line-no">215</span><span id="line-215">   */</span>
-<span class="source-line-no">216</span><span id="line-216">  @Nullable</span>
-<span class="source-line-no">217</span><span id="line-217">  default &lt;T&gt; T evaluateAs(</span>
-<span class="source-line-no">218</span><span id="line-218">      @Nullable IItem focus,</span>
-<span class="source-line-no">219</span><span id="line-219">      @NonNull ResultType resultType) {</span>
-<span class="source-line-no">220</span><span id="line-220">    ISequence&lt;?&gt; result = evaluate(focus);</span>
-<span class="source-line-no">221</span><span id="line-221">    return resultType.convert(result);</span>
-<span class="source-line-no">222</span><span id="line-222">  }</span>
-<span class="source-line-no">223</span><span id="line-223"></span>
-<span class="source-line-no">224</span><span id="line-224">  /**</span>
-<span class="source-line-no">225</span><span id="line-225">   * Evaluate this Metapath expression using the provided {@code focus} as the</span>
-<span class="source-line-no">226</span><span id="line-226">   * initial evaluation context. The specific result type will be determined by</span>
-<span class="source-line-no">227</span><span id="line-227">   * the {@code resultType} argument.</span>
-<span class="source-line-no">228</span><span id="line-228">   * &lt;p&gt;</span>
-<span class="source-line-no">229</span><span id="line-229">   * This variant allow for reuse of a provided {@code dynamicContext}.</span>
-<span class="source-line-no">230</span><span id="line-230">   *</span>
-<span class="source-line-no">231</span><span id="line-231">   * @param &lt;T&gt;</span>
-<span class="source-line-no">232</span><span id="line-232">   *          the expected result type</span>
-<span class="source-line-no">233</span><span id="line-233">   * @param focus</span>
-<span class="source-line-no">234</span><span id="line-234">   *          the outer focus of the expression</span>
-<span class="source-line-no">235</span><span id="line-235">   * @param resultType</span>
-<span class="source-line-no">236</span><span id="line-236">   *          the type of result to produce</span>
-<span class="source-line-no">237</span><span id="line-237">   * @param dynamicContext</span>
-<span class="source-line-no">238</span><span id="line-238">   *          the dynamic context to use for evaluation</span>
-<span class="source-line-no">239</span><span id="line-239">   * @return the converted result</span>
-<span class="source-line-no">240</span><span id="line-240">   * @throws TypeMetapathException</span>
-<span class="source-line-no">241</span><span id="line-241">   *           if the provided sequence is incompatible with the requested result</span>
-<span class="source-line-no">242</span><span id="line-242">   *           type</span>
-<span class="source-line-no">243</span><span id="line-243">   * @throws MetapathException</span>
-<span class="source-line-no">244</span><span id="line-244">   *           if an error occurred during evaluation</span>
-<span class="source-line-no">245</span><span id="line-245">   * @see ResultType#convert(ISequence)</span>
-<span class="source-line-no">246</span><span id="line-246">   */</span>
-<span class="source-line-no">247</span><span id="line-247">  @Nullable</span>
-<span class="source-line-no">248</span><span id="line-248">  default &lt;T&gt; T evaluateAs(</span>
-<span class="source-line-no">249</span><span id="line-249">      @Nullable IItem focus,</span>
-<span class="source-line-no">250</span><span id="line-250">      @NonNull ResultType resultType,</span>
-<span class="source-line-no">251</span><span id="line-251">      @NonNull DynamicContext dynamicContext) {</span>
-<span class="source-line-no">252</span><span id="line-252">    ISequence&lt;?&gt; result = evaluate(focus, dynamicContext);</span>
-<span class="source-line-no">253</span><span id="line-253">    return resultType.convert(result);</span>
-<span class="source-line-no">254</span><span id="line-254">  }</span>
-<span class="source-line-no">255</span><span id="line-255"></span>
-<span class="source-line-no">256</span><span id="line-256">  /**</span>
-<span class="source-line-no">257</span><span id="line-257">   * Evaluate this Metapath expression without a specific focus.</span>
-<span class="source-line-no">258</span><span id="line-258">   *</span>
-<span class="source-line-no">259</span><span id="line-259">   * @param &lt;T&gt;</span>
-<span class="source-line-no">260</span><span id="line-260">   *          the type of items contained in the resulting sequence</span>
-<span class="source-line-no">261</span><span id="line-261">   * @return a sequence of Metapath items representing the result of the</span>
-<span class="source-line-no">262</span><span id="line-262">   *         evaluation</span>
-<span class="source-line-no">263</span><span id="line-263">   * @throws MetapathException</span>
-<span class="source-line-no">264</span><span id="line-264">   *           if an error occurred during evaluation</span>
-<span class="source-line-no">265</span><span id="line-265">   */</span>
-<span class="source-line-no">266</span><span id="line-266">  @NonNull</span>
-<span class="source-line-no">267</span><span id="line-267">  default &lt;T extends IItem&gt; ISequence&lt;T&gt; evaluate() {</span>
-<span class="source-line-no">268</span><span id="line-268">    return evaluate((IItem) null);</span>
-<span class="source-line-no">269</span><span id="line-269">  }</span>
-<span class="source-line-no">270</span><span id="line-270"></span>
-<span class="source-line-no">271</span><span id="line-271">  /**</span>
-<span class="source-line-no">272</span><span id="line-272">   * Evaluate this Metapath expression using the provided {@code focus} as the</span>
-<span class="source-line-no">273</span><span id="line-273">   * initial evaluation context.</span>
-<span class="source-line-no">274</span><span id="line-274">   *</span>
-<span class="source-line-no">275</span><span id="line-275">   * @param &lt;T&gt;</span>
-<span class="source-line-no">276</span><span id="line-276">   *          the type of items contained in the resulting sequence</span>
-<span class="source-line-no">277</span><span id="line-277">   * @param focus</span>
-<span class="source-line-no">278</span><span id="line-278">   *          the outer focus of the expression</span>
+<span class="source-line-no">180</span><span id="line-180">   * @return the expression</span>
+<span class="source-line-no">181</span><span id="line-181">   */</span>
+<span class="source-line-no">182</span><span id="line-182">  @Override</span>
+<span class="source-line-no">183</span><span id="line-183">  @NonNull</span>
+<span class="source-line-no">184</span><span id="line-184">  String getPath();</span>
+<span class="source-line-no">185</span><span id="line-185"></span>
+<span class="source-line-no">186</span><span id="line-186">  /**</span>
+<span class="source-line-no">187</span><span id="line-187">   * Get the static context used to compile this Metapath.</span>
+<span class="source-line-no">188</span><span id="line-188">   *</span>
+<span class="source-line-no">189</span><span id="line-189">   * @return the static context</span>
+<span class="source-line-no">190</span><span id="line-190">   */</span>
+<span class="source-line-no">191</span><span id="line-191">  @NonNull</span>
+<span class="source-line-no">192</span><span id="line-192">  StaticContext getStaticContext();</span>
+<span class="source-line-no">193</span><span id="line-193"></span>
+<span class="source-line-no">194</span><span id="line-194">  /**</span>
+<span class="source-line-no">195</span><span id="line-195">   * Evaluate this Metapath expression without a specific focus. The required</span>
+<span class="source-line-no">196</span><span id="line-196">   * result type will be determined by the {@code resultType} argument.</span>
+<span class="source-line-no">197</span><span id="line-197">   *</span>
+<span class="source-line-no">198</span><span id="line-198">   * @param &lt;T&gt;</span>
+<span class="source-line-no">199</span><span id="line-199">   *          the expected result type</span>
+<span class="source-line-no">200</span><span id="line-200">   * @param resultType</span>
+<span class="source-line-no">201</span><span id="line-201">   *          the type of result to produce</span>
+<span class="source-line-no">202</span><span id="line-202">   * @return the converted result</span>
+<span class="source-line-no">203</span><span id="line-203">   * @throws TypeMetapathException</span>
+<span class="source-line-no">204</span><span id="line-204">   *           if the provided sequence is incompatible with the requested result</span>
+<span class="source-line-no">205</span><span id="line-205">   *           type</span>
+<span class="source-line-no">206</span><span id="line-206">   * @throws MetapathException</span>
+<span class="source-line-no">207</span><span id="line-207">   *           if an error occurred during evaluation</span>
+<span class="source-line-no">208</span><span id="line-208">   * @see ResultType#convert(ISequence)</span>
+<span class="source-line-no">209</span><span id="line-209">   */</span>
+<span class="source-line-no">210</span><span id="line-210">  @Nullable</span>
+<span class="source-line-no">211</span><span id="line-211">  default &lt;T&gt; T evaluateAs(@NonNull ResultType resultType) {</span>
+<span class="source-line-no">212</span><span id="line-212">    return evaluateAs(null, resultType);</span>
+<span class="source-line-no">213</span><span id="line-213">  }</span>
+<span class="source-line-no">214</span><span id="line-214"></span>
+<span class="source-line-no">215</span><span id="line-215">  /**</span>
+<span class="source-line-no">216</span><span id="line-216">   * Evaluate this Metapath expression using the provided {@code focus} as the</span>
+<span class="source-line-no">217</span><span id="line-217">   * initial evaluation context. The required result type will be determined by</span>
+<span class="source-line-no">218</span><span id="line-218">   * the {@code resultType} argument.</span>
+<span class="source-line-no">219</span><span id="line-219">   *</span>
+<span class="source-line-no">220</span><span id="line-220">   * @param &lt;T&gt;</span>
+<span class="source-line-no">221</span><span id="line-221">   *          the expected result type</span>
+<span class="source-line-no">222</span><span id="line-222">   * @param focus</span>
+<span class="source-line-no">223</span><span id="line-223">   *          the focus of the expression</span>
+<span class="source-line-no">224</span><span id="line-224">   * @param resultType</span>
+<span class="source-line-no">225</span><span id="line-225">   *          the type of result to produce</span>
+<span class="source-line-no">226</span><span id="line-226">   * @return the converted result</span>
+<span class="source-line-no">227</span><span id="line-227">   * @throws TypeMetapathException</span>
+<span class="source-line-no">228</span><span id="line-228">   *           if the provided sequence is incompatible with the requested result</span>
+<span class="source-line-no">229</span><span id="line-229">   *           type</span>
+<span class="source-line-no">230</span><span id="line-230">   * @throws MetapathException</span>
+<span class="source-line-no">231</span><span id="line-231">   *           if an error occurred during evaluation</span>
+<span class="source-line-no">232</span><span id="line-232">   * @see ResultType#convert(ISequence)</span>
+<span class="source-line-no">233</span><span id="line-233">   */</span>
+<span class="source-line-no">234</span><span id="line-234">  @Nullable</span>
+<span class="source-line-no">235</span><span id="line-235">  default &lt;T&gt; T evaluateAs(</span>
+<span class="source-line-no">236</span><span id="line-236">      @Nullable IItem focus,</span>
+<span class="source-line-no">237</span><span id="line-237">      @NonNull ResultType resultType) {</span>
+<span class="source-line-no">238</span><span id="line-238">    ISequence&lt;?&gt; result = evaluate(focus);</span>
+<span class="source-line-no">239</span><span id="line-239">    return resultType.convert(result);</span>
+<span class="source-line-no">240</span><span id="line-240">  }</span>
+<span class="source-line-no">241</span><span id="line-241"></span>
+<span class="source-line-no">242</span><span id="line-242">  /**</span>
+<span class="source-line-no">243</span><span id="line-243">   * Evaluate this Metapath expression using the provided {@code focus} as the</span>
+<span class="source-line-no">244</span><span id="line-244">   * initial evaluation context. The specific result type will be determined by</span>
+<span class="source-line-no">245</span><span id="line-245">   * the {@code resultType} argument.</span>
+<span class="source-line-no">246</span><span id="line-246">   * &lt;p&gt;</span>
+<span class="source-line-no">247</span><span id="line-247">   * This variant allow for reuse of a provided {@code dynamicContext}.</span>
+<span class="source-line-no">248</span><span id="line-248">   *</span>
+<span class="source-line-no">249</span><span id="line-249">   * @param &lt;T&gt;</span>
+<span class="source-line-no">250</span><span id="line-250">   *          the expected result type</span>
+<span class="source-line-no">251</span><span id="line-251">   * @param focus</span>
+<span class="source-line-no">252</span><span id="line-252">   *          the outer focus of the expression</span>
+<span class="source-line-no">253</span><span id="line-253">   * @param resultType</span>
+<span class="source-line-no">254</span><span id="line-254">   *          the type of result to produce</span>
+<span class="source-line-no">255</span><span id="line-255">   * @param dynamicContext</span>
+<span class="source-line-no">256</span><span id="line-256">   *          the dynamic context to use for evaluation</span>
+<span class="source-line-no">257</span><span id="line-257">   * @return the converted result</span>
+<span class="source-line-no">258</span><span id="line-258">   * @throws TypeMetapathException</span>
+<span class="source-line-no">259</span><span id="line-259">   *           if the provided sequence is incompatible with the requested result</span>
+<span class="source-line-no">260</span><span id="line-260">   *           type</span>
+<span class="source-line-no">261</span><span id="line-261">   * @throws MetapathException</span>
+<span class="source-line-no">262</span><span id="line-262">   *           if an error occurred during evaluation</span>
+<span class="source-line-no">263</span><span id="line-263">   * @see ResultType#convert(ISequence)</span>
+<span class="source-line-no">264</span><span id="line-264">   */</span>
+<span class="source-line-no">265</span><span id="line-265">  @Nullable</span>
+<span class="source-line-no">266</span><span id="line-266">  default &lt;T&gt; T evaluateAs(</span>
+<span class="source-line-no">267</span><span id="line-267">      @Nullable IItem focus,</span>
+<span class="source-line-no">268</span><span id="line-268">      @NonNull ResultType resultType,</span>
+<span class="source-line-no">269</span><span id="line-269">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">270</span><span id="line-270">    ISequence&lt;?&gt; result = evaluate(focus, dynamicContext);</span>
+<span class="source-line-no">271</span><span id="line-271">    return resultType.convert(result);</span>
+<span class="source-line-no">272</span><span id="line-272">  }</span>
+<span class="source-line-no">273</span><span id="line-273"></span>
+<span class="source-line-no">274</span><span id="line-274">  /**</span>
+<span class="source-line-no">275</span><span id="line-275">   * Evaluate this Metapath expression without a specific focus.</span>
+<span class="source-line-no">276</span><span id="line-276">   *</span>
+<span class="source-line-no">277</span><span id="line-277">   * @param &lt;T&gt;</span>
+<span class="source-line-no">278</span><span id="line-278">   *          the type of items contained in the resulting sequence</span>
 <span class="source-line-no">279</span><span id="line-279">   * @return a sequence of Metapath items representing the result of the</span>
 <span class="source-line-no">280</span><span id="line-280">   *         evaluation</span>
 <span class="source-line-no">281</span><span id="line-281">   * @throws MetapathException</span>
 <span class="source-line-no">282</span><span id="line-282">   *           if an error occurred during evaluation</span>
 <span class="source-line-no">283</span><span id="line-283">   */</span>
 <span class="source-line-no">284</span><span id="line-284">  @NonNull</span>
-<span class="source-line-no">285</span><span id="line-285">  default &lt;T extends IItem&gt; ISequence&lt;T&gt; evaluate(</span>
-<span class="source-line-no">286</span><span id="line-286">      @Nullable IItem focus) {</span>
-<span class="source-line-no">287</span><span id="line-287">    return evaluate(focus, new DynamicContext(getStaticContext()));</span>
-<span class="source-line-no">288</span><span id="line-288">  }</span>
-<span class="source-line-no">289</span><span id="line-289"></span>
-<span class="source-line-no">290</span><span id="line-290">  /**</span>
-<span class="source-line-no">291</span><span id="line-291">   * Evaluate this Metapath expression using the provided {@code focus} as the</span>
-<span class="source-line-no">292</span><span id="line-292">   * initial evaluation context.</span>
-<span class="source-line-no">293</span><span id="line-293">   * &lt;p&gt;</span>
-<span class="source-line-no">294</span><span id="line-294">   * This variant allow for reuse of a provided {@code dynamicContext}.</span>
-<span class="source-line-no">295</span><span id="line-295">   *</span>
-<span class="source-line-no">296</span><span id="line-296">   * @param &lt;T&gt;</span>
-<span class="source-line-no">297</span><span id="line-297">   *          the type of items contained in the resulting sequence</span>
-<span class="source-line-no">298</span><span id="line-298">   * @param focus</span>
-<span class="source-line-no">299</span><span id="line-299">   *          the outer focus of the expression</span>
-<span class="source-line-no">300</span><span id="line-300">   * @param dynamicContext</span>
-<span class="source-line-no">301</span><span id="line-301">   *          the dynamic context to use for evaluation</span>
-<span class="source-line-no">302</span><span id="line-302">   * @return a sequence of Metapath items representing the result of the</span>
-<span class="source-line-no">303</span><span id="line-303">   *         evaluation</span>
-<span class="source-line-no">304</span><span id="line-304">   * @throws MetapathException</span>
-<span class="source-line-no">305</span><span id="line-305">   *           if an error occurred during evaluation</span>
-<span class="source-line-no">306</span><span id="line-306">   */</span>
-<span class="source-line-no">307</span><span id="line-307">  @NonNull</span>
-<span class="source-line-no">308</span><span id="line-308">  &lt;T extends IItem&gt; ISequence&lt;T&gt; evaluate(</span>
-<span class="source-line-no">309</span><span id="line-309">      @Nullable IItem focus,</span>
-<span class="source-line-no">310</span><span id="line-310">      @NonNull DynamicContext dynamicContext);</span>
-<span class="source-line-no">311</span><span id="line-311">}</span>
+<span class="source-line-no">285</span><span id="line-285">  default &lt;T extends IItem&gt; ISequence&lt;T&gt; evaluate() {</span>
+<span class="source-line-no">286</span><span id="line-286">    return evaluate((IItem) null);</span>
+<span class="source-line-no">287</span><span id="line-287">  }</span>
+<span class="source-line-no">288</span><span id="line-288"></span>
+<span class="source-line-no">289</span><span id="line-289">  /**</span>
+<span class="source-line-no">290</span><span id="line-290">   * Evaluate this Metapath expression using the provided {@code focus} as the</span>
+<span class="source-line-no">291</span><span id="line-291">   * initial evaluation context.</span>
+<span class="source-line-no">292</span><span id="line-292">   *</span>
+<span class="source-line-no">293</span><span id="line-293">   * @param &lt;T&gt;</span>
+<span class="source-line-no">294</span><span id="line-294">   *          the type of items contained in the resulting sequence</span>
+<span class="source-line-no">295</span><span id="line-295">   * @param focus</span>
+<span class="source-line-no">296</span><span id="line-296">   *          the outer focus of the expression</span>
+<span class="source-line-no">297</span><span id="line-297">   * @return a sequence of Metapath items representing the result of the</span>
+<span class="source-line-no">298</span><span id="line-298">   *         evaluation</span>
+<span class="source-line-no">299</span><span id="line-299">   * @throws MetapathException</span>
+<span class="source-line-no">300</span><span id="line-300">   *           if an error occurred during evaluation</span>
+<span class="source-line-no">301</span><span id="line-301">   */</span>
+<span class="source-line-no">302</span><span id="line-302">  @NonNull</span>
+<span class="source-line-no">303</span><span id="line-303">  default &lt;T extends IItem&gt; ISequence&lt;T&gt; evaluate(</span>
+<span class="source-line-no">304</span><span id="line-304">      @Nullable IItem focus) {</span>
+<span class="source-line-no">305</span><span id="line-305">    return evaluate(focus, new DynamicContext(getStaticContext()));</span>
+<span class="source-line-no">306</span><span id="line-306">  }</span>
+<span class="source-line-no">307</span><span id="line-307"></span>
+<span class="source-line-no">308</span><span id="line-308">  /**</span>
+<span class="source-line-no">309</span><span id="line-309">   * Evaluate this Metapath expression using the provided {@code focus} as the</span>
+<span class="source-line-no">310</span><span id="line-310">   * initial evaluation context.</span>
+<span class="source-line-no">311</span><span id="line-311">   * &lt;p&gt;</span>
+<span class="source-line-no">312</span><span id="line-312">   * This variant allow for reuse of a provided {@code dynamicContext}.</span>
+<span class="source-line-no">313</span><span id="line-313">   *</span>
+<span class="source-line-no">314</span><span id="line-314">   * @param &lt;T&gt;</span>
+<span class="source-line-no">315</span><span id="line-315">   *          the type of items contained in the resulting sequence</span>
+<span class="source-line-no">316</span><span id="line-316">   * @param focus</span>
+<span class="source-line-no">317</span><span id="line-317">   *          the outer focus of the expression</span>
+<span class="source-line-no">318</span><span id="line-318">   * @param dynamicContext</span>
+<span class="source-line-no">319</span><span id="line-319">   *          the dynamic context to use for evaluation</span>
+<span class="source-line-no">320</span><span id="line-320">   * @return a sequence of Metapath items representing the result of the</span>
+<span class="source-line-no">321</span><span id="line-321">   *         evaluation</span>
+<span class="source-line-no">322</span><span id="line-322">   * @throws MetapathException</span>
+<span class="source-line-no">323</span><span id="line-323">   *           if an error occurred during evaluation</span>
+<span class="source-line-no">324</span><span id="line-324">   */</span>
+<span class="source-line-no">325</span><span id="line-325">  @NonNull</span>
+<span class="source-line-no">326</span><span id="line-326">  &lt;T extends IItem&gt; ISequence&lt;T&gt; evaluate(</span>
+<span class="source-line-no">327</span><span id="line-327">      @Nullable IItem focus,</span>
+<span class="source-line-no">328</span><span id="line-328">      @NonNull DynamicContext dynamicContext);</span>
+<span class="source-line-no">329</span><span id="line-329"></span>
+<span class="source-line-no">330</span><span id="line-330">}</span>
 
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1743912701705">
-    <module artifactId="metaschema-schema-generator" groupId="dev.metaschema.java" version="2.2.0"/>
+<licensePluginReport goal="FORMAT" timestamp="1765735582520">
+    <module artifactId="metaschema-schema-generator" groupId="dev.metaschema.java" version="3.0.0.M1"/>
     <files>
         <file path="src/test/java/gov/nist/secauto/metaschema/schemagen/AbstractSchemaGeneratorTestSuite.java" result="NOOP"/>
         <file path="src/test/java/gov/nist/secauto/metaschema/schemagen/JsonSuiteTest.java" result="NOOP"/>

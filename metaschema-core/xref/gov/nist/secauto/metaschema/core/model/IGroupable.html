@@ -94,7 +94,7 @@
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>    @Nullable
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">default</strong> <a name="IEnhancedQName" href="../../../../../../gov/nist/secauto/metaschema/core/qname/IEnhancedQName.html#IEnhancedQName">IEnhancedQName</a> getEffectiveXmlGroupAsQName() {
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">return</strong> XmlGroupAsBehavior.GROUPED.equals(getXmlGroupAsBehavior())
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">return</strong> getXmlGroupAsBehavior() == XmlGroupAsBehavior.GROUPED
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>          ? IEnhancedQName.of(
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>              getContainingDefinition().getQName().getNamespace(),
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>              ObjectUtils.requireNonNull(getGroupAsName()))

@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">this</strong>.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">this</strong>.defaultValue = ModelSupport.defaultValue(binding.getDefault(), definition.getJavaTypeAdapter());
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">this</strong>.boundNodeItem = ObjectUtils.notNull(
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>          Lazy.lazy(() -&gt; (IAssemblyNodeItem) ObjectUtils.notNull(parent.getSourceNodeItem())
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          Lazy.of(() -&gt; (IAssemblyNodeItem) ObjectUtils.notNull(parent.getSourceNodeItem())
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>              .getModelItemsByName(bindingInstance.getQName())
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>              .get(position)));
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>    }

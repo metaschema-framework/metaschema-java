@@ -53,7 +53,7 @@
 <span class="source-line-no">040</span><span id="line-40"> */</span>
 <span class="source-line-no">041</span><span id="line-41">public final class DataTypeService {</span>
 <span class="source-line-no">042</span><span id="line-42">  private static final Logger LOGGER = LogManager.getLogger(DataTypeService.class);</span>
-<span class="source-line-no">043</span><span id="line-43">  private static final Lazy&lt;DataTypeService&gt; INSTANCE = Lazy.lazy(DataTypeService::new);</span>
+<span class="source-line-no">043</span><span id="line-43">  private static final Lazy&lt;DataTypeService&gt; INSTANCE = Lazy.of(DataTypeService::new);</span>
 <span class="source-line-no">044</span><span id="line-44"></span>
 <span class="source-line-no">045</span><span id="line-45">  private static final List&lt;IItemType&gt; BUILTIN_ITEM_TYPES;</span>
 <span class="source-line-no">046</span><span id="line-46"></span>

@@ -92,7 +92,7 @@
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>    @SuppressWarnings(<span class="jxr_string">"null"</span>)
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>    @NonNull
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Stream&lt;IItem&gt; flatten(@NonNull <a name="IItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/IItem.html#IItem">IItem</a> item) {
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">return</strong> item instanceof IArrayItem
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">return</strong> item instanceof <a name="IArrayItem" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/function/IArrayItem.html#IArrayItem">IArrayItem</a>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>          <em class="jxr_comment">// flatten the array members</em>
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>          ? ((IArrayItem&lt;?&gt;) item).stream()
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>              .flatMap(member -&gt; member.toSequence().stream()

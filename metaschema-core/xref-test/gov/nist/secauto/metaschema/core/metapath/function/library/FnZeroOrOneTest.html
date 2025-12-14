@@ -15,63 +15,57 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> gov.nist.secauto.metaschema.core.metapath.TestUtils.integer;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> gov.nist.secauto.metaschema.core.metapath.TestUtils.sequence;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertAll;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.assertj.core.api.Assertions.assertThat;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertNull;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertThrows;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.ExpressionTestBase;
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.MetapathException;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.ISequence;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.ParameterizedTest;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.Arguments;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.MethodSource;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> java.util.stream.Stream;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.Nullable;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">class</strong> <a name="FnZeroOrOneTest" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/library/FnZeroOrOneTest.html#FnZeroOrOneTest">FnZeroOrOneTest</a>
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">extends</strong> <a name="ExpressionTestBase" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/ExpressionTestBase.html#ExpressionTestBase">ExpressionTestBase</a> {
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Stream&lt;Arguments&gt; provideValues() { <em class="jxr_comment">// NOPMD - false positive</em>
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">return</strong> Stream.of(
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>          Arguments.of(
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>              <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>              <span class="jxr_string">"zero-or-one((10, 20, 30))"</span>),
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>          Arguments.of(
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>              <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>              <span class="jxr_string">"zero-or-one((10, 20))"</span>),
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>          Arguments.of(
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>              sequence(integer(10)),
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>              <span class="jxr_string">"zero-or-one((10))"</span>),
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>          Arguments.of(
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>              sequence(),
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>              <span class="jxr_string">"zero-or-one(())"</span>));
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>    }
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    @ParameterizedTest
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>    @MethodSource(<span class="jxr_string">"provideValues"</span>)
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    <strong class="jxr_keyword">void</strong> test(@Nullable ISequence&lt;?&gt; expected, @NonNull String metapath) {
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>        assertEquals(expected, IMetapathExpression.compile(metapath)
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>            .evaluate(<strong class="jxr_keyword">null</strong>, newDynamicContext()));
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      } <strong class="jxr_keyword">catch</strong> (MetapathException ex) {
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>        <em class="jxr_comment">// FIXME: After refactoring the exception hierarchy, target the actual exception</em>
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>        Throwable cause = ex.getCause() == <strong class="jxr_keyword">null</strong> ? ex.getCause() : ex.getCause().getCause();
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>        assertAll(
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>            () -&gt; assertNull(expected),
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>            () -&gt; assertEquals(InvalidArgumentFunctionException.<strong class="jxr_keyword">class</strong>, cause == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : cause.getClass()),
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>            () -&gt; assertEquals(
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>                InvalidArgumentFunctionException.INVALID_ARGUMENT_ZERO_OR_ONE,
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>                cause instanceof InvalidArgumentFunctionException
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>                    ? ((InvalidArgumentFunctionException) cause).getCode()
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>                    : <strong class="jxr_keyword">null</strong>));
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      }
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>  }
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.function.InvalidArgumentFunctionException;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.ParameterizedTest;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.Arguments;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.junit.jupiter.params.provider.MethodSource;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.stream.Stream;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.NonNull;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> edu.umd.cs.findbugs.annotations.Nullable;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">class</strong> <a name="FnZeroOrOneTest" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/function/library/FnZeroOrOneTest.html#FnZeroOrOneTest">FnZeroOrOneTest</a>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">extends</strong> <a name="ExpressionTestBase" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/ExpressionTestBase.html#ExpressionTestBase">ExpressionTestBase</a> {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Stream&lt;Arguments&gt; provideValues() { <em class="jxr_comment">// NOPMD - false positive</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">return</strong> Stream.of(
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>          Arguments.of(
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>              <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>              <span class="jxr_string">"zero-or-one((10, 20, 30))"</span>),
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>          Arguments.of(
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>              <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>              <span class="jxr_string">"zero-or-one((10, 20))"</span>),
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>          Arguments.of(
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>              sequence(integer(10)),
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>              <span class="jxr_string">"zero-or-one((10))"</span>),
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>          Arguments.of(
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>              sequence(),
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>              <span class="jxr_string">"zero-or-one(())"</span>));
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    }
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    @ParameterizedTest
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>    @MethodSource(<span class="jxr_string">"provideValues"</span>)
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">void</strong> test(@Nullable ISequence&lt;?&gt; expected, @NonNull String metapath) {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">if</strong> (expected == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>        InvalidArgumentFunctionException thrown = assertThrows(InvalidArgumentFunctionException.<strong class="jxr_keyword">class</strong>, () -&gt; {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>          IMetapathExpression.compile(metapath).evaluate(<strong class="jxr_keyword">null</strong>, newDynamicContext());
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>        });
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>        assertThat(thrown).extracting(ex -&gt; ex.getErrorCode().getCode())
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>            .isEqualTo(InvalidArgumentFunctionException.INVALID_ARGUMENT_ZERO_OR_ONE);
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>        assertEquals(expected, IMetapathExpression.compile(metapath)
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>            .evaluate(<strong class="jxr_keyword">null</strong>, newDynamicContext()));
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      }
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>    }
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  }
 </pre>
 <hr/>
 <div id="footer">© 2025</div>

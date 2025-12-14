@@ -75,8 +75,8 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">   * @return a predicate implementing the filter</em>
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">static</strong> &lt;DEF <strong class="jxr_keyword">extends</strong> IDefinition&gt; Predicate&lt;DEF&gt; allNonLocalDefinitions() {
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">return</strong> definition -&gt; IDefinition.ModuleScope.PUBLIC.equals(definition.getModuleScope())
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>          || ModelType.ASSEMBLY.equals(definition.getModelType())
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">return</strong> definition -&gt; definition.getModuleScope() == IDefinition.ModuleScope.PUBLIC
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          || definition.getModelType() == ModelType.ASSEMBLY
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>              &amp;&amp; ((<a name="IAssemblyDefinition" href="../../../../../../gov/nist/secauto/metaschema/core/model/IAssemblyDefinition.html#IAssemblyDefinition">IAssemblyDefinition</a>) definition).isRoot();
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>    }
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  
@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">   * @return a predicate implementing the filter</em>
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">static</strong> &lt;DEF <strong class="jxr_keyword">extends</strong> IDefinition&gt; Predicate&lt;DEF&gt; allRootAssemblyDefinitions() {
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">return</strong> definition -&gt; ModelType.ASSEMBLY.equals(definition.getModelType())
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">return</strong> definition -&gt; definition.getModelType() == ModelType.ASSEMBLY
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>          &amp;&amp; ((<a name="IAssemblyDefinition" href="../../../../../../gov/nist/secauto/metaschema/core/model/IAssemblyDefinition.html#IAssemblyDefinition">IAssemblyDefinition</a>) definition).isRoot();
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>    }
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  

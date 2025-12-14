@@ -117,7 +117,7 @@
 <span class="source-line-no">104</span><span id="line-104">      @NonNull INodeItem node,</span>
 <span class="source-line-no">105</span><span id="line-105">      @NonNull CharSequence message,</span>
 <span class="source-line-no">106</span><span id="line-106">      @Nullable Throwable cause) {</span>
-<span class="source-line-no">107</span><span id="line-107">    if (!Level.NONE.equals(level)) {</span>
+<span class="source-line-no">107</span><span id="line-107">    if (level != Level.NONE) {</span>
 <span class="source-line-no">108</span><span id="line-108">      LogBuilder builder = getLogBuilder(level);</span>
 <span class="source-line-no">109</span><span id="line-109">      if (cause != null) {</span>
 <span class="source-line-no">110</span><span id="line-110">        builder.withThrowable(cause);</span>
@@ -135,7 +135,7 @@
 <span class="source-line-no">122</span><span id="line-122">      @NonNull ICardinalityConstraint constraint,</span>
 <span class="source-line-no">123</span><span id="line-123">      @NonNull INodeItem node,</span>
 <span class="source-line-no">124</span><span id="line-124">      @NonNull ISequence&lt;? extends INodeItem&gt; targets,</span>
-<span class="source-line-no">125</span><span id="line-125">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">125</span><span id="line-125">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">126</span><span id="line-126">    Level level = constraint.getLevel();</span>
 <span class="source-line-no">127</span><span id="line-127">    if (isLogged(level)) {</span>
 <span class="source-line-no">128</span><span id="line-128">      logMessage(</span>
@@ -156,7 +156,7 @@
 <span class="source-line-no">143</span><span id="line-143">      @NonNull ICardinalityConstraint constraint,</span>
 <span class="source-line-no">144</span><span id="line-144">      @NonNull INodeItem node,</span>
 <span class="source-line-no">145</span><span id="line-145">      @NonNull ISequence&lt;? extends INodeItem&gt; targets,</span>
-<span class="source-line-no">146</span><span id="line-146">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">146</span><span id="line-146">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">147</span><span id="line-147">    Level level = constraint.getLevel();</span>
 <span class="source-line-no">148</span><span id="line-148">    if (isLogged(level)) {</span>
 <span class="source-line-no">149</span><span id="line-149">      logMessage(</span>
@@ -178,7 +178,7 @@
 <span class="source-line-no">165</span><span id="line-165">      @NonNull INodeItem node,</span>
 <span class="source-line-no">166</span><span id="line-166">      @NonNull INodeItem oldItem,</span>
 <span class="source-line-no">167</span><span id="line-167">      @NonNull INodeItem target,</span>
-<span class="source-line-no">168</span><span id="line-168">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">168</span><span id="line-168">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">169</span><span id="line-169">    Level level = constraint.getLevel();</span>
 <span class="source-line-no">170</span><span id="line-170">    if (isLogged(level)) {</span>
 <span class="source-line-no">171</span><span id="line-171">      logMessage(</span>
@@ -201,7 +201,7 @@
 <span class="source-line-no">188</span><span id="line-188">      @NonNull INodeItem node,</span>
 <span class="source-line-no">189</span><span id="line-189">      @NonNull INodeItem oldItem,</span>
 <span class="source-line-no">190</span><span id="line-190">      @NonNull INodeItem target,</span>
-<span class="source-line-no">191</span><span id="line-191">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">191</span><span id="line-191">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">192</span><span id="line-192">    Level level = constraint.getLevel();</span>
 <span class="source-line-no">193</span><span id="line-193">    if (isLogged(level)) {</span>
 <span class="source-line-no">194</span><span id="line-194">      logMessage(</span>
@@ -244,7 +244,7 @@
 <span class="source-line-no">231</span><span id="line-231">      @NonNull INodeItem target,</span>
 <span class="source-line-no">232</span><span id="line-232">      @NonNull String value,</span>
 <span class="source-line-no">233</span><span id="line-233">      @NonNull Pattern pattern,</span>
-<span class="source-line-no">234</span><span id="line-234">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">234</span><span id="line-234">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">235</span><span id="line-235">    Level level = constraint.getLevel();</span>
 <span class="source-line-no">236</span><span id="line-236">    if (isLogged(level)) {</span>
 <span class="source-line-no">237</span><span id="line-237">      logMessage(</span>
@@ -270,7 +270,7 @@
 <span class="source-line-no">257</span><span id="line-257">      @NonNull String value,</span>
 <span class="source-line-no">258</span><span id="line-258">      @NonNull IDataTypeAdapter&lt;?&gt; adapter,</span>
 <span class="source-line-no">259</span><span id="line-259">      @NonNull IllegalArgumentException cause,</span>
-<span class="source-line-no">260</span><span id="line-260">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">260</span><span id="line-260">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">261</span><span id="line-261">    Level level = constraint.getLevel();</span>
 <span class="source-line-no">262</span><span id="line-262">    if (isLogged(level)) {</span>
 <span class="source-line-no">263</span><span id="line-263">      logMessage(</span>
@@ -293,7 +293,7 @@
 <span class="source-line-no">280</span><span id="line-280">      @NonNull IExpectConstraint constraint,</span>
 <span class="source-line-no">281</span><span id="line-281">      @NonNull INodeItem node,</span>
 <span class="source-line-no">282</span><span id="line-282">      @NonNull INodeItem target,</span>
-<span class="source-line-no">283</span><span id="line-283">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">283</span><span id="line-283">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">284</span><span id="line-284">    Level level = constraint.getLevel();</span>
 <span class="source-line-no">285</span><span id="line-285">    if (isLogged(level)) {</span>
 <span class="source-line-no">286</span><span id="line-286">      logMessage(</span>
@@ -356,7 +356,7 @@
 <span class="source-line-no">343</span><span id="line-343">      @NonNull INodeItem node,</span>
 <span class="source-line-no">344</span><span id="line-344">      @NonNull INodeItem target,</span>
 <span class="source-line-no">345</span><span id="line-345">      @NonNull List&lt;String&gt; key,</span>
-<span class="source-line-no">346</span><span id="line-346">      @NonNull DynamicContext dynamicContext) {</span>
+<span class="source-line-no">346</span><span id="line-346">      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {</span>
 <span class="source-line-no">347</span><span id="line-347">    Level level = constraint.getLevel();</span>
 <span class="source-line-no">348</span><span id="line-348">    if (isLogged(level)) {</span>
 <span class="source-line-no">349</span><span id="line-349">      logMessage(</span>

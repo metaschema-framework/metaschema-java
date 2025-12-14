@@ -112,7 +112,7 @@
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>       @NonNull CharSequence message,
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>       @Nullable Throwable cause) {
-<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">if</strong> (!Level.NONE.equals(level)) {
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">if</strong> (level != Level.NONE) {
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>       LogBuilder builder = getLogBuilder(level);
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>       <strong class="jxr_keyword">if</strong> (cause != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>         builder.withThrowable(cause);
@@ -130,7 +130,7 @@
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>       @NonNull <a name="ICardinalityConstraint" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ICardinalityConstraint.html#ICardinalityConstraint">ICardinalityConstraint</a> constraint,
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>       @NonNull ISequence&lt;? <strong class="jxr_keyword">extends</strong> INodeItem&gt; targets,
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>     Level level = constraint.getLevel();
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>     <strong class="jxr_keyword">if</strong> (isLogged(level)) {
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>       logMessage(
@@ -151,7 +151,7 @@
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>       @NonNull <a name="ICardinalityConstraint" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ICardinalityConstraint.html#ICardinalityConstraint">ICardinalityConstraint</a> constraint,
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>       @NonNull ISequence&lt;? <strong class="jxr_keyword">extends</strong> INodeItem&gt; targets,
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>     Level level = constraint.getLevel();
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">if</strong> (isLogged(level)) {
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>       logMessage(
@@ -173,7 +173,7 @@
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> oldItem,
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>     Level level = constraint.getLevel();
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>     <strong class="jxr_keyword">if</strong> (isLogged(level)) {
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>       logMessage(
@@ -196,7 +196,7 @@
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> oldItem,
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>     Level level = constraint.getLevel();
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>     <strong class="jxr_keyword">if</strong> (isLogged(level)) {
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>       logMessage(
@@ -239,7 +239,7 @@
 <a class="jxr_linenumber" name="L231" href="#L231">231</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
 <a class="jxr_linenumber" name="L232" href="#L232">232</a>       @NonNull String value,
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>       @NonNull Pattern pattern,
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>     Level level = constraint.getLevel();
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>     <strong class="jxr_keyword">if</strong> (isLogged(level)) {
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>       logMessage(
@@ -265,7 +265,7 @@
 <a class="jxr_linenumber" name="L257" href="#L257">257</a>       @NonNull String value,
 <a class="jxr_linenumber" name="L258" href="#L258">258</a>       @NonNull IDataTypeAdapter&lt;?&gt; adapter,
 <a class="jxr_linenumber" name="L259" href="#L259">259</a>       @NonNull IllegalArgumentException cause,
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L261" href="#L261">261</a>     Level level = constraint.getLevel();
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>     <strong class="jxr_keyword">if</strong> (isLogged(level)) {
 <a class="jxr_linenumber" name="L263" href="#L263">263</a>       logMessage(
@@ -288,7 +288,7 @@
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>       @NonNull <a name="IExpectConstraint" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/IExpectConstraint.html#IExpectConstraint">IExpectConstraint</a> constraint,
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>     Level level = constraint.getLevel();
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>     <strong class="jxr_keyword">if</strong> (isLogged(level)) {
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>       logMessage(
@@ -351,7 +351,7 @@
 <a class="jxr_linenumber" name="L343" href="#L343">343</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> node,
 <a class="jxr_linenumber" name="L344" href="#L344">344</a>       @NonNull <a name="INodeItem" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItem.html#INodeItem">INodeItem</a> target,
 <a class="jxr_linenumber" name="L345" href="#L345">345</a>       @NonNull List&lt;String&gt; key,
-<a class="jxr_linenumber" name="L346" href="#L346">346</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) {
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>       @NonNull <a name="DynamicContext" href="../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext) <strong class="jxr_keyword">throws</strong> <a name="ConstraintValidationException" href="../../../../../../../gov/nist/secauto/metaschema/core/model/constraint/ConstraintValidationException.html#ConstraintValidationException">ConstraintValidationException</a> {
 <a class="jxr_linenumber" name="L347" href="#L347">347</a>     Level level = constraint.getLevel();
 <a class="jxr_linenumber" name="L348" href="#L348">348</a>     <strong class="jxr_keyword">if</strong> (isLogged(level)) {
 <a class="jxr_linenumber" name="L349" href="#L349">349</a>       logMessage(

@@ -133,7 +133,7 @@
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>       @NonNull URI resource,
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>       @NonNull JsonToken token) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>     JsonToken currentToken = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">while</strong> (parser.hasCurrentToken() &amp;&amp; !token.equals(currentToken = parser.currentToken())) {
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">while</strong> (parser.hasCurrentToken() &amp;&amp; (currentToken = parser.currentToken()) != token) {
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>       currentToken = parser.nextToken();
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>       <strong class="jxr_keyword">if</strong> (LOGGER.isWarnEnabled()) {
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>         LOGGER.warn(<span class="jxr_string">"skipping over: {}"</span>,
@@ -165,7 +165,7 @@
 <a class="jxr_linenumber" name="L157" href="#L157">157</a> 
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>     JsonToken currentToken = parser.currentToken();
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>     <em class="jxr_comment">// skip the field name</em>
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>     <strong class="jxr_keyword">if</strong> (JsonToken.FIELD_NAME.equals(currentToken)) {
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>     <strong class="jxr_keyword">if</strong> (currentToken == JsonToken.FIELD_NAME) {
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>       currentToken = parser.nextToken();
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>     }
 <a class="jxr_linenumber" name="L163" href="#L163">163</a> 
@@ -246,7 +246,7 @@
 <a class="jxr_linenumber" name="L238" href="#L238">238</a>       @NonNull JsonToken... expectedTokens) {
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>     JsonToken current = parser.currentToken();
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>     assert Arrays.stream(expectedTokens)
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>         .anyMatch(expected -&gt; expected.equals(current)) : generateExpectedMessage(
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>         .anyMatch(expected -&gt; expected == current) : generateExpectedMessage(
 <a class="jxr_linenumber" name="L242" href="#L242">242</a>             parser,
 <a class="jxr_linenumber" name="L243" href="#L243">243</a>             resource,
 <a class="jxr_linenumber" name="L244" href="#L244">244</a>             expectedTokens,
@@ -283,7 +283,7 @@
 <a class="jxr_linenumber" name="L275" href="#L275">275</a>       @NonNull JsonToken expectedToken)
 <a class="jxr_linenumber" name="L276" href="#L276">276</a>       <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L277" href="#L277">277</a>     JsonToken token = parser.currentToken();
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>     assert expectedToken.equals(token) : generateExpectedMessage(
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>     assert token == expectedToken : generateExpectedMessage(
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>         parser,
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>         resource,
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>         expectedToken,
@@ -312,7 +312,7 @@
 <a class="jxr_linenumber" name="L304" href="#L304">304</a>       @NonNull JsonToken expectedToken)
 <a class="jxr_linenumber" name="L305" href="#L305">305</a>       <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L306" href="#L306">306</a>     JsonToken token = parser.nextToken();
-<a class="jxr_linenumber" name="L307" href="#L307">307</a>     assert expectedToken.equals(token) : generateExpectedMessage(
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>     assert token == expectedToken : generateExpectedMessage(
 <a class="jxr_linenumber" name="L308" href="#L308">308</a>         parser,
 <a class="jxr_linenumber" name="L309" href="#L309">309</a>         resource,
 <a class="jxr_linenumber" name="L310" href="#L310">310</a>         expectedToken,

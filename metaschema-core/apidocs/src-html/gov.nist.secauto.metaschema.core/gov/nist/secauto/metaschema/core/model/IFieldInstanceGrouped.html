@@ -20,44 +20,51 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">public interface IFieldInstanceGrouped extends INamedModelInstanceGrouped, IFieldInstance {</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">  /**</span>
-<span class="source-line-no">013</span><span id="line-13">   * Determines if the field is configured to have a wrapper in XML.</span>
-<span class="source-line-no">014</span><span id="line-14">   *</span>
-<span class="source-line-no">015</span><span id="line-15">   * @return {@code true} if an XML wrapper is required, or {@code false}</span>
-<span class="source-line-no">016</span><span id="line-16">   *         otherwise</span>
-<span class="source-line-no">017</span><span id="line-17">   */</span>
-<span class="source-line-no">018</span><span id="line-18">  @Override</span>
-<span class="source-line-no">019</span><span id="line-19">  default boolean isInXmlWrapped() {</span>
-<span class="source-line-no">020</span><span id="line-20">    // must always be wrapped</span>
-<span class="source-line-no">021</span><span id="line-21">    return true;</span>
-<span class="source-line-no">022</span><span id="line-22">  }</span>
-<span class="source-line-no">023</span><span id="line-23"></span>
-<span class="source-line-no">024</span><span id="line-24">  @Override</span>
-<span class="source-line-no">025</span><span id="line-25">  default boolean isEffectiveValueWrappedInXml() {</span>
-<span class="source-line-no">026</span><span id="line-26">    // must always be wrapped</span>
-<span class="source-line-no">027</span><span id="line-27">    return true;</span>
-<span class="source-line-no">028</span><span id="line-28">  }</span>
-<span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">  /**</span>
-<span class="source-line-no">031</span><span id="line-31">   * A visitor callback.</span>
-<span class="source-line-no">032</span><span id="line-32">   *</span>
-<span class="source-line-no">033</span><span id="line-33">   * @param &lt;CONTEXT&gt;</span>
-<span class="source-line-no">034</span><span id="line-34">   *          the type of the context parameter</span>
-<span class="source-line-no">035</span><span id="line-35">   * @param &lt;RESULT&gt;</span>
-<span class="source-line-no">036</span><span id="line-36">   *          the type of the visitor result</span>
-<span class="source-line-no">037</span><span id="line-37">   * @param visitor</span>
-<span class="source-line-no">038</span><span id="line-38">   *          the calling visitor</span>
-<span class="source-line-no">039</span><span id="line-39">   * @param context</span>
-<span class="source-line-no">040</span><span id="line-40">   *          a parameter used to pass contextual information between visitors</span>
-<span class="source-line-no">041</span><span id="line-41">   * @return the visitor result</span>
-<span class="source-line-no">042</span><span id="line-42">   */</span>
-<span class="source-line-no">043</span><span id="line-43">  @Override</span>
-<span class="source-line-no">044</span><span id="line-44">  default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull IModelElementVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {</span>
-<span class="source-line-no">045</span><span id="line-45">    return visitor.visitFieldInstance(this, context);</span>
-<span class="source-line-no">046</span><span id="line-46">  }</span>
-<span class="source-line-no">047</span><span id="line-47">}</span>
+<span class="source-line-no">010</span><span id="line-10">/**</span>
+<span class="source-line-no">011</span><span id="line-11"> * Represents a field instance that appears within a choice or other grouping</span>
+<span class="source-line-no">012</span><span id="line-12"> * construct.</span>
+<span class="source-line-no">013</span><span id="line-13"> * &lt;p&gt;</span>
+<span class="source-line-no">014</span><span id="line-14"> * Grouped field instances always have XML wrapping enabled and inherit</span>
+<span class="source-line-no">015</span><span id="line-15"> * cardinality from their containing group.</span>
+<span class="source-line-no">016</span><span id="line-16"> */</span>
+<span class="source-line-no">017</span><span id="line-17">public interface IFieldInstanceGrouped extends INamedModelInstanceGrouped, IFieldInstance {</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">  /**</span>
+<span class="source-line-no">020</span><span id="line-20">   * Determines if the field is configured to have a wrapper in XML.</span>
+<span class="source-line-no">021</span><span id="line-21">   *</span>
+<span class="source-line-no">022</span><span id="line-22">   * @return {@code true} if an XML wrapper is required, or {@code false}</span>
+<span class="source-line-no">023</span><span id="line-23">   *         otherwise</span>
+<span class="source-line-no">024</span><span id="line-24">   */</span>
+<span class="source-line-no">025</span><span id="line-25">  @Override</span>
+<span class="source-line-no">026</span><span id="line-26">  default boolean isInXmlWrapped() {</span>
+<span class="source-line-no">027</span><span id="line-27">    // must always be wrapped</span>
+<span class="source-line-no">028</span><span id="line-28">    return true;</span>
+<span class="source-line-no">029</span><span id="line-29">  }</span>
+<span class="source-line-no">030</span><span id="line-30"></span>
+<span class="source-line-no">031</span><span id="line-31">  @Override</span>
+<span class="source-line-no">032</span><span id="line-32">  default boolean isEffectiveValueWrappedInXml() {</span>
+<span class="source-line-no">033</span><span id="line-33">    // must always be wrapped</span>
+<span class="source-line-no">034</span><span id="line-34">    return true;</span>
+<span class="source-line-no">035</span><span id="line-35">  }</span>
+<span class="source-line-no">036</span><span id="line-36"></span>
+<span class="source-line-no">037</span><span id="line-37">  /**</span>
+<span class="source-line-no">038</span><span id="line-38">   * A visitor callback.</span>
+<span class="source-line-no">039</span><span id="line-39">   *</span>
+<span class="source-line-no">040</span><span id="line-40">   * @param &lt;CONTEXT&gt;</span>
+<span class="source-line-no">041</span><span id="line-41">   *          the type of the context parameter</span>
+<span class="source-line-no">042</span><span id="line-42">   * @param &lt;RESULT&gt;</span>
+<span class="source-line-no">043</span><span id="line-43">   *          the type of the visitor result</span>
+<span class="source-line-no">044</span><span id="line-44">   * @param visitor</span>
+<span class="source-line-no">045</span><span id="line-45">   *          the calling visitor</span>
+<span class="source-line-no">046</span><span id="line-46">   * @param context</span>
+<span class="source-line-no">047</span><span id="line-47">   *          a parameter used to pass contextual information between visitors</span>
+<span class="source-line-no">048</span><span id="line-48">   * @return the visitor result</span>
+<span class="source-line-no">049</span><span id="line-49">   */</span>
+<span class="source-line-no">050</span><span id="line-50">  @Override</span>
+<span class="source-line-no">051</span><span id="line-51">  default &lt;CONTEXT, RESULT&gt; RESULT accept(@NonNull IModelElementVisitor&lt;CONTEXT, RESULT&gt; visitor, CONTEXT context) {</span>
+<span class="source-line-no">052</span><span id="line-52">    return visitor.visitFieldInstance(this, context);</span>
+<span class="source-line-no">053</span><span id="line-53">  }</span>
+<span class="source-line-no">054</span><span id="line-54">}</span>
 
 
 

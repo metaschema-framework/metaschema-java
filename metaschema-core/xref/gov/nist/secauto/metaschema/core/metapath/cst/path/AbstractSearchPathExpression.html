@@ -86,7 +86,7 @@
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>          = (Stream&lt;? <strong class="jxr_keyword">extends</strong> INodeItem&gt;) expression.accept(dynamicContext, focus).stream();
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>  
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      Stream&lt;? <strong class="jxr_keyword">extends</strong> INodeItem&gt; childMatches = focus.stream()
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>          .map(ItemUtils::checkItemIsNodeItemForStep)
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>          .map(item -&gt; ItemUtils.checkItemIsNodeItem(dynamicContext, item))
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>          .flatMap(focusedNode -&gt; {
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>  
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>            Stream&lt;? <strong class="jxr_keyword">extends</strong> INodeItem&gt; matches;

@@ -31,7 +31,7 @@
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>        @NonNull <a name="IModule" href="../../../../../../../../gov/nist/secauto/metaschema/core/model/IModule.html#IModule">IModule</a> module,
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>        @NonNull <a name="INodeItemGenerator" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/item/node/INodeItemGenerator.html#INodeItemGenerator">INodeItemGenerator</a> generator) {
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>      <strong class="jxr_keyword">this</strong>.module = module;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>      <strong class="jxr_keyword">this</strong>.model = ObjectUtils.notNull(Lazy.lazy(generator.newMetaschemaModelSupplier(<strong class="jxr_keyword">this</strong>)));
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>      <strong class="jxr_keyword">this</strong>.model = ObjectUtils.notNull(Lazy.of(generator.newMetaschemaModelSupplier(<strong class="jxr_keyword">this</strong>)));
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>    }
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>    @NonNull

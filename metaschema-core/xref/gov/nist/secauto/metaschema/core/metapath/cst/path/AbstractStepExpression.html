@@ -75,7 +75,7 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>        <a name="DynamicContext" href="../../../../../../../../gov/nist/secauto/metaschema/core/metapath/DynamicContext.html#DynamicContext">DynamicContext</a> dynamicContext,
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>        ISequence&lt;?&gt; focus) {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">return</strong> ISequence.of(ObjectUtils.notNull(focus.stream()
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>          .map(ItemUtils::checkItemIsNodeItemForStep)
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          .map(item -&gt; ItemUtils.checkItemIsNodeItem(dynamicContext, item))
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>          .flatMap(item -&gt; {
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>            assert item != <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>            <strong class="jxr_keyword">return</strong> match(item);

@@ -86,7 +86,7 @@
 <span class="source-line-no">073</span><span id="line-73">                .map(field -&gt; new Attribute(field.getEffectiveName(), field.getDefinition().getJavaTypeAdapter()))</span>
 <span class="source-line-no">074</span><span id="line-74">            : Stream.empty())</span>
 <span class="source-line-no">075</span><span id="line-75">        .collect(Collectors.toUnmodifiableList()));</span>
-<span class="source-line-no">076</span><span id="line-76">    this.edges = ObjectUtils.notNull(Lazy.lazy(() -&gt; definition instanceof IAssemblyDefinition</span>
+<span class="source-line-no">076</span><span id="line-76">    this.edges = ObjectUtils.notNull(Lazy.of(() -&gt; definition instanceof IAssemblyDefinition</span>
 <span class="source-line-no">077</span><span id="line-77">        ? generateEdges((IAssemblyDefinition) definition)</span>
 <span class="source-line-no">078</span><span id="line-78">        : CollectionUtil.emptyList()));</span>
 <span class="source-line-no">079</span><span id="line-79">  }</span>
@@ -200,75 +200,86 @@
 <span class="source-line-no">187</span><span id="line-187">    }</span>
 <span class="source-line-no">188</span><span id="line-188">  }</span>
 <span class="source-line-no">189</span><span id="line-189"></span>
-<span class="source-line-no">190</span><span id="line-190">  public final class ModelEdge</span>
-<span class="source-line-no">191</span><span id="line-191">      extends AbstractEdge&lt;INamedModelInstanceAbsolute&gt; {</span>
-<span class="source-line-no">192</span><span id="line-192">    private ModelEdge(</span>
-<span class="source-line-no">193</span><span id="line-193">        @NonNull INamedModelInstanceAbsolute instance) {</span>
-<span class="source-line-no">194</span><span id="line-194">      super(Relationship.toRelationship(instance), instance);</span>
-<span class="source-line-no">195</span><span id="line-195">    }</span>
-<span class="source-line-no">196</span><span id="line-196"></span>
-<span class="source-line-no">197</span><span id="line-197">    @Override</span>
-<span class="source-line-no">198</span><span id="line-198">    public void accept(IDiagramNodeVisitor visitor) {</span>
-<span class="source-line-no">199</span><span id="line-199">      visitor.visit(this);</span>
-<span class="source-line-no">200</span><span id="line-200">    }</span>
-<span class="source-line-no">201</span><span id="line-201">  }</span>
-<span class="source-line-no">202</span><span id="line-202"></span>
-<span class="source-line-no">203</span><span id="line-203">  public final class ChoiceEdge</span>
-<span class="source-line-no">204</span><span id="line-204">      extends AbstractEdge&lt;INamedModelInstanceAbsolute&gt; {</span>
-<span class="source-line-no">205</span><span id="line-205">    @NonNull</span>
-<span class="source-line-no">206</span><span id="line-206">    private final IChoiceInstance choice;</span>
-<span class="source-line-no">207</span><span id="line-207"></span>
-<span class="source-line-no">208</span><span id="line-208">    private ChoiceEdge(</span>
-<span class="source-line-no">209</span><span id="line-209">        @NonNull IChoiceInstance choice,</span>
-<span class="source-line-no">210</span><span id="line-210">        @NonNull INamedModelInstanceAbsolute instance) {</span>
-<span class="source-line-no">211</span><span id="line-211">      super(Relationship.toRelationship(instance), instance);</span>
-<span class="source-line-no">212</span><span id="line-212">      this.choice = choice;</span>
-<span class="source-line-no">213</span><span id="line-213">    }</span>
+<span class="source-line-no">190</span><span id="line-190">  /**</span>
+<span class="source-line-no">191</span><span id="line-191">   * Represents an edge based on a named model instance.</span>
+<span class="source-line-no">192</span><span id="line-192">   */</span>
+<span class="source-line-no">193</span><span id="line-193">  public final class ModelEdge</span>
+<span class="source-line-no">194</span><span id="line-194">      extends AbstractEdge&lt;INamedModelInstanceAbsolute&gt; {</span>
+<span class="source-line-no">195</span><span id="line-195">    private ModelEdge(</span>
+<span class="source-line-no">196</span><span id="line-196">        @NonNull INamedModelInstanceAbsolute instance) {</span>
+<span class="source-line-no">197</span><span id="line-197">      super(Relationship.toRelationship(instance), instance);</span>
+<span class="source-line-no">198</span><span id="line-198">    }</span>
+<span class="source-line-no">199</span><span id="line-199"></span>
+<span class="source-line-no">200</span><span id="line-200">    @Override</span>
+<span class="source-line-no">201</span><span id="line-201">    public void accept(IDiagramNodeVisitor visitor) {</span>
+<span class="source-line-no">202</span><span id="line-202">      visitor.visit(this);</span>
+<span class="source-line-no">203</span><span id="line-203">    }</span>
+<span class="source-line-no">204</span><span id="line-204">  }</span>
+<span class="source-line-no">205</span><span id="line-205"></span>
+<span class="source-line-no">206</span><span id="line-206">  /**</span>
+<span class="source-line-no">207</span><span id="line-207">   * Represents an edge based on a named model instance that is a member of a</span>
+<span class="source-line-no">208</span><span id="line-208">   * choice.</span>
+<span class="source-line-no">209</span><span id="line-209">   */</span>
+<span class="source-line-no">210</span><span id="line-210">  public final class ChoiceEdge</span>
+<span class="source-line-no">211</span><span id="line-211">      extends AbstractEdge&lt;INamedModelInstanceAbsolute&gt; {</span>
+<span class="source-line-no">212</span><span id="line-212">    @NonNull</span>
+<span class="source-line-no">213</span><span id="line-213">    private final IChoiceInstance choice;</span>
 <span class="source-line-no">214</span><span id="line-214"></span>
-<span class="source-line-no">215</span><span id="line-215">    /**</span>
-<span class="source-line-no">216</span><span id="line-216">     * Get the associated choice.</span>
-<span class="source-line-no">217</span><span id="line-217">     *</span>
-<span class="source-line-no">218</span><span id="line-218">     * @return the choice instance</span>
-<span class="source-line-no">219</span><span id="line-219">     */</span>
-<span class="source-line-no">220</span><span id="line-220">    @NonNull</span>
-<span class="source-line-no">221</span><span id="line-221">    public IChoiceInstance getChoice() {</span>
-<span class="source-line-no">222</span><span id="line-222">      return choice;</span>
-<span class="source-line-no">223</span><span id="line-223">    }</span>
-<span class="source-line-no">224</span><span id="line-224"></span>
-<span class="source-line-no">225</span><span id="line-225">    @Override</span>
-<span class="source-line-no">226</span><span id="line-226">    public void accept(IDiagramNodeVisitor visitor) {</span>
-<span class="source-line-no">227</span><span id="line-227">      visitor.visit(this);</span>
-<span class="source-line-no">228</span><span id="line-228">    }</span>
-<span class="source-line-no">229</span><span id="line-229">  }</span>
-<span class="source-line-no">230</span><span id="line-230"></span>
-<span class="source-line-no">231</span><span id="line-231">  public final class ChoiceGroupEdge</span>
-<span class="source-line-no">232</span><span id="line-232">      extends AbstractEdge&lt;INamedModelInstanceGrouped&gt; {</span>
-<span class="source-line-no">233</span><span id="line-233">    @NonNull</span>
-<span class="source-line-no">234</span><span id="line-234">    private final IChoiceGroupInstance choiceGroup;</span>
-<span class="source-line-no">235</span><span id="line-235"></span>
-<span class="source-line-no">236</span><span id="line-236">    private ChoiceGroupEdge(</span>
-<span class="source-line-no">237</span><span id="line-237">        @NonNull IChoiceGroupInstance choiceGroup,</span>
-<span class="source-line-no">238</span><span id="line-238">        @NonNull INamedModelInstanceGrouped instance) {</span>
-<span class="source-line-no">239</span><span id="line-239">      super(Relationship.toRelationship(choiceGroup), instance);</span>
-<span class="source-line-no">240</span><span id="line-240">      this.choiceGroup = choiceGroup;</span>
-<span class="source-line-no">241</span><span id="line-241">    }</span>
-<span class="source-line-no">242</span><span id="line-242"></span>
-<span class="source-line-no">243</span><span id="line-243">    /**</span>
-<span class="source-line-no">244</span><span id="line-244">     * Get the associated choice group.</span>
-<span class="source-line-no">245</span><span id="line-245">     *</span>
-<span class="source-line-no">246</span><span id="line-246">     * @return the choice group instance</span>
-<span class="source-line-no">247</span><span id="line-247">     */</span>
-<span class="source-line-no">248</span><span id="line-248">    @NonNull</span>
-<span class="source-line-no">249</span><span id="line-249">    public IChoiceGroupInstance getChoiceGroup() {</span>
-<span class="source-line-no">250</span><span id="line-250">      return choiceGroup;</span>
-<span class="source-line-no">251</span><span id="line-251">    }</span>
-<span class="source-line-no">252</span><span id="line-252"></span>
-<span class="source-line-no">253</span><span id="line-253">    @Override</span>
-<span class="source-line-no">254</span><span id="line-254">    public void accept(IDiagramNodeVisitor visitor) {</span>
-<span class="source-line-no">255</span><span id="line-255">      visitor.visit(this);</span>
-<span class="source-line-no">256</span><span id="line-256">    }</span>
-<span class="source-line-no">257</span><span id="line-257">  }</span>
-<span class="source-line-no">258</span><span id="line-258">}</span>
+<span class="source-line-no">215</span><span id="line-215">    private ChoiceEdge(</span>
+<span class="source-line-no">216</span><span id="line-216">        @NonNull IChoiceInstance choice,</span>
+<span class="source-line-no">217</span><span id="line-217">        @NonNull INamedModelInstanceAbsolute instance) {</span>
+<span class="source-line-no">218</span><span id="line-218">      super(Relationship.toRelationship(instance), instance);</span>
+<span class="source-line-no">219</span><span id="line-219">      this.choice = choice;</span>
+<span class="source-line-no">220</span><span id="line-220">    }</span>
+<span class="source-line-no">221</span><span id="line-221"></span>
+<span class="source-line-no">222</span><span id="line-222">    /**</span>
+<span class="source-line-no">223</span><span id="line-223">     * Get the associated choice.</span>
+<span class="source-line-no">224</span><span id="line-224">     *</span>
+<span class="source-line-no">225</span><span id="line-225">     * @return the choice instance</span>
+<span class="source-line-no">226</span><span id="line-226">     */</span>
+<span class="source-line-no">227</span><span id="line-227">    @NonNull</span>
+<span class="source-line-no">228</span><span id="line-228">    public IChoiceInstance getChoice() {</span>
+<span class="source-line-no">229</span><span id="line-229">      return choice;</span>
+<span class="source-line-no">230</span><span id="line-230">    }</span>
+<span class="source-line-no">231</span><span id="line-231"></span>
+<span class="source-line-no">232</span><span id="line-232">    @Override</span>
+<span class="source-line-no">233</span><span id="line-233">    public void accept(IDiagramNodeVisitor visitor) {</span>
+<span class="source-line-no">234</span><span id="line-234">      visitor.visit(this);</span>
+<span class="source-line-no">235</span><span id="line-235">    }</span>
+<span class="source-line-no">236</span><span id="line-236">  }</span>
+<span class="source-line-no">237</span><span id="line-237"></span>
+<span class="source-line-no">238</span><span id="line-238">  /**</span>
+<span class="source-line-no">239</span><span id="line-239">   * Represents an edge based on a named model instance that is a member of a</span>
+<span class="source-line-no">240</span><span id="line-240">   * choice group.</span>
+<span class="source-line-no">241</span><span id="line-241">   */</span>
+<span class="source-line-no">242</span><span id="line-242">  public final class ChoiceGroupEdge</span>
+<span class="source-line-no">243</span><span id="line-243">      extends AbstractEdge&lt;INamedModelInstanceGrouped&gt; {</span>
+<span class="source-line-no">244</span><span id="line-244">    @NonNull</span>
+<span class="source-line-no">245</span><span id="line-245">    private final IChoiceGroupInstance choiceGroup;</span>
+<span class="source-line-no">246</span><span id="line-246"></span>
+<span class="source-line-no">247</span><span id="line-247">    private ChoiceGroupEdge(</span>
+<span class="source-line-no">248</span><span id="line-248">        @NonNull IChoiceGroupInstance choiceGroup,</span>
+<span class="source-line-no">249</span><span id="line-249">        @NonNull INamedModelInstanceGrouped instance) {</span>
+<span class="source-line-no">250</span><span id="line-250">      super(Relationship.toRelationship(choiceGroup), instance);</span>
+<span class="source-line-no">251</span><span id="line-251">      this.choiceGroup = choiceGroup;</span>
+<span class="source-line-no">252</span><span id="line-252">    }</span>
+<span class="source-line-no">253</span><span id="line-253"></span>
+<span class="source-line-no">254</span><span id="line-254">    /**</span>
+<span class="source-line-no">255</span><span id="line-255">     * Get the associated choice group.</span>
+<span class="source-line-no">256</span><span id="line-256">     *</span>
+<span class="source-line-no">257</span><span id="line-257">     * @return the choice group instance</span>
+<span class="source-line-no">258</span><span id="line-258">     */</span>
+<span class="source-line-no">259</span><span id="line-259">    @NonNull</span>
+<span class="source-line-no">260</span><span id="line-260">    public IChoiceGroupInstance getChoiceGroup() {</span>
+<span class="source-line-no">261</span><span id="line-261">      return choiceGroup;</span>
+<span class="source-line-no">262</span><span id="line-262">    }</span>
+<span class="source-line-no">263</span><span id="line-263"></span>
+<span class="source-line-no">264</span><span id="line-264">    @Override</span>
+<span class="source-line-no">265</span><span id="line-265">    public void accept(IDiagramNodeVisitor visitor) {</span>
+<span class="source-line-no">266</span><span id="line-266">      visitor.visit(this);</span>
+<span class="source-line-no">267</span><span id="line-267">    }</span>
+<span class="source-line-no">268</span><span id="line-268">  }</span>
+<span class="source-line-no">269</span><span id="line-269">}</span>
 
 
 

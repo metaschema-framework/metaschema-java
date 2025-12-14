@@ -99,7 +99,7 @@
 <span class="source-line-no">086</span><span id="line-86">   */</span>
 <span class="source-line-no">087</span><span id="line-87">  @Nullable</span>
 <span class="source-line-no">088</span><span id="line-88">  default IEnhancedQName getEffectiveXmlGroupAsQName() {</span>
-<span class="source-line-no">089</span><span id="line-89">    return XmlGroupAsBehavior.GROUPED.equals(getXmlGroupAsBehavior())</span>
+<span class="source-line-no">089</span><span id="line-89">    return getXmlGroupAsBehavior() == XmlGroupAsBehavior.GROUPED</span>
 <span class="source-line-no">090</span><span id="line-90">        ? IEnhancedQName.of(</span>
 <span class="source-line-no">091</span><span id="line-91">            getContainingDefinition().getQName().getNamespace(),</span>
 <span class="source-line-no">092</span><span id="line-92">            ObjectUtils.requireNonNull(getGroupAsName()))</span>
