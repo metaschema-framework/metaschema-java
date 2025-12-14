@@ -51,9 +51,9 @@ abstract class AbstractModelInstanceTypeInfo<INSTANCE extends IModelInstanceAbso
     return baseName;
   }
 
+  @NonNull
   @Override
-  public @NonNull
-  TypeName getJavaFieldType() {
+  public TypeName getJavaFieldType() {
     TypeName item = getJavaItemType();
 
     @NonNull

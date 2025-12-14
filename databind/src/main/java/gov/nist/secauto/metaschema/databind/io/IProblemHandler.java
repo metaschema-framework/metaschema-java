@@ -18,6 +18,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * Implementations support handling common parsing issues.
  */
 // TODO: consider what methods can be defined here
+@FunctionalInterface
 public interface IProblemHandler {
   /**
    * A callback used to handle bound properties for which no data was found when
