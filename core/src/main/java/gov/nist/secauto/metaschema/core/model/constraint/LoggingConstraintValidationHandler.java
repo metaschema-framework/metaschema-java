@@ -104,7 +104,7 @@ public class LoggingConstraintValidationHandler
       @NonNull INodeItem node,
       @NonNull CharSequence message,
       @Nullable Throwable cause) {
-    if (!Level.NONE.equals(level)) {
+    if (level != Level.NONE) {
       LogBuilder builder = getLogBuilder(level);
       if (cause != null) {
         builder.withThrowable(cause);

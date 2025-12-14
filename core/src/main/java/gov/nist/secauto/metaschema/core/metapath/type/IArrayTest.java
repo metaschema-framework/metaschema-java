@@ -14,6 +14,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Declares the expected type information for an {@link IArrayItem}.
  */
+@FunctionalInterface
 public interface IArrayTest extends IItemType {
   @SuppressWarnings({ "rawtypes" })
   @Override

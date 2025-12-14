@@ -159,7 +159,7 @@ public class XmlSchemaContentValidator
 
     @Override
     public Kind getKind() {
-      return Level.WARNING.equals(getSeverity()) ? Kind.PASS : Kind.FAIL;
+      return getSeverity() == Level.WARNING ? Kind.PASS : Kind.FAIL;
     }
 
     @Override

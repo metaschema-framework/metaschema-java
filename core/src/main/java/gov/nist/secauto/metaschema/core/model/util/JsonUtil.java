@@ -125,7 +125,7 @@ public final class JsonUtil {
       @NonNull URI resource,
       @NonNull JsonToken token) throws IOException {
     JsonToken currentToken = null;
-    while (parser.hasCurrentToken() && !token.equals(currentToken = parser.currentToken())) {
+    while (parser.hasCurrentToken() && (currentToken = parser.currentToken()) != token) {
       currentToken = parser.nextToken();
       if (LOGGER.isWarnEnabled()) {
         LOGGER.warn("skipping over: {}",
@@ -157,7 +157,7 @@ public final class JsonUtil {
 
     JsonToken currentToken = parser.currentToken();
     // skip the field name
-    if (JsonToken.FIELD_NAME.equals(currentToken)) {
+    if (currentToken == JsonToken.FIELD_NAME) {
       currentToken = parser.nextToken();
     }
 
@@ -238,7 +238,7 @@ public final class JsonUtil {
       @NonNull JsonToken... expectedTokens) {
     JsonToken current = parser.currentToken();
     assert Arrays.stream(expectedTokens)
-        .anyMatch(expected -> expected.equals(current)) : generateExpectedMessage(
+        .anyMatch(expected -> expected == current) : generateExpectedMessage(
             parser,
             resource,
             expectedTokens,
@@ -275,7 +275,7 @@ public final class JsonUtil {
       @NonNull JsonToken expectedToken)
       throws IOException {
     JsonToken token = parser.currentToken();
-    assert expectedToken.equals(token) : generateExpectedMessage(
+    assert token == expectedToken : generateExpectedMessage(
         parser,
         resource,
         expectedToken,
@@ -304,7 +304,7 @@ public final class JsonUtil {
       @NonNull JsonToken expectedToken)
       throws IOException {
     JsonToken token = parser.nextToken();
-    assert expectedToken.equals(token) : generateExpectedMessage(
+    assert token == expectedToken : generateExpectedMessage(
         parser,
         resource,
         expectedToken,

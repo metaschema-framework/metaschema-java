@@ -102,11 +102,11 @@ public final class ItemUtils {
       @NonNull ISequence<?> items) {
     return ISequence.of(ObjectUtils.notNull(items.stream()
         // ensures a non-null INodeItem instance
-        .map(item -> ItemUtils.checkItemIsNodeItem(dynamicContext, item))
+        .map(item -> checkItemIsNodeItem(dynamicContext, item))
         .map(item -> Axis.ANCESTOR_OR_SELF.execute(ObjectUtils.notNull(item))
             .findFirst().stream()
             .filter(IDocumentBasedNodeItem.class::isInstance)
-            .map(firstItem -> ItemUtils.checkItemIsDocumentNodeItem(dynamicContext, firstItem))
+            .map(firstItem -> checkItemIsDocumentNodeItem(dynamicContext, firstItem))
             .findFirst().orElseThrow(() -> new InvalidTreatTypeDynamicMetapathException(
                 dynamicContext.getExecutionStack(),
                 String.format("The node '%s' is not the descendant of a document node.",

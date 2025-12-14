@@ -86,7 +86,7 @@ public interface IGroupable extends IInstance {
    */
   @Nullable
   default IEnhancedQName getEffectiveXmlGroupAsQName() {
-    return XmlGroupAsBehavior.GROUPED.equals(getXmlGroupAsBehavior())
+    return getXmlGroupAsBehavior() == XmlGroupAsBehavior.GROUPED
         ? IEnhancedQName.of(
             getContainingDefinition().getQName().getNamespace(),
             ObjectUtils.requireNonNull(getGroupAsName()))

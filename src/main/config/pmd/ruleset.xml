@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Metaschema Java Custom Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>
+        Custom PMD ruleset for metaschema-java that extends the oss-maven ruleset
+        while excluding rules that don't fit the project's conventions.
+    </description>
+
+    <!-- Include the parent oss-maven ruleset -->
+    <rule ref="pmd/category/java/custom.xml">
+        <!-- Exclude TypeParameterNamingConventions since this project uses descriptive
+             type parameter names like TYPE, RESULT, CONTEXT instead of single letters -->
+        <exclude name="TypeParameterNamingConventions"/>
+    </rule>
+
+</ruleset>

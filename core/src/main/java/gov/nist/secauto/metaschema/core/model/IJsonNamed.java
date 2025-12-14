@@ -13,6 +13,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * This interface provides access to the name used when serializing or
  * deserializing the element in JSON or YAML format.
  */
+@FunctionalInterface
 public interface IJsonNamed {
 
   /**

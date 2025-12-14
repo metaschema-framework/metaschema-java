@@ -13,6 +13,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * This interface provides access to the name used when the instance appears in
  * JSON or YAML serialization.
  */
+@FunctionalInterface
 public interface IJsonInstance {
   /**
    * Get the name used for the instance in JSON/YAML serialization.

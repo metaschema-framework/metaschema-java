@@ -42,7 +42,7 @@ public final class NodeComparators {
       @NonNull INodeItem item1,
       @NonNull INodeItem item2,
       @NonNull DynamicContext dynamicContext) {
-    return item1.getNodeType().equals(item2.getNodeType())
+    return item1.getNodeType() == item2.getNodeType()
         && compareFlags(item1.getFlags(), item2.getFlags(), dynamicContext)
         && compareModelItems(item1.getModelItems(), item2.getModelItems(), dynamicContext);
   }

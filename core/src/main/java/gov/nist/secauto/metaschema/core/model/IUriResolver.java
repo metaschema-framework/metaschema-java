@@ -12,6 +12,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Provides URI resolution capabilities for Metaschema resources.
  */
+@FunctionalInterface
 public interface IUriResolver {
   /**
    * Resolve the provided URI, producing a resolved URI, which may point to a

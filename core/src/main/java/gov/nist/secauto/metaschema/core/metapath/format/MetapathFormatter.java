@@ -25,8 +25,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class MetapathFormatter implements IPathFormatter {
 
   @Override
-  public @NonNull
-  String formatMetaschema(IModuleNodeItem metaschema) {
+  @NonNull
+  public String formatMetaschema(IModuleNodeItem metaschema) {
     // this will result in a slash being generated using the join in the format
     // method
     return "";

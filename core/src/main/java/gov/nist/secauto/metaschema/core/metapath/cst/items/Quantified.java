@@ -155,12 +155,12 @@ public class Quantified
         subDynamicContext.bindVariableValue(var, ISequence.of(item));
       }
       boolean result = FnBoolean.fnBooleanAsPrimitive(getSatisfies().accept(subDynamicContext, focus));
-      if (Quantifier.EVERY.equals(quantifier) && !result) {
+      if (quantifier == Quantifier.EVERY && !result) {
         // fail on first false
         retval = false;
         break;
       }
-      if (Quantifier.SOME.equals(quantifier)) {
+      if (quantifier == Quantifier.SOME) {
         if (result) {
           // pass on first true
           retval = true;

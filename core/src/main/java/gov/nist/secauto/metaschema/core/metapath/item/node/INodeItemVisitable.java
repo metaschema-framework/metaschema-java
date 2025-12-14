@@ -6,6 +6,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Marks a node item as visitable by a {@link INodeItemVisitor}.
  */
+@FunctionalInterface
 public interface INodeItemVisitable {
   /**
    * A visitor callback.

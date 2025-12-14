@@ -11,6 +11,7 @@ package gov.nist.secauto.metaschema.core.model;
  * This interface is implemented by model definitions that may contain flags,
  * fields, or assemblies as part of their structure.
  */
+@FunctionalInterface
 public interface IContainer {
   /**
    * Identifies if the container allows child instances or not.

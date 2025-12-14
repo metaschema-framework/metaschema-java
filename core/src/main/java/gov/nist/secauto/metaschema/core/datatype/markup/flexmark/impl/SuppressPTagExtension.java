@@ -50,8 +50,8 @@ public class SuppressPTagExtension
   static class PTagNodeRenderer implements NodeRenderer {
 
     @Override
-    public @Nullable
-    Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
+    @Nullable
+    public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
       return Collections.singleton(
           new NodeRenderingHandler<>(Paragraph.class, this::render));
     }

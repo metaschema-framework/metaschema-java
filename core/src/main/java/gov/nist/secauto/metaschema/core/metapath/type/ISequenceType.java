@@ -42,7 +42,7 @@ public interface ISequenceType {
   static ISequenceType of(
       @NonNull IItemType type,
       @NonNull Occurrence occurrence) {
-    return Occurrence.ZERO.equals(occurrence)
+    return occurrence == Occurrence.ZERO
         ? empty()
         : new SequenceTypeImpl(type, occurrence);
   }
