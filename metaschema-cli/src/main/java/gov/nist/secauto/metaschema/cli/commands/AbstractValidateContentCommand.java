@@ -67,7 +67,7 @@ public abstract class AbstractValidateContentCommand
           .hasArgs()
           .argName("URL")
           .desc("additional constraint definitions")
-          .build());
+          .get());
   @NonNull
   private static final Option SARIF_OUTPUT_FILE_OPTION = ObjectUtils.notNull(
       Option.builder("o")
@@ -75,25 +75,25 @@ public abstract class AbstractValidateContentCommand
           .argName("FILE")
           .desc("write SARIF results to the provided FILE")
           .numberOfArgs(1)
-          .build());
+          .get());
   @NonNull
   private static final Option SARIF_INCLUDE_PASS_OPTION = ObjectUtils.notNull(
       Option.builder()
           .longOpt("sarif-include-pass")
           .desc("include pass results in SARIF")
-          .build());
+          .get());
   @NonNull
   private static final Option NO_SCHEMA_VALIDATION_OPTION = ObjectUtils.notNull(
       Option.builder()
           .longOpt("disable-schema-validation")
           .desc("do not perform schema validation")
-          .build());
+          .get());
   @NonNull
   private static final Option NO_CONSTRAINT_VALIDATION_OPTION = ObjectUtils.notNull(
       Option.builder()
           .longOpt("disable-constraint-validation")
           .desc("do not perform constraint validation")
-          .build());
+          .get());
 
   @Override
   public String getName() {

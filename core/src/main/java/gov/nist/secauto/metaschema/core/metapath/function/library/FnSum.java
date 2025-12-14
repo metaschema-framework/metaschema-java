@@ -117,7 +117,6 @@ public final class FnSum {
    * @return the average
    */
   @SuppressWarnings({
-      "PMD.OnlyOneReturn", // readability
       "PMD.CyclomaticComplexity", // ok
       "unchecked" // safe cast for wildcard type
   })

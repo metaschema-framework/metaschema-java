@@ -66,7 +66,6 @@ public class NonAdapterAtomicItemType<T extends IAnyAtomicItem>
     return Objects.hash(getItemClass(), qname);
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {

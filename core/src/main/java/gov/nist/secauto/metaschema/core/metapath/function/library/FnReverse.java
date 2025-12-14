@@ -68,7 +68,6 @@ public final class FnReverse {
    * @return {@code sequence} the new sequence with items in reverse order.
    *
    */
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   public static <T extends IItem> List<T> fnReverse(@NonNull List<T> target) {
     if (target.size() <= 1) {

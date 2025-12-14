@@ -105,9 +105,9 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
     return retval;
   }
 
+  @NonNull
   @Override
-  public @NonNull
-  String getClassName(@NonNull IModule module) {
+  public String getClassName(@NonNull IModule module) {
     // TODO: make this configurable
     return ClassUtils.toClassName(module.getShortName() + "Module");
   }

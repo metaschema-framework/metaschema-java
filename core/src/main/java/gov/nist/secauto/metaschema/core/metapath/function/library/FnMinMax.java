@@ -171,7 +171,6 @@ public final class FnMinMax {
         });
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn") // readability
   private static Stream<? extends IAnyAtomicItem> normalize(
       @NonNull List<? extends IAnyAtomicItem> items) {
     if (items.isEmpty()) {
@@ -202,7 +201,6 @@ public final class FnMinMax {
     return ISequence.ofCollection((List<IAnyAtomicItem>) items).countTypes(PRIMITIVE_ITEM_TYPES);
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   private static Stream<? extends IAnyAtomicItem> createNormalizedStream(
       @NonNull List<? extends IAnyAtomicItem> items,

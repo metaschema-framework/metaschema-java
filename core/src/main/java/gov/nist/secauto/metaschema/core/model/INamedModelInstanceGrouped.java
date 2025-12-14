@@ -51,7 +51,7 @@ public interface INamedModelInstanceGrouped extends INamedModelInstance {
   @Override
   @Nullable
   default IFlagInstance getEffectiveJsonKey() {
-    return JsonGroupAsBehavior.KEYED.equals(getParentContainer().getJsonGroupAsBehavior())
+    return getParentContainer().getJsonGroupAsBehavior() == JsonGroupAsBehavior.KEYED
         ? ObjectUtils.requireNonNull(getJsonKey())
         : null;
   }

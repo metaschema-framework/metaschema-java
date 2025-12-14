@@ -15,6 +15,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * This interface provides access to the node item representation required for
  * Metapath evaluation.
  */
+@FunctionalInterface
 public interface IMetapathQueryable {
   /**
    * Get the Metapath node item for this Metaschema module construct, which can be

@@ -57,7 +57,6 @@ public final class NamespaceCache {
    *          the namespace
    * @return the index value
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   public int indexOf(@NonNull String namespace) {
     return nsToIndex.computeIfAbsent(namespace, key -> {
       int nextIndex = indexCounter.getAndIncrement();

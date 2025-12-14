@@ -42,7 +42,7 @@ public final class NodeComparators {
       @NonNull INodeItem item1,
       @NonNull INodeItem item2,
       @NonNull DynamicContext dynamicContext) {
-    return item1.getNodeType().equals(item2.getNodeType())
+    return item1.getNodeType() == item2.getNodeType()
         && compareFlags(item1.getFlags(), item2.getFlags(), dynamicContext)
         && compareModelItems(item1.getModelItems(), item2.getModelItems(), dynamicContext);
   }
@@ -82,7 +82,6 @@ public final class NodeComparators {
     return retval;
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   private static boolean compareFlags(
       @NonNull Collection<? extends IFlagNodeItem> flags1,
       @NonNull Collection<? extends IFlagNodeItem> flags2,
@@ -111,7 +110,6 @@ public final class NodeComparators {
     return true;
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   private static boolean compareModelItems(
       @NonNull Collection<? extends List<? extends IModelNodeItem<?, ?>>> items1,
       @NonNull Collection<? extends List<? extends IModelNodeItem<?, ?>>> items2,
@@ -164,7 +162,6 @@ public final class NodeComparators {
         && compareAtomics(item1.toAtomicItem(), item2.toAtomicItem(), dynamicContext);
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   private static boolean compareAsField(
       @NonNull IModelNodeItem<?, ?> item1,
       @NonNull IModelNodeItem<?, ?> item2,

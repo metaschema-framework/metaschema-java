@@ -18,6 +18,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * A marker interface for implementations that supports the mapping of a
  * namespace valued key to a set of values.
  */
+@FunctionalInterface
 public interface IAttributable {
   /**
    * The default key namespace for a property.
@@ -108,7 +109,6 @@ public interface IAttributable {
    */
   // FIXME: use IEnhancedQName instead of name and namespace, or replace key
   // altogether with an integer value
-  @SuppressWarnings("PMD.ShortClassName")
   final class Key {
     @NonNull
     private final String name;
@@ -149,7 +149,6 @@ public interface IAttributable {
       return Objects.hash(name, namespace);
     }
 
-    @SuppressWarnings("PMD.OnlyOneReturn")
     @Override
     public boolean equals(Object obj) {
       if (this == obj) {

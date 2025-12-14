@@ -32,7 +32,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 // FIXME: Remove these methods in favor of direct calls to methods on the item
 // types
-@SuppressWarnings("PMD.CouplingBetweenObjects")
 public final class FunctionUtils {
   private FunctionUtils() {
     // disable

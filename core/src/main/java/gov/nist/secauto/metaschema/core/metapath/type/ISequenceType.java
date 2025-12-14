@@ -37,12 +37,11 @@ public interface ISequenceType {
    *          the expected occurrence of the sequence
    * @return the new sequence type
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static ISequenceType of(
       @NonNull IItemType type,
       @NonNull Occurrence occurrence) {
-    return Occurrence.ZERO.equals(occurrence)
+    return occurrence == Occurrence.ZERO
         ? empty()
         : new SequenceTypeImpl(type, occurrence);
   }

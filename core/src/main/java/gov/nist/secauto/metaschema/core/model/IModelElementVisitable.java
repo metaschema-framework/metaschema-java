@@ -13,6 +13,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * This interface supports traversal of model elements using implementations of
  * {@link IModelElementVisitor}.
  */
+@FunctionalInterface
 public interface IModelElementVisitable {
   /**
    * A visitor callback.

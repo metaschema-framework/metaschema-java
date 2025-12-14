@@ -100,7 +100,6 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
         || other instanceof IArrayItem && getValue().equals(((IArrayItem<?>) other).getValue());
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     if (!(other instanceof IArrayItem)) {

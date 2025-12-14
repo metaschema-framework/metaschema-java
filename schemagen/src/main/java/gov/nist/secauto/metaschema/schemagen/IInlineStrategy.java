@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.model.IDefinition;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+@FunctionalInterface
 public interface IInlineStrategy {
   @NonNull
   IInlineStrategy NONE_INLINE = new IInlineStrategy() {

@@ -10,13 +10,13 @@ import gov.nist.secauto.metaschema.core.metapath.item.atomic.ITemporalItem;
 /**
  * An {@link IMapItem} key based on an {@link ITemporalItem} value.
  */
+@FunctionalInterface
 public interface ITemporalMapKey extends IMapKey {
 
   @Override
   ITemporalItem getKey();
 
   @Override
-  @SuppressWarnings("PMD.OnlyOneReturn")
   default boolean isSameKey(IMapKey other) {
     if (!(other instanceof ITemporalMapKey)) {
       return false;

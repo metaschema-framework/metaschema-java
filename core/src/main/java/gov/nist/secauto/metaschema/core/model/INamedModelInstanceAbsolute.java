@@ -39,7 +39,7 @@ public interface INamedModelInstanceAbsolute extends INamedModelInstance, IModel
   @Override
   @Nullable
   default IFlagInstance getEffectiveJsonKey() {
-    return JsonGroupAsBehavior.KEYED.equals(getJsonGroupAsBehavior())
+    return getJsonGroupAsBehavior() == JsonGroupAsBehavior.KEYED
         ? getJsonKey()
         : null;
   }

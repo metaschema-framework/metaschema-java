@@ -20,7 +20,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href="https://www.w3.org/TR/xpath-31/#id-let-expressions">Let
  * expression</a> supporting variable value binding.
  */
-@SuppressWarnings("PMD.ShortClassName")
 public class Let
     extends AbstractExpression {
   @NonNull

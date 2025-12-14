@@ -41,7 +41,6 @@ public abstract class AbstractDateTimeItem<TYPE>
     return 31 * result * getClass().hashCode();
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {

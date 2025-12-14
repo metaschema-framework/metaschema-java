@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+@FunctionalInterface
 public interface IFeatureJavaField extends IValuedMutable {
 
   /**

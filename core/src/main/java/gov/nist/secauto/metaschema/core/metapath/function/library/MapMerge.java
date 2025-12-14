@@ -171,7 +171,7 @@ public final class MapMerge {
    *          settings that affect the merge behavior
    * @return a map containing the merged entries
    */
-  @SuppressWarnings({ "null", "PMD.OnlyOneReturn" })
+  @SuppressWarnings("null")
   @NonNull
   public static IMapItem<?> merge(@NonNull Collection<? extends Map<IMapKey, ? extends ICollectionValue>> maps,
       @NonNull Map<IMapKey, ? extends ICollectionValue> options) {

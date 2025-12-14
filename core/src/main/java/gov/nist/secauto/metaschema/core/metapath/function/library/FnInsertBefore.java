@@ -85,7 +85,6 @@ public final class FnInsertBefore {
    *          the sequence of Metapath items to be inserted into the target
    * @return the sequence of Metapath items with insertions
    */
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   public static <T extends IItem> List<T> fnInsertBefore(
       @NonNull List<T> target,

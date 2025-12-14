@@ -34,7 +34,6 @@ public interface IKeyField {
    *          optional remarks describing the intent of the constraint
    * @return the new key field
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IKeyField of(
       @NonNull IMetapathExpression target,

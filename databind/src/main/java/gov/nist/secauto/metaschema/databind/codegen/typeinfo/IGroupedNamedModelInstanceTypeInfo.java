@@ -14,6 +14,7 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+@FunctionalInterface
 public interface IGroupedNamedModelInstanceTypeInfo {
   @NonNull
   Set<IModelDefinition> generateMemberAnnotation(

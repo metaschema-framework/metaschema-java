@@ -301,7 +301,6 @@ public final class XmlEventUtil { // NOPMD this is a set of utility methods
    * @throws XMLStreamException
    *           if an error occurred while reading the event stream
    */
-  @SuppressWarnings("PMD.OnlyOneReturn")
   public static XMLEvent skipElement(@NonNull XMLEventReader2 reader) throws XMLStreamException {
     XMLEvent xmlEvent = reader.peek();
     if (!xmlEvent.isStartElement()) {

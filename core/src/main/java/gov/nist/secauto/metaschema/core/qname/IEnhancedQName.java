@@ -68,7 +68,6 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
    *          the index value to lookup
    * @return an optional containing the qualified name, if it exists
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static Optional<IEnhancedQName> of(int index) {
     return EQNameFactory.instance().get(index);
@@ -81,7 +80,6 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
    *          the qualified name to get
    * @return the qualified name
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull QName qname) {
     return of(
@@ -96,7 +94,6 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
    *          the qualified name local part
    * @return the qualified name
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull String localName) {
     return of("", localName);
@@ -111,7 +108,6 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
    *          the qualified name local part
    * @return the qualified name
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull URI namespace, @NonNull String localName) {
     return of(ObjectUtils.notNull(namespace.toASCIIString()), localName);
@@ -126,7 +122,6 @@ public interface IEnhancedQName extends Comparable<IEnhancedQName> {
    *          the qualified name local part
    * @return the qualified name
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IEnhancedQName of(@NonNull String namespace, @NonNull String localName) {
     return EQNameFactory.instance().newQName(namespace, localName);

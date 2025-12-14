@@ -17,7 +17,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * Represents a variable assignment for use in Metaschema module constraints.
  */
-@SuppressWarnings("PMD.ShortClassName")
 public interface ILet {
   /**
    * Create a new Let expression by compiling the provided Metapath expression
@@ -37,7 +36,6 @@ public interface ILet {
    *          remarks about the let statement
    * @return the original let statement with the same name or {@code null}
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   @Deprecated(since = "2.2.0", forRemoval = true)
   static ILet of(
@@ -65,7 +63,6 @@ public interface ILet {
    *          remarks about the let statement
    * @return the original let statement with the same name or {@code null}
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static ILet of(
       @NonNull IEnhancedQName name,

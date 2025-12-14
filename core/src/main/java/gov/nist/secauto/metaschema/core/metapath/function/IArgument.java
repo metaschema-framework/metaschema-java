@@ -32,7 +32,6 @@ public interface IArgument {
    *          the argument's sequence type
    * @return a new argument instance
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IArgument of(@NonNull IEnhancedQName name, @NonNull ISequenceType sequenceType) {
     return new ArgumentImpl(name, sequenceType);

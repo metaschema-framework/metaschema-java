@@ -950,8 +950,8 @@ public class DefaultConstraintValidator
       if (newExtensible.ordinal() > extensible.ordinal()) {
         // record the most restrictive value
         extensible = allowedValues.getExtensible();
-      } else if (IAllowedValuesConstraint.Extensible.NONE.equals(newExtensible)
-          && IAllowedValuesConstraint.Extensible.NONE.equals(extensible)) {
+      } else if (newExtensible == IAllowedValuesConstraint.Extensible.NONE
+          && extensible == IAllowedValuesConstraint.Extensible.NONE) {
         // this is an error, where there are two none constraints that conflict
         // TODO: find a different exception type to use
         throw new ConstraintValidationException(
@@ -963,7 +963,7 @@ public class DefaultConstraintValidator
                     constraints.stream()
                         .map(Pair::getLeft)
                         .filter(
-                            constraint -> IAllowedValuesConstraint.Extensible.NONE.equals(constraint.getExtensible())))
+                            constraint -> constraint.getExtensible() == IAllowedValuesConstraint.Extensible.NONE))
                     .map(IConstraint::getConstraintIdentity)
                     .collect(Collectors.joining(", ", "{", "}")),
                 item.getMetapath())));
@@ -994,7 +994,7 @@ public class DefaultConstraintValidator
           if (matchingValue != null) {
             match = true;
             handlePass(allowedValues, node, item, dynamicContext);
-          } else if (IAllowedValuesConstraint.Extensible.NONE.equals(allowedValues.getExtensible())) {
+          } else if (allowedValues.getExtensible() == IAllowedValuesConstraint.Extensible.NONE) {
             // hard failure, since no other values can satisfy this constraint
             failedConstraints = CollectionUtil.singletonList(allowedValues);
             match = false;

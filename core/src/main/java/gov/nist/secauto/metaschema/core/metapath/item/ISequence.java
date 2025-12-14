@@ -38,7 +38,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * @param <ITEM>
  *          the Java type of the items in a sequence
  */
-@SuppressWarnings("PMD.ShortMethodName")
 public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionValue {
   /**
    * Get an empty sequence.
