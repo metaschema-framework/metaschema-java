@@ -23,7 +23,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href="https://www.w3.org/TR/xpath-31/#doc-xpath31-IfExpr">If
  * expression</a> supporting conditional evaluation.
  */
-@SuppressWarnings("PMD.ShortClassName")
 public class If
     extends AbstractExpression {
   private final IExpression testExpression;

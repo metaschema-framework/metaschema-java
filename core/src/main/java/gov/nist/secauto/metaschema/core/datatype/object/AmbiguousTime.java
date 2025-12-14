@@ -43,7 +43,6 @@ public class AmbiguousTime
     return Objects.hash(getValue(), hasTimeZone());
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {

@@ -69,7 +69,6 @@ public class DataTypeItemType<T extends IAnyAtomicItem>
     return Objects.hash(adapter, getItemClass());
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {

@@ -167,7 +167,6 @@ public interface IMapItem<VALUE extends ICollectionValue>
    *          the value Java type
    * @return an empty {@code IMapItem}
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static <V extends ICollectionValue> IMapItem<V> of() {
     return AbstractMapItem.empty();
@@ -188,7 +187,6 @@ public interface IMapItem<VALUE extends ICollectionValue>
    * @throws NullPointerException
    *           if the key or the value is {@code null}
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static <K extends IAnyAtomicItem, V extends ICollectionValue> IMapItem<V> of(@NonNull K k1, @NonNull V v1) {
     return new MapItemN<>(entry(k1, v1));
@@ -215,7 +213,6 @@ public interface IMapItem<VALUE extends ICollectionValue>
    * @throws NullPointerException
    *           if any key or value is {@code null}
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static <K extends IAnyAtomicItem, V extends ICollectionValue> IMapItem<V> of(
       @NonNull K k1, @NonNull V v1,
@@ -250,7 +247,6 @@ public interface IMapItem<VALUE extends ICollectionValue>
    * @throws NullPointerException
    *           if any key or value is {@code null}
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static <K extends IAnyAtomicItem, V extends ICollectionValue>
       IMapItem<V> of(
@@ -292,7 +288,6 @@ public interface IMapItem<VALUE extends ICollectionValue>
    * @throws NullPointerException
    *           if any key or value is {@code null}
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static <K extends IAnyAtomicItem, V extends ICollectionValue>
       IMapItem<V> of(
@@ -340,7 +335,6 @@ public interface IMapItem<VALUE extends ICollectionValue>
    * @throws NullPointerException
    *           if any key or value is {@code null}
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static <K extends IAnyAtomicItem, V extends ICollectionValue>
       IMapItem<V> of(
@@ -394,10 +388,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
    * @throws NullPointerException
    *           if any key or value is {@code null}
    */
-  @SuppressWarnings({
-      "PMD.ExcessiveParameterList",
-      "PMD.ShortMethodName"
-  })
+  @SuppressWarnings("PMD.ExcessiveParameterList")
   @NonNull
   static <K extends IAnyAtomicItem, V extends ICollectionValue>
       IMapItem<V> of(
@@ -458,10 +449,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
    * @throws NullPointerException
    *           if any key or value is {@code null}
    */
-  @SuppressWarnings({
-      "PMD.ExcessiveParameterList",
-      "PMD.ShortMethodName"
-  })
+  @SuppressWarnings("PMD.ExcessiveParameterList")
   @NonNull
   static <K extends IAnyAtomicItem, V extends ICollectionValue> IMapItem<V> of(
       @NonNull K k1, @NonNull V v1,
@@ -527,10 +515,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
    * @throws NullPointerException
    *           if any key or value is {@code null}
    */
-  @SuppressWarnings({
-      "PMD.ExcessiveParameterList",
-      "PMD.ShortMethodName"
-  })
+  @SuppressWarnings("PMD.ExcessiveParameterList")
   @NonNull
   static <K extends IAnyAtomicItem, V extends ICollectionValue>
       IMapItem<V> of(
@@ -602,10 +587,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
    * @throws NullPointerException
    *           if any key or value is {@code null}
    */
-  @SuppressWarnings({
-      "PMD.ExcessiveParameterList",
-      "PMD.ShortMethodName"
-  })
+  @SuppressWarnings("PMD.ExcessiveParameterList")
   @NonNull
   static <K extends IAnyAtomicItem, V extends ICollectionValue>
       IMapItem<V> of(
@@ -675,10 +657,7 @@ public interface IMapItem<VALUE extends ICollectionValue>
    * @throws NullPointerException
    *           if any key or value is {@code null}
    */
-  @SuppressWarnings({
-      "PMD.ExcessiveParameterList",
-      "PMD.ShortMethodName"
-  })
+  @SuppressWarnings("PMD.ExcessiveParameterList")
   @NonNull
   static <K extends IAnyAtomicItem, V extends ICollectionValue> IMapItem<V> of(
       @NonNull K k1, @NonNull V v1,

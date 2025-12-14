@@ -56,7 +56,7 @@ public final class FnSubstringBefore {
     // disable construction
   }
 
-  @SuppressWarnings({ "unused", "PMD.OnlyOneReturn" })
+  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IStringItem> executeTwoArg(
       @NonNull IFunction function,

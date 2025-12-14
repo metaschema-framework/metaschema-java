@@ -18,7 +18,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * A compact syntax tree node that supports the Metapath
  * <a href="https://www.w3.org/TR/xpath-31/#id-cast">"cast as" operator</a>.
  */
-@SuppressWarnings("PMD.ShortClassName")
 public class Cast
     extends AbstractCastingExpression {
 

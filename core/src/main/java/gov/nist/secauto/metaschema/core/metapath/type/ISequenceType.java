@@ -37,7 +37,6 @@ public interface ISequenceType {
    *          the expected occurrence of the sequence
    * @return the new sequence type
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static ISequenceType of(
       @NonNull IItemType type,

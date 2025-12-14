@@ -38,7 +38,6 @@ public class FixedEmphasisDelimiterProcessor
     this.multipleUse = strongWrapsEmphasis ? 1 : 2;
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn") // for readability
   @Override
   public int getDelimiterUse(DelimiterRun opener, DelimiterRun closer) {
     // "multiple of 3" rule for internal delimiter runs

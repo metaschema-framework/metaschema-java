@@ -31,7 +31,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * This implementation will short-circuit and return {@code true} when the first
  * expression evaluates to {@code true}, otherwise it will return {@code false}.
  */
-@SuppressWarnings("PMD.ShortClassName")
 public class Or
     extends AbstractNAryExpression
     implements IBooleanLogicExpression {

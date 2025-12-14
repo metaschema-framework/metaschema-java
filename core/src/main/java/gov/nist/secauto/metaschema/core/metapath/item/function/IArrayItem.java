@@ -40,7 +40,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <ITEM>
  *          the Metapath item type of array members
  */
-@SuppressWarnings({ "PMD.ShortMethodName", "PMD.ExcessivePublicCount" })
+@SuppressWarnings("PMD.ExcessivePublicCount")
 public interface IArrayItem<ITEM extends ICollectionValue> extends IFunction, List<ITEM> {
   /**
    * Get the type information for this item.

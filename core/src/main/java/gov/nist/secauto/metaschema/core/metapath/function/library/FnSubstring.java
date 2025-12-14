@@ -80,7 +80,7 @@ public final class FnSubstring {
     // disable construction
   }
 
-  @SuppressWarnings({ "unused", "PMD.OnlyOneReturn" })
+  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IStringItem> executeTwoArg(
       @NonNull IFunction function,
@@ -105,7 +105,7 @@ public final class FnSubstring {
             sourceString.asString().length() - Math.max(startIndex, 1) + 1)));
   }
 
-  @SuppressWarnings({ "unused", "PMD.OnlyOneReturn" })
+  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IStringItem> executeThreeArg(
       @NonNull IFunction function,

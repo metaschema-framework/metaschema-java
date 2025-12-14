@@ -17,7 +17,6 @@ public interface ITemporalMapKey extends IMapKey {
   ITemporalItem getKey();
 
   @Override
-  @SuppressWarnings("PMD.OnlyOneReturn")
   default boolean isSameKey(IMapKey other) {
     if (!(other instanceof ITemporalMapKey)) {
       return false;

@@ -22,7 +22,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <a href="https://www.w3.org/TR/xpath-31/#id-for-expressions">For
  * expression</a> supporting variable-based iteration.
  */
-@SuppressWarnings("PMD.ShortClassName")
 public class For
     extends AbstractExpression {
   @NonNull

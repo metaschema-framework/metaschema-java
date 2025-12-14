@@ -90,7 +90,6 @@ public final class QNameCache {
    * @return the new cached qualified name or the existing cached name if it
    *         already exists in the cache
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   public IEnhancedQName cachedQNameFor(@NonNull String namespace, @NonNull String name) {
     int namespacePosition = namespaceCache.indexOf(namespace);
@@ -193,7 +192,6 @@ public final class QNameCache {
       return Objects.hashCode(qnameIndexPosition);
     }
 
-    @SuppressWarnings("PMD.OnlyOneReturn")
     @Override
     public boolean equals(Object obj) {
       if (this == obj) {

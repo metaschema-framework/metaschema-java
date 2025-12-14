@@ -124,7 +124,6 @@ public final class ArraySubarray {
    * @throws IndexOutOfBoundsArrayMetapathException
    *           if the start position is not in the range of 1 to array:size
    */
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   public static <T extends ICollectionValue> IArrayItem<T> subarray(
       @NonNull IArrayItem<T> array,
@@ -151,7 +150,6 @@ public final class ArraySubarray {
    * @throws IndexOutOfBoundsArrayMetapathException
    *           if the start position is not in the range of 1 to array:size
    */
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   public static <T extends ICollectionValue> IArrayItem<T> subarray(
       @NonNull IArrayItem<T> array,

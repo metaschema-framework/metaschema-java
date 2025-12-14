@@ -25,7 +25,6 @@ public interface IErrorCode {
    *          the error code value
    * @return a new error code instance
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IErrorCode of(@NonNull String prefix, int code) {
     return new ErrorCodeImpl(prefix, code);

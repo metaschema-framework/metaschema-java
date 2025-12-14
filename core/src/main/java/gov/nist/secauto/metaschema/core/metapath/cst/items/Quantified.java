@@ -270,7 +270,6 @@ public class Quantified
       this.size = size;
     }
 
-    @SuppressWarnings("PMD.OnlyOneReturn") // readability
     @Override
     public Iterator<List<T>> iterator() {
       if (size == 0) {

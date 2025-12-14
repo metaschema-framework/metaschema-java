@@ -36,7 +36,6 @@ public interface IAtomicOrUnionType<I extends IAnyAtomicItem> extends IItemType 
    *          the qualified name of the type
    * @return the type information
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static <I extends IAnyAtomicItem> IAtomicOrUnionType<I> of(
       Class<I> itemClass,

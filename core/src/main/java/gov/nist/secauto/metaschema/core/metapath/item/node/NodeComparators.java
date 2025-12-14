@@ -82,7 +82,6 @@ public final class NodeComparators {
     return retval;
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   private static boolean compareFlags(
       @NonNull Collection<? extends IFlagNodeItem> flags1,
       @NonNull Collection<? extends IFlagNodeItem> flags2,
@@ -111,7 +110,6 @@ public final class NodeComparators {
     return true;
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   private static boolean compareModelItems(
       @NonNull Collection<? extends List<? extends IModelNodeItem<?, ?>>> items1,
       @NonNull Collection<? extends List<? extends IModelNodeItem<?, ?>>> items2,
@@ -164,7 +162,6 @@ public final class NodeComparators {
         && compareAtomics(item1.toAtomicItem(), item2.toAtomicItem(), dynamicContext);
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   private static boolean compareAsField(
       @NonNull IModelNodeItem<?, ?> item1,
       @NonNull IModelNodeItem<?, ?> item2,

@@ -27,7 +27,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * with the evaluation of a series of predicate expressions that filter the
  * result of the evaluation.
  */
-@SuppressWarnings("PMD.ShortClassName")
 public class Step
     extends AbstractExpression {
 

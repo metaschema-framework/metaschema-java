@@ -31,7 +31,6 @@ public interface IAllowedValue {
    *          the version this value was deprecated in
    * @return the new allowed value
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static IAllowedValue of(
       @NonNull String value,

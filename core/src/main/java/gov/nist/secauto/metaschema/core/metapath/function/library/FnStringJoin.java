@@ -73,7 +73,7 @@ public final class FnStringJoin {
     // disable construction
   }
 
-  @SuppressWarnings({ "unused", "PMD.OnlyOneReturn" })
+  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IStringItem> execute(
       @NonNull IFunction function,

@@ -14,6 +14,12 @@
         <!-- Exclude TypeParameterNamingConventions since this project uses descriptive
              type parameter names like TYPE, RESULT, CONTEXT instead of single letters -->
         <exclude name="TypeParameterNamingConventions"/>
+        <!-- Exclude OnlyOneReturn - multiple returns improve readability for guard clauses -->
+        <exclude name="OnlyOneReturn"/>
+        <!-- Exclude ShortMethodName - factory methods like of(), as() are idiomatic Java -->
+        <exclude name="ShortMethodName"/>
+        <!-- Exclude ShortClassName - short class names like If, Or, For are acceptable for DSL-style APIs -->
+        <exclude name="ShortClassName"/>
     </rule>
 
 </ruleset>

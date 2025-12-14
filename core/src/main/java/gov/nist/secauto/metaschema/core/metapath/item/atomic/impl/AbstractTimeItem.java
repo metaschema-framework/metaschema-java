@@ -39,7 +39,6 @@ public abstract class AbstractTimeItem<TYPE>
     return asOffsetTime().withOffsetSameInstant(ZoneOffset.UTC).hashCode();
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {

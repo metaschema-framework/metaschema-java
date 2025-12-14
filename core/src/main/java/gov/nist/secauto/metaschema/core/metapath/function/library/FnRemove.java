@@ -75,7 +75,6 @@ public final class FnRemove {
    *          the position of the item in the sequence to be removed
    * @return {@code sequence} the new sequence with the item removed
    */
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   public static <T extends IItem> List<T> fnRemove(
       @NonNull List<T> target,

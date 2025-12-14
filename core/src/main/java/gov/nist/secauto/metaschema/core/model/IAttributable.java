@@ -109,7 +109,6 @@ public interface IAttributable {
    */
   // FIXME: use IEnhancedQName instead of name and namespace, or replace key
   // altogether with an integer value
-  @SuppressWarnings("PMD.ShortClassName")
   final class Key {
     @NonNull
     private final String name;
@@ -150,7 +149,6 @@ public interface IAttributable {
       return Objects.hash(name, namespace);
     }
 
-    @SuppressWarnings("PMD.OnlyOneReturn")
     @Override
     public boolean equals(Object obj) {
       if (this == obj) {

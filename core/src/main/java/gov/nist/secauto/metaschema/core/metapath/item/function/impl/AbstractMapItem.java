@@ -107,7 +107,6 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
         || other instanceof IMapItem && getValue().equals(((IMapItem<?>) other).getValue());
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     if (!(other instanceof IMapItem)) {

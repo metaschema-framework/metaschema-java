@@ -179,7 +179,6 @@ public abstract class AbstractSequence<ITEM extends IItem>
     return new UnsupportedOperationException("sequences are immutable");
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean equals(Object other) {
     // must either be the same instance or a sequence that has the same list
@@ -208,7 +207,6 @@ public abstract class AbstractSequence<ITEM extends IItem>
     return asList().hashCode();
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @Override
   public boolean deepEquals(ICollectionValue other, DynamicContext dynamicContext) {
     if (!(other instanceof ISequence)) {

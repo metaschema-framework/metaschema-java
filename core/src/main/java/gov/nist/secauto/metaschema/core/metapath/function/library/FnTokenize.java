@@ -146,7 +146,6 @@ public final class FnTokenize {
     return execute(input, pattern, flags);
   }
 
-  @SuppressWarnings("PMD.OnlyOneReturn")
   @NonNull
   private static ISequence<IStringItem> execute(
       @Nullable IStringItem input,
@@ -191,7 +190,7 @@ public final class FnTokenize {
    *          matching options
    * @return the stream of tokens
    */
-  @SuppressWarnings({ "PMD.OnlyOneReturn", "PMD.CyclomaticComplexity" })
+  @SuppressWarnings("PMD.CyclomaticComplexity")
   @NonNull
   public static List<String> fnTokenize(@NonNull String input, @NonNull String pattern, @NonNull String flags) {
     if (input.isEmpty()) {
