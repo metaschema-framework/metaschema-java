@@ -72,14 +72,14 @@ class EvaluateMetapathCommand
           .hasArg()
           .argName("EXPRESSION")
           .desc("Metapath expression to execute")
-          .build());
+          .get());
   @NonNull
   private static final Option CONTENT_OPTION = ObjectUtils.notNull(
       Option.builder("i")
           .hasArg()
           .argName("FILE_OR_URL")
           .desc("Metaschema content instance resource")
-          .build());
+          .get());
 
   @Override
   public String getName() {

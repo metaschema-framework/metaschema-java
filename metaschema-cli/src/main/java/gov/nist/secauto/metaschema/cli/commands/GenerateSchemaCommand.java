@@ -57,7 +57,7 @@ class GenerateSchemaCommand
       Option.builder()
           .longOpt("inline-types")
           .desc("definitions declared inline will be generated as inline types")
-          .build());
+          .get());
 
   @Override
   public String getName() {

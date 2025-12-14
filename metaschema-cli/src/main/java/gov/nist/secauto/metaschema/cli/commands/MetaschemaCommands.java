@@ -81,7 +81,7 @@ public final class MetaschemaCommands {
           .required()
           .desc("metaschema resource")
           .numberOfArgs(1)
-          .build());
+          .get());
   /**
    * Used by commands to declare an optional Metaschema module for processing.
    *
@@ -94,7 +94,7 @@ public final class MetaschemaCommands {
           .argName("FILE_OR_URL")
           .desc("metaschema resource")
           .numberOfArgs(1)
-          .build());
+          .get());
   /**
    * Used by commands to protect existing files from being overwritten, unless
    * this option is provided.
@@ -104,7 +104,7 @@ public final class MetaschemaCommands {
       Option.builder()
           .longOpt("overwrite")
           .desc("overwrite the destination if it exists")
-          .build());
+          .get());
   /**
    * Used by commands to identify the target format for a content conversion
    * operation.
@@ -121,7 +121,7 @@ public final class MetaschemaCommands {
               .map(Enum::name)
               .collect(CustomCollectors.joiningWithOxfordComma("or")))
           .numberOfArgs(1)
-          .build());
+          .get());
   /**
    * Used by commands to identify the source format for a content-related
    * operation.
@@ -138,7 +138,7 @@ public final class MetaschemaCommands {
               .map(Enum::name)
               .collect(CustomCollectors.joiningWithOxfordComma("or")))
           .numberOfArgs(1)
-          .build());
+          .get());
   /**
    * Used by commands that produce schemas to identify the schema format to
    * produce.
@@ -156,7 +156,7 @@ public final class MetaschemaCommands {
               .map(Enum::name)
               .collect(CustomCollectors.joiningWithOxfordComma("or")))
           .numberOfArgs(1)
-          .build());
+          .get());
 
   /**
    * Get the provided source path or URI string as an absolute {@link URI} for the
