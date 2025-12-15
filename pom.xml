@@ -37,7 +37,7 @@
 		<mojo.maven.version>3.8.1</mojo.maven.version>
 
 		<dependency.antlr4.version>4.13.2</dependency.antlr4.version>
-		<dependency.assertj.version>3.27.3</dependency.assertj.version>
+		<dependency.assertj.version>3.27.6</dependency.assertj.version>
 		<dependency.caffeine.version>3.2.3</dependency.caffeine.version>
 		<dependency.commons-cli.version>1.11.0</dependency.commons-cli.version>
 		<dependency.commons-codec.version>1.20.0</dependency.commons-codec.version>
