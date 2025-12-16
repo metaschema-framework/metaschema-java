@@ -25,6 +25,20 @@ As an engineer using a metaschema-java-based CLI tool (oscal-cli, metaschema-cli
 
 ## Design
 
+### Type-Based Completion Approach
+
+This design leverages Apache Commons CLI's `Option.type()` method to declare completion types programmatically. Instead of inferring completion behavior from `argName` strings, we use Java types directly:
+
+- **`File.class`** → File path completion
+- **`URI.class` / `URL.class`** → URL completion
+- **Custom `ICompletionType` implementations** → Enumerated value completion (e.g., formats)
+
+This approach provides:
+- **Type safety** at compile time
+- **Explicit declaration** of completion behavior
+- **Extensibility** via custom completion types
+- **Reusability** across all CLIs built on cli-processor
+
 ### New Interfaces and Classes
 
 ```
@@ -32,45 +46,84 @@ cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
 ├── command/
 │   └── ShellCompletionCommand.java
 └── completion/
-    ├── IArgumentTypeResolver.java
-    ├── ArgumentTypeResolvers.java
+    ├── ICompletionType.java
+    ├── Format.java
     └── CompletionScriptGenerator.java
 ```
 
-### IArgumentTypeResolver Interface
+### ICompletionType Interface
 
 ```java
-public interface IArgumentTypeResolver {
+/**
+ * Marker interface for types that provide shell completion information.
+ * Implement this interface on enums or classes to define custom completion
+ * behavior for command-line options.
+ */
+public interface ICompletionType {
     /**
-     * Get the argument type name this resolver handles.
-     * @return the argument type (e.g., "FILE", "FORMAT", "URL")
+     * Generate Bash completion code for this type.
+     * @return bash completion snippet, or empty string for freeform input
      */
-    String getArgumentType();
-
-    /**
-     * Generate Bash completion code for this argument type.
-     * @return bash completion snippet
-     */
+    @NonNull
     String getBashCompletion();
 
     /**
-     * Generate Zsh completion code for this argument type.
-     * @return zsh completion snippet
+     * Generate Zsh completion code for this type.
+     * @return zsh completion snippet, or empty string for freeform input
      */
+    @NonNull
     String getZshCompletion();
 }
 ```
 
-### Built-in Argument Type Resolvers
+### Format Enum (Example ICompletionType)
 
-| Argument Type | Bash Completion | Zsh Completion |
-|---------------|-----------------|----------------|
-| `FILE` | `_filedir` | `_files` |
-| `FILE_OR_URL` | `_filedir` | `_files` |
-| `FORMAT` | `compgen -W "xml json yaml"` | `(xml json yaml)` |
-| `URL` | (freeform) | `_urls` |
-| `EXPRESSION` | (freeform) | (freeform) |
-| (none/flag) | N/A | N/A |
+```java
+/**
+ * Content format options with shell completion support.
+ */
+public enum Format implements ICompletionType {
+    XML("xml"),
+    JSON("json"),
+    YAML("yaml");
+
+    private final String name;
+
+    Format(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getBashCompletion() {
+        return "compgen -W \"" + getCompletionValues() + "\"";
+    }
+
+    @Override
+    public String getZshCompletion() {
+        return "(" + getCompletionValues() + ")";
+    }
+
+    private static String getCompletionValues() {
+        return Arrays.stream(values())
+            .map(Format::getName)
+            .collect(Collectors.joining(" "));
+    }
+}
+```
+
+### Built-in Type Completion Mapping
+
+| Java Type | Bash Completion | Zsh Completion |
+|-----------|-----------------|----------------|
+| `File.class` | `_filedir` | `_files` |
+| `URI.class` / `URL.class` | (freeform) | `_urls` |
+| `Format.class` | `compgen -W "xml json yaml"` | `(xml json yaml)` |
+| `String.class` / `null` | (freeform) | (freeform) |
+| `ICompletionType` impl | from interface | from interface |
 
 ### ShellCompletionCommand
 
@@ -112,20 +165,40 @@ public class ShellCompletionCommand extends AbstractTerminalCommand {
 public class CompletionScriptGenerator {
     private final String programName;
     private final List<ICommand> commands;
-    private final Map<String, IArgumentTypeResolver> resolvers;
 
     public CompletionScriptGenerator(
-            String programName,
-            List<ICommand> commands,
-            Map<String, IArgumentTypeResolver> resolvers);
+            @NonNull String programName,
+            @NonNull List<ICommand> commands);
 
+    @NonNull
     public String generateBashCompletion();
+
+    @NonNull
     public String generateZshCompletion();
 
     // Internal helpers
     private void visitCommand(ICommand cmd, List<String> path);
     private List<String> collectOptions(ICommand cmd);
     private List<String> collectSubcommands(ICommand cmd);
+
+    /**
+     * Get completion code for an option based on its type.
+     */
+    private String getCompletionForOption(Option option, Shell shell) {
+        Class<?> type = option.getType();
+
+        if (type == null || String.class.equals(type)) {
+            return "";  // freeform
+        } else if (File.class.isAssignableFrom(type)) {
+            return shell == Shell.BASH ? "_filedir" : "_files";
+        } else if (URI.class.isAssignableFrom(type) || URL.class.isAssignableFrom(type)) {
+            return shell == Shell.BASH ? "" : "_urls";
+        } else if (ICompletionType.class.isAssignableFrom(type)) {
+            ICompletionType instance = getCompletionTypeInstance(type);
+            return shell == Shell.BASH ? instance.getBashCompletion() : instance.getZshCompletion();
+        }
+        return "";
+    }
 }
 ```
 
@@ -149,38 +222,50 @@ boolean isSubCommandRequired()
 // From Option (Apache Commons CLI)
 String getLongOpt()
 String getOpt()
-String getArgName()      // KEY: Used to lookup resolver
+Class<?> getType()       // KEY: Used to determine completion type
 boolean hasArg()
 boolean isRequired()
 String getDescription()
 
 // From ExtraArgument
-String getName()         // Contains type hint (e.g., "source-file-or-URL")
+String getName()
 boolean isRequired()
 ```
 
-## Argument Type Inventory
+## Option Type Migration
 
-Analysis of existing CLI commands reveals these argument types:
+Existing CLI commands should be updated to use `.type()` for completion support:
 
-### Option argName Values
+### Before (argName-based)
 
-| argName | Usage | Completion |
-|---------|-------|------------|
-| `FILE_OR_URL` | Input documents | File paths |
-| `FORMAT` | Output format selection | `xml`, `json`, `yaml` |
-| `FILE` | Local file paths | File paths |
-| `URL` | Web resources | Freeform |
-| `EXPRESSION` | Metapath expressions | Freeform |
+```java
+Option.builder("m")
+    .hasArg()
+    .argName("FILE_OR_URL")
+    .desc("metaschema resource")
+    .get()
+```
 
-### ExtraArgument Name Patterns
+### After (type-based)
 
-| Pattern | Inferred Type | Completion |
-|---------|---------------|------------|
-| `*-file` | FILE | File paths |
-| `*-file-or-URL` | FILE_OR_URL | File paths |
-| `*URL*` | URL | Freeform |
-| `destination*` | FILE | File paths |
+```java
+Option.builder("m")
+    .hasArg()
+    .argName("FILE_OR_URL")  // Keep for help text
+    .type(File.class)        // Add for completion
+    .desc("metaschema resource")
+    .get()
+```
+
+### Type Mapping Guide
+
+| Current argName | Recommended Type | Notes |
+|-----------------|------------------|-------|
+| `FILE_OR_URL` | `File.class` | File completion covers most use cases |
+| `FILE` | `File.class` | Direct mapping |
+| `FORMAT` | `Format.class` | Custom enum with completion |
+| `URL` | `URI.class` | Use standard Java type |
+| `EXPRESSION` | `String.class` | Freeform input |
 
 ## Generated Script Examples
 
@@ -319,13 +404,26 @@ cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
 ├── command/
 │   └── ShellCompletionCommand.java
 └── completion/
-    ├── IArgumentTypeResolver.java
-    ├── ArgumentTypeResolvers.java
+    ├── ICompletionType.java
+    ├── Format.java
     └── CompletionScriptGenerator.java
 
 cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/
 └── completion/
-    └── CompletionScriptGeneratorTest.java
+    ├── CompletionScriptGeneratorTest.java
+    └── FormatTest.java
+```
+
+### Modified Files (Option Type Migration)
+
+Commands that define options with arguments should add `.type()` calls:
+
+```
+metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/
+├── MetaschemaCommands.java          // Shared options
+├── AbstractValidateContentCommand.java
+├── GenerateSchemaCommand.java
+└── (other command classes)
 ```
 
 ### Consumer Updates (e.g., oscal-cli)

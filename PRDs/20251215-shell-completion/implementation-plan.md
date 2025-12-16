@@ -2,9 +2,9 @@
 
 ## Phase 1: Core Infrastructure
 
-### Task 1.1: Create IArgumentTypeResolver Interface
+### Task 1.1: Create ICompletionType Interface
 
-**File:** `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/completion/IArgumentTypeResolver.java`
+**File:** `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/completion/ICompletionType.java`
 
 ```java
 /*
@@ -17,29 +17,26 @@ package gov.nist.secauto.metaschema.cli.processor.completion;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * Provides shell completion code for a specific argument type.
+ * Marker interface for types that provide shell completion information.
+ * <p>
+ * Implement this interface on enums or classes to define custom completion
+ * behavior for command-line options. The completion generator will use
+ * {@link org.apache.commons.cli.Option#getType()} to determine the
+ * completion type for each option.
  */
-public interface IArgumentTypeResolver {
+public interface ICompletionType {
     /**
-     * Get the argument type name this resolver handles.
+     * Generate Bash completion code for this type.
      *
-     * @return the argument type (e.g., "FILE", "FORMAT", "URL")
-     */
-    @NonNull
-    String getArgumentType();
-
-    /**
-     * Generate Bash completion code for this argument type.
-     *
-     * @return bash completion snippet, or empty string if no completion
+     * @return bash completion snippet, or empty string for freeform input
      */
     @NonNull
     String getBashCompletion();
 
     /**
-     * Generate Zsh completion code for this argument type.
+     * Generate Zsh completion code for this type.
      *
-     * @return zsh completion snippet, or empty string if no completion
+     * @return zsh completion snippet, or empty string for freeform input
      */
     @NonNull
     String getZshCompletion();
@@ -50,26 +47,65 @@ public interface IArgumentTypeResolver {
 
 ---
 
-### Task 1.2: Create ArgumentTypeResolvers Registry
+### Task 1.2: Create Format Enum
 
-**File:** `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/completion/ArgumentTypeResolvers.java`
+**File:** `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/completion/Format.java`
 
-Implement built-in resolvers:
+```java
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
 
-| Resolver | argName | Bash | Zsh |
-|----------|---------|------|-----|
-| FileResolver | `FILE` | `_filedir` | `_files` |
-| FileOrUrlResolver | `FILE_OR_URL` | `_filedir` | `_files` |
-| FormatResolver | `FORMAT` | `compgen -W "xml json yaml"` | `(xml json yaml)` |
-| UrlResolver | `URL` | (empty) | `_urls` |
-| ExpressionResolver | `EXPRESSION` | (empty) | (empty) |
+package gov.nist.secauto.metaschema.cli.processor.completion;
 
-Include:
-- Static registry map
-- `getResolver(String argName)` lookup method
-- `getDefaultResolver()` for unknown types (file completion)
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
-**Verification:** Unit test for each resolver returns expected completion code.
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Content format options with shell completion support.
+ */
+public enum Format implements ICompletionType {
+    XML("xml"),
+    JSON("json"),
+    YAML("yaml");
+
+    @NonNull
+    private final String name;
+
+    Format(@NonNull String name) {
+        this.name = name;
+    }
+
+    @NonNull
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    @NonNull
+    public String getBashCompletion() {
+        return "compgen -W \"" + getCompletionValues() + "\"";
+    }
+
+    @Override
+    @NonNull
+    public String getZshCompletion() {
+        return "(" + getCompletionValues() + ")";
+    }
+
+    @NonNull
+    private static String getCompletionValues() {
+        return Arrays.stream(values())
+            .map(Format::getName)
+            .collect(Collectors.joining(" "));
+    }
+}
+```
+
+**Verification:** Unit test for completion methods returns expected values.
 
 ---
 
@@ -89,21 +125,45 @@ public String generateBashCompletion();
 
 @NonNull
 public String generateZshCompletion();
+
+// Type-based completion lookup
+private String getCompletionForOption(Option option, Shell shell) {
+    Class<?> type = option.getType();
+
+    if (type == null || String.class.equals(type)) {
+        return "";  // freeform
+    } else if (File.class.isAssignableFrom(type)) {
+        return shell == Shell.BASH ? "_filedir" : "_files";
+    } else if (URI.class.isAssignableFrom(type) || URL.class.isAssignableFrom(type)) {
+        return shell == Shell.BASH ? "" : "_urls";
+    } else if (ICompletionType.class.isAssignableFrom(type)) {
+        ICompletionType instance = getCompletionTypeInstance(type);
+        return shell == Shell.BASH ? instance.getBashCompletion() : instance.getZshCompletion();
+    }
+    return "";
+}
 ```
 
 Implementation approach:
 
-1. **Constructor:** Store program name, commands list, initialize resolver registry
+1. **Constructor:** Store program name and commands list
 2. **generateBashCompletion():**
    - Generate function header `_<program_name>()`
    - Generate case statement for each top-level command
+   - Use `Option.getType()` to determine completion behavior
    - Recursively handle subcommands
    - Generate `complete -F` registration
 3. **generateZshCompletion():**
    - Generate `#compdef` header
    - Generate command descriptions array
    - Generate `_arguments` for each command path
+   - Use `Option.getType()` for completion specifiers
    - Handle subcommand context switching
+4. **getCompletionForOption():**
+   - Check `Option.getType()` for completion type
+   - Handle built-in types: `File.class`, `URI.class`, `URL.class`
+   - Handle custom `ICompletionType` implementations
+   - Return empty string for freeform input
 
 **Verification:**
 - Unit test generates syntactically valid bash (test with `bash -n`)
@@ -186,15 +246,14 @@ Investigate existing patterns and choose the simplest approach.
 
 ## Phase 3: Testing
 
-### Task 3.1: Unit Tests for Resolvers
+### Task 3.1: Unit Tests for ICompletionType
 
-**File:** `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/completion/ArgumentTypeResolversTest.java`
+**File:** `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/completion/FormatTest.java`
 
 Test cases:
-- `testFileResolver()` - Returns `_filedir` for bash
-- `testFormatResolver()` - Returns format list
-- `testUnknownType()` - Falls back to default resolver
-- `testNullArgName()` - Handles gracefully
+- `testBashCompletion()` - Returns `compgen -W "xml json yaml"`
+- `testZshCompletion()` - Returns `(xml json yaml)`
+- `testAllValuesIncluded()` - All enum values appear in completion
 
 ---
 
@@ -208,6 +267,9 @@ Test cases:
 - `testIncludesAllCommands()` - All registered commands appear
 - `testIncludesSubcommands()` - Parent command subcommands appear
 - `testIncludesOptions()` - Command options appear in completion
+- `testFileTypeCompletion()` - Options with `File.class` get file completion
+- `testUriTypeCompletion()` - Options with `URI.class` get URL completion
+- `testCustomCompletionType()` - Options with `ICompletionType` use custom completion
 
 ---
 
@@ -250,29 +312,87 @@ your-cli shell-completion zsh > ~/.zfunc/_your-cli
 
 ---
 
+## Phase 5: Option Type Migration
+
+### Task 5.1: Add Types to Existing Options
+
+Update existing option definitions in `metaschema-cli` to include `.type()` calls:
+
+**File:** `metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/MetaschemaCommands.java`
+
+```java
+// Before
+public static final Option METASCHEMA_REQUIRED_OPTION = ObjectUtils.notNull(
+    Option.builder("m")
+        .hasArg()
+        .argName("FILE_OR_URL")
+        .required()
+        .desc("metaschema resource")
+        .numberOfArgs(1)
+        .get());
+
+// After
+public static final Option METASCHEMA_REQUIRED_OPTION = ObjectUtils.notNull(
+    Option.builder("m")
+        .hasArg()
+        .argName("FILE_OR_URL")
+        .type(File.class)           // Added for completion
+        .required()
+        .desc("metaschema resource")
+        .numberOfArgs(1)
+        .get());
+```
+
+**Files to update:**
+- `MetaschemaCommands.java` - Shared options (METASCHEMA_*, TO_OPTION, AS_FORMAT_OPTION, etc.)
+- `AbstractValidateContentCommand.java` - CONSTRAINTS_OPTION, SARIF_OUTPUT_FILE_OPTION
+- `GenerateSchemaCommand.java` - Any command-specific options
+- Other command classes with file/format options
+
+**Type assignments:**
+| Option | Type |
+|--------|------|
+| METASCHEMA_REQUIRED_OPTION | `File.class` |
+| METASCHEMA_OPTIONAL_OPTION | `File.class` |
+| TO_OPTION | `Format.class` |
+| AS_FORMAT_OPTION | `Format.class` |
+| AS_SCHEMA_FORMAT_OPTION | Custom schema format enum |
+| CONSTRAINTS_OPTION | `URI.class` |
+| SARIF_OUTPUT_FILE_OPTION | `File.class` |
+
+**Verification:** Options compile and existing tests pass.
+
+---
+
 ## Implementation Order
 
-1. **Task 1.1** - IArgumentTypeResolver interface
-2. **Task 1.2** - ArgumentTypeResolvers registry
-3. **Task 3.1** - Unit tests for resolvers
+1. **Task 1.1** - ICompletionType interface
+2. **Task 1.2** - Format enum
+3. **Task 3.1** - Unit tests for Format
 4. **Task 1.3** - CompletionScriptGenerator
 5. **Task 3.2** - Unit tests for generator
 6. **Task 2.2** - Investigate CLIProcessor access
 7. **Task 2.1** - ShellCompletionCommand
 8. **Task 3.3** - Integration tests
-9. **Task 4.1** - Documentation
+9. **Task 5.1** - Add types to existing options
+10. **Task 4.1** - Documentation
 
 ---
 
 ## Acceptance Criteria
 
+- [ ] `ICompletionType` interface created with bash/zsh completion methods
+- [ ] `Format` enum implements `ICompletionType` with xml/json/yaml values
+- [ ] `CompletionScriptGenerator` uses `Option.getType()` for completion lookup
 - [ ] `shell-completion bash` generates valid bash completion script
 - [ ] `shell-completion zsh` generates valid zsh completion script
 - [ ] All registered commands appear in generated completions
 - [ ] Subcommands appear for parent commands
-- [ ] Options with arguments get appropriate type-based completion
-- [ ] File arguments get file path completion
-- [ ] Format arguments get format value completion
+- [ ] Options with `File.class` type get file path completion
+- [ ] Options with `Format.class` type get format value completion
+- [ ] Options with `URI.class` type get URL completion
+- [ ] Options with custom `ICompletionType` use custom completion
+- [ ] Existing options in `metaschema-cli` updated with `.type()` calls
 - [ ] Generated scripts pass syntax validation (`bash -n`, `zsh -n`)
 - [ ] Unit tests pass
 - [ ] Integration tests pass
