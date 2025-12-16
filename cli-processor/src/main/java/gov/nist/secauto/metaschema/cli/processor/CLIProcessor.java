@@ -268,7 +268,7 @@ public class CLIProcessor {
    * @return the list of commands
    */
   @NonNull
-  protected final List<ICommand> getTopLevelCommands() {
+  public final List<ICommand> getTopLevelCommands() {
     return CollectionUtil.unmodifiableList(commands);
   }
 
