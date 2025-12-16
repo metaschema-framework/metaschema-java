@@ -50,12 +50,21 @@ public class AssemblyModel implements IBoundObject {
   @BoundChoiceGroup(
       maxOccurs = -1,
       assemblies = {
-          @BoundGroupedAssembly(formalName = "Assembly Reference", useName = "assembly",
+          @BoundGroupedAssembly(formalName = "Assembly Reference",
+              useName = "assembly",
+              discriminatorValue = "assembly-ref",
               binding = AssemblyReference.class),
-          @BoundGroupedAssembly(formalName = "Inline Assembly Definition", useName = "define-assembly",
+          @BoundGroupedAssembly(formalName = "Inline Assembly Definition",
+              useName = "define-assembly",
+              discriminatorValue = "assembly",
               binding = InlineDefineAssembly.class),
-          @BoundGroupedAssembly(formalName = "Field Reference", useName = "field", binding = FieldReference.class),
-          @BoundGroupedAssembly(formalName = "Inline Field Definition", useName = "define-field",
+          @BoundGroupedAssembly(formalName = "Field Reference",
+              useName = "field",
+              discriminatorValue = "field-ref",
+              binding = FieldReference.class),
+          @BoundGroupedAssembly(formalName = "Inline Field Definition",
+              useName = "define-field",
+              discriminatorValue = "field",
               binding = InlineDefineField.class),
           @BoundGroupedAssembly(formalName = "Choice", useName = "choice", binding = Choice.class),
           @BoundGroupedAssembly(formalName = "Choice Grouping", useName = "choice-group", binding = ChoiceGroup.class)
@@ -113,12 +122,21 @@ public class AssemblyModel implements IBoundObject {
         minOccurs = 1,
         maxOccurs = -1,
         assemblies = {
-            @BoundGroupedAssembly(formalName = "Assembly Reference", useName = "assembly",
+            @BoundGroupedAssembly(formalName = "Assembly Reference",
+                useName = "assembly",
+                discriminatorValue = "assembly-ref",
                 binding = AssemblyReference.class),
-            @BoundGroupedAssembly(formalName = "Inline Assembly Definition", useName = "define-assembly",
+            @BoundGroupedAssembly(formalName = "Inline Assembly Definition",
+                useName = "define-assembly",
+                discriminatorValue = "assembly",
                 binding = InlineDefineAssembly.class),
-            @BoundGroupedAssembly(formalName = "Field Reference", useName = "field", binding = FieldReference.class),
-            @BoundGroupedAssembly(formalName = "Inline Field Definition", useName = "define-field",
+            @BoundGroupedAssembly(formalName = "Field Reference",
+                useName = "field",
+                discriminatorValue = "field-ref",
+                binding = FieldReference.class),
+            @BoundGroupedAssembly(formalName = "Inline Field Definition",
+                useName = "define-field",
+                discriminatorValue = "field",
                 binding = InlineDefineField.class)
         },
         groupAs = @GroupAs(name = "choices", inJson = JsonGroupAsBehavior.LIST))
@@ -210,12 +228,21 @@ public class AssemblyModel implements IBoundObject {
         minOccurs = 1,
         maxOccurs = -1,
         assemblies = {
-            @BoundGroupedAssembly(formalName = "Grouping Assembly Reference", useName = "assembly",
+            @BoundGroupedAssembly(formalName = "Grouping Assembly Reference",
+                useName = "assembly",
+                discriminatorValue = "assembly-ref",
                 binding = Assembly.class),
-            @BoundGroupedAssembly(formalName = "Inline Assembly Definition", useName = "define-assembly",
+            @BoundGroupedAssembly(formalName = "Inline Assembly Definition",
+                useName = "define-assembly",
+                discriminatorValue = "assembly",
                 binding = DefineAssembly.class),
-            @BoundGroupedAssembly(formalName = "Grouping Field Reference", useName = "field", binding = Field.class),
-            @BoundGroupedAssembly(formalName = "Inline Field Definition", useName = "define-field",
+            @BoundGroupedAssembly(formalName = "Grouping Field Reference",
+                useName = "field",
+                discriminatorValue = "field-ref",
+                binding = Field.class),
+            @BoundGroupedAssembly(formalName = "Inline Field Definition",
+                useName = "define-field",
+                discriminatorValue = "field",
                 binding = DefineField.class)
         },
         groupAs = @GroupAs(name = "choices", inJson = JsonGroupAsBehavior.LIST))
@@ -330,7 +357,8 @@ public class AssemblyModel implements IBoundObject {
       @BoundField(
           formalName = "Formal Name",
           description = "A formal name for the data construct, to be presented in documentation.",
-          useName = "formal-name")
+          useName = "formal-name",
+          typeAdapter = StringAdapter.class)
       private String _formalName;
 
       @BoundField(
@@ -513,7 +541,8 @@ public class AssemblyModel implements IBoundObject {
       @BoundField(
           formalName = "Formal Name",
           description = "A formal name for the data construct, to be presented in documentation.",
-          useName = "formal-name")
+          useName = "formal-name",
+          typeAdapter = StringAdapter.class)
       private String _formalName;
 
       @BoundField(
@@ -539,9 +568,14 @@ public class AssemblyModel implements IBoundObject {
       @BoundChoiceGroup(
           maxOccurs = -1,
           assemblies = {
-              @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag",
+              @BoundGroupedAssembly(formalName = "Inline Flag Definition",
+                  useName = "define-flag",
+                  discriminatorValue = "flag",
                   binding = InlineDefineFlag.class),
-              @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)
+              @BoundGroupedAssembly(formalName = "Flag Reference",
+                  useName = "flag",
+                  discriminatorValue = "flag-ref",
+                  binding = FlagReference.class)
           },
           groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST))
       private List<Object> _flags;
@@ -786,7 +820,8 @@ public class AssemblyModel implements IBoundObject {
       @BoundField(
           formalName = "Formal Name",
           description = "A formal name for the data construct, to be presented in documentation.",
-          useName = "formal-name")
+          useName = "formal-name",
+          typeAdapter = StringAdapter.class)
       private String _formalName;
 
       @BoundField(
@@ -1056,7 +1091,8 @@ public class AssemblyModel implements IBoundObject {
       @BoundField(
           formalName = "Formal Name",
           description = "A formal name for the data construct, to be presented in documentation.",
-          useName = "formal-name")
+          useName = "formal-name",
+          typeAdapter = StringAdapter.class)
       private String _formalName;
 
       @BoundField(
@@ -1093,9 +1129,14 @@ public class AssemblyModel implements IBoundObject {
       @BoundChoiceGroup(
           maxOccurs = -1,
           assemblies = {
-              @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag",
+              @BoundGroupedAssembly(formalName = "Inline Flag Definition",
+                  useName = "define-flag",
+                  discriminatorValue = "flag",
                   binding = InlineDefineFlag.class),
-              @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)
+              @BoundGroupedAssembly(formalName = "Flag Reference",
+                  useName = "flag",
+                  discriminatorValue = "flag-ref",
+                  binding = FlagReference.class)
           },
           groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST))
       private List<Object> _flags;

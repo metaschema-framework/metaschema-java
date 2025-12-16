@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLineAdapter;
@@ -94,7 +95,8 @@ public class FlagAllowedValues implements IBoundObject, IConstraintBase {
   @BoundField(
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
-      useName = "formal-name")
+      useName = "formal-name",
+      typeAdapter = StringAdapter.class)
   private String _formalName;
 
   @BoundField(

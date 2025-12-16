@@ -82,7 +82,8 @@ public class InlineDefineAssembly implements IBoundObject {
   @BoundField(
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
-      useName = "formal-name")
+      useName = "formal-name",
+      typeAdapter = StringAdapter.class)
   private String _formalName;
 
   @BoundField(
@@ -113,9 +114,14 @@ public class InlineDefineAssembly implements IBoundObject {
   @BoundChoiceGroup(
       maxOccurs = -1,
       assemblies = {
-          @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag",
+          @BoundGroupedAssembly(formalName = "Inline Flag Definition",
+              useName = "define-flag",
+              discriminatorValue = "flag",
               binding = InlineDefineFlag.class),
-          @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)
+          @BoundGroupedAssembly(formalName = "Flag Reference",
+              useName = "flag",
+              discriminatorValue = "flag-ref",
+              binding = FlagReference.class)
       },
       groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST))
   private List<Object> _flags;

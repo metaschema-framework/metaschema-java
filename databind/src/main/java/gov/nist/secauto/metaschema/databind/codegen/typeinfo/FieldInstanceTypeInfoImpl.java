@@ -82,9 +82,8 @@ public class FieldInstanceTypeInfoImpl
     // handle the field value related info
     if (!definition.hasChildren()) {
       // this is a simple field, without flags
-      if (!MetaschemaDataTypeProvider.DEFAULT_DATA_TYPE.equals(adapter)) {
-        annotation.addMember("typeAdapter", "$T.class", adapter.getClass());
-      }
+      // Always add typeAdapter so the reader knows to treat this as a simple value
+      annotation.addMember("typeAdapter", "$T.class", adapter.getClass());
       AnnotationGenerator.buildValueConstraints(annotation, definition);
     }
     return retval;

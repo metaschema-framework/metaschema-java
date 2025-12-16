@@ -132,7 +132,8 @@ public class METASCHEMA implements IBoundObject {
   @BoundField(
       description = "A version string used to distinguish between multiple revisions of the same Metaschema module.",
       useName = "schema-version",
-      minOccurs = 1)
+      minOccurs = 1,
+      typeAdapter = StringAdapter.class)
   private String _schemaVersion;
 
   @BoundField(
@@ -186,10 +187,16 @@ public class METASCHEMA implements IBoundObject {
       assemblies = {
           @BoundGroupedAssembly(formalName = "Global Assembly Definition",
               description = "In XML, an element with structured element content. In JSON, an object with properties. Defined globally, an assembly can be assigned to appear in the `model` of any assembly (another assembly type, or itself), by `assembly` reference.",
-              useName = "define-assembly", binding = DefineAssembly.class),
-          @BoundGroupedAssembly(formalName = "Global Field Definition", useName = "define-field",
+              useName = "define-assembly",
+              discriminatorValue = "assembly",
+              binding = DefineAssembly.class),
+          @BoundGroupedAssembly(formalName = "Global Field Definition",
+              useName = "define-field",
+              discriminatorValue = "field",
               binding = DefineField.class),
-          @BoundGroupedAssembly(formalName = "Global Flag Definition", useName = "define-flag",
+          @BoundGroupedAssembly(formalName = "Global Flag Definition",
+              useName = "define-flag",
+              discriminatorValue = "flag",
               binding = DefineFlag.class)
       },
       groupAs = @GroupAs(name = "definitions", inJson = JsonGroupAsBehavior.LIST))
@@ -409,6 +416,7 @@ public class METASCHEMA implements IBoundObject {
       formalName = "Global Assembly Definition",
       description = "In XML, an element with structured element content. In JSON, an object with properties. Defined globally, an assembly can be assigned to appear in the `model` of any assembly (another assembly type, or itself), by `assembly` reference.",
       name = "define-assembly",
+
       moduleClass = MetaschemaModelModule.class)
   public static class DefineAssembly implements IBoundObject {
     private final IMetaschemaData __metaschemaData;
@@ -447,7 +455,8 @@ public class METASCHEMA implements IBoundObject {
     @BoundField(
         formalName = "Formal Name",
         description = "A formal name for the data construct, to be presented in documentation.",
-        useName = "formal-name")
+        useName = "formal-name",
+        typeAdapter = StringAdapter.class)
     private String _formalName;
 
     @BoundField(
@@ -486,9 +495,14 @@ public class METASCHEMA implements IBoundObject {
     @BoundChoiceGroup(
         maxOccurs = -1,
         assemblies = {
-            @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag",
+            @BoundGroupedAssembly(formalName = "Inline Flag Definition",
+                useName = "define-flag",
+                discriminatorValue = "flag",
                 binding = InlineDefineFlag.class),
-            @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)
+            @BoundGroupedAssembly(formalName = "Flag Reference",
+                useName = "flag",
+                discriminatorValue = "flag-ref",
+                binding = FlagReference.class)
         },
         groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST))
     private List<Object> _flags;
@@ -883,7 +897,8 @@ public class METASCHEMA implements IBoundObject {
     @BoundField(
         formalName = "Formal Name",
         description = "A formal name for the data construct, to be presented in documentation.",
-        useName = "formal-name")
+        useName = "formal-name",
+        typeAdapter = StringAdapter.class)
     private String _formalName;
 
     @BoundField(
@@ -926,9 +941,14 @@ public class METASCHEMA implements IBoundObject {
     @BoundChoiceGroup(
         maxOccurs = -1,
         assemblies = {
-            @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag",
+            @BoundGroupedAssembly(formalName = "Inline Flag Definition",
+                useName = "define-flag",
+                discriminatorValue = "flag",
                 binding = InlineDefineFlag.class),
-            @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", binding = FlagReference.class)
+            @BoundGroupedAssembly(formalName = "Flag Reference",
+                useName = "flag",
+                discriminatorValue = "flag-ref",
+                binding = FlagReference.class)
         },
         groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST))
     private List<Object> _flags;
@@ -1269,7 +1289,8 @@ public class METASCHEMA implements IBoundObject {
     @BoundField(
         formalName = "Formal Name",
         description = "A formal name for the data construct, to be presented in documentation.",
-        useName = "formal-name")
+        useName = "formal-name",
+        typeAdapter = StringAdapter.class)
     private String _formalName;
 
     @BoundField(
