@@ -25,6 +25,32 @@ The tool can be run as follows:
 
 metaschema-cli --help
 
+Shell Completion:
+-----------------
+
+The tool supports tab-completion for Bash and Zsh shells. To enable completion:
+
+For Bash:
+
+  # Generate and source completion script
+  source <(metaschema-cli shell-completion bash)
+
+  # Or save to a file for persistent use
+  metaschema-cli shell-completion bash --to ~/.metaschema-cli-completion.bash
+  echo 'source ~/.metaschema-cli-completion.bash' >> ~/.bashrc
+
+For Zsh:
+
+  # Generate and save to completions directory
+  metaschema-cli shell-completion zsh > ~/.zsh/completions/_metaschema-cli
+
+  # Ensure completions directory is in fpath (add to ~/.zshrc if needed)
+  fpath=(~/.zsh/completions $fpath)
+  autoload -Uz compinit && compinit
+
+Completion provides intelligent suggestions for commands, options, file paths,
+and format arguments when you press Tab.
+
 Feedback:
 ---------
 

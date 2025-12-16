@@ -494,6 +494,13 @@ metaschema-cli shell-completion <shell> [--to <file>]
 **Options:**
 - `--to <file>` - Optional. Write completion script to this file instead of stdout
 
+**File Handling Behavior (`--to` option):**
+- Paths are resolved relative to the current working directory
+- Parent directories must exist; the command does not create intermediate directories
+- Existing files are overwritten without prompting
+- On write failure (invalid path, permission denied, disk full), the command exits with `IO_ERROR` exit code and prints an error message
+- Uses UTF-8 encoding for output
+
 ### Installing Bash Completions
 
 **Option 1: User-local installation (recommended)**
