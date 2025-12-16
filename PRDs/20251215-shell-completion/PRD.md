@@ -47,7 +47,7 @@ cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
 │   └── ShellCompletionCommand.java
 └── completion/
     ├── ICompletionType.java
-    ├── Format.java
+    ├── CompletionTypeRegistry.java
     └── CompletionScriptGenerator.java
 ```
 
@@ -55,9 +55,11 @@ cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
 
 ```java
 /**
- * Marker interface for types that provide shell completion information.
- * Implement this interface on enums or classes to define custom completion
- * behavior for command-line options.
+ * Provides shell completion code for a specific type.
+ * <p>
+ * Instances are registered with {@link CompletionTypeRegistry} and looked up
+ * by the type class specified in {@link Option#getType()} or
+ * {@link ExtraArgument#getType()}.
  */
 public interface ICompletionType {
     /**
@@ -76,54 +78,161 @@ public interface ICompletionType {
 }
 ```
 
-### Format Enum (Example ICompletionType)
+### CompletionTypeRegistry
 
 ```java
 /**
- * Content format options with shell completion support.
+ * Registry for mapping Java types to their shell completion behavior.
+ * <p>
+ * This decouples type classes from completion logic, allowing any type to
+ * have completion behavior registered without implementing an interface.
  */
-public enum Format implements ICompletionType {
-    XML("xml"),
-    JSON("json"),
-    YAML("yaml");
+public final class CompletionTypeRegistry {
+    private static final Map<Class<?>, ICompletionType> REGISTRY = new ConcurrentHashMap<>();
 
-    private final String name;
-
-    Format(String name) {
-        this.name = name;
+    // Pre-register built-in types
+    static {
+        register(File.class, new FileCompletionType());
+        register(URI.class, new UriCompletionType());
+        register(URL.class, new UriCompletionType());
     }
 
-    public String getName() {
-        return name;
+    private CompletionTypeRegistry() {
+        // static utility class
     }
 
-    @Override
-    public String getBashCompletion() {
-        return "compgen -W \"" + getCompletionValues() + "\"";
+    /**
+     * Register a completion type for a class.
+     *
+     * @param type the type class to register
+     * @param completion the completion behavior for that type
+     */
+    public static void register(@NonNull Class<?> type, @NonNull ICompletionType completion) {
+        REGISTRY.put(type, completion);
     }
 
-    @Override
-    public String getZshCompletion() {
-        return "(" + getCompletionValues() + ")";
+    /**
+     * Register an enum type using its constant names as completion values.
+     * <p>
+     * Enum names are converted to lowercase for completion.
+     *
+     * @param <E> the enum type
+     * @param enumClass the enum class to register
+     */
+    public static <E extends Enum<E>> void registerEnum(@NonNull Class<E> enumClass) {
+        register(enumClass, forEnum(enumClass));
     }
 
-    private static String getCompletionValues() {
-        return Arrays.stream(values())
-            .map(Format::getName)
+    /**
+     * Create a completion type for an enum using its constant names.
+     *
+     * @param <E> the enum type
+     * @param enumClass the enum class
+     * @return completion type that offers enum values
+     */
+    @NonNull
+    public static <E extends Enum<E>> ICompletionType forEnum(@NonNull Class<E> enumClass) {
+        String values = Arrays.stream(enumClass.getEnumConstants())
+            .map(Enum::name)
+            .map(String::toLowerCase)
             .collect(Collectors.joining(" "));
+
+        return new ICompletionType() {
+            @Override
+            public String getBashCompletion() {
+                return "compgen -W \"" + values + "\"";
+            }
+
+            @Override
+            public String getZshCompletion() {
+                return "(" + values + ")";
+            }
+        };
     }
+
+    /**
+     * Lookup the completion type for a class.
+     *
+     * @param type the type class to lookup
+     * @return the registered completion type, or {@code null} if none registered
+     */
+    @Nullable
+    public static ICompletionType lookup(@Nullable Class<?> type) {
+        return type == null ? null : REGISTRY.get(type);
+    }
+}
+```
+
+### Registration Example
+
+```java
+// In metaschema-cli initialization (e.g., MetaschemaCommands static block)
+// Format enum doesn't need to implement any interface
+public enum Format { XML, JSON, YAML }
+
+// Register completion for the enum
+static {
+    CompletionTypeRegistry.registerEnum(Format.class);
 }
 ```
 
 ### Built-in Type Completion Mapping
 
+Pre-registered types in `CompletionTypeRegistry`:
+
 | Java Type | Bash Completion | Zsh Completion |
 |-----------|-----------------|----------------|
 | `File.class` | `_filedir` | `_files` |
-| `URI.class` / `URL.class` | (freeform) | `_urls` |
-| `Format.class` | `compgen -W "xml json yaml"` | `(xml json yaml)` |
-| `String.class` / `null` | (freeform) | (freeform) |
-| `ICompletionType` impl | from interface | from interface |
+| `URI.class` | (freeform) | `_urls` |
+| `URL.class` | (freeform) | `_urls` |
+
+Types requiring explicit registration:
+
+| Java Type | Registration | Completion |
+|-----------|--------------|------------|
+| Enum types | `registerEnum(MyEnum.class)` | enum values (lowercase) |
+| Custom types | `register(type, completion)` | custom behavior |
+| `String.class` / `null` | (none needed) | freeform |
+
+### ExtraArgument Extension
+
+The `ExtraArgument` interface will be extended to support type-based completion, matching the approach used for `Option`:
+
+```java
+public interface ExtraArgument {
+    // Existing methods...
+    String getName();
+    boolean isRequired();
+    int getNumber();
+
+    /**
+     * Get the type for completion purposes.
+     *
+     * @return the type class used to determine shell completion behavior,
+     *         or {@code null} for freeform input
+     */
+    @Nullable
+    default Class<?> getType() {
+        return null;  // default: freeform (backward compatible)
+    }
+
+    // New factory method with type
+    @NonNull
+    static ExtraArgument newInstance(@NonNull String name, boolean required, @Nullable Class<?> type) {
+        return new DefaultExtraArgument(name, required, type);
+    }
+}
+```
+
+This allows extra arguments to specify completion types:
+
+```java
+// Before
+ExtraArgument.newInstance("metaschema-module-file-or-URL", true)
+
+// After
+ExtraArgument.newInstance("metaschema-module-file-or-URL", true, File.class)
+```
 
 ### ShellCompletionCommand
 
@@ -186,18 +295,25 @@ public class CompletionScriptGenerator {
      */
     private String getCompletionForOption(Option option, Shell shell) {
         Class<?> type = option.getType();
+        ICompletionType completion = CompletionTypeRegistry.lookup(type);
 
-        if (type == null || String.class.equals(type)) {
-            return "";  // freeform
-        } else if (File.class.isAssignableFrom(type)) {
-            return shell == Shell.BASH ? "_filedir" : "_files";
-        } else if (URI.class.isAssignableFrom(type) || URL.class.isAssignableFrom(type)) {
-            return shell == Shell.BASH ? "" : "_urls";
-        } else if (ICompletionType.class.isAssignableFrom(type)) {
-            ICompletionType instance = getCompletionTypeInstance(type);
-            return shell == Shell.BASH ? instance.getBashCompletion() : instance.getZshCompletion();
+        if (completion != null) {
+            return shell == Shell.BASH ? completion.getBashCompletion() : completion.getZshCompletion();
         }
-        return "";
+        return "";  // freeform for unregistered types
+    }
+
+    /**
+     * Get completion code for an extra argument based on its type.
+     */
+    private String getCompletionForExtraArgument(ExtraArgument arg, Shell shell) {
+        Class<?> type = arg.getType();
+        ICompletionType completion = CompletionTypeRegistry.lookup(type);
+
+        if (completion != null) {
+            return shell == Shell.BASH ? completion.getBashCompletion() : completion.getZshCompletion();
+        }
+        return "";  // freeform for unregistered types
     }
 }
 ```
@@ -230,6 +346,7 @@ String getDescription()
 // From ExtraArgument
 String getName()
 boolean isRequired()
+Class<?> getType()   // NEW: Used to determine completion type
 ```
 
 ## Option Type Migration
@@ -252,7 +369,7 @@ Option.builder("m")
 Option.builder("m")
     .hasArg()
     .argName("FILE_OR_URL")  // Keep for help text
-    .type(File.class)        // Add for completion
+    .type(URL.class)        // Add for completion
     .desc("metaschema resource")
     .get()
 ```
@@ -261,7 +378,7 @@ Option.builder("m")
 
 | Current argName | Recommended Type | Notes |
 |-----------------|------------------|-------|
-| `FILE_OR_URL` | `File.class` | File completion covers most use cases |
+| `FILE_OR_URL` | `URL.class` | File completion covers most use cases |
 | `FILE` | `File.class` | Direct mapping |
 | `FORMAT` | `Format.class` | Custom enum with completion |
 | `URL` | `URI.class` | Use standard Java type |
@@ -365,17 +482,102 @@ _metaschema-cli "$@"
 
 ## Usage
 
+### Command Syntax
+
 ```bash
-# Generate and install bash completion
+metaschema-cli shell-completion <shell> [--to <file>]
+```
+
+**Arguments:**
+- `<shell>` - Required. The shell type: `bash` or `zsh`
+
+**Options:**
+- `--to <file>` - Optional. Write completion script to this file instead of stdout
+
+### Installing Bash Completions
+
+**Option 1: User-local installation (recommended)**
+
+```bash
+# Create the completion directory if it doesn't exist
+mkdir -p ~/.local/share/bash-completion/completions
+
+# Generate and save the completion script
 metaschema-cli shell-completion bash > ~/.local/share/bash-completion/completions/metaschema-cli
+
+# Load completions in your current shell
 source ~/.local/share/bash-completion/completions/metaschema-cli
+```
 
-# Generate and install zsh completion
+Completions will be automatically loaded in new terminal sessions.
+
+**Option 2: System-wide installation (requires root)**
+
+```bash
+# Generate and install for all users
+sudo metaschema-cli shell-completion bash --to /etc/bash_completion.d/metaschema-cli
+
+# Reload completions
+source /etc/bash_completion.d/metaschema-cli
+```
+
+### Installing Zsh Completions
+
+**Step 1: Create a completion directory**
+
+```bash
+mkdir -p ~/.zfunc
+```
+
+**Step 2: Generate the completion script**
+
+```bash
 metaschema-cli shell-completion zsh > ~/.zfunc/_metaschema-cli
-# Add to .zshrc: fpath=(~/.zfunc $fpath); autoload -Uz compinit; compinit
+```
 
-# Write directly to file
-metaschema-cli shell-completion bash --to /etc/bash_completion.d/metaschema-cli
+**Step 3: Configure Zsh to load completions**
+
+Add these lines to your `~/.zshrc` if not already present:
+
+```bash
+# Add custom completion directory to fpath
+fpath=(~/.zfunc $fpath)
+
+# Initialize completion system
+autoload -Uz compinit && compinit
+```
+
+**Step 4: Reload your shell**
+
+```bash
+# Either restart your terminal or run:
+source ~/.zshrc
+```
+
+### Verifying Installation
+
+After installation, test that completions work:
+
+```bash
+# Type the command and press Tab twice
+metaschema-cli <Tab><Tab>
+# Should show available commands: validate, convert, generate-schema, etc.
+
+metaschema-cli validate --<Tab><Tab>
+# Should show available options: --help, --metaschema, --as, etc.
+```
+
+### Updating Completions
+
+When upgrading to a new version of the CLI, regenerate the completion script to get completions for any new commands or options:
+
+```bash
+# Bash
+metaschema-cli shell-completion bash > ~/.local/share/bash-completion/completions/metaschema-cli
+
+# Zsh
+metaschema-cli shell-completion zsh > ~/.zfunc/_metaschema-cli
+compinit  # Rebuild completion cache
 ```
 
 ## Testing Strategy
@@ -405,18 +607,29 @@ cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
 │   └── ShellCompletionCommand.java
 └── completion/
     ├── ICompletionType.java
-    ├── Format.java
+    ├── CompletionTypeRegistry.java
     └── CompletionScriptGenerator.java
 
 cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/
 └── completion/
-    ├── CompletionScriptGeneratorTest.java
-    └── FormatTest.java
+    ├── CompletionTypeRegistryTest.java
+    └── CompletionScriptGeneratorTest.java
 ```
 
-### Modified Files (Option Type Migration)
+### Modified Files
 
-Commands that define options with arguments should add `.type()` calls:
+**ExtraArgument extension (cli-processor):**
+
+```
+cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/
+├── ExtraArgument.java               // Add getType() method and factory overload
+└── impl/
+    └── DefaultExtraArgument.java    // Add type field and constructor
+```
+
+**Option and ExtraArgument type migration (metaschema-cli):**
+
+Commands that define options and extra arguments should add type information:
 
 ```
 metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/
