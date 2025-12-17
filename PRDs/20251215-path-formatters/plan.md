@@ -26,6 +26,141 @@ A commented-out `JsonPathFormatter` exists but uses outdated APIs and implements
 - JSONPath (dot notation) support - not in scope
 - Namespace prefix resolution from external context - using self-contained EQName format instead
 
+## Future: Format-Based Selection and CLI Integration
+
+### Problem
+
+Validation results currently always use `MetapathFormatter` for paths. Users need:
+1. **Automatic format selection** - JSON Pointer paths when validating JSON, XPath when validating XML
+2. **CLI override** - Explicit path format selection regardless of document format
+
+### Design
+
+#### Path Format Selection Enum
+
+```java
+package gov.nist.secauto.metaschema.core.metapath.format;
+
+/**
+ * Enumeration of path format selection options for validation output.
+ */
+public enum PathFormatSelection {
+  /** Auto-select based on document format (JSON/YAML → JSON Pointer, XML → XPath) */
+  AUTO,
+  /** Always use Metapath format */
+  METAPATH,
+  /** Always use XPath 3.1 EQName format */
+  XPATH,
+  /** Always use RFC 6901 JSON Pointer format */
+  JSON_POINTER
+}
+```
+
+#### Resolver Method on IPathFormatter
+
+```java
+/**
+ * Resolve the appropriate path formatter based on selection and document format.
+ *
+ * @param selection the path format selection
+ * @param documentFormat the document format being validated, may be null
+ * @return the resolved path formatter
+ */
+@NonNull
+static IPathFormatter resolveFormatter(
+    @NonNull PathFormatSelection selection,
+    @Nullable Format documentFormat) {
+
+  if (selection == PathFormatSelection.AUTO && documentFormat != null) {
+    return switch (documentFormat) {
+      case JSON, YAML -> JSON_POINTER_PATH_FORMATTER;
+      case XML -> XPATH_PATH_FORMATTER;
+    };
+  }
+
+  return switch (selection) {
+    case XPATH -> XPATH_PATH_FORMATTER;
+    case JSON_POINTER -> JSON_POINTER_PATH_FORMATTER;
+    case METAPATH -> METAPATH_PATH_FORMATER;
+    case AUTO -> METAPATH_PATH_FORMATER; // fallback when no format info
+  };
+}
+```
+
+#### CLI Option (metaschema-cli)
+
+```java
+private static final Option PATH_FORMAT_OPTION = ObjectUtils.notNull(
+    Option.builder()
+        .longOpt("path-format")
+        .hasArg()
+        .argName("FORMAT")
+        .desc("path format in output: auto (default - selects based on document format), "
+            + "metapath, xpath, jsonpointer")
+        .build());
+```
+
+#### Integration Flow
+
+```
+CLI Command
+    ↓ parses --path-format option
+PathFormatSelection
+    ↓ combined with
+Format (from document or --as option)
+    ↓ resolved via
+IPathFormatter.resolveFormatter()
+    ↓ passed to
+AbstractConstraintValidationHandler.setPathFormatter()
+    ↓ used by
+Validation result messages
+```
+
+#### Handler Configuration
+
+Option 1: Direct setter (existing):
+```java
+handler.setPathFormatter(IPathFormatter.resolveFormatter(selection, format));
+```
+
+Option 2: Convenience method on handler:
+```java
+// In AbstractConstraintValidationHandler
+public void configurePathFormat(
+    @NonNull PathFormatSelection selection,
+    @Nullable Format documentFormat) {
+  setPathFormatter(IPathFormatter.resolveFormatter(selection, documentFormat));
+}
+```
+
+### Benefits
+
+1. **Smart defaults** - Users get format-appropriate paths automatically (JSON Pointer for JSON/YAML, XPath for XML)
+2. **Explicit override** - Users can force a specific format for consistency across mixed documents
+3. **Reusable** - Core logic in `IPathFormatter.resolveFormatter()` usable outside CLI (API, plugins)
+
+### Default Behavior
+
+When `--path-format` is not specified, the default is `AUTO`:
+- JSON documents → JSON Pointer paths
+- YAML documents → JSON Pointer paths
+- XML documents → XPath paths
+
+Users who prefer the original Metapath format can explicitly use `--path-format=metapath`.
+
+### Implementation Tasks (Phase 4)
+
+- [ ] Create `PathFormatSelection` enum in `core/.../metapath/format/`
+- [ ] Add `resolveFormatter()` static method to `IPathFormatter`
+- [ ] Add convenience method to `AbstractConstraintValidationHandler`
+- [ ] Add `--path-format` option to `AbstractValidateContentCommand`
+- [ ] Parse option in validation executor
+- [ ] Pass resolved formatter to validation handler
+- [ ] Update `LoggingValidationHandler` to use configured formatter
+- [ ] Add unit tests for resolver logic
+- [ ] Add integration tests for CLI option
+- [ ] Update CLI help documentation
+
 ## Technical Approach
 
 ### Architecture
@@ -132,55 +267,81 @@ IPathFormatter JSON_POINTER_PATH_FORMATTER = new JsonPointerFormatter();
 ## Implementation Tasks
 
 ### Phase 1: XPathFormatter
-- [ ] Create `XPathFormatter.java` implementing `IPathFormatter`
-- [ ] Implement `formatDocument()` - return empty string
-- [ ] Implement `formatMetaschema()` - return empty string
-- [ ] Implement `formatRootAssembly()` - return EQName
-- [ ] Implement `formatAssembly()` - handle GROUPED/UNGROUPED, return EQName with position
-- [ ] Implement `formatAssembly(IAssemblyInstanceGroupedNodeItem)` - same pattern
-- [ ] Implement `formatField()` - handle GROUPED/UNGROUPED, return EQName with position
-- [ ] Implement `formatFlag()` - return `@` + EQName
-- [ ] Add helper method for XML group wrapper element
-- [ ] Add `XPATH_PATH_FORMATTER` constant to `IPathFormatter`
-- [ ] Create `XPathFormatterTest.java` with comprehensive tests
+- [x] Create `XPathFormatter.java` implementing `IPathFormatter`
+- [x] Implement `formatDocument()` - return empty string
+- [x] Implement `formatMetaschema()` - return empty string
+- [x] Implement `formatRootAssembly()` - return EQName
+- [x] Implement `formatAssembly()` - handle GROUPED/UNGROUPED, return EQName with position
+- [x] Implement `formatAssembly(IAssemblyInstanceGroupedNodeItem)` - same pattern
+- [x] Implement `formatField()` - handle GROUPED/UNGROUPED, return EQName with position
+- [x] Implement `formatFlag()` - return `@` + EQName
+- [x] Add helper method for XML group wrapper element
+- [x] Add `XPATH_PATH_FORMATTER` constant to `IPathFormatter`
+- [x] Create `XPathFormatterTest.java` with comprehensive tests (26 tests)
 
 ### Phase 2: JsonPointerFormatter
-- [ ] Create `JsonPointerFormatter.java` implementing `IPathFormatter`
-- [ ] Implement RFC 6901 escaping helper method (`escapeJsonPointer`)
-- [ ] Implement `formatDocument()` - return empty string
-- [ ] Implement `formatMetaschema()` - return empty string
-- [ ] Implement `formatRootAssembly()` - return escaped JSON name
-- [ ] Implement `formatAssembly()` - handle all JSON grouping behaviors
-- [ ] Implement `formatAssembly(IAssemblyInstanceGroupedNodeItem)` - same pattern
-- [ ] Implement `formatField()` - handle grouping + optional value key
-- [ ] Implement `formatFlag()` - return escaped JSON name (no @ prefix)
-- [ ] Add helper for KEYED key value extraction
-- [ ] Add helper for sibling count check (SINGLETON_OR_LIST)
-- [ ] Add helper for JSON value key resolution
-- [ ] Add `JSON_POINTER_PATH_FORMATTER` constant to `IPathFormatter`
-- [ ] Create `JsonPointerFormatterTest.java` with comprehensive tests
+- [x] Create `JsonPointerFormatter.java` implementing `IPathFormatter`
+- [x] Implement RFC 6901 escaping helper method (`escapeJsonPointer`)
+- [x] Implement `formatDocument()` - return empty string
+- [x] Implement `formatMetaschema()` - return empty string
+- [x] Implement `formatRootAssembly()` - return escaped JSON name
+- [x] Implement `formatAssembly()` - handle all JSON grouping behaviors
+- [x] Implement `formatAssembly(IAssemblyInstanceGroupedNodeItem)` - same pattern
+- [x] Implement `formatField()` - handle grouping + optional value key
+- [x] Implement `formatFlag()` - return escaped JSON name (no @ prefix)
+- [x] Add helper for KEYED key value extraction
+- [x] Add helper for sibling count check (SINGLETON_OR_LIST)
+- [ ] Add helper for JSON value key resolution (deferred - not needed for basic path formatting)
+- [x] Add `JSON_POINTER_PATH_FORMATTER` constant to `IPathFormatter`
+- [x] Create `JsonPointerFormatterTest.java` with comprehensive tests (21 tests)
 
 ### Phase 3: Cleanup & Documentation
-- [ ] Remove or replace commented `JsonPathFormatter.java`
-- [ ] Update `package-info.java` documentation
-- [ ] Add Javadoc to all public APIs
-- [ ] Run full test suite
-- [ ] Run `mvn install -PCI -Prelease` verification
+- [x] Remove or replace commented `JsonPathFormatter.java`
+- [x] Update `package-info.java` documentation
+- [x] Add Javadoc to all public APIs
+- [x] Run full test suite
+- [x] Run `mvn install -PCI -Prelease` verification
+
+### Phase 4: Format-Based Selection and CLI Integration
+- [ ] Create `PathFormatSelection` enum in `core/.../metapath/format/`
+- [ ] Add `resolveFormatter()` static method to `IPathFormatter`
+- [ ] Add convenience method to `AbstractConstraintValidationHandler`
+- [ ] Add `--path-format` option to `AbstractValidateContentCommand`
+- [ ] Parse option in validation command executor
+- [ ] Pass resolved formatter to validation handler
+- [ ] Update `LoggingValidationHandler` to use configured formatter for constraint findings
+- [ ] Add unit tests for `resolveFormatter()` logic
+- [ ] Add integration tests for `--path-format` CLI option
+- [ ] Update CLI help documentation
 
 ## File Changes
 
-### New Files
+### Phase 1-3 Files (Completed)
+
+#### New Files
 - `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/XPathFormatter.java`
 - `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/JsonPointerFormatter.java`
 - `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/format/XPathFormatterTest.java`
 - `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/format/JsonPointerFormatterTest.java`
 
-### Modified Files
+#### Modified Files
 - `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/IPathFormatter.java` - Add constants
 - `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/package-info.java` - Update docs
 
-### Deleted Files
+#### Deleted Files
 - `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/JsonPathFormatter.java` - Remove commented code
+
+### Phase 4 Files (Planned)
+
+#### New Files
+- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/PathFormatSelection.java` - Enum for path format options
+- `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/format/PathFormatterResolverTest.java` - Tests for resolver logic
+
+#### Modified Files
+- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/IPathFormatter.java` - Add `resolveFormatter()` method
+- `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/AbstractConstraintValidationHandler.java` - Add convenience method
+- `metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/AbstractValidateContentCommand.java` - Add `--path-format` option
+- `metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/processor/LoggingValidationHandler.java` - Use configured formatter
 
 ## Code Examples
 
@@ -289,11 +450,29 @@ private static String escapeJsonPointer(@NonNull String value) {
 10. **RFC 6901 escaping** - Verify `~` → `~0`, `/` → `~1`
 11. **JSON name vs effective name** - Verify uses `getJsonName()`
 
+### Phase 4: Path Format Selection Test Cases
+
+1. **resolveFormatter AUTO with JSON format** - Returns `JSON_POINTER_PATH_FORMATTER`
+2. **resolveFormatter AUTO with YAML format** - Returns `JSON_POINTER_PATH_FORMATTER`
+3. **resolveFormatter AUTO with XML format** - Returns `XPATH_PATH_FORMATTER`
+4. **resolveFormatter AUTO with null format** - Returns `METAPATH_PATH_FORMATER` (fallback)
+5. **resolveFormatter METAPATH explicit** - Returns `METAPATH_PATH_FORMATER` regardless of format
+6. **resolveFormatter XPATH explicit** - Returns `XPATH_PATH_FORMATTER` regardless of format
+7. **resolveFormatter JSON_POINTER explicit** - Returns `JSON_POINTER_PATH_FORMATTER` regardless of format
+8. **CLI --path-format=auto** - Auto-selects based on document format
+9. **CLI --path-format=metapath** - Forces Metapath format regardless of document type
+10. **CLI --path-format=jsonpointer** - Forces JSON Pointer format regardless of document type
+11. **CLI --path-format=xpath** - Forces XPath format regardless of document type
+12. **CLI no --path-format option** - Uses AUTO (format-based selection) as default
+13. **CLI validate JSON without option** - Uses JSON Pointer paths
+14. **CLI validate XML without option** - Uses XPath paths
+
 ### Test Infrastructure
 
 - Use existing Metaschema test suite modules to load real documents
 - Create mock node items for isolated unit tests
 - Reference patterns from `DefaultConstraintValidatorTest.java`
+- CLI integration tests in `metaschema-cli` module using Maven Invoker plugin
 
 ## Risks and Mitigations
 
