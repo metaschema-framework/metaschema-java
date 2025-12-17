@@ -19,6 +19,9 @@ import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -48,6 +51,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  *      Pointer</a>
  */
 public class JsonPointerFormatter implements IPathFormatter {
+  private static final Logger LOGGER = LogManager.getLogger(JsonPointerFormatter.class);
 
   @Override
   @NonNull
@@ -156,7 +160,12 @@ public class JsonPointerFormatter implements IPathFormatter {
         return flagItem.toAtomicItem().asString();
       }
     }
-    // Fallback to 0-based index
+    // Fallback to 0-based index - this indicates a potential issue with the model
+    // or data
+    if (LOGGER.isWarnEnabled()) {
+      LOGGER.warn("Unable to resolve JSON key for KEYED collection item '{}', falling back to numeric index",
+          item.getQName().getLocalName());
+    }
     return String.valueOf(item.getPosition() - 1);
   }
 

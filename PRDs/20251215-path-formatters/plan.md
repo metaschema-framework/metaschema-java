@@ -81,8 +81,8 @@ static IPathFormatter resolveFormatter(
   return switch (selection) {
     case XPATH -> XPATH_PATH_FORMATTER;
     case JSON_POINTER -> JSON_POINTER_PATH_FORMATTER;
-    case METAPATH -> METAPATH_PATH_FORMATER;
-    case AUTO -> METAPATH_PATH_FORMATER; // fallback when no format info
+    case METAPATH -> METAPATH_PATH_FORMATTER;
+    case AUTO -> METAPATH_PATH_FORMATTER; // fallback when no format info
   };
 }
 ```
@@ -102,7 +102,7 @@ private static final Option PATH_FORMAT_OPTION = ObjectUtils.notNull(
 
 #### Integration Flow
 
-```
+```text
 CLI Command
     ↓ parses --path-format option
 PathFormatSelection
@@ -167,7 +167,7 @@ Users who prefer the original Metapath format can explicitly use `--path-format=
 
 Both formatters implement `IPathFormatter` interface:
 
-```
+```text
 IPathFormatter (interface)
 ├── MetapathFormatter (existing)
 ├── XPathFormatter (new)
@@ -289,8 +289,8 @@ IPathFormatter JSON_POINTER_PATH_FORMATTER = new JsonPointerFormatter();
 - [x] Implement `formatAssembly(IAssemblyInstanceGroupedNodeItem)` - same pattern
 - [x] Implement `formatField()` - handle grouping + optional value key
 - [x] Implement `formatFlag()` - return escaped JSON name (no @ prefix)
-- [x] Add helper for KEYED key value extraction
-- [x] Add helper for sibling count check (SINGLETON_OR_LIST)
+- [x] Add helper for KEYED key value extraction (`getJsonKeyValue()`) with warning on fallback
+- [x] Add helper for sibling count check (SINGLETON_OR_LIST) - `countSiblings()` method
 - [ ] Add helper for JSON value key resolution (deferred - not needed for basic path formatting)
 - [x] Add `JSON_POINTER_PATH_FORMATTER` constant to `IPathFormatter`
 - [x] Create `JsonPointerFormatterTest.java` with comprehensive tests (21 tests)
