@@ -503,7 +503,7 @@ metaschema-cli shell-completion <shell> [--to <file>]
 
 ### Installing Bash Completions
 
-**Option 1: User-local installation (recommended)**
+#### Option 1: User-local installation (recommended)
 
 ```bash
 # Create the completion directory if it doesn't exist
@@ -518,7 +518,7 @@ source ~/.local/share/bash-completion/completions/metaschema-cli
 
 Completions will be automatically loaded in new terminal sessions.
 
-**Option 2: System-wide installation (requires root)**
+#### Option 2: System-wide installation (requires root)
 
 ```bash
 # Generate and install for all users
@@ -530,19 +530,19 @@ source /etc/bash_completion.d/metaschema-cli
 
 ### Installing Zsh Completions
 
-**Step 1: Create a completion directory**
+#### Step 1: Create a completion directory
 
 ```bash
 mkdir -p ~/.zfunc
 ```
 
-**Step 2: Generate the completion script**
+#### Step 2: Generate the completion script
 
 ```bash
 metaschema-cli shell-completion zsh > ~/.zfunc/_metaschema-cli
 ```
 
-**Step 3: Configure Zsh to load completions**
+#### Step 3: Configure Zsh to load completions
 
 Add these lines to your `~/.zshrc` if not already present:
 
@@ -554,7 +554,7 @@ fpath=(~/.zfunc $fpath)
 autoload -Uz compinit && compinit
 ```
 
-**Step 4: Reload your shell**
+#### Step 4: Reload your shell
 
 ```bash
 # Either restart your terminal or run:
