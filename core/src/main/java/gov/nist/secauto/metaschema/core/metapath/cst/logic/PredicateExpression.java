@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.cst.logic;
 
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import gov.nist.secauto.metaschema.core.metapath.FocusContext;
 import gov.nist.secauto.metaschema.core.metapath.IExpression;
 import gov.nist.secauto.metaschema.core.metapath.MetapathEvaluationFeature;
 import gov.nist.secauto.metaschema.core.metapath.cst.AbstractExpression;
@@ -96,12 +97,21 @@ public class PredicateExpression
     if (dynamicContext.getConfiguration().isFeatureEnabled(MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES)) {
       // evaluate the predicates for this step
       AtomicInteger index = new AtomicInteger();
+      int size = retval.size();
 
       Stream<? extends IItem> stream = ObjectUtils.notNull(
-          retval.stream().map(item -> Map.entry(BigInteger.valueOf(index.incrementAndGet()), item)).filter(entry -> {
+          retval.stream().map(item -> {
+            int pos = index.incrementAndGet();
+            DynamicContext subContext = dynamicContext.subContext(
+                FocusContext.of(item, pos, size));
+            return Map.entry(subContext, item);
+          }).filter(entry -> {
             @SuppressWarnings("null")
             @NonNull
             IItem item = entry.getValue();
+            @SuppressWarnings("null")
+            @NonNull
+            DynamicContext subContext = entry.getKey();
 
             // return false if any predicate evaluates to false
             return !predicates.stream()
@@ -111,14 +121,14 @@ public class PredicateExpression
                     // reduce the result to the matching item
                     BigInteger predicateIndex = ((IntegerLiteral) predicateExpr).getValue().asInteger();
 
-                    // get the position of the item
-                    final BigInteger position = entry.getKey();
+                    // get the position of the item from the context
+                    final BigInteger position = BigInteger.valueOf(subContext.getFocusContext().getPosition());
 
                     // it is a match if the position matches
                     bool = position.equals(predicateIndex);
                   } else {
                     ISequence<?> innerFocus = ISequence.of(item);
-                    ISequence<?> predicateResult = predicateExpr.accept(dynamicContext, innerFocus);
+                    ISequence<?> predicateResult = predicateExpr.accept(subContext, innerFocus);
                     bool = FnBoolean.fnBoolean(predicateResult).toBoolean();
                   }
                   return bool;
