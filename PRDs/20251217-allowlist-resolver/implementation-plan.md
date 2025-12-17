@@ -28,17 +28,19 @@ Single PR with multiple commits organized by feature area.
 7. AllowlistUriResolver and builder
 
 **Phase 2: Configuration System**
-8. IConfigurationService interface
-9. ConfigurationService implementation with directory discovery
-10. AllowlistConfigurationMerger (deep merge on scheme, shallow on domain)
-11. AllowlistConfiguration POJO and YAML loading
+8. Create Metaschema module definition (`allowlist-config_metaschema.yaml`)
+9. Configure metaschema-maven-plugin for code generation in cli-processor pom.xml
+10. IConfigurationService interface
+11. ConfigurationService implementation with directory discovery
+12. AllowlistConfigurationMerger (deep merge on scheme, shallow on domain)
+13. AllowlistConfiguration binding class integration with IBoundLoader
 
 **Phase 3: Integration**
-12. Update AbstractModuleLoader to use IUriResolver
-13. Update BindingConstraintLoader to use IUriResolver
-14. Update DefaultXmlDeserializer to use IUriResolver
-15. CLI integration (--config-dir option, METASCHEMA_CONFIG_DIR env var)
-16. Documentation and examples
+14. Update AbstractModuleLoader to use IUriResolver
+15. Update BindingConstraintLoader to use IUriResolver
+16. Update DefaultXmlDeserializer to use IUriResolver
+17. CLI integration (--config-dir option, METASCHEMA_CONFIG_DIR env var)
+18. Documentation and examples
 
 ---
 
@@ -1461,7 +1463,241 @@ mvn -pl core checkstyle:check
 
 ## PR5: Configuration System Infrastructure
 
-**Goal:** Implement layered configuration system with directory discovery and merge support.
+**Goal:** Implement layered configuration system with directory discovery, Metaschema-based configuration model, and merge support.
+
+**Module:** `databind-metaschema` (for config model and loading), `cli-processor` (for directory discovery service)
+
+### Task 5.0: Create Metaschema Configuration Model
+
+**Files:**
+- Create: `databind-metaschema/src/main/metaschema/allowlist-config_metaschema.yaml`
+
+**Step 1: Create the Metaschema module file**
+
+Create the directory structure and Metaschema module definition:
+
+```bash
+mkdir -p databind-metaschema/src/main/metaschema
+```
+
+```yaml
+# databind-metaschema/src/main/metaschema/allowlist-config_metaschema.yaml
+metaschema:
+  schema-name: Allowlist Configuration
+  schema-version: 1.0.0
+  short-name: allowlist-config
+  namespace: http://csrc.nist.gov/ns/metaschema/allowlist-config/1.0
+  json-base-uri: http://csrc.nist.gov/ns/metaschema/allowlist-config/1.0
+
+  definitions:
+    - define-assembly:
+        name: allowlist-config
+        formal-name: Allowlist Configuration
+        description: Configuration for the allowlist URI resolver.
+        root-name: allowlist-config
+        flags:
+          - define-flag:
+              name: default-policy
+              as-type: token
+              formal-name: Default Policy
+              description: Default policy for unlisted schemes.
+              constraint:
+                allowed-values:
+                  - enum:
+                      value: allow
+                      description: Allow unlisted schemes
+                  - enum:
+                      value: deny
+                      description: Deny unlisted schemes
+        model:
+          - assembly:
+              ref: scheme-config
+              max-occurs: unbounded
+              group-as:
+                name: schemes
+                in-json: BY_KEY
+          - assembly:
+              ref: logging-config
+              min-occurs: 0
+
+    - define-assembly:
+        name: scheme-config
+        formal-name: Scheme Configuration
+        description: Configuration for a specific URI scheme.
+        json-key:
+          flag-ref: scheme
+        flags:
+          - define-flag:
+              name: scheme
+              as-type: token
+              required: yes
+              formal-name: URI Scheme
+              description: The URI scheme (e.g., https, http, file, jar).
+          - define-flag:
+              name: enabled
+              as-type: boolean
+              formal-name: Enabled
+              description: Whether this scheme is enabled.
+        model:
+          - choice:
+              - assembly:
+                  ref: http-rule
+                  max-occurs: unbounded
+                  group-as:
+                    name: http-rules
+                    in-json: ARRAY
+              - assembly:
+                  ref: file-rule
+                  max-occurs: unbounded
+                  group-as:
+                    name: file-rules
+                    in-json: ARRAY
+              - assembly:
+                  ref: jar-rule
+                  max-occurs: unbounded
+                  group-as:
+                    name: jar-rules
+                    in-json: ARRAY
+
+    - define-assembly:
+        name: http-rule
+        formal-name: HTTP Rule
+        description: Access rule for HTTP/HTTPS URIs.
+        flags:
+          - define-flag:
+              name: domain
+              as-type: string
+              required: yes
+              formal-name: Domain
+              description: Domain pattern (e.g., "example.com", "*.nist.gov").
+        model:
+          - field:
+              ref: path-prefix
+              max-occurs: unbounded
+              group-as:
+                name: paths
+                in-json: ARRAY
+
+    - define-assembly:
+        name: file-rule
+        formal-name: File Rule
+        description: Access rule for file:// URIs.
+        flags:
+          - define-flag:
+              name: path
+              as-type: string
+              required: yes
+              formal-name: Path
+              description: Base directory path.
+          - define-flag:
+              name: scope
+              as-type: token
+              formal-name: Scope
+              description: Access scope for the directory.
+              constraint:
+                allowed-values:
+                  - enum:
+                      value: recursive
+                      description: Allow recursive access
+                  - enum:
+                      value: single-level
+                      description: Allow single level only
+
+    - define-assembly:
+        name: jar-rule
+        formal-name: JAR Rule
+        description: Access rule for jar: URIs.
+        flags:
+          - define-flag:
+              name: path
+              as-type: string
+              required: yes
+              formal-name: Path
+              description: Resource path pattern within JAR.
+
+    - define-field:
+        name: path-prefix
+        as-type: string
+        formal-name: Path Prefix
+        description: Allowed path prefix.
+
+    - define-assembly:
+        name: logging-config
+        formal-name: Logging Configuration
+        description: Audit logging settings.
+        flags:
+          - define-flag:
+              name: level
+              as-type: token
+              formal-name: Log Level
+              description: Minimum log level for access attempts.
+          - define-flag:
+              name: include-allowed
+              as-type: boolean
+              formal-name: Include Allowed
+              description: Whether to log allowed access attempts.
+```
+
+**Step 2: Commit**
+
+```bash
+git add databind-metaschema/src/main/metaschema/allowlist-config_metaschema.yaml
+git commit -m "feat(config): add Metaschema module for allowlist configuration"
+```
+
+---
+
+### Task 5.0b: Configure Maven Code Generation
+
+**Files:**
+- Modify: `databind-metaschema/pom.xml`
+
+**Step 1: Add metaschema-maven-plugin configuration**
+
+The `databind-metaschema` module already has metaschema-maven-plugin configured. Add the allowlist config module to the existing configuration by ensuring the `metaschemaDir` includes our new module:
+
+```xml
+<!-- In databind-metaschema/pom.xml, verify the plugin configuration includes: -->
+<plugin>
+  <groupId>gov.nist.secauto.metaschema</groupId>
+  <artifactId>metaschema-maven-plugin</artifactId>
+  <executions>
+    <execution>
+      <id>generate-sources</id>
+      <goals>
+        <goal>generate-sources</goal>
+      </goals>
+      <configuration>
+        <metaschemaDir>${project.basedir}/src/main/metaschema</metaschemaDir>
+        <constraints/>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+```
+
+**Step 2: Verify code generation**
+
+```bash
+mvn -pl databind-metaschema generate-sources
+```
+
+Expected: Generated Java classes in `databind-metaschema/target/generated-sources/metaschema/` including:
+- `AllowlistConfig.java`
+- `SchemeConfig.java`
+- `HttpRule.java`
+- `FileRule.java`
+- `JarRule.java`
+- `LoggingConfig.java`
+
+**Step 3: Commit (if pom.xml changes needed)**
+
+```bash
+git add databind-metaschema/pom.xml
+git commit -m "build(databind): configure code generation for allowlist config module"
+```
+
+---
 
 **Package:** `gov.nist.secauto.metaschema.cli.processor.config`
 
@@ -1982,17 +2218,165 @@ mvn -pl cli-processor checkstyle:check
 
 ---
 
-## PR6: Allowlist YAML Configuration and Merge
+## PR6: Allowlist Configuration Loading and Merge
 
-**Goal:** Implement allowlist-specific YAML configuration with scheme-deep/domain-shallow merge semantics.
+**Goal:** Implement allowlist-specific configuration loading using Metaschema-generated binding classes with scheme-deep/domain-shallow merge semantics.
 
-**Package:** `gov.nist.secauto.metaschema.core.model.resolver.config`
+**Module:** `databind-metaschema`
+
+**Package:** `gov.nist.secauto.metaschema.databind.metaschema.config`
+
+### Task 6.0: Create AllowlistConfigurationLoader
+
+**Files:**
+- Create: `databind-metaschema/src/main/java/gov/nist/secauto/metaschema/databind/metaschema/config/AllowlistConfigurationLoader.java`
+- Test: `databind-metaschema/src/test/java/gov/nist/secauto/metaschema/databind/metaschema/config/AllowlistConfigurationLoaderTest.java`
+
+**Step 1: Write the failing test**
+
+```java
+package gov.nist.secauto.metaschema.databind.metaschema.config;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import gov.nist.secauto.metaschema.databind.IBindingContext;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+class AllowlistConfigurationLoaderTest {
+
+  private static IBindingContext bindingContext;
+
+  @TempDir
+  Path tempDir;
+
+  @BeforeAll
+  static void setUp() throws Exception {
+    bindingContext = IBindingContext.newInstance();
+  }
+
+  @Test
+  void testLoadYamlConfiguration() throws IOException {
+    Path configFile = tempDir.resolve("allowlist.yaml");
+    Files.writeString(configFile, """
+        default-policy: deny
+        schemes:
+          https:
+            enabled: true
+            http-rules:
+              - domain: nist.gov
+                paths:
+                  - /schemas/
+        """);
+
+    AllowlistConfigurationLoader loader = new AllowlistConfigurationLoader(bindingContext);
+    AllowlistConfig config = loader.load(configFile);
+
+    assertNotNull(config);
+    assertEquals("deny", config.getDefaultPolicy());
+    assertNotNull(config.getSchemes());
+  }
+
+  @Test
+  void testLoadJsonConfiguration() throws IOException {
+    Path configFile = tempDir.resolve("allowlist.json");
+    Files.writeString(configFile, """
+        {
+          "default-policy": "allow",
+          "schemes": {
+            "file": {
+              "enabled": false
+            }
+          }
+        }
+        """);
+
+    AllowlistConfigurationLoader loader = new AllowlistConfigurationLoader(bindingContext);
+    AllowlistConfig config = loader.load(configFile);
+
+    assertNotNull(config);
+    assertEquals("allow", config.getDefaultPolicy());
+  }
+}
+```
+
+**Step 2: Write implementation**
+
+```java
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package gov.nist.secauto.metaschema.databind.metaschema.config;
+
+import gov.nist.secauto.metaschema.databind.IBindingContext;
+import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Loads allowlist configuration files using Metaschema databind.
+ * <p>
+ * Supports loading from YAML, JSON, or XML formats based on file extension.
+ */
+public class AllowlistConfigurationLoader {
+
+  @NonNull
+  private final IBoundLoader loader;
+
+  /**
+   * Creates a new configuration loader.
+   *
+   * @param bindingContext
+   *          the binding context for deserialization
+   */
+  public AllowlistConfigurationLoader(@NonNull IBindingContext bindingContext) {
+    this.loader = bindingContext.newBoundLoader();
+  }
+
+  /**
+   * Loads an allowlist configuration from a file.
+   * <p>
+   * The format is auto-detected from the file extension.
+   *
+   * @param configFile
+   *          the path to the configuration file
+   * @return the loaded configuration
+   * @throws IOException
+   *           if an error occurs reading the file
+   */
+  @NonNull
+  public AllowlistConfig load(@NonNull Path configFile) throws IOException {
+    return loader.load(AllowlistConfig.class, configFile);
+  }
+}
+```
+
+**Step 3: Commit**
+
+```bash
+git add databind-metaschema/src/main/java/gov/nist/secauto/metaschema/databind/metaschema/config/AllowlistConfigurationLoader.java
+git add databind-metaschema/src/test/java/gov/nist/secauto/metaschema/databind/metaschema/config/AllowlistConfigurationLoaderTest.java
+git commit -m "feat(config): add AllowlistConfigurationLoader using databind"
+```
+
+---
 
 ### Task 6.1: Create AllowlistConfigurationMerger
 
 **Files:**
-- Create: `core/src/main/java/gov/nist/secauto/metaschema/core/model/resolver/config/AllowlistConfigurationMerger.java`
-- Test: `core/src/test/java/gov/nist/secauto/metaschema/core/model/resolver/config/AllowlistConfigurationMergerTest.java`
+- Create: `databind-metaschema/src/main/java/gov/nist/secauto/metaschema/databind/metaschema/config/AllowlistConfigurationMerger.java`
+- Test: `databind-metaschema/src/test/java/gov/nist/secauto/metaschema/databind/metaschema/config/AllowlistConfigurationMergerTest.java`
 
 **Step 1: Write the failing test**
 
@@ -2194,10 +2578,12 @@ if (uriResolver != null) {
 - [ ] AllowlistUriResolver and builder
 
 **Phase 2: Configuration System**
-- [ ] IConfigurationService interface
-- [ ] ConfigurationService with directory discovery
-- [ ] AllowlistConfigurationMerger
-- [ ] AllowlistConfiguration POJO
+- [ ] Metaschema module definition (`databind-metaschema/src/main/metaschema/allowlist-config_metaschema.yaml`)
+- [ ] Maven code generation verification
+- [ ] IConfigurationService interface (`cli-processor`)
+- [ ] ConfigurationService with directory discovery (`cli-processor`)
+- [ ] AllowlistConfigurationLoader (`databind-metaschema`)
+- [ ] AllowlistConfigurationMerger (`databind-metaschema`)
 
 **Phase 3: Integration**
 - [ ] Loader integration (AbstractModuleLoader, BindingConstraintLoader, DefaultXmlDeserializer)

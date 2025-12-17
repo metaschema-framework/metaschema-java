@@ -230,65 +230,243 @@ public final class Schemes {
 }
 ```
 
-### YAML Configuration (Scheme-First Hierarchy)
+### Metaschema-Based Configuration Model
+
+The allowlist configuration uses a Metaschema-defined model, enabling:
+- **Type-safe configuration** via generated Java classes
+- **Multi-format support** - XML, JSON, or YAML
+- **Schema validation** - configs validated against the Metaschema model
+- **Dogfooding** - using Metaschema for its own tooling
+
+**Metaschema Module Definition** (`allowlist-config_metaschema.yaml`):
 
 ```yaml
-# allowlist-config.yaml
-default: deny  # deny unlisted schemes
+metaschema:
+  schema-name: Allowlist Configuration
+  schema-version: 1.0.0
+  short-name: allowlist-config
+  namespace: http://csrc.nist.gov/ns/metaschema/allowlist-config/1.0
+  json-base-uri: http://csrc.nist.gov/ns/metaschema/allowlist-config/1.0
 
-schemes:
-  https:
-    enabled: true
-    rules:
-      - domain: pages.nist.gov
-        paths: any
-      - domain: raw.githubusercontent.com
-        paths:
-          - prefix: /metaschema-framework/
-          - prefix: /usnistgov/OSCAL/
-      - domain: "*.nist.gov"
-        paths:
-          - prefix: /schemas/
+  definitions:
+    - define-assembly:
+        name: allowlist-config
+        formal-name: Allowlist Configuration
+        description: Configuration for the allowlist URI resolver.
+        root-name: allowlist-config
+        flags:
+          - define-flag:
+              name: default-policy
+              as-type: token
+              formal-name: Default Policy
+              description: Default policy for unlisted schemes.
+              constraint:
+                allowed-values:
+                  - enum:
+                      value: allow
+                      description: Allow unlisted schemes
+                  - enum:
+                      value: deny
+                      description: Deny unlisted schemes
+        model:
+          - assembly:
+              ref: scheme-config
+              max-occurs: unbounded
+              group-as:
+                name: schemes
+                in-json: BY_KEY
+          - assembly:
+              ref: logging-config
+              min-occurs: 0
 
-  http:
-    enabled: false
+    - define-assembly:
+        name: scheme-config
+        formal-name: Scheme Configuration
+        description: Configuration for a specific URI scheme.
+        json-key:
+          flag-ref: scheme
+        flags:
+          - define-flag:
+              name: scheme
+              as-type: token
+              required: yes
+              formal-name: URI Scheme
+              description: The URI scheme (e.g., https, http, file, jar).
+          - define-flag:
+              name: enabled
+              as-type: boolean
+              formal-name: Enabled
+              description: Whether this scheme is enabled.
+        model:
+          - choice:
+              - assembly:
+                  ref: http-rule
+                  max-occurs: unbounded
+                  group-as:
+                    name: http-rules
+                    in-json: ARRAY
+              - assembly:
+                  ref: file-rule
+                  max-occurs: unbounded
+                  group-as:
+                    name: file-rules
+                    in-json: ARRAY
+              - assembly:
+                  ref: jar-rule
+                  max-occurs: unbounded
+                  group-as:
+                    name: jar-rules
+                    in-json: ARRAY
 
-  file:
-    enabled: true  # set to false for server mode
-    rules:
-      - path: /data/schemas
-        scope: recursive
-      - path: /app/config
-        scope: single-level
+    - define-assembly:
+        name: http-rule
+        formal-name: HTTP Rule
+        description: Access rule for HTTP/HTTPS URIs.
+        flags:
+          - define-flag:
+              name: domain
+              as-type: string
+              required: yes
+              formal-name: Domain
+              description: Domain pattern (e.g., "example.com", "*.nist.gov").
+        model:
+          - field:
+              ref: path-prefix
+              max-occurs: unbounded
+              group-as:
+                name: paths
+                in-json: ARRAY
 
-  jar:
-    enabled: true
-    rules:
-      - path: /schema/
-      - path: /META-INF/metaschema/
+    - define-assembly:
+        name: file-rule
+        formal-name: File Rule
+        description: Access rule for file:// URIs.
+        flags:
+          - define-flag:
+              name: path
+              as-type: string
+              required: yes
+              formal-name: Path
+              description: Base directory path.
+          - define-flag:
+              name: scope
+              as-type: token
+              formal-name: Scope
+              description: Access scope for the directory.
+              constraint:
+                allowed-values:
+                  - enum:
+                      value: recursive
+                      description: Allow recursive access
+                  - enum:
+                      value: single-level
+                      description: Allow single level only
 
-# Audit logging configuration
-logging:
-  level: WARN
-  include_allowed: false
+    - define-assembly:
+        name: jar-rule
+        formal-name: JAR Rule
+        description: Access rule for jar: URIs.
+        flags:
+          - define-flag:
+              name: path
+              as-type: string
+              required: yes
+              formal-name: Path
+              description: Resource path pattern within JAR.
+
+    - define-field:
+        name: path-prefix
+        as-type: string
+        formal-name: Path Prefix
+        description: Allowed path prefix.
+
+    - define-assembly:
+        name: logging-config
+        formal-name: Logging Configuration
+        description: Audit logging settings.
+        flags:
+          - define-flag:
+              name: level
+              as-type: token
+              formal-name: Log Level
+              description: Minimum log level for access attempts.
+          - define-flag:
+              name: include-allowed
+              as-type: boolean
+              formal-name: Include Allowed
+              description: Whether to log allowed access attempts.
+```
+
+**Example Configuration Files:**
+
+YAML format (`allowlist.yaml`):
+```yaml
+allowlist-config:
+  default-policy: deny
+  schemes:
+    - scheme: https
+      enabled: true
+      http-rules:
+        - domain: pages.nist.gov
+          paths: [/schemas/, /examples/]
+        - domain: raw.githubusercontent.com
+          paths: [/metaschema-framework/, /usnistgov/OSCAL/]
+    - scheme: http
+      enabled: false
+    - scheme: file
+      enabled: true
+      file-rules:
+        - path: /data/schemas
+          scope: recursive
+    - scheme: jar
+      enabled: true
+      jar-rules:
+        - path: /schema/
+        - path: /META-INF/metaschema/
+  logging-config:
+    level: WARN
+    include-allowed: false
+```
+
+JSON format (`allowlist.json`):
+```json
+{
+  "allowlist-config": {
+    "default-policy": "deny",
+    "schemes": {
+      "https": {
+        "enabled": true,
+        "http-rules": [
+          { "domain": "pages.nist.gov", "paths": ["/schemas/"] }
+        ]
+      },
+      "file": {
+        "enabled": false
+      }
+    }
+  }
+}
 ```
 
 ### Loading Configuration
 
 ```java
-// From file
-AllowlistUriResolver resolver = AllowlistUriResolver
-    .fromYaml(Path.of("/etc/metaschema/allowlist.yaml"));
+// Using databind to load configuration
+IBindingContext bindingContext = IBindingContext.instance();
+IBoundLoader loader = bindingContext.newBoundLoader();
+
+// From file (auto-detects format: XML, JSON, or YAML)
+AllowlistConfig config = loader.load(AllowlistConfig.class,
+    Path.of("/etc/metaschema-cli/allowlist.yaml"));
+
+// Create resolver from loaded config
+AllowlistUriResolver resolver = AllowlistUriResolver.fromConfiguration(config);
 
 // From classpath resource
-AllowlistUriResolver resolver = AllowlistUriResolver
-    .fromYaml(getClass().getResourceAsStream("/allowlist-config.yaml"));
-
-// From environment variable
-String configPath = System.getenv("METASCHEMA_ALLOWLIST_CONFIG");
-if (configPath != null) {
+try (InputStream is = getClass().getResourceAsStream("/allowlist.yaml")) {
+    AllowlistConfig config = loader.load(AllowlistConfig.class, is);
     AllowlistUriResolver.setGlobalDefaults(
-        AllowlistUriResolver.fromYaml(Path.of(configPath)));
+        AllowlistUriResolver.fromConfiguration(config));
 }
 ```
 
