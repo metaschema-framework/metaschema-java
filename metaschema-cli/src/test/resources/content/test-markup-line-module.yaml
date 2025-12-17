@@ -1,0 +1,21 @@
+METASCHEMA:
+  schema-name: Markup Line Test Module
+  schema-version: "1.0.0"
+  short-name: markup-line-test
+  namespace: https://example.com/markup-line-test
+  json-base-uri: https://example.com/markup-line-test
+  definitions:
+    - object-type: assembly
+      name: root
+      root-name:
+        name: test-root
+      formal-name: Test Root
+      description: A test root assembly with a markup-line field.
+      model:
+        instances:
+          - object-type: field
+            name: title
+            as-type: markup-line
+            min-occurs: 1
+            formal-name: Title
+            description: A single line of markup content.

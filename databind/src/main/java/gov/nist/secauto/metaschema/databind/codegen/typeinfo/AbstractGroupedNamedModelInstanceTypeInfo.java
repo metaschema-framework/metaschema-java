@@ -60,12 +60,19 @@ public abstract class AbstractGroupedNamedModelInstanceTypeInfo<I extends INamed
 
     AnnotationSpec.Builder memberAnnotation = ObjectUtils.notNull(AnnotationSpec.builder(getBindingAnnotation()));
 
-    TypeInfoUtils.buildCommonBindingAnnotationValues(getInstance(), memberAnnotation);
+    I instance = getInstance();
+
+    TypeInfoUtils.buildCommonBindingAnnotationValues(instance, memberAnnotation);
+
+    // Add discriminatorValue if it differs from useName
+    String discriminatorValue = instance.getEffectiveDisciminatorValue();
+    String useName = instance.getEffectiveName();
+    if (!discriminatorValue.equals(useName)) {
+      memberAnnotation.addMember("discriminatorValue", "$S", discriminatorValue);
+    }
 
     Set<IModelDefinition> retval = new LinkedHashSet<>();
-
-    I instance = getInstance();
-    IModelDefinition definition = getInstance().getDefinition();
+    IModelDefinition definition = instance.getDefinition();
 
     IChoiceGroupTypeInfo choiceGroupTypeInfo = getChoiceGroupTypeInfo();
     ITypeResolver typeResolver = choiceGroupTypeInfo.getParentTypeInfo().getTypeResolver();

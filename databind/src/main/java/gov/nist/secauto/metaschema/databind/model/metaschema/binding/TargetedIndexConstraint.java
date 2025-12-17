@@ -84,7 +84,8 @@ public class TargetedIndexConstraint
   @BoundField(
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
-      useName = "formal-name")
+      useName = "formal-name",
+      typeAdapter = StringAdapter.class)
   private String _formalName;
 
   @BoundField(
@@ -111,7 +112,8 @@ public class TargetedIndexConstraint
 
   @BoundField(
       formalName = "Constraint Condition Violation Message",
-      useName = "message")
+      useName = "message",
+      typeAdapter = StringAdapter.class)
   private String _message;
 
   @BoundField(

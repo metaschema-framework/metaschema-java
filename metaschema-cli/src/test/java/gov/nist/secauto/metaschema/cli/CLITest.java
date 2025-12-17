@@ -258,6 +258,15 @@ public class CLITest {
                 "../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml",
             },
             ExitCode.OK, NO_EXCEPTION_CLASS));
+        // Test markup-line datatype validation with YAML module
+        add(Arguments.of(
+            new String[] { "validate-content",
+                "-m",
+                "src/test/resources/content/test-markup-line-module.yaml",
+                "src/test/resources/content/test-markup-line-content.json",
+                "--as=json"
+            },
+            ExitCode.OK, NO_EXCEPTION_CLASS));
       }
     };
     return values.stream();

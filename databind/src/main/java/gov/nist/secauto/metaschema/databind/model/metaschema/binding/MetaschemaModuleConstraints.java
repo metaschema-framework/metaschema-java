@@ -64,13 +64,15 @@ public class MetaschemaModuleConstraints implements IBoundObject {
   @BoundField(
       description = "The name of this constraint set.",
       useName = "name",
-      minOccurs = 1)
+      minOccurs = 1,
+      typeAdapter = StringAdapter.class)
   private String _name;
 
   @BoundField(
       description = "The version of this constraint set. A version string used to distinguish between multiple revisions of the same resource.",
       useName = "version",
-      minOccurs = 1)
+      minOccurs = 1,
+      typeAdapter = StringAdapter.class)
   private String _version;
 
   @BoundAssembly(
@@ -315,7 +317,8 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
     @BoundField(
         formalName = "Constraint Condition Violation Message",
-        useName = "message")
+        useName = "message",
+        typeAdapter = StringAdapter.class)
     private String _message;
 
     @BoundField(
