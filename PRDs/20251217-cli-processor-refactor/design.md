@@ -3,6 +3,7 @@
 **Issue:** [#252](https://github.com/metaschema-framework/metaschema-java/issues/252)
 **Date:** 2025-12-17
 **Status:** Approved
+**Depends On:** [PR #551](https://github.com/metaschema-framework/metaschema-java/pull/551) (shell completion)
 
 ## Problem Statement
 
@@ -246,12 +247,33 @@ class TestCommandRequiringArgs implements ICommand { ... }
 class TestCommandWithRequiredOption implements ICommand { ... }
 ```
 
+## Dependencies
+
+### PR #551 Impact
+
+This refactoring must be based on PR #551 (shell completion). That PR introduces:
+
+1. **`getTopLevelCommands()` visibility change** - Changed from `protected` to `public`. No impact on our design.
+
+2. **`ShellCompletionCommand`** - New command that imports `CLIProcessor.CallingContext`. When we extract `CallingContext` to a top-level class, we must update this import:
+
+```java
+// Before (PR #551)
+import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+
+// After (our refactor)
+import gov.nist.secauto.metaschema.cli.processor.CallingContext;
+```
+
+3. **`ExtraArgument.getType()`** - New method for completion hints. No impact on our design.
+
 ## Risks & Mitigations
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
 | Breaking existing CLI behavior | High | Write characterization tests first, run full test suite after each change |
 | CallingContext extraction breaks internal references | Medium | `CLIProcessor.this` references need updating; search for all usages |
+| ShellCompletionCommand import breaks | Low | Update import when extracting CallingContext |
 | Test fixtures become complex/fragile | Medium | Keep test commands minimal; use builder pattern if needed |
 | PMD/Checkstyle finds new issues in refactored code | Low | Run `mvn checkstyle:check` incrementally |
 
