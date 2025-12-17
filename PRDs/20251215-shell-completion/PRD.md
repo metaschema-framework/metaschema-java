@@ -41,7 +41,7 @@ This approach provides:
 
 ### New Interfaces and Classes
 
-```
+```text
 cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
 ├── command/
 │   └── ShellCompletionCommand.java
@@ -608,7 +608,7 @@ compinit  # Rebuild completion cache
 
 ### New Files
 
-```
+```text
 cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
 ├── command/
 │   └── ShellCompletionCommand.java
@@ -627,7 +627,7 @@ cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/
 
 **ExtraArgument extension (cli-processor):**
 
-```
+```text
 cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/
 ├── ExtraArgument.java               // Add getType() method and factory overload
 └── impl/
@@ -638,7 +638,7 @@ cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/
 
 Commands that define options and extra arguments should add type information:
 
-```
+```text
 metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/
 ├── MetaschemaCommands.java          // Shared options
 ├── AbstractValidateContentCommand.java
