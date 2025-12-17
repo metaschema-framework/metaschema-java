@@ -499,6 +499,7 @@ public interface IBindingContext {
       @Nullable IConfiguration<ValidationFeature<?>> config) throws ConstraintValidationException {
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
+
     IConstraintValidator validator = newValidator(handler, config);
 
     DynamicContext dynamicContext = new DynamicContext(nodeItem.getStaticContext());
