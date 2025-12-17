@@ -34,6 +34,32 @@ public interface IPathFormatter {
   IPathFormatter METAPATH_PATH_FORMATER = new MetapathFormatter();
 
   /**
+   * A path formatter that produces XPath 3.1 paths with EQName-qualified names.
+   * <p>
+   * This formatter generates namespace-qualified paths using the EQName format
+   * (e.g., {@code Q{http://example.com}element[1]}), suitable for use with XML
+   * tooling that requires namespace qualification.
+   *
+   * @see XPathFormatter
+   */
+  @NonNull
+  IPathFormatter XPATH_PATH_FORMATTER = new XPathFormatter();
+
+  /**
+   * A path formatter that produces RFC 6901 JSON Pointer paths.
+   * <p>
+   * This formatter generates JSON Pointer paths suitable for use with JSON
+   * tooling and JSON-based error reporting. Uses JSON property names, 0-based
+   * array indices, and proper RFC 6901 escaping.
+   *
+   * @see JsonPointerFormatter
+   * @see <a href="https://www.rfc-editor.org/rfc/rfc6901">RFC 6901 - JSON
+   *      Pointer</a>
+   */
+  @NonNull
+  IPathFormatter JSON_POINTER_PATH_FORMATTER = new JsonPointerFormatter();
+
+  /**
    * Format the path represented by the provided path segment. The provided
    * segment is expected to be the last node in this path. A call to
    * {@link IPathSegment#getPathStream()} or {@link IPathSegment#getPath()} can be
