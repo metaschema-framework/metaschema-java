@@ -110,6 +110,15 @@ public abstract class AbstractValidateContentCommand
           .desc("path format in validation output: auto (default, selects based on document format), "
               + "metapath, xpath, jsonpointer")
           .get());
+  @NonNull
+  private static final Option PARALLEL_THREADS_OPTION = ObjectUtils.notNull(
+      Option.builder()
+          .longOpt("threads")
+          .hasArg()
+          .argName("count")
+          .type(Number.class)
+          .desc("number of threads for parallel constraint validation (default: 1, experimental)")
+          .get());
 
   @Override
   public String getName() {
@@ -126,7 +135,8 @@ public abstract class AbstractValidateContentCommand
         SARIF_INCLUDE_PASS_OPTION,
         NO_SCHEMA_VALIDATION_OPTION,
         NO_CONSTRAINT_VALIDATION_OPTION,
-        PATH_FORMAT_OPTION);
+        PATH_FORMAT_OPTION,
+        PARALLEL_THREADS_OPTION);
   }
 
   @Override
@@ -281,6 +291,18 @@ public abstract class AbstractValidateContentCommand
           IMutableConfiguration<ValidationFeature<?>> configuration = new DefaultConfiguration<>();
           if (commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION) && commandLine.hasOption(SARIF_INCLUDE_PASS_OPTION)) {
             configuration.enableFeature(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS);
+          }
+
+          // Configure parallel validation if requested
+          if (commandLine.hasOption(PARALLEL_THREADS_OPTION)) {
+            int threadCount = Integer.parseInt(commandLine.getOptionValue(PARALLEL_THREADS_OPTION));
+            if (threadCount > 1) {
+              if (LOGGER.isWarnEnabled()) {
+                LOGGER.warn("Parallel constraint validation is an experimental feature. "
+                    + "Using {} threads.", threadCount);
+              }
+              configuration.set(ValidationFeature.PARALLEL_THREADS, threadCount);
+            }
           }
 
           // perform constraint validation

@@ -24,6 +24,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.FindingCollectingConstr
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintValidationHandler;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintValidator;
+import gov.nist.secauto.metaschema.core.model.constraint.ParallelValidationConfig;
 import gov.nist.secauto.metaschema.core.model.constraint.ValidationFeature;
 import gov.nist.secauto.metaschema.core.model.validation.AggregateValidationResult;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
@@ -450,7 +451,15 @@ public interface IBindingContext {
     DynamicContext context = new DynamicContext();
     context.setDocumentLoader(loader);
 
-    DefaultConstraintValidator retval = new DefaultConstraintValidator(handler);
+    // Determine parallel validation configuration
+    int threadCount = config != null
+        ? config.get(ValidationFeature.PARALLEL_THREADS)
+        : ValidationFeature.PARALLEL_THREADS.getDefault();
+    ParallelValidationConfig parallelConfig = threadCount > 1
+        ? ParallelValidationConfig.withThreads(threadCount)
+        : ParallelValidationConfig.SEQUENTIAL;
+
+    DefaultConstraintValidator retval = new DefaultConstraintValidator(handler, parallelConfig);
     if (config != null) {
       retval.applyConfiguration(config);
     }
