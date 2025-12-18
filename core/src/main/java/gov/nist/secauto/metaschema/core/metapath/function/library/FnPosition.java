@@ -50,11 +50,7 @@ public final class FnPosition {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
-    FocusContext focusContext = dynamicContext.getFocusContext();
-    if (focusContext == null) {
-      throw new ContextAbsentDynamicMetapathException("The context position is absent");
-    }
-    return ISequence.of(IIntegerItem.valueOf(focusContext.getPosition()));
+    return ISequence.of(fnPosition(dynamicContext));
   }
 
   /**

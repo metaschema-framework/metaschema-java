@@ -51,10 +51,28 @@ public final class FnLast {
       @NonNull List<ISequence<?>> arguments,
       @NonNull DynamicContext dynamicContext,
       IItem focus) {
+    return ISequence.of(fnLast(dynamicContext));
+  }
+
+  /**
+   * Returns the context size from the dynamic context.
+   * <p>
+   * Based on the XPath 3.1
+   * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-last">fn:last</a>
+   * function.
+   *
+   * @param dynamicContext
+   *          the dynamic evaluation context
+   * @return the context size as an integer
+   * @throws ContextAbsentDynamicMetapathException
+   *           if the focus context is absent (XPDY0002)
+   */
+  @NonNull
+  public static IIntegerItem fnLast(@NonNull DynamicContext dynamicContext) {
     FocusContext focusContext = dynamicContext.getFocusContext();
     if (focusContext == null) {
       throw new ContextAbsentDynamicMetapathException("The context size is absent");
     }
-    return ISequence.of(IIntegerItem.valueOf(focusContext.getSize()));
+    return IIntegerItem.valueOf(focusContext.getSize());
   }
 }
