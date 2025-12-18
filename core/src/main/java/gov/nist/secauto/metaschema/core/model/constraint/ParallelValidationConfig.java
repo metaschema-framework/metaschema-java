@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.core.model.constraint;
 
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -19,7 +19,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * This class supports two modes:
  * <ul>
  * <li>Internal thread pool: Created via {@link #withThreads(int)}, shut down by
- * {@link #close()}</li>
+ * {@link #close()}. Uses {@link ForkJoinPool} internally to handle nested
+ * parallelism without deadlock.</li>
  * <li>External executor: Provided via {@link #withExecutor(ExecutorService)},
  * NOT shut down by {@link #close()}</li>
  * </ul>
@@ -123,7 +124,9 @@ public final class ParallelValidationConfig implements AutoCloseable {
       synchronized (this) {
         result = executor;
         if (result == null) {
-          result = Executors.newFixedThreadPool(threadCount);
+          // Use ForkJoinPool to avoid deadlock with nested parallelism.
+          // Fixed thread pools deadlock when all threads wait for children.
+          result = new ForkJoinPool(threadCount);
           executor = result;
         }
       }
