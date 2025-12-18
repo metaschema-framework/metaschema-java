@@ -23,6 +23,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -204,17 +205,20 @@ public final class StaticContext {
    * Get the default language to be used by functions like fn:lang() when
    * processing language-sensitive operations.
    * <p>
-   * As specified in the XPath 3.1 specification, if no default language is
-   * configured, "en" (English) is returned as the default value.
+   * If no default language is configured, the JVM's default locale language code
+   * is returned (e.g., "en" for English systems, "fr" for French systems).
    *
-   * @return the default language code, or "en" if not configured
+   * @return the default language code, or the JVM's default locale language if
+   *         not configured
    * @see <a href=
    *      "https://www.w3.org/TR/xpath-functions-31/#func-default-language">XPath
    *      3.1 fn:default-language</a>
    */
   @NonNull
   public String getDefaultLanguage() {
-    return defaultLanguage == null ? "en" : defaultLanguage;
+    return defaultLanguage == null
+        ? ObjectUtils.notNull(Locale.getDefault().getLanguage())
+        : defaultLanguage;
   }
 
   /**
@@ -759,7 +763,8 @@ public final class StaticContext {
      * Defines the default language to be used by functions like fn:lang() when
      * processing language-sensitive operations.
      * <p>
-     * If not set, "en" (English) will be used as the default language.
+     * If not set, the JVM's default locale language code will be used (e.g., "en"
+     * for English systems, "fr" for French systems).
      *
      * @param language
      *          the language code (e.g., "en", "fr", "de")

@@ -15,16 +15,19 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
+
 class FnDefaultLanguageTest {
 
   @Test
-  void testDefaultLanguageReturnsEnByDefault() {
+  void testDefaultLanguageReturnsSystemLocaleByDefault() {
     DynamicContext context = new DynamicContext();
     IStringItem result = ObjectUtils.notNull(IMetapathExpression.compile("fn:default-language()")
         .evaluateAs(null, IMetapathExpression.ResultType.ITEM, context));
 
-    assertEquals("en", result.asString(),
-        "The default language should be 'en' when not configured.");
+    String expectedLanguage = Locale.getDefault().getLanguage();
+    assertEquals(expectedLanguage, result.asString(),
+        "The default language should match the JVM's default locale language when not configured.");
   }
 
   @Test
