@@ -102,8 +102,9 @@ public final class ParallelValidationConfig {
    * <p>
    * The internal pool is shut down after validation completes.
    *
-   * @param threadCount number of threads (must be >= 1)
+   * @param threadCount number of threads (must be &gt;= 1)
    * @return configuration with internal thread pool
+   * @throws IllegalArgumentException if threadCount &lt; 1
    */
   public static ParallelValidationConfig withThreads(int threadCount);
 
@@ -319,18 +320,28 @@ class Visitor extends AbstractNodeItemVisitor<DynamicContext, Void> {
     }
 
     // Wait for all children and propagate exceptions
-    for (Future<?> future : futures) {
-      try {
+    try {
+      for (Future<?> future : futures) {
         future.get();
-      } catch (ExecutionException e) {
-        Throwable cause = e.getCause();
-        if (cause instanceof RuntimeException) {
-          throw (RuntimeException) cause;
-        }
-        throw new ConstraintValidationException(cause);
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        throw new ConstraintValidationException("Validation interrupted", e);
+      }
+    } catch (ExecutionException e) {
+      cancelRemainingFutures(futures);
+      Throwable cause = e.getCause();
+      if (cause instanceof RuntimeException) {
+        throw (RuntimeException) cause;
+      }
+      throw new ConstraintValidationException(cause);
+    } catch (InterruptedException e) {
+      cancelRemainingFutures(futures);
+      Thread.currentThread().interrupt();
+      throw new ConstraintValidationException("Validation interrupted", e);
+    }
+  }
+
+  private void cancelRemainingFutures(List<Future<?>> futures) {
+    for (Future<?> future : futures) {
+      if (!future.isDone()) {
+        future.cancel(true);
       }
     }
   }
@@ -377,7 +388,7 @@ try {
 
 ### Execution Flow Diagram
 
-```
+```text
 CLI: metaschema-cli validate --threads 4 document.xml
 
                     ┌─────────────────┐
@@ -453,10 +464,10 @@ CLI: metaschema-cli validate --threads 4 document.xml
 
 1. **PARALLEL_THRESHOLD**: Fixed at 4 (not configurable). This avoids complexity and provides a reasonable default. Can be made configurable later if users request it.
 
-2. **CLI interface**: Only `--threads N` option. No `--parallel` shortcut. Explicit thread count is clearer for an experimental feature.
+2. **CLI**: Only `--threads N` option. No `--parallel` shortcut. Explicit thread count is clearer for an experimental feature.
 
 3. **Experimental warning**: Print warning to stderr when `--threads > 1`:
-   ```
+   ```text
    WARNING: Parallel constraint validation (--threads N) is experimental.
             Report issues at https://github.com/metaschema-framework/metaschema-java/issues
    ```

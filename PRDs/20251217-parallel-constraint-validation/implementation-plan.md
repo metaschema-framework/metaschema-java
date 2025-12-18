@@ -1060,18 +1060,28 @@ Change 6: Modify Visitor class to support parallel traversal. Update visitAssemb
       }
 
       // Wait for all children and propagate exceptions
-      for (Future<?> future : futures) {
-        try {
+      try {
+        for (Future<?> future : futures) {
           future.get();
-        } catch (ExecutionException e) {
-          Throwable cause = e.getCause();
-          if (cause instanceof RuntimeException) {
-            throw (RuntimeException) cause;
-          }
-          throw new ConstraintValidationException(cause);
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-          throw new ConstraintValidationException("Validation interrupted", e);
+        }
+      } catch (ExecutionException e) {
+        cancelRemainingFutures(futures);
+        Throwable cause = e.getCause();
+        if (cause instanceof RuntimeException) {
+          throw (RuntimeException) cause;
+        }
+        throw new ConstraintValidationException(cause);
+      } catch (InterruptedException e) {
+        cancelRemainingFutures(futures);
+        Thread.currentThread().interrupt();
+        throw new ConstraintValidationException("Validation interrupted", e);
+      }
+    }
+
+    private void cancelRemainingFutures(List<Future<?>> futures) {
+      for (Future<?> future : futures) {
+        if (!future.isDone()) {
+          future.cancel(true);
         }
       }
     }
