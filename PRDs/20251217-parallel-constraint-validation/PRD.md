@@ -124,18 +124,21 @@ public final class ParallelValidationConfig {
   public boolean isParallel();
 
   /**
-   * Get the executor, creating an internal pool if needed.
+   * Get the executor service, creating an internal pool if needed.
    *
    * @return the executor service
+   * @throws IllegalStateException if called on SEQUENTIAL config
    */
   @NonNull
-  ExecutorService getOrCreateExecutor();
+  ExecutorService getExecutor();
 
   /**
-   * Shut down internal executor if one was created.
+   * Close this configuration, shutting down internal executor if one was created.
    * Does nothing if using an external executor.
+   * Implements AutoCloseable for use with try-with-resources.
    */
-  void shutdownInternalExecutor();
+  @Override
+  void close();
 }
 ```
 
@@ -315,7 +318,7 @@ class Visitor extends AbstractNodeItemVisitor<DynamicContext, Void> {
       @NonNull IAssemblyNodeItem item,
       @NonNull DynamicContext context) {
 
-    ExecutorService executor = parallelConfig.getOrCreateExecutor();
+    ExecutorService executor = parallelConfig.getExecutor();
     List<? extends IModelNodeItem<?, ?>> children = item.modelItems().collect(Collectors.toList());
 
     List<Future<?>> futures = new ArrayList<>(children.size());
@@ -338,11 +341,11 @@ class Visitor extends AbstractNodeItemVisitor<DynamicContext, Void> {
       if (cause instanceof RuntimeException) {
         throw (RuntimeException) cause;
       }
-      throw new ConstraintValidationException(cause);
+      throw ExceptionUtils.wrap(new ConstraintValidationException("Error during parallel validation", cause));
     } catch (InterruptedException e) {
       cancelRemainingFutures(futures);
       Thread.currentThread().interrupt();
-      throw new ConstraintValidationException("Validation interrupted", e);
+      throw ExceptionUtils.wrap(new ConstraintValidationException("Validation interrupted", e));
     }
   }
 
@@ -387,10 +390,8 @@ ParallelValidationConfig parallelConfig = threadCount > 1
     ? ParallelValidationConfig.withThreads(threadCount)
     : ParallelValidationConfig.SEQUENTIAL;
 
-try {
+try (parallelConfig) {  // AutoCloseable - calls close() automatically
   // ... validation logic using parallelConfig ...
-} finally {
-  parallelConfig.shutdownInternalExecutor();
 }
 ```
 

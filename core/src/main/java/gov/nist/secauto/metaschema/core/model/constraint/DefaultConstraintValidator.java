@@ -1182,11 +1182,11 @@ public class DefaultConstraintValidator
         if (cause instanceof RuntimeException) {
           throw (RuntimeException) cause;
         }
-        throw new IllegalStateException("Error during parallel validation", cause);
+        throw ExceptionUtils.wrap(new ConstraintValidationException("Error during parallel validation", cause));
       } catch (InterruptedException e) {
         cancelRemainingFutures(futures);
         Thread.currentThread().interrupt();
-        throw new IllegalStateException("Validation interrupted", e);
+        throw ExceptionUtils.wrap(new ConstraintValidationException("Validation interrupted", e));
       }
     }
 
