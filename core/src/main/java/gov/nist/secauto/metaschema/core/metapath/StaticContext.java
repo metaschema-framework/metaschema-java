@@ -23,6 +23,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -49,6 +50,8 @@ public final class StaticContext {
   private final String defaultModelNamespace;
   @Nullable
   private final String defaultFunctionNamespace;
+  @Nullable
+  private final String defaultLanguage;
   private final boolean useWildcardWhenNamespaceNotDefaulted;
   @NonNull
   private final IFunctionResolver functionResolver;
@@ -92,6 +95,7 @@ public final class StaticContext {
             CustomCollectors.useFirstMapper())));
     this.defaultModelNamespace = builder.defaultModelNamespace;
     this.defaultFunctionNamespace = builder.defaultFunctionNamespace;
+    this.defaultLanguage = builder.defaultLanguage;
     this.useWildcardWhenNamespaceNotDefaulted = builder.useWildcardWhenNamespaceNotDefaulted;
     this.functionResolver = builder.functionResolver;
   }
@@ -195,6 +199,26 @@ public final class StaticContext {
   @Nullable
   private String getDefaultFunctionNamespace() {
     return defaultFunctionNamespace;
+  }
+
+  /**
+   * Get the default language to be used by functions like fn:lang() when
+   * processing language-sensitive operations.
+   * <p>
+   * If no default language is configured, the JVM's default locale language code
+   * is returned (e.g., "en" for English systems, "fr" for French systems).
+   *
+   * @return the default language code, or the JVM's default locale language if
+   *         not configured
+   * @see <a href=
+   *      "https://www.w3.org/TR/xpath-functions-31/#func-default-language">XPath
+   *      3.1 fn:default-language</a>
+   */
+  @NonNull
+  public String getDefaultLanguage() {
+    return defaultLanguage == null
+        ? ObjectUtils.notNull(Locale.getDefault().getLanguage())
+        : defaultLanguage;
   }
 
   /**
@@ -552,6 +576,7 @@ public final class StaticContext {
     builder.namespaces.putAll(this.knownPrefixToNamespace);
     builder.defaultModelNamespace = this.defaultModelNamespace;
     builder.defaultFunctionNamespace = this.defaultFunctionNamespace;
+    builder.defaultLanguage = this.defaultLanguage;
     return builder;
   }
 
@@ -591,6 +616,8 @@ public final class StaticContext {
     private String defaultModelNamespace;
     @Nullable
     private String defaultFunctionNamespace = MetapathConstants.NS_METAPATH_FUNCTIONS;
+    @Nullable
+    private String defaultLanguage;
     @NonNull
     private IFunctionResolver functionResolver = FunctionService.getInstance();
 
@@ -729,6 +756,26 @@ public final class StaticContext {
         throw new IllegalArgumentException(ex);
       }
       NamespaceCache.instance().indexOf(uri);
+      return this;
+    }
+
+    /**
+     * Defines the default language to be used by functions like fn:lang() when
+     * processing language-sensitive operations.
+     * <p>
+     * If not set, the JVM's default locale language code will be used (e.g., "en"
+     * for English systems, "fr" for French systems).
+     *
+     * @param language
+     *          the language code (e.g., "en", "fr", "de")
+     * @return this builder
+     * @see <a href=
+     *      "https://www.w3.org/TR/xpath-functions-31/#func-default-language">XPath
+     *      3.1 fn:default-language</a>
+     */
+    @NonNull
+    public Builder defaultLanguage(@NonNull String language) {
+      this.defaultLanguage = language;
       return this;
     }
 

@@ -52,6 +52,8 @@ public class DynamicContext { // NOPMD - intentional data class
   private final Map<Integer, ISequence<?>> letVariableMap;
   @NonNull
   private final SharedState sharedState;
+  @Nullable
+  private final FocusContext focusContext;
 
   /**
    * Construct a new dynamic context with a default static context.
@@ -69,11 +71,17 @@ public class DynamicContext { // NOPMD - intentional data class
   public DynamicContext(@NonNull StaticContext staticContext) {
     this.letVariableMap = new ConcurrentHashMap<>();
     this.sharedState = new SharedState(staticContext);
+    this.focusContext = null;
   }
 
   private DynamicContext(@NonNull DynamicContext context) {
+    this(context, context.focusContext);
+  }
+
+  private DynamicContext(@NonNull DynamicContext context, @Nullable FocusContext focusContext) {
     this.letVariableMap = new ConcurrentHashMap<>(context.letVariableMap);
     this.sharedState = context.sharedState;
+    this.focusContext = focusContext;
   }
 
   private static class SharedState {
@@ -119,12 +127,46 @@ public class DynamicContext { // NOPMD - intentional data class
    * without affecting this context. This is useful for setting information that
    * is only used in a limited evaluation sub-scope, such as for handling variable
    * assignment.
+   * <p>
+   * The focus context from this context is preserved in the new sub-context,
+   * allowing nested expressions to access the enclosing focus (e.g., for
+   * {@code position()} and {@code last()} calls within variable binding scopes).
    *
    * @return a new dynamic context
    */
   @NonNull
   public DynamicContext subContext() {
     return new DynamicContext(this);
+  }
+
+  /**
+   * Generate a new dynamic context with the specified focus context.
+   * <p>
+   * This method is used by predicate expressions to establish a new focus for
+   * evaluating predicates. The focus context provides the information needed by
+   * {@code fn:position()} and {@code fn:last()}.
+   *
+   * @param focusContext
+   *          the focus context for the new sub-context
+   * @return a new dynamic context with the specified focus context
+   */
+  @NonNull
+  public DynamicContext subContext(@NonNull FocusContext focusContext) {
+    return new DynamicContext(this, focusContext);
+  }
+
+  /**
+   * Get the focus context for this dynamic context.
+   * <p>
+   * The focus context contains the context item, position, and size as defined in
+   * the <a href="https://www.w3.org/TR/xpath-31/#eval_context">XPath 3.1
+   * evaluation context</a>.
+   *
+   * @return the focus context, or {@code null} if no focus context is established
+   */
+  @Nullable
+  public FocusContext getFocusContext() {
+    return focusContext;
   }
 
   /**
