@@ -106,7 +106,15 @@ public final class ParallelValidationConfig {
    * @return configuration with internal thread pool
    * @throws IllegalArgumentException if threadCount &lt; 1
    */
-  public static ParallelValidationConfig withThreads(int threadCount);
+  public static ParallelValidationConfig withThreads(int threadCount) {
+    if (threadCount < 1) {
+      throw new IllegalArgumentException("Thread count must be at least 1, got: " + threadCount);
+    }
+    if (threadCount == 1) {
+      return SEQUENTIAL;
+    }
+    return new ParallelValidationConfig(null, threadCount);
+  }
 
   /**
    * Check if parallel execution is enabled.
