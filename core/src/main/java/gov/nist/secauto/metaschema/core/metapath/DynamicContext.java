@@ -54,6 +54,8 @@ public class DynamicContext { // NOPMD - intentional data class
   private final SharedState sharedState;
   @Nullable
   private final FocusContext focusContext;
+  @NonNull
+  private final Deque<IExpression> executionStack;
 
   /**
    * Construct a new dynamic context with a default static context.
@@ -72,6 +74,7 @@ public class DynamicContext { // NOPMD - intentional data class
     this.letVariableMap = new ConcurrentHashMap<>();
     this.sharedState = new SharedState(staticContext);
     this.focusContext = null;
+    this.executionStack = new ArrayDeque<>();
   }
 
   private DynamicContext(@NonNull DynamicContext context) {
@@ -82,6 +85,8 @@ public class DynamicContext { // NOPMD - intentional data class
     this.letVariableMap = new ConcurrentHashMap<>(context.letVariableMap);
     this.sharedState = context.sharedState;
     this.focusContext = focusContext;
+    // Copy parent's stack so error traces show full call chain
+    this.executionStack = new ArrayDeque<>(context.executionStack);
   }
 
   private static class SharedState {
@@ -98,8 +103,6 @@ public class DynamicContext { // NOPMD - intentional data class
     @NonNull
     private final IMutableConfiguration<MetapathEvaluationFeature<?>> configuration;
     @NonNull
-    private final Deque<IExpression> executionStack = new ArrayDeque<>();
-    @NonNull
     private ZoneId implicitTimeZone;
 
     public SharedState(@NonNull StaticContext staticContext) {
@@ -110,7 +113,7 @@ public class DynamicContext { // NOPMD - intentional data class
       this.implicitTimeZone = ObjectUtils.notNull(clock.getZone());
 
       this.currentDateTime = ObjectUtils.notNull(ZonedDateTime.now(clock));
-      this.availableDocuments = new HashMap<>();
+      this.availableDocuments = new ConcurrentHashMap<>();
       this.functionResultCache = ObjectUtils.notNull(Caffeine.newBuilder()
           .maximumSize(5000)
           .expireAfterAccess(10, TimeUnit.MINUTES)
@@ -416,7 +419,7 @@ public class DynamicContext { // NOPMD - intentional data class
    *          the expression to push
    */
   public void pushExecutionStack(@NonNull IExpression expression) {
-    this.sharedState.executionStack.push(expression);
+    this.executionStack.push(expression);
   }
 
   /**
@@ -426,7 +429,7 @@ public class DynamicContext { // NOPMD - intentional data class
    *          the expected expression to be popped
    */
   public void popExecutionStack(@NonNull IExpression expression) {
-    IExpression popped = this.sharedState.executionStack.pop();
+    IExpression popped = this.executionStack.pop();
     if (!expression.equals(popped)) {
       throw new IllegalStateException("Popped expression does not match expected expression");
     }
@@ -439,7 +442,7 @@ public class DynamicContext { // NOPMD - intentional data class
    */
   @NonNull
   public Deque<IExpression> getExecutionStack() {
-    return new ArrayDeque<>(this.sharedState.executionStack);
+    return new ArrayDeque<>(this.executionStack);
   }
 
   /**

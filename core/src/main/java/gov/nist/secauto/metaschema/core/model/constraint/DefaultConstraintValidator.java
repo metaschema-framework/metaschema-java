@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
@@ -36,11 +37,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,7 +54,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * Used to perform constraint validation over one or more node items.
  * <p>
- * This class is not thread safe.
+ * This class is thread-safe and can be used with parallel constraint
+ * validation.
  */
 @SuppressWarnings({
     "PMD.CouplingBetweenObjects",
@@ -62,7 +66,7 @@ public class DefaultConstraintValidator
   private static final Logger LOGGER = LogManager.getLogger(DefaultConstraintValidator.class);
 
   @NonNull
-  private final Map<INodeItem, ValueStatus> valueMap = new LinkedHashMap<>(); // NOPMD - intentional
+  private final Map<INodeItem, ValueStatus> valueMap = new ConcurrentHashMap<>();
   @NonNull
   private final Map<String, IIndex> indexNameToIndexMap = new ConcurrentHashMap<>();
   @NonNull
@@ -71,17 +75,34 @@ public class DefaultConstraintValidator
   private final IConstraintValidationHandler handler;
   @NonNull
   private final IMutableConfiguration<ValidationFeature<?>> configuration;
+  @NonNull
+  private final ParallelValidationConfig parallelConfig;
 
   /**
-   * Construct a new constraint validation instance.
+   * Construct a new constraint validation instance with sequential execution.
    *
    * @param handler
    *          the validation handler to use for handling constraint violations
    */
   public DefaultConstraintValidator(
       @NonNull IConstraintValidationHandler handler) {
+    this(handler, ParallelValidationConfig.SEQUENTIAL);
+  }
+
+  /**
+   * Construct a new constraint validation instance with configurable parallelism.
+   *
+   * @param handler
+   *          the validation handler to use for handling constraint violations
+   * @param parallelConfig
+   *          the parallel execution configuration
+   */
+  public DefaultConstraintValidator(
+      @NonNull IConstraintValidationHandler handler,
+      @NonNull ParallelValidationConfig parallelConfig) {
     this.handler = handler;
     this.configuration = new DefaultConfiguration<>();
+    this.parallelConfig = parallelConfig;
   }
 
   /**
@@ -667,11 +688,11 @@ public class DefaultConstraintValidator
       @NonNull ISequence<? extends INodeItem> targets) {
     String indexName = constraint.getIndexName();
 
-    List<KeyRef> keyRefItems = indexNameToKeyRefMap.get(indexName);
-    if (keyRefItems == null) {
-      keyRefItems = new LinkedList<>();
-      indexNameToKeyRefMap.put(indexName, keyRefItems);
-    }
+    // Use computeIfAbsent for thread-safe lazy initialization
+    // The list is wrapped in synchronizedList to ensure thread-safe add operations
+    List<KeyRef> keyRefItems = indexNameToKeyRefMap.computeIfAbsent(
+        indexName,
+        k -> Collections.synchronizedList(new ArrayList<>()));
 
     keyRefItems.add(new KeyRef(constraint, node, new ArrayList<>(targets)));
   }
@@ -831,14 +852,8 @@ public class DefaultConstraintValidator
       @NonNull INodeItem targetItem,
       @NonNull IAllowedValuesConstraint allowedValues,
       @NonNull IDefinitionNodeItem<?, ?> node) throws ConstraintValidationException {
-    // constraint.getAllowedValues().containsKey(value)
-
-    @Nullable
-    ValueStatus valueStatus = valueMap.get(targetItem);
-    if (valueStatus == null) {
-      valueStatus = new ValueStatus(targetItem);
-      valueMap.put(targetItem, valueStatus);
-    }
+    // Use computeIfAbsent for thread-safe lazy initialization
+    ValueStatus valueStatus = valueMap.computeIfAbsent(targetItem, ValueStatus::new);
 
     valueStatus.registerAllowedValues(allowedValues, node);
   }
@@ -927,23 +942,38 @@ public class DefaultConstraintValidator
     }
   }
 
+  @SuppressWarnings("PMD.AvoidUsingVolatile") // Required for thread-safe visibility across threads
   private class ValueStatus {
     @NonNull
-    private final List<Pair<IAllowedValuesConstraint, IDefinitionNodeItem<?, ?>>> constraints = new LinkedList<>();
+    private final List<Pair<IAllowedValuesConstraint, IDefinitionNodeItem<?, ?>>> constraints
+        = Collections.synchronizedList(new ArrayList<>());
     @NonNull
     private final String value;
     @NonNull
     private final INodeItem item;
-    private boolean allowOthers = true;
+    private volatile boolean allowOthers = true;
     @NonNull
-    private IAllowedValuesConstraint.Extensible extensible = IAllowedValuesConstraint.Extensible.EXTERNAL;
+    private volatile IAllowedValuesConstraint.Extensible extensible = IAllowedValuesConstraint.Extensible.EXTERNAL;
 
     public ValueStatus(@NonNull INodeItem item) {
       this.item = item;
       this.value = item.toAtomicItem().asString();
     }
 
-    public void registerAllowedValues(
+    /**
+     * Register allowed values constraint for this item.
+     * <p>
+     * This method is synchronized to ensure thread-safe updates to the
+     * extensibility and allowOthers state.
+     *
+     * @param allowedValues
+     *          the allowed values constraint
+     * @param node
+     *          the definition node
+     * @throws ConstraintValidationException
+     *           if constraint registration fails
+     */
+    public synchronized void registerAllowedValues(
         @NonNull IAllowedValuesConstraint allowedValues,
         @NonNull IDefinitionNodeItem<?, ?> node) throws ConstraintValidationException {
       IAllowedValuesConstraint.Extensible newExtensible = allowedValues.getExtensible();
@@ -983,11 +1013,19 @@ public class DefaultConstraintValidator
     }
 
     public void validate(@NonNull DynamicContext dynamicContext) {
-      if (!constraints.isEmpty()) {
+      // Take a snapshot of the state for thread-safe validation
+      final boolean localAllowOthers;
+      final List<Pair<IAllowedValuesConstraint, IDefinitionNodeItem<?, ?>>> localConstraints;
+      synchronized (this) {
+        localAllowOthers = this.allowOthers;
+        localConstraints = new ArrayList<>(this.constraints);
+      }
+
+      if (!localConstraints.isEmpty()) {
         boolean match = false;
-        List<IAllowedValuesConstraint> failedConstraints = new LinkedList<>();
+        List<IAllowedValuesConstraint> failedConstraints = new ArrayList<>();
         IConstraintValidationHandler handler = getConstraintValidationHandler();
-        for (Pair<IAllowedValuesConstraint, IDefinitionNodeItem<?, ?>> pair : constraints) {
+        for (Pair<IAllowedValuesConstraint, IDefinitionNodeItem<?, ?>> pair : localConstraints) {
           IAllowedValuesConstraint allowedValues = pair.getLeft();
           IDefinitionNodeItem<?, ?> node = ObjectUtils.notNull(pair.getRight());
           IAllowedValue matchingValue = allowedValues.getAllowedValue(value);
@@ -1005,7 +1043,7 @@ public class DefaultConstraintValidator
         }
 
         // it's not a failure if allow others is true
-        if (!match && !allowOthers) {
+        if (!match && !localAllowOthers) {
           handler.handleAllowedValuesViolation(failedConstraints, item, dynamicContext);
         }
       }
@@ -1014,6 +1052,11 @@ public class DefaultConstraintValidator
 
   class Visitor
       extends AbstractNodeItemVisitor<DynamicContext, Void> {
+
+    /**
+     * Minimum number of model children required to enable parallel traversal.
+     */
+    private static final int PARALLEL_THRESHOLD = 4;
 
     @NonNull
     private DynamicContext handleLetStatements(
@@ -1079,8 +1122,86 @@ public class DefaultConstraintValidator
       } catch (ConstraintValidationException ex) {
         throw ExceptionUtils.wrap(ex);
       }
-      super.visitAssembly(item, effectiveContext);
+
+      // Parallel or sequential child traversal
+      if (parallelConfig.isParallel() && shouldParallelize(item)) {
+        visitFlags(item, effectiveContext);
+        visitChildrenParallel(item, effectiveContext);
+      } else {
+        super.visitAssembly(item, effectiveContext);
+      }
+
       return null;
+    }
+
+    /**
+     * Check if the item has enough children to benefit from parallel traversal.
+     *
+     * @param item
+     *          the assembly item to check
+     * @return true if the item has at least PARALLEL_THRESHOLD model children
+     */
+    private boolean shouldParallelize(@NonNull IAssemblyNodeItem item) {
+      return item.modelItems().count() >= PARALLEL_THRESHOLD;
+    }
+
+    /**
+     * Visit model children in parallel using the configured executor.
+     *
+     * @param item
+     *          the parent assembly item
+     * @param context
+     *          the dynamic context
+     */
+    private void visitChildrenParallel(
+        @NonNull IAssemblyNodeItem item,
+        @NonNull DynamicContext context) {
+
+      ExecutorService executor = parallelConfig.getExecutor();
+      List<? extends IModelNodeItem<?, ?>> children = item.modelItems()
+          .collect(Collectors.toList());
+
+      List<Future<?>> futures = new ArrayList<>(children.size());
+      for (IModelNodeItem<?, ?> child : children) {
+        futures.add(executor.submit(() -> {
+          // Each parallel task gets its own subContext for isolated execution stack
+          DynamicContext childContext = context.subContext();
+          child.accept(this, childContext);
+          return null;
+        }));
+      }
+
+      // Wait for all children and propagate exceptions
+      try {
+        for (Future<?> future : futures) {
+          future.get();
+        }
+      } catch (ExecutionException e) {
+        cancelRemainingFutures(futures);
+        Throwable cause = e.getCause();
+        if (cause instanceof RuntimeException) {
+          throw (RuntimeException) cause;
+        }
+        throw ExceptionUtils.wrap(new ConstraintValidationException("Error during parallel validation", cause));
+      } catch (InterruptedException e) {
+        cancelRemainingFutures(futures);
+        Thread.currentThread().interrupt();
+        throw ExceptionUtils.wrap(new ConstraintValidationException("Validation interrupted", e));
+      }
+    }
+
+    /**
+     * Cancel any futures that are still running.
+     *
+     * @param futures
+     *          the list of futures to cancel
+     */
+    private void cancelRemainingFutures(@NonNull List<Future<?>> futures) {
+      for (Future<?> future : futures) {
+        if (!future.isDone()) {
+          future.cancel(true);
+        }
+      }
     }
 
     @Override

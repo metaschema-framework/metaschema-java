@@ -19,9 +19,13 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.LinkedList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -29,7 +33,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * A validation result handler that collects the resulting findings for later
  * retrieval using the {@link #getFindings()} method.
  * <p>
- * This class is not thread safe.
+ * This class is thread-safe and can be used with parallel constraint
+ * validation.
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class FindingCollectingConstraintValidationHandler
@@ -37,20 +42,23 @@ public class FindingCollectingConstraintValidationHandler
     implements IValidationResult {
   private static final Logger LOGGER = LogManager.getLogger(FindingCollectingConstraintValidationHandler.class);
   @NonNull
-  private final List<ConstraintValidationFinding> findings = new LinkedList<>();
+  private final Queue<ConstraintValidationFinding> findings = new ConcurrentLinkedQueue<>();
   @NonNull
-  private Level highestLevel = IConstraint.Level.INFORMATIONAL;
+  private final AtomicReference<Level> highestLevel = new AtomicReference<>(IConstraint.Level.INFORMATIONAL);
 
   @Override
   @NonNull
   public List<ConstraintValidationFinding> getFindings() {
-    return CollectionUtil.unmodifiableList(findings);
+    // Sort by document location for consistent CLI output
+    return findings.stream()
+        .sorted(Comparator.comparing(f -> f.getTarget().getMetapath()))
+        .collect(Collectors.toUnmodifiableList());
   }
 
   @Override
   @NonNull
   public Level getHighestSeverity() {
-    return highestLevel;
+    return highestLevel.get();
   }
 
   /**
@@ -63,9 +71,7 @@ public class FindingCollectingConstraintValidationHandler
     findings.add(finding);
 
     Level severity = finding.getSeverity();
-    if (severity.ordinal() > highestLevel.ordinal()) {
-      highestLevel = severity;
-    }
+    highestLevel.updateAndGet(current -> severity.ordinal() > current.ordinal() ? severity : current);
   }
 
   @NonNull

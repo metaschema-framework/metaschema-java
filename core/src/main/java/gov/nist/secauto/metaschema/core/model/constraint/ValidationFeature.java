@@ -30,6 +30,18 @@ public final class ValidationFeature<V>
   @NonNull
   public static final ValidationFeature<Boolean> THROW_EXCEPTION_ON_ERROR
       = new ValidationFeature<>("throw-exception-on-error", Boolean.class, false);
+  /**
+   * The number of threads to use for parallel constraint validation.
+   * <p>
+   * A value of 1 (the default) means sequential validation. Values greater than 1
+   * enable experimental parallel validation with the specified number of threads.
+   * <p>
+   * <b>Warning:</b> Parallel validation is an experimental feature. Results
+   * should be verified against sequential validation.
+   */
+  @NonNull
+  public static final ValidationFeature<Integer> PARALLEL_THREADS
+      = new ValidationFeature<>("parallel-threads", Integer.class, 1);
 
   private ValidationFeature(
       @NonNull String name,
