@@ -27,7 +27,9 @@ import org.apache.commons.cli.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -50,8 +52,8 @@ class GenerateSchemaCommand
   private static final String COMMAND = "generate-schema";
   @NonNull
   private static final List<ExtraArgument> EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
-      ExtraArgument.newInstance("metaschema-module-file-or-URL", true),
-      ExtraArgument.newInstance("destination-schema-file", false)));
+      ExtraArgument.newInstance("metaschema-module-file-or-URL", true, URI.class),
+      ExtraArgument.newInstance("destination-schema-file", false, File.class)));
 
   private static final Option INLINE_TYPES_OPTION = ObjectUtils.notNull(
       Option.builder()

@@ -36,6 +36,7 @@ import org.apache.commons.cli.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
@@ -59,13 +60,14 @@ public abstract class AbstractValidateContentCommand
   private static final String COMMAND = "validate";
   @NonNull
   private static final List<ExtraArgument> EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
-      ExtraArgument.newInstance("file-or-URI-to-validate", true)));
+      ExtraArgument.newInstance("file-or-URI-to-validate", true, URI.class)));
 
   @NonNull
   private static final Option CONSTRAINTS_OPTION = ObjectUtils.notNull(
       Option.builder("c")
           .hasArgs()
           .argName("URL")
+          .type(URI.class)
           .desc("additional constraint definitions")
           .get());
   @NonNull
@@ -73,6 +75,7 @@ public abstract class AbstractValidateContentCommand
       Option.builder("o")
           .hasArg()
           .argName("FILE")
+          .type(File.class)
           .desc("write SARIF results to the provided FILE")
           .numberOfArgs(1)
           .get());

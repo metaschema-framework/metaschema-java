@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.cli.processor.command.impl;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * A default implementation of the {@link ExtraArgument} interface that
@@ -20,6 +21,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class DefaultExtraArgument implements ExtraArgument {
   private final String name;
   private final boolean required;
+  @Nullable
+  private final Class<?> type;
 
   /**
    * Construct a new instance.
@@ -30,8 +33,24 @@ public class DefaultExtraArgument implements ExtraArgument {
    *          {@code true} if the argument is required, or {@code false} otherwise
    */
   public DefaultExtraArgument(@NonNull String name, boolean required) {
+    this(name, required, null);
+  }
+
+  /**
+   * Construct a new instance with type information for shell completion.
+   *
+   * @param name
+   *          the argument name
+   * @param required
+   *          {@code true} if the argument is required, or {@code false} otherwise
+   * @param type
+   *          the type class for completion lookup, or {@code null} for freeform
+   *          input
+   */
+  public DefaultExtraArgument(@NonNull String name, boolean required, @Nullable Class<?> type) {
     this.name = name;
     this.required = required;
+    this.type = type;
   }
 
   @Override
@@ -42,5 +61,11 @@ public class DefaultExtraArgument implements ExtraArgument {
   @Override
   public boolean isRequired() {
     return required;
+  }
+
+  @Override
+  @Nullable
+  public Class<?> getType() {
+    return type;
   }
 }

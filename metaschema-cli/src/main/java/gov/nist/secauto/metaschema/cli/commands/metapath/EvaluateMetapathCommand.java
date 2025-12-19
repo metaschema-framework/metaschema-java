@@ -78,6 +78,7 @@ class EvaluateMetapathCommand
       Option.builder("i")
           .hasArg()
           .argName("FILE_OR_URL")
+          .type(URI.class)
           .desc("Metaschema content instance resource")
           .get());
 

@@ -9,10 +9,13 @@ import gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandService;
+import gov.nist.secauto.metaschema.cli.processor.completion.CompletionTypeRegistry;
 import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.MetaschemaJavaVersion;
 import gov.nist.secauto.metaschema.core.model.MetaschemaVersion;
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
+import gov.nist.secauto.metaschema.databind.io.Format;
+import gov.nist.secauto.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
 
 import java.io.PrintStream;
 import java.util.LinkedHashMap;
@@ -64,6 +67,10 @@ public final class CLI {
   @NonNull
   public static ExitStatus runCli(@Nullable PrintStream outputStream, String... args) {
     System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");
+
+    // Register completion types for shell completion script generation
+    CompletionTypeRegistry.registerEnum(Format.class);
+    CompletionTypeRegistry.registerEnum(SchemaFormat.class);
 
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     Map<String, IVersionInfo> versions = new LinkedHashMap<>();

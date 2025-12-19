@@ -23,6 +23,7 @@ import org.apache.commons.cli.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -48,8 +49,8 @@ public abstract class AbstractConvertSubcommand
   private static final String COMMAND = "convert";
   @NonNull
   private static final List<ExtraArgument> EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
-      ExtraArgument.newInstance("source-file-or-URL", true),
-      ExtraArgument.newInstance("destination-file", false)));
+      ExtraArgument.newInstance("source-file-or-URL", true, URI.class),
+      ExtraArgument.newInstance("destination-file", false, File.class)));
 
   @Override
   public String getName() {
