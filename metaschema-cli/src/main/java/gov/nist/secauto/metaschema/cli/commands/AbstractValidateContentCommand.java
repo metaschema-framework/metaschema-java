@@ -106,6 +106,7 @@ public abstract class AbstractValidateContentCommand
           .longOpt("path-format")
           .hasArg()
           .argName("FORMAT")
+          .type(PathFormatSelection.class)
           .desc("path format in validation output: auto (default, selects based on document format), "
               + "metapath, xpath, jsonpointer")
           .get());
