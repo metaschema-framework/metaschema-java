@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.databind.io;
 
+import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
+import gov.nist.secauto.metaschema.core.metapath.format.PathFormatSelection;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -85,5 +88,54 @@ public enum Format {
   @NonNull
   public String getDefaultExtension() {
     return defaultExtension;
+  }
+
+  /**
+   * Get the appropriate path formatter for this format.
+   * <p>
+   * Returns:
+   * <ul>
+   * <li>{@link IPathFormatter#XPATH_PATH_FORMATTER} for XML</li>
+   * <li>{@link IPathFormatter#JSON_POINTER_PATH_FORMATTER} for JSON and YAML</li>
+   * </ul>
+   *
+   * @return the path formatter appropriate for this format
+   */
+  @NonNull
+  public IPathFormatter getPathFormatter() {
+    return this == XML
+        ? IPathFormatter.XPATH_PATH_FORMATTER
+        : IPathFormatter.JSON_POINTER_PATH_FORMATTER;
+  }
+
+  /**
+   * Resolve the path formatter based on the selection and document format.
+   * <p>
+   * When {@link PathFormatSelection#AUTO} is specified, the formatter is
+   * determined by the document format. For explicit selections, the corresponding
+   * formatter is returned regardless of document format.
+   *
+   * @param selection
+   *          the path format selection
+   * @param format
+   *          the document format, used when selection is AUTO; may be null
+   * @return the resolved path formatter
+   */
+  @NonNull
+  public static IPathFormatter resolvePathFormatter(
+      @NonNull PathFormatSelection selection,
+      @Nullable Format format) {
+    switch (selection) {
+    case AUTO:
+      return format != null ? format.getPathFormatter() : IPathFormatter.METAPATH_PATH_FORMATER;
+    case METAPATH:
+      return IPathFormatter.METAPATH_PATH_FORMATER;
+    case XPATH:
+      return IPathFormatter.XPATH_PATH_FORMATTER;
+    case JSON_POINTER:
+      return IPathFormatter.JSON_POINTER_PATH_FORMATTER;
+    default:
+      return IPathFormatter.METAPATH_PATH_FORMATER;
+    }
   }
 }

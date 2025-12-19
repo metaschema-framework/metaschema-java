@@ -16,6 +16,8 @@ import gov.nist.secauto.metaschema.cli.util.LoggingValidationHandler;
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
+import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
+import gov.nist.secauto.metaschema.core.metapath.format.PathFormatSelection;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationException;
@@ -45,6 +47,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -97,6 +100,16 @@ public abstract class AbstractValidateContentCommand
           .longOpt("disable-constraint-validation")
           .desc("do not perform constraint validation")
           .get());
+  @NonNull
+  private static final Option PATH_FORMAT_OPTION = ObjectUtils.notNull(
+      Option.builder()
+          .longOpt("path-format")
+          .hasArg()
+          .argName("FORMAT")
+          .type(PathFormatSelection.class)
+          .desc("path format in validation output: auto (default, selects based on document format), "
+              + "metapath, xpath, jsonpointer")
+          .get());
 
   @Override
   public String getName() {
@@ -112,7 +125,8 @@ public abstract class AbstractValidateContentCommand
         SARIF_OUTPUT_FILE_OPTION,
         SARIF_INCLUDE_PASS_OPTION,
         NO_SCHEMA_VALIDATION_OPTION,
-        NO_CONSTRAINT_VALIDATION_OPTION);
+        NO_CONSTRAINT_VALIDATION_OPTION,
+        PATH_FORMAT_OPTION);
   }
 
   @Override
@@ -226,7 +240,7 @@ public abstract class AbstractValidateContentCommand
           source);
 
       IValidationResult validationResult = validate(source, asFormat, cmdLine, bindingContext);
-      handleOutput(source, validationResult, cmdLine, bindingContext);
+      handleOutput(source, validationResult, asFormat, cmdLine, bindingContext);
 
       if (validationResult == null || validationResult.isPassing()) {
         if (LOGGER.isInfoEnabled()) {
@@ -297,6 +311,7 @@ public abstract class AbstractValidateContentCommand
     private void handleOutput(
         @NonNull URI source,
         @Nullable IValidationResult validationResult,
+        @NonNull Format asFormat,
         @NonNull CommandLine commandLine,
         @NonNull IBindingContext bindingContext) throws CommandExecutionException {
       if (commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION)) {
@@ -316,9 +331,62 @@ public abstract class AbstractValidateContentCommand
         }
       } else if (validationResult != null && !validationResult.getFindings().isEmpty()) {
         LOGGER.info("Validation identified the following issues:");
-        LoggingValidationHandler.instance().handleResults(validationResult);
+        IPathFormatter pathFormatter = resolvePathFormatter(commandLine, asFormat);
+        LoggingValidationHandler.withPathFormatter(pathFormatter).handleResults(validationResult);
       }
 
+    }
+
+    /**
+     * Resolve the path formatter based on command line option and document format.
+     *
+     * @param commandLine
+     *          the parsed command line
+     * @param asFormat
+     *          the document format
+     * @return the resolved path formatter
+     */
+    @NonNull
+    @SuppressWarnings("synthetic-access")
+    private IPathFormatter resolvePathFormatter(
+        @NonNull CommandLine commandLine,
+        @NonNull Format asFormat) {
+      PathFormatSelection selection = PathFormatSelection.AUTO;
+
+      if (commandLine.hasOption(PATH_FORMAT_OPTION)) {
+        String value = commandLine.getOptionValue(PATH_FORMAT_OPTION);
+        if (value != null) {
+          selection = parsePathFormatSelection(value);
+        }
+      }
+
+      return Format.resolvePathFormatter(selection, asFormat);
+    }
+
+    /**
+     * Parse the path format selection from a string value.
+     *
+     * @param value
+     *          the string value from the command line
+     * @return the parsed selection, defaults to AUTO if unrecognized
+     */
+    @NonNull
+    @SuppressWarnings("synthetic-access")
+    private PathFormatSelection parsePathFormatSelection(@NonNull String value) {
+      switch (value.toLowerCase(Locale.ROOT)) {
+      case "auto":
+        return PathFormatSelection.AUTO;
+      case "metapath":
+        return PathFormatSelection.METAPATH;
+      case "xpath":
+        return PathFormatSelection.XPATH;
+      case "jsonpointer":
+      case "json-pointer":
+        return PathFormatSelection.JSON_POINTER;
+      default:
+        LOGGER.warn("Unrecognized path format '{}', using auto", value);
+        return PathFormatSelection.AUTO;
+      }
     }
   }
 }

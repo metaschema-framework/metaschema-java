@@ -10,8 +10,7 @@
  * This package contains interfaces and implementations for converting sequences
  * of path segments (representing navigation through a Metaschema document
  * structure) into formatted path strings. Different formatters can produce
- * paths in various syntaxes, such as Metapath expressions or JSON path
- * notation.
+ * paths in various syntaxes for different use cases.
  * <p>
  * Key interfaces and classes:
  * <ul>
@@ -23,7 +22,21 @@
  * segments and access to associated node items</li>
  * <li>{@link gov.nist.secauto.metaschema.core.metapath.format.MetapathFormatter}
  * - Produces Metapath expression syntax for paths (e.g.,
- * {@code /root/assembly/field})</li>
+ * {@code /root/assembly[1]/field[1]})</li>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.format.XPathFormatter} -
+ * Produces XPath 3.1 paths with EQName-qualified names (e.g.,
+ * {@code /Q{http://example.com}root/Q{http://example.com}assembly[1]})</li>
+ * <li>{@link gov.nist.secauto.metaschema.core.metapath.format.JsonPointerFormatter}
+ * - Produces RFC 6901 JSON Pointer paths (e.g.,
+ * {@code /root/assemblies/0/id})</li>
+ * </ul>
+ * <p>
+ * Available formatter constants on {@link IPathFormatter}:
+ * <ul>
+ * <li>{@link IPathFormatter#METAPATH_PATH_FORMATER} - Metapath syntax</li>
+ * <li>{@link IPathFormatter#XPATH_PATH_FORMATTER} - XPath 3.1 with EQNames</li>
+ * <li>{@link IPathFormatter#JSON_POINTER_PATH_FORMATTER} - RFC 6901 JSON
+ * Pointer</li>
  * </ul>
  * <p>
  * Path formatters are primarily used for:
@@ -32,6 +45,8 @@
  * schema validation failures</li>
  * <li>Creating navigational references for documentation and debugging</li>
  * <li>Providing context when reporting constraint violations</li>
+ * <li>Integrating with XML tooling (XPath formatter)</li>
+ * <li>Integrating with JSON tooling (JSON Pointer formatter)</li>
  * </ul>
  * <p>
  * Typical usage:
@@ -43,7 +58,11 @@
  * // Format a path from a node item
  * INodeItem nodeItem = ...; // some node in a document
  * String path = nodeItem.toPath(formatter);
- * // Result: "/root-assembly/child-assembly/field[@name='value']"
+ * // Result: "/root-assembly/child-assembly[1]/field[1]"
+ *
+ * // For JSON Pointer paths:
+ * String jsonPath = nodeItem.toPath(IPathFormatter.JSON_POINTER_PATH_FORMATTER);
+ * // Result: "/root-assembly/child-assemblies/0/field"
  * }</pre>
  * <p>
  * Path formatters are designed to be stateless and thread-safe, allowing reuse

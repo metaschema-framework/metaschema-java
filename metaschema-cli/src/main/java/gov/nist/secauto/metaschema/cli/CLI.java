@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.CommandService;
 import gov.nist.secauto.metaschema.cli.processor.completion.CompletionTypeRegistry;
 import gov.nist.secauto.metaschema.core.MetaschemaConstants;
 import gov.nist.secauto.metaschema.core.MetaschemaJavaVersion;
+import gov.nist.secauto.metaschema.core.metapath.format.PathFormatSelection;
 import gov.nist.secauto.metaschema.core.model.MetaschemaVersion;
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
 import gov.nist.secauto.metaschema.databind.io.Format;
@@ -70,6 +71,7 @@ public final class CLI {
 
     // Register completion types for shell completion script generation
     CompletionTypeRegistry.registerEnum(Format.class);
+    CompletionTypeRegistry.registerEnum(PathFormatSelection.class);
     CompletionTypeRegistry.registerEnum(SchemaFormat.class);
 
     @SuppressWarnings("PMD.UseConcurrentHashMap")

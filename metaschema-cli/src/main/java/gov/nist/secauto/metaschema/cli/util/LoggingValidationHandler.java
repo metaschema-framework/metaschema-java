@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.cli.util;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
 import gov.nist.secauto.metaschema.core.model.validation.AbstractValidationResultProcessor;
@@ -43,6 +44,8 @@ public final class LoggingValidationHandler
   private static final LoggingValidationHandler LOG_EXCPTION_INSTANCE = new LoggingValidationHandler(true);
 
   private final boolean logExceptions;
+  @NonNull
+  private final IPathFormatter pathFormatter;
 
   /**
    * Get a singleton instance of the logging validation handler.
@@ -71,8 +74,42 @@ public final class LoggingValidationHandler
     return logExceptions ? LOG_EXCPTION_INSTANCE : NO_LOG_EXCPTION_INSTANCE;
   }
 
+  /**
+   * Create a new logging validation handler with a custom path formatter.
+   *
+   * @param pathFormatter
+   *          the path formatter to use for constraint validation findings
+   * @return a new handler instance
+   */
+  @NonNull
+  public static LoggingValidationHandler withPathFormatter(@NonNull IPathFormatter pathFormatter) {
+    return new LoggingValidationHandler(false, pathFormatter);
+  }
+
+  /**
+   * Create a new logging validation handler with custom settings.
+   *
+   * @param logExceptions
+   *          {@code true} if this instance will log exceptions or {@code false}
+   *          otherwise
+   * @param pathFormatter
+   *          the path formatter to use for constraint validation findings
+   * @return a new handler instance
+   */
+  @NonNull
+  public static LoggingValidationHandler withSettings(
+      boolean logExceptions,
+      @NonNull IPathFormatter pathFormatter) {
+    return new LoggingValidationHandler(logExceptions, pathFormatter);
+  }
+
   private LoggingValidationHandler(boolean logExceptions) {
+    this(logExceptions, IPathFormatter.METAPATH_PATH_FORMATER);
+  }
+
+  private LoggingValidationHandler(boolean logExceptions, @NonNull IPathFormatter pathFormatter) {
     this.logExceptions = logExceptions;
+    this.pathFormatter = pathFormatter;
   }
 
   /**
@@ -126,7 +163,7 @@ public final class LoggingValidationHandler
   protected void handleConstraintValidationFinding(@NonNull ConstraintValidationFinding finding) {
     Ansi ansi = generatePreamble(finding.getSeverity());
 
-    ansi.format("[%s]", finding.getTarget().getMetapath());
+    ansi.format("[%s]", finding.getTarget().toPath(pathFormatter));
 
     String id = finding.getIdentifier();
     if (id != null) {
