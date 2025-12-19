@@ -266,77 +266,33 @@ public class CallingContext {
    *
    * @return the result of processing the command
    */
-  @SuppressWarnings({
-      "PMD.OnlyOneReturn",
-      "PMD.NPathComplexity",
-      "PMD.CyclomaticComplexity"
-  })
   @NonNull
   public ExitStatus processCommand() {
-    CommandLineParser parser = new DefaultParser();
+    // Phase 1: Check help/version before full parsing
+    Optional<ExitStatus> earlyExit = checkHelpAndVersion();
+    if (earlyExit.isPresent()) {
+      return earlyExit.get();
+    }
 
-    // phase 1
+    // Phase 2: Parse all options
     CommandLine cmdLine;
     try {
-      Options phase1Options = new Options();
-      phase1Options.addOption(CLIProcessor.HELP_OPTION);
-      phase1Options.addOption(CLIProcessor.VERSION_OPTION);
-
-      cmdLine = ObjectUtils.notNull(parser.parse(phase1Options, getExtraArgs().toArray(new String[0]), true));
+      cmdLine = parseOptions();
     } catch (ParseException ex) {
       String msg = ex.getMessage();
       assert msg != null;
       return handleInvalidCommand(msg);
     }
 
-    if (cmdLine.hasOption(CLIProcessor.VERSION_OPTION)) {
-      cliProcessor.showVersion();
-      return ExitCode.OK.exit();
-    }
-    if (cmdLine.hasOption(CLIProcessor.HELP_OPTION)) {
-      showHelp();
-      return ExitCode.OK.exit();
+    // Phase 3-4: Validate arguments and options
+    Optional<ExitStatus> validationResult = validateExtraArguments(cmdLine)
+        .or(() -> validateCalledCommands(cmdLine));
+    if (validationResult.isPresent()) {
+      return validationResult.get();
     }
 
-    // phase 2
-    try {
-      cmdLine = ObjectUtils.notNull(parser.parse(toOptions(), getExtraArgs().toArray(new String[0])));
-    } catch (ParseException ex) {
-      String msg = ex.getMessage();
-      assert msg != null;
-      return handleInvalidCommand(msg);
-    }
-
-    ICommand targetCommand = getTargetCommand();
-    if (targetCommand != null) {
-      try {
-        targetCommand.validateExtraArguments(this, cmdLine);
-      } catch (InvalidArgumentException ex) {
-        return handleError(
-            ExitCode.INVALID_ARGUMENTS.exitMessage(ex.getLocalizedMessage()),
-            cmdLine,
-            true);
-      }
-    }
-
-    for (ICommand cmd : getCalledCommands()) {
-      try {
-        cmd.validateOptions(this, cmdLine);
-      } catch (InvalidArgumentException ex) {
-        String msg = ex.getMessage();
-        assert msg != null;
-        return handleInvalidCommand(msg);
-      }
-    }
-
-    // phase 3
-    if (cmdLine.hasOption(CLIProcessor.NO_COLOR_OPTION)) {
-      CLIProcessor.handleNoColor();
-    }
-
-    if (cmdLine.hasOption(CLIProcessor.QUIET_OPTION)) {
-      CLIProcessor.handleQuiet();
-    }
+    // Phase 5: Apply global options and execute
+    applyGlobalOptions(cmdLine);
     return invokeCommand(cmdLine);
   }
 
