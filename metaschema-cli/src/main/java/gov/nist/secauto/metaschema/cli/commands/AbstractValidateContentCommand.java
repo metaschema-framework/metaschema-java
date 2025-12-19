@@ -295,7 +295,21 @@ public abstract class AbstractValidateContentCommand
 
           // Configure parallel validation if requested
           if (commandLine.hasOption(PARALLEL_THREADS_OPTION)) {
-            int threadCount = Integer.parseInt(commandLine.getOptionValue(PARALLEL_THREADS_OPTION));
+            String threadValue = commandLine.getOptionValue(PARALLEL_THREADS_OPTION);
+            int threadCount;
+            try {
+              threadCount = Integer.parseInt(threadValue);
+            } catch (NumberFormatException ex) {
+              throw new CommandExecutionException(
+                  ExitCode.INVALID_ARGUMENTS,
+                  String.format("Invalid thread count '%s': must be a positive integer", threadValue),
+                  ex);
+            }
+            if (threadCount < 1) {
+              throw new CommandExecutionException(
+                  ExitCode.INVALID_ARGUMENTS,
+                  String.format("Thread count must be at least 1, got: %d", threadCount));
+            }
             if (threadCount > 1) {
               if (LOGGER.isWarnEnabled()) {
                 LOGGER.warn("Parallel constraint validation is an experimental feature. "
