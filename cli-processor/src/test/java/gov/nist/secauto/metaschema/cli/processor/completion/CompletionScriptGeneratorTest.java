@@ -8,7 +8,7 @@ package gov.nist.secauto.metaschema.cli.processor.completion;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;

@@ -32,13 +32,13 @@ class TestCommand
 
   @Override
   public ICommandExecutor newExecutor(
-      @NonNull CLIProcessor.CallingContext callingContext,
+      @NonNull CallingContext callingContext,
       @NonNull CommandLine cmdLine) {
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
 
   private void executeCommand(
-      @NonNull CLIProcessor.CallingContext callingContext,
+      @NonNull CallingContext callingContext,
       @NonNull CommandLine cmdLine) {
     // Do nothing - success
   }

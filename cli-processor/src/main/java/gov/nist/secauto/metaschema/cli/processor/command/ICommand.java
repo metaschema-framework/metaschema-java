@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.cli.processor.command;
 
-import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
