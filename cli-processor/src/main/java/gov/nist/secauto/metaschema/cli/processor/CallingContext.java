@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -146,6 +147,118 @@ public class CallingContext {
       retval.addOption(option);
     }
     return retval;
+  }
+
+  /**
+   * Check for --help and --version options before full parsing.
+   * <p>
+   * This is phase 1 of command processing.
+   *
+   * @return an exit status if help or version was requested, or empty to continue
+   */
+  @NonNull
+  protected Optional<ExitStatus> checkHelpAndVersion() {
+    Options phase1Options = new Options();
+    phase1Options.addOption(CLIProcessor.HELP_OPTION);
+    phase1Options.addOption(CLIProcessor.VERSION_OPTION);
+
+    try {
+      CommandLine cmdLine = new DefaultParser()
+          .parse(phase1Options, getExtraArgs().toArray(new String[0]), true);
+
+      if (cmdLine.hasOption(CLIProcessor.VERSION_OPTION)) {
+        cliProcessor.showVersion();
+        return Optional.of(ExitCode.OK.exit());
+      }
+      if (cmdLine.hasOption(CLIProcessor.HELP_OPTION)) {
+        showHelp();
+        return Optional.of(ExitCode.OK.exit());
+      }
+    } catch (ParseException ex) {
+      return Optional.of(handleInvalidCommand(ObjectUtils.notNull(ex.getMessage())));
+    }
+    return Optional.empty();
+  }
+
+  /**
+   * Parse all command line options.
+   * <p>
+   * This is phase 2 of command processing.
+   *
+   * @return the parsed command line
+   * @throws ParseException
+   *           if parsing fails
+   */
+  @NonNull
+  protected CommandLine parseOptions() throws ParseException {
+    return ObjectUtils.notNull(
+        new DefaultParser().parse(toOptions(), getExtraArgs().toArray(new String[0])));
+  }
+
+  /**
+   * Validate extra arguments for the target command.
+   * <p>
+   * This is phase 3 of command processing.
+   *
+   * @param cmdLine
+   *          the parsed command line
+   * @return an exit status if validation failed, or empty to continue
+   */
+  @NonNull
+  protected Optional<ExitStatus> validateExtraArguments(@NonNull CommandLine cmdLine) {
+    ICommand target = getTargetCommand();
+    if (target == null) {
+      return Optional.empty();
+    }
+    try {
+      target.validateExtraArguments(this, cmdLine);
+      return Optional.empty();
+    } catch (InvalidArgumentException ex) {
+      return Optional.of(handleError(
+          ExitCode.INVALID_ARGUMENTS.exitMessage(ex.getLocalizedMessage()),
+          cmdLine,
+          true));
+    }
+  }
+
+  /**
+   * Validate options for all called commands in the chain.
+   * <p>
+   * This is phase 4 of command processing.
+   *
+   * @param cmdLine
+   *          the parsed command line
+   * @return an exit status if validation failed, or empty to continue
+   */
+  @NonNull
+  protected Optional<ExitStatus> validateCalledCommands(@NonNull CommandLine cmdLine) {
+    for (ICommand cmd : getCalledCommands()) {
+      try {
+        cmd.validateOptions(this, cmdLine);
+      } catch (InvalidArgumentException ex) {
+        String msg = ex.getMessage();
+        assert msg != null;
+        return Optional.of(handleInvalidCommand(msg));
+      }
+    }
+    return Optional.empty();
+  }
+
+  /**
+   * Apply global options like --no-color and --quiet.
+   * <p>
+   * This is phase 5 of command processing.
+   *
+   * @param cmdLine
+   *          the parsed command line
+   */
+  protected void applyGlobalOptions(@NonNull CommandLine cmdLine) {
+    if (cmdLine.hasOption(CLIProcessor.NO_COLOR_OPTION)) {
+      CLIProcessor.handleNoColor();
+    }
+    if (cmdLine.hasOption(CLIProcessor.QUIET_OPTION)) {
+      CLIProcessor.handleQuiet();
+    }
   }
 
   /**
