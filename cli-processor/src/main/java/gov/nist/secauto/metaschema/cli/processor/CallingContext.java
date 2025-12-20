@@ -42,7 +42,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * Records information about the command line options and called command
  * hierarchy.
  */
-@SuppressWarnings("PMD.GodClass")
 public class CallingContext {
   @NonNull
   private final CLIProcessor cliProcessor;
