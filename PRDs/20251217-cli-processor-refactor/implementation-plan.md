@@ -982,7 +982,7 @@ mvn -pl cli-processor test
 
 Expected: BUILD SUCCESS
 
-### Step 3: Commit
+### Step 3: Commit ShellCompletionCommand update
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/ShellCompletionCommand.java
@@ -1289,7 +1289,7 @@ mvn -pl cli-processor test -Dtest=CallingContextTest#*parseOptions*
 
 Expected: BUILD SUCCESS
 
-### Step 3: Commit
+### Step 3: Commit parseOptions method
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -1340,7 +1340,7 @@ mvn -pl cli-processor test -Dtest=CallingContextTest#*validateExtraArguments*
 
 Expected: BUILD SUCCESS
 
-### Step 3: Commit
+### Step 3: Commit validateExtraArguments method
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -1388,7 +1388,7 @@ mvn -pl cli-processor test -Dtest=CallingContextTest#*validateCalledCommands*
 
 Expected: BUILD SUCCESS
 
-### Step 3: Commit
+### Step 3: Commit validateCalledCommands method
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -1430,7 +1430,7 @@ mvn -pl cli-processor test -Dtest=CallingContextTest#*applyGlobalOptions*
 
 Expected: BUILD SUCCESS
 
-### Step 3: Commit
+### Step 3: Commit applyGlobalOptions method
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
