@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.cli.commands;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor;
-import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractCommandExecutor;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
