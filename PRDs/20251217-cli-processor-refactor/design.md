@@ -30,7 +30,7 @@ The `processCommand` method in `CLIProcessor.java` has high cyclomatic and NPath
 
 ### File Structure
 
-```
+```text
 cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
 ├── CLIProcessor.java          (simplified, delegates to CallingContext)
 ├── CallingContext.java        (NEW - extracted, package-private)
@@ -44,7 +44,7 @@ cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/
 
 ### Phase Flow
 
-```
+```text
 processCommand()
     → checkHelpAndVersion()     : Optional<ExitStatus>
     → parseOptions()            : CommandLine (throws ParseException)

@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +44,8 @@ class CallingContextTest {
         nullOutput);
   }
 
-  private CallingContext createContext(String... args) {
+  @NonNull
+  private CallingContext createContext(@NonNull String... args) {
     return new CallingContext(processor, Arrays.asList(args));
   }
 

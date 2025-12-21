@@ -9,15 +9,17 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import edu.umd.cs.findbugs.annotations.NonNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * Integration tests for {@link CLIProcessor}.
@@ -27,7 +29,9 @@ import org.junit.jupiter.api.Test;
 @DisplayName("CLIProcessor Integration Tests")
 class CLIProcessorTest {
 
+  @NonNull
   private CLIProcessor processor;
+  @NonNull
   private ByteArrayOutputStream outputCapture;
 
   @BeforeEach
