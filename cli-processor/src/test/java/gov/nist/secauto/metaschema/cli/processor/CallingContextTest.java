@@ -111,6 +111,14 @@ class CallingContextTest {
 
       assertThrows(ParseException.class, ctx::parseOptions);
     }
+
+    @Test
+    @DisplayName("throws on multiple invalid options")
+    void throwsOnMultipleInvalidOptions() {
+      CallingContext ctx = createContext("--invalid-one", "--invalid-two", "--invalid-three");
+
+      assertThrows(ParseException.class, ctx::parseOptions);
+    }
   }
 
   @Nested
@@ -139,6 +147,34 @@ class CallingContextTest {
 
       assertTrue(result.isEmpty());
     }
+
+    @Test
+    @DisplayName("returns error when required argument missing")
+    void returnsErrorWhenRequiredArgumentMissing() throws ParseException {
+      processor.addCommandHandler(new TestCommandWithRequiredArg());
+      CallingContext ctx = createContext("test-cmd-with-arg");
+      CommandLine cmdLine = ctx.parseOptions();
+
+      Optional<ExitStatus> result = ctx.validateExtraArguments(cmdLine);
+
+      assertAll(
+          () -> assertTrue(result.isPresent()),
+          () -> assertEquals(ExitCode.INVALID_ARGUMENTS, result.get().getExitCode()));
+    }
+
+    @Test
+    @DisplayName("returns error when too many arguments provided")
+    void returnsErrorWhenTooManyArguments() throws ParseException {
+      processor.addCommandHandler(new TestCommand());
+      CallingContext ctx = createContext("test-cmd", "extra-arg-1", "extra-arg-2");
+      CommandLine cmdLine = ctx.parseOptions();
+
+      Optional<ExitStatus> result = ctx.validateExtraArguments(cmdLine);
+
+      assertAll(
+          () -> assertTrue(result.isPresent()),
+          () -> assertEquals(ExitCode.INVALID_ARGUMENTS, result.get().getExitCode()));
+    }
   }
 
   @Nested
@@ -156,6 +192,32 @@ class CallingContextTest {
 
       assertTrue(result.isEmpty());
     }
+
+    @Test
+    @DisplayName("returns error when required option missing")
+    void returnsErrorWhenRequiredOptionMissing() throws ParseException {
+      processor.addCommandHandler(new TestCommandWithRequiredOption());
+      CallingContext ctx = createContext("test-cmd-with-option");
+      CommandLine cmdLine = ctx.parseOptions();
+
+      Optional<ExitStatus> result = ctx.validateCalledCommands(cmdLine);
+
+      assertAll(
+          () -> assertTrue(result.isPresent()),
+          () -> assertEquals(ExitCode.INVALID_COMMAND, result.get().getExitCode()));
+    }
+
+    @Test
+    @DisplayName("returns empty when required option provided")
+    void returnsEmptyWhenRequiredOptionProvided() throws ParseException {
+      processor.addCommandHandler(new TestCommandWithRequiredOption());
+      CallingContext ctx = createContext("test-cmd-with-option", "--required-opt", "value");
+      CommandLine cmdLine = ctx.parseOptions();
+
+      Optional<ExitStatus> result = ctx.validateCalledCommands(cmdLine);
+
+      assertTrue(result.isEmpty());
+    }
   }
 
   @Nested
@@ -167,6 +229,26 @@ class CallingContextTest {
     void appliesQuietOption() throws ParseException {
       processor.addCommandHandler(new TestCommand());
       CallingContext ctx = createContext("test-cmd", "--quiet");
+      CommandLine cmdLine = ctx.parseOptions();
+
+      assertDoesNotThrow(() -> ctx.applyGlobalOptions(cmdLine));
+    }
+
+    @Test
+    @DisplayName("applies --no-color without error")
+    void appliesNoColorOption() throws ParseException {
+      processor.addCommandHandler(new TestCommand());
+      CallingContext ctx = createContext("test-cmd", "--no-color");
+      CommandLine cmdLine = ctx.parseOptions();
+
+      assertDoesNotThrow(() -> ctx.applyGlobalOptions(cmdLine));
+    }
+
+    @Test
+    @DisplayName("applies both --quiet and --no-color without error")
+    void appliesBothQuietAndNoColor() throws ParseException {
+      processor.addCommandHandler(new TestCommand());
+      CallingContext ctx = createContext("test-cmd", "--quiet", "--no-color");
       CommandLine cmdLine = ctx.parseOptions();
 
       assertDoesNotThrow(() -> ctx.applyGlobalOptions(cmdLine));
