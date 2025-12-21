@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.cli.commands;
 
-import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
