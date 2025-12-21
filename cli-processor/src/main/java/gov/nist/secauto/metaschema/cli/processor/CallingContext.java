@@ -322,7 +322,7 @@ public class CallingContext {
           retval = ex.toExitStatus();
         } catch (RuntimeException ex) {
           retval = ExitCode.RUNTIME_ERROR
-              .exitMessage("Unexpected error occured: " + ex.getLocalizedMessage())
+              .exitMessage("Unexpected error occurred: " + ex.getLocalizedMessage())
               .withThrowable(ex);
         }
       }

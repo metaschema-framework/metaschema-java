@@ -1,7 +1,5 @@
 # CLIProcessor Refactoring Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
-
 **Goal:** Refactor `processCommand` method and extract `CallingContext` to reduce complexity and improve testability.
 
 **Architecture:** Extract `CallingContext` inner class to a package-private top-level class. Refactor `processCommand()` into discrete phases using Optional-based result chaining. Each phase either returns an exit status (stop) or empty (continue).
@@ -16,20 +14,20 @@
 
 **Prerequisites:** PR #551 must be merged into `develop`
 
-**Step 1: Fetch latest develop**
+### Step 1: Fetch latest develop
 
 ```bash
 cd ../metaschema-java-252
 git fetch origin develop
 ```
 
-**Step 2: Rebase branch**
+### Step 2: Rebase branch
 
 ```bash
 git rebase origin/develop
 ```
 
-**Step 3: Verify build**
+### Step 3: Verify build
 
 ```bash
 mvn -pl cli-processor test
@@ -47,7 +45,7 @@ Expected: BUILD SUCCESS
 - Create: `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/TestVersionInfo.java`
 - Create: `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/TestCommand.java`
 
-**Step 1: Create TestVersionInfo**
+### Step 1: Create TestVersionInfo
 
 ```java
 /*
@@ -110,7 +108,7 @@ class TestVersionInfo implements IVersionInfo {
 }
 ```
 
-**Step 2: Create TestCommand**
+### Step 2: Create TestCommand
 
 ```java
 /*
@@ -160,7 +158,7 @@ class TestCommand extends AbstractTerminalCommand {
 }
 ```
 
-**Step 3: Verify compilation**
+### Step 3: Verify compilation
 
 ```bash
 mvn -pl cli-processor test-compile
@@ -168,7 +166,7 @@ mvn -pl cli-processor test-compile
 
 Expected: BUILD SUCCESS
 
-**Step 4: Commit**
+### Step 4: Commit
 
 ```bash
 git add cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/TestVersionInfo.java
@@ -183,7 +181,7 @@ git commit -m "test: add test fixtures for CLIProcessor testing"
 **Files:**
 - Create: `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/CLIProcessorTest.java`
 
-**Step 1: Write integration test class with version test**
+### Step 1: Write integration test class with version test
 
 ```java
 /*
@@ -308,7 +306,7 @@ class CLIProcessorTest {
 }
 ```
 
-**Step 2: Run tests to verify they pass with existing code**
+### Step 2: Run tests to verify they pass with existing code
 
 ```bash
 mvn -pl cli-processor test -Dtest=CLIProcessorTest
@@ -316,7 +314,7 @@ mvn -pl cli-processor test -Dtest=CLIProcessorTest
 
 Expected: BUILD SUCCESS (all tests pass - these characterize existing behavior)
 
-**Step 3: Commit**
+### Step 3: Commit
 
 ```bash
 git add cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/CLIProcessorTest.java
@@ -332,7 +330,7 @@ git commit -m "test: add integration tests for CLIProcessor existing behavior"
 **Files:**
 - Create: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
 
-**Step 1: Create new CallingContext.java file**
+### Step 1: Create new CallingContext.java file
 
 Copy the inner class to a new file, adding package-private visibility and updating `CLIProcessor.this` references:
 
@@ -842,7 +840,7 @@ class CallingContext {
 }
 ```
 
-**Step 2: Verify compilation**
+### Step 2: Verify compilation
 
 ```bash
 mvn -pl cli-processor compile
@@ -850,7 +848,7 @@ mvn -pl cli-processor compile
 
 Expected: BUILD SUCCESS
 
-**Step 3: Commit**
+### Step 3: Commit
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -864,7 +862,7 @@ git commit -m "refactor: extract CallingContext to top-level package-private cla
 **Files:**
 - Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CLIProcessor.java`
 
-**Step 1: Add package-private getter for outputStream**
+### Step 1: Add package-private getter for outputStream
 
 Add this method to `CLIProcessor.java` (needed by extracted `CallingContext`):
 
@@ -880,7 +878,7 @@ PrintStream getOutputStream() {
 }
 ```
 
-**Step 2: Make OPTIONS package-private**
+### Step 2: Make OPTIONS package-private
 
 Change the `OPTIONS` field visibility from `private` to package-private:
 
@@ -894,7 +892,7 @@ static final List<Option> OPTIONS = ObjectUtils.notNull(List.of(
     VERSION_OPTION));
 ```
 
-**Step 3: Make handleNoColor and handleQuiet package-private**
+### Step 3: Make handleNoColor and handleQuiet package-private
 
 Change visibility from `private`/`public` to package-private (no modifier):
 
@@ -912,7 +910,7 @@ static void handleQuiet() {
 }
 ```
 
-**Step 4: Update parseCommand to use new CallingContext constructor**
+### Step 4: Update parseCommand to use new CallingContext constructor
 
 ```java
 @NonNull
@@ -939,11 +937,11 @@ private ExitStatus parseCommand(String... args) {
 }
 ```
 
-**Step 5: Remove the inner CallingContext class**
+### Step 5: Remove the inner CallingContext class
 
 Delete the entire inner class `CallingContext` from `CLIProcessor.java` (lines 328-802 approximately).
 
-**Step 6: Run tests to verify behavior preserved**
+### Step 6: Run tests to verify behavior preserved
 
 ```bash
 mvn -pl cli-processor test
@@ -951,7 +949,7 @@ mvn -pl cli-processor test
 
 Expected: BUILD SUCCESS (all tests pass)
 
-**Step 7: Commit**
+### Step 7: Commit
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CLIProcessor.java
@@ -965,7 +963,7 @@ git commit -m "refactor: update CLIProcessor to use extracted CallingContext"
 **Files:**
 - Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/ShellCompletionCommand.java`
 
-**Step 1: Update import statement**
+### Step 1: Update import statement
 
 Change:
 ```java
@@ -977,7 +975,7 @@ To:
 import gov.nist.secauto.metaschema.cli.processor.CallingContext;
 ```
 
-**Step 2: Run tests**
+### Step 2: Run tests
 
 ```bash
 mvn -pl cli-processor test
@@ -985,7 +983,7 @@ mvn -pl cli-processor test
 
 Expected: BUILD SUCCESS
 
-**Step 3: Commit**
+### Step 3: Commit
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/ShellCompletionCommand.java
@@ -1001,7 +999,7 @@ git commit -m "refactor: update ShellCompletionCommand import for extracted Call
 **Files:**
 - Create: `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/CallingContextTest.java`
 
-**Step 1: Create CallingContextTest with phase tests**
+### Step 1: Create CallingContextTest with phase tests
 
 ```java
 /*
@@ -1178,7 +1176,7 @@ class CallingContextTest {
 }
 ```
 
-**Step 2: Run tests - they will fail (methods don't exist yet)**
+### Step 2: Run tests - they will fail (methods don't exist yet)
 
 ```bash
 mvn -pl cli-processor test -Dtest=CallingContextTest
@@ -1186,7 +1184,7 @@ mvn -pl cli-processor test -Dtest=CallingContextTest
 
 Expected: COMPILATION ERROR (methods not found) - this is expected for TDD
 
-**Step 3: Commit test file**
+### Step 3: Commit test file
 
 ```bash
 git add cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/CallingContextTest.java
@@ -1200,7 +1198,7 @@ git commit -m "test: add unit tests for CallingContext phase methods (TDD - red)
 **Files:**
 - Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
 
-**Step 1: Add checkHelpAndVersion method**
+### Step 1: Add checkHelpAndVersion method
 
 Add this method to `CallingContext.java`:
 
@@ -1237,13 +1235,13 @@ protected Optional<ExitStatus> checkHelpAndVersion() {
 }
 ```
 
-**Step 2: Add import for Optional**
+### Step 2: Add import for Optional
 
 ```java
 import java.util.Optional;
 ```
 
-**Step 3: Run tests for checkHelpAndVersion**
+### Step 3: Run tests for checkHelpAndVersion
 
 ```bash
 mvn -pl cli-processor test -Dtest=CallingContextTest#*checkHelpAndVersion*
@@ -1251,7 +1249,7 @@ mvn -pl cli-processor test -Dtest=CallingContextTest#*checkHelpAndVersion*
 
 Expected: BUILD SUCCESS
 
-**Step 4: Commit**
+### Step 4: Commit
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -1265,7 +1263,7 @@ git commit -m "refactor: extract checkHelpAndVersion phase method"
 **Files:**
 - Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
 
-**Step 1: Add parseOptions method**
+### Step 1: Add parseOptions method
 
 ```java
 /**
@@ -1283,7 +1281,7 @@ protected CommandLine parseOptions() throws ParseException {
 }
 ```
 
-**Step 2: Run tests for parseOptions**
+### Step 2: Run tests for parseOptions
 
 ```bash
 mvn -pl cli-processor test -Dtest=CallingContextTest#*parseOptions*
@@ -1291,7 +1289,7 @@ mvn -pl cli-processor test -Dtest=CallingContextTest#*parseOptions*
 
 Expected: BUILD SUCCESS
 
-**Step 3: Commit**
+### Step 3: Commit
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -1305,7 +1303,7 @@ git commit -m "refactor: extract parseOptions phase method"
 **Files:**
 - Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
 
-**Step 1: Add validateExtraArguments method**
+### Step 1: Add validateExtraArguments method
 
 ```java
 /**
@@ -1334,7 +1332,7 @@ protected Optional<ExitStatus> validateExtraArguments(@NonNull CommandLine cmdLi
 }
 ```
 
-**Step 2: Run tests for validateExtraArguments**
+### Step 2: Run tests for validateExtraArguments
 
 ```bash
 mvn -pl cli-processor test -Dtest=CallingContextTest#*validateExtraArguments*
@@ -1342,7 +1340,7 @@ mvn -pl cli-processor test -Dtest=CallingContextTest#*validateExtraArguments*
 
 Expected: BUILD SUCCESS
 
-**Step 3: Commit**
+### Step 3: Commit
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -1356,7 +1354,7 @@ git commit -m "refactor: extract validateExtraArguments phase method"
 **Files:**
 - Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
 
-**Step 1: Add validateCalledCommands method**
+### Step 1: Add validateCalledCommands method
 
 ```java
 /**
@@ -1382,7 +1380,7 @@ protected Optional<ExitStatus> validateCalledCommands(@NonNull CommandLine cmdLi
 }
 ```
 
-**Step 2: Run tests for validateCalledCommands**
+### Step 2: Run tests for validateCalledCommands
 
 ```bash
 mvn -pl cli-processor test -Dtest=CallingContextTest#*validateCalledCommands*
@@ -1390,7 +1388,7 @@ mvn -pl cli-processor test -Dtest=CallingContextTest#*validateCalledCommands*
 
 Expected: BUILD SUCCESS
 
-**Step 3: Commit**
+### Step 3: Commit
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -1404,7 +1402,7 @@ git commit -m "refactor: extract validateCalledCommands phase method"
 **Files:**
 - Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
 
-**Step 1: Add applyGlobalOptions method**
+### Step 1: Add applyGlobalOptions method
 
 ```java
 /**
@@ -1424,7 +1422,7 @@ protected void applyGlobalOptions(@NonNull CommandLine cmdLine) {
 }
 ```
 
-**Step 2: Run tests for applyGlobalOptions**
+### Step 2: Run tests for applyGlobalOptions
 
 ```bash
 mvn -pl cli-processor test -Dtest=CallingContextTest#*applyGlobalOptions*
@@ -1432,7 +1430,7 @@ mvn -pl cli-processor test -Dtest=CallingContextTest#*applyGlobalOptions*
 
 Expected: BUILD SUCCESS
 
-**Step 3: Commit**
+### Step 3: Commit
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -1446,7 +1444,7 @@ git commit -m "refactor: extract applyGlobalOptions phase method"
 **Files:**
 - Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
 
-**Step 1: Replace processCommand implementation**
+### Step 1: Replace processCommand implementation
 
 Replace the entire `processCommand()` method with:
 
@@ -1487,7 +1485,7 @@ public ExitStatus processCommand() {
 }
 ```
 
-**Step 2: Remove PMD suppressions from processCommand**
+### Step 2: Remove PMD suppressions from processCommand
 
 Remove this annotation from processCommand:
 
@@ -1499,7 +1497,7 @@ Remove this annotation from processCommand:
 })
 ```
 
-**Step 3: Run all tests**
+### Step 3: Run all tests
 
 ```bash
 mvn -pl cli-processor test
@@ -1507,7 +1505,7 @@ mvn -pl cli-processor test
 
 Expected: BUILD SUCCESS
 
-**Step 4: Run full CI build**
+### Step 4: Run full CI build
 
 ```bash
 mvn -pl cli-processor install -PCI
@@ -1515,7 +1513,7 @@ mvn -pl cli-processor install -PCI
 
 Expected: BUILD SUCCESS (no PMD violations)
 
-**Step 5: Commit**
+### Step 5: Commit
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -1534,7 +1532,7 @@ Removes PMD suppressions for complexity warnings."
 **Files:**
 - Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
 
-**Step 1: Remove GodClass suppression**
+### Step 1: Remove GodClass suppression
 
 Remove this line from `CallingContext.java`:
 
@@ -1542,7 +1540,7 @@ Remove this line from `CallingContext.java`:
 @SuppressWarnings("PMD.GodClass")
 ```
 
-**Step 2: Run PMD check**
+### Step 2: Run PMD check
 
 ```bash
 mvn -pl cli-processor pmd:check
@@ -1550,7 +1548,7 @@ mvn -pl cli-processor pmd:check
 
 Expected: BUILD SUCCESS (if GodClass warning persists, we may need additional extraction - but try first)
 
-**Step 3: Run full CI build**
+### Step 3: Run full CI build
 
 ```bash
 mvn install -PCI -Prelease
@@ -1558,7 +1556,7 @@ mvn install -PCI -Prelease
 
 Expected: BUILD SUCCESS
 
-**Step 4: Commit**
+### Step 4: Commit
 
 ```bash
 git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
@@ -1571,7 +1569,7 @@ git commit -m "refactor: remove PMD GodClass suppression from CallingContext"
 
 ### Task 14: Full Build Verification
 
-**Step 1: Run complete CI build**
+### Step 1: Run complete CI build
 
 ```bash
 mvn clean install -PCI -Prelease
@@ -1579,7 +1577,7 @@ mvn clean install -PCI -Prelease
 
 Expected: BUILD SUCCESS
 
-**Step 2: Verify all tests pass**
+### Step 2: Verify all tests pass
 
 ```bash
 mvn test
@@ -1587,7 +1585,7 @@ mvn test
 
 Expected: All tests pass
 
-**Step 3: Verify no checkstyle issues**
+### Step 3: Verify no checkstyle issues
 
 ```bash
 mvn checkstyle:check
@@ -1595,7 +1593,7 @@ mvn checkstyle:check
 
 Expected: BUILD SUCCESS
 
-**Step 4: Review commit history**
+### Step 4: Review commit history
 
 ```bash
 git log --oneline -15
