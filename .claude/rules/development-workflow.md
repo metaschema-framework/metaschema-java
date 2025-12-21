@@ -29,6 +29,7 @@ If you think any of these, STOP and check for skills:
 
 **Project Skills** (defined in `.claude/skills/`):
 - `prd-construction` - Templates and methodology for creating PRDs and implementation plans
+- `unit-test-writing` - Edge case checklist, test structure patterns, coverage workflow
 
 **Managed Skills** (from superpowers plugin - install via `claude plugin add superpowers-marketplace`):
 - `superpowers:brainstorming` - Refine ideas into designs through collaborative questioning
@@ -122,6 +123,36 @@ No Issues → Proceed to Verification
 - Verify all code review issues are resolved
 - Create PR against `develop` branch
 - Always use squash merge with branch deletion (`gh pr merge --squash --delete-branch`)
+
+#### Build Verification Summary Format
+
+After running builds with quality checks, provide a scannable summary:
+
+```text
+Build verified successfully:
+- ✅ Tests: 56 passed, 0 failed
+- ✅ SpotBugs: 0 bugs, 0 errors
+- ✅ PMD: 0 violations, 97 warnings
+- ✅ Checkstyle: 0 violations, 5 warnings
+- ✅ Coverage: 65% (target: 60%)
+```
+
+**Guidelines:**
+- Use ✅ for passing checks (no blocking errors/violations), ❌ for failures
+- Use ⚠️ for coverage below target (build succeeds but coverage warning)
+- Always report both errors/violations AND warnings for each tool
+- Add brief context for notable items (e.g., "import order fixed")
+- Report failures clearly so they can be addressed before proceeding
+
+**Example with failures:**
+```text
+Build failed:
+- ❌ Tests: 54 passed, 2 failed
+- ❌ SpotBugs: 2 bugs (null pointer issues), 0 errors
+- ✅ PMD: 0 violations, 45 warnings
+- ❌ Checkstyle: 3 violations (missing Javadoc), 12 warnings
+- ⚠️ Coverage: 58% (target: 60%)
+```
 
 ### Workflow Summary
 ```
