@@ -109,7 +109,7 @@ jobs:
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: build_zip
-        path: ./target/*metaschema-cli.zip
+        path: ./metaschema-cli/target/*metaschema-cli.zip
   build-container:
     name: Container
     permissions:

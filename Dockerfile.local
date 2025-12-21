@@ -28,7 +28,7 @@ cat > /root/.m2/toolchains.xml << XMLEOF
 XMLEOF
 EOF
 RUN mvn -B -e -Prelease package
-RUN find /usr/local/src/target \
+RUN find /usr/local/src/metaschema-cli/target \
     -iname '*metaschema-cli.zip' \
     -exec cp {} /tmp/metaschema-cli.zip \;
 RUN mkdir -p /opt/metaschema-cli
