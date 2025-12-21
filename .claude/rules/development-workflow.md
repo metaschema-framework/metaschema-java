@@ -28,6 +28,7 @@ If you think any of these, STOP and check for skills:
 ### Available Skills
 
 **Project Skills** (defined in `.claude/skills/`):
+- `prd-construction` - Templates and methodology for creating PRDs and implementation plans
 
 **Managed Skills** (from superpowers plugin - install via `claude plugin add superpowers-marketplace`):
 - `superpowers:brainstorming` - Refine ideas into designs through collaborative questioning
@@ -52,24 +53,20 @@ User instructions describe WHAT to do, not HOW. "Add X" or "Fix Y" does NOT mean
 For new development work, follow this structured lifecycle:
 
 ### Phase 1: PRD Development
-1. **Create PRD directory**: `/prds/mm-dd-yyy-name/`
-2. **Use `superpowers:brainstorming`** to refine requirements
-3. **Use `superpowers:writing-plans`** to create implementation plan
-4. **Create `/prds/mm-dd-yyy-name/plan.md`** containing:
-   - Problem statement and goals
-   - Technical approach and architecture
-   - Implementation tasks (checkboxes for tracking)
-   - Exact file paths to create/modify
-   - Code examples and patterns to follow
-   - Testing strategy
-   - Risks and mitigations
-5. **Add supporting documents** to the directory as needed (diagrams, research, etc.)
+1. **Use `superpowers:brainstorming`** to refine requirements
+2. **Use `prd-construction` skill** for templates and methodology
+3. **Create PRD directory**: `PRDs/[date]-[name]/` (see `prd-conventions.md` for naming)
+4. **Create PRD documents** using skill templates:
+   - `PRD.md` - Problem statement, goals, requirements, success metrics
+   - `implementation-plan.md` - Detailed PR breakdown with acceptance criteria
+5. **Add supporting documents** to the directory as needed (analysis, research, diagrams)
 
 ### PRD Directory Structure
-```
-/prds/mm-dd-yyy-name/
-├── plan.md           # PRD + implementation plan
-└── (supporting docs) # Diagrams, research, screenshots, etc.
+```text
+PRDs/[date]-[name]/
+├── PRD.md                 # Main requirements document
+├── implementation-plan.md # Detailed PR breakdown
+└── [supporting-docs].md   # Analysis, research, etc.
 ```
 
 ### Phase 2: User Approval
@@ -87,10 +84,10 @@ Execute the plan using these skills:
 **Auto-applied skills** (Claude automatically uses these when relevant):
 - `superpowers:testing-anti-patterns` - Avoid testing mock behavior, test-only production methods
 
-**Update `plan.md` as you work:**
-- Mark tasks as `[x]` when completed
+**Update PRD documents as you work:**
+- Mark acceptance criteria as `[x]` when completed
+- Update PR status in implementation-plan.md
 - Add notes about deviations from plan
-- Document decisions made during implementation
 
 ### Phase 4: Code Review Cycle
 Perform iterative code review until all issues are resolved:
@@ -124,18 +121,19 @@ No Issues → Proceed to Verification
 - `superpowers:verification-before-completion` - Confirm all tests pass
 - Verify all code review issues are resolved
 - Create PR against `develop` branch
+- Always use squash merge with branch deletion (`gh pr merge --squash --delete-branch`)
 
 ### Workflow Summary
 ```
 GitHub issue/prompt
     ↓
-brainstorming + writing-plans → /prds/mm-dd-yyy-name/plan.md
+brainstorming → prd-construction → PRDs/[date]-[name]/
     ↓
 User Approves PRD
     ↓
 executing-plans + TDD + subagents
     ↓
-Update plan.md with progress [x]
+Update implementation-plan.md with progress [x]
     ↓
 verification-before-completion
     ↓
