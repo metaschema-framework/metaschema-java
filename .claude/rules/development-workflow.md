@@ -134,10 +134,12 @@ Build verified successfully:
 - ✅ SpotBugs: 0 bugs, 0 errors
 - ✅ PMD: 0 violations, 97 warnings
 - ✅ Checkstyle: 0 violations, 5 warnings
+- ✅ Coverage: 65% (target: 60%)
 ```
 
 **Guidelines:**
 - Use ✅ for passing checks (no blocking errors/violations), ❌ for failures
+- Use ⚠️ for coverage below target (build succeeds but coverage warning)
 - Always report both errors/violations AND warnings for each tool
 - Add brief context for notable items (e.g., "import order fixed")
 - Report failures clearly so they can be addressed before proceeding
@@ -149,6 +151,7 @@ Build failed:
 - ❌ SpotBugs: 2 bugs (null pointer issues), 0 errors
 - ✅ PMD: 0 violations, 45 warnings
 - ❌ Checkstyle: 3 violations (missing Javadoc), 12 warnings
+- ⚠️ Coverage: 58% (target: 60%)
 ```
 
 ### Workflow Summary
