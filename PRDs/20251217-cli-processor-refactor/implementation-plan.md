@@ -144,14 +144,13 @@ class TestCommand extends AbstractTerminalCommand {
 
   @Override
   public ICommandExecutor newExecutor(
-      @NonNull CLIProcessor.CallingContext callingContext,
+      @NonNull CallingContext callingContext,
       @NonNull CommandLine cmdLine) {
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
 
-  @NonNull
   private void executeCommand(
-      @NonNull CLIProcessor.CallingContext callingContext,
+      @NonNull CallingContext callingContext,
       @NonNull CommandLine cmdLine) {
     // Do nothing - success
   }
@@ -1046,7 +1045,8 @@ class CallingContextTest {
         nullOutput);
   }
 
-  private CallingContext createContext(String... args) {
+  @NonNull
+  private CallingContext createContext(@NonNull String... args) {
     return new CallingContext(processor, Arrays.asList(args));
   }
 
