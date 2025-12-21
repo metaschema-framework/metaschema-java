@@ -124,7 +124,7 @@ No Issues → Proceed to Verification
 - Create PR against `develop` branch
 - Always use squash merge with branch deletion (`gh pr merge --squash --delete-branch`)
 
-### Build Verification Summary Format
+#### Build Verification Summary Format
 
 After running builds with quality checks, provide a scannable summary:
 
@@ -147,7 +147,7 @@ Build verified successfully:
 **Example with failures:**
 ```text
 Build failed:
-- ✅ Tests: 54 passed, 2 failed
+- ❌ Tests: 54 passed, 2 failed
 - ❌ SpotBugs: 2 bugs (null pointer issues), 0 errors
 - ✅ PMD: 0 violations, 45 warnings
 - ❌ Checkstyle: 3 violations (missing Javadoc), 12 warnings
