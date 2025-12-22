@@ -70,6 +70,18 @@ PRDs/[date]-[name]/
 └── [supporting-docs].md   # Analysis, research, etc.
 ```
 
+### Resuming PRD Work (CRITICAL)
+
+**Before making ANY changes for PRD-related work:**
+1. Run `git worktree list` to check for existing worktrees
+2. If a worktree exists for this PRD/feature, switch to it
+3. **NEVER work in the main repository** if a worktree exists for the task
+
+**Why:** Working in the wrong directory causes:
+- Changes in wrong location that must be manually moved
+- Risk of committing to wrong branch
+- Merge conflicts and cleanup overhead
+
 ### Phase 2: User Approval
 - Present PRD to user for review
 - Incorporate feedback and iterate
