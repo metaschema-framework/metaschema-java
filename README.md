@@ -43,6 +43,65 @@ git clone --recurse-submodules https://github.com/metaschema-framework/metaschem
 mvn install
 ```
 
+## Installing the CLI tool
+
+The maintainers provide developers of Metaschema-enabled tools a CLI tool from this repository to dynamically validate Metaschema models themselves, content based on developer-provided models, and format conversion for models and content between supported data formats (e.g. JSON, XML, and YAML). There are multiple ways to install this CLI tool.
+
+1. Build the project locally with Maven.
+1. Download a developer snapshot from the Metaschema Framework repository for pre-release builds.
+1. Download the official releases from the official Maven Central.
+1. Download an OCI-conformant container image from the [GitHub Container Registry (ghcr.io)](https://ghcr.io) for use with `docker`, `podman`, Kubernetes, or other container orchestration platforms.
+
+### Build the project locally with Maven
+
+To build the project locally, follow the [instructions above](#building) that explain how to build and install project packages, including the CLI, with Maven  (`mvn`).
+
+### Download pre-built snapshot release
+
+To download, unzip, and install a pre-built snapshot release (a developer build that is not an official release), please visit [the GitHub `metaschema-framework/maven2` repository](https://github.com/metaschema-framework/maven2/tree/main/dev/metaschema/java/metaschema-cli/) to download a `.bz2`, `.gz`, or `.zip` archive.
+
+```sh
+# Download the zip archive to /tmp
+cd /tmp
+curl -L -O https://github.com/metaschema-framework/maven2/raw/refs/heads/main/dev/metaschema/java/metaschema-cli/3.0.0.M1-SNAPSHOT/metaschema-cli-3.0.0.M1-20251213.151427-29-metaschema-cli.zip
+# Extract zip archive to /opt/metaschema-cli
+# You might need sudo for permission to write files to this path
+sudo unzip "/tmp/*metaschema-cli.zip" -d /opt/metaschema-cli
+# Now add this installation directory to the path
+export PATH="${PATH}:/opt/metaschema-cli"
+# Run the CLI to test it is properly installed
+metaschema-cli --version
+```
+
+### Download a pre-built official release from Maven Central
+
+You can also use Maven to download a pre-built official release from Maven Central using the Maven (`mvn`) CLI tool, unzipping the archive, and then adding that directory to your path.
+
+```sh
+# Download the zip archive of the latest release to /tmp
+mvn \
+    org.apache.maven.plugins:maven-dependency-plugin:LATEST:copy  \
+    -DoutputDirectory=/tmp \
+    -DremoteRepositories=https://repo1.maven.org/maven2 \
+    -Dartifact=dev.metaschema.java:metaschema-cli:LATEST:zip:metaschema-cli
+# Extract zip archive to /opt/metaschema-cli
+# You might need sudo for permission to write files to this path
+sudo unzip "/tmp/*metaschema-cli.zip" -d /opt/metaschema-cli
+# Now add this installation directory to the path
+export PATH="${PATH}:/opt/metaschema-cli"
+# Run the CLI to test it is properly installed
+metaschema-cli --version
+```
+
+### Download container image
+
+You can also download pre-release and official release versions of the CLI as an OCI-conformant image with `docker`, `podman`, or other tools.
+
+```sh
+docker pull ghcr.io/metaschema-framework/metaschema-cli:latest
+docker run -it ghcr.io/metaschema-framework/metaschema-cli:latest --version
+```
+
 ## Relationship to prior work
 
 The contents of this repository is based on work from the [Metaschema Java repository](https://github.com/usnistgov/metaschema-java/) maintained by the National Institute of Standards and Technology (NIST), the [contents of which have been dedicated in the worldwide public domain](https://github.com/usnistgov/metaschema-java/blob/1a496e4bcf905add6b00a77a762ed3cc31bf77e6/LICENSE.md) using the [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) public domain dedication. This repository builds on this prior work, maintaining the [CCO license](https://github.com/metaschema-framework/metaschema-java/blob/main/LICENSE.md) on any new works in this repository.
