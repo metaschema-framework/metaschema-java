@@ -66,11 +66,6 @@
 			<artifactId>jackson-dataformat-yaml</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.xmlbeans</groupId>
-			<artifactId>xmlbeans</artifactId>
-		</dependency>
-
 		<!-- Log4j API and Core implementation required for binding -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -104,11 +99,9 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
 					<configuration>
-						<excludeRoots>
-							<excludeRoot>target/generated-sources/xmlbeans</excludeRoot>
-						</excludeRoots>
 						<excludes>
                             <exclude>gov/nist/secauto/metaschema/databind/model/metaschema/binding/*.java</exclude>
+                            <exclude>gov/nist/secauto/metaschema/databind/config/binding/*.java</exclude>
                         </excludes>
 					</configuration>
 				</plugin>
@@ -116,7 +109,7 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<configuration>
-						<excludes>**/gov/nist/secauto/metaschema/databind/model/metaschema/binding/*.java,**/gov/nist/secauto/metaschema/databind/model/test/*.java</excludes>
+						<excludes>**/gov/nist/secauto/metaschema/databind/model/metaschema/binding/*.java,**/gov/nist/secauto/metaschema/databind/model/test/*.java,**/gov/nist/secauto/metaschema/databind/config/binding/*.java</excludes>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -125,58 +118,14 @@
 					<configuration>
 						<excludes>
 							<!-- filter generated code -->
-							<exclude>gov/nist/secauto/metaschema/databind/codegen/xmlbeans/**/*</exclude>
-							<exclude>org/apache/xmlbeans/**/*</exclude>
 							<exclude>gov/nist/secauto/metaschema/databind/model/binding/metaschema/*</exclude>
+							<exclude>gov/nist/secauto/metaschema/databind/config/binding/*</exclude>
 						</excludes>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.xmlbeans</groupId>
-				<artifactId>xmlbeans</artifactId>
-				<executions>
-					<execution>
-						<id>metaschema-codegen-beans</id>
-						<inherited>false</inherited>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-						<configuration>
-							<xmlConfigs>
-								${project.basedir}/src/schema/xmlconfig.xml</xmlConfigs>
-							<sourceDir>${project.basedir}/src/main/xsd</sourceDir>
-							<javaTargetDir>
-								${project.build.directory}/generated-sources/xmlbeans</javaTargetDir>
-							<classTargetDir>
-								${project.basedir}/target/generated-resources/xmlbeans</classTargetDir>
-							<name>metaschema.codegen</name>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>
-									${project.build.directory}/generated-sources/xmlbeans</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
