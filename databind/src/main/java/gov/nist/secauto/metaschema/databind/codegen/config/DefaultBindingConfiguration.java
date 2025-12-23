@@ -11,16 +11,11 @@ import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.codegen.ClassUtils;
-import gov.nist.secauto.metaschema.databind.codegen.xmlbeans.JavaModelBindingType;
-import gov.nist.secauto.metaschema.databind.codegen.xmlbeans.JavaObjectDefinitionBindingType;
-import gov.nist.secauto.metaschema.databind.codegen.xmlbeans.MetaschemaBindingType;
-import gov.nist.secauto.metaschema.databind.codegen.xmlbeans.MetaschemaBindingsDocument;
-import gov.nist.secauto.metaschema.databind.codegen.xmlbeans.MetaschemaBindingsType;
-import gov.nist.secauto.metaschema.databind.codegen.xmlbeans.ModelBindingType;
-import gov.nist.secauto.metaschema.databind.codegen.xmlbeans.ObjectDefinitionBindingType;
-
-import org.apache.xmlbeans.XmlException;
+import gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings;
+import gov.nist.secauto.metaschema.databind.io.Format;
+import gov.nist.secauto.metaschema.databind.io.IDeserializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -248,42 +243,58 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
    *           if an error occurred while reading the {@code resource}
    */
   public void load(URL resource) throws IOException {
-    MetaschemaBindingsDocument xml;
+    IBindingContext context = IBindingContext.newInstance();
+    IDeserializer<MetaschemaBindings> deserializer = context.newDeserializer(Format.XML, MetaschemaBindings.class);
+
+    MetaschemaBindings bindings;
     try {
-      xml = MetaschemaBindingsDocument.Factory.parse(resource);
-    } catch (XmlException ex) {
-      throw new IOException(ex);
+      bindings = deserializer.deserialize(resource);
+    } catch (IOException | URISyntaxException ex) {
+      throw new IOException("Failed to parse binding configuration: " + resource, ex);
     }
 
-    MetaschemaBindingsType bindings = xml.getMetaschemaBindings();
-
-    for (ModelBindingType model : bindings.getModelBindingList()) {
-      processModelBindingConfig(model);
+    List<MetaschemaBindings.ModelBinding> modelBindings = bindings.getModelBindings();
+    if (modelBindings != null) {
+      for (MetaschemaBindings.ModelBinding model : modelBindings) {
+        processModelBindingConfig(model);
+      }
     }
 
-    for (MetaschemaBindingType metaschema : bindings.getMetaschemaBindingList()) {
-      try {
-        processMetaschemaBindingConfig(resource, metaschema);
-      } catch (MalformedURLException | URISyntaxException ex) {
-        throw new IOException(ex);
+    List<MetaschemaBindings.MetaschemaBinding> metaschemaBindings = bindings.getMetaschemaBindings();
+    if (metaschemaBindings != null) {
+      for (MetaschemaBindings.MetaschemaBinding metaschema : metaschemaBindings) {
+        try {
+          processMetaschemaBindingConfig(resource, metaschema);
+        } catch (MalformedURLException | URISyntaxException ex) {
+          throw new IOException(ex);
+        }
       }
     }
   }
 
-  private void processModelBindingConfig(ModelBindingType model) {
-    String namespace = model.getNamespace();
+  private void processModelBindingConfig(MetaschemaBindings.ModelBinding model) {
+    URI namespaceUri = model.getNamespace();
+    if (namespaceUri == null) {
+      return;
+    }
+    String namespace = namespaceUri.toString();
 
-    if (model.isSetJava()) {
-      JavaModelBindingType java = model.getJava();
-      if (java.isSetUsePackageName()) {
-        addModelBindingConfig(namespace, java.getUsePackageName());
+    MetaschemaBindings.ModelBinding.Java java = model.getJava();
+    if (java != null) {
+      String packageName = java.getUsePackageName();
+      if (packageName != null) {
+        addModelBindingConfig(namespace, packageName);
       }
     }
   }
 
-  private void processMetaschemaBindingConfig(URL configResource, MetaschemaBindingType metaschema)
+  private void processMetaschemaBindingConfig(URL configResource, MetaschemaBindings.MetaschemaBinding metaschema)
       throws MalformedURLException, URISyntaxException {
-    String href = metaschema.getHref();
+    URI hrefUri = metaschema.getHref();
+    if (hrefUri == null) {
+      return;
+    }
+    String href = hrefUri.toString();
     URL moduleUrl = new URL(configResource, href);
     String moduleUri = ObjectUtils.notNull(moduleUrl.toURI().normalize().toString());
 
@@ -292,41 +303,87 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
       metaschemaConfig = new MetaschemaBindingConfiguration();
       addMetaschemaBindingConfiguration(moduleUri, metaschemaConfig);
     }
-    for (ObjectDefinitionBindingType assemblyBinding : metaschema.getDefineAssemblyBindingList()) {
-      String name = ObjectUtils.requireNonNull(assemblyBinding.getName());
-      IDefinitionBindingConfiguration config = metaschemaConfig.getAssemblyDefinitionBindingConfig(name);
-      config = processDefinitionBindingConfiguration(config, assemblyBinding);
-      metaschemaConfig.addAssemblyDefinitionBindingConfig(name, config);
+
+    List<MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding> assemblyBindings
+        = metaschema.getDefineAssemblyBindings();
+    if (assemblyBindings != null) {
+      for (MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding assemblyBinding : assemblyBindings) {
+        String name = assemblyBinding.getName();
+        if (name != null) {
+          IDefinitionBindingConfiguration config = metaschemaConfig.getAssemblyDefinitionBindingConfig(name);
+          config = processDefinitionBindingConfiguration(config, assemblyBinding.getJava());
+          metaschemaConfig.addAssemblyDefinitionBindingConfig(name, config);
+        }
+      }
     }
 
-    for (ObjectDefinitionBindingType fieldBinding : metaschema.getDefineFieldBindingList()) {
-      String name = ObjectUtils.requireNonNull(fieldBinding.getName());
-      IDefinitionBindingConfiguration config = metaschemaConfig.getFieldDefinitionBindingConfig(name);
-      config = processDefinitionBindingConfiguration(config, fieldBinding);
-      metaschemaConfig.addFieldDefinitionBindingConfig(name, config);
+    List<MetaschemaBindings.MetaschemaBinding.DefineFieldBinding> fieldBindings
+        = metaschema.getDefineFieldBindings();
+    if (fieldBindings != null) {
+      for (MetaschemaBindings.MetaschemaBinding.DefineFieldBinding fieldBinding : fieldBindings) {
+        String name = fieldBinding.getName();
+        if (name != null) {
+          IDefinitionBindingConfiguration config = metaschemaConfig.getFieldDefinitionBindingConfig(name);
+          config = processDefinitionBindingConfiguration(config, fieldBinding.getJava());
+          metaschemaConfig.addFieldDefinitionBindingConfig(name, config);
+        }
+      }
     }
   }
 
   @NonNull
   private static IMutableDefinitionBindingConfiguration processDefinitionBindingConfiguration(
       @Nullable IDefinitionBindingConfiguration oldConfig,
-      @NonNull ObjectDefinitionBindingType objectDefinitionBinding) {
+      @Nullable MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.Java java) {
     IMutableDefinitionBindingConfiguration config = oldConfig == null
         ? new DefaultDefinitionBindingConfiguration()
         : new DefaultDefinitionBindingConfiguration(oldConfig);
 
-    if (objectDefinitionBinding.isSetJava()) {
-      JavaObjectDefinitionBindingType java = objectDefinitionBinding.getJava();
-      if (java.isSetUseClassName()) {
-        config.setClassName(ObjectUtils.notNull(java.getUseClassName()));
+    if (java != null) {
+      String className = java.getUseClassName();
+      if (className != null) {
+        config.setClassName(ObjectUtils.notNull(className));
       }
 
-      if (java.isSetExtendBaseClass()) {
-        config.setQualifiedBaseClassName(ObjectUtils.notNull(java.getExtendBaseClass()));
+      String baseClass = java.getExtendBaseClass();
+      if (baseClass != null) {
+        config.setQualifiedBaseClassName(ObjectUtils.notNull(baseClass));
       }
 
-      for (String interfaceName : java.getImplementInterfaceList()) {
-        config.addInterfaceToImplement(ObjectUtils.notNull(interfaceName));
+      List<String> interfaces = java.getImplementInterfaces();
+      if (interfaces != null) {
+        for (String interfaceName : interfaces) {
+          config.addInterfaceToImplement(ObjectUtils.notNull(interfaceName));
+        }
+      }
+    }
+    return config;
+  }
+
+  @NonNull
+  private static IMutableDefinitionBindingConfiguration processDefinitionBindingConfiguration(
+      @Nullable IDefinitionBindingConfiguration oldConfig,
+      @Nullable MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.Java java) {
+    IMutableDefinitionBindingConfiguration config = oldConfig == null
+        ? new DefaultDefinitionBindingConfiguration()
+        : new DefaultDefinitionBindingConfiguration(oldConfig);
+
+    if (java != null) {
+      String className = java.getUseClassName();
+      if (className != null) {
+        config.setClassName(ObjectUtils.notNull(className));
+      }
+
+      String baseClass = java.getExtendBaseClass();
+      if (baseClass != null) {
+        config.setQualifiedBaseClassName(ObjectUtils.notNull(baseClass));
+      }
+
+      List<String> interfaces = java.getImplementInterfaces();
+      if (interfaces != null) {
+        for (String interfaceName : interfaces) {
+          config.addInterfaceToImplement(ObjectUtils.notNull(interfaceName));
+        }
       }
     }
     return config;

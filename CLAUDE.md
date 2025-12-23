@@ -233,6 +233,7 @@ PRDs are stored in `PRDs/<YYYYMMDD>-<name>/` with:
 |-----|-------------|--------|
 | `PRDs/20251206-build-cleanup/` | Build warnings and deprecation removal | In Progress |
 | `PRDs/20251217-context-functions/` | Complete Metapath context functions (issue #162) | In Progress |
+| `PRDs/20251221-xmlbeans-removal/` | Replace XMLBeans with Metaschema bindings | In Progress |
 
 ### Completed PRDs
 
