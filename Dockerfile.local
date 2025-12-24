@@ -29,7 +29,7 @@ XMLEOF
 EOF
 RUN mvn -B -e -Prelease package
 RUN find /usr/local/src/metaschema-cli/target \
-    -iname '*metaschema-cli.zip' \
+    -iname 'metaschema-cli-*metaschema-cli.zip' \
     -exec cp {} /tmp/metaschema-cli.zip \;
 RUN mkdir -p /opt/metaschema-cli
 RUN unzip /tmp/metaschema-cli-*-metaschema-cli.zip -d /opt/metaschema-cli
