@@ -37,12 +37,12 @@ RUN chmod +x /opt/metaschema-cli/bin/metaschema-cli
 
 FROM ${RUNNER_IMAGE} AS runner
 COPY --from=builder /opt/metaschema-cli /opt/metaschema-cli
-RUN groupadd -r oscalcli && \
-    useradd -r -g oscalcli -s /bin/false oscalcli && \
-    chown -R oscalcli:oscalcli /opt/metaschema-cli && \
+RUN groupadd -r metaschema && \
+    useradd -r -g metaschema -s /bin/false metaschema && \
+    chown -R metaschema:metaschema /opt/metaschema-cli && \
     mkdir -p /app
 WORKDIR /app
-USER oscalcli
+USER metaschema
 RUN /opt/metaschema-cli/bin/metaschema-cli --version
 ENTRYPOINT [ "/opt/metaschema-cli/bin/metaschema-cli" ]
 
