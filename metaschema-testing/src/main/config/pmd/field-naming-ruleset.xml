@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Metaschema Testing Field Naming Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>
+        FieldNamingConventions rule for metaschema-testing.
+        Excludes generated binding classes that use underscore-prefixed fields.
+    </description>
+
+    <!-- Exclude generated test suite binding classes that use underscore-prefixed fields -->
+    <exclude-pattern>.*/gov/nist/secauto/metaschema/model/testing/testsuite/.*\.java</exclude-pattern>
+
+    <!-- Apply FieldNamingConventions to non-generated code only -->
+    <rule ref="category/java/codestyle.xml/FieldNamingConventions"/>
+
+</ruleset>

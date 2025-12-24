@@ -102,10 +102,34 @@ Metapath is an implementation of XPath 3.1. The [XPath 3.1 specification](https:
 ### Generated Code
 
 Code generation occurs during Maven build:
-- **XMLBeans**: Generated from XSD schemas in `core/metaschema/schema/xml`
+- **Metaschema bindings**: Generated from Metaschema modules via metaschema-maven-plugin
 - **ANTLR4**: Metapath parser from `core/src/main/antlr4`
 
 Generated sources are placed in `target/generated-sources/` and excluded from style checks.
+
+### Bootstrap Binding Classes
+
+The `metaschema-testing` module contains pre-generated binding classes that cannot be generated during the normal build due to circular dependencies (metaschema-maven-plugin → metaschema-schema-generator → metaschema-testing).
+
+To regenerate these classes when the test suite Metaschema module changes:
+
+```bash
+# Generate binding classes using bootstrap POM
+mvn -f metaschema-testing/pom-bootstrap.xml generate-sources
+
+# Copy to source directory
+cp -r metaschema-testing/target/generated-sources/metaschema/gov/nist/secauto/metaschema/model/testing/testsuite/* \
+      metaschema-testing/src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/
+```
+
+See `metaschema-testing/README.md` for details.
+
+### Metaschema Module Authoring
+
+**YAML-first approach**: When creating new Metaschema modules, prefer YAML format over XML.
+- YAML modules use `.yaml` extension and are stored in `src/main/metaschema/`
+- Use the JSON schema at `databind-metaschema/target/generated-resources/schema/json/metaschema-model_schema.json` for IDE validation
+- Reference existing YAML modules (e.g., `databind/src/main/metaschema/metaschema-bindings.yaml`) for structure examples
 
 ### Key Interfaces
 
@@ -168,7 +192,7 @@ Checkstyle enforces these rules (configured in [oss-maven checkstyle.xml](https:
 Exceptions (no Javadoc required):
 - `@Override` methods (inherit documentation)
 - `@Test` methods (use descriptive names)
-- Generated code (`*.xmlbeans`, `*.antlr` packages)
+- Generated code (`*.antlr` packages)
 
 ```bash
 # Check Javadoc compliance

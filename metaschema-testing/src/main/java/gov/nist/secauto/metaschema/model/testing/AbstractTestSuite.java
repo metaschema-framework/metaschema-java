@@ -18,18 +18,16 @@ import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.ISerializer;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
-import gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.ContentCaseType;
-import gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.GenerateSchemaDocument.GenerateSchema;
-import gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.MetaschemaDocument;
-import gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.TestCollectionDocument.TestCollection;
-import gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.TestScenarioDocument.TestScenario;
-import gov.nist.secauto.metaschema.model.testing.xml.xmlbeans.TestSuiteDocument;
+import gov.nist.secauto.metaschema.model.testing.testsuite.GenerateSchema;
+import gov.nist.secauto.metaschema.model.testing.testsuite.Metaschema;
+import gov.nist.secauto.metaschema.model.testing.testsuite.TestCollection;
+import gov.nist.secauto.metaschema.model.testing.testsuite.TestScenario;
+import gov.nist.secauto.metaschema.model.testing.testsuite.TestSuite;
+import gov.nist.secauto.metaschema.model.testing.testsuite.ValidationCase;
 
 import org.apache.logging.log4j.LogBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlOptions;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
@@ -48,6 +46,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -76,6 +75,8 @@ public abstract class AbstractTestSuite {
       StandardOpenOption.WRITE,
       StandardOpenOption.TRUNCATE_EXISTING
   };
+
+  private static final String VALID = "VALID";
 
   /**
    * Get the content format used by the test suite.
@@ -137,10 +138,6 @@ public abstract class AbstractTestSuite {
   @NonNull
   protected Stream<DynamicNode> testFactory(@NonNull IBindingContext bindingContext) {
     try {
-      XmlOptions options = new XmlOptions();
-      options.setBaseURI(null);
-      options.setLoadLineNumbers();
-
       Path generationPath = getGenerationPath();
       if (Files.exists(generationPath)) {
         if (!Files.isDirectory(generationPath)) {
@@ -152,16 +149,19 @@ public abstract class AbstractTestSuite {
 
       URI testSuiteUri = getTestSuiteURI();
       URL testSuiteUrl = testSuiteUri.toURL();
-      TestSuiteDocument directive = TestSuiteDocument.Factory.parse(testSuiteUrl, options);
-      return ObjectUtils.notNull(directive.getTestSuite().getTestCollectionList().stream()
-          .flatMap(
-              collection -> Stream
-                  .of(generateCollection(
-                      ObjectUtils.notNull(collection),
-                      testSuiteUri,
-                      generationPath,
-                      bindingContext))));
-    } catch (XmlException | IOException ex) {
+      TestSuite testSuite = bindingContext.newBoundLoader().load(TestSuite.class, testSuiteUrl);
+      List<TestCollection> testCollections = testSuite.getTestCollections();
+      return ObjectUtils.notNull(testCollections == null
+          ? Stream.empty()
+          : testCollections.stream()
+              .flatMap(
+                  collection -> Stream
+                      .of(generateCollection(
+                          ObjectUtils.notNull(collection),
+                          testSuiteUri,
+                          generationPath,
+                          bindingContext))));
+    } catch (IOException | URISyntaxException ex) {
       throw new JUnitException("Unable to generate tests", ex);
     }
   }
@@ -221,19 +221,22 @@ public abstract class AbstractTestSuite {
       return retval;
     }));
 
+    List<TestScenario> testScenarios = collection.getTestScenarios();
     return DynamicContainer.dynamicContainer(
         collection.getName(),
         testSuiteUri,
-        collection.getTestScenarioList().stream()
-            .flatMap(scenario -> {
-              assert scenario != null;
-              return Stream.of(generateScenario(
-                  scenario,
-                  collectionUri,
-                  collectionGenerationPath,
-                  bindingContext));
-            })
-            .sequential());
+        testScenarios == null
+            ? Stream.empty()
+            : testScenarios.stream()
+                .flatMap(scenario -> {
+                  assert scenario != null;
+                  return Stream.of(generateScenario(
+                      scenario,
+                      collectionUri,
+                      collectionGenerationPath,
+                      bindingContext));
+                })
+                .sequential());
   }
 
   @NonNull
@@ -327,7 +330,7 @@ public abstract class AbstractTestSuite {
     }));
 
     GenerateSchema generateSchema = scenario.getGenerateSchema();
-    MetaschemaDocument.Metaschema metaschemaDirective = generateSchema.getMetaschema();
+    Metaschema metaschemaDirective = generateSchema.getMetaschema();
     URI metaschemaUri = collectionUri.resolve(metaschemaDirective.getLocation());
 
     IModule module;
@@ -364,18 +367,21 @@ public abstract class AbstractTestSuite {
           }
         });
 
-    Stream<? extends DynamicNode> contentTests = scenario.getValidationCaseList().stream()
-        .flatMap(contentCase -> {
-          assert contentCase != null;
-          DynamicTest test
-              = generateValidationCase(
-                  contentCase,
-                  bindingContext,
-                  lazyContentValidator,
-                  collectionUri,
-                  ObjectUtils.notNull(scenarioGenerationPath));
-          return test == null ? Stream.empty() : Stream.of(test);
-        }).sequential();
+    List<ValidationCase> validationCases = scenario.getValidationCases();
+    Stream<? extends DynamicNode> contentTests = validationCases == null
+        ? Stream.empty()
+        : validationCases.stream()
+            .flatMap(contentCase -> {
+              assert contentCase != null;
+              DynamicTest test
+                  = generateValidationCase(
+                      contentCase,
+                      bindingContext,
+                      lazyContentValidator,
+                      collectionUri,
+                      ObjectUtils.notNull(scenarioGenerationPath));
+              return test == null ? Stream.empty() : Stream.of(test);
+            }).sequential();
 
     return DynamicContainer.dynamicContainer(
         scenario.getName(),
@@ -434,9 +440,33 @@ public abstract class AbstractTestSuite {
     return convertedContetPath;
   }
 
+  /**
+   * Convert a source format string to the corresponding Format enum value.
+   *
+   * @param sourceFormat
+   *          the source format string (e.g., "XML", "JSON", "YAML")
+   * @return the corresponding Format, or null if the format is not recognized
+   */
+  @Nullable
+  private static Format toFormat(@Nullable String sourceFormat) {
+    if (sourceFormat == null) {
+      return null;
+    }
+    switch (sourceFormat) {
+    case "XML":
+      return Format.XML;
+    case "JSON":
+      return Format.JSON;
+    case "YAML":
+      return Format.YAML;
+    default:
+      return null;
+    }
+  }
+
   @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private DynamicTest generateValidationCase(
-      @NonNull ContentCaseType contentCase,
+      @NonNull ValidationCase contentCase,
       @NonNull IBindingContext bindingContext,
       @NonNull Lazy<IContentValidator> lazyContentValidator,
       @NonNull URI collectionUri,
@@ -444,11 +474,13 @@ public abstract class AbstractTestSuite {
 
     URI contentUri = ObjectUtils.notNull(collectionUri.resolve(contentCase.getLocation()));
 
-    Format format = contentCase.getSourceFormat();
+    Format format = toFormat(contentCase.getSourceFormat());
+    boolean expectedValid = isValid(contentCase.getValidationResult());
+
     DynamicTest retval = null;
     if (getRequiredContentFormat().equals(format)) {
       retval = DynamicTest.dynamicTest(
-          String.format("Validate %s=%s: %s", format, contentCase.getValidationResult(),
+          String.format("Validate %s=%s: %s", format, expectedValid,
               contentCase.getLocation()),
           contentUri,
           () -> {
@@ -461,14 +493,14 @@ public abstract class AbstractTestSuite {
             }
 
             assertEquals(
-                contentCase.getValidationResult(),
+                expectedValid,
                 validateWithSchema(
                     ObjectUtils.notNull(contentValidator), ObjectUtils.notNull(contentUri.toURL())),
                 "validation did not match expectation for: " + contentUri.toASCIIString());
           });
-    } else if (contentCase.getValidationResult()) {
+    } else if (expectedValid) {
       retval = DynamicTest.dynamicTest(
-          String.format("Convert and Validate %s=%s: %s", format, contentCase.getValidationResult(),
+          String.format("Convert and Validate %s=%s: %s", format, expectedValid,
               contentCase.getLocation()),
           contentUri,
           () -> {
@@ -494,7 +526,7 @@ public abstract class AbstractTestSuite {
             if (LOGGER.isInfoEnabled()) {
               LOGGER.atInfo().log("Validating content '{}'", convertedContetPath);
             }
-            assertEquals(contentCase.getValidationResult(),
+            assertEquals(expectedValid,
                 validateWithSchema(
                     ObjectUtils.notNull(contentValidator),
                     ObjectUtils.notNull(convertedContetPath.toUri().toURL())),
@@ -502,6 +534,17 @@ public abstract class AbstractTestSuite {
           });
     }
     return retval;
+  }
+
+  /**
+   * Check if the validation result string indicates a valid result.
+   *
+   * @param validationResult
+   *          the validation result string
+   * @return {@code true} if the result indicates valid, {@code false} otherwise
+   */
+  private static boolean isValid(@Nullable String validationResult) {
+    return VALID.equals(validationResult);
   }
 
   private static boolean validateWithSchema(@NonNull IContentValidator validator, @NonNull URL target)

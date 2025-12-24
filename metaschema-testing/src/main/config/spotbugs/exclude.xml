@@ -5,9 +5,12 @@
 	xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
 	<Match>
 		<Or>
-			<Package name="~gov\.nist\.secauto\.metaschema\.databind\.codegen\.xmlbeans\.*" />
 			<Bug pattern="EI_EXPOSE_REP" />
 			<Bug pattern="EI_EXPOSE_REP2" />
 		</Or>
+	</Match>
+	<!-- Exclude generated binding classes -->
+	<Match>
+		<Package name="gov.nist.secauto.metaschema.model.testing.testsuite" />
 	</Match>
 </FindBugsFilter>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metaschema-bindings
+    xmlns="https://csrc.nist.gov/ns/metaschema-binding/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://csrc.nist.gov/ns/metaschema-binding/1.0 ../../xsd/metaschema-binding.xsd">
+    <model-binding namespace="http://csrc.nist.gov/ns/metaschema/test-suite/1.0">
+        <java>
+            <use-package-name>gov.nist.secauto.metaschema.model.testing.testsuite</use-package-name>
+        </java>
+    </model-binding>
+</metaschema-bindings>

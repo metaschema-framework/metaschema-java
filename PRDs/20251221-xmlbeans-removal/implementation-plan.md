@@ -120,12 +120,12 @@ Use this schema for IDE validation when authoring the YAML Metaschema modules.
 
 | Attribute | Value |
 |-----------|-------|
-| **Files Changed** | ~15-20 |
+| **Files Changed** | 15 |
 | **Risk Level** | Low |
 | **Dependencies** | PR 1 |
 | **Target Branch** | develop |
-| **Status** | Pending |
-| **Pull Request** | |
+| **Status** | Complete |
+| **Pull Request** | [#567](https://github.com/metaschema-framework/metaschema-java/pull/567) |
 
 #### Files to Create
 
@@ -145,9 +145,10 @@ Use this schema for IDE validation when authoring the YAML Metaschema modules.
 
 | File | Reason |
 |------|--------|
-| `core/metaschema/test-suite/unit-tests.xsd` | Replaced by Metaschema module |
 | `metaschema-testing/src/schema/xmlconfig.xml` | XMLBeans configuration no longer needed |
 | `metaschema-testing/src/main/java/gov/nist/secauto/metaschema/model/testing/xml/xmlbeans/` | Entire XMLBeans handler package |
+
+**Note**: `core/metaschema/test-suite/unit-tests.xsd` is in the metaschema specification submodule (separate repository) and was not deleted.
 
 #### Implementation Approach
 
@@ -177,19 +178,19 @@ Use this schema for IDE validation when authoring the YAML Metaschema modules.
 
 #### Acceptance Criteria
 
-- [ ] Metaschema module created at `metaschema-testing/src/main/metaschema/unit-tests.yaml`
-- [ ] metaschema-maven-plugin configured in testing POM
-- [ ] `AbstractTestSuite.java` uses generated binding classes
-- [ ] No XMLBeans imports in metaschema-testing module
-- [ ] XMLBeans dependency removed from `metaschema-testing/pom.xml`
-- [ ] XMLBeans removed from parent `pom.xml`
-- [ ] XSD file deleted from `core/metaschema/test-suite/`
-- [ ] XMLBeans handler package deleted
-- [ ] Existing test suite files parse correctly
-- [ ] All metaschema-testing tests pass
-- [ ] All dependent module tests pass
-- [ ] Full CI build succeeds: `mvn install -PCI -Prelease`
-- [ ] No XMLBeans references remain in codebase (verify with grep)
+- [x] Metaschema module created at `metaschema-testing/src/main/metaschema/unit-tests.yaml`
+- [x] metaschema-maven-plugin configured in testing POM
+- [x] `AbstractTestSuite.java` uses generated binding classes
+- [x] No XMLBeans imports in metaschema-testing module
+- [x] XMLBeans dependency removed from `metaschema-testing/pom.xml`
+- [x] XMLBeans removed from parent `pom.xml`
+- [x] XSD file in `core/metaschema/test-suite/` is in submodule (separate repo), no longer referenced
+- [x] XMLBeans handler package deleted
+- [x] Existing test suite files parse correctly
+- [x] All metaschema-testing tests pass
+- [x] All dependent module tests pass
+- [x] Full CI build succeeds: `mvn install -PCI -Prelease`
+- [x] No XMLBeans references remain in codebase (verify with grep)
 
 ---
 
@@ -198,7 +199,7 @@ Use this schema for IDE validation when authoring the YAML Metaschema modules.
 | PR | Description | Files | Risk | Dependencies | Status |
 |----|-------------|-------|------|--------------|--------|
 | 1 | databind module: XMLBeans → Metaschema bindings (bootstrap) | 14 | Medium | None | Complete ([#566](https://github.com/metaschema-framework/metaschema-java/pull/566)) |
-| 2 | metaschema-testing module + parent POM cleanup | ~15-20 | Low | PR 1 | Pending |
+| 2 | metaschema-testing module + parent POM cleanup | 15 | Low | PR 1 | Complete ([#567](https://github.com/metaschema-framework/metaschema-java/pull/567)) |
 
 **Total Estimated PRs**: 2
 **Total Estimated Files**: ~30-40

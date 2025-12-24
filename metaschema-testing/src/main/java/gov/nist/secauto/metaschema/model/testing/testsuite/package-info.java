@@ -1,0 +1,13 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+@gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaPackage(moduleClass = {
+    gov.nist.secauto.metaschema.model.testing.testsuite.MetaschemaTestSuiteModule.class })
+@gov.nist.secauto.metaschema.databind.model.annotations.XmlSchema(
+    namespace = "http://csrc.nist.gov/ns/metaschema/test-suite/1.0",
+    xmlns = { @gov.nist.secauto.metaschema.databind.model.annotations.XmlNs(prefix = "",
+        namespace = "http://csrc.nist.gov/ns/metaschema/test-suite/1.0") },
+    xmlElementFormDefault = gov.nist.secauto.metaschema.databind.model.annotations.XmlNsForm.QUALIFIED)
+package gov.nist.secauto.metaschema.model.testing.testsuite;
