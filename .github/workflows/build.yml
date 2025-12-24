@@ -116,7 +116,6 @@ jobs:
       contents: read
       packages: write
       attestations: write
-      id-token: write
     needs: build-code
     uses: ./.github/workflows/container.yml
     with:
