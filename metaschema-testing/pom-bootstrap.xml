@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This POM is used to regenerate the test suite binding classes.
+  It is NOT part of the normal build due to circular dependencies.
+
+  Usage: mvn -f metaschema-testing/pom-bootstrap.xml generate-sources
+
+  After running, copy the generated classes from:
+    target/generated-sources/metaschema/gov/nist/secauto/metaschema/model/testing/testsuite/
+  to:
+    src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>dev.metaschema.java</groupId>
+		<artifactId>metaschema-framework</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>metaschema-testing-bootstrap</artifactId>
+	<packaging>pom</packaging>
+	<name>Metaschema Testing - Binding Class Generator</name>
+	<description>Standalone POM for regenerating test suite binding classes.</description>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>metaschema-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<id>metaschema-codegen</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-sources</goal>
+						</goals>
+						<configuration>
+							<metaschemaDir>${project.basedir}/src/main/metaschema</metaschemaDir>
+							<outputDirectory>${project.build.directory}/generated-sources/metaschema</outputDirectory>
+							<configs>
+								<config>${project.basedir}/src/main/metaschema-bindings/test-suite-bindings.xml</config>
+							</configs>
+							<includes>
+								<include>unit-tests.yaml</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

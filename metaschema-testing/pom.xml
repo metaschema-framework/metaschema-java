@@ -33,10 +33,6 @@
 			<artifactId>metaschema-databind</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.xmlbeans</groupId>
-			<artifactId>xmlbeans</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 		</dependency>
@@ -53,68 +49,33 @@
 	</dependencies>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<directory>${project.build.directory}/generated-resources/xmlbeans</directory>
-			</resource>
-		</resources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<configuration>
+						<excludes>**/gov/nist/secauto/metaschema/model/testing/testsuite/**/*</excludes>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
+					<configuration>
+						<excludeFilterFile>src/main/config/spotbugs/exclude.xml</excludeFilterFile>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
 					<configuration>
-						<excludeRoots>
-							<excludeRoot>target/generated-sources/xmlbeans</excludeRoot>
-						</excludeRoots>
+						<rulesets>
+							<ruleset>src/main/config/pmd/ruleset.xml</ruleset>
+							<ruleset>src/main/config/pmd/field-naming-ruleset.xml</ruleset>
+						</rulesets>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.xmlbeans</groupId>
-				<artifactId>xmlbeans</artifactId>
-				<executions>
-					<execution>
-						<id>metaschema-testing-beans</id>
-						<inherited>false</inherited>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-						<configuration>
-	                        <xmlConfigs>${project.basedir}/src/schema/xmlconfig.xml</xmlConfigs>
-							<sourceDir>${project.basedir}/../core/metaschema/test-suite</sourceDir>
-							<sourceSchemas>unit-tests.xsd</sourceSchemas>
-							<javaTargetDir>${project.build.directory}/generated-sources/xmlbeans</javaTargetDir>
-							<classTargetDir>${project.basedir}/target/generated-resources/xmlbeans</classTargetDir>
-							<name>metaschema.testing</name>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>add-xmlbeans-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>${project.build.directory}/generated-sources/xmlbeans</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
 	</build>
 </project>

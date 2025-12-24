@@ -12,8 +12,9 @@ package gov.nist.secauto.metaschema.core.metapath.format;
  * messages and other output. The selection can be explicit (forcing a specific
  * format) or automatic (selecting based on document format).
  *
- * @see IPathFormatter#resolveFormatter(PathFormatSelection,
- *      gov.nist.secauto.metaschema.databind.io.Format)
+ * @see IPathFormatter#METAPATH_PATH_FORMATER
+ * @see IPathFormatter#XPATH_PATH_FORMATTER
+ * @see IPathFormatter#JSON_POINTER_PATH_FORMATTER
  */
 public enum PathFormatSelection {
   /**

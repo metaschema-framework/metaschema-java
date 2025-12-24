@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Metaschema Databind Base Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>
+        Base PMD ruleset for metaschema-databind excluding FieldNamingConventions.
+        FieldNamingConventions is handled separately to exclude generated binding classes.
+    </description>
+
+    <!-- Include the parent oss-maven ruleset with project exclusions -->
+    <rule ref="pmd/category/java/custom.xml">
+        <!-- Exclude TypeParameterNamingConventions since this project uses descriptive
+             type parameter names like TYPE, RESULT, CONTEXT instead of single letters -->
+        <exclude name="TypeParameterNamingConventions"/>
+        <!-- Exclude OnlyOneReturn - multiple returns improve readability for guard clauses -->
+        <exclude name="OnlyOneReturn"/>
+        <!-- Exclude ShortMethodName - factory methods like of(), as() are idiomatic Java -->
+        <exclude name="ShortMethodName"/>
+        <!-- Exclude ShortClassName - short class names like If, Or, For are acceptable for DSL-style APIs -->
+        <exclude name="ShortClassName"/>
+        <!-- Exclude FieldNamingConventions - handled in separate ruleset -->
+        <exclude name="FieldNamingConventions"/>
+    </rule>
+
+</ruleset>

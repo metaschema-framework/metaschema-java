@@ -7,7 +7,7 @@ This guide defines the Javadoc requirements for the metaschema-java project, bas
 The project's `pom.xml` configures `maven-javadoc-plugin` with:
 - `failOnWarnings: false` - Javadoc warnings do not fail the build (currently)
 - `failOnError: false` - Javadoc errors do not fail the build (currently)
-- Excluded packages: `*.xmlbeans`, `*.xmlbeans.*`, `*.antlr` (generated code)
+- Excluded packages: `*.antlr` (generated code)
 
 **Important**: While these settings currently allow builds to pass with Javadoc issues, the goal is to progressively improve documentation coverage until these can be set to `true`.
 
@@ -351,6 +351,6 @@ When working in a file, consider documenting nearby undocumented members, especi
 ### Excluded Code
 
 Do not add Javadoc to:
-- Generated code (`*.xmlbeans`, `*.antlr` packages)
+- Generated code (`*.antlr` packages)
 - `module-info.java` files
 - Test classes and methods (use descriptive method names instead)

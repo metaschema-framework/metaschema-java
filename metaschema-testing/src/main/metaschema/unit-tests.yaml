@@ -1,0 +1,199 @@
+---
+METASCHEMA:
+  schema-name: Metaschema Test Suite
+  short-name: metaschema-test-suite
+  namespace: http://csrc.nist.gov/ns/metaschema/test-suite/1.0
+  json-base-uri: http://csrc.nist.gov/ns/metaschema/test-suite/1.0
+  schema-version: 1.0.0
+  definitions:
+  - object-type: assembly
+    name: test-suite
+    formal-name: Test Suite
+    description: The root element containing a collection of test collections.
+    root-name:
+      name: test-suite
+    model:
+      instances:
+      - object-type: assembly-ref
+        ref: test-collection
+        min-occurs: 1
+        max-occurs: unbounded
+        group-as:
+          name: test-collections
+          in-json: ARRAY
+
+  - object-type: assembly
+    name: test-collection
+    formal-name: Test Collection
+    description: A collection of test scenarios located at a specific path.
+    flags:
+    - object-type: flag
+      name: location
+      formal-name: Location
+      description: A URI reference to the location of this test collection.
+      as-type: uri-reference
+      required: "yes"
+    - object-type: flag
+      name: name
+      formal-name: Name
+      description: The name of this test collection.
+      as-type: string
+      required: "yes"
+    model:
+      instances:
+      - object-type: assembly-ref
+        ref: test-scenario
+        min-occurs: 1
+        max-occurs: unbounded
+        group-as:
+          name: test-scenarios
+          in-json: ARRAY
+
+  - object-type: assembly
+    name: test-scenario
+    formal-name: Test Scenario
+    description: A test scenario that validates a metaschema and its content.
+    flags:
+    - object-type: flag
+      name: name
+      formal-name: Name
+      description: The name of this test scenario.
+      as-type: string
+      required: "yes"
+    model:
+      instances:
+      - object-type: assembly-ref
+        ref: generate-schema
+      - object-type: assembly-ref
+        ref: validation-case
+        max-occurs: unbounded
+        group-as:
+          name: validation-cases
+          in-json: ARRAY
+
+  - object-type: assembly
+    name: generate-schema
+    formal-name: Generate Schema
+    description: Defines schema generation parameters and expected results.
+    flags:
+    - object-type: flag-ref
+      ref: generation-result
+      default: SUCCESS
+    - object-type: flag-ref
+      ref: validation-result
+      default: VALID
+    model:
+      instances:
+      - object-type: assembly-ref
+        ref: metaschema
+        min-occurs: 1
+      - object-type: assembly-ref
+        ref: generation-case
+        max-occurs: unbounded
+        group-as:
+          name: generation-cases
+          in-json: ARRAY
+
+  - object-type: assembly
+    name: metaschema
+    formal-name: Metaschema
+    description: Reference to a metaschema module to load.
+    flags:
+    - object-type: flag
+      name: location
+      formal-name: Location
+      description: A URI reference to the metaschema module location.
+      as-type: uri-reference
+      required: "yes"
+
+  - object-type: assembly
+    name: validation-case
+    formal-name: Validation Case
+    description: A content validation test case.
+    flags:
+    - object-type: flag-ref
+      ref: source-format
+    - object-type: flag
+      name: location
+      formal-name: Location
+      description: A URI reference to the content file location.
+      as-type: uri-reference
+      required: "yes"
+    - object-type: flag-ref
+      ref: validation-result
+      default: VALID
+
+  - object-type: assembly
+    name: generation-case
+    formal-name: Generation Case
+    description: A schema generation comparison test case.
+    flags:
+    - object-type: flag-ref
+      ref: source-format
+    - object-type: flag
+      name: location
+      formal-name: Location
+      description: A URI reference to the expected schema file location.
+      as-type: uri-reference
+      required: "yes"
+    - object-type: flag-ref
+      ref: match-result
+      default: MATCH
+
+  - object-type: flag
+    name: source-format
+    formal-name: Source Format
+    description: The format of the source content.
+    as-type: token
+    constraint:
+      rules:
+      - object-type: allowed-values
+        enums:
+        - value: XML
+          remark: Content is XML.
+        - value: JSON
+          remark: Content is JSON.
+        - value: YAML
+          remark: Content is YAML.
+
+  - object-type: flag
+    name: generation-result
+    formal-name: Generation Result
+    description: The expected result of schema generation.
+    as-type: token
+    constraint:
+      rules:
+      - object-type: allowed-values
+        enums:
+        - value: SUCCESS
+          remark: Generation succeeded.
+        - value: FAILURE
+          remark: Generation resulted in failure caused by some error.
+
+  - object-type: flag
+    name: validation-result
+    formal-name: Validation Result
+    description: The expected result of content validation.
+    as-type: token
+    constraint:
+      rules:
+      - object-type: allowed-values
+        enums:
+        - value: VALID
+          remark: Validation succeeded.
+        - value: INVALID
+          remark: Validation resulted in failure caused by some content defect or error.
+
+  - object-type: flag
+    name: match-result
+    formal-name: Match Result
+    description: The expected result of content comparison.
+    as-type: token
+    constraint:
+      rules:
+      - object-type: allowed-values
+        enums:
+        - value: MATCH
+          remark: The actual content matched the expected content.
+        - value: MISMATCH
+          remark: The actual content did not match the expected content.
