@@ -61,12 +61,15 @@ To build the project locally, follow the [instructions above](#building) that ex
 To download, unzip, and install a pre-built snapshot release (a developer build that is not an official release), please visit [the GitHub `metaschema-framework/maven2` repository](https://github.com/metaschema-framework/maven2/tree/main/dev/metaschema/java/metaschema-cli/) to download a `.bz2`, `.gz`, or `.zip` archive.
 
 ```sh
+# Visit https://github.com/metaschema-framework/maven2/commits/main/dev/metaschema/java/metaschema-cli
+# Adjust the value for CURRENT_SNAPSHOT_PATH for most recently committed artifact by folder and file name.
+export CURRENT_SNAPSHOT_PATH="3.0.0.M1-SNAPSHOT/metaschema-cli-3.0.0.M1-20251213.151427-29-metaschema-cli.zip"
 # Download the zip archive to /tmp
 cd /tmp
-curl -L -O https://github.com/metaschema-framework/maven2/raw/refs/heads/main/dev/metaschema/java/metaschema-cli/3.0.0.M1-SNAPSHOT/metaschema-cli-3.0.0.M1-20251213.151427-29-metaschema-cli.zip
+curl -L -O "https://github.com/metaschema-framework/maven2/raw/refs/heads/main/dev/metaschema/java/metaschema-cli/${CURRENT_SNAPSHOT_PATH}"
 # Extract zip archive to /opt/metaschema-cli
 # You might need sudo for permission to write files to this path
-sudo unzip "/tmp/*metaschema-cli.zip" -d /opt/metaschema-cli
+sudo unzip /tmp/metaschema-cli-*-metaschema-cli.zip -d /opt/metaschema-cli
 # Now add this installation directory to the path
 export PATH="${PATH}:/opt/metaschema-cli"
 # Run the CLI to test it is properly installed
