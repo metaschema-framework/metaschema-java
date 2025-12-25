@@ -30,6 +30,10 @@ If you think any of these, STOP and check for skills:
 **Project Skills** (defined in `.claude/skills/`):
 - `prd-construction` - Templates and methodology for creating PRDs and implementation plans
 - `unit-test-writing` - Edge case checklist, test structure patterns, coverage workflow
+- `metaschema-module-authoring` - Module structure, definitions, format-specific features
+- `metaschema-constraints-authoring` - Constraint types, validation patterns
+- `metapath-expressions` - Path syntax, operators, functions based on XPath 3.1
+- `metaschema-java-library` - Key interfaces, exception hierarchy, Metapath evaluation, serialization
 
 **Managed Skills** (from superpowers plugin - install via `claude plugin add superpowers-marketplace`):
 - `superpowers:brainstorming` - Refine ideas into designs through collaborative questioning
@@ -49,11 +53,62 @@ User instructions describe WHAT to do, not HOW. "Add X" or "Fix Y" does NOT mean
 
 ---
 
+## Test-Driven Development (MANDATORY)
+
+**ALL code changes MUST follow TDD. No exceptions.**
+
+### The TDD Cycle
+
+1. **Write the test first** - Before writing any implementation code
+2. **Watch it fail** - Run the test to verify it fails for the right reason
+3. **Write minimal code** - Implement just enough to make the test pass
+4. **Refactor** - Clean up while keeping tests green
+5. **Repeat** - For each new behavior
+
+### Red Flags (You're Skipping TDD)
+
+If you catch yourself doing ANY of these, STOP:
+- Writing implementation code before tests
+- "I'll add tests after I get it working"
+- "This is too simple to need tests"
+- "Let me just make this small change first"
+- Modifying code without first verifying existing test coverage
+
+### When Tests Already Exist
+
+When modifying existing code:
+1. **Run existing tests first** - Verify they pass before changes
+2. **Add tests for new behavior** - Write failing tests for new functionality
+3. **Make changes** - Implement while keeping all tests passing
+
+### Enforcement
+
+- Use `superpowers:test-driven-development` skill for the full workflow
+- The skill will guide you through RED-GREEN-REFACTOR
+- Never skip the "watch it fail" step - it proves your test works
+
+---
+
 ## PRD-Based Development Lifecycle
 
 For new development work, follow this structured lifecycle:
 
 ### Phase 1: PRD Development
+
+#### Check for Existing Work (CRITICAL - Do This First)
+
+**Before making ANY changes for PRD-related work:**
+1. Run `git worktree list` to check for existing worktrees
+2. If a worktree exists for this PRD/feature, switch to it using `cd <worktree-path>`
+3. **NEVER work in the main repository** if a worktree exists for the task
+
+**Why:** Working in the wrong directory causes:
+- Changes in wrong location that must be manually moved
+- Risk of committing to wrong branch
+- Merge conflicts and cleanup overhead
+
+#### Creating New PRDs
+
 1. **Use `superpowers:brainstorming`** to refine requirements
 2. **Use `prd-construction` skill** for templates and methodology
 3. **Create PRD directory**: `PRDs/[date]-[name]/` (see `prd-conventions.md` for naming)
