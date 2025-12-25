@@ -195,7 +195,7 @@ Function library classes that use deprecated FunctionUtils methods.
 
 ---
 
-### PR 5: Fix FunctionUtils Deprecation (Type Requirements)
+### PR 5: Fix FunctionUtils Deprecation (Type Requirements) ✅ COMPLETED
 
 | Attribute | Value |
 |-----------|-------|
@@ -203,6 +203,8 @@ Function library classes that use deprecated FunctionUtils methods.
 | **Risk Level** | Medium |
 | **Dependencies** | PR 4 (recommended, not required) |
 | **Target Branch** | develop |
+| **Status** | ✅ Completed 2025-12-08 |
+| **Pull Request** | [#523](https://github.com/metaschema-framework/metaschema-java/pull/523) |
 
 #### Focus
 Type requirement methods and remaining usages.
