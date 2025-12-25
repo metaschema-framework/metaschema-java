@@ -36,7 +36,7 @@ This document details each PR in the code generator quality improvements initiat
 
 This PR fixes the code generator and regenerates metaschema-testing binding classes to verify the improvements work correctly.
 
-#### Code Generator Files to Modify
+### Code Generator Files to Modify
 
 | File | Changes |
 |------|---------|
@@ -45,13 +45,13 @@ This PR fixes the code generator and regenerates metaschema-testing binding clas
 | `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/AbstractPropertyTypeInfo.java` | Add Javadoc to getter/setter generation |
 | `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/AbstractModelDefinitionTypeInfo.java` | Add null-safety annotations to generated code |
 
-#### Regenerated Files
+### Regenerated Files
 
 | File | Changes |
 |------|---------|
 | `metaschema-testing/src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/*.java` | Regenerated binding classes with improved Javadoc |
 
-#### Implementation Approach
+### Implementation Approach
 
 1. **Fix Javadoc quote issue** (Issue #568)
    - In `INamedInstanceTypeInfo.java`, change the `buildFieldJavadoc` method
@@ -80,7 +80,7 @@ This PR fixes the code generator and regenerates metaschema-testing binding clas
    - Copy generated files to source directory
    - Verify generated code passes checkstyle
 
-#### Acceptance Criteria
+### Acceptance Criteria
 
 - [x] Generated Javadoc does not contain extraneous quote characters
 - [x] No-arg constructor has descriptive Javadoc
@@ -108,7 +108,7 @@ This PR fixes the code generator and regenerates metaschema-testing binding clas
 
 This PR extends the binding configuration to support overriding default collection implementation classes.
 
-#### Files to Modify
+### Files to Modify
 
 | File | Changes |
 |------|---------|
@@ -118,7 +118,7 @@ This PR extends the binding configuration to support overriding default collecti
 | `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/AbstractModelInstanceTypeInfo.java` | Apply collection class override from binding config |
 | `databind-metaschema/src/main/metaschema/metaschema-bindings.yaml` | Add `collection-class` field definition to binding schema |
 
-#### Implementation Approach
+### Implementation Approach
 
 1. **Update binding configuration schema**
    - Add `collection-class` element to the metaschema-bindings schema
@@ -141,7 +141,7 @@ This PR extends the binding configuration to support overriding default collecti
    - Test that override is applied during code generation
    - Test validation rejects incompatible types
 
-#### Example Binding Configuration
+### Example Binding Configuration
 
 ```xml
 <metaschema-bindings xmlns="https://csrc.nist.gov/ns/metaschema-binding/1.0">
@@ -153,7 +153,7 @@ This PR extends the binding configuration to support overriding default collecti
 </metaschema-bindings>
 ```
 
-#### Acceptance Criteria
+### Acceptance Criteria
 
 - [ ] Binding configuration schema supports `<collection-class>` element
 - [ ] `DefaultBindingConfiguration` parses collection-class from XML
@@ -179,26 +179,26 @@ This PR extends the binding configuration to support overriding default collecti
 
 This PR creates the databind bootstrap infrastructure and regenerates the databind binding classes.
 
-#### Files to Create
+### Files to Create
 
 | File | Changes |
 |------|---------|
 | `databind/pom-bootstrap.xml` | Standalone POM for binding class regeneration |
 | `databind/README.md` | Document bootstrap process |
 
-#### Files to Update
+### Files to Update
 
 | File | Changes |
 |------|---------|
 | `CLAUDE.md` | Reference databind bootstrap in Bootstrap Binding Classes section |
 
-#### Files to Regenerate
+### Files to Regenerate
 
 | File | Changes |
 |------|---------|
 | `databind/src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/binding/*.java` | Regenerated binding classes |
 
-#### Implementation Approach
+### Implementation Approach
 
 1. **Create `pom-bootstrap.xml`**
    - Copy structure from `metaschema-testing/pom-bootstrap.xml`
@@ -221,7 +221,7 @@ This PR creates the databind bootstrap infrastructure and regenerates the databi
    - Compare with existing classes to identify any API differences
    - Verify custom interface implementations are preserved (via binding configuration)
 
-#### Acceptance Criteria
+### Acceptance Criteria
 
 - [ ] `pom-bootstrap.xml` successfully generates binding classes
 - [ ] README documents the complete regeneration process
