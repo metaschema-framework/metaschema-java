@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
@@ -35,7 +36,7 @@ public class TestCollection implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
   /**
-   * "A URI reference to the location of this test collection."
+   * A URI reference to the location of this test collection.
    */
   @BoundFlag(
       formalName = "Location",
@@ -46,7 +47,7 @@ public class TestCollection implements IBoundObject {
   private URI _location;
 
   /**
-   * "The name of this test collection."
+   * The name of this test collection.
    */
   @BoundFlag(
       formalName = "Name",
@@ -56,6 +57,9 @@ public class TestCollection implements IBoundObject {
       typeAdapter = StringAdapter.class)
   private String _name;
 
+  /**
+   * A test scenario that validates a metaschema and its content.
+   */
   @BoundAssembly(
       formalName = "Test Scenario",
       description = "A test scenario that validates a metaschema and its content.",
@@ -65,10 +69,23 @@ public class TestCollection implements IBoundObject {
       groupAs = @GroupAs(name = "test-scenarios", inJson = JsonGroupAsBehavior.LIST))
   private List<TestScenario> _testScenarios;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestCollection}
+   * instance with no metadata.
+   */
   public TestCollection() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestCollection}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public TestCollection(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -78,27 +95,84 @@ public class TestCollection implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the location.
+   *
+   * <p>
+   * A URI reference to the location of this test collection.
+   *
+   * @return the location value
+   */
+  @NonNull
   public URI getLocation() {
     return _location;
   }
 
-  public void setLocation(URI value) {
+  /**
+   * Set the location.
+   *
+   * <p>
+   * A URI reference to the location of this test collection.
+   *
+   * @param value
+   *          the location value to set
+   */
+  public void setLocation(@NonNull URI value) {
     _location = value;
   }
 
+  /**
+   * Get the name.
+   *
+   * <p>
+   * The name of this test collection.
+   *
+   * @return the name value
+   */
+  @NonNull
   public String getName() {
     return _name;
   }
 
-  public void setName(String value) {
+  /**
+   * Set the name.
+   *
+   * <p>
+   * The name of this test collection.
+   *
+   * @param value
+   *          the name value to set
+   */
+  public void setName(@NonNull String value) {
     _name = value;
   }
 
+  /**
+   * Get the test Scenario.
+   *
+   * <p>
+   * A test scenario that validates a metaschema and its content.
+   *
+   * @return the test-scenario value
+   */
+  @NonNull
   public List<TestScenario> getTestScenarios() {
+    if (_testScenarios == null) {
+      _testScenarios = new LinkedList<>();
+    }
     return _testScenarios;
   }
 
-  public void setTestScenarios(List<TestScenario> value) {
+  /**
+   * Set the test Scenario.
+   *
+   * <p>
+   * A test scenario that validates a metaschema and its content.
+   *
+   * @param value
+   *          the test-scenario value to set
+   */
+  public void setTestScenarios(@NonNull List<TestScenario> value) {
     _testScenarios = value;
   }
 

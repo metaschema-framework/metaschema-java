@@ -43,6 +43,11 @@ public class FlagInstanceTypeInfoImpl
   }
 
   @Override
+  public boolean isRequired() {
+    return getInstance().isRequired();
+  }
+
+  @Override
   public TypeName getJavaFieldType() {
     return ObjectUtils.notNull(ClassName.get(getInstance().getDefinition().getJavaTypeAdapter().getJavaClass()));
   }

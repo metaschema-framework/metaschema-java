@@ -21,12 +21,15 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 abstract class AbstractModelInstanceTypeInfo<INSTANCE extends IModelInstanceAbsolute>
     extends AbstractInstanceTypeInfo<INSTANCE, IAssemblyDefinitionTypeInfo>
@@ -72,6 +75,29 @@ abstract class AbstractModelInstanceTypeInfo<INSTANCE extends IModelInstanceAbso
     }
 
     return retval;
+  }
+
+  @Override
+  public boolean isCollectionType() {
+    IModelInstanceAbsolute instance = getInstance();
+    int maxOccurs = instance.getMaxOccurs();
+    return maxOccurs == -1 || maxOccurs > 1;
+  }
+
+  @Nullable
+  @Override
+  public Class<?> getCollectionImplementationClass() {
+    IModelInstanceAbsolute instance = getInstance();
+    int maxOccurs = instance.getMaxOccurs();
+    if (maxOccurs == -1 || maxOccurs > 1) {
+      // This is a collection - return the appropriate implementation class
+      if (JsonGroupAsBehavior.KEYED.equals(instance.getJsonGroupAsBehavior())) {
+        return LinkedHashMap.class;
+      }
+      return LinkedList.class;
+    }
+    // Not a collection
+    return null;
   }
 
   @NonNull

@@ -18,6 +18,26 @@ public final class TypeInfoUtils {
     // disable construction
   }
 
+  /**
+   * Convert the first character of a string to lowercase.
+   *
+   * <p>
+   * This is useful for forming Javadoc sentences where a description needs to
+   * flow naturally after a prefix like "Get the" or "Set the".
+   *
+   * @param text
+   *          the text to convert
+   * @return the text with the first character lowercased, or the original text if
+   *         empty or already lowercase
+   */
+  @NonNull
+  public static String toLowerFirstChar(@NonNull String text) {
+    if (text.isEmpty() || Character.isLowerCase(text.charAt(0))) {
+      return text;
+    }
+    return Character.toLowerCase(text.charAt(0)) + text.substring(1);
+  }
+
   public static void buildCommonBindingAnnotationValues(
       @NonNull INamedModelInstance instance,
       @NonNull AnnotationSpec.Builder annotation) {

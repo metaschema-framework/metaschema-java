@@ -151,16 +151,14 @@ public abstract class AbstractTestSuite {
       URL testSuiteUrl = testSuiteUri.toURL();
       TestSuite testSuite = bindingContext.newBoundLoader().load(TestSuite.class, testSuiteUrl);
       List<TestCollection> testCollections = testSuite.getTestCollections();
-      return ObjectUtils.notNull(testCollections == null
-          ? Stream.empty()
-          : testCollections.stream()
-              .flatMap(
-                  collection -> Stream
-                      .of(generateCollection(
-                          ObjectUtils.notNull(collection),
-                          testSuiteUri,
-                          generationPath,
-                          bindingContext))));
+      return ObjectUtils.notNull(testCollections.stream()
+          .flatMap(
+              collection -> Stream
+                  .of(generateCollection(
+                      ObjectUtils.notNull(collection),
+                      testSuiteUri,
+                      generationPath,
+                      bindingContext))));
     } catch (IOException | URISyntaxException ex) {
       throw new JUnitException("Unable to generate tests", ex);
     }
@@ -225,18 +223,16 @@ public abstract class AbstractTestSuite {
     return DynamicContainer.dynamicContainer(
         collection.getName(),
         testSuiteUri,
-        testScenarios == null
-            ? Stream.empty()
-            : testScenarios.stream()
-                .flatMap(scenario -> {
-                  assert scenario != null;
-                  return Stream.of(generateScenario(
-                      scenario,
-                      collectionUri,
-                      collectionGenerationPath,
-                      bindingContext));
-                })
-                .sequential());
+        testScenarios.stream()
+            .flatMap(scenario -> {
+              assert scenario != null;
+              return Stream.of(generateScenario(
+                  scenario,
+                  collectionUri,
+                  collectionGenerationPath,
+                  bindingContext));
+            })
+            .sequential());
   }
 
   @NonNull
@@ -330,6 +326,10 @@ public abstract class AbstractTestSuite {
     }));
 
     GenerateSchema generateSchema = scenario.getGenerateSchema();
+    if (generateSchema == null) {
+      throw new JUnitException(String.format(
+          "Scenario '%s' does not have a generate-schema directive", scenario.getName()));
+    }
     Metaschema metaschemaDirective = generateSchema.getMetaschema();
     URI metaschemaUri = collectionUri.resolve(metaschemaDirective.getLocation());
 
@@ -368,20 +368,18 @@ public abstract class AbstractTestSuite {
         });
 
     List<ValidationCase> validationCases = scenario.getValidationCases();
-    Stream<? extends DynamicNode> contentTests = validationCases == null
-        ? Stream.empty()
-        : validationCases.stream()
-            .flatMap(contentCase -> {
-              assert contentCase != null;
-              DynamicTest test
-                  = generateValidationCase(
-                      contentCase,
-                      bindingContext,
-                      lazyContentValidator,
-                      collectionUri,
-                      ObjectUtils.notNull(scenarioGenerationPath));
-              return test == null ? Stream.empty() : Stream.of(test);
-            }).sequential();
+    Stream<? extends DynamicNode> contentTests = validationCases.stream()
+        .flatMap(contentCase -> {
+          assert contentCase != null;
+          DynamicTest test
+              = generateValidationCase(
+                  contentCase,
+                  bindingContext,
+                  lazyContentValidator,
+                  collectionUri,
+                  ObjectUtils.notNull(scenarioGenerationPath));
+          return test == null ? Stream.empty() : Stream.of(test);
+        }).sequential();
 
     return DynamicContainer.dynamicContainer(
         scenario.getName(),
