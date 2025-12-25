@@ -26,5 +26,5 @@ jobs:
         keep-n-most-recent: 5
         image-tags: "!latest !v*"
         tag-selection: both
-        dry-run: ${{ inputs.dry-run == true }}
+        dry-run: ${{ inputs.dry-run || false }}
         token: ${{ secrets.GITHUB_TOKEN }}
