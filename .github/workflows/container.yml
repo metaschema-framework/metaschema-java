@@ -85,7 +85,7 @@ jobs:
         cache-to: type=gha,mode=max
     - if: inputs.push
       name: Container image push attestations
-      uses: actions/attest-build-provenance@1c608d11d69870c2092266b3f9a6f3abbf17002c
+      uses: actions/attest-build-provenance@00014ed6ed5efc5b1ab7f7f34a39eb55d41aa4f8
       with:
         subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
         subject-digest: ${{ steps.image_registry_push.outputs.digest }}
