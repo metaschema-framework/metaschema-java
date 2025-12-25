@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../../../../core/metaschema/schema/xml/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+  <schema-name>Required Flag Test</schema-name>
+  <schema-version>1.0</schema-version>
+  <short-name>required-flag-test</short-name>
+  <namespace>http://csrc.nist.gov/ns/metaschema/testing/required-flag</namespace>
+  <json-base-uri>http://csrc.nist.gov/ns/metaschema/testing/required-flag</json-base-uri>
+
+  <define-assembly name="item">
+    <formal-name>Item</formal-name>
+    <description>An item with required and optional flags</description>
+    <root-name>item</root-name>
+    <flag ref="required-id" required="yes"/>
+    <flag ref="optional-name"/>
+  </define-assembly>
+
+  <define-flag name="required-id">
+    <formal-name>Required Identifier</formal-name>
+    <description>A required identifier for the item</description>
+  </define-flag>
+
+  <define-flag name="optional-name">
+    <formal-name>Optional Name</formal-name>
+    <description>An optional name for the item</description>
+  </define-flag>
+
+</METASCHEMA>

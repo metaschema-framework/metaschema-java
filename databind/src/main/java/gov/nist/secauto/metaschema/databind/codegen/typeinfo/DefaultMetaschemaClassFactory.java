@@ -386,11 +386,16 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
 
     builder.addMethod(MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
+        .addJavadoc("Constructs a new {@code $L} instance with no metadata.\n", typeInfo.getClassName())
         .addStatement("this(null)")
         .build());
 
     builder.addMethod(MethodSpec.constructorBuilder()
         .addModifiers(Modifier.PUBLIC)
+        .addJavadoc("Constructs a new {@code $L} instance with the specified metadata.\n", typeInfo.getClassName())
+        .addJavadoc("\n")
+        .addJavadoc("@param data\n")
+        .addJavadoc("          the metaschema data, or {@code null} if none\n")
         .addParameter(IMetaschemaData.class, "data")
         .addStatement("this.$N = $N", "__metaschemaData", "data")
         .build());

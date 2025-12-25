@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
@@ -37,7 +39,7 @@ public class GenerateSchema implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
   /**
-   * "The expected result of schema generation."
+   * The expected result of schema generation.
    */
   @BoundFlag(
       formalName = "Generation Result",
@@ -51,7 +53,7 @@ public class GenerateSchema implements IBoundObject {
   private String _generationResult;
 
   /**
-   * "The expected result of content validation."
+   * The expected result of content validation.
    */
   @BoundFlag(
       formalName = "Validation Result",
@@ -65,6 +67,9 @@ public class GenerateSchema implements IBoundObject {
                   description = "Validation resulted in failure caused by some content defect or error.") })))
   private String _validationResult;
 
+  /**
+   * Reference to a metaschema module to load.
+   */
   @BoundAssembly(
       formalName = "Metaschema",
       description = "Reference to a metaschema module to load.",
@@ -72,6 +77,9 @@ public class GenerateSchema implements IBoundObject {
       minOccurs = 1)
   private Metaschema _metaschema;
 
+  /**
+   * A schema generation comparison test case.
+   */
   @BoundAssembly(
       formalName = "Generation Case",
       description = "A schema generation comparison test case.",
@@ -80,10 +88,23 @@ public class GenerateSchema implements IBoundObject {
       groupAs = @GroupAs(name = "generation-cases", inJson = JsonGroupAsBehavior.LIST))
   private List<GenerationCase> _generationCases;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.GenerateSchema}
+   * instance with no metadata.
+   */
   public GenerateSchema() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.GenerateSchema}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public GenerateSchema(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -93,35 +114,110 @@ public class GenerateSchema implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the generation Result.
+   *
+   * <p>
+   * The expected result of schema generation.
+   *
+   * @return the generation-result value, or {@code null} if not set
+   */
+  @Nullable
   public String getGenerationResult() {
     return _generationResult;
   }
 
-  public void setGenerationResult(String value) {
+  /**
+   * Set the generation Result.
+   *
+   * <p>
+   * The expected result of schema generation.
+   *
+   * @param value
+   *          the generation-result value to set
+   */
+  public void setGenerationResult(@Nullable String value) {
     _generationResult = value;
   }
 
+  /**
+   * Get the validation Result.
+   *
+   * <p>
+   * The expected result of content validation.
+   *
+   * @return the validation-result value, or {@code null} if not set
+   */
+  @Nullable
   public String getValidationResult() {
     return _validationResult;
   }
 
-  public void setValidationResult(String value) {
+  /**
+   * Set the validation Result.
+   *
+   * <p>
+   * The expected result of content validation.
+   *
+   * @param value
+   *          the validation-result value to set
+   */
+  public void setValidationResult(@Nullable String value) {
     _validationResult = value;
   }
 
+  /**
+   * Get the metaschema.
+   *
+   * <p>
+   * Reference to a metaschema module to load.
+   *
+   * @return the metaschema value
+   */
+  @NonNull
   public Metaschema getMetaschema() {
     return _metaschema;
   }
 
-  public void setMetaschema(Metaschema value) {
+  /**
+   * Set the metaschema.
+   *
+   * <p>
+   * Reference to a metaschema module to load.
+   *
+   * @param value
+   *          the metaschema value to set
+   */
+  public void setMetaschema(@NonNull Metaschema value) {
     _metaschema = value;
   }
 
+  /**
+   * Get the generation Case.
+   *
+   * <p>
+   * A schema generation comparison test case.
+   *
+   * @return the generation-case value
+   */
+  @NonNull
   public List<GenerationCase> getGenerationCases() {
+    if (_generationCases == null) {
+      _generationCases = new LinkedList<>();
+    }
     return _generationCases;
   }
 
-  public void setGenerationCases(List<GenerationCase> value) {
+  /**
+   * Set the generation Case.
+   *
+   * <p>
+   * A schema generation comparison test case.
+   *
+   * @param value
+   *          the generation-case value to set
+   */
+  public void setGenerationCases(@NonNull List<GenerationCase> value) {
     _generationCases = value;
   }
 

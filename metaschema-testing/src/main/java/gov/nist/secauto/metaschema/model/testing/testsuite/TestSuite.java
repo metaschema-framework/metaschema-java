@@ -5,6 +5,7 @@
 
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
@@ -31,6 +32,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class TestSuite implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
+  /**
+   * A collection of test scenarios located at a specific path.
+   */
   @BoundAssembly(
       formalName = "Test Collection",
       description = "A collection of test scenarios located at a specific path.",
@@ -40,10 +44,23 @@ public class TestSuite implements IBoundObject {
       groupAs = @GroupAs(name = "test-collections", inJson = JsonGroupAsBehavior.LIST))
   private List<TestCollection> _testCollections;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestSuite}
+   * instance with no metadata.
+   */
   public TestSuite() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestSuite}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public TestSuite(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -53,11 +70,32 @@ public class TestSuite implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the test Collection.
+   *
+   * <p>
+   * A collection of test scenarios located at a specific path.
+   *
+   * @return the test-collection value
+   */
+  @NonNull
   public List<TestCollection> getTestCollections() {
+    if (_testCollections == null) {
+      _testCollections = new LinkedList<>();
+    }
     return _testCollections;
   }
 
-  public void setTestCollections(List<TestCollection> value) {
+  /**
+   * Set the test Collection.
+   *
+   * <p>
+   * A collection of test scenarios located at a specific path.
+   *
+   * @param value
+   *          the test-collection value to set
+   */
+  public void setTestCollections(@NonNull List<TestCollection> value) {
     _testCollections = value;
   }
 

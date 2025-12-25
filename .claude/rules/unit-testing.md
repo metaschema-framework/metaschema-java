@@ -39,3 +39,21 @@ Every test class should prioritize edge case coverage over happy paths:
 3. Add tests before completing the work
 
 Use the `unit-test-writing` skill for the detailed workflow.
+
+## Legacy Code Coverage
+
+**When improving or refactoring existing classes, add tests for legacy functionality.**
+
+This ensures:
+- Existing behavior is documented through tests
+- Regressions are caught if refactoring breaks something
+- Test coverage improves incrementally over time
+
+### Process
+
+1. **Before changes**: Write tests capturing current behavior of code you're touching
+2. **Verify tests pass**: Confirms tests accurately reflect existing behavior
+3. **Make improvements**: Refactor or enhance the code
+4. **Verify tests still pass**: Confirms behavioral equivalence
+
+This approach builds test coverage organically as the codebase evolves.

@@ -42,6 +42,21 @@ abstract class AbstractNamedModelInstanceTypeInfo<INSTANCE extends INamedModelIn
     super(instance, parentDefinition);
   }
 
+  @Override
+  public boolean isRequired() {
+    INSTANCE instance = getInstance();
+    // A model instance is required if minOccurs >= 1 AND it's a single item (not a
+    // collection)
+    return instance.getMinOccurs() >= 1 && instance.getMaxOccurs() == 1;
+  }
+
+  @Override
+  public boolean isCollectionType() {
+    INSTANCE instance = getInstance();
+    // A collection has maxOccurs > 1 or unbounded (-1)
+    return instance.getMaxOccurs() == -1 || instance.getMaxOccurs() > 1;
+  }
+
   @NonNull
   @Override
   public String getBaseName() {

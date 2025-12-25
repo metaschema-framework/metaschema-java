@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
@@ -33,7 +35,7 @@ public class ValidationCase implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
   /**
-   * "The format of the source content."
+   * The format of the source content.
    */
   @BoundFlag(
       formalName = "Source Format",
@@ -47,7 +49,7 @@ public class ValidationCase implements IBoundObject {
   private String _sourceFormat;
 
   /**
-   * "A URI reference to the content file location."
+   * A URI reference to the content file location.
    */
   @BoundFlag(
       formalName = "Location",
@@ -58,7 +60,7 @@ public class ValidationCase implements IBoundObject {
   private URI _location;
 
   /**
-   * "The expected result of content validation."
+   * The expected result of content validation.
    */
   @BoundFlag(
       formalName = "Validation Result",
@@ -72,10 +74,23 @@ public class ValidationCase implements IBoundObject {
                   description = "Validation resulted in failure caused by some content defect or error.") })))
   private String _validationResult;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.ValidationCase}
+   * instance with no metadata.
+   */
   public ValidationCase() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.ValidationCase}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public ValidationCase(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -85,27 +100,81 @@ public class ValidationCase implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the source Format.
+   *
+   * <p>
+   * The format of the source content.
+   *
+   * @return the source-format value, or {@code null} if not set
+   */
+  @Nullable
   public String getSourceFormat() {
     return _sourceFormat;
   }
 
-  public void setSourceFormat(String value) {
+  /**
+   * Set the source Format.
+   *
+   * <p>
+   * The format of the source content.
+   *
+   * @param value
+   *          the source-format value to set
+   */
+  public void setSourceFormat(@Nullable String value) {
     _sourceFormat = value;
   }
 
+  /**
+   * Get the location.
+   *
+   * <p>
+   * A URI reference to the content file location.
+   *
+   * @return the location value
+   */
+  @NonNull
   public URI getLocation() {
     return _location;
   }
 
-  public void setLocation(URI value) {
+  /**
+   * Set the location.
+   *
+   * <p>
+   * A URI reference to the content file location.
+   *
+   * @param value
+   *          the location value to set
+   */
+  public void setLocation(@NonNull URI value) {
     _location = value;
   }
 
+  /**
+   * Get the validation Result.
+   *
+   * <p>
+   * The expected result of content validation.
+   *
+   * @return the validation-result value, or {@code null} if not set
+   */
+  @Nullable
   public String getValidationResult() {
     return _validationResult;
   }
 
-  public void setValidationResult(String value) {
+  /**
+   * Set the validation Result.
+   *
+   * <p>
+   * The expected result of content validation.
+   *
+   * @param value
+   *          the validation-result value to set
+   */
+  public void setValidationResult(@Nullable String value) {
     _validationResult = value;
   }
 
