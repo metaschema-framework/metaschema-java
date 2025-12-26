@@ -279,6 +279,67 @@ model:
 </model>
 ```
 
+### Code Generation: Nested vs Separate Classes
+
+The choice between inline definitions and global definitions with references affects how Java classes are generated:
+
+| Approach | Generated Structure | Use When |
+|----------|---------------------|----------|
+| Inline definitions | Nested inner classes | Single-use, tightly coupled structures |
+| Global definitions + refs | Separate top-level classes | Reusable, shared across multiple parents |
+
+#### Example: Inline produces nested classes
+
+```yaml
+# This YAML structure with inline definitions:
+- object-type: assembly
+  name: parent
+  model:
+    instances:
+    - object-type: assembly
+      name: child
+      formal-name: Child
+      model:
+        instances:
+        - object-type: field
+          name: value
+          as-type: string
+```
+
+Generates:
+```java
+public class Parent {
+    public static class Child {
+        // nested inside Parent
+    }
+}
+```
+
+#### Example: References produce separate classes
+
+```yaml
+# This YAML structure with global definitions and refs:
+definitions:
+- object-type: assembly
+  name: parent
+  model:
+    instances:
+    - object-type: assembly-ref
+      ref: child
+
+- object-type: assembly
+  name: child
+  formal-name: Child
+```
+
+Generates:
+```java
+public class Parent { ... }
+public class Child { ... }  // separate file
+```
+
+**Key insight**: Use inline definitions when you want tightly coupled, nested class hierarchies (like binding configurations with deeply nested elements). Use global definitions with refs when the component is reused elsewhere.
+
 ## Cardinality and Grouping
 
 ### Cardinality Attributes

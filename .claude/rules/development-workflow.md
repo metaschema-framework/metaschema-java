@@ -228,9 +228,26 @@ PR to develop
 
 ---
 
-## Debugging Workflow
+## Debugging Workflow (MANDATORY)
+
+**ALL debugging MUST use `superpowers:systematic-debugging` skill. No exceptions.**
 
 When debugging issues (during development or in production):
+
+### Step 0: Invoke the Debugging Skill (REQUIRED FIRST STEP)
+
+**BEFORE ANY investigation or fix attempts:**
+1. Use `Skill` tool to invoke `superpowers:systematic-debugging`
+2. Follow the four phases exactly as specified
+3. Create TodoWrite todos for each phase
+
+**Red Flags (You're Skipping the Skill):**
+- "Let me just check this quickly"
+- "This is a simple bug"
+- "I can see the problem, let me fix it"
+- "One quick fix to try first"
+
+**Why:** Random fixes waste time and create new bugs. The skill ensures systematic root cause identification.
 
 ### Step 1: Identify Root Cause (REQUIRED)
 **Do NOT attempt fixes until root cause is identified.**
@@ -244,7 +261,7 @@ Use these skills:
 - Where in the code does the bug originate?
 - Why does this code path produce the wrong result?
 
-**Post Bug Reproduction comment to Jira** (see Jira Comments section below)
+**Post Bug Reproduction comment to Jira** (if applicable)
 
 ### Step 2: Verify Test Coverage
 Once root cause is confirmed:
@@ -287,7 +304,7 @@ Implement Fix (target the root cause)
     ↓
 verification-before-completion
     ↓
-PR to staging
+PR to develop
 ```
 
 ---

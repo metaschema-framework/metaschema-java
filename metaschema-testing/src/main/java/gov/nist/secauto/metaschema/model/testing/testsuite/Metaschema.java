@@ -2,6 +2,8 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../metaschema/unit-tests.yaml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
@@ -11,8 +13,6 @@ import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
-import java.lang.Override;
-import java.lang.String;
 import java.net.URI;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

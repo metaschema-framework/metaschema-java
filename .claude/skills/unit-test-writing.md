@@ -20,12 +20,39 @@ description: Use when writing or expanding unit tests - provides edge case check
 | Empty/Null | Empty string, null reference, empty collection | ☐ |
 | Boundaries | Zero, negative, max int, min int, boundary values | ☐ |
 | Invalid | Wrong type, malformed input, out of range | ☐ |
-| Missing | Required field absent, partial data | ☐ |
+| Missing | Required field absent, partial data, missing nested element | ☐ |
 | Duplicates | Repeated values, duplicate keys | ☐ |
 | Ordering | First, last, middle, unsorted | ☐ |
 | Concurrency | Race conditions, thread safety (if applicable) | ☐ |
 | State | Uninitialized, already processed, closed | ☐ |
 | Combinations | Multiple flags, conflicting options | ☐ |
+
+## Configuration/Parsing Edge Cases
+
+When testing XML/JSON/YAML configuration loading, always test:
+
+| Scenario | Test Case | Expected |
+|----------|-----------|----------|
+| Missing optional child | Parent element exists, optional child absent | Null or default value |
+| Empty element | `<element/>` or `<element></element>` | Empty string or null |
+| Unknown module | Query from module not in config | Null, not exception |
+| Unknown definition | Query definition not in config | Null, not exception |
+| Partial config | Some fields present, others missing | Only specified fields set |
+| Multiple types | Same pattern for different parent types (assembly vs field) | Both work correctly |
+
+**Example edge case test structure:**
+
+```java
+@Test
+void testMissingOptionalElement() throws IOException {
+    // Load config with element that has no optional child
+    config.load(new File("edge-cases.xml"));
+
+    // Query should return null, not throw
+    IPropertyBindingConfiguration result = config.getPropertyBindingConfiguration(definition, "missing-child");
+    assertNull(result, "Missing optional element should return null");
+}
+```
 
 ## Coverage Expansion Workflow
 

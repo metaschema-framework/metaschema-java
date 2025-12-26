@@ -95,16 +95,16 @@ This PR fixes the code generator and regenerates metaschema-testing binding clas
 
 ---
 
-## PR 2: Collection Class Override Support
+## PR 2: Collection Class Override Support ✅
 
 | Attribute | Value |
 |-----------|-------|
-| **Files Changed** | ~10 |
+| **Files Changed** | ~15 |
 | **Risk Level** | Low |
 | **Dependencies** | PR 1 |
 | **Target Branch** | develop |
-| **Status** | Pending |
-| **Pull Request** | |
+| **Status** | Completed |
+| **Pull Request** | [#584](https://github.com/metaschema-framework/metaschema-java/pull/584) |
 
 This PR extends the binding configuration to support overriding default collection implementation classes.
 
@@ -155,14 +155,29 @@ This PR extends the binding configuration to support overriding default collecti
 
 ### Acceptance Criteria
 
-- [ ] Binding configuration schema supports `<collection-class>` element
-- [ ] `DefaultBindingConfiguration` parses collection-class from XML
-- [ ] Override is applied in `getCollectionImplementationClass()`
-- [ ] Type compatibility validation (List vs Map)
-- [ ] Unit tests for collection-class parsing and application
-- [ ] `mvn checkstyle:check` passes
-- [ ] All tests pass: `mvn test`
-- [ ] Build succeeds: `mvn clean install -PCI -Prelease`
+- [x] Binding configuration schema supports `<collection-class>` element
+- [x] `DefaultBindingConfiguration` parses collection-class from XML
+- [x] Override is applied in `getCollectionImplementationClass()` (infrastructure ready)
+- [ ] Type compatibility validation (List vs Map) - deferred to PR 4
+- [x] Unit tests for collection-class parsing and application
+- [x] `mvn checkstyle:check` passes
+- [x] All tests pass: `mvn test`
+- [x] Build succeeds: `mvn clean install -PCI -Prelease`
+
+### Files Actually Modified
+
+| File | Changes |
+|------|---------|
+| `databind/src/main/metaschema/metaschema-bindings.yaml` | Added `collection-class` field and fixed `object-type` keywords |
+| `databind/src/main/java/.../config/binding/MetaschemaBindings.java` | Regenerated with `getCollectionClass()` method |
+| `databind/src/main/java/.../config/binding/MetaschemaBindingsModule.java` | Regenerated module class |
+| `databind/src/main/java/.../config/binding/package-info.java` | Regenerated package info |
+| `databind/src/main/java/.../codegen/config/DefaultBindingConfiguration.java` | Added property binding parsing |
+| `databind/src/main/java/.../codegen/config/IPropertyBindingConfiguration.java` | New interface for property bindings |
+| `databind/src/main/java/.../codegen/config/IMutablePropertyBindingConfiguration.java` | New mutable interface |
+| `databind/src/main/java/.../codegen/config/DefaultPropertyBindingConfiguration.java` | New implementation |
+| `databind/pom-bootstrap.xml` | Simplified bootstrap POM for direct generation |
+| `databind/src/test/resources/metaschema/binding-config-with-collection-class.xml` | Test configuration |
 
 ---
 
@@ -237,16 +252,74 @@ This PR creates the databind bootstrap infrastructure and regenerates the databi
 
 ---
 
+## PR 4: Parser Required Field Validation
+
+| Attribute | Value |
+|-----------|-------|
+| **Files Changed** | ~10 |
+| **Risk Level** | Medium |
+| **Dependencies** | PR 1 |
+| **Target Branch** | develop |
+| **Status** | Pending |
+| **Pull Request** | |
+
+This PR adds validation during parsing to emit meaningful errors when required fields are missing, and includes type compatibility validation for collection class overrides.
+
+### Motivation
+
+Currently, when a required field/flag is missing from input data, the generated binding classes have `@NonNull` annotations on getters but the parser doesn't actively validate and provide meaningful errors. This can result in confusing null pointer exceptions later rather than clear parse-time errors.
+
+### Files to Modify
+
+| File | Changes |
+|------|---------|
+| `databind/src/main/java/.../io/xml/DefaultXmlDeserializer.java` | Add required field validation |
+| `databind/src/main/java/.../io/json/DefaultJsonDeserializer.java` | Add required field validation |
+| `databind/src/main/java/.../codegen/typeinfo/AbstractModelInstanceTypeInfo.java` | Validate collection class type compatibility |
+
+### Implementation Approach
+
+1. **Required field validation at parse time**
+   - After parsing an object, check if all required fields (those with `@NonNull` getters) have values
+   - Emit meaningful error message with field name and source location
+   - Must be efficient - check once after parsing, not on every field access
+
+2. **Collection class type compatibility**
+   - When collection-class override is specified, validate at code generation time:
+     - For List fields: class must implement `java.util.List`
+     - For Map fields: class must implement `java.util.Map`
+   - Emit clear error if incompatible type specified
+
+3. **Performance considerations**
+   - Required field tracking should use bitsets or similar compact representation
+   - Validation should happen once per object, not per field
+   - No reflection at runtime - track requirements at class binding time
+
+### Acceptance Criteria
+
+- [ ] Parser validates required fields are present during deserialization
+- [ ] Missing required field produces clear error with field name and location
+- [ ] Collection class override validates type compatibility (List/Map)
+- [ ] Validation is efficient (no per-field overhead)
+- [ ] Unit tests for required field validation
+- [ ] Unit tests for collection class type validation
+- [ ] `mvn checkstyle:check` passes
+- [ ] All tests pass: `mvn test`
+- [ ] Build succeeds: `mvn clean install -PCI -Prelease`
+
+---
+
 ## PR Summary Table
 
 | PR | Description | Files | Risk | Dependencies | Status |
 |----|-------------|-------|------|--------------|--------|
 | 1 | Code generator improvements + metaschema-testing regeneration | 20 | Low | None | ✅ Completed ([#577](https://github.com/metaschema-framework/metaschema-java/pull/577)) |
-| 2 | Collection class override support | ~10 | Low | PR 1 | Pending |
+| 2 | Collection class override support | ~15 | Low | PR 1 | ✅ Completed |
 | 3 | Databind bootstrap setup + regeneration | ~35 | Medium | PR 1, PR 2 | Pending |
+| 4 | Parser required field validation | ~10 | Medium | PR 1 | Pending |
 
-**Total Estimated PRs**: 3
-**Total Estimated Files**: ~65
+**Total Estimated PRs**: 4
+**Total Estimated Files**: ~80
 
 ---
 

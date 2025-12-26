@@ -25,6 +25,7 @@ import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.codegen.IGeneratedClass;
 import gov.nist.secauto.metaschema.databind.codegen.IGeneratedDefinitionClass;
@@ -53,6 +54,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -110,6 +112,67 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
     return typeResolver;
   }
 
+  /**
+   * Calculates a relative path from the generated file location to the source
+   * Metaschema module.
+   *
+   * @param module
+   *          the source module
+   * @param javaPackage
+   *          the Java package of the generated file
+   * @param targetDirectory
+   *          the target directory where files are generated
+   * @return a relative path string if relativization succeeds, the module short
+   *         name if location is unavailable, or the absolute URI string if
+   *         relativization fails
+   */
+  @NonNull
+  private static String getRelativeSourcePath(
+      @NonNull IModule module,
+      @NonNull String javaPackage,
+      @NonNull Path targetDirectory) {
+    URI location = module.getLocation();
+    if (location == null) {
+      return module.getShortName();
+    }
+
+    try {
+      // Calculate the path to the generated file (targetDirectory + package path)
+      String packagePath = javaPackage.replace('.', '/');
+      Path generatedFileDir = targetDirectory.resolve(packagePath);
+      URI generatedDirUri = generatedFileDir.toUri();
+
+      // Calculate relative path from generated file directory to source file
+      return UriUtils.relativize(generatedDirUri, location, true).toString();
+    } catch (URISyntaxException ex) {
+      // Fall back to absolute URI if relativization fails
+      return location.toString();
+    }
+  }
+
+  /**
+   * Adds a file header comment indicating the file is generated from a Metaschema
+   * module.
+   *
+   * @param javaFileBuilder
+   *          the JavaFile builder to add the comment to
+   * @param module
+   *          the source module
+   * @param javaPackage
+   *          the Java package of the generated file
+   * @param targetDirectory
+   *          the target directory where the file will be generated
+   */
+  private static void addGeneratedFileComment(
+      @NonNull JavaFile.Builder javaFileBuilder,
+      @NonNull IModule module,
+      @NonNull String javaPackage,
+      @NonNull Path targetDirectory) {
+    String sourceReference = getRelativeSourcePath(module, javaPackage, targetDirectory);
+    javaFileBuilder.addFileComment("Generated from: $L\nDo not edit - changes will be lost when regenerated.",
+        sourceReference);
+  }
+
   @Override
   public IGeneratedModuleClass generateClass(
       IModule module,
@@ -120,7 +183,13 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
 
     TypeSpec.Builder classSpec = newClassBuilder(module, className);
 
-    JavaFile javaFile = JavaFile.builder(className.packageName(), classSpec.build()).build();
+    JavaFile.Builder javaFileBuilder = JavaFile.builder(className.packageName(), classSpec.build())
+        .skipJavaLangImports(true);
+
+    // Add file header comment indicating this is generated code
+    addGeneratedFileComment(javaFileBuilder, module, className.packageName(), targetDirectory);
+
+    JavaFile javaFile = javaFileBuilder.build();
     Path classFile = ObjectUtils.notNull(javaFile.writeToPath(targetDirectory));
 
     // now generate all related definition classes
@@ -187,7 +256,14 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
 
     TypeSpec.Builder classSpec = newClassBuilder(typeInfo, false);
 
-    JavaFile javaFile = JavaFile.builder(className.packageName(), classSpec.build()).build();
+    JavaFile.Builder javaFileBuilder = JavaFile.builder(className.packageName(), classSpec.build())
+        .skipJavaLangImports(true);
+
+    // Add file header comment indicating this is generated code
+    IModule module = typeInfo.getDefinition().getContainingModule();
+    addGeneratedFileComment(javaFileBuilder, module, className.packageName(), targetDirectory);
+
+    JavaFile javaFile = javaFileBuilder.build();
     Path classFile = ObjectUtils.notNull(javaFile.writeToPath(targetDirectory));
 
     return new DefaultGeneratedDefinitionClass(classFile, className, typeInfo.getDefinition());
@@ -206,6 +282,14 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
     try (PrintWriter writer = new PrintWriter(
         Files.newBufferedWriter(packageInfo, StandardOpenOption.CREATE, StandardOpenOption.WRITE,
             StandardOpenOption.TRUNCATE_EXISTING))) {
+      // Add file header comment indicating this is generated code
+      for (IGeneratedModuleClass moduleProduction : moduleProductions) {
+        IModule module = moduleProduction.getModule();
+        String sourceReference = getRelativeSourcePath(module, javaPackage, targetDirectory);
+        writer.format("// Generated from: %s%n", sourceReference);
+      }
+      writer.format("// Do not edit - changes will be lost when regenerated.%n");
+
       writer.format("@%1$s(moduleClass = {%n", MetaschemaPackage.class.getName());
 
       boolean first = true;
@@ -250,6 +334,15 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
         .addModifiers(Modifier.PUBLIC)
         .addModifiers(Modifier.FINAL);
 
+    // Add class-level Javadoc from module name and remarks
+    MarkupLine moduleName = module.getName();
+    builder.addJavadoc("$L", moduleName.toHtml());
+    MarkupMultiline moduleRemarks = module.getRemarks();
+    if (moduleRemarks != null) {
+      // toHtml() already wraps content in <p> tags, so just add a newline separator
+      builder.addJavadoc("\n$L", moduleRemarks.toHtml());
+    }
+
     builder.superclass(AbstractBoundModule.class);
     builder.addAnnotation(buildModuleAnnotation(module).build());
 
@@ -288,6 +381,11 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
 
     builder.addMethod(
         MethodSpec.constructorBuilder()
+            .addJavadoc("Construct a new module instance.\n\n")
+            .addJavadoc("@param importedModules\n")
+            .addJavadoc("          modules imported by this module\n")
+            .addJavadoc("@param bindingContext\n")
+            .addJavadoc("          the binding context to associate with this module\n")
             .addModifiers(Modifier.PUBLIC)
             .addParameter(
                 ParameterizedTypeName.get(ClassName.get(List.class),
