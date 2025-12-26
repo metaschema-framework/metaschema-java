@@ -2,6 +2,8 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../metaschema/unit-tests.yaml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
@@ -11,11 +13,12 @@ import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.AbstractBoundModule;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaModule;
-import java.lang.Override;
-import java.lang.String;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * Metaschema Test Suite
+ */
 @MetaschemaModule(
     assemblies = {
         TestSuite.class,
@@ -38,6 +41,14 @@ public final class MetaschemaTestSuiteModule
 
   private static final URI JSON_BASE_URI = URI.create("http://csrc.nist.gov/ns/metaschema/test-suite/1.0");
 
+  /**
+   * Construct a new module instance.
+   *
+   * @param importedModules
+   *          modules imported by this module
+   * @param bindingContext
+   *          the binding context to associate with this module
+   */
   public MetaschemaTestSuiteModule(List<? extends IBoundModule> importedModules,
       IBindingContext bindingContext) {
     super(importedModules, bindingContext);

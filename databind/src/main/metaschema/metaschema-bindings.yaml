@@ -5,149 +5,213 @@ METASCHEMA:
   namespace: https://csrc.nist.gov/ns/metaschema-binding/1.0
   json-base-uri: https://csrc.nist.gov/ns/metaschema-binding/1.0
   schema-version: 1.0.0
+  remarks:
+    remark: |
+      This module defines the binding configuration format used to customize
+      Java code generation from Metaschema modules. It allows specifying
+      package names, class names, interface implementations, base classes,
+      and collection types for generated binding classes.
   definitions:
-  - object-type: define-assembly
+  - object-type: assembly
     name: metaschema-bindings
     formal-name: Metaschema Bindings
     description: The root element for a set of metaschema binding customizations.
-    root-name: metaschema-bindings
+    root-name:
+      name: metaschema-bindings
     model:
       instances:
       - object-type: assembly
-        ref: model-binding
+        name: model-binding
+        formal-name: Model Binding
+        description: Defines binding configurations that apply to a whole model described by a namespace.
         max-occurs: unbounded
         group-as:
           name: model-bindings
           in-json: ARRAY
+        flags:
+        - object-type: flag
+          name: namespace
+          formal-name: Namespace
+          description: A URI referencing the namespace of one or more related metaschema definitions.
+          as-type: uri
+          required: "yes"
+        model:
+          instances:
+          - object-type: assembly
+            name: java
+            formal-name: Java Model Binding
+            description: Java-specific binding configuration for a model namespace.
+            model:
+              instances:
+              - object-type: field
+                name: use-package-name
+                formal-name: Use Package Name
+                description: The Java package name to use for classes generated from this namespace.
+                as-type: token
       - object-type: assembly
-        ref: metaschema-binding
+        name: metaschema-binding
+        formal-name: Metaschema Binding
+        description: Defines a binding for a given metaschema identified by a relative URL.
         max-occurs: unbounded
         group-as:
           name: metaschema-bindings
           in-json: ARRAY
-
-  - object-type: define-assembly
-    name: model-binding
-    formal-name: Model Binding
-    description: Defines binding configurations that apply to a whole model described by a namespace.
-    flags:
-    - object-type: define-flag
-      name: namespace
-      formal-name: Namespace
-      description: A URI referencing the namespace of one or more related metaschema definitions.
-      as-type: uri
-      required: "yes"
-    model:
-      instances:
-      - object-type: assembly
-        ref: java-model-binding
-
-  - object-type: define-assembly
-    name: java-model-binding
-    formal-name: Java Model Binding
-    description: Java-specific binding configuration for a model namespace.
-    use-name: java
-    model:
-      instances:
-      - object-type: field
-        ref: use-package-name
-
-  - object-type: define-field
-    name: use-package-name
-    formal-name: Use Package Name
-    description: The Java package name to use for classes generated from this namespace.
-    as-type: token
-
-  - object-type: define-assembly
-    name: metaschema-binding
-    formal-name: Metaschema Binding
-    description: Defines a binding for a given metaschema identified by a relative URL.
-    flags:
-    - object-type: define-flag
-      name: href
-      formal-name: Href
-      description: A URL relative to this binding configuration file, pointing to a metaschema definition.
-      as-type: uri-reference
-      required: "yes"
-    model:
-      instances:
-      - object-type: assembly
-        ref: define-assembly-binding
-        max-occurs: unbounded
-        group-as:
-          name: define-assembly-bindings
-          in-json: ARRAY
-      - object-type: assembly
-        ref: define-field-binding
-        max-occurs: unbounded
-        group-as:
-          name: define-field-bindings
-          in-json: ARRAY
-
-  - object-type: define-assembly
-    name: define-assembly-binding
-    formal-name: Define Assembly Binding
-    description: Provides binding configurations for a given defined assembly within the parent metaschema.
-    flags:
-    - object-type: define-flag
-      name: name
-      formal-name: Name
-      description: The name of the metaschema assembly.
-      as-type: token
-      required: "yes"
-    model:
-      instances:
-      - object-type: assembly
-        ref: java-object-definition-binding
-
-  - object-type: define-assembly
-    name: define-field-binding
-    formal-name: Define Field Binding
-    description: Provides binding configurations for a given defined field within the parent metaschema.
-    flags:
-    - object-type: define-flag
-      name: name
-      formal-name: Name
-      description: The name of the metaschema field.
-      as-type: token
-      required: "yes"
-    model:
-      instances:
-      - object-type: assembly
-        ref: java-object-definition-binding
-
-  - object-type: define-assembly
-    name: java-object-definition-binding
-    formal-name: Java Object Definition Binding
-    description: Field and assembly binding configurations for Java bound classes.
-    use-name: java
-    model:
-      instances:
-      - object-type: field
-        ref: use-class-name
-      - object-type: field
-        ref: implement-interface
-        max-occurs: unbounded
-        group-as:
-          name: implement-interfaces
-          in-json: ARRAY
-      - object-type: field
-        ref: extend-base-class
-
-  - object-type: define-field
-    name: use-class-name
-    formal-name: Use Class Name
-    description: The Java class name to use for the generated class.
-    as-type: token
-
-  - object-type: define-field
-    name: implement-interface
-    formal-name: Implement Interface
-    description: A fully qualified Java interface name that the generated class should implement.
-    as-type: token
-
-  - object-type: define-field
-    name: extend-base-class
-    formal-name: Extend Base Class
-    description: A fully qualified Java class name that the generated class should extend.
-    as-type: token
+        flags:
+        - object-type: flag
+          name: href
+          formal-name: Href
+          description: A URL relative to this binding configuration file, pointing to a metaschema definition.
+          as-type: uri-reference
+          required: "yes"
+        model:
+          instances:
+          - object-type: assembly
+            name: define-assembly-binding
+            formal-name: Define Assembly Binding
+            description: Provides binding configurations for a given defined assembly within the parent metaschema.
+            max-occurs: unbounded
+            group-as:
+              name: define-assembly-bindings
+              in-json: ARRAY
+            flags:
+            - object-type: flag
+              name: name
+              formal-name: Name
+              description: The name of the metaschema assembly.
+              as-type: token
+              required: "yes"
+            model:
+              instances:
+              - object-type: assembly
+                name: java
+                formal-name: Java Object Definition Binding
+                description: Field and assembly binding configurations for Java bound classes.
+                model:
+                  instances:
+                  - object-type: field
+                    name: use-class-name
+                    formal-name: Use Class Name
+                    description: The Java class name to use for the generated class.
+                    as-type: token
+                  - object-type: field
+                    name: implement-interface
+                    formal-name: Implement Interface
+                    description: A fully qualified Java interface name that the generated class should implement.
+                    as-type: token
+                    max-occurs: unbounded
+                    group-as:
+                      name: implement-interfaces
+                      in-json: ARRAY
+                  - object-type: field
+                    name: extend-base-class
+                    formal-name: Extend Base Class
+                    description: A fully qualified Java class name that the generated class should extend.
+                    as-type: token
+                  - object-type: field
+                    name: collection-class
+                    formal-name: Collection Class
+                    description: A fully qualified Java collection class name to use instead of the default.
+                    as-type: token
+              - object-type: assembly
+                name: property-binding
+                formal-name: Property Binding
+                description: Provides binding configurations for a property within the parent definition.
+                max-occurs: unbounded
+                group-as:
+                  name: property-bindings
+                  in-json: ARRAY
+                flags:
+                - object-type: flag
+                  name: name
+                  formal-name: Name
+                  description: The name of the property within the parent definition.
+                  as-type: token
+                  required: "yes"
+                model:
+                  instances:
+                  - object-type: assembly
+                    name: java
+                    formal-name: Java Property Binding
+                    description: Java-specific binding configuration for a property.
+                    model:
+                      instances:
+                      - object-type: field
+                        name: collection-class
+                        formal-name: Collection Class
+                        description: A fully qualified Java collection class name to use instead of the default.
+                        as-type: token
+          - object-type: assembly
+            name: define-field-binding
+            formal-name: Define Field Binding
+            description: Provides binding configurations for a given defined field within the parent metaschema.
+            max-occurs: unbounded
+            group-as:
+              name: define-field-bindings
+              in-json: ARRAY
+            flags:
+            - object-type: flag
+              name: name
+              formal-name: Name
+              description: The name of the metaschema field.
+              as-type: token
+              required: "yes"
+            model:
+              instances:
+              - object-type: assembly
+                name: java
+                formal-name: Java Object Definition Binding
+                description: Field and assembly binding configurations for Java bound classes.
+                model:
+                  instances:
+                  - object-type: field
+                    name: use-class-name
+                    formal-name: Use Class Name
+                    description: The Java class name to use for the generated class.
+                    as-type: token
+                  - object-type: field
+                    name: implement-interface
+                    formal-name: Implement Interface
+                    description: A fully qualified Java interface name that the generated class should implement.
+                    as-type: token
+                    max-occurs: unbounded
+                    group-as:
+                      name: implement-interfaces
+                      in-json: ARRAY
+                  - object-type: field
+                    name: extend-base-class
+                    formal-name: Extend Base Class
+                    description: A fully qualified Java class name that the generated class should extend.
+                    as-type: token
+                  - object-type: field
+                    name: collection-class
+                    formal-name: Collection Class
+                    description: A fully qualified Java collection class name to use instead of the default.
+                    as-type: token
+              - object-type: assembly
+                name: property-binding
+                formal-name: Property Binding
+                description: Provides binding configurations for a property within the parent definition.
+                max-occurs: unbounded
+                group-as:
+                  name: property-bindings
+                  in-json: ARRAY
+                flags:
+                - object-type: flag
+                  name: name
+                  formal-name: Name
+                  description: The name of the property within the parent definition.
+                  as-type: token
+                  required: "yes"
+                model:
+                  instances:
+                  - object-type: assembly
+                    name: java
+                    formal-name: Java Property Binding
+                    description: Java-specific binding configuration for a property.
+                    model:
+                      instances:
+                      - object-type: field
+                        name: collection-class
+                        formal-name: Collection Class
+                        description: A fully qualified Java collection class name to use instead of the default.
+                        as-type: token

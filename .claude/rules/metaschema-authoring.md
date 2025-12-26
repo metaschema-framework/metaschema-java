@@ -66,6 +66,37 @@ When Metaschema modules are used for code generation but create circular depende
 
 See `metaschema-testing/` for an example of this pattern.
 
+### Generated Binding Class Locations
+
+The following packages contain binding classes derived from Metaschema modules:
+
+| Package | Source Metaschema | Bootstrap POM |
+|---------|------------------|---------------|
+| `databind/src/main/java/gov/nist/secauto/metaschema/databind/config/binding/` | `databind/src/main/metaschema/metaschema-bindings.yaml` | `databind/pom-bootstrap.xml` |
+| `metaschema-testing/src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/` | `metaschema-testing/src/main/metaschema/unit-tests.yaml` | `metaschema-testing/pom-bootstrap.xml` |
+
+### CRITICAL: Never Manually Edit Generated Binding Classes
+
+**All changes to generated binding classes MUST be driven through the source Metaschema module.**
+
+When you need to modify a generated binding class:
+
+1. **Identify the source Metaschema** - Find the `.yaml` or `.xml` module that generates the class
+2. **Modify the Metaschema module** - Update the `.yaml` or `.xml` module definition
+3. **Build the project first** - Run `mvn install` to ensure the code generator is up to date
+4. **Regenerate the binding classes** - Run the bootstrap POM: `mvn -f {module}/pom-bootstrap.xml generate-sources`
+5. **Verify the changes** - Check that the regenerated classes contain the expected changes
+
+**Why this matters:**
+- Manual edits will be lost when classes are regenerated
+- Manual edits may diverge from the Metaschema schema definition
+- The Metaschema module is the authoritative source for the data model
+
+**Red flags that you're about to make a mistake:**
+- Opening a file in `.../config/binding/` or `.../testsuite/` for editing
+- Adding fields, methods, or annotations directly to these classes
+- Copying code patterns from these files to create new bindings manually
+
 ## Code Generation
 
 After modifying Metaschema modules that generate Java bindings:

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -113,6 +114,32 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
     return config == null
         ? CollectionUtil.emptyList()
         : config.getInterfacesToImplement();
+  }
+
+  /**
+   * Get the property binding configuration for a specific property within a
+   * definition.
+   *
+   * @param definition
+   *          the containing definition
+   * @param propertyName
+   *          the name of the property
+   * @return the property binding configuration, or {@code null} if none is
+   *         configured
+   */
+  @Nullable
+  public IPropertyBindingConfiguration getPropertyBindingConfiguration(
+      @NonNull IModelDefinition definition,
+      @NonNull String propertyName) {
+    String moduleUri = ObjectUtils.notNull(definition.getContainingModule().getLocation().toASCIIString());
+    String definitionName = definition.getName();
+
+    MetaschemaBindingConfiguration metaschemaConfig = getMetaschemaBindingConfiguration(moduleUri);
+    if (metaschemaConfig == null) {
+      return null;
+    }
+
+    return metaschemaConfig.getPropertyBindingConfig(definitionName, propertyName);
   }
 
   /**
@@ -273,11 +300,7 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
   }
 
   private void processModelBindingConfig(MetaschemaBindings.ModelBinding model) {
-    URI namespaceUri = model.getNamespace();
-    if (namespaceUri == null) {
-      return;
-    }
-    String namespace = namespaceUri.toString();
+    String namespace = model.getNamespace().toString();
 
     MetaschemaBindings.ModelBinding.Java java = model.getJava();
     if (java != null) {
@@ -290,11 +313,7 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
 
   private void processMetaschemaBindingConfig(URL configResource, MetaschemaBindings.MetaschemaBinding metaschema)
       throws MalformedURLException, URISyntaxException {
-    URI hrefUri = metaschema.getHref();
-    if (hrefUri == null) {
-      return;
-    }
-    String href = hrefUri.toString();
+    String href = metaschema.getHref().toString();
     URL moduleUrl = new URL(configResource, href);
     String moduleUri = ObjectUtils.notNull(moduleUrl.toURI().normalize().toString());
 
@@ -313,6 +332,9 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
           IDefinitionBindingConfiguration config = metaschemaConfig.getAssemblyDefinitionBindingConfig(name);
           config = processDefinitionBindingConfiguration(config, assemblyBinding.getJava());
           metaschemaConfig.addAssemblyDefinitionBindingConfig(name, config);
+
+          // Process property bindings for this assembly
+          processAssemblyPropertyBindings(metaschemaConfig, name, assemblyBinding.getPropertyBindings());
         }
       }
     }
@@ -326,9 +348,112 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
           IDefinitionBindingConfiguration config = metaschemaConfig.getFieldDefinitionBindingConfig(name);
           config = processDefinitionBindingConfiguration(config, fieldBinding.getJava());
           metaschemaConfig.addFieldDefinitionBindingConfig(name, config);
+
+          // Process property bindings for this field
+          processFieldPropertyBindings(metaschemaConfig, name, fieldBinding.getPropertyBindings());
         }
       }
     }
+  }
+
+  /**
+   * Process property bindings from a definition binding element.
+   * <p>
+   * This generic helper method consolidates the common logic for processing
+   * property bindings from both assembly and field definition bindings.
+   *
+   * @param <P>
+   *          the property binding type
+   * @param <J>
+   *          the Java configuration type
+   * @param metaschemaConfig
+   *          the metaschema binding configuration to add property bindings to
+   * @param definitionName
+   *          the name of the containing definition
+   * @param propertyBindings
+   *          the list of property bindings to process
+   * @param nameAccessor
+   *          function to extract the property name from a binding
+   * @param javaAccessor
+   *          function to extract the Java config from a binding
+   * @param collectionClassAccessor
+   *          function to extract the collection class name from a Java config
+   */
+  private static <P, J> void processPropertyBindings(
+      @NonNull MetaschemaBindingConfiguration metaschemaConfig,
+      @NonNull String definitionName,
+      @Nullable List<P> propertyBindings,
+      @NonNull Function<P, String> nameAccessor,
+      @NonNull Function<P, J> javaAccessor,
+      @NonNull Function<J, String> collectionClassAccessor) {
+    if (propertyBindings == null) {
+      return;
+    }
+
+    for (P propertyBinding : propertyBindings) {
+      String propertyName = nameAccessor.apply(propertyBinding);
+      if (propertyName == null) {
+        continue;
+      }
+
+      J java = javaAccessor.apply(propertyBinding);
+      if (java == null) {
+        continue;
+      }
+
+      String collectionClassName = collectionClassAccessor.apply(java);
+      if (collectionClassName != null) {
+        IMutablePropertyBindingConfiguration config = new DefaultPropertyBindingConfiguration();
+        config.setCollectionClassName(collectionClassName);
+        metaschemaConfig.addPropertyBindingConfig(definitionName, propertyName, config);
+      }
+    }
+  }
+
+  /**
+   * Process property bindings from a define-assembly-binding element.
+   *
+   * @param metaschemaConfig
+   *          the metaschema binding configuration to add property bindings to
+   * @param definitionName
+   *          the name of the containing definition
+   * @param propertyBindings
+   *          the list of property bindings to process
+   */
+  private static void processAssemblyPropertyBindings(
+      @NonNull MetaschemaBindingConfiguration metaschemaConfig,
+      @NonNull String definitionName,
+      @Nullable List<MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding> propertyBindings) {
+    processPropertyBindings(
+        metaschemaConfig,
+        definitionName,
+        propertyBindings,
+        MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding::getName,
+        MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding::getJava,
+        MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding.Java::getCollectionClass);
+  }
+
+  /**
+   * Process property bindings from a define-field-binding element.
+   *
+   * @param metaschemaConfig
+   *          the metaschema binding configuration to add property bindings to
+   * @param definitionName
+   *          the name of the containing definition
+   * @param propertyBindings
+   *          the list of property bindings to process
+   */
+  private static void processFieldPropertyBindings(
+      @NonNull MetaschemaBindingConfiguration metaschemaConfig,
+      @NonNull String definitionName,
+      @Nullable List<MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding> propertyBindings) {
+    processPropertyBindings(
+        metaschemaConfig,
+        definitionName,
+        propertyBindings,
+        MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding::getName,
+        MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding::getJava,
+        MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding.Java::getCollectionClass);
   }
 
   @NonNull
@@ -392,6 +517,9 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
   public static final class MetaschemaBindingConfiguration {
     private final Map<String, IDefinitionBindingConfiguration> assemblyBindingConfigs = new ConcurrentHashMap<>();
     private final Map<String, IDefinitionBindingConfiguration> fieldBindingConfigs = new ConcurrentHashMap<>();
+    // Map structure: definition name -> property name -> property binding config
+    private final Map<String, Map<String, IPropertyBindingConfiguration>> propertyBindingConfigs
+        = new ConcurrentHashMap<>();
 
     private MetaschemaBindingConfiguration() {
     }
@@ -456,6 +584,48 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
     public IDefinitionBindingConfiguration addFieldDefinitionBindingConfig(@NonNull String name,
         @NonNull IDefinitionBindingConfiguration config) {
       return fieldBindingConfigs.put(name, config);
+    }
+
+    /**
+     * Get the property binding configuration for a specific property within a
+     * definition.
+     *
+     * @param definitionName
+     *          the name of the containing definition
+     * @param propertyName
+     *          the name of the property
+     * @return the property binding configuration, or {@code null} if none is
+     *         configured
+     */
+    @Nullable
+    public IPropertyBindingConfiguration getPropertyBindingConfig(
+        @NonNull String definitionName,
+        @NonNull String propertyName) {
+      Map<String, IPropertyBindingConfiguration> defProps = propertyBindingConfigs.get(definitionName);
+      return defProps == null ? null : defProps.get(propertyName);
+    }
+
+    /**
+     * Set the property binding configuration for a specific property within a
+     * definition.
+     *
+     * @param definitionName
+     *          the name of the containing definition
+     * @param propertyName
+     *          the name of the property
+     * @param config
+     *          the property binding configuration
+     * @return the old property binding configuration, or {@code null} if none was
+     *         previously configured
+     */
+    @Nullable
+    public IPropertyBindingConfiguration addPropertyBindingConfig(
+        @NonNull String definitionName,
+        @NonNull String propertyName,
+        @NonNull IPropertyBindingConfiguration config) {
+      return propertyBindingConfigs
+          .computeIfAbsent(definitionName, k -> new ConcurrentHashMap<>())
+          .put(propertyName, config);
     }
   }
 }

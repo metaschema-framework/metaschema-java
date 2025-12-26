@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metaschema-bindings
+	xmlns="https://csrc.nist.gov/ns/metaschema-binding/1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<metaschema-binding href="./assembly/metaschema.xml">
+		<!-- Assembly with various edge cases for property bindings -->
+		<define-assembly-binding name="edge-case-assembly">
+			<!-- Property binding without java element -->
+			<property-binding name="no-java-element"/>
+			<!-- Property binding with java but no collection-class -->
+			<property-binding name="no-collection-class">
+				<java/>
+			</property-binding>
+			<!-- Duplicate property bindings - last wins behavior -->
+			<property-binding name="duplicate-property">
+				<java>
+					<collection-class>java.util.ArrayList</collection-class>
+				</java>
+			</property-binding>
+			<property-binding name="duplicate-property">
+				<java>
+					<collection-class>java.util.LinkedList</collection-class>
+				</java>
+			</property-binding>
+		</define-assembly-binding>
+		<!-- Field definition with property binding -->
+		<define-field-binding name="test-field">
+			<property-binding name="field-items">
+				<java>
+					<collection-class>java.util.LinkedHashSet</collection-class>
+				</java>
+			</property-binding>
+		</define-field-binding>
+	</metaschema-binding>
+</metaschema-bindings>

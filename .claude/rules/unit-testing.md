@@ -1,5 +1,20 @@
 # Unit Testing Standards
 
+## 100% Test Pass Rate (BLOCKING)
+
+**All unit tests MUST pass before pushing code or creating PRs.**
+
+- Run `mvn test` or `mvn -pl {module} test` to verify
+- A single failing test blocks the PR
+- Flaky tests must be fixed or marked as `@Disabled` with explanation
+- Network-dependent tests should have appropriate timeouts and retry logic
+
+**If CI fails due to test timeout or flakiness:**
+1. Investigate the root cause
+2. If it's a pre-existing issue on develop, note this in the PR
+3. Re-run CI to verify it's not caused by your changes
+4. Open an issue to track the flaky test if not already tracked
+
 ## Core Principles
 
 ### What NOT to Test
