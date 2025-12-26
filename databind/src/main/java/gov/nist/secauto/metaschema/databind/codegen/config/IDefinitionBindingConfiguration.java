@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.databind.codegen.config;
 
 import java.util.List;
+import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -36,4 +37,16 @@ public interface IDefinitionBindingConfiguration {
    */
   @NonNull
   List<String> getInterfacesToImplement();
+
+  /**
+   * Get the choice group binding configurations for this definition.
+   *
+   * <p>
+   * Choice group bindings provide configuration for choice groups within this
+   * assembly definition, keyed by the choice group's {@code group-as} name.
+   *
+   * @return a map of group-as name to choice group binding configuration
+   */
+  @NonNull
+  Map<String, IChoiceGroupBindingConfiguration> getChoiceGroupBindings();
 }

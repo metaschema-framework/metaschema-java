@@ -9,6 +9,7 @@ package gov.nist.secauto.metaschema.databind.config.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import gov.nist.secauto.metaschema.core.datatype.adapter.BooleanAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UriAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
@@ -18,9 +19,11 @@ import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundFieldValue;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaField;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
@@ -675,6 +678,17 @@ public class MetaschemaBindings implements IBoundObject {
       private List<PropertyBinding> _propertyBindings;
 
       /**
+       * Provides binding configuration for a choice group within the parent assembly.
+       */
+      @BoundAssembly(
+          formalName = "Choice Group Binding",
+          description = "Provides binding configuration for a choice group within the parent assembly.",
+          useName = "choice-group-binding",
+          maxOccurs = -1,
+          groupAs = @GroupAs(name = "choice-group-bindings", inJson = JsonGroupAsBehavior.LIST))
+      private List<ChoiceGroupBinding> _choiceGroupBindings;
+
+      /**
        * Constructs a new
        * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding}
        * instance with no metadata.
@@ -807,6 +821,63 @@ public class MetaschemaBindings implements IBoundObject {
       public boolean removePropertyBinding(PropertyBinding item) {
         PropertyBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
         return _propertyBindings != null && _propertyBindings.remove(value);
+      }
+
+      /**
+       * Get the choice Group Binding.
+       *
+       * <p>
+       * Provides binding configuration for a choice group within the parent assembly.
+       *
+       * @return the choice-group-binding value
+       */
+      @NonNull
+      public List<ChoiceGroupBinding> getChoiceGroupBindings() {
+        if (_choiceGroupBindings == null) {
+          _choiceGroupBindings = new LinkedList<>();
+        }
+        return _choiceGroupBindings;
+      }
+
+      /**
+       * Set the choice Group Binding.
+       *
+       * <p>
+       * Provides binding configuration for a choice group within the parent assembly.
+       *
+       * @param value
+       *          the choice-group-binding value to set
+       */
+      public void setChoiceGroupBindings(@NonNull List<ChoiceGroupBinding> value) {
+        _choiceGroupBindings = value;
+      }
+
+      /**
+       * Add a new {@link ChoiceGroupBinding} item to the underlying collection.
+       *
+       * @param item
+       *          the item to add
+       * @return {@code true}
+       */
+      public boolean addChoiceGroupBinding(ChoiceGroupBinding item) {
+        ChoiceGroupBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+        if (_choiceGroupBindings == null) {
+          _choiceGroupBindings = new LinkedList<>();
+        }
+        return _choiceGroupBindings.add(value);
+      }
+
+      /**
+       * Remove the first matching {@link ChoiceGroupBinding} item from the underlying
+       * collection.
+       *
+       * @param item
+       *          the item to remove
+       * @return {@code true} if the item was removed or {@code false} otherwise
+       */
+      public boolean removeChoiceGroupBinding(ChoiceGroupBinding item) {
+        ChoiceGroupBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+        return _choiceGroupBindings != null && _choiceGroupBindings.remove(value);
       }
 
       @Override
@@ -1221,6 +1292,222 @@ public class MetaschemaBindings implements IBoundObject {
            */
           public void setCollectionClass(@Nullable String value) {
             _collectionClass = value;
+          }
+
+          @Override
+          public String toString() {
+            return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+          }
+        }
+      }
+
+      /**
+       * Provides binding configuration for a choice group within the parent assembly.
+       */
+      @MetaschemaAssembly(
+          formalName = "Choice Group Binding",
+          description = "Provides binding configuration for a choice group within the parent assembly.",
+          name = "choice-group-binding",
+          moduleClass = MetaschemaBindingsModule.class)
+      public static class ChoiceGroupBinding implements IBoundObject {
+        private final IMetaschemaData __metaschemaData;
+
+        /**
+         * The name of the choice group (matches the group-as name in the metaschema).
+         */
+        @BoundFlag(
+            formalName = "Name",
+            description = "The name of the choice group (matches the group-as name in the metaschema).",
+            name = "name",
+            required = true,
+            typeAdapter = TokenAdapter.class)
+        private String _name;
+
+        /**
+         * A fully qualified Java type for collection items. When specified, the
+         * generated field and getter will use this type instead of Object.
+         */
+        @BoundField(
+            formalName = "Item Type",
+            description = "A fully qualified Java type for collection items. When specified, the generated field and getter will use this type instead of Object.",
+            useName = "item-type")
+        private ItemType _itemType;
+
+        /**
+         * Constructs a new
+         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding}
+         * instance with no metadata.
+         */
+        public ChoiceGroupBinding() {
+          this(null);
+        }
+
+        /**
+         * Constructs a new
+         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding}
+         * instance with the specified metadata.
+         *
+         * @param data
+         *          the metaschema data, or {@code null} if none
+         */
+        public ChoiceGroupBinding(IMetaschemaData data) {
+          this.__metaschemaData = data;
+        }
+
+        @Override
+        public IMetaschemaData getMetaschemaData() {
+          return __metaschemaData;
+        }
+
+        /**
+         * Get the name.
+         *
+         * <p>
+         * The name of the choice group (matches the group-as name in the metaschema).
+         *
+         * @return the name value
+         */
+        @NonNull
+        public String getName() {
+          return _name;
+        }
+
+        /**
+         * Set the name.
+         *
+         * <p>
+         * The name of the choice group (matches the group-as name in the metaschema).
+         *
+         * @param value
+         *          the name value to set
+         */
+        public void setName(@NonNull String value) {
+          _name = value;
+        }
+
+        /**
+         * Get the item Type.
+         *
+         * <p>
+         * A fully qualified Java type for collection items. When specified, the
+         * generated field and getter will use this type instead of Object.
+         *
+         * @return the item-type value, or {@code null} if not set
+         */
+        @Nullable
+        public ItemType getItemType() {
+          return _itemType;
+        }
+
+        /**
+         * Set the item Type.
+         *
+         * <p>
+         * A fully qualified Java type for collection items. When specified, the
+         * generated field and getter will use this type instead of Object.
+         *
+         * @param value
+         *          the item-type value to set
+         */
+        public void setItemType(@Nullable ItemType value) {
+          _itemType = value;
+        }
+
+        @Override
+        public String toString() {
+          return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+        }
+
+        /**
+         * A fully qualified Java type for collection items. When specified, the
+         * generated field and getter will use this type instead of Object.
+         */
+        @MetaschemaField(
+            formalName = "Item Type",
+            description = "A fully qualified Java type for collection items. When specified, the generated field and getter will use this type instead of Object.",
+            name = "item-type",
+            moduleClass = MetaschemaBindingsModule.class)
+        public static class ItemType implements IBoundObject {
+          private final IMetaschemaData __metaschemaData;
+
+          /**
+           * Whether to use a wildcard bounded type (List&lt;? extends Type&gt;). Defaults
+           * to true.
+           */
+          @BoundFlag(
+              formalName = "Use Wildcard",
+              description = "Whether to use a wildcard bounded type (List<? extends Type>). Defaults to true.",
+              name = "use-wildcard",
+              defaultValue = "true",
+              typeAdapter = BooleanAdapter.class)
+          private Boolean _useWildcard;
+
+          @BoundFieldValue(
+              valueKeyName = "STRVALUE",
+              typeAdapter = TokenAdapter.class)
+          private String _value;
+
+          /**
+           * Constructs a new
+           * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding.ItemType}
+           * instance with no metadata.
+           */
+          public ItemType() {
+            this(null);
+          }
+
+          /**
+           * Constructs a new
+           * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding.ItemType}
+           * instance with the specified metadata.
+           *
+           * @param data
+           *          the metaschema data, or {@code null} if none
+           */
+          public ItemType(IMetaschemaData data) {
+            this.__metaschemaData = data;
+          }
+
+          @Override
+          public IMetaschemaData getMetaschemaData() {
+            return __metaschemaData;
+          }
+
+          /**
+           * Get the use Wildcard.
+           *
+           * <p>
+           * Whether to use a wildcard bounded type (List&lt;? extends Type&gt;). Defaults
+           * to true.
+           *
+           * @return the use-wildcard value, or {@code null} if not set
+           */
+          @Nullable
+          public Boolean getUseWildcard() {
+            return _useWildcard;
+          }
+
+          /**
+           * Set the use Wildcard.
+           *
+           * <p>
+           * Whether to use a wildcard bounded type (List&lt;? extends Type&gt;). Defaults
+           * to true.
+           *
+           * @param value
+           *          the use-wildcard value to set
+           */
+          public void setUseWildcard(@Nullable Boolean value) {
+            _useWildcard = value;
+          }
+
+          @Nullable
+          public String getValue() {
+            return _value;
+          }
+
+          public void setValue(@Nullable String value) {
+            _value = value;
           }
 
           @Override

@@ -42,6 +42,14 @@ public interface ITypeResolver {
   }
 
   /**
+   * Get the binding configuration used by this type resolver.
+   *
+   * @return the binding configuration
+   */
+  @NonNull
+  IBindingConfiguration getBindingConfiguration();
+
+  /**
    * Get type information for the provided {@code instance}.
    *
    * @param instance

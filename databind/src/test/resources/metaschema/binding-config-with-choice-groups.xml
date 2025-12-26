@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metaschema-bindings
+  xmlns="https://csrc.nist.gov/ns/metaschema-binding/1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://csrc.nist.gov/ns/metaschema-binding/1.0 ../../../main/xsd/metaschema-binding.xsd ">
+
+  <!-- Test assembly module with choice groups -->
+  <metaschema-binding href="./assembly/metaschema.xml">
+    <!-- Assembly with choice group bindings -->
+    <define-assembly-binding name="test-assembly">
+      <java>
+        <use-class-name>TestAssembly</use-class-name>
+      </java>
+
+      <!-- Choice group with item type and wildcard -->
+      <choice-group-binding name="mixed-content">
+        <item-type use-wildcard="true">gov.nist.secauto.metaschema.core.model.IModelElement</item-type>
+      </choice-group-binding>
+
+      <!-- Choice group with item type, no wildcard -->
+      <choice-group-binding name="typed-items">
+        <item-type use-wildcard="false">java.lang.String</item-type>
+      </choice-group-binding>
+
+      <!-- Choice group without item type (should default to Object) -->
+      <choice-group-binding name="untyped-items">
+      </choice-group-binding>
+    </define-assembly-binding>
+
+    <!-- Assembly with no choice group bindings -->
+    <define-assembly-binding name="simple-assembly">
+      <java>
+        <use-class-name>SimpleAssembly</use-class-name>
+      </java>
+    </define-assembly-binding>
+  </metaschema-binding>
+</metaschema-bindings>

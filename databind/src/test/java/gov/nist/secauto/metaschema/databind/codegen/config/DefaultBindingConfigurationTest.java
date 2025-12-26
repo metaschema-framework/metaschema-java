@@ -294,4 +294,109 @@ class DefaultBindingConfigurationTest {
         "Duplicate property bindings should use last-wins semantics");
   }
 
+  @Test
+  void testChoiceGroupBindingParsing() throws IOException {
+    // Test that choice-group-binding elements are parsed from XML config
+    File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-with-choice-groups.xml");
+    URI assemblyMetaschemaLocation = new File("src/test/resources/metaschema/assembly/metaschema.xml")
+        .getAbsoluteFile().toURI();
+
+    DefaultBindingConfiguration config = new DefaultBindingConfiguration();
+    config.load(bindingConfigFile);
+
+    IAssemblyDefinition testAssemblyDefinition = context.mock(IAssemblyDefinition.class, "testAssembly");
+    IModule testModule = context.mock(IModule.class, "testModule");
+
+    context.checking(new Expectations() {
+      {
+        allowing(testModule).getLocation();
+        will(returnValue(assemblyMetaschemaLocation));
+        allowing(testAssemblyDefinition).getContainingModule();
+        will(returnValue(testModule));
+        allowing(testAssemblyDefinition).getModelType();
+        will(returnValue(ModelType.ASSEMBLY));
+        allowing(testAssemblyDefinition).getName();
+        will(returnValue("test-assembly"));
+      }
+    });
+
+    // Get the definition binding configuration
+    IDefinitionBindingConfiguration defConfig = config.getBindingConfigurationForDefinition(
+        ObjectUtils.notNull(testAssemblyDefinition));
+
+    assertNotNull(defConfig, "Definition binding configuration should exist");
+
+    // Verify choice group bindings are accessible
+    assertNotNull(defConfig.getChoiceGroupBindings(),
+        "Choice group bindings map should not be null");
+    assertEquals(3, defConfig.getChoiceGroupBindings().size(),
+        "Should have 3 choice group bindings");
+
+    // Verify "mixed-content" choice group binding
+    IChoiceGroupBindingConfiguration mixedContentConfig
+        = defConfig.getChoiceGroupBindings().get("mixed-content");
+    assertNotNull(mixedContentConfig, "mixed-content choice group binding should exist");
+    assertEquals("mixed-content", mixedContentConfig.getGroupAsName());
+    assertEquals("gov.nist.secauto.metaschema.core.model.IModelElement",
+        mixedContentConfig.getItemTypeName());
+    assertEquals(true, mixedContentConfig.isUseWildcard(),
+        "mixed-content should use wildcard");
+
+    // Verify "typed-items" choice group binding
+    IChoiceGroupBindingConfiguration typedItemsConfig
+        = defConfig.getChoiceGroupBindings().get("typed-items");
+    assertNotNull(typedItemsConfig, "typed-items choice group binding should exist");
+    assertEquals("typed-items", typedItemsConfig.getGroupAsName());
+    assertEquals("java.lang.String", typedItemsConfig.getItemTypeName());
+    assertEquals(false, typedItemsConfig.isUseWildcard(),
+        "typed-items should not use wildcard");
+
+    // Verify "untyped-items" choice group binding
+    IChoiceGroupBindingConfiguration untypedItemsConfig
+        = defConfig.getChoiceGroupBindings().get("untyped-items");
+    assertNotNull(untypedItemsConfig, "untyped-items choice group binding should exist");
+    assertEquals("untyped-items", untypedItemsConfig.getGroupAsName());
+    assertNull(untypedItemsConfig.getItemTypeName(),
+        "untyped-items should not have an item type");
+  }
+
+  @Test
+  void testEmptyChoiceGroupBindings() throws IOException {
+    // Test that empty choice group bindings map is returned when none configured
+    File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-with-choice-groups.xml");
+    URI assemblyMetaschemaLocation = new File("src/test/resources/metaschema/assembly/metaschema.xml")
+        .getAbsoluteFile().toURI();
+
+    DefaultBindingConfiguration config = new DefaultBindingConfiguration();
+    config.load(bindingConfigFile);
+
+    IAssemblyDefinition simpleAssemblyDefinition = context.mock(IAssemblyDefinition.class, "simpleAssembly");
+    IModule simpleModule = context.mock(IModule.class, "simpleModule");
+
+    context.checking(new Expectations() {
+      {
+        allowing(simpleModule).getLocation();
+        will(returnValue(assemblyMetaschemaLocation));
+        allowing(simpleAssemblyDefinition).getContainingModule();
+        will(returnValue(simpleModule));
+        allowing(simpleAssemblyDefinition).getModelType();
+        will(returnValue(ModelType.ASSEMBLY));
+        allowing(simpleAssemblyDefinition).getName();
+        will(returnValue("simple-assembly"));
+      }
+    });
+
+    // Get the definition binding configuration
+    IDefinitionBindingConfiguration defConfig = config.getBindingConfigurationForDefinition(
+        ObjectUtils.notNull(simpleAssemblyDefinition));
+
+    assertNotNull(defConfig, "Definition binding configuration should exist");
+
+    // Verify choice group bindings map is empty but not null
+    assertNotNull(defConfig.getChoiceGroupBindings(),
+        "Choice group bindings map should not be null");
+    assertEquals(0, defConfig.getChoiceGroupBindings().size(),
+        "Choice group bindings map should be empty");
+  }
+
 }

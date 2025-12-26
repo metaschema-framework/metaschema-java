@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This POM is used to regenerate the Metaschema model binding classes.
+  It is NOT part of the normal build due to circular dependencies.
+
+  Usage: mvn -f databind-metaschema/pom-bootstrap.xml generate-sources
+
+  This will:
+  1. Delete existing generated classes in databind's model/metaschema/binding package
+  2. Generate new binding classes directly into databind/src/main/java
+
+  IMPORTANT: Build the project first to ensure the code generator is up to date:
+  mvn install -DskipTests
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>dev.metaschema.java</groupId>
+		<artifactId>metaschema-framework</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>metaschema-databind-modules-bootstrap</artifactId>
+	<packaging>pom</packaging>
+	<name>Metaschema Modules - Binding Class Generator</name>
+	<description>Standalone POM for regenerating Metaschema model binding classes.</description>
+
+	<properties>
+		<!-- For testing: generate to target directory first, then compare with existing -->
+		<output.dir>${project.build.directory}/generated-sources/metaschema</output.dir>
+		<binding.package.dir>${project.basedir}/../databind/src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/binding</binding.package.dir>
+		<stale.file.dir>${project.build.directory}/metaschema</stale.file.dir>
+		<metaschema.sources.dir>${project.basedir}/../core/metaschema/schema/metaschema</metaschema.sources.dir>
+	</properties>
+
+	<build>
+		<plugins>
+			<!-- Step 1: Clean stale file to force regeneration -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>clean-stale-file</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+						<configuration>
+							<excludeDefaultDirectories>true</excludeDefaultDirectories>
+							<filesets>
+								<!-- Clean the stale file to force regeneration -->
+								<fileset>
+									<directory>${stale.file.dir}</directory>
+									<includes>
+										<include>metaschema-codegen-generateSourcesStaleFile</include>
+									</includes>
+								</fileset>
+							</filesets>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Step 2: Generate binding classes to test directory for comparison -->
+			<plugin>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>metaschema-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<id>metaschema-codegen</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-sources</goal>
+						</goals>
+						<configuration>
+							<metaschemaDir>${metaschema.sources.dir}</metaschemaDir>
+							<outputDirectory>${output.dir}</outputDirectory>
+							<configs>
+								<config>${project.basedir}/src/main/metaschema-bindings/metaschema-model-bindings.xml</config>
+							</configs>
+							<includes>
+								<include>metaschema-module-metaschema.xml</include>
+							</includes>
+							<constraints>
+								<constraint>${metaschema.sources.dir}/metaschema-module-constraints.xml</constraint>
+							</constraints>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

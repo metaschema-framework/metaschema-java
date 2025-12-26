@@ -5,8 +5,11 @@
 
 package gov.nist.secauto.metaschema.databind.codegen.config;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -18,6 +21,8 @@ public class DefaultDefinitionBindingConfiguration implements IMutableDefinition
   private String baseClassName;
   @NonNull
   private final List<String> interfacesToImplement = new LinkedList<>();
+  @NonNull
+  private final Map<String, IChoiceGroupBindingConfiguration> choiceGroupBindings = new LinkedHashMap<>();
 
   /**
    * Create a new definition binding configuration.
@@ -37,6 +42,7 @@ public class DefaultDefinitionBindingConfiguration implements IMutableDefinition
     this.className = config.getClassName();
     this.baseClassName = config.getQualifiedBaseClassName();
     this.interfacesToImplement.addAll(config.getInterfacesToImplement());
+    this.choiceGroupBindings.putAll(config.getChoiceGroupBindings());
   }
 
   @Override
@@ -67,5 +73,22 @@ public class DefaultDefinitionBindingConfiguration implements IMutableDefinition
   @Override
   public void addInterfaceToImplement(String interfaceName) {
     this.interfacesToImplement.add(interfaceName);
+  }
+
+  @Override
+  public Map<String, IChoiceGroupBindingConfiguration> getChoiceGroupBindings() {
+    return Collections.unmodifiableMap(choiceGroupBindings);
+  }
+
+  /**
+   * Add a choice group binding configuration.
+   *
+   * @param groupAsName
+   *          the group-as name from the Metaschema module
+   * @param config
+   *          the choice group binding configuration
+   */
+  public void addChoiceGroupBinding(@NonNull String groupAsName, @NonNull IChoiceGroupBindingConfiguration config) {
+    this.choiceGroupBindings.put(groupAsName, config);
   }
 }
