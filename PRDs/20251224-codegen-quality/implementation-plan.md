@@ -181,74 +181,71 @@ This PR extends the binding configuration to support overriding default collecti
 
 ---
 
-## PR 3: Databind Bootstrap and Regeneration
+## PR 3: Databind Bootstrap and Regeneration ✅
 
 | Attribute | Value |
 |-----------|-------|
-| **Files Changed** | ~35 |
+| **Files Changed** | ~55 |
 | **Risk Level** | Medium |
 | **Dependencies** | PR 1, PR 2 |
 | **Target Branch** | develop |
-| **Status** | Pending |
-| **Pull Request** | |
+| **Status** | Completed |
+| **Pull Request** | (combined with PR 2 in #584) |
 
 This PR creates the databind bootstrap infrastructure and regenerates the databind binding classes.
 
-### Files to Create
+### Files Created
 
 | File | Changes |
 |------|---------|
-| `databind/pom-bootstrap.xml` | Standalone POM for binding class regeneration |
-| `databind/README.md` | Document bootstrap process |
+| `databind/pom-bootstrap-config.xml` | Bootstrap POM for config binding classes |
+| `databind/pom-bootstrap-model.xml` | Bootstrap POM for model binding classes |
+| `databind/README.md` | Documents bootstrap process for both binding class sets |
+| `databind/src/main/metaschema-bindings/metaschema-model-bindings.xml` | Binding configuration for model classes |
 
-### Files to Update
-
-| File | Changes |
-|------|---------|
-| `CLAUDE.md` | Reference databind bootstrap in Bootstrap Binding Classes section |
-
-### Files to Regenerate
+### Files Updated
 
 | File | Changes |
 |------|---------|
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/binding/*.java` | Regenerated binding classes |
+| `CLAUDE.md` | Updated Bootstrap Binding Classes section with databind POMs |
+| `databind/src/main/metaschema-bindings/metaschema-config-bindings.xml` | Renamed from `metaschema-bindings.xml` |
 
-### Implementation Approach
+### Files Regenerated
 
-1. **Create `pom-bootstrap.xml`**
-   - Copy structure from `metaschema-testing/pom-bootstrap.xml`
-   - Configure metaschema-maven-plugin for databind module
-   - Reference `databind-metaschema/src/main/metaschema-bindings/metaschema-metaschema-bindings.xml`
-   - Set output to `target/generated-sources/metaschema`
+| File | Changes |
+|------|---------|
+| `databind/src/main/java/.../config/binding/*.java` | Regenerated config binding classes |
+| `databind/src/main/java/.../model/metaschema/binding/*.java` | Regenerated model binding classes (~40 files) |
 
-2. **Create README.md**
-   - Document the bootstrap process
-   - Explain when regeneration is needed
-   - Provide step-by-step commands
+### Implementation Notes
 
-3. **Update CLAUDE.md**
-   - Add databind to Bootstrap Binding Classes section
-   - Reference the README for detailed instructions
+1. **Two separate bootstrap POMs created**
+   - `pom-bootstrap-config.xml` - for config binding classes from `metaschema-bindings.yaml`
+   - `pom-bootstrap-model.xml` - for model binding classes from `metaschema-module-metaschema.xml`
 
-4. **Regenerate databind binding classes**
-   - Run bootstrap generation: `mvn -f databind/pom-bootstrap.xml generate-sources`
-   - Copy generated files to source directory
-   - Compare with existing classes to identify any API differences
-   - Verify custom interface implementations are preserved (via binding configuration)
+2. **Binding configuration for model classes**
+   - Created `metaschema-model-bindings.xml` to customize generated classes
+   - Adds interface implementations (e.g., `IModelConstraintsBase`, `IValueConstraintsBase`)
+   - Renames `group-as` to `GroupingAs` to avoid Java keyword conflicts
+
+3. **README documents both bootstrap processes**
+   - Separate sections for config and model binding classes
+   - Includes regeneration commands and explains when to regenerate
 
 ### Acceptance Criteria
 
-- [ ] `pom-bootstrap.xml` successfully generates binding classes
-- [ ] README documents the complete regeneration process
-- [ ] CLAUDE.md references databind bootstrap documentation
-- [ ] All databind binding classes regenerated
-- [ ] Custom interface implementations preserved via binding configuration
-- [ ] Base class extensions preserved via binding configuration
-- [ ] Generated Javadoc is complete and properly formatted
-- [ ] Null-safety annotations present
-- [ ] `mvn checkstyle:check` passes on regenerated files
-- [ ] All tests pass: `mvn test`
-- [ ] Build succeeds: `mvn clean install -PCI -Prelease`
+- [x] `pom-bootstrap-config.xml` successfully generates config binding classes
+- [x] `pom-bootstrap-model.xml` successfully generates model binding classes
+- [x] README documents the complete regeneration process
+- [x] CLAUDE.md references databind bootstrap documentation
+- [x] All databind binding classes regenerated
+- [x] Custom interface implementations preserved via binding configuration
+- [x] Base class extensions preserved via binding configuration
+- [x] Generated Javadoc is complete and properly formatted
+- [x] Null-safety annotations present
+- [x] `mvn checkstyle:check` passes on regenerated files
+- [x] All tests pass: `mvn test`
+- [x] Build succeeds: `mvn clean install -PCI -Prelease`
 
 ---
 
@@ -314,12 +311,12 @@ Currently, when a required field/flag is missing from input data, the generated 
 | PR | Description | Files | Risk | Dependencies | Status |
 |----|-------------|-------|------|--------------|--------|
 | 1 | Code generator improvements + metaschema-testing regeneration | 20 | Low | None | ✅ Completed ([#577](https://github.com/metaschema-framework/metaschema-java/pull/577)) |
-| 2 | Collection class override support | ~15 | Low | PR 1 | ✅ Completed |
-| 3 | Databind bootstrap setup + regeneration | ~35 | Medium | PR 1, PR 2 | Pending |
+| 2 | Collection class override support | ~15 | Low | PR 1 | ✅ Completed ([#584](https://github.com/metaschema-framework/metaschema-java/pull/584)) |
+| 3 | Databind bootstrap setup + regeneration | ~55 | Medium | PR 1, PR 2 | ✅ Completed (combined with PR 2) |
 | 4 | Parser required field validation | ~10 | Medium | PR 1 | Pending |
 
-**Total Estimated PRs**: 4
-**Total Estimated Files**: ~80
+**Total Estimated PRs**: 4 (3 actual - PR 2 and PR 3 combined)
+**Total Estimated Files**: ~100
 
 ---
 

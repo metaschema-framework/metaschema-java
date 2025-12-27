@@ -38,8 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-
 public class ChoiceGroupTypeInfoImpl
     extends AbstractModelInstanceTypeInfo<IChoiceGroupInstance>
     implements IChoiceGroupTypeInfo {
@@ -225,6 +223,13 @@ public class ChoiceGroupTypeInfoImpl
     builder.addJavadoc("@return the $L items\n", groupAsName);
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Generates Javadoc for choice group setter methods, including documentation of
+   * the configured item type (if binding configuration specifies one) and whether
+   * wildcard types are required.
+   */
   @Override
   public void buildSetterJavadoc(@NonNull MethodSpec.Builder builder, @NonNull String paramName) {
     IChoiceGroupInstance instance = getInstance();
