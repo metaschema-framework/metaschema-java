@@ -62,7 +62,14 @@ public class BindingModuleLoader
   public BindingModuleLoader(
       @NonNull IBindingContext bindingContext,
       @NonNull ModuleLoadingPostProcessor postProcessor) {
-    this.loader = Lazy.of(bindingContext::newBoundLoader);
+    this.loader = Lazy.of(() -> {
+      IBoundLoader boundLoader = bindingContext.newBoundLoader();
+      // Disable required field validation during module loading since:
+      // 1. Metaschema modules have their own schema validation
+      // 2. Module parsing is an internal operation with trusted input
+      boundLoader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+      return boundLoader;
+    });
     this.postProcessor = postProcessor;
   }
 

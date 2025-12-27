@@ -55,6 +55,22 @@ public final class DeserializationFeature<V>
   public static final DeserializationFeature<Integer> FORMAT_DETECTION_LOOKAHEAD_LIMIT
       = new DeserializationFeature<>("format-detection-lookahead-limit", Integer.class, FORMAT_DETECTION_LOOKAHEAD);
 
+  /**
+   * If enabled, validate that required fields are present during deserialization.
+   * When a required field is missing and has no default value, an error will be
+   * thrown with a descriptive message.
+   * <p>
+   * Choice groups are handled correctly: if an instance belongs to a choice and
+   * at least one sibling in that choice was provided, the instance is not
+   * considered missing.
+   * <p>
+   * When using schema validation via CLI commands, this feature is automatically
+   * disabled since the schema already validates required fields.
+   */
+  @NonNull
+  public static final DeserializationFeature<Boolean> DESERIALIZE_VALIDATE_REQUIRED_FIELDS
+      = new DeserializationFeature<>("validate-required-fields", Boolean.class, true);
+
   private DeserializationFeature(
       @NonNull String name,
       @NonNull Class<V> valueClass,

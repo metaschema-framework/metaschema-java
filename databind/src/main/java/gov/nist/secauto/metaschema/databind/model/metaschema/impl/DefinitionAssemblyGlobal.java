@@ -33,6 +33,7 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyCon
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.JsonKey;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -145,6 +146,11 @@ public class DefinitionAssemblyGlobal
       IChoiceInstance,
       IChoiceGroupInstance> getModelContainer() {
     return ObjectUtils.notNull(modelContainer.get());
+  }
+
+  @Override
+  public List<IChoiceInstance> getChoiceInstances() {
+    return getModelContainer().getChoiceInstances();
   }
 
   @Override

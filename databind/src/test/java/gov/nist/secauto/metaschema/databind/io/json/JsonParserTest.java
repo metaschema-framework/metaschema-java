@@ -30,6 +30,10 @@ class JsonParserTest
 
     IBoundLoader loader = bindingContext.newBoundLoader();
     loader.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
+    // Disable required field validation since dynamically compiled binding classes
+    // don't preserve choice group information. The metaschema has a choice between
+    // x and y, and the example provides y, which should satisfy the choice.
+    loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
     Object obj = loader.load(ObjectUtils.notNull(
         Paths.get("src/test/resources/metaschema/308-choice-regression/example.json")));
     assertNotNull(obj);

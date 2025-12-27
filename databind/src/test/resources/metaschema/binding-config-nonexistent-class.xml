@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Test configuration with a non-existent class -->
+<metaschema-bindings
+    xmlns="https://csrc.nist.gov/ns/metaschema-binding/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metaschema-binding href="./assembly/metaschema.xml">
+    <define-assembly-binding name="top-level">
+      <property-binding name="children">
+        <java>
+          <collection-class>com.nonexistent.FakeCollection</collection-class>
+        </java>
+      </property-binding>
+    </define-assembly-binding>
+  </metaschema-binding>
+</metaschema-bindings>

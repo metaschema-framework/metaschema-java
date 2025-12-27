@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 import gov.nist.secauto.metaschema.core.model.ModelType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.io.BindingException;
 
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
@@ -47,7 +48,7 @@ class DefaultBindingConfigurationTest {
   private final IModule module = context.mock(IModule.class);
 
   @Test
-  void testLoader() throws MalformedURLException, IOException {
+  void testLoader() throws MalformedURLException, IOException, BindingException {
     File bindingConfigFile = new File("src/test/resources/metaschema/binding-config.xml");
 
     DefaultBindingConfiguration config = new DefaultBindingConfiguration();
@@ -75,7 +76,7 @@ class DefaultBindingConfigurationTest {
   }
 
   @Test
-  void testCollectionClassOverride() throws IOException {
+  void testCollectionClassOverride() throws IOException, BindingException {
     // Test loading binding configuration with collection-class overrides
     File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-with-collection-class.xml");
     URI assemblyMetaschemaLocation = new File("src/test/resources/metaschema/assembly/metaschema.xml")
@@ -151,7 +152,7 @@ class DefaultBindingConfigurationTest {
   }
 
   @Test
-  void testPropertyBindingWithoutJavaElement() throws IOException {
+  void testPropertyBindingWithoutJavaElement() throws IOException, BindingException {
     // Test property-binding element that has no <java> child
     File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-edge-cases.xml");
     URI assemblyMetaschemaLocation = new File("src/test/resources/metaschema/assembly/metaschema.xml")
@@ -190,7 +191,7 @@ class DefaultBindingConfigurationTest {
   }
 
   @Test
-  void testDefinitionNotInBindingConfig() throws IOException {
+  void testDefinitionNotInBindingConfig() throws IOException, BindingException {
     // Test querying a definition from a module that has no binding config
     File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-with-collection-class.xml");
     URI unknownModuleLocation = new File("src/test/resources/metaschema/unknown-module.xml")
@@ -223,7 +224,7 @@ class DefaultBindingConfigurationTest {
   }
 
   @Test
-  void testFieldDefinitionPropertyBinding() throws IOException {
+  void testFieldDefinitionPropertyBinding() throws IOException, BindingException {
     // Test property binding on a field definition (not just assembly)
     File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-edge-cases.xml");
     URI assemblyMetaschemaLocation = new File("src/test/resources/metaschema/assembly/metaschema.xml")
@@ -258,7 +259,7 @@ class DefaultBindingConfigurationTest {
   }
 
   @Test
-  void testDuplicatePropertyBindingLastWins() throws IOException {
+  void testDuplicatePropertyBindingLastWins() throws IOException, BindingException {
     // Test that duplicate property bindings use last-wins semantics
     File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-edge-cases.xml");
     URI assemblyMetaschemaLocation = new File("src/test/resources/metaschema/assembly/metaschema.xml")
@@ -295,7 +296,7 @@ class DefaultBindingConfigurationTest {
   }
 
   @Test
-  void testChoiceGroupBindingParsing() throws IOException {
+  void testChoiceGroupBindingParsing() throws IOException, BindingException {
     // Test that choice-group-binding elements are parsed from XML config
     File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-with-choice-groups.xml");
     URI assemblyMetaschemaLocation = new File("src/test/resources/metaschema/assembly/metaschema.xml")
@@ -361,7 +362,7 @@ class DefaultBindingConfigurationTest {
   }
 
   @Test
-  void testEmptyChoiceGroupBindings() throws IOException {
+  void testEmptyChoiceGroupBindings() throws IOException, BindingException {
     // Test that empty choice group bindings map is returned when none configured
     File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-with-choice-groups.xml");
     URI assemblyMetaschemaLocation = new File("src/test/resources/metaschema/assembly/metaschema.xml")
@@ -397,6 +398,41 @@ class DefaultBindingConfigurationTest {
         "Choice group bindings map should not be null");
     assertEquals(0, defConfig.getChoiceGroupBindings().size(),
         "Choice group bindings map should be empty");
+  }
+
+  @Test
+  void testInvalidCollectionClassThrowsError() {
+    // Test that specifying a class that doesn't implement List for a List field
+    // throws an error
+    File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-invalid-collection-class.xml");
+
+    DefaultBindingConfiguration config = new DefaultBindingConfiguration();
+
+    BindingException exception = org.junit.jupiter.api.Assertions.assertThrows(
+        BindingException.class,
+        () -> config.load(bindingConfigFile));
+
+    String message = exception.getMessage();
+    org.junit.jupiter.api.Assertions.assertTrue(
+        message != null && (message.contains("Collection") || message.contains("collection")),
+        "Error message should indicate type incompatibility: " + message);
+  }
+
+  @Test
+  void testNonExistentCollectionClassThrowsError() {
+    // Test that specifying a non-existent class throws an error
+    File bindingConfigFile = new File("src/test/resources/metaschema/binding-config-nonexistent-class.xml");
+
+    DefaultBindingConfiguration config = new DefaultBindingConfiguration();
+
+    BindingException exception = org.junit.jupiter.api.Assertions.assertThrows(
+        BindingException.class,
+        () -> config.load(bindingConfigFile));
+
+    String message = exception.getMessage();
+    org.junit.jupiter.api.Assertions.assertTrue(
+        message != null && (message.contains("class") || message.contains("ClassNotFound")),
+        "Error message should indicate class not found: " + message);
   }
 
 }

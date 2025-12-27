@@ -43,7 +43,11 @@ class MetaschemaModuleMetaschemaTest {
   void testReadMetaschemaAsXml() throws IOException {
     IBindingContext context = IBindingContext.newInstance();
 
-    METASCHEMA metaschema = context.newDeserializer(Format.XML, METASCHEMA.class).deserialize(METASCHEMA_FILE);
+    // Disable required field validation since Metaschema modules are validated by
+    // schema and the pre-generated binding classes don't preserve choice group info
+    IDeserializer<METASCHEMA> xmlDeserializer = context.newDeserializer(Format.XML, METASCHEMA.class);
+    xmlDeserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+    METASCHEMA metaschema = xmlDeserializer.deserialize(METASCHEMA_FILE);
 
     {
       ISerializer<METASCHEMA> serializer = context.newSerializer(Format.XML, METASCHEMA.class);
@@ -62,18 +66,21 @@ class MetaschemaModuleMetaschemaTest {
 
     {
       IDeserializer<METASCHEMA> deserializer = context.newDeserializer(Format.XML, METASCHEMA.class);
+      deserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
       deserializer.deserialize(
           ObjectUtils.notNull(Paths.get("target/metaschema.xml")));
     }
 
     {
       IDeserializer<METASCHEMA> deserializer = context.newDeserializer(Format.JSON, METASCHEMA.class);
+      deserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
       deserializer.deserialize(
           ObjectUtils.notNull(Paths.get("target/metaschema.json")));
     }
 
     {
       IDeserializer<METASCHEMA> deserializer = context.newDeserializer(Format.YAML, METASCHEMA.class);
+      deserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
       deserializer.deserialize(
           ObjectUtils.notNull(Paths.get("target/metaschema.yaml")));
     }

@@ -32,6 +32,24 @@ public class DefaultXmlProblemHandler
     implements IXmlProblemHandler {
   private static final Logger LOGGER = LogManager.getLogger(DefaultXmlProblemHandler.class);
 
+  /**
+   * Construct a new problem handler with required field validation enabled.
+   */
+  public DefaultXmlProblemHandler() {
+    super();
+  }
+
+  /**
+   * Construct a new problem handler with the specified validation setting.
+   *
+   * @param validateRequiredFields
+   *          {@code true} to validate that required fields are present,
+   *          {@code false} to skip validation
+   */
+  public DefaultXmlProblemHandler(boolean validateRequiredFields) {
+    super(validateRequiredFields);
+  }
+
   private static final IEnhancedQName XSI_SCHEMA_LOCATION
       = IEnhancedQName.of("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation");
   private static final Set<IEnhancedQName> IGNORED_QNAMES;

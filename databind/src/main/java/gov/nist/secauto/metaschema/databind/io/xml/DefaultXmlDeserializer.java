@@ -162,8 +162,11 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
   @NonNull
   private CLASS parseXmlInternal(@NonNull XMLEventReader2 reader, @NonNull URI resource)
       throws IOException {
-
-    MetaschemaXmlReader parser = new MetaschemaXmlReader(reader, resource, new DefaultXmlProblemHandler());
+    boolean validateRequired = isFeatureEnabled(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+    MetaschemaXmlReader parser = new MetaschemaXmlReader(
+        reader,
+        resource,
+        new DefaultXmlProblemHandler(validateRequired));
 
     try {
       return parser.read(rootDefinition);

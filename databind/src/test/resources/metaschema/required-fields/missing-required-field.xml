@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Missing required-field element -->
+<root xmlns="http://csrc.nist.gov/ns/metaschema/testing/required-fields"
+      required-flag="value1">
+  <required-assembly id="assembly-1" />
+</root>

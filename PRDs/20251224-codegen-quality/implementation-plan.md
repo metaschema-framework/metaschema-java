@@ -249,16 +249,16 @@ This PR creates the databind bootstrap infrastructure and regenerates the databi
 
 ---
 
-## PR 4: Parser Required Field Validation
+## PR 4: Parser Required Field Validation ✅
 
 | Attribute | Value |
 |-----------|-------|
-| **Files Changed** | ~10 |
+| **Files Changed** | ~25 |
 | **Risk Level** | Medium |
 | **Dependencies** | PR 1 |
 | **Target Branch** | develop |
-| **Status** | Pending |
-| **Pull Request** | |
+| **Status** | Completed |
+| **Pull Request** | [#593](https://github.com/metaschema-framework/metaschema-java/pull/593) |
 
 This PR adds validation during parsing to emit meaningful errors when required fields are missing, and includes type compatibility validation for collection class overrides.
 
@@ -294,15 +294,18 @@ Currently, when a required field/flag is missing from input data, the generated 
 
 ### Acceptance Criteria
 
-- [ ] Parser validates required fields are present during deserialization
-- [ ] Missing required field produces clear error with field name and location
-- [ ] Collection class override validates type compatibility (List/Map)
-- [ ] Validation is efficient (no per-field overhead)
-- [ ] Unit tests for required field validation
-- [ ] Unit tests for collection class type validation
-- [ ] `mvn checkstyle:check` passes
-- [ ] All tests pass: `mvn test`
-- [ ] Build succeeds: `mvn clean install -PCI -Prelease`
+- [x] Parser validates required fields are present during deserialization
+- [x] Missing required field produces clear error with field name and location
+- [x] Collection class override validates type compatibility (Collection/Map)
+- [x] Validation is efficient (no per-field overhead)
+- [x] Choice group support - only error if ALL options in choice are missing
+- [x] Unit tests for required field validation
+- [x] Unit tests for collection class type validation
+- [x] Required field validation enabled by default
+- [x] CLI validators disable required field validation (schema handles it)
+- [x] `mvn checkstyle:check` passes
+- [x] All tests pass: `mvn test`
+- [x] Build succeeds: `mvn clean install -PCI -Prelease`
 
 ---
 
@@ -313,7 +316,7 @@ Currently, when a required field/flag is missing from input data, the generated 
 | 1 | Code generator improvements + metaschema-testing regeneration | 20 | Low | None | ✅ Completed ([#577](https://github.com/metaschema-framework/metaschema-java/pull/577)) |
 | 2 | Collection class override support | ~15 | Low | PR 1 | ✅ Completed ([#584](https://github.com/metaschema-framework/metaschema-java/pull/584)) |
 | 3 | Databind bootstrap setup + regeneration | ~55 | Medium | PR 1, PR 2 | ✅ Completed (combined with PR 2) |
-| 4 | Parser required field validation | ~10 | Medium | PR 1 | Pending |
+| 4 | Parser required field validation | ~25 | Medium | PR 1 | ✅ Completed ([#593](https://github.com/metaschema-framework/metaschema-java/pull/593)) |
 
 **Total Estimated PRs**: 4 (3 actual - PR 2 and PR 3 combined)
 **Total Estimated Files**: ~100

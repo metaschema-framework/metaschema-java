@@ -1,0 +1,8 @@
+{
+  "root": {
+    "required-field": "Required field value",
+    "required-assembly": {
+      "id": "assembly-1"
+    }
+  }
+}
