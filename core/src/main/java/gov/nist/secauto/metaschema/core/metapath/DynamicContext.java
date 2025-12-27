@@ -5,8 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
-
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
@@ -22,6 +20,7 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.time.Clock;
 import java.time.Duration;
@@ -35,7 +34,6 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -114,10 +112,7 @@ public class DynamicContext { // NOPMD - intentional data class
 
       this.currentDateTime = ObjectUtils.notNull(ZonedDateTime.now(clock));
       this.availableDocuments = new ConcurrentHashMap<>();
-      this.functionResultCache = ObjectUtils.notNull(Caffeine.newBuilder()
-          .maximumSize(5000)
-          .expireAfterAccess(10, TimeUnit.MINUTES)
-          .<CalledContext, ISequence<?>>build().asMap());
+      this.functionResultCache = new ConcurrentHashMap<>();
       this.configuration = new DefaultConfiguration<>();
       this.configuration.enableFeature(MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES);
     }
@@ -483,12 +478,18 @@ public class DynamicContext { // NOPMD - intentional data class
 
     @Override
     public IDocumentNodeItem loadAsNodeItem(URI uri) throws IOException {
-      IDocumentNodeItem retval = sharedState.availableDocuments.get(uri);
-      if (retval == null) {
-        retval = getProxiedDocumentLoader().loadAsNodeItem(uri);
-        sharedState.availableDocuments.put(uri, retval);
+      URI normalizedUri = uri.normalize();
+      try {
+        return sharedState.availableDocuments.computeIfAbsent(normalizedUri, key -> {
+          try {
+            return getProxiedDocumentLoader().loadAsNodeItem(key);
+          } catch (IOException e) {
+            throw new UncheckedIOException(e);
+          }
+        });
+      } catch (UncheckedIOException e) {
+        throw e.getCause();
       }
-      return retval;
     }
 
     public class ContextUriResolver implements IUriResolver {
