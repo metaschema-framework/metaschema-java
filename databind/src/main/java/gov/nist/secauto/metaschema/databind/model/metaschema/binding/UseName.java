@@ -2,9 +2,12 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.NonNegativeIntegerAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
@@ -12,19 +15,13 @@ import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFieldValue;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaField;
-
+import java.math.BigInteger;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.math.BigInteger;
 
 /**
  * Allows the name of the definition to be overridden.
  */
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.FieldNamingConventions"
-})
 @MetaschemaField(
     formalName = "Use Name",
     description = "Allows the name of the definition to be overridden.",
@@ -34,7 +31,7 @@ public class UseName implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
   /**
-   * "Used for binary formats instead of the textual name."
+   * Used for binary formats instead of the textual name.
    */
   @BoundFlag(
       formalName = "Numeric Index",
@@ -48,10 +45,23 @@ public class UseName implements IBoundObject {
       typeAdapter = TokenAdapter.class)
   private String _name;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.UseName}
+   * instance with no metadata.
+   */
   public UseName() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.UseName}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public UseName(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -61,19 +71,38 @@ public class UseName implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the numeric Index.
+   *
+   * <p>
+   * Used for binary formats instead of the textual name.
+   *
+   * @return the index value, or {@code null} if not set
+   */
+  @Nullable
   public BigInteger getIndex() {
     return _index;
   }
 
-  public void setIndex(BigInteger value) {
+  /**
+   * Set the numeric Index.
+   *
+   * <p>
+   * Used for binary formats instead of the textual name.
+   *
+   * @param value
+   *          the index value to set
+   */
+  public void setIndex(@Nullable BigInteger value) {
     _index = value;
   }
 
+  @Nullable
   public String getName() {
     return _name;
   }
 
-  public void setName(String value) {
+  public void setName(@Nullable String value) {
     _name = value;
   }
 

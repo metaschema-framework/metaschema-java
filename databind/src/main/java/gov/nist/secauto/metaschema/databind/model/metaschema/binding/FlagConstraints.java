@@ -2,9 +2,13 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -15,22 +19,15 @@ import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IConstraintBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IValueConstraintsBase;
-
+import java.util.LinkedList;
+import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.LinkedList;
-import java.util.List;
-
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.ExcessivePublicCount",
-    "PMD.FieldNamingConventions"
-})
 @MetaschemaAssembly(
     name = "flag-constraints",
     moduleClass = MetaschemaModelModule.class)
-public class FlagConstraints implements IValueConstraintsBase {
+public class FlagConstraints implements IBoundObject, IValueConstraintsBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundAssembly(
@@ -43,6 +40,7 @@ public class FlagConstraints implements IValueConstraintsBase {
   @BoundChoiceGroup(
       minOccurs = 1,
       maxOccurs = -1,
+      groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST),
       assemblies = {
           @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values",
               binding = FlagAllowedValues.class),
@@ -51,15 +49,29 @@ public class FlagConstraints implements IValueConstraintsBase {
           @BoundGroupedAssembly(formalName = "Index Has Key Constraint", useName = "index-has-key",
               binding = FlagIndexHasKey.class),
           @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches",
-              binding = FlagMatches.class)
-      },
-      groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST))
+              binding = FlagMatches.class),
+          @BoundGroupedAssembly(formalName = "Report Condition Constraint", useName = "report",
+              binding = FlagReport.class)
+      })
   private List<? extends IConstraintBase> _rules;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagConstraints}
+   * instance with no metadata.
+   */
   public FlagConstraints() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagConstraints}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public FlagConstraints(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -69,12 +81,26 @@ public class FlagConstraints implements IValueConstraintsBase {
     return __metaschemaData;
   }
 
-  @Override
+  /**
+   * Get the constraint Let Expression.
+   *
+   * @return the let value
+   */
+  @NonNull
   public List<ConstraintLetExpression> getLets() {
+    if (_lets == null) {
+      _lets = new LinkedList<>();
+    }
     return _lets;
   }
 
-  public void setLets(List<ConstraintLetExpression> value) {
+  /**
+   * Set the constraint Let Expression.
+   *
+   * @param value
+   *          the let value to set
+   */
+  public void setLets(@NonNull List<ConstraintLetExpression> value) {
     _lets = value;
   }
 
@@ -106,12 +132,32 @@ public class FlagConstraints implements IValueConstraintsBase {
     return _lets != null && _lets.remove(value);
   }
 
-  @Override
+  /**
+   * Get the {@code rules} choice group items.
+   *
+   * <p>
+   * Items in this collection implement {@link IConstraintBase}.
+   *
+   * @return the rules items
+   */
+  @NonNull
   public List<? extends IConstraintBase> getRules() {
+    if (_rules == null) {
+      _rules = new LinkedList<>();
+    }
     return _rules;
   }
 
-  public void setRules(List<? extends IConstraintBase> value) {
+  /**
+   * Set the {@code rules} choice group items.
+   *
+   * <p>
+   * Items in this collection must implement {@link IConstraintBase}.
+   *
+   * @param value
+   *          the rules items to set
+   */
+  public void setRules(@NonNull List<? extends IConstraintBase> value) {
     _rules = value;
   }
 

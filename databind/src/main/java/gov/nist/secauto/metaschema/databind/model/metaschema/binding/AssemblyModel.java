@@ -2,9 +2,13 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.NonNegativeIntegerAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.PositiveIntegerAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
@@ -27,20 +31,12 @@ import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-@SuppressWarnings({
-    "PMD.CouplingBetweenObjects",
-    "PMD.DataClass",
-    "PMD.ExcessivePublicCount",
-    "PMD.FieldNamingConventions"
-})
 @MetaschemaAssembly(
     name = "assembly-model",
     moduleClass = MetaschemaModelModule.class)
@@ -49,27 +45,19 @@ public class AssemblyModel implements IBoundObject {
 
   @BoundChoiceGroup(
       maxOccurs = -1,
+      groupAs = @GroupAs(name = "instances", inJson = JsonGroupAsBehavior.LIST),
       assemblies = {
-          @BoundGroupedAssembly(formalName = "Assembly Reference",
-              useName = "assembly",
-              discriminatorValue = "assembly-ref",
-              binding = AssemblyReference.class),
-          @BoundGroupedAssembly(formalName = "Inline Assembly Definition",
-              useName = "define-assembly",
-              discriminatorValue = "assembly",
-              binding = InlineDefineAssembly.class),
-          @BoundGroupedAssembly(formalName = "Field Reference",
-              useName = "field",
-              discriminatorValue = "field-ref",
+          @BoundGroupedAssembly(formalName = "Assembly Reference", useName = "assembly",
+              discriminatorValue = "assembly-ref", binding = AssemblyReference.class),
+          @BoundGroupedAssembly(formalName = "Inline Assembly Definition", useName = "define-assembly",
+              discriminatorValue = "assembly", binding = InlineDefineAssembly.class),
+          @BoundGroupedAssembly(formalName = "Field Reference", useName = "field", discriminatorValue = "field-ref",
               binding = FieldReference.class),
-          @BoundGroupedAssembly(formalName = "Inline Field Definition",
-              useName = "define-field",
-              discriminatorValue = "field",
-              binding = InlineDefineField.class),
+          @BoundGroupedAssembly(formalName = "Inline Field Definition", useName = "define-field",
+              discriminatorValue = "field", binding = InlineDefineField.class),
           @BoundGroupedAssembly(formalName = "Choice", useName = "choice", binding = Choice.class),
           @BoundGroupedAssembly(formalName = "Choice Grouping", useName = "choice-group", binding = ChoiceGroup.class)
-      },
-      groupAs = @GroupAs(name = "instances", inJson = JsonGroupAsBehavior.LIST))
+      })
   private List<Object> _instances;
 
   @BoundAssembly(
@@ -77,10 +65,23 @@ public class AssemblyModel implements IBoundObject {
       useName = "any")
   private Any _any;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel}
+   * instance with no metadata.
+   */
   public AssemblyModel() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public AssemblyModel(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -90,19 +91,46 @@ public class AssemblyModel implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the {@code instances} choice group items.
+   *
+   * @return the instances items
+   */
+  @NonNull
   public List<Object> getInstances() {
+    if (_instances == null) {
+      _instances = new LinkedList<>();
+    }
     return _instances;
   }
 
-  public void setInstances(List<Object> value) {
+  /**
+   * Set the {@code instances} choice group items.
+   *
+   * @param value
+   *          the instances items to set
+   */
+  public void setInstances(@NonNull List<Object> value) {
     _instances = value;
   }
 
+  /**
+   * Get the any Additional Content.
+   *
+   * @return the any value, or {@code null} if not set
+   */
+  @Nullable
   public Any getAny() {
     return _any;
   }
 
-  public void setAny(Any value) {
+  /**
+   * Set the any Additional Content.
+   *
+   * @param value
+   *          the any value to set
+   */
+  public void setAny(@Nullable Any value) {
     _any = value;
   }
 
@@ -121,25 +149,17 @@ public class AssemblyModel implements IBoundObject {
     @BoundChoiceGroup(
         minOccurs = 1,
         maxOccurs = -1,
+        groupAs = @GroupAs(name = "choices", inJson = JsonGroupAsBehavior.LIST),
         assemblies = {
-            @BoundGroupedAssembly(formalName = "Assembly Reference",
-                useName = "assembly",
-                discriminatorValue = "assembly-ref",
-                binding = AssemblyReference.class),
-            @BoundGroupedAssembly(formalName = "Inline Assembly Definition",
-                useName = "define-assembly",
-                discriminatorValue = "assembly",
-                binding = InlineDefineAssembly.class),
-            @BoundGroupedAssembly(formalName = "Field Reference",
-                useName = "field",
-                discriminatorValue = "field-ref",
+            @BoundGroupedAssembly(formalName = "Assembly Reference", useName = "assembly",
+                discriminatorValue = "assembly-ref", binding = AssemblyReference.class),
+            @BoundGroupedAssembly(formalName = "Inline Assembly Definition", useName = "define-assembly",
+                discriminatorValue = "assembly", binding = InlineDefineAssembly.class),
+            @BoundGroupedAssembly(formalName = "Field Reference", useName = "field", discriminatorValue = "field-ref",
                 binding = FieldReference.class),
-            @BoundGroupedAssembly(formalName = "Inline Field Definition",
-                useName = "define-field",
-                discriminatorValue = "field",
-                binding = InlineDefineField.class)
-        },
-        groupAs = @GroupAs(name = "choices", inJson = JsonGroupAsBehavior.LIST))
+            @BoundGroupedAssembly(formalName = "Inline Field Definition", useName = "define-field",
+                discriminatorValue = "field", binding = InlineDefineField.class)
+        })
     private List<Object> _choices;
 
     @BoundAssembly(
@@ -147,10 +167,23 @@ public class AssemblyModel implements IBoundObject {
         useName = "any")
     private Any _any;
 
+    /**
+     * Constructs a new
+     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice}
+     * instance with no metadata.
+     */
     public Choice() {
       this(null);
     }
 
+    /**
+     * Constructs a new
+     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.Choice}
+     * instance with the specified metadata.
+     *
+     * @param data
+     *          the metaschema data, or {@code null} if none
+     */
     public Choice(IMetaschemaData data) {
       this.__metaschemaData = data;
     }
@@ -160,19 +193,46 @@ public class AssemblyModel implements IBoundObject {
       return __metaschemaData;
     }
 
+    /**
+     * Get the {@code choices} choice group items.
+     *
+     * @return the choices items
+     */
+    @NonNull
     public List<Object> getChoices() {
+      if (_choices == null) {
+        _choices = new LinkedList<>();
+      }
       return _choices;
     }
 
-    public void setChoices(List<Object> value) {
+    /**
+     * Set the {@code choices} choice group items.
+     *
+     * @param value
+     *          the choices items to set
+     */
+    public void setChoices(@NonNull List<Object> value) {
       _choices = value;
     }
 
+    /**
+     * Get the any Additional Content.
+     *
+     * @return the any value, or {@code null} if not set
+     */
+    @Nullable
     public Any getAny() {
       return _any;
     }
 
-    public void setAny(Any value) {
+    /**
+     * Set the any Additional Content.
+     *
+     * @param value
+     *          the any value to set
+     */
+    public void setAny(@Nullable Any value) {
       _any = value;
     }
 
@@ -205,6 +265,11 @@ public class AssemblyModel implements IBoundObject {
             matches = @Matches(level = IConstraint.Level.ERROR, pattern = "^[1-9][0-9]*|unbounded$")))
     private String _maxOccurs;
 
+    /**
+     * Used in JSON (and similar formats) to identify a flag that will be used as
+     * the property name in an object hold a collection of sibling objects. Requires
+     * that siblings must never share <code>json-key</code> values.
+     */
     @BoundAssembly(
         formalName = "JSON Key",
         description = "Used in JSON (and similar formats) to identify a flag that will be used as the property name in an object hold a collection of sibling objects. Requires that siblings must never share `json-key` values.",
@@ -227,37 +292,46 @@ public class AssemblyModel implements IBoundObject {
     @BoundChoiceGroup(
         minOccurs = 1,
         maxOccurs = -1,
+        groupAs = @GroupAs(name = "choices", inJson = JsonGroupAsBehavior.LIST),
         assemblies = {
-            @BoundGroupedAssembly(formalName = "Grouping Assembly Reference",
-                useName = "assembly",
-                discriminatorValue = "assembly-ref",
-                binding = Assembly.class),
-            @BoundGroupedAssembly(formalName = "Inline Assembly Definition",
-                useName = "define-assembly",
-                discriminatorValue = "assembly",
-                binding = DefineAssembly.class),
-            @BoundGroupedAssembly(formalName = "Grouping Field Reference",
-                useName = "field",
-                discriminatorValue = "field-ref",
-                binding = Field.class),
-            @BoundGroupedAssembly(formalName = "Inline Field Definition",
-                useName = "define-field",
-                discriminatorValue = "field",
-                binding = DefineField.class)
-        },
-        groupAs = @GroupAs(name = "choices", inJson = JsonGroupAsBehavior.LIST))
+            @BoundGroupedAssembly(formalName = "Grouping Assembly Reference", useName = "assembly",
+                discriminatorValue = "assembly-ref", binding = Assembly.class),
+            @BoundGroupedAssembly(formalName = "Inline Assembly Definition", useName = "define-assembly",
+                discriminatorValue = "assembly", binding = DefineAssembly.class),
+            @BoundGroupedAssembly(formalName = "Grouping Field Reference", useName = "field",
+                discriminatorValue = "field-ref", binding = Field.class),
+            @BoundGroupedAssembly(formalName = "Inline Field Definition", useName = "define-field",
+                discriminatorValue = "field", binding = DefineField.class)
+        })
     private List<Object> _choices;
 
+    /**
+     * Any explanatory or helpful information to be provided about the remarks
+     * parent.
+     */
     @BoundField(
         formalName = "Remarks",
         description = "Any explanatory or helpful information to be provided about the remarks parent.",
         useName = "remarks")
     private Remarks _remarks;
 
+    /**
+     * Constructs a new
+     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup}
+     * instance with no metadata.
+     */
     public ChoiceGroup() {
       this(null);
     }
 
+    /**
+     * Constructs a new
+     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup}
+     * instance with the specified metadata.
+     *
+     * @param data
+     *          the metaschema data, or {@code null} if none
+     */
     public ChoiceGroup(IMetaschemaData data) {
       this.__metaschemaData = data;
     }
@@ -267,59 +341,164 @@ public class AssemblyModel implements IBoundObject {
       return __metaschemaData;
     }
 
+    /**
+     * Get the minimum Occurrence.
+     *
+     * @return the min-occurs value, or {@code null} if not set
+     */
+    @Nullable
     public BigInteger getMinOccurs() {
       return _minOccurs;
     }
 
-    public void setMinOccurs(BigInteger value) {
+    /**
+     * Set the minimum Occurrence.
+     *
+     * @param value
+     *          the min-occurs value to set
+     */
+    public void setMinOccurs(@Nullable BigInteger value) {
       _minOccurs = value;
     }
 
+    /**
+     * Get the maximum Occurrence.
+     *
+     * @return the max-occurs value, or {@code null} if not set
+     */
+    @Nullable
     public String getMaxOccurs() {
       return _maxOccurs;
     }
 
-    public void setMaxOccurs(String value) {
+    /**
+     * Set the maximum Occurrence.
+     *
+     * @param value
+     *          the max-occurs value to set
+     */
+    public void setMaxOccurs(@Nullable String value) {
       _maxOccurs = value;
     }
 
+    /**
+     * Get the jSON Key.
+     *
+     * <p>
+     * Used in JSON (and similar formats) to identify a flag that will be used as
+     * the property name in an object hold a collection of sibling objects. Requires
+     * that siblings must never share <code>json-key</code> values.
+     *
+     * @return the json-key value, or {@code null} if not set
+     */
+    @Nullable
     public JsonKey getJsonKey() {
       return _jsonKey;
     }
 
-    public void setJsonKey(JsonKey value) {
+    /**
+     * Set the jSON Key.
+     *
+     * <p>
+     * Used in JSON (and similar formats) to identify a flag that will be used as
+     * the property name in an object hold a collection of sibling objects. Requires
+     * that siblings must never share <code>json-key</code> values.
+     *
+     * @param value
+     *          the json-key value to set
+     */
+    public void setJsonKey(@Nullable JsonKey value) {
       _jsonKey = value;
     }
 
+    /**
+     * Get the group As.
+     *
+     * @return the group-as value
+     */
+    @NonNull
     public GroupingAs getGroupAs() {
       return _groupAs;
     }
 
-    public void setGroupAs(GroupingAs value) {
+    /**
+     * Set the group As.
+     *
+     * @param value
+     *          the group-as value to set
+     */
+    public void setGroupAs(@NonNull GroupingAs value) {
       _groupAs = value;
     }
 
+    /**
+     * Get the discriminator JSON Property.
+     *
+     * @return the discriminator value, or {@code null} if not set
+     */
+    @Nullable
     public String getDiscriminator() {
       return _discriminator;
     }
 
-    public void setDiscriminator(String value) {
+    /**
+     * Set the discriminator JSON Property.
+     *
+     * @param value
+     *          the discriminator value to set
+     */
+    public void setDiscriminator(@Nullable String value) {
       _discriminator = value;
     }
 
+    /**
+     * Get the {@code choices} choice group items.
+     *
+     * @return the choices items
+     */
+    @NonNull
     public List<Object> getChoices() {
+      if (_choices == null) {
+        _choices = new LinkedList<>();
+      }
       return _choices;
     }
 
-    public void setChoices(List<Object> value) {
+    /**
+     * Set the {@code choices} choice group items.
+     *
+     * @param value
+     *          the choices items to set
+     */
+    public void setChoices(@NonNull List<Object> value) {
       _choices = value;
     }
 
+    /**
+     * Get the remarks.
+     *
+     * <p>
+     * Any explanatory or helpful information to be provided about the remarks
+     * parent.
+     *
+     * @return the remarks value, or {@code null} if not set
+     */
+    @Nullable
     public Remarks getRemarks() {
       return _remarks;
     }
 
-    public void setRemarks(Remarks value) {
+    /**
+     * Set the remarks.
+     *
+     * <p>
+     * Any explanatory or helpful information to be provided about the remarks
+     * parent.
+     *
+     * @param value
+     *          the remarks value to set
+     */
+    public void setRemarks(@Nullable Remarks value) {
       _remarks = value;
     }
 
@@ -354,6 +533,9 @@ public class AssemblyModel implements IBoundObject {
           typeAdapter = StringAdapter.class)
       private String _deprecated;
 
+      /**
+       * A formal name for the data construct, to be presented in documentation.
+       */
       @BoundField(
           formalName = "Formal Name",
           description = "A formal name for the data construct, to be presented in documentation.",
@@ -361,6 +543,10 @@ public class AssemblyModel implements IBoundObject {
           typeAdapter = StringAdapter.class)
       private String _formalName;
 
+      /**
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       */
       @BoundField(
           formalName = "Description",
           description = "A short description of the data construct's purpose, describing the constructs semantics.",
@@ -375,6 +561,9 @@ public class AssemblyModel implements IBoundObject {
           groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST))
       private List<Property> _props;
 
+      /**
+       * Allows the name of the definition to be overridden.
+       */
       @BoundField(
           formalName = "Use Name",
           description = "Allows the name of the definition to be overridden.",
@@ -387,16 +576,33 @@ public class AssemblyModel implements IBoundObject {
           typeAdapter = TokenAdapter.class)
       private String _discriminatorValue;
 
+      /**
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       */
       @BoundField(
           formalName = "Remarks",
           description = "Any explanatory or helpful information to be provided about the remarks parent.",
           useName = "remarks")
       private Remarks _remarks;
 
+      /**
+       * Constructs a new
+       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup.Assembly}
+       * instance with no metadata.
+       */
       public Assembly() {
         this(null);
       }
 
+      /**
+       * Constructs a new
+       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup.Assembly}
+       * instance with the specified metadata.
+       *
+       * @param data
+       *          the metaschema data, or {@code null} if none
+       */
       public Assembly(IMetaschemaData data) {
         this.__metaschemaData = data;
       }
@@ -406,51 +612,140 @@ public class AssemblyModel implements IBoundObject {
         return __metaschemaData;
       }
 
+      /**
+       * Get the global Assembly Reference.
+       *
+       * @return the ref value
+       */
+      @NonNull
       public String getRef() {
         return _ref;
       }
 
-      public void setRef(String value) {
+      /**
+       * Set the global Assembly Reference.
+       *
+       * @param value
+       *          the ref value to set
+       */
+      public void setRef(@NonNull String value) {
         _ref = value;
       }
 
+      /**
+       * Get the assembly Reference Binary Name.
+       *
+       * @return the index value, or {@code null} if not set
+       */
+      @Nullable
       public BigInteger getIndex() {
         return _index;
       }
 
-      public void setIndex(BigInteger value) {
+      /**
+       * Set the assembly Reference Binary Name.
+       *
+       * @param value
+       *          the index value to set
+       */
+      public void setIndex(@Nullable BigInteger value) {
         _index = value;
       }
 
+      /**
+       * Get the deprecated Version.
+       *
+       * @return the deprecated value, or {@code null} if not set
+       */
+      @Nullable
       public String getDeprecated() {
         return _deprecated;
       }
 
-      public void setDeprecated(String value) {
+      /**
+       * Set the deprecated Version.
+       *
+       * @param value
+       *          the deprecated value to set
+       */
+      public void setDeprecated(@Nullable String value) {
         _deprecated = value;
       }
 
+      /**
+       * Get the formal Name.
+       *
+       * <p>
+       * A formal name for the data construct, to be presented in documentation.
+       *
+       * @return the formal-name value, or {@code null} if not set
+       */
+      @Nullable
       public String getFormalName() {
         return _formalName;
       }
 
-      public void setFormalName(String value) {
+      /**
+       * Set the formal Name.
+       *
+       * <p>
+       * A formal name for the data construct, to be presented in documentation.
+       *
+       * @param value
+       *          the formal-name value to set
+       */
+      public void setFormalName(@Nullable String value) {
         _formalName = value;
       }
 
+      /**
+       * Get the description.
+       *
+       * <p>
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       *
+       * @return the description value, or {@code null} if not set
+       */
+      @Nullable
       public MarkupLine getDescription() {
         return _description;
       }
 
-      public void setDescription(MarkupLine value) {
+      /**
+       * Set the description.
+       *
+       * <p>
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       *
+       * @param value
+       *          the description value to set
+       */
+      public void setDescription(@Nullable MarkupLine value) {
         _description = value;
       }
 
+      /**
+       * Get the property.
+       *
+       * @return the prop value
+       */
+      @NonNull
       public List<Property> getProps() {
+        if (_props == null) {
+          _props = new LinkedList<>();
+        }
         return _props;
       }
 
-      public void setProps(List<Property> value) {
+      /**
+       * Set the property.
+       *
+       * @param value
+       *          the prop value to set
+       */
+      public void setProps(@NonNull List<Property> value) {
         _props = value;
       }
 
@@ -482,27 +777,77 @@ public class AssemblyModel implements IBoundObject {
         return _props != null && _props.remove(value);
       }
 
+      /**
+       * Get the use Name.
+       *
+       * <p>
+       * Allows the name of the definition to be overridden.
+       *
+       * @return the use-name value, or {@code null} if not set
+       */
+      @Nullable
       public UseName getUseName() {
         return _useName;
       }
 
-      public void setUseName(UseName value) {
+      /**
+       * Set the use Name.
+       *
+       * <p>
+       * Allows the name of the definition to be overridden.
+       *
+       * @param value
+       *          the use-name value to set
+       */
+      public void setUseName(@Nullable UseName value) {
         _useName = value;
       }
 
+      /**
+       * Get the grouping Discriminator Value.
+       *
+       * @return the discriminator-value value, or {@code null} if not set
+       */
+      @Nullable
       public String getDiscriminatorValue() {
         return _discriminatorValue;
       }
 
-      public void setDiscriminatorValue(String value) {
+      /**
+       * Set the grouping Discriminator Value.
+       *
+       * @param value
+       *          the discriminator-value value to set
+       */
+      public void setDiscriminatorValue(@Nullable String value) {
         _discriminatorValue = value;
       }
 
+      /**
+       * Get the remarks.
+       *
+       * <p>
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       *
+       * @return the remarks value, or {@code null} if not set
+       */
+      @Nullable
       public Remarks getRemarks() {
         return _remarks;
       }
 
-      public void setRemarks(Remarks value) {
+      /**
+       * Set the remarks.
+       *
+       * <p>
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       *
+       * @param value
+       *          the remarks value to set
+       */
+      public void setRemarks(@Nullable Remarks value) {
         _remarks = value;
       }
 
@@ -538,6 +883,9 @@ public class AssemblyModel implements IBoundObject {
           typeAdapter = StringAdapter.class)
       private String _deprecated;
 
+      /**
+       * A formal name for the data construct, to be presented in documentation.
+       */
       @BoundField(
           formalName = "Formal Name",
           description = "A formal name for the data construct, to be presented in documentation.",
@@ -545,6 +893,10 @@ public class AssemblyModel implements IBoundObject {
           typeAdapter = StringAdapter.class)
       private String _formalName;
 
+      /**
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       */
       @BoundField(
           formalName = "Description",
           description = "A short description of the data construct's purpose, describing the constructs semantics.",
@@ -567,17 +919,13 @@ public class AssemblyModel implements IBoundObject {
 
       @BoundChoiceGroup(
           maxOccurs = -1,
+          groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST),
           assemblies = {
-              @BoundGroupedAssembly(formalName = "Inline Flag Definition",
-                  useName = "define-flag",
-                  discriminatorValue = "flag",
-                  binding = InlineDefineFlag.class),
-              @BoundGroupedAssembly(formalName = "Flag Reference",
-                  useName = "flag",
-                  discriminatorValue = "flag-ref",
+              @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag",
+                  discriminatorValue = "flag", binding = InlineDefineFlag.class),
+              @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", discriminatorValue = "flag-ref",
                   binding = FlagReference.class)
-          },
-          groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST))
+          })
       private List<Object> _flags;
 
       @BoundAssembly(
@@ -588,6 +936,10 @@ public class AssemblyModel implements IBoundObject {
           useName = "constraint")
       private AssemblyConstraints _constraint;
 
+      /**
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       */
       @BoundField(
           formalName = "Remarks",
           description = "Any explanatory or helpful information to be provided about the remarks parent.",
@@ -601,10 +953,23 @@ public class AssemblyModel implements IBoundObject {
           groupAs = @GroupAs(name = "examples", inJson = JsonGroupAsBehavior.LIST))
       private List<Example> _examples;
 
+      /**
+       * Constructs a new
+       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup.DefineAssembly}
+       * instance with no metadata.
+       */
       public DefineAssembly() {
         this(null);
       }
 
+      /**
+       * Constructs a new
+       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup.DefineAssembly}
+       * instance with the specified metadata.
+       *
+       * @param data
+       *          the metaschema data, or {@code null} if none
+       */
       public DefineAssembly(IMetaschemaData data) {
         this.__metaschemaData = data;
       }
@@ -614,51 +979,140 @@ public class AssemblyModel implements IBoundObject {
         return __metaschemaData;
       }
 
+      /**
+       * Get the inline Assembly Name.
+       *
+       * @return the name value
+       */
+      @NonNull
       public String getName() {
         return _name;
       }
 
-      public void setName(String value) {
+      /**
+       * Set the inline Assembly Name.
+       *
+       * @param value
+       *          the name value to set
+       */
+      public void setName(@NonNull String value) {
         _name = value;
       }
 
+      /**
+       * Get the inline Assembly Binary Name.
+       *
+       * @return the index value, or {@code null} if not set
+       */
+      @Nullable
       public BigInteger getIndex() {
         return _index;
       }
 
-      public void setIndex(BigInteger value) {
+      /**
+       * Set the inline Assembly Binary Name.
+       *
+       * @param value
+       *          the index value to set
+       */
+      public void setIndex(@Nullable BigInteger value) {
         _index = value;
       }
 
+      /**
+       * Get the deprecated Version.
+       *
+       * @return the deprecated value, or {@code null} if not set
+       */
+      @Nullable
       public String getDeprecated() {
         return _deprecated;
       }
 
-      public void setDeprecated(String value) {
+      /**
+       * Set the deprecated Version.
+       *
+       * @param value
+       *          the deprecated value to set
+       */
+      public void setDeprecated(@Nullable String value) {
         _deprecated = value;
       }
 
+      /**
+       * Get the formal Name.
+       *
+       * <p>
+       * A formal name for the data construct, to be presented in documentation.
+       *
+       * @return the formal-name value, or {@code null} if not set
+       */
+      @Nullable
       public String getFormalName() {
         return _formalName;
       }
 
-      public void setFormalName(String value) {
+      /**
+       * Set the formal Name.
+       *
+       * <p>
+       * A formal name for the data construct, to be presented in documentation.
+       *
+       * @param value
+       *          the formal-name value to set
+       */
+      public void setFormalName(@Nullable String value) {
         _formalName = value;
       }
 
+      /**
+       * Get the description.
+       *
+       * <p>
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       *
+       * @return the description value, or {@code null} if not set
+       */
+      @Nullable
       public MarkupLine getDescription() {
         return _description;
       }
 
-      public void setDescription(MarkupLine value) {
+      /**
+       * Set the description.
+       *
+       * <p>
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       *
+       * @param value
+       *          the description value to set
+       */
+      public void setDescription(@Nullable MarkupLine value) {
         _description = value;
       }
 
+      /**
+       * Get the property.
+       *
+       * @return the prop value
+       */
+      @NonNull
       public List<Property> getProps() {
+        if (_props == null) {
+          _props = new LinkedList<>();
+        }
         return _props;
       }
 
-      public void setProps(List<Property> value) {
+      /**
+       * Set the property.
+       *
+       * @param value
+       *          the prop value to set
+       */
+      public void setProps(@NonNull List<Property> value) {
         _props = value;
       }
 
@@ -690,51 +1144,137 @@ public class AssemblyModel implements IBoundObject {
         return _props != null && _props.remove(value);
       }
 
+      /**
+       * Get the grouping Discriminator Value.
+       *
+       * @return the discriminator-value value, or {@code null} if not set
+       */
+      @Nullable
       public String getDiscriminatorValue() {
         return _discriminatorValue;
       }
 
-      public void setDiscriminatorValue(String value) {
+      /**
+       * Set the grouping Discriminator Value.
+       *
+       * @param value
+       *          the discriminator-value value to set
+       */
+      public void setDiscriminatorValue(@Nullable String value) {
         _discriminatorValue = value;
       }
 
+      /**
+       * Get the {@code flags} choice group items.
+       *
+       * @return the flags items
+       */
+      @NonNull
       public List<Object> getFlags() {
+        if (_flags == null) {
+          _flags = new LinkedList<>();
+        }
         return _flags;
       }
 
-      public void setFlags(List<Object> value) {
+      /**
+       * Set the {@code flags} choice group items.
+       *
+       * @param value
+       *          the flags items to set
+       */
+      public void setFlags(@NonNull List<Object> value) {
         _flags = value;
       }
 
+      /**
+       * Get the {@code model} property.
+       *
+       * @return the model value, or {@code null} if not set
+       */
+      @Nullable
       public AssemblyModel getModel() {
         return _model;
       }
 
-      public void setModel(AssemblyModel value) {
+      /**
+       * Set the {@code model} property.
+       *
+       * @param value
+       *          the model value to set
+       */
+      public void setModel(@Nullable AssemblyModel value) {
         _model = value;
       }
 
+      /**
+       * Get the {@code constraint} property.
+       *
+       * @return the constraint value, or {@code null} if not set
+       */
+      @Nullable
       public AssemblyConstraints getConstraint() {
         return _constraint;
       }
 
-      public void setConstraint(AssemblyConstraints value) {
+      /**
+       * Set the {@code constraint} property.
+       *
+       * @param value
+       *          the constraint value to set
+       */
+      public void setConstraint(@Nullable AssemblyConstraints value) {
         _constraint = value;
       }
 
+      /**
+       * Get the remarks.
+       *
+       * <p>
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       *
+       * @return the remarks value, or {@code null} if not set
+       */
+      @Nullable
       public Remarks getRemarks() {
         return _remarks;
       }
 
-      public void setRemarks(Remarks value) {
+      /**
+       * Set the remarks.
+       *
+       * <p>
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       *
+       * @param value
+       *          the remarks value to set
+       */
+      public void setRemarks(@Nullable Remarks value) {
         _remarks = value;
       }
 
+      /**
+       * Get the example.
+       *
+       * @return the example value
+       */
+      @NonNull
       public List<Example> getExamples() {
+        if (_examples == null) {
+          _examples = new LinkedList<>();
+        }
         return _examples;
       }
 
-      public void setExamples(List<Example> value) {
+      /**
+       * Set the example.
+       *
+       * @param value
+       *          the example value to set
+       */
+      public void setExamples(@NonNull List<Example> value) {
         _examples = value;
       }
 
@@ -814,9 +1354,13 @@ public class AssemblyModel implements IBoundObject {
                   description = "Block contents of a markup-multiline field will be represented with a containing (wrapper) element in the XML."),
                   @AllowedValue(value = "UNWRAPPED",
                       description = "Block contents of a markup-multiline will be represented in the XML with no wrapper, making the field implicit. Among sibling fields in a given model, only one of them may be designated as UNWRAPPED."),
-                  @AllowedValue(value = "WITH_WRAPPER", description = "Alias for WRAPPED.") })))
+                  @AllowedValue(value = "WITH_WRAPPER", description = "Alias for WRAPPED.",
+                      deprecatedVersion = "0.9.0") })))
       private String _inXml;
 
+      /**
+       * A formal name for the data construct, to be presented in documentation.
+       */
       @BoundField(
           formalName = "Formal Name",
           description = "A formal name for the data construct, to be presented in documentation.",
@@ -824,6 +1368,10 @@ public class AssemblyModel implements IBoundObject {
           typeAdapter = StringAdapter.class)
       private String _formalName;
 
+      /**
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       */
       @BoundField(
           formalName = "Description",
           description = "A short description of the data construct's purpose, describing the constructs semantics.",
@@ -838,6 +1386,9 @@ public class AssemblyModel implements IBoundObject {
           groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST))
       private List<Property> _props;
 
+      /**
+       * Allows the name of the definition to be overridden.
+       */
       @BoundField(
           formalName = "Use Name",
           description = "Allows the name of the definition to be overridden.",
@@ -850,16 +1401,33 @@ public class AssemblyModel implements IBoundObject {
           typeAdapter = TokenAdapter.class)
       private String _discriminatorValue;
 
+      /**
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       */
       @BoundField(
           formalName = "Remarks",
           description = "Any explanatory or helpful information to be provided about the remarks parent.",
           useName = "remarks")
       private Remarks _remarks;
 
+      /**
+       * Constructs a new
+       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup.Field}
+       * instance with no metadata.
+       */
       public Field() {
         this(null);
       }
 
+      /**
+       * Constructs a new
+       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup.Field}
+       * instance with the specified metadata.
+       *
+       * @param data
+       *          the metaschema data, or {@code null} if none
+       */
       public Field(IMetaschemaData data) {
         this.__metaschemaData = data;
       }
@@ -869,67 +1437,180 @@ public class AssemblyModel implements IBoundObject {
         return __metaschemaData;
       }
 
+      /**
+       * Get the global Field Reference.
+       *
+       * @return the ref value
+       */
+      @NonNull
       public String getRef() {
         return _ref;
       }
 
-      public void setRef(String value) {
+      /**
+       * Set the global Field Reference.
+       *
+       * @param value
+       *          the ref value to set
+       */
+      public void setRef(@NonNull String value) {
         _ref = value;
       }
 
+      /**
+       * Get the field Reference Binary Name.
+       *
+       * @return the index value, or {@code null} if not set
+       */
+      @Nullable
       public BigInteger getIndex() {
         return _index;
       }
 
-      public void setIndex(BigInteger value) {
+      /**
+       * Set the field Reference Binary Name.
+       *
+       * @param value
+       *          the index value to set
+       */
+      public void setIndex(@Nullable BigInteger value) {
         _index = value;
       }
 
+      /**
+       * Get the deprecated Version.
+       *
+       * @return the deprecated value, or {@code null} if not set
+       */
+      @Nullable
       public String getDeprecated() {
         return _deprecated;
       }
 
-      public void setDeprecated(String value) {
+      /**
+       * Set the deprecated Version.
+       *
+       * @param value
+       *          the deprecated value to set
+       */
+      public void setDeprecated(@Nullable String value) {
         _deprecated = value;
       }
 
+      /**
+       * Get the default Field Value.
+       *
+       * @return the default value, or {@code null} if not set
+       */
+      @Nullable
       public String getDefault() {
         return _default;
       }
 
-      public void setDefault(String value) {
+      /**
+       * Set the default Field Value.
+       *
+       * @param value
+       *          the default value to set
+       */
+      public void setDefault(@Nullable String value) {
         _default = value;
       }
 
+      /**
+       * Get the field In XML.
+       *
+       * @return the in-xml value, or {@code null} if not set
+       */
+      @Nullable
       public String getInXml() {
         return _inXml;
       }
 
-      public void setInXml(String value) {
+      /**
+       * Set the field In XML.
+       *
+       * @param value
+       *          the in-xml value to set
+       */
+      public void setInXml(@Nullable String value) {
         _inXml = value;
       }
 
+      /**
+       * Get the formal Name.
+       *
+       * <p>
+       * A formal name for the data construct, to be presented in documentation.
+       *
+       * @return the formal-name value, or {@code null} if not set
+       */
+      @Nullable
       public String getFormalName() {
         return _formalName;
       }
 
-      public void setFormalName(String value) {
+      /**
+       * Set the formal Name.
+       *
+       * <p>
+       * A formal name for the data construct, to be presented in documentation.
+       *
+       * @param value
+       *          the formal-name value to set
+       */
+      public void setFormalName(@Nullable String value) {
         _formalName = value;
       }
 
+      /**
+       * Get the description.
+       *
+       * <p>
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       *
+       * @return the description value, or {@code null} if not set
+       */
+      @Nullable
       public MarkupLine getDescription() {
         return _description;
       }
 
-      public void setDescription(MarkupLine value) {
+      /**
+       * Set the description.
+       *
+       * <p>
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       *
+       * @param value
+       *          the description value to set
+       */
+      public void setDescription(@Nullable MarkupLine value) {
         _description = value;
       }
 
+      /**
+       * Get the property.
+       *
+       * @return the prop value
+       */
+      @NonNull
       public List<Property> getProps() {
+        if (_props == null) {
+          _props = new LinkedList<>();
+        }
         return _props;
       }
 
-      public void setProps(List<Property> value) {
+      /**
+       * Set the property.
+       *
+       * @param value
+       *          the prop value to set
+       */
+      public void setProps(@NonNull List<Property> value) {
         _props = value;
       }
 
@@ -961,27 +1642,77 @@ public class AssemblyModel implements IBoundObject {
         return _props != null && _props.remove(value);
       }
 
+      /**
+       * Get the use Name.
+       *
+       * <p>
+       * Allows the name of the definition to be overridden.
+       *
+       * @return the use-name value, or {@code null} if not set
+       */
+      @Nullable
       public UseName getUseName() {
         return _useName;
       }
 
-      public void setUseName(UseName value) {
+      /**
+       * Set the use Name.
+       *
+       * <p>
+       * Allows the name of the definition to be overridden.
+       *
+       * @param value
+       *          the use-name value to set
+       */
+      public void setUseName(@Nullable UseName value) {
         _useName = value;
       }
 
+      /**
+       * Get the grouping Discriminator Value.
+       *
+       * @return the discriminator-value value, or {@code null} if not set
+       */
+      @Nullable
       public String getDiscriminatorValue() {
         return _discriminatorValue;
       }
 
-      public void setDiscriminatorValue(String value) {
+      /**
+       * Set the grouping Discriminator Value.
+       *
+       * @param value
+       *          the discriminator-value value to set
+       */
+      public void setDiscriminatorValue(@Nullable String value) {
         _discriminatorValue = value;
       }
 
+      /**
+       * Get the remarks.
+       *
+       * <p>
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       *
+       * @return the remarks value, or {@code null} if not set
+       */
+      @Nullable
       public Remarks getRemarks() {
         return _remarks;
       }
 
-      public void setRemarks(Remarks value) {
+      /**
+       * Set the remarks.
+       *
+       * <p>
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       *
+       * @param value
+       *          the remarks value to set
+       */
+      public void setRemarks(@Nullable Remarks value) {
         _remarks = value;
       }
 
@@ -1025,61 +1756,67 @@ public class AssemblyModel implements IBoundObject {
           valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
               allowOthers = true,
               values = { @AllowedValue(value = "markup-line",
-                  description = "The [markup-line](https://pages.nist.gov/metaschema/specification/datatypes/#markup-line) data type."),
+                  description = "The [markup-line](https://framework.metaschema.dev/specification/datatypes/#markup-line) data type."),
                   @AllowedValue(value = "markup-multiline",
-                      description = "The [markup-multiline](https://pages.nist.gov/metaschema/specification/datatypes/#markup-multiline) data type."),
+                      description = "The [markup-multiline](https://framework.metaschema.dev/specification/datatypes/#markup-multiline) data type."),
                   @AllowedValue(value = "base64",
-                      description = "The [base64](https://pages.nist.gov/metaschema/specification/datatypes/#base64) data type."),
+                      description = "The [base64](https://framework.metaschema.dev/specification/datatypes/#base64) data type."),
                   @AllowedValue(value = "boolean",
-                      description = "The [boolean](https://pages.nist.gov/metaschema/specification/datatypes/#boolean) data type."),
+                      description = "The [boolean](https://framework.metaschema.dev/specification/datatypes/#boolean) data type."),
                   @AllowedValue(value = "date",
-                      description = "The [date](https://pages.nist.gov/metaschema/specification/datatypes/#date) data type."),
+                      description = "The [date](https://framework.metaschema.dev/specification/datatypes/#date) data type."),
                   @AllowedValue(value = "date-time",
-                      description = "The [date-time](https://pages.nist.gov/metaschema/specification/datatypes/#date-time) data type."),
+                      description = "The [date-time](https://framework.metaschema.dev/specification/datatypes/#date-time) data type."),
                   @AllowedValue(value = "date-time-with-timezone",
-                      description = "The [date-time-with-timezone](https://pages.nist.gov/metaschema/specification/datatypes/#date-time-with-timezone) data type."),
+                      description = "The [date-time-with-timezone](https://framework.metaschema.dev/specification/datatypes/#date-time-with-timezone) data type."),
                   @AllowedValue(value = "date-with-timezone",
-                      description = "The [date-with-timezone](https://pages.nist.gov/metaschema/specification/datatypes/#date-with-timezone) data type."),
+                      description = "The [date-with-timezone](https://framework.metaschema.dev/specification/datatypes/#date-with-timezone) data type."),
                   @AllowedValue(value = "day-time-duration",
-                      description = "The [day-time-duration](https://pages.nist.gov/metaschema/specification/datatypes/#day-time-duration) data type."),
+                      description = "The [day-time-duration](https://framework.metaschema.dev/specification/datatypes/#day-time-duration) data type."),
                   @AllowedValue(value = "decimal",
-                      description = "The [decimal](https://pages.nist.gov/metaschema/specification/datatypes/#decimal) data type."),
+                      description = "The [decimal](https://framework.metaschema.dev/specification/datatypes/#decimal) data type."),
                   @AllowedValue(value = "email-address",
-                      description = "The [email-address](https://pages.nist.gov/metaschema/specification/datatypes/#email-address) data type."),
+                      description = "The [email-address](https://framework.metaschema.dev/specification/datatypes/#email-address) data type."),
                   @AllowedValue(value = "hostname",
-                      description = "The [hostname](https://pages.nist.gov/metaschema/specification/datatypes/#hostname) data type."),
+                      description = "The [hostname](https://framework.metaschema.dev/specification/datatypes/#hostname) data type."),
                   @AllowedValue(value = "integer",
-                      description = "The [integer](https://pages.nist.gov/metaschema/specification/datatypes/#integer) data type."),
+                      description = "The [integer](https://framework.metaschema.dev/specification/datatypes/#integer) data type."),
                   @AllowedValue(value = "ip-v4-address",
-                      description = "The [ip-v4-address](https://pages.nist.gov/metaschema/specification/datatypes/#ip-v4-address) data type."),
+                      description = "The [ip-v4-address](https://framework.metaschema.dev/specification/datatypes/#ip-v4-address) data type."),
                   @AllowedValue(value = "ip-v6-address",
-                      description = "The [ip-v6-address](https://pages.nist.gov/metaschema/specification/datatypes/#ip-v6-address) data type."),
+                      description = "The [ip-v6-address](https://framework.metaschema.dev/specification/datatypes/#ip-v6-address) data type."),
                   @AllowedValue(value = "non-negative-integer",
-                      description = "The [non-negative-integer](https://pages.nist.gov/metaschema/specification/datatypes/#non-negative-integer) data type."),
+                      description = "The [non-negative-integer](https://framework.metaschema.dev/specification/datatypes/#non-negative-integer) data type."),
                   @AllowedValue(value = "positive-integer",
-                      description = "The [positive-integer](https://pages.nist.gov/metaschema/specification/datatypes/#positive-integer) data type."),
+                      description = "The [positive-integer](https://framework.metaschema.dev/specification/datatypes/#positive-integer) data type."),
                   @AllowedValue(value = "string",
-                      description = "The [string](https://pages.nist.gov/metaschema/specification/datatypes/#string) data type."),
+                      description = "The [string](https://framework.metaschema.dev/specification/datatypes/#string) data type."),
                   @AllowedValue(value = "token",
-                      description = "The [token](https://pages.nist.gov/metaschema/specification/datatypes/#token) data type."),
+                      description = "The [token](https://framework.metaschema.dev/specification/datatypes/#token) data type."),
                   @AllowedValue(value = "uri",
-                      description = "The [uri](https://pages.nist.gov/metaschema/specification/datatypes/#uri) data type."),
+                      description = "The [uri](https://framework.metaschema.dev/specification/datatypes/#uri) data type."),
                   @AllowedValue(value = "uri-reference",
-                      description = "The [uri-reference](https://pages.nist.gov/metaschema/specification/datatypes/#uri-reference) data type."),
+                      description = "The [uri-reference](https://framework.metaschema.dev/specification/datatypes/#uri-reference) data type."),
                   @AllowedValue(value = "uuid",
-                      description = "The [uuid](https://pages.nist.gov/metaschema/specification/datatypes/#uuid) data type."),
+                      description = "The [uuid](https://framework.metaschema.dev/specification/datatypes/#uuid) data type."),
                   @AllowedValue(value = "base64Binary",
-                      description = "An old name which is deprecated for use in favor of the 'base64' data type."),
+                      description = "An old name which is deprecated for use in favor of the 'base64' data type.",
+                      deprecatedVersion = "1.0.0"),
                   @AllowedValue(value = "dateTime",
-                      description = "An old name which is deprecated for use in favor of the 'date-time' data type."),
+                      description = "An old name which is deprecated for use in favor of the 'date-time' data type.",
+                      deprecatedVersion = "1.0.0"),
                   @AllowedValue(value = "dateTime-with-timezone",
-                      description = "An old name which is deprecated for use in favor of the 'date-time-with-timezone' data type."),
+                      description = "An old name which is deprecated for use in favor of the 'date-time-with-timezone' data type.",
+                      deprecatedVersion = "1.0.0"),
                   @AllowedValue(value = "email",
-                      description = "An old name which is deprecated for use in favor of the 'email-address' data type."),
+                      description = "An old name which is deprecated for use in favor of the 'email-address' data type.",
+                      deprecatedVersion = "1.0.0"),
                   @AllowedValue(value = "nonNegativeInteger",
-                      description = "An old name which is deprecated for use in favor of the 'non-negative-integer' data type."),
+                      description = "An old name which is deprecated for use in favor of the 'non-negative-integer' data type.",
+                      deprecatedVersion = "1.0.0"),
                   @AllowedValue(value = "positiveInteger",
-                      description = "An old name which is deprecated for use in favor of the 'positive-integer' data type.") })))
+                      description = "An old name which is deprecated for use in favor of the 'positive-integer' data type.",
+                      deprecatedVersion = "1.0.0") })))
       private String _asType;
 
       @BoundFlag(
@@ -1088,6 +1825,9 @@ public class AssemblyModel implements IBoundObject {
           typeAdapter = StringAdapter.class)
       private String _default;
 
+      /**
+       * A formal name for the data construct, to be presented in documentation.
+       */
       @BoundField(
           formalName = "Formal Name",
           description = "A formal name for the data construct, to be presented in documentation.",
@@ -1095,6 +1835,10 @@ public class AssemblyModel implements IBoundObject {
           typeAdapter = StringAdapter.class)
       private String _formalName;
 
+      /**
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       */
       @BoundField(
           formalName = "Description",
           description = "A short description of the data construct's purpose, describing the constructs semantics.",
@@ -1128,23 +1872,23 @@ public class AssemblyModel implements IBoundObject {
 
       @BoundChoiceGroup(
           maxOccurs = -1,
+          groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST),
           assemblies = {
-              @BoundGroupedAssembly(formalName = "Inline Flag Definition",
-                  useName = "define-flag",
-                  discriminatorValue = "flag",
-                  binding = InlineDefineFlag.class),
-              @BoundGroupedAssembly(formalName = "Flag Reference",
-                  useName = "flag",
-                  discriminatorValue = "flag-ref",
+              @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag",
+                  discriminatorValue = "flag", binding = InlineDefineFlag.class),
+              @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", discriminatorValue = "flag-ref",
                   binding = FlagReference.class)
-          },
-          groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST))
+          })
       private List<Object> _flags;
 
       @BoundAssembly(
           useName = "constraint")
       private FieldConstraints _constraint;
 
+      /**
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       */
       @BoundField(
           formalName = "Remarks",
           description = "Any explanatory or helpful information to be provided about the remarks parent.",
@@ -1158,10 +1902,23 @@ public class AssemblyModel implements IBoundObject {
           groupAs = @GroupAs(name = "examples", inJson = JsonGroupAsBehavior.LIST))
       private List<Example> _examples;
 
+      /**
+       * Constructs a new
+       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup.DefineField}
+       * instance with no metadata.
+       */
       public DefineField() {
         this(null);
       }
 
+      /**
+       * Constructs a new
+       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel.ChoiceGroup.DefineField}
+       * instance with the specified metadata.
+       *
+       * @param data
+       *          the metaschema data, or {@code null} if none
+       */
       public DefineField(IMetaschemaData data) {
         this.__metaschemaData = data;
       }
@@ -1171,67 +1928,180 @@ public class AssemblyModel implements IBoundObject {
         return __metaschemaData;
       }
 
+      /**
+       * Get the inline Field Name.
+       *
+       * @return the name value
+       */
+      @NonNull
       public String getName() {
         return _name;
       }
 
-      public void setName(String value) {
+      /**
+       * Set the inline Field Name.
+       *
+       * @param value
+       *          the name value to set
+       */
+      public void setName(@NonNull String value) {
         _name = value;
       }
 
+      /**
+       * Get the inline Field Binary Name.
+       *
+       * @return the index value, or {@code null} if not set
+       */
+      @Nullable
       public BigInteger getIndex() {
         return _index;
       }
 
-      public void setIndex(BigInteger value) {
+      /**
+       * Set the inline Field Binary Name.
+       *
+       * @param value
+       *          the index value to set
+       */
+      public void setIndex(@Nullable BigInteger value) {
         _index = value;
       }
 
+      /**
+       * Get the deprecated Version.
+       *
+       * @return the deprecated value, or {@code null} if not set
+       */
+      @Nullable
       public String getDeprecated() {
         return _deprecated;
       }
 
-      public void setDeprecated(String value) {
+      /**
+       * Set the deprecated Version.
+       *
+       * @param value
+       *          the deprecated value to set
+       */
+      public void setDeprecated(@Nullable String value) {
         _deprecated = value;
       }
 
+      /**
+       * Get the field Value Data Type.
+       *
+       * @return the as-type value, or {@code null} if not set
+       */
+      @Nullable
       public String getAsType() {
         return _asType;
       }
 
-      public void setAsType(String value) {
+      /**
+       * Set the field Value Data Type.
+       *
+       * @param value
+       *          the as-type value to set
+       */
+      public void setAsType(@Nullable String value) {
         _asType = value;
       }
 
+      /**
+       * Get the default Field Value.
+       *
+       * @return the default value, or {@code null} if not set
+       */
+      @Nullable
       public String getDefault() {
         return _default;
       }
 
-      public void setDefault(String value) {
+      /**
+       * Set the default Field Value.
+       *
+       * @param value
+       *          the default value to set
+       */
+      public void setDefault(@Nullable String value) {
         _default = value;
       }
 
+      /**
+       * Get the formal Name.
+       *
+       * <p>
+       * A formal name for the data construct, to be presented in documentation.
+       *
+       * @return the formal-name value, or {@code null} if not set
+       */
+      @Nullable
       public String getFormalName() {
         return _formalName;
       }
 
-      public void setFormalName(String value) {
+      /**
+       * Set the formal Name.
+       *
+       * <p>
+       * A formal name for the data construct, to be presented in documentation.
+       *
+       * @param value
+       *          the formal-name value to set
+       */
+      public void setFormalName(@Nullable String value) {
         _formalName = value;
       }
 
+      /**
+       * Get the description.
+       *
+       * <p>
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       *
+       * @return the description value, or {@code null} if not set
+       */
+      @Nullable
       public MarkupLine getDescription() {
         return _description;
       }
 
-      public void setDescription(MarkupLine value) {
+      /**
+       * Set the description.
+       *
+       * <p>
+       * A short description of the data construct's purpose, describing the
+       * constructs semantics.
+       *
+       * @param value
+       *          the description value to set
+       */
+      public void setDescription(@Nullable MarkupLine value) {
         _description = value;
       }
 
+      /**
+       * Get the property.
+       *
+       * @return the prop value
+       */
+      @NonNull
       public List<Property> getProps() {
+        if (_props == null) {
+          _props = new LinkedList<>();
+        }
         return _props;
       }
 
-      public void setProps(List<Property> value) {
+      /**
+       * Set the property.
+       *
+       * @param value
+       *          the prop value to set
+       */
+      public void setProps(@NonNull List<Property> value) {
         _props = value;
       }
 
@@ -1263,59 +2133,157 @@ public class AssemblyModel implements IBoundObject {
         return _props != null && _props.remove(value);
       }
 
+      /**
+       * Get the grouping Discriminator Value.
+       *
+       * @return the discriminator-value value, or {@code null} if not set
+       */
+      @Nullable
       public String getDiscriminatorValue() {
         return _discriminatorValue;
       }
 
-      public void setDiscriminatorValue(String value) {
+      /**
+       * Set the grouping Discriminator Value.
+       *
+       * @param value
+       *          the discriminator-value value to set
+       */
+      public void setDiscriminatorValue(@Nullable String value) {
         _discriminatorValue = value;
       }
 
+      /**
+       * Get the field Value JSON Property Name.
+       *
+       * @return the json-value-key value, or {@code null} if not set
+       */
+      @Nullable
       public String getJsonValueKey() {
         return _jsonValueKey;
       }
 
-      public void setJsonValueKey(String value) {
+      /**
+       * Set the field Value JSON Property Name.
+       *
+       * @param value
+       *          the json-value-key value to set
+       */
+      public void setJsonValueKey(@Nullable String value) {
         _jsonValueKey = value;
       }
 
+      /**
+       * Get the flag Used as the Field Value's JSON Property Name.
+       *
+       * @return the json-value-key-flag value, or {@code null} if not set
+       */
+      @Nullable
       public JsonValueKeyFlag getJsonValueKeyFlag() {
         return _jsonValueKeyFlag;
       }
 
-      public void setJsonValueKeyFlag(JsonValueKeyFlag value) {
+      /**
+       * Set the flag Used as the Field Value's JSON Property Name.
+       *
+       * @param value
+       *          the json-value-key-flag value to set
+       */
+      public void setJsonValueKeyFlag(@Nullable JsonValueKeyFlag value) {
         _jsonValueKeyFlag = value;
       }
 
+      /**
+       * Get the {@code flags} choice group items.
+       *
+       * @return the flags items
+       */
+      @NonNull
       public List<Object> getFlags() {
+        if (_flags == null) {
+          _flags = new LinkedList<>();
+        }
         return _flags;
       }
 
-      public void setFlags(List<Object> value) {
+      /**
+       * Set the {@code flags} choice group items.
+       *
+       * @param value
+       *          the flags items to set
+       */
+      public void setFlags(@NonNull List<Object> value) {
         _flags = value;
       }
 
+      /**
+       * Get the {@code constraint} property.
+       *
+       * @return the constraint value, or {@code null} if not set
+       */
+      @Nullable
       public FieldConstraints getConstraint() {
         return _constraint;
       }
 
-      public void setConstraint(FieldConstraints value) {
+      /**
+       * Set the {@code constraint} property.
+       *
+       * @param value
+       *          the constraint value to set
+       */
+      public void setConstraint(@Nullable FieldConstraints value) {
         _constraint = value;
       }
 
+      /**
+       * Get the remarks.
+       *
+       * <p>
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       *
+       * @return the remarks value, or {@code null} if not set
+       */
+      @Nullable
       public Remarks getRemarks() {
         return _remarks;
       }
 
-      public void setRemarks(Remarks value) {
+      /**
+       * Set the remarks.
+       *
+       * <p>
+       * Any explanatory or helpful information to be provided about the remarks
+       * parent.
+       *
+       * @param value
+       *          the remarks value to set
+       */
+      public void setRemarks(@Nullable Remarks value) {
         _remarks = value;
       }
 
+      /**
+       * Get the example.
+       *
+       * @return the example value
+       */
+      @NonNull
       public List<Example> getExamples() {
+        if (_examples == null) {
+          _examples = new LinkedList<>();
+        }
         return _examples;
       }
 
-      public void setExamples(List<Example> value) {
+      /**
+       * Set the example.
+       *
+       * @param value
+       *          the example value to set
+       */
+      public void setExamples(@NonNull List<Example> value) {
         _examples = value;
       }
 

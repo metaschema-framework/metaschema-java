@@ -2,9 +2,13 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.NonNegativeIntegerAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.PositiveIntegerAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
@@ -23,18 +27,12 @@ import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.FieldNamingConventions"
-})
 @MetaschemaAssembly(
     formalName = "Assembly Reference",
     name = "assembly-reference",
@@ -77,6 +75,9 @@ public class AssemblyReference implements IBoundObject {
           matches = @Matches(level = IConstraint.Level.ERROR, pattern = "^[1-9][0-9]*|unbounded$")))
   private String _maxOccurs;
 
+  /**
+   * A formal name for the data construct, to be presented in documentation.
+   */
   @BoundField(
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
@@ -84,6 +85,10 @@ public class AssemblyReference implements IBoundObject {
       typeAdapter = StringAdapter.class)
   private String _formalName;
 
+  /**
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   */
   @BoundField(
       formalName = "Description",
       description = "A short description of the data construct's purpose, describing the constructs semantics.",
@@ -98,6 +103,9 @@ public class AssemblyReference implements IBoundObject {
       groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST))
   private List<Property> _props;
 
+  /**
+   * Allows the name of the definition to be overridden.
+   */
   @BoundField(
       formalName = "Use Name",
       description = "Allows the name of the definition to be overridden.",
@@ -109,16 +117,33 @@ public class AssemblyReference implements IBoundObject {
       useName = "group-as")
   private GroupingAs _groupAs;
 
+  /**
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
       useName = "remarks")
   private Remarks _remarks;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyReference}
+   * instance with no metadata.
+   */
   public AssemblyReference() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyReference}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public AssemblyReference(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -128,67 +153,180 @@ public class AssemblyReference implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the global Assembly Reference.
+   *
+   * @return the ref value
+   */
+  @NonNull
   public String getRef() {
     return _ref;
   }
 
-  public void setRef(String value) {
+  /**
+   * Set the global Assembly Reference.
+   *
+   * @param value
+   *          the ref value to set
+   */
+  public void setRef(@NonNull String value) {
     _ref = value;
   }
 
+  /**
+   * Get the assembly Reference Binary Name.
+   *
+   * @return the index value, or {@code null} if not set
+   */
+  @Nullable
   public BigInteger getIndex() {
     return _index;
   }
 
-  public void setIndex(BigInteger value) {
+  /**
+   * Set the assembly Reference Binary Name.
+   *
+   * @param value
+   *          the index value to set
+   */
+  public void setIndex(@Nullable BigInteger value) {
     _index = value;
   }
 
+  /**
+   * Get the deprecated Version.
+   *
+   * @return the deprecated value, or {@code null} if not set
+   */
+  @Nullable
   public String getDeprecated() {
     return _deprecated;
   }
 
-  public void setDeprecated(String value) {
+  /**
+   * Set the deprecated Version.
+   *
+   * @param value
+   *          the deprecated value to set
+   */
+  public void setDeprecated(@Nullable String value) {
     _deprecated = value;
   }
 
+  /**
+   * Get the minimum Occurrence.
+   *
+   * @return the min-occurs value, or {@code null} if not set
+   */
+  @Nullable
   public BigInteger getMinOccurs() {
     return _minOccurs;
   }
 
-  public void setMinOccurs(BigInteger value) {
+  /**
+   * Set the minimum Occurrence.
+   *
+   * @param value
+   *          the min-occurs value to set
+   */
+  public void setMinOccurs(@Nullable BigInteger value) {
     _minOccurs = value;
   }
 
+  /**
+   * Get the maximum Occurrence.
+   *
+   * @return the max-occurs value, or {@code null} if not set
+   */
+  @Nullable
   public String getMaxOccurs() {
     return _maxOccurs;
   }
 
-  public void setMaxOccurs(String value) {
+  /**
+   * Set the maximum Occurrence.
+   *
+   * @param value
+   *          the max-occurs value to set
+   */
+  public void setMaxOccurs(@Nullable String value) {
     _maxOccurs = value;
   }
 
+  /**
+   * Get the formal Name.
+   *
+   * <p>
+   * A formal name for the data construct, to be presented in documentation.
+   *
+   * @return the formal-name value, or {@code null} if not set
+   */
+  @Nullable
   public String getFormalName() {
     return _formalName;
   }
 
-  public void setFormalName(String value) {
+  /**
+   * Set the formal Name.
+   *
+   * <p>
+   * A formal name for the data construct, to be presented in documentation.
+   *
+   * @param value
+   *          the formal-name value to set
+   */
+  public void setFormalName(@Nullable String value) {
     _formalName = value;
   }
 
+  /**
+   * Get the description.
+   *
+   * <p>
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   *
+   * @return the description value, or {@code null} if not set
+   */
+  @Nullable
   public MarkupLine getDescription() {
     return _description;
   }
 
-  public void setDescription(MarkupLine value) {
+  /**
+   * Set the description.
+   *
+   * <p>
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   *
+   * @param value
+   *          the description value to set
+   */
+  public void setDescription(@Nullable MarkupLine value) {
     _description = value;
   }
 
+  /**
+   * Get the property.
+   *
+   * @return the prop value
+   */
+  @NonNull
   public List<Property> getProps() {
+    if (_props == null) {
+      _props = new LinkedList<>();
+    }
     return _props;
   }
 
-  public void setProps(List<Property> value) {
+  /**
+   * Set the property.
+   *
+   * @param value
+   *          the prop value to set
+   */
+  public void setProps(@NonNull List<Property> value) {
     _props = value;
   }
 
@@ -220,27 +358,77 @@ public class AssemblyReference implements IBoundObject {
     return _props != null && _props.remove(value);
   }
 
+  /**
+   * Get the use Name.
+   *
+   * <p>
+   * Allows the name of the definition to be overridden.
+   *
+   * @return the use-name value, or {@code null} if not set
+   */
+  @Nullable
   public UseName getUseName() {
     return _useName;
   }
 
-  public void setUseName(UseName value) {
+  /**
+   * Set the use Name.
+   *
+   * <p>
+   * Allows the name of the definition to be overridden.
+   *
+   * @param value
+   *          the use-name value to set
+   */
+  public void setUseName(@Nullable UseName value) {
     _useName = value;
   }
 
+  /**
+   * Get the group As.
+   *
+   * @return the group-as value, or {@code null} if not set
+   */
+  @Nullable
   public GroupingAs getGroupAs() {
     return _groupAs;
   }
 
-  public void setGroupAs(GroupingAs value) {
+  /**
+   * Set the group As.
+   *
+   * @param value
+   *          the group-as value to set
+   */
+  public void setGroupAs(@Nullable GroupingAs value) {
     _groupAs = value;
   }
 
+  /**
+   * Get the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @return the remarks value, or {@code null} if not set
+   */
+  @Nullable
   public Remarks getRemarks() {
     return _remarks;
   }
 
-  public void setRemarks(Remarks value) {
+  /**
+   * Set the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @param value
+   *          the remarks value to set
+   */
+  public void setRemarks(@Nullable Remarks value) {
     _remarks = value;
   }
 

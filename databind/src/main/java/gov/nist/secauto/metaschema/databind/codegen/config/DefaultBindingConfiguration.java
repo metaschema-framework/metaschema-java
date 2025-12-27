@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.INamedInstance;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -47,6 +48,10 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
 
   /**
    * Retrieve the binding configuration for the provided {@code definition}.
+   * <p>
+   * This method first checks for a binding by the definition's name. If not found
+   * and the definition is inline, it also checks for a binding by the
+   * definition's path (using "/" separated ancestor names).
    *
    * @param definition
    *          the definition to get the config for
@@ -65,10 +70,22 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
     if (metaschemaConfig != null) {
       switch (definition.getModelType()) {
       case ASSEMBLY:
+        // First try by name
         retval = metaschemaConfig.getAssemblyDefinitionBindingConfig(definitionName);
+        // If not found and inline, try by path
+        if (retval == null && definition.isInline()) {
+          String path = computeDefinitionPath(definition);
+          retval = metaschemaConfig.getAssemblyDefinitionBindingConfig(path);
+        }
         break;
       case FIELD:
+        // First try by name
         retval = metaschemaConfig.getFieldDefinitionBindingConfig(definitionName);
+        // If not found and inline, try by path
+        if (retval == null && definition.isInline()) {
+          String path = computeDefinitionPath(definition);
+          retval = metaschemaConfig.getFieldDefinitionBindingConfig(path);
+        }
         break;
       default:
         throw new UnsupportedOperationException(
@@ -76,6 +93,41 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
       }
     }
     return retval;
+  }
+
+  /**
+   * Compute the path for an inline definition.
+   * <p>
+   * The path is constructed by walking up the definition hierarchy and
+   * concatenating ancestor definition names with "/" separators. For example, an
+   * inline assembly "assembly" within "scope" within
+   * "metaschema-module-constraints" would have path "scope/assembly".
+   *
+   * @param definition
+   *          the definition to compute the path for
+   * @return the computed path, or just the definition name if not inline
+   */
+  @NonNull
+  private static String computeDefinitionPath(@NonNull IModelDefinition definition) {
+    StringBuilder path = new StringBuilder();
+    IModelDefinition current = definition;
+
+    while (current != null && current.isInline()) {
+      if (path.length() > 0) {
+        path.insert(0, "/");
+      }
+      path.insert(0, current.getName());
+
+      // Walk up to the parent definition
+      INamedInstance inlineInstance = current.getInlineInstance();
+      if (inlineInstance != null) {
+        current = inlineInstance.getContainingDefinition();
+      } else {
+        break;
+      }
+    }
+
+    return ObjectUtils.notNull(path.toString());
   }
 
   @Override
@@ -328,13 +380,17 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
     if (assemblyBindings != null) {
       for (MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding assemblyBinding : assemblyBindings) {
         String name = assemblyBinding.getName();
-        if (name != null) {
-          IDefinitionBindingConfiguration config = metaschemaConfig.getAssemblyDefinitionBindingConfig(name);
+        String target = assemblyBinding.getTarget();
+
+        // Determine the lookup key - use name if provided, otherwise use target
+        String lookupKey = name != null ? name : target;
+        if (lookupKey != null) {
+          IDefinitionBindingConfiguration config = metaschemaConfig.getAssemblyDefinitionBindingConfig(lookupKey);
           config = processDefinitionBindingConfiguration(config, assemblyBinding.getJava());
-          metaschemaConfig.addAssemblyDefinitionBindingConfig(name, config);
+          metaschemaConfig.addAssemblyDefinitionBindingConfig(lookupKey, config);
 
           // Process property bindings for this assembly
-          processAssemblyPropertyBindings(metaschemaConfig, name, assemblyBinding.getPropertyBindings());
+          processAssemblyPropertyBindings(metaschemaConfig, lookupKey, assemblyBinding.getPropertyBindings());
 
           // Process choice group bindings for this assembly
           processChoiceGroupBindings(config, assemblyBinding.getChoiceGroupBindings());
@@ -347,13 +403,17 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
     if (fieldBindings != null) {
       for (MetaschemaBindings.MetaschemaBinding.DefineFieldBinding fieldBinding : fieldBindings) {
         String name = fieldBinding.getName();
-        if (name != null) {
-          IDefinitionBindingConfiguration config = metaschemaConfig.getFieldDefinitionBindingConfig(name);
+        String target = fieldBinding.getTarget();
+
+        // Determine the lookup key - use name if provided, otherwise use target
+        String lookupKey = name != null ? name : target;
+        if (lookupKey != null) {
+          IDefinitionBindingConfiguration config = metaschemaConfig.getFieldDefinitionBindingConfig(lookupKey);
           config = processDefinitionBindingConfiguration(config, fieldBinding.getJava());
-          metaschemaConfig.addFieldDefinitionBindingConfig(name, config);
+          metaschemaConfig.addFieldDefinitionBindingConfig(lookupKey, config);
 
           // Process property bindings for this field
-          processFieldPropertyBindings(metaschemaConfig, name, fieldBinding.getPropertyBindings());
+          processFieldPropertyBindings(metaschemaConfig, lookupKey, fieldBinding.getPropertyBindings());
         }
       }
     }

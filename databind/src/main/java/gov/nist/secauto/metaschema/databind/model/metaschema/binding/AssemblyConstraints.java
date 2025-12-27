@@ -2,9 +2,13 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -15,22 +19,15 @@ import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IModelConstraintsBase;
 import gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase;
-
+import java.util.LinkedList;
+import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.LinkedList;
-import java.util.List;
-
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.ExcessivePublicCount",
-    "PMD.FieldNamingConventions"
-})
 @MetaschemaAssembly(
     name = "assembly-constraints",
     moduleClass = MetaschemaModelModule.class)
-public class AssemblyConstraints implements IModelConstraintsBase {
+public class AssemblyConstraints implements IBoundObject, IModelConstraintsBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundAssembly(
@@ -43,6 +40,7 @@ public class AssemblyConstraints implements IModelConstraintsBase {
   @BoundChoiceGroup(
       minOccurs = 1,
       maxOccurs = -1,
+      groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST),
       assemblies = {
           @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values",
               binding = TargetedAllowedValuesConstraint.class),
@@ -57,15 +55,29 @@ public class AssemblyConstraints implements IModelConstraintsBase {
           @BoundGroupedAssembly(formalName = "Targeted Index Constraint", useName = "index",
               binding = TargetedIndexConstraint.class),
           @BoundGroupedAssembly(formalName = "Targeted Cardinality Constraint", useName = "has-cardinality",
-              binding = TargetedHasCardinalityConstraint.class)
-      },
-      groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST))
+              binding = TargetedHasCardinalityConstraint.class),
+          @BoundGroupedAssembly(formalName = "Report Condition Constraint", useName = "report",
+              binding = TargetedReportConstraint.class)
+      })
   private List<? extends ITargetedConstraintBase> _rules;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints}
+   * instance with no metadata.
+   */
   public AssemblyConstraints() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyConstraints}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public AssemblyConstraints(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -75,12 +87,26 @@ public class AssemblyConstraints implements IModelConstraintsBase {
     return __metaschemaData;
   }
 
-  @Override
+  /**
+   * Get the constraint Let Expression.
+   *
+   * @return the let value
+   */
+  @NonNull
   public List<ConstraintLetExpression> getLets() {
+    if (_lets == null) {
+      _lets = new LinkedList<>();
+    }
     return _lets;
   }
 
-  public void setLets(List<ConstraintLetExpression> value) {
+  /**
+   * Set the constraint Let Expression.
+   *
+   * @param value
+   *          the let value to set
+   */
+  public void setLets(@NonNull List<ConstraintLetExpression> value) {
     _lets = value;
   }
 
@@ -112,12 +138,32 @@ public class AssemblyConstraints implements IModelConstraintsBase {
     return _lets != null && _lets.remove(value);
   }
 
-  @Override
+  /**
+   * Get the {@code rules} choice group items.
+   *
+   * <p>
+   * Items in this collection implement {@link ITargetedConstraintBase}.
+   *
+   * @return the rules items
+   */
+  @NonNull
   public List<? extends ITargetedConstraintBase> getRules() {
+    if (_rules == null) {
+      _rules = new LinkedList<>();
+    }
     return _rules;
   }
 
-  public void setRules(List<? extends ITargetedConstraintBase> value) {
+  /**
+   * Set the {@code rules} choice group items.
+   *
+   * <p>
+   * Items in this collection must implement {@link ITargetedConstraintBase}.
+   *
+   * @param value
+   *          the rules items to set
+   */
+  public void setRules(@NonNull List<? extends ITargetedConstraintBase> value) {
     _rules = value;
   }
 

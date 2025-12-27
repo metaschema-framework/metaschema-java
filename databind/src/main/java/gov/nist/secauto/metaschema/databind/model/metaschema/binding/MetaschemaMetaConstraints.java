@@ -2,9 +2,13 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UriAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
@@ -23,22 +27,16 @@ import gov.nist.secauto.metaschema.databind.model.annotations.KeyField;
 import gov.nist.secauto.metaschema.databind.model.annotations.Let;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Defines constraint rules to be applied to an existing set of Metaschema
  * module-based models.
  */
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.FieldNamingConventions",
-})
 @MetaschemaAssembly(
     formalName = "External Module Constraints",
     description = "Defines constraint rules to be applied to an existing set of Metaschema module-based models.",
@@ -64,6 +62,10 @@ import java.util.List;
 public class MetaschemaMetaConstraints implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
+  /**
+   * Declares a set of Metaschema constraints from an out-of-line resource to
+   * import, supporting composition of constraint sets.
+   */
   @BoundAssembly(
       description = "Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.",
       useName = "import",
@@ -71,12 +73,16 @@ public class MetaschemaMetaConstraints implements IBoundObject {
       groupAs = @GroupAs(name = "imports", inJson = JsonGroupAsBehavior.LIST))
   private List<Import> _imports;
 
+  /**
+   * Assigns a Metapath namespace to a prefix for use in a Metapath expression in
+   * a lexical qualified name.
+   */
   @BoundAssembly(
       formalName = "Metapath Namespace Declaration",
       description = "Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.",
       useName = "namespace-binding",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "namespace-bindings"))
+      groupAs = @GroupAs(name = "namespace-bindings", inJson = JsonGroupAsBehavior.LIST))
   private List<MetapathNamespace> _namespaceBindings;
 
   @BoundAssembly(
@@ -90,10 +96,23 @@ public class MetaschemaMetaConstraints implements IBoundObject {
       groupAs = @GroupAs(name = "contexts", inJson = JsonGroupAsBehavior.LIST))
   private List<MetapathContext> _contexts;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints}
+   * instance with no metadata.
+   */
   public MetaschemaMetaConstraints() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public MetaschemaMetaConstraints(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -103,11 +122,34 @@ public class MetaschemaMetaConstraints implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the {@code import} property.
+   *
+   * <p>
+   * Declares a set of Metaschema constraints from an out-of-line resource to
+   * import, supporting composition of constraint sets.
+   *
+   * @return the import value
+   */
+  @NonNull
   public List<Import> getImports() {
+    if (_imports == null) {
+      _imports = new LinkedList<>();
+    }
     return _imports;
   }
 
-  public void setImports(List<Import> value) {
+  /**
+   * Set the {@code import} property.
+   *
+   * <p>
+   * Declares a set of Metaschema constraints from an out-of-line resource to
+   * import, supporting composition of constraint sets.
+   *
+   * @param value
+   *          the import value to set
+   */
+  public void setImports(@NonNull List<Import> value) {
     _imports = value;
   }
 
@@ -138,11 +180,34 @@ public class MetaschemaMetaConstraints implements IBoundObject {
     return _imports != null && _imports.remove(value);
   }
 
+  /**
+   * Get the metapath Namespace Declaration.
+   *
+   * <p>
+   * Assigns a Metapath namespace to a prefix for use in a Metapath expression in
+   * a lexical qualified name.
+   *
+   * @return the namespace-binding value
+   */
+  @NonNull
   public List<MetapathNamespace> getNamespaceBindings() {
+    if (_namespaceBindings == null) {
+      _namespaceBindings = new LinkedList<>();
+    }
     return _namespaceBindings;
   }
 
-  public void setNamespaceBindings(List<MetapathNamespace> value) {
+  /**
+   * Set the metapath Namespace Declaration.
+   *
+   * <p>
+   * Assigns a Metapath namespace to a prefix for use in a Metapath expression in
+   * a lexical qualified name.
+   *
+   * @param value
+   *          the namespace-binding value to set
+   */
+  public void setNamespaceBindings(@NonNull List<MetapathNamespace> value) {
     _namespaceBindings = value;
   }
 
@@ -174,19 +239,46 @@ public class MetaschemaMetaConstraints implements IBoundObject {
     return _namespaceBindings != null && _namespaceBindings.remove(value);
   }
 
+  /**
+   * Get the {@code definition-context} property.
+   *
+   * @return the definition-context value, or {@code null} if not set
+   */
+  @Nullable
   public DefinitionContext getDefinitionContext() {
     return _definitionContext;
   }
 
-  public void setDefinitionContext(DefinitionContext value) {
+  /**
+   * Set the {@code definition-context} property.
+   *
+   * @param value
+   *          the definition-context value to set
+   */
+  public void setDefinitionContext(@Nullable DefinitionContext value) {
     _definitionContext = value;
   }
 
+  /**
+   * Get the {@code context} property.
+   *
+   * @return the context value
+   */
+  @NonNull
   public List<MetapathContext> getContexts() {
+    if (_contexts == null) {
+      _contexts = new LinkedList<>();
+    }
     return _contexts;
   }
 
-  public void setContexts(List<MetapathContext> value) {
+  /**
+   * Set the {@code context} property.
+   *
+   * @param value
+   *          the context value to set
+   */
+  public void setContexts(@NonNull List<MetapathContext> value) {
     _contexts = value;
   }
 
@@ -235,8 +327,8 @@ public class MetaschemaMetaConstraints implements IBoundObject {
     private final IMetaschemaData __metaschemaData;
 
     /**
-     * "A relative or absolute URI for retrieving an out-of-line Metaschema
-     * constraint definition."
+     * A relative or absolute URI for retrieving an out-of-line Metaschema
+     * constraint definition.
      */
     @BoundFlag(
         description = "A relative or absolute URI for retrieving an out-of-line Metaschema constraint definition.",
@@ -245,10 +337,23 @@ public class MetaschemaMetaConstraints implements IBoundObject {
         typeAdapter = UriReferenceAdapter.class)
     private URI _href;
 
+    /**
+     * Constructs a new
+     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints.Import}
+     * instance with no metadata.
+     */
     public Import() {
       this(null);
     }
 
+    /**
+     * Constructs a new
+     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints.Import}
+     * instance with the specified metadata.
+     *
+     * @param data
+     *          the metaschema data, or {@code null} if none
+     */
     public Import(IMetaschemaData data) {
       this.__metaschemaData = data;
     }
@@ -258,11 +363,31 @@ public class MetaschemaMetaConstraints implements IBoundObject {
       return __metaschemaData;
     }
 
+    /**
+     * Get the {@code href} property.
+     *
+     * <p>
+     * A relative or absolute URI for retrieving an out-of-line Metaschema
+     * constraint definition.
+     *
+     * @return the href value
+     */
+    @NonNull
     public URI getHref() {
       return _href;
     }
 
-    public void setHref(URI value) {
+    /**
+     * Set the {@code href} property.
+     *
+     * <p>
+     * A relative or absolute URI for retrieving an out-of-line Metaschema
+     * constraint definition.
+     *
+     * @param value
+     *          the href value to set
+     */
+    public void setHref(@NonNull URI value) {
       _href = value;
     }
 
@@ -295,16 +420,33 @@ public class MetaschemaMetaConstraints implements IBoundObject {
         minOccurs = 1)
     private AssemblyConstraints _constraints;
 
+    /**
+     * Any explanatory or helpful information to be provided about the remarks
+     * parent.
+     */
     @BoundField(
         formalName = "Remarks",
         description = "Any explanatory or helpful information to be provided about the remarks parent.",
         useName = "remarks")
     private Remarks _remarks;
 
+    /**
+     * Constructs a new
+     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints.DefinitionContext}
+     * instance with no metadata.
+     */
     public DefinitionContext() {
       this(null);
     }
 
+    /**
+     * Constructs a new
+     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints.DefinitionContext}
+     * instance with the specified metadata.
+     *
+     * @param data
+     *          the metaschema data, or {@code null} if none
+     */
     public DefinitionContext(IMetaschemaData data) {
       this.__metaschemaData = data;
     }
@@ -314,35 +456,91 @@ public class MetaschemaMetaConstraints implements IBoundObject {
       return __metaschemaData;
     }
 
+    /**
+     * Get the {@code name} property.
+     *
+     * @return the name value
+     */
+    @NonNull
     public String getName() {
       return _name;
     }
 
-    public void setName(String value) {
+    /**
+     * Set the {@code name} property.
+     *
+     * @param value
+     *          the name value to set
+     */
+    public void setName(@NonNull String value) {
       _name = value;
     }
 
+    /**
+     * Get the {@code namespace} property.
+     *
+     * @return the namespace value
+     */
+    @NonNull
     public URI getNamespace() {
       return _namespace;
     }
 
-    public void setNamespace(URI value) {
+    /**
+     * Set the {@code namespace} property.
+     *
+     * @param value
+     *          the namespace value to set
+     */
+    public void setNamespace(@NonNull URI value) {
       _namespace = value;
     }
 
+    /**
+     * Get the {@code constraints} property.
+     *
+     * @return the constraints value
+     */
+    @NonNull
     public AssemblyConstraints getConstraints() {
       return _constraints;
     }
 
-    public void setConstraints(AssemblyConstraints value) {
+    /**
+     * Set the {@code constraints} property.
+     *
+     * @param value
+     *          the constraints value to set
+     */
+    public void setConstraints(@NonNull AssemblyConstraints value) {
       _constraints = value;
     }
 
+    /**
+     * Get the remarks.
+     *
+     * <p>
+     * Any explanatory or helpful information to be provided about the remarks
+     * parent.
+     *
+     * @return the remarks value, or {@code null} if not set
+     */
+    @Nullable
     public Remarks getRemarks() {
       return _remarks;
     }
 
-    public void setRemarks(Remarks value) {
+    /**
+     * Set the remarks.
+     *
+     * <p>
+     * Any explanatory or helpful information to be provided about the remarks
+     * parent.
+     *
+     * @param value
+     *          the remarks value to set
+     */
+    public void setRemarks(@Nullable Remarks value) {
       _remarks = value;
     }
 

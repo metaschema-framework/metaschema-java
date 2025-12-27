@@ -2,9 +2,13 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
@@ -13,23 +17,21 @@ import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
 import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
-
+import java.util.LinkedList;
+import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.LinkedList;
-import java.util.List;
-
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.FieldNamingConventions",
-})
 @MetaschemaAssembly(
     name = "metapath-context",
     moduleClass = MetaschemaModelModule.class)
 public class MetapathContext implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
+  /**
+   * A Metapath expression identifying the model node that the constraints will be
+   * applied to.
+   */
   @BoundAssembly(
       description = "A Metapath expression identifying the model node that the constraints will be applied to.",
       useName = "metapath",
@@ -48,16 +50,33 @@ public class MetapathContext implements IBoundObject {
       groupAs = @GroupAs(name = "contexts", inJson = JsonGroupAsBehavior.LIST))
   private List<MetapathContext> _contexts;
 
+  /**
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
       useName = "remarks")
   private Remarks _remarks;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathContext}
+   * instance with no metadata.
+   */
   public MetapathContext() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathContext}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public MetapathContext(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -67,11 +86,34 @@ public class MetapathContext implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the {@code metapath} property.
+   *
+   * <p>
+   * A Metapath expression identifying the model node that the constraints will be
+   * applied to.
+   *
+   * @return the metapath value
+   */
+  @NonNull
   public List<MetaschemaMetapath> getMetapaths() {
+    if (_metapaths == null) {
+      _metapaths = new LinkedList<>();
+    }
     return _metapaths;
   }
 
-  public void setMetapaths(List<MetaschemaMetapath> value) {
+  /**
+   * Set the {@code metapath} property.
+   *
+   * <p>
+   * A Metapath expression identifying the model node that the constraints will be
+   * applied to.
+   *
+   * @param value
+   *          the metapath value to set
+   */
+  public void setMetapaths(@NonNull List<MetaschemaMetapath> value) {
     _metapaths = value;
   }
 
@@ -103,19 +145,46 @@ public class MetapathContext implements IBoundObject {
     return _metapaths != null && _metapaths.remove(value);
   }
 
+  /**
+   * Get the {@code constraints} property.
+   *
+   * @return the constraints value, or {@code null} if not set
+   */
+  @Nullable
   public AssemblyConstraints getConstraints() {
     return _constraints;
   }
 
-  public void setConstraints(AssemblyConstraints value) {
+  /**
+   * Set the {@code constraints} property.
+   *
+   * @param value
+   *          the constraints value to set
+   */
+  public void setConstraints(@Nullable AssemblyConstraints value) {
     _constraints = value;
   }
 
+  /**
+   * Get the {@code context} property.
+   *
+   * @return the context value
+   */
+  @NonNull
   public List<MetapathContext> getContexts() {
+    if (_contexts == null) {
+      _contexts = new LinkedList<>();
+    }
     return _contexts;
   }
 
-  public void setContexts(List<MetapathContext> value) {
+  /**
+   * Set the {@code context} property.
+   *
+   * @param value
+   *          the context value to set
+   */
+  public void setContexts(@NonNull List<MetapathContext> value) {
     _contexts = value;
   }
 
@@ -147,11 +216,31 @@ public class MetapathContext implements IBoundObject {
     return _contexts != null && _contexts.remove(value);
   }
 
+  /**
+   * Get the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @return the remarks value, or {@code null} if not set
+   */
+  @Nullable
   public Remarks getRemarks() {
     return _remarks;
   }
 
-  public void setRemarks(Remarks value) {
+  /**
+   * Set the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @param value
+   *          the remarks value to set
+   */
+  public void setRemarks(@Nullable Remarks value) {
     _remarks = value;
   }
 

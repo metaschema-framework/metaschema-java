@@ -2,9 +2,13 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.PositiveIntegerAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
@@ -23,18 +27,12 @@ import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.FieldNamingConventions"
-})
 @MetaschemaAssembly(
     formalName = "Flag Reference",
     name = "flag-reference",
@@ -77,6 +75,9 @@ public class FlagReference implements IBoundObject {
               @AllowedValue(value = "no", description = "The flag is optional.") })))
   private String _required;
 
+  /**
+   * A formal name for the data construct, to be presented in documentation.
+   */
   @BoundField(
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
@@ -84,6 +85,10 @@ public class FlagReference implements IBoundObject {
       typeAdapter = StringAdapter.class)
   private String _formalName;
 
+  /**
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   */
   @BoundField(
       formalName = "Description",
       description = "A short description of the data construct's purpose, describing the constructs semantics.",
@@ -98,22 +103,42 @@ public class FlagReference implements IBoundObject {
       groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST))
   private List<Property> _props;
 
+  /**
+   * Allows the name of the definition to be overridden.
+   */
   @BoundField(
       formalName = "Use Name",
       description = "Allows the name of the definition to be overridden.",
       useName = "use-name")
   private UseName _useName;
 
+  /**
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
       useName = "remarks")
   private Remarks _remarks;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagReference}
+   * instance with no metadata.
+   */
   public FlagReference() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagReference}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public FlagReference(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -123,67 +148,180 @@ public class FlagReference implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the global Flag Reference.
+   *
+   * @return the ref value
+   */
+  @NonNull
   public String getRef() {
     return _ref;
   }
 
-  public void setRef(String value) {
+  /**
+   * Set the global Flag Reference.
+   *
+   * @param value
+   *          the ref value to set
+   */
+  public void setRef(@NonNull String value) {
     _ref = value;
   }
 
+  /**
+   * Get the flag Reference Binary Name.
+   *
+   * @return the index value, or {@code null} if not set
+   */
+  @Nullable
   public BigInteger getIndex() {
     return _index;
   }
 
-  public void setIndex(BigInteger value) {
+  /**
+   * Set the flag Reference Binary Name.
+   *
+   * @param value
+   *          the index value to set
+   */
+  public void setIndex(@Nullable BigInteger value) {
     _index = value;
   }
 
+  /**
+   * Get the deprecated Version.
+   *
+   * @return the deprecated value, or {@code null} if not set
+   */
+  @Nullable
   public String getDeprecated() {
     return _deprecated;
   }
 
-  public void setDeprecated(String value) {
+  /**
+   * Set the deprecated Version.
+   *
+   * @param value
+   *          the deprecated value to set
+   */
+  public void setDeprecated(@Nullable String value) {
     _deprecated = value;
   }
 
+  /**
+   * Get the default Flag Value.
+   *
+   * @return the default value, or {@code null} if not set
+   */
+  @Nullable
   public String getDefault() {
     return _default;
   }
 
-  public void setDefault(String value) {
+  /**
+   * Set the default Flag Value.
+   *
+   * @param value
+   *          the default value to set
+   */
+  public void setDefault(@Nullable String value) {
     _default = value;
   }
 
+  /**
+   * Get the is Flag Required?.
+   *
+   * @return the required value, or {@code null} if not set
+   */
+  @Nullable
   public String getRequired() {
     return _required;
   }
 
-  public void setRequired(String value) {
+  /**
+   * Set the is Flag Required?.
+   *
+   * @param value
+   *          the required value to set
+   */
+  public void setRequired(@Nullable String value) {
     _required = value;
   }
 
+  /**
+   * Get the formal Name.
+   *
+   * <p>
+   * A formal name for the data construct, to be presented in documentation.
+   *
+   * @return the formal-name value, or {@code null} if not set
+   */
+  @Nullable
   public String getFormalName() {
     return _formalName;
   }
 
-  public void setFormalName(String value) {
+  /**
+   * Set the formal Name.
+   *
+   * <p>
+   * A formal name for the data construct, to be presented in documentation.
+   *
+   * @param value
+   *          the formal-name value to set
+   */
+  public void setFormalName(@Nullable String value) {
     _formalName = value;
   }
 
+  /**
+   * Get the description.
+   *
+   * <p>
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   *
+   * @return the description value, or {@code null} if not set
+   */
+  @Nullable
   public MarkupLine getDescription() {
     return _description;
   }
 
-  public void setDescription(MarkupLine value) {
+  /**
+   * Set the description.
+   *
+   * <p>
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   *
+   * @param value
+   *          the description value to set
+   */
+  public void setDescription(@Nullable MarkupLine value) {
     _description = value;
   }
 
+  /**
+   * Get the property.
+   *
+   * @return the prop value
+   */
+  @NonNull
   public List<Property> getProps() {
+    if (_props == null) {
+      _props = new LinkedList<>();
+    }
     return _props;
   }
 
-  public void setProps(List<Property> value) {
+  /**
+   * Set the property.
+   *
+   * @param value
+   *          the prop value to set
+   */
+  public void setProps(@NonNull List<Property> value) {
     _props = value;
   }
 
@@ -215,19 +353,57 @@ public class FlagReference implements IBoundObject {
     return _props != null && _props.remove(value);
   }
 
+  /**
+   * Get the use Name.
+   *
+   * <p>
+   * Allows the name of the definition to be overridden.
+   *
+   * @return the use-name value, or {@code null} if not set
+   */
+  @Nullable
   public UseName getUseName() {
     return _useName;
   }
 
-  public void setUseName(UseName value) {
+  /**
+   * Set the use Name.
+   *
+   * <p>
+   * Allows the name of the definition to be overridden.
+   *
+   * @param value
+   *          the use-name value to set
+   */
+  public void setUseName(@Nullable UseName value) {
     _useName = value;
   }
 
+  /**
+   * Get the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @return the remarks value, or {@code null} if not set
+   */
+  @Nullable
   public Remarks getRemarks() {
     return _remarks;
   }
 
-  public void setRemarks(Remarks value) {
+  /**
+   * Set the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @param value
+   *          the remarks value to set
+   */
+  public void setRemarks(@Nullable Remarks value) {
     _remarks = value;
   }
 

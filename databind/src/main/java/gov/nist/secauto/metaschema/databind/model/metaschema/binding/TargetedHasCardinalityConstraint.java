@@ -2,9 +2,13 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.NonNegativeIntegerAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
@@ -25,25 +29,17 @@ import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase;
-import gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.FieldNamingConventions"
-})
 @MetaschemaAssembly(
     formalName = "Targeted Cardinality Constraint",
     name = "targeted-has-cardinality-constraint",
     moduleClass = MetaschemaModelModule.class)
-public class TargetedHasCardinalityConstraint
-    implements IBoundObject, ITargetedConstraintBase, IConfigurableMessageConstraintBase {
+public class TargetedHasCardinalityConstraint implements IBoundObject, IConfigurableMessageConstraintBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundFlag(
@@ -91,6 +87,9 @@ public class TargetedHasCardinalityConstraint
       typeAdapter = StringAdapter.class)
   private String _target;
 
+  /**
+   * A formal name for the data construct, to be presented in documentation.
+   */
   @BoundField(
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
@@ -98,6 +97,10 @@ public class TargetedHasCardinalityConstraint
       typeAdapter = StringAdapter.class)
   private String _formalName;
 
+  /**
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   */
   @BoundField(
       formalName = "Description",
       description = "A short description of the data construct's purpose, describing the constructs semantics.",
@@ -118,16 +121,33 @@ public class TargetedHasCardinalityConstraint
       typeAdapter = StringAdapter.class)
   private String _message;
 
+  /**
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
       useName = "remarks")
   private Remarks _remarks;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedHasCardinalityConstraint}
+   * instance with no metadata.
+   */
   public TargetedHasCardinalityConstraint() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedHasCardinalityConstraint}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public TargetedHasCardinalityConstraint(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -137,73 +157,180 @@ public class TargetedHasCardinalityConstraint
     return __metaschemaData;
   }
 
-  @Override
+  /**
+   * Get the constraint Identifier.
+   *
+   * @return the id value, or {@code null} if not set
+   */
+  @Nullable
   public String getId() {
     return _id;
   }
 
-  public void setId(String value) {
+  /**
+   * Set the constraint Identifier.
+   *
+   * @param value
+   *          the id value to set
+   */
+  public void setId(@Nullable String value) {
     _id = value;
   }
 
-  @Override
+  /**
+   * Get the constraint Severity Level.
+   *
+   * @return the level value, or {@code null} if not set
+   */
+  @Nullable
   public String getLevel() {
     return _level;
   }
 
-  public void setLevel(String value) {
+  /**
+   * Set the constraint Severity Level.
+   *
+   * @param value
+   *          the level value to set
+   */
+  public void setLevel(@Nullable String value) {
     _level = value;
   }
 
+  /**
+   * Get the minimum Occurrence.
+   *
+   * @return the min-occurs value, or {@code null} if not set
+   */
+  @Nullable
   public BigInteger getMinOccurs() {
     return _minOccurs;
   }
 
-  public void setMinOccurs(BigInteger value) {
+  /**
+   * Set the minimum Occurrence.
+   *
+   * @param value
+   *          the min-occurs value to set
+   */
+  public void setMinOccurs(@Nullable BigInteger value) {
     _minOccurs = value;
   }
 
+  /**
+   * Get the maximum Occurrence.
+   *
+   * @return the max-occurs value, or {@code null} if not set
+   */
+  @Nullable
   public String getMaxOccurs() {
     return _maxOccurs;
   }
 
-  public void setMaxOccurs(String value) {
+  /**
+   * Set the maximum Occurrence.
+   *
+   * @param value
+   *          the max-occurs value to set
+   */
+  public void setMaxOccurs(@Nullable String value) {
     _maxOccurs = value;
   }
 
-  @Override
+  /**
+   * Get the constraint Target Metapath Expression.
+   *
+   * @return the target value
+   */
+  @NonNull
   public String getTarget() {
     return _target;
   }
 
-  public void setTarget(String value) {
+  /**
+   * Set the constraint Target Metapath Expression.
+   *
+   * @param value
+   *          the target value to set
+   */
+  public void setTarget(@NonNull String value) {
     _target = value;
   }
 
-  @Override
+  /**
+   * Get the formal Name.
+   *
+   * <p>
+   * A formal name for the data construct, to be presented in documentation.
+   *
+   * @return the formal-name value, or {@code null} if not set
+   */
+  @Nullable
   public String getFormalName() {
     return _formalName;
   }
 
-  public void setFormalName(String value) {
+  /**
+   * Set the formal Name.
+   *
+   * <p>
+   * A formal name for the data construct, to be presented in documentation.
+   *
+   * @param value
+   *          the formal-name value to set
+   */
+  public void setFormalName(@Nullable String value) {
     _formalName = value;
   }
 
-  @Override
+  /**
+   * Get the description.
+   *
+   * <p>
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   *
+   * @return the description value, or {@code null} if not set
+   */
+  @Nullable
   public MarkupLine getDescription() {
     return _description;
   }
 
-  public void setDescription(MarkupLine value) {
+  /**
+   * Set the description.
+   *
+   * <p>
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   *
+   * @param value
+   *          the description value to set
+   */
+  public void setDescription(@Nullable MarkupLine value) {
     _description = value;
   }
 
-  @Override
+  /**
+   * Get the property.
+   *
+   * @return the prop value
+   */
+  @NonNull
   public List<Property> getProps() {
+    if (_props == null) {
+      _props = new LinkedList<>();
+    }
     return _props;
   }
 
-  public void setProps(List<Property> value) {
+  /**
+   * Set the property.
+   *
+   * @param value
+   *          the prop value to set
+   */
+  public void setProps(@NonNull List<Property> value) {
     _props = value;
   }
 
@@ -235,21 +362,51 @@ public class TargetedHasCardinalityConstraint
     return _props != null && _props.remove(value);
   }
 
-  @Override
+  /**
+   * Get the constraint Condition Violation Message.
+   *
+   * @return the message value, or {@code null} if not set
+   */
+  @Nullable
   public String getMessage() {
     return _message;
   }
 
-  public void setMessage(String value) {
+  /**
+   * Set the constraint Condition Violation Message.
+   *
+   * @param value
+   *          the message value to set
+   */
+  public void setMessage(@Nullable String value) {
     _message = value;
   }
 
-  @Override
+  /**
+   * Get the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @return the remarks value, or {@code null} if not set
+   */
+  @Nullable
   public Remarks getRemarks() {
     return _remarks;
   }
 
-  public void setRemarks(Remarks value) {
+  /**
+   * Set the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @param value
+   *          the remarks value to set
+   */
+  public void setRemarks(@Nullable Remarks value) {
     _remarks = value;
   }
 

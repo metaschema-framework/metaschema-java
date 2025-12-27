@@ -2,9 +2,13 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
@@ -23,24 +27,16 @@ import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase;
-import gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase;
-
+import java.util.LinkedList;
+import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.LinkedList;
-import java.util.List;
-
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.FieldNamingConventions"
-})
 @MetaschemaAssembly(
     formalName = "Value Matches Constraint",
     name = "targeted-matches-constraint",
     moduleClass = MetaschemaModelModule.class)
-public class TargetedMatchesConstraint
-    implements IBoundObject, ITargetedConstraintBase, IConfigurableMessageConstraintBase {
+public class TargetedMatchesConstraint implements IBoundObject, IConfigurableMessageConstraintBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundFlag(
@@ -80,57 +76,63 @@ public class TargetedMatchesConstraint
       valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
           allowOthers = true,
           values = { @AllowedValue(value = "base64",
-              description = "The [base64](https://pages.nist.gov/metaschema/specification/datatypes/#base64) data type."),
+              description = "The [base64](https://framework.metaschema.dev/specification/datatypes/#base64) data type."),
               @AllowedValue(value = "boolean",
-                  description = "The [boolean](https://pages.nist.gov/metaschema/specification/datatypes/#boolean) data type."),
+                  description = "The [boolean](https://framework.metaschema.dev/specification/datatypes/#boolean) data type."),
               @AllowedValue(value = "date",
-                  description = "The [date](https://pages.nist.gov/metaschema/specification/datatypes/#date) data type."),
+                  description = "The [date](https://framework.metaschema.dev/specification/datatypes/#date) data type."),
               @AllowedValue(value = "date-time",
-                  description = "The [date-time](https://pages.nist.gov/metaschema/specification/datatypes/#date-time) data type."),
+                  description = "The [date-time](https://framework.metaschema.dev/specification/datatypes/#date-time) data type."),
               @AllowedValue(value = "date-time-with-timezone",
-                  description = "The [date-time-with-timezone](https://pages.nist.gov/metaschema/specification/datatypes/#date-time-with-timezone) data type."),
+                  description = "The [date-time-with-timezone](https://framework.metaschema.dev/specification/datatypes/#date-time-with-timezone) data type."),
               @AllowedValue(value = "date-with-timezone",
-                  description = "The [date-with-timezone](https://pages.nist.gov/metaschema/specification/datatypes/#date-with-timezone) data type."),
+                  description = "The [date-with-timezone](https://framework.metaschema.dev/specification/datatypes/#date-with-timezone) data type."),
               @AllowedValue(value = "day-time-duration",
-                  description = "The [day-time-duration](https://pages.nist.gov/metaschema/specification/datatypes/#day-time-duration) data type."),
+                  description = "The [day-time-duration](https://framework.metaschema.dev/specification/datatypes/#day-time-duration) data type."),
               @AllowedValue(value = "decimal",
-                  description = "The [decimal](https://pages.nist.gov/metaschema/specification/datatypes/#decimal) data type."),
+                  description = "The [decimal](https://framework.metaschema.dev/specification/datatypes/#decimal) data type."),
               @AllowedValue(value = "email-address",
-                  description = "The [email-address](https://pages.nist.gov/metaschema/specification/datatypes/#email-address) data type."),
+                  description = "The [email-address](https://framework.metaschema.dev/specification/datatypes/#email-address) data type."),
               @AllowedValue(value = "hostname",
-                  description = "The [hostname](https://pages.nist.gov/metaschema/specification/datatypes/#hostname) data type."),
+                  description = "The [hostname](https://framework.metaschema.dev/specification/datatypes/#hostname) data type."),
               @AllowedValue(value = "integer",
-                  description = "The [integer](https://pages.nist.gov/metaschema/specification/datatypes/#integer) data type."),
+                  description = "The [integer](https://framework.metaschema.dev/specification/datatypes/#integer) data type."),
               @AllowedValue(value = "ip-v4-address",
-                  description = "The [ip-v4-address](https://pages.nist.gov/metaschema/specification/datatypes/#ip-v4-address) data type."),
+                  description = "The [ip-v4-address](https://framework.metaschema.dev/specification/datatypes/#ip-v4-address) data type."),
               @AllowedValue(value = "ip-v6-address",
-                  description = "The [ip-v6-address](https://pages.nist.gov/metaschema/specification/datatypes/#ip-v6-address) data type."),
+                  description = "The [ip-v6-address](https://framework.metaschema.dev/specification/datatypes/#ip-v6-address) data type."),
               @AllowedValue(value = "non-negative-integer",
-                  description = "The [non-negative-integer](https://pages.nist.gov/metaschema/specification/datatypes/#non-negative-integer) data type."),
+                  description = "The [non-negative-integer](https://framework.metaschema.dev/specification/datatypes/#non-negative-integer) data type."),
               @AllowedValue(value = "positive-integer",
-                  description = "The [positive-integer](https://pages.nist.gov/metaschema/specification/datatypes/#positive-integer) data type."),
+                  description = "The [positive-integer](https://framework.metaschema.dev/specification/datatypes/#positive-integer) data type."),
               @AllowedValue(value = "string",
-                  description = "The [string](https://pages.nist.gov/metaschema/specification/datatypes/#string) data type."),
+                  description = "The [string](https://framework.metaschema.dev/specification/datatypes/#string) data type."),
               @AllowedValue(value = "token",
-                  description = "The [token](https://pages.nist.gov/metaschema/specification/datatypes/#token) data type."),
+                  description = "The [token](https://framework.metaschema.dev/specification/datatypes/#token) data type."),
               @AllowedValue(value = "uri",
-                  description = "The [uri](https://pages.nist.gov/metaschema/specification/datatypes/#uri) data type."),
+                  description = "The [uri](https://framework.metaschema.dev/specification/datatypes/#uri) data type."),
               @AllowedValue(value = "uri-reference",
-                  description = "The [uri-reference](https://pages.nist.gov/metaschema/specification/datatypes/#uri-reference) data type."),
+                  description = "The [uri-reference](https://framework.metaschema.dev/specification/datatypes/#uri-reference) data type."),
               @AllowedValue(value = "uuid",
-                  description = "The [uuid](https://pages.nist.gov/metaschema/specification/datatypes/#uuid) data type."),
+                  description = "The [uuid](https://framework.metaschema.dev/specification/datatypes/#uuid) data type."),
               @AllowedValue(value = "base64Binary",
-                  description = "An old name which is deprecated for use in favor of the 'base64' data type."),
+                  description = "An old name which is deprecated for use in favor of the 'base64' data type.",
+                  deprecatedVersion = "1.0.0"),
               @AllowedValue(value = "dateTime",
-                  description = "An old name which is deprecated for use in favor of the 'date-time' data type."),
+                  description = "An old name which is deprecated for use in favor of the 'date-time' data type.",
+                  deprecatedVersion = "1.0.0"),
               @AllowedValue(value = "dateTime-with-timezone",
-                  description = "An old name which is deprecated for use in favor of the 'date-time-with-timezone' data type."),
+                  description = "An old name which is deprecated for use in favor of the 'date-time-with-timezone' data type.",
+                  deprecatedVersion = "1.0.0"),
               @AllowedValue(value = "email",
-                  description = "An old name which is deprecated for use in favor of the 'email-address' data type."),
+                  description = "An old name which is deprecated for use in favor of the 'email-address' data type.",
+                  deprecatedVersion = "1.0.0"),
               @AllowedValue(value = "nonNegativeInteger",
-                  description = "An old name which is deprecated for use in favor of the 'non-negative-integer' data type."),
+                  description = "An old name which is deprecated for use in favor of the 'non-negative-integer' data type.",
+                  deprecatedVersion = "1.0.0"),
               @AllowedValue(value = "positiveInteger",
-                  description = "An old name which is deprecated for use in favor of the 'positive-integer' data type.") })))
+                  description = "An old name which is deprecated for use in favor of the 'positive-integer' data type.",
+                  deprecatedVersion = "1.0.0") })))
   private String _datatype;
 
   @BoundFlag(
@@ -140,6 +142,9 @@ public class TargetedMatchesConstraint
       typeAdapter = StringAdapter.class)
   private String _target;
 
+  /**
+   * A formal name for the data construct, to be presented in documentation.
+   */
   @BoundField(
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
@@ -147,6 +152,10 @@ public class TargetedMatchesConstraint
       typeAdapter = StringAdapter.class)
   private String _formalName;
 
+  /**
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   */
   @BoundField(
       formalName = "Description",
       description = "A short description of the data construct's purpose, describing the constructs semantics.",
@@ -167,16 +176,33 @@ public class TargetedMatchesConstraint
       typeAdapter = StringAdapter.class)
   private String _message;
 
+  /**
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
       useName = "remarks")
   private Remarks _remarks;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedMatchesConstraint}
+   * instance with no metadata.
+   */
   public TargetedMatchesConstraint() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedMatchesConstraint}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public TargetedMatchesConstraint(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -186,73 +212,180 @@ public class TargetedMatchesConstraint
     return __metaschemaData;
   }
 
-  @Override
+  /**
+   * Get the constraint Identifier.
+   *
+   * @return the id value, or {@code null} if not set
+   */
+  @Nullable
   public String getId() {
     return _id;
   }
 
-  public void setId(String value) {
+  /**
+   * Set the constraint Identifier.
+   *
+   * @param value
+   *          the id value to set
+   */
+  public void setId(@Nullable String value) {
     _id = value;
   }
 
-  @Override
+  /**
+   * Get the constraint Severity Level.
+   *
+   * @return the level value, or {@code null} if not set
+   */
+  @Nullable
   public String getLevel() {
     return _level;
   }
 
-  public void setLevel(String value) {
+  /**
+   * Set the constraint Severity Level.
+   *
+   * @param value
+   *          the level value to set
+   */
+  public void setLevel(@Nullable String value) {
     _level = value;
   }
 
+  /**
+   * Get the matches Regular Expression.
+   *
+   * @return the regex value, or {@code null} if not set
+   */
+  @Nullable
   public String getRegex() {
     return _regex;
   }
 
-  public void setRegex(String value) {
+  /**
+   * Set the matches Regular Expression.
+   *
+   * @param value
+   *          the regex value to set
+   */
+  public void setRegex(@Nullable String value) {
     _regex = value;
   }
 
+  /**
+   * Get the matches Data Type.
+   *
+   * @return the datatype value, or {@code null} if not set
+   */
+  @Nullable
   public String getDatatype() {
     return _datatype;
   }
 
-  public void setDatatype(String value) {
+  /**
+   * Set the matches Data Type.
+   *
+   * @param value
+   *          the datatype value to set
+   */
+  public void setDatatype(@Nullable String value) {
     _datatype = value;
   }
 
-  @Override
+  /**
+   * Get the constraint Target Metapath Expression.
+   *
+   * @return the target value
+   */
+  @NonNull
   public String getTarget() {
     return _target;
   }
 
-  public void setTarget(String value) {
+  /**
+   * Set the constraint Target Metapath Expression.
+   *
+   * @param value
+   *          the target value to set
+   */
+  public void setTarget(@NonNull String value) {
     _target = value;
   }
 
-  @Override
+  /**
+   * Get the formal Name.
+   *
+   * <p>
+   * A formal name for the data construct, to be presented in documentation.
+   *
+   * @return the formal-name value, or {@code null} if not set
+   */
+  @Nullable
   public String getFormalName() {
     return _formalName;
   }
 
-  public void setFormalName(String value) {
+  /**
+   * Set the formal Name.
+   *
+   * <p>
+   * A formal name for the data construct, to be presented in documentation.
+   *
+   * @param value
+   *          the formal-name value to set
+   */
+  public void setFormalName(@Nullable String value) {
     _formalName = value;
   }
 
-  @Override
+  /**
+   * Get the description.
+   *
+   * <p>
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   *
+   * @return the description value, or {@code null} if not set
+   */
+  @Nullable
   public MarkupLine getDescription() {
     return _description;
   }
 
-  public void setDescription(MarkupLine value) {
+  /**
+   * Set the description.
+   *
+   * <p>
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   *
+   * @param value
+   *          the description value to set
+   */
+  public void setDescription(@Nullable MarkupLine value) {
     _description = value;
   }
 
-  @Override
+  /**
+   * Get the property.
+   *
+   * @return the prop value
+   */
+  @NonNull
   public List<Property> getProps() {
+    if (_props == null) {
+      _props = new LinkedList<>();
+    }
     return _props;
   }
 
-  public void setProps(List<Property> value) {
+  /**
+   * Set the property.
+   *
+   * @param value
+   *          the prop value to set
+   */
+  public void setProps(@NonNull List<Property> value) {
     _props = value;
   }
 
@@ -284,21 +417,51 @@ public class TargetedMatchesConstraint
     return _props != null && _props.remove(value);
   }
 
-  @Override
+  /**
+   * Get the constraint Condition Violation Message.
+   *
+   * @return the message value, or {@code null} if not set
+   */
+  @Nullable
   public String getMessage() {
     return _message;
   }
 
-  public void setMessage(String value) {
+  /**
+   * Set the constraint Condition Violation Message.
+   *
+   * @param value
+   *          the message value to set
+   */
+  public void setMessage(@Nullable String value) {
     _message = value;
   }
 
-  @Override
+  /**
+   * Get the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @return the remarks value, or {@code null} if not set
+   */
+  @Nullable
   public Remarks getRemarks() {
     return _remarks;
   }
 
-  public void setRemarks(Remarks value) {
+  /**
+   * Set the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @param value
+   *          the remarks value to set
+   */
+  public void setRemarks(@Nullable Remarks value) {
     _remarks = value;
   }
 

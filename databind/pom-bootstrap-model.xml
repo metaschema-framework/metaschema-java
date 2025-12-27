@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  This POM is used to regenerate the metaschema-bindings binding classes.
+  This POM is used to regenerate the Metaschema model binding classes.
   It is NOT part of the normal build due to circular dependencies.
 
-  Usage: mvn -f databind/pom-bootstrap.xml generate-sources
+  Usage: mvn -f databind/pom-bootstrap-model.xml generate-sources
 
   This will:
-  1. Delete existing generated classes in the config/binding package
+  1. Delete existing generated classes in the model/metaschema/binding package
   2. Generate new binding classes directly into src/main/java
 
-  See metaschema-testing/pom-bootstrap.xml for a similar pattern.
+  IMPORTANT: Build the project first to ensure the code generator is up to date:
+  mvn install -DskipTests
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -18,14 +19,15 @@
 		<artifactId>metaschema-framework</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>metaschema-databind-bootstrap</artifactId>
+	<artifactId>metaschema-databind-model-bootstrap</artifactId>
 	<packaging>pom</packaging>
-	<name>Metaschema Databind - Binding Class Generator</name>
-	<description>Standalone POM for regenerating metaschema-bindings binding classes.</description>
+	<name>Metaschema Databind - Model Binding Class Generator</name>
+	<description>Standalone POM for regenerating Metaschema model binding classes.</description>
 
 	<properties>
-		<binding.package.dir>${project.basedir}/src/main/java/gov/nist/secauto/metaschema/databind/config/binding</binding.package.dir>
+		<binding.package.dir>${project.basedir}/src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/binding</binding.package.dir>
 		<stale.file.dir>${project.build.directory}/metaschema</stale.file.dir>
+		<metaschema.sources.dir>${project.basedir}/../core/metaschema/schema/metaschema</metaschema.sources.dir>
 	</properties>
 
 	<build>
@@ -73,14 +75,17 @@
 							<goal>generate-sources</goal>
 						</goals>
 						<configuration>
-							<metaschemaDir>${project.basedir}/src/main/metaschema</metaschemaDir>
+							<metaschemaDir>${metaschema.sources.dir}</metaschemaDir>
 							<outputDirectory>${project.basedir}/src/main/java</outputDirectory>
 							<configs>
-								<config>${project.basedir}/src/main/metaschema-bindings/metaschema-binding-bindings.xml</config>
+								<config>${project.basedir}/src/main/metaschema-bindings/metaschema-model-bindings.xml</config>
 							</configs>
 							<includes>
-								<include>metaschema-bindings.yaml</include>
+								<include>metaschema-module-metaschema.xml</include>
 							</includes>
+							<constraints>
+								<constraint>${metaschema.sources.dir}/metaschema-module-constraints.xml</constraint>
+							</constraints>
 						</configuration>
 					</execution>
 				</executions>

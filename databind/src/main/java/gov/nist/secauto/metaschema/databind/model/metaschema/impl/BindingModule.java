@@ -148,20 +148,12 @@ public class BindingModule
 
   @Override
   public MarkupLine getName() {
-    MarkupLine retval = getBinding().getSchemaName();
-    if (retval == null) {
-      throw new IllegalStateException(String.format("The schema name is NULL for module '%s'.", getLocation()));
-    }
-    return retval;
+    return getBinding().getSchemaName();
   }
 
   @Override
   public String getVersion() {
-    String retval = getBinding().getSchemaVersion();
-    if (retval == null) {
-      throw new IllegalStateException(String.format("The schema version is NULL for module '%s'.", getLocation()));
-    }
-    return retval;
+    return getBinding().getSchemaVersion();
   }
 
   @Override
@@ -171,30 +163,17 @@ public class BindingModule
 
   @Override
   public String getShortName() {
-    String retval = getBinding().getShortName();
-    if (retval == null) {
-      throw new IllegalStateException(String.format("The schema short name is NULL for module '%s'.", getLocation()));
-    }
-    return retval;
+    return getBinding().getShortName();
   }
 
   @Override
   public final URI getXmlNamespace() {
-    URI retval = getBinding().getNamespace();
-    if (retval == null) {
-      throw new IllegalStateException(
-          String.format("The XML schema namespace is NULL for module '%s'.", getLocation()));
-    }
-    return retval;
+    return getBinding().getNamespace();
   }
 
   @Override
   public URI getJsonBaseUri() {
-    URI retval = getBinding().getJsonBaseUri();
-    if (retval == null) {
-      throw new IllegalStateException(String.format("The JSON schema URI is NULL for module '%s'.", getLocation()));
-    }
-    return retval;
+    return getBinding().getJsonBaseUri();
   }
 
   @Override
