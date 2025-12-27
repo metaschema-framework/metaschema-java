@@ -72,8 +72,9 @@ The following packages contain binding classes derived from Metaschema modules:
 
 | Package | Source Metaschema | Bootstrap POM |
 |---------|------------------|---------------|
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/config/binding/` | `databind/src/main/metaschema/metaschema-bindings.yaml` | `databind/pom-bootstrap.xml` |
-| `metaschema-testing/src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/` | `metaschema-testing/src/main/metaschema/unit-tests.yaml` | `metaschema-testing/pom-bootstrap.xml` |
+| `databind/.../config/binding/` | `databind/src/main/metaschema/metaschema-bindings.yaml` | `databind/pom-bootstrap-config.xml` |
+| `databind/.../model/metaschema/binding/` | `core/metaschema/schema/metaschema/metaschema-module-metaschema.xml` | `databind/pom-bootstrap-model.xml` |
+| `metaschema-testing/.../testsuite/` | `metaschema-testing/src/main/metaschema/unit-tests.yaml` | `metaschema-testing/pom-bootstrap.xml` |
 
 ### CRITICAL: Never Manually Edit Generated Binding Classes
 
@@ -93,7 +94,7 @@ When you need to modify a generated binding class:
 - The Metaschema module is the authoritative source for the data model
 
 **Red flags that you're about to make a mistake:**
-- Opening a file in `.../config/binding/` or `.../testsuite/` for editing
+- Opening a file in `.../config/binding/`, `.../model/metaschema/binding/`, or `.../testsuite/` for editing
 - Adding fields, methods, or annotations directly to these classes
 - Copying code patterns from these files to create new bindings manually
 

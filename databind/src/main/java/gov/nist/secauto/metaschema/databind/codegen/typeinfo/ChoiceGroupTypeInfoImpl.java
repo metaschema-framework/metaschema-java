@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.codegen.typeinfo;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -25,6 +26,9 @@ import gov.nist.secauto.metaschema.databind.codegen.config.IChoiceGroupBindingCo
 import gov.nist.secauto.metaschema.databind.codegen.config.IDefinitionBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundChoiceGroup;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -175,6 +179,76 @@ public class ChoiceGroupTypeInfoImpl
           referencedDefinitions.get(className).size() > 1));
     }
     return retval;
+  }
+
+  /**
+   * Get the binding configuration for this choice group, if one exists.
+   *
+   * @return the choice group binding configuration, or {@code null} if not
+   *         configured
+   */
+  @Nullable
+  private IChoiceGroupBindingConfiguration getChoiceGroupBindingConfiguration() {
+    IChoiceGroupInstance instance = getInstance();
+    IAssemblyDefinition parent = instance.getContainingDefinition();
+    ITypeResolver resolver = getParentTypeInfo().getTypeResolver();
+    IBindingConfiguration bindingConfig = resolver.getBindingConfiguration();
+    IDefinitionBindingConfiguration defConfig = bindingConfig.getBindingConfigurationForDefinition(parent);
+    if (defConfig != null) {
+      return defConfig.getChoiceGroupBindings().get(instance.getGroupAsName());
+    }
+    return null;
+  }
+
+  @Override
+  public void buildGetterJavadoc(@NonNull MethodSpec.Builder builder) {
+    IChoiceGroupInstance instance = getInstance();
+    String groupAsName = instance.getGroupAsName();
+
+    builder.addJavadoc("Get the {@code $L} choice group items.\n", groupAsName);
+
+    // Add item type information if configured
+    IChoiceGroupBindingConfiguration choiceConfig = getChoiceGroupBindingConfiguration();
+    String itemTypeName = choiceConfig == null ? null : choiceConfig.getItemTypeName();
+    if (itemTypeName != null) {
+      builder.addJavadoc("\n");
+      builder.addJavadoc("<p>\n");
+      String simpleTypeName = itemTypeName.substring(itemTypeName.lastIndexOf('.') + 1);
+      if (choiceConfig.isUseWildcard()) {
+        builder.addJavadoc("Items in this collection implement {@link $L}.\n", simpleTypeName);
+      } else {
+        builder.addJavadoc("Items in this collection are of type {@link $L}.\n", simpleTypeName);
+      }
+    }
+
+    builder.addJavadoc("\n");
+    builder.addJavadoc("@return the $L items\n", groupAsName);
+  }
+
+  @Override
+  public void buildSetterJavadoc(@NonNull MethodSpec.Builder builder, @NonNull String paramName) {
+    IChoiceGroupInstance instance = getInstance();
+    String groupAsName = instance.getGroupAsName();
+
+    builder.addJavadoc("Set the {@code $L} choice group items.\n", groupAsName);
+
+    // Add item type information if configured
+    IChoiceGroupBindingConfiguration choiceConfig = getChoiceGroupBindingConfiguration();
+    String itemTypeName = choiceConfig == null ? null : choiceConfig.getItemTypeName();
+    if (itemTypeName != null) {
+      builder.addJavadoc("\n");
+      builder.addJavadoc("<p>\n");
+      String simpleTypeName = itemTypeName.substring(itemTypeName.lastIndexOf('.') + 1);
+      if (choiceConfig.isUseWildcard()) {
+        builder.addJavadoc("Items in this collection must implement {@link $L}.\n", simpleTypeName);
+      } else {
+        builder.addJavadoc("Items in this collection must be of type {@link $L}.\n", simpleTypeName);
+      }
+    }
+
+    builder.addJavadoc("\n");
+    builder.addJavadoc("@param $L\n", paramName);
+    builder.addJavadoc("          the $L items to set\n", groupAsName);
   }
 
 }

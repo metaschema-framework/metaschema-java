@@ -109,20 +109,28 @@ Generated sources are placed in `target/generated-sources/` and excluded from st
 
 ### Bootstrap Binding Classes
 
-The `metaschema-testing` module contains pre-generated binding classes that cannot be generated during the normal build due to circular dependencies (metaschema-maven-plugin → metaschema-schema-generator → metaschema-testing).
+Several modules contain pre-generated binding classes that cannot be generated during the normal build due to circular dependencies. These classes must be regenerated manually when their source Metaschema modules change.
 
-To regenerate these classes when the test suite Metaschema module changes:
+| Module | Bootstrap POM | Generated Package | Source Metaschema |
+|--------|--------------|-------------------|-------------------|
+| metaschema-testing | `metaschema-testing/pom-bootstrap.xml` | `...model.testing.testsuite` | `unit-tests.yaml` |
+| databind | `databind/pom-bootstrap-config.xml` | `...databind.config.binding` | `metaschema-bindings.yaml` |
+| databind | `databind/pom-bootstrap-model.xml` | `...databind.model.metaschema.binding` | `metaschema-module-metaschema.xml` |
+
+To regenerate binding classes:
 
 ```bash
-# Generate binding classes using bootstrap POM
-mvn -f metaschema-testing/pom-bootstrap.xml generate-sources
+# First ensure the project is built
+mvn install -DskipTests
 
-# Copy to source directory
-cp -r metaschema-testing/target/generated-sources/metaschema/gov/nist/secauto/metaschema/model/testing/testsuite/* \
-      metaschema-testing/src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/
+# Generate binding classes using bootstrap POM (choose the appropriate module)
+# Each bootstrap POM generates classes directly into src/main/java
+mvn -f metaschema-testing/pom-bootstrap.xml generate-sources
+mvn -f databind/pom-bootstrap-config.xml generate-sources
+mvn -f databind/pom-bootstrap-model.xml generate-sources
 ```
 
-See `metaschema-testing/README.md` for details.
+See the README.md files in each module for detailed instructions.
 
 ### Metaschema Module Authoring
 

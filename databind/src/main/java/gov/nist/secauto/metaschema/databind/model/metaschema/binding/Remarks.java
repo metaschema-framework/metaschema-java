@@ -2,9 +2,12 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultiline;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupMultilineAdapter;
@@ -17,7 +20,6 @@ import gov.nist.secauto.metaschema.databind.model.annotations.BoundFieldValue;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaField;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -25,10 +27,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Any explanatory or helpful information to be provided about the remarks
  * parent.
  */
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.FieldNamingConventions"
-})
 @MetaschemaField(
     formalName = "Remarks",
     description = "Any explanatory or helpful information to be provided about the remarks parent.",
@@ -38,8 +36,8 @@ public class Remarks implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
   /**
-   * "Mark as &lsquo;XML&rsquo; for XML-only or &lsquo;JSON&rsquo; for JSON-only
-   * remarks."
+   * Mark as &lsquo;XML&rsquo; for XML-only or &lsquo;JSON&rsquo; for JSON-only
+   * remarks.
    */
   @BoundFlag(
       formalName = "Remark Class",
@@ -58,10 +56,23 @@ public class Remarks implements IBoundObject {
       typeAdapter = MarkupMultilineAdapter.class)
   private MarkupMultiline _remark;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.Remarks}
+   * instance with no metadata.
+   */
   public Remarks() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.Remarks}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public Remarks(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -71,19 +82,40 @@ public class Remarks implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the remark Class.
+   *
+   * <p>
+   * Mark as &lsquo;XML&rsquo; for XML-only or &lsquo;JSON&rsquo; for JSON-only
+   * remarks.
+   *
+   * @return the class value, or {@code null} if not set
+   */
+  @Nullable
   public String getClazz() {
     return _clazz;
   }
 
-  public void setClazz(String value) {
+  /**
+   * Set the remark Class.
+   *
+   * <p>
+   * Mark as &lsquo;XML&rsquo; for XML-only or &lsquo;JSON&rsquo; for JSON-only
+   * remarks.
+   *
+   * @param value
+   *          the class value to set
+   */
+  public void setClazz(@Nullable String value) {
     _clazz = value;
   }
 
+  @Nullable
   public MarkupMultiline getRemark() {
     return _remark;
   }
 
-  public void setRemark(MarkupMultiline value) {
+  public void setRemark(@Nullable MarkupMultiline value) {
     _remark = value;
   }
 

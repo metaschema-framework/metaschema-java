@@ -10,38 +10,33 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.codegen.AbstractMetaschemaTest;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-class MetaschemaModuleMetaschemaTest
-    extends AbstractMetaschemaTest {
+class MetaschemaModuleMetaschemaTest {
   @NonNull
   private static final Path METASCHEMA_FILE
       = ObjectUtils.notNull(Paths.get("../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml"));
 
-  @Test
-  @Disabled
-  void testMetaschemaMetaschema() throws MetaschemaException, IOException, ClassNotFoundException {
-    runTests(
-        ObjectUtils.notNull(METASCHEMA_FILE),
-        ObjectUtils.notNull(
-            Paths.get("../databind-metaschema/src/main/metaschema-bindings/metaschema-metaschema-bindings.xml")),
-        null,
-        ObjectUtils.notNull(METASCHEMA.class.getName()),
-        ObjectUtils.notNull(generationDir),
-        null);
+  @NonNull
+  private static IBindingContext newBindingContext() throws IOException {
+    Path generationDir = Paths.get("target/generated-modules");
+    Files.createDirectories(generationDir);
+
+    return IBindingContext.builder()
+        .compilePath(ObjectUtils.notNull(Files.createTempDirectory(generationDir, "modules-")))
+        .build();
   }
 
   @Test

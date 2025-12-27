@@ -10,6 +10,7 @@ package gov.nist.secauto.metaschema.databind.config.binding;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.BooleanAdapter;
+import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.TokenAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UriAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
@@ -647,15 +648,25 @@ public class MetaschemaBindings implements IBoundObject {
       private final IMetaschemaData __metaschemaData;
 
       /**
-       * The name of the metaschema assembly.
+       * The name of the metaschema assembly. Used for top-level definitions.
        */
       @BoundFlag(
           formalName = "Name",
-          description = "The name of the metaschema assembly.",
+          description = "The name of the metaschema assembly. Used for top-level definitions.",
           name = "name",
-          required = true,
           typeAdapter = TokenAdapter.class)
       private String _name;
+
+      /**
+       * A Metapath expression targeting the assembly definition(s) within the
+       * metaschema. Used for inline definitions.
+       */
+      @BoundFlag(
+          formalName = "Target",
+          description = "A Metapath expression targeting the assembly definition(s) within the metaschema. Used for inline definitions.",
+          name = "target",
+          typeAdapter = StringAdapter.class)
+      private String _target;
 
       /**
        * Field and assembly binding configurations for Java bound classes.
@@ -718,11 +729,11 @@ public class MetaschemaBindings implements IBoundObject {
        * Get the name.
        *
        * <p>
-       * The name of the metaschema assembly.
+       * The name of the metaschema assembly. Used for top-level definitions.
        *
-       * @return the name value
+       * @return the name value, or {@code null} if not set
        */
-      @NonNull
+      @Nullable
       public String getName() {
         return _name;
       }
@@ -731,13 +742,41 @@ public class MetaschemaBindings implements IBoundObject {
        * Set the name.
        *
        * <p>
-       * The name of the metaschema assembly.
+       * The name of the metaschema assembly. Used for top-level definitions.
        *
        * @param value
        *          the name value to set
        */
-      public void setName(@NonNull String value) {
+      public void setName(@Nullable String value) {
         _name = value;
+      }
+
+      /**
+       * Get the target.
+       *
+       * <p>
+       * A Metapath expression targeting the assembly definition(s) within the
+       * metaschema. Used for inline definitions.
+       *
+       * @return the target value, or {@code null} if not set
+       */
+      @Nullable
+      public String getTarget() {
+        return _target;
+      }
+
+      /**
+       * Set the target.
+       *
+       * <p>
+       * A Metapath expression targeting the assembly definition(s) within the
+       * metaschema. Used for inline definitions.
+       *
+       * @param value
+       *          the target value to set
+       */
+      public void setTarget(@Nullable String value) {
+        _target = value;
       }
 
       /**
@@ -1531,15 +1570,25 @@ public class MetaschemaBindings implements IBoundObject {
       private final IMetaschemaData __metaschemaData;
 
       /**
-       * The name of the metaschema field.
+       * The name of the metaschema field. Used for top-level definitions.
        */
       @BoundFlag(
           formalName = "Name",
-          description = "The name of the metaschema field.",
+          description = "The name of the metaschema field. Used for top-level definitions.",
           name = "name",
-          required = true,
           typeAdapter = TokenAdapter.class)
       private String _name;
+
+      /**
+       * A Metapath expression targeting the field definition(s) within the
+       * metaschema. Used for inline definitions.
+       */
+      @BoundFlag(
+          formalName = "Target",
+          description = "A Metapath expression targeting the field definition(s) within the metaschema. Used for inline definitions.",
+          name = "target",
+          typeAdapter = StringAdapter.class)
+      private String _target;
 
       /**
        * Field and assembly binding configurations for Java bound classes.
@@ -1591,11 +1640,11 @@ public class MetaschemaBindings implements IBoundObject {
        * Get the name.
        *
        * <p>
-       * The name of the metaschema field.
+       * The name of the metaschema field. Used for top-level definitions.
        *
-       * @return the name value
+       * @return the name value, or {@code null} if not set
        */
-      @NonNull
+      @Nullable
       public String getName() {
         return _name;
       }
@@ -1604,13 +1653,41 @@ public class MetaschemaBindings implements IBoundObject {
        * Set the name.
        *
        * <p>
-       * The name of the metaschema field.
+       * The name of the metaschema field. Used for top-level definitions.
        *
        * @param value
        *          the name value to set
        */
-      public void setName(@NonNull String value) {
+      public void setName(@Nullable String value) {
         _name = value;
+      }
+
+      /**
+       * Get the target.
+       *
+       * <p>
+       * A Metapath expression targeting the field definition(s) within the
+       * metaschema. Used for inline definitions.
+       *
+       * @return the target value, or {@code null} if not set
+       */
+      @Nullable
+      public String getTarget() {
+        return _target;
+      }
+
+      /**
+       * Set the target.
+       *
+       * <p>
+       * A Metapath expression targeting the field definition(s) within the
+       * metaschema. Used for inline definitions.
+       *
+       * @param value
+       *          the target value to set
+       */
+      public void setTarget(@Nullable String value) {
+        _target = value;
       }
 
       /**

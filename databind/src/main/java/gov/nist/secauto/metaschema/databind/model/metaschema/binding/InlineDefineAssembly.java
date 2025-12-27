@@ -2,9 +2,13 @@
  * SPDX-FileCopyrightText: none
  * SPDX-License-Identifier: CC0-1.0
  */
+// Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
+// Do not edit - changes will be lost when regenerated.
 
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import gov.nist.secauto.metaschema.core.datatype.adapter.NonNegativeIntegerAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.PositiveIntegerAdapter;
 import gov.nist.secauto.metaschema.core.datatype.adapter.StringAdapter;
@@ -25,18 +29,12 @@ import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-@SuppressWarnings({
-    "PMD.DataClass",
-    "PMD.FieldNamingConventions"
-})
 @MetaschemaAssembly(
     formalName = "Inline Assembly Definition",
     name = "inline-define-assembly",
@@ -79,6 +77,9 @@ public class InlineDefineAssembly implements IBoundObject {
           matches = @Matches(level = IConstraint.Level.ERROR, pattern = "^[1-9][0-9]*|unbounded$")))
   private String _maxOccurs;
 
+  /**
+   * A formal name for the data construct, to be presented in documentation.
+   */
   @BoundField(
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
@@ -86,6 +87,10 @@ public class InlineDefineAssembly implements IBoundObject {
       typeAdapter = StringAdapter.class)
   private String _formalName;
 
+  /**
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   */
   @BoundField(
       formalName = "Description",
       description = "A short description of the data construct's purpose, describing the constructs semantics.",
@@ -100,6 +105,11 @@ public class InlineDefineAssembly implements IBoundObject {
       groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST))
   private List<Property> _props;
 
+  /**
+   * Used in JSON (and similar formats) to identify a flag that will be used as
+   * the property name in an object hold a collection of sibling objects. Requires
+   * that siblings must never share <code>json-key</code> values.
+   */
   @BoundAssembly(
       formalName = "JSON Key",
       description = "Used in JSON (and similar formats) to identify a flag that will be used as the property name in an object hold a collection of sibling objects. Requires that siblings must never share `json-key` values.",
@@ -113,17 +123,13 @@ public class InlineDefineAssembly implements IBoundObject {
 
   @BoundChoiceGroup(
       maxOccurs = -1,
+      groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST),
       assemblies = {
-          @BoundGroupedAssembly(formalName = "Inline Flag Definition",
-              useName = "define-flag",
-              discriminatorValue = "flag",
-              binding = InlineDefineFlag.class),
-          @BoundGroupedAssembly(formalName = "Flag Reference",
-              useName = "flag",
-              discriminatorValue = "flag-ref",
+          @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag",
+              discriminatorValue = "flag", binding = InlineDefineFlag.class),
+          @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", discriminatorValue = "flag-ref",
               binding = FlagReference.class)
-      },
-      groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST))
+      })
   private List<Object> _flags;
 
   @BoundAssembly(
@@ -134,6 +140,10 @@ public class InlineDefineAssembly implements IBoundObject {
       useName = "constraint")
   private AssemblyConstraints _constraint;
 
+  /**
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
@@ -147,10 +157,23 @@ public class InlineDefineAssembly implements IBoundObject {
       groupAs = @GroupAs(name = "examples", inJson = JsonGroupAsBehavior.LIST))
   private List<Example> _examples;
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly}
+   * instance with no metadata.
+   */
   public InlineDefineAssembly() {
     this(null);
   }
 
+  /**
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly}
+   * instance with the specified metadata.
+   *
+   * @param data
+   *          the metaschema data, or {@code null} if none
+   */
   public InlineDefineAssembly(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
@@ -160,67 +183,180 @@ public class InlineDefineAssembly implements IBoundObject {
     return __metaschemaData;
   }
 
+  /**
+   * Get the inline Assembly Name.
+   *
+   * @return the name value
+   */
+  @NonNull
   public String getName() {
     return _name;
   }
 
-  public void setName(String value) {
+  /**
+   * Set the inline Assembly Name.
+   *
+   * @param value
+   *          the name value to set
+   */
+  public void setName(@NonNull String value) {
     _name = value;
   }
 
+  /**
+   * Get the inline Assembly Binary Name.
+   *
+   * @return the index value, or {@code null} if not set
+   */
+  @Nullable
   public BigInteger getIndex() {
     return _index;
   }
 
-  public void setIndex(BigInteger value) {
+  /**
+   * Set the inline Assembly Binary Name.
+   *
+   * @param value
+   *          the index value to set
+   */
+  public void setIndex(@Nullable BigInteger value) {
     _index = value;
   }
 
+  /**
+   * Get the deprecated Version.
+   *
+   * @return the deprecated value, or {@code null} if not set
+   */
+  @Nullable
   public String getDeprecated() {
     return _deprecated;
   }
 
-  public void setDeprecated(String value) {
+  /**
+   * Set the deprecated Version.
+   *
+   * @param value
+   *          the deprecated value to set
+   */
+  public void setDeprecated(@Nullable String value) {
     _deprecated = value;
   }
 
+  /**
+   * Get the minimum Occurrence.
+   *
+   * @return the min-occurs value, or {@code null} if not set
+   */
+  @Nullable
   public BigInteger getMinOccurs() {
     return _minOccurs;
   }
 
-  public void setMinOccurs(BigInteger value) {
+  /**
+   * Set the minimum Occurrence.
+   *
+   * @param value
+   *          the min-occurs value to set
+   */
+  public void setMinOccurs(@Nullable BigInteger value) {
     _minOccurs = value;
   }
 
+  /**
+   * Get the maximum Occurrence.
+   *
+   * @return the max-occurs value, or {@code null} if not set
+   */
+  @Nullable
   public String getMaxOccurs() {
     return _maxOccurs;
   }
 
-  public void setMaxOccurs(String value) {
+  /**
+   * Set the maximum Occurrence.
+   *
+   * @param value
+   *          the max-occurs value to set
+   */
+  public void setMaxOccurs(@Nullable String value) {
     _maxOccurs = value;
   }
 
+  /**
+   * Get the formal Name.
+   *
+   * <p>
+   * A formal name for the data construct, to be presented in documentation.
+   *
+   * @return the formal-name value, or {@code null} if not set
+   */
+  @Nullable
   public String getFormalName() {
     return _formalName;
   }
 
-  public void setFormalName(String value) {
+  /**
+   * Set the formal Name.
+   *
+   * <p>
+   * A formal name for the data construct, to be presented in documentation.
+   *
+   * @param value
+   *          the formal-name value to set
+   */
+  public void setFormalName(@Nullable String value) {
     _formalName = value;
   }
 
+  /**
+   * Get the description.
+   *
+   * <p>
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   *
+   * @return the description value, or {@code null} if not set
+   */
+  @Nullable
   public MarkupLine getDescription() {
     return _description;
   }
 
-  public void setDescription(MarkupLine value) {
+  /**
+   * Set the description.
+   *
+   * <p>
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
+   *
+   * @param value
+   *          the description value to set
+   */
+  public void setDescription(@Nullable MarkupLine value) {
     _description = value;
   }
 
+  /**
+   * Get the property.
+   *
+   * @return the prop value
+   */
+  @NonNull
   public List<Property> getProps() {
+    if (_props == null) {
+      _props = new LinkedList<>();
+    }
     return _props;
   }
 
-  public void setProps(List<Property> value) {
+  /**
+   * Set the property.
+   *
+   * @param value
+   *          the prop value to set
+   */
+  public void setProps(@NonNull List<Property> value) {
     _props = value;
   }
 
@@ -252,59 +388,167 @@ public class InlineDefineAssembly implements IBoundObject {
     return _props != null && _props.remove(value);
   }
 
+  /**
+   * Get the jSON Key.
+   *
+   * <p>
+   * Used in JSON (and similar formats) to identify a flag that will be used as
+   * the property name in an object hold a collection of sibling objects. Requires
+   * that siblings must never share <code>json-key</code> values.
+   *
+   * @return the json-key value, or {@code null} if not set
+   */
+  @Nullable
   public JsonKey getJsonKey() {
     return _jsonKey;
   }
 
-  public void setJsonKey(JsonKey value) {
+  /**
+   * Set the jSON Key.
+   *
+   * <p>
+   * Used in JSON (and similar formats) to identify a flag that will be used as
+   * the property name in an object hold a collection of sibling objects. Requires
+   * that siblings must never share <code>json-key</code> values.
+   *
+   * @param value
+   *          the json-key value to set
+   */
+  public void setJsonKey(@Nullable JsonKey value) {
     _jsonKey = value;
   }
 
+  /**
+   * Get the group As.
+   *
+   * @return the group-as value, or {@code null} if not set
+   */
+  @Nullable
   public GroupingAs getGroupAs() {
     return _groupAs;
   }
 
-  public void setGroupAs(GroupingAs value) {
+  /**
+   * Set the group As.
+   *
+   * @param value
+   *          the group-as value to set
+   */
+  public void setGroupAs(@Nullable GroupingAs value) {
     _groupAs = value;
   }
 
+  /**
+   * Get the {@code flags} choice group items.
+   *
+   * @return the flags items
+   */
+  @NonNull
   public List<Object> getFlags() {
+    if (_flags == null) {
+      _flags = new LinkedList<>();
+    }
     return _flags;
   }
 
-  public void setFlags(List<Object> value) {
+  /**
+   * Set the {@code flags} choice group items.
+   *
+   * @param value
+   *          the flags items to set
+   */
+  public void setFlags(@NonNull List<Object> value) {
     _flags = value;
   }
 
+  /**
+   * Get the {@code model} property.
+   *
+   * @return the model value, or {@code null} if not set
+   */
+  @Nullable
   public AssemblyModel getModel() {
     return _model;
   }
 
-  public void setModel(AssemblyModel value) {
+  /**
+   * Set the {@code model} property.
+   *
+   * @param value
+   *          the model value to set
+   */
+  public void setModel(@Nullable AssemblyModel value) {
     _model = value;
   }
 
+  /**
+   * Get the {@code constraint} property.
+   *
+   * @return the constraint value, or {@code null} if not set
+   */
+  @Nullable
   public AssemblyConstraints getConstraint() {
     return _constraint;
   }
 
-  public void setConstraint(AssemblyConstraints value) {
+  /**
+   * Set the {@code constraint} property.
+   *
+   * @param value
+   *          the constraint value to set
+   */
+  public void setConstraint(@Nullable AssemblyConstraints value) {
     _constraint = value;
   }
 
+  /**
+   * Get the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @return the remarks value, or {@code null} if not set
+   */
+  @Nullable
   public Remarks getRemarks() {
     return _remarks;
   }
 
-  public void setRemarks(Remarks value) {
+  /**
+   * Set the remarks.
+   *
+   * <p>
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
+   *
+   * @param value
+   *          the remarks value to set
+   */
+  public void setRemarks(@Nullable Remarks value) {
     _remarks = value;
   }
 
+  /**
+   * Get the example.
+   *
+   * @return the example value
+   */
+  @NonNull
   public List<Example> getExamples() {
+    if (_examples == null) {
+      _examples = new LinkedList<>();
+    }
     return _examples;
   }
 
-  public void setExamples(List<Example> value) {
+  /**
+   * Set the example.
+   *
+   * @param value
+   *          the example value to set
+   */
+  public void setExamples(@NonNull List<Example> value) {
     _examples = value;
   }
 

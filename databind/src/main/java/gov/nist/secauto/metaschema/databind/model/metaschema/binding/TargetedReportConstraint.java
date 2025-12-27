@@ -33,10 +33,10 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @MetaschemaAssembly(
-    formalName = "Targeted Unique Constraint",
-    name = "targeted-is-unique-constraint",
+    formalName = "Report Condition Constraint",
+    name = "targeted-report-constraint",
     moduleClass = MetaschemaModelModule.class)
-public class TargetedIsUniqueConstraint implements IBoundObject, IConfigurableMessageConstraintBase {
+public class TargetedReportConstraint implements IBoundObject, IConfigurableMessageConstraintBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundFlag(
@@ -62,6 +62,13 @@ public class TargetedIsUniqueConstraint implements IBoundObject, IConfigurableMe
           @AllowedValue(value = "DEBUG",
               description = "A violation of the constraint represents a fault in the content that may warrant review by a developer when performing model or tool development.") })))
   private String _level;
+
+  @BoundFlag(
+      formalName = "Report Test Condition",
+      name = "test",
+      required = true,
+      typeAdapter = StringAdapter.class)
+  private String _test;
 
   @BoundFlag(
       formalName = "Constraint Target Metapath Expression",
@@ -98,14 +105,6 @@ public class TargetedIsUniqueConstraint implements IBoundObject, IConfigurableMe
       groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST))
   private List<Property> _props;
 
-  @BoundAssembly(
-      formalName = "Key Constraint Field",
-      useName = "key-field",
-      minOccurs = 1,
-      maxOccurs = -1,
-      groupAs = @GroupAs(name = "key-fields", inJson = JsonGroupAsBehavior.LIST))
-  private List<KeyConstraintField> _keyFields;
-
   @BoundField(
       formalName = "Constraint Condition Violation Message",
       useName = "message",
@@ -124,22 +123,22 @@ public class TargetedIsUniqueConstraint implements IBoundObject, IConfigurableMe
 
   /**
    * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedIsUniqueConstraint}
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedReportConstraint}
    * instance with no metadata.
    */
-  public TargetedIsUniqueConstraint() {
+  public TargetedReportConstraint() {
     this(null);
   }
 
   /**
    * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedIsUniqueConstraint}
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedReportConstraint}
    * instance with the specified metadata.
    *
    * @param data
    *          the metaschema data, or {@code null} if none
    */
-  public TargetedIsUniqueConstraint(IMetaschemaData data) {
+  public TargetedReportConstraint(IMetaschemaData data) {
     this.__metaschemaData = data;
   }
 
@@ -186,6 +185,26 @@ public class TargetedIsUniqueConstraint implements IBoundObject, IConfigurableMe
    */
   public void setLevel(@Nullable String value) {
     _level = value;
+  }
+
+  /**
+   * Get the report Test Condition.
+   *
+   * @return the test value
+   */
+  @NonNull
+  public String getTest() {
+    return _test;
+  }
+
+  /**
+   * Set the report Test Condition.
+   *
+   * @param value
+   *          the test value to set
+   */
+  public void setTest(@NonNull String value) {
+    _test = value;
   }
 
   /**
@@ -311,57 +330,6 @@ public class TargetedIsUniqueConstraint implements IBoundObject, IConfigurableMe
   public boolean removeProp(Property item) {
     Property value = ObjectUtils.requireNonNull(item, "item cannot be null");
     return _props != null && _props.remove(value);
-  }
-
-  /**
-   * Get the key Constraint Field.
-   *
-   * @return the key-field value
-   */
-  @NonNull
-  public List<KeyConstraintField> getKeyFields() {
-    if (_keyFields == null) {
-      _keyFields = new LinkedList<>();
-    }
-    return _keyFields;
-  }
-
-  /**
-   * Set the key Constraint Field.
-   *
-   * @param value
-   *          the key-field value to set
-   */
-  public void setKeyFields(@NonNull List<KeyConstraintField> value) {
-    _keyFields = value;
-  }
-
-  /**
-   * Add a new {@link KeyConstraintField} item to the underlying collection.
-   *
-   * @param item
-   *          the item to add
-   * @return {@code true}
-   */
-  public boolean addKeyField(KeyConstraintField item) {
-    KeyConstraintField value = ObjectUtils.requireNonNull(item, "item cannot be null");
-    if (_keyFields == null) {
-      _keyFields = new LinkedList<>();
-    }
-    return _keyFields.add(value);
-  }
-
-  /**
-   * Remove the first matching {@link KeyConstraintField} item from the underlying
-   * collection.
-   *
-   * @param item
-   *          the item to remove
-   * @return {@code true} if the item was removed or {@code false} otherwise
-   */
-  public boolean removeKeyField(KeyConstraintField item) {
-    KeyConstraintField value = ObjectUtils.requireNonNull(item, "item cannot be null");
-    return _keyFields != null && _keyFields.remove(value);
   }
 
   /**

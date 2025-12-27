@@ -6,12 +6,35 @@
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintLetExpression;
 
 import java.util.List;
 
-public interface IValueConstraintsBase extends IBoundObject {
-  List<ConstraintLetExpression> getLets();
+import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides a common interface for value constraint binding objects.
+ */
+public interface IValueConstraintsBase extends IBoundObject {
+  /**
+   * Get the let expressions defined for this constraint set.
+   *
+   * <p>
+   * The default implementation returns an empty list. Implementations with let
+   * expressions should override this method.
+   *
+   * @return the list of let expressions, or an empty list if none are defined
+   */
+  @NonNull
+  default List<ConstraintLetExpression> getLets() {
+    return CollectionUtil.emptyList();
+  }
+
+  /**
+   * Get the constraint rules defined for this constraint set.
+   *
+   * @return the list of constraint rules
+   */
   List<? extends IConstraintBase> getRules();
 }

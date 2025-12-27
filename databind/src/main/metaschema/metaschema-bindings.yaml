@@ -73,13 +73,25 @@ METASCHEMA:
             group-as:
               name: define-assembly-bindings
               in-json: ARRAY
+            constraints:
+              expect:
+              - id: assembly-binding-name-or-target
+                test: "exists(@name) or exists(@target)"
+                message: "Either 'name' or 'target' must be specified for define-assembly-binding."
+              - id: assembly-binding-name-xor-target
+                test: "not(exists(@name) and exists(@target))"
+                message: "Only one of 'name' or 'target' may be specified for define-assembly-binding, not both."
             flags:
             - object-type: flag
               name: name
               formal-name: Name
-              description: The name of the metaschema assembly.
+              description: The name of the metaschema assembly. Used for top-level definitions.
               as-type: token
-              required: "yes"
+            - object-type: flag
+              name: target
+              formal-name: Target
+              description: A Metapath expression targeting the assembly definition(s) within the metaschema. Used for inline definitions.
+              as-type: string
             model:
               instances:
               - object-type: assembly
@@ -177,13 +189,25 @@ METASCHEMA:
             group-as:
               name: define-field-bindings
               in-json: ARRAY
+            constraints:
+              expect:
+              - id: field-binding-name-or-target
+                test: "exists(@name) or exists(@target)"
+                message: "Either 'name' or 'target' must be specified for define-field-binding."
+              - id: field-binding-name-xor-target
+                test: "not(exists(@name) and exists(@target))"
+                message: "Only one of 'name' or 'target' may be specified for define-field-binding, not both."
             flags:
             - object-type: flag
               name: name
               formal-name: Name
-              description: The name of the metaschema field.
+              description: The name of the metaschema field. Used for top-level definitions.
               as-type: token
-              required: "yes"
+            - object-type: flag
+              name: target
+              formal-name: Target
+              description: A Metapath expression targeting the field definition(s) within the metaschema. Used for inline definitions.
+              as-type: string
             model:
               instances:
               - object-type: assembly

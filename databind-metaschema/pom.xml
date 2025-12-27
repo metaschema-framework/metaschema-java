@@ -150,30 +150,6 @@
 				<version>${project.version}</version>
 				<executions>
 					<execution>
-						<id>metaschema-codegen</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>generate-sources</goal>
-						</goals>
-						<configuration>
-							<metaschemaDir>
-								${project.build.directory}/generated-resources/metaschema-sources</metaschemaDir>
-							<outputDirectory>
-								${project.build.directory}/generated-sources/metaschema</outputDirectory>
-							<configs>
-								<config>
-									${project.basedir}/src/main/metaschema-bindings/metaschema-metaschema-bindings.xml</config>
-							</configs>
-							<includes>
-								<include>metaschema-module-metaschema.xml</include>
-							</includes>
-							<constraints>
-								<constraint>
-									${project.build.directory}/generated-resources/metaschema-sources/metaschema-module-constraints.xml</constraint>
-							</constraints>
-						</configuration>
-					</execution>
-					<execution>
 						<id>metaschema-xml-schema</id>
 						<phase>generate-sources</phase>
 						<goals>

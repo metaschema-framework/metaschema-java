@@ -5,14 +5,12 @@
 
 package gov.nist.secauto.metaschema.databind.model.metaschema;
 
-import gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintLetExpression;
-
 import java.util.List;
 
+/**
+ * Provides a common interface for targeted value constraint binding objects.
+ */
 public interface IValueTargetedConstraintsBase extends IValueConstraintsBase {
-  @Override
-  List<ConstraintLetExpression> getLets();
-
   @Override
   List<? extends ITargetedConstraintBase> getRules();
 }
