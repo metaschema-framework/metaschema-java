@@ -6,15 +6,23 @@
 package gov.nist.secauto.metaschema.core.metapath;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
 import gov.nist.secauto.metaschema.core.metapath.cst.IExpressionVisitor;
 import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.model.IUriResolver;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -50,6 +58,120 @@ class DynamicContextTest {
     // Parent should not see child's push
     assertEquals(0, parent.getExecutionStack().size());
     assertEquals(1, child.getExecutionStack().size());
+  }
+
+  @Test
+  void testConcurrentDocumentLoadingLoadsOnlyOnce() throws Exception {
+    // Given: A document loader that tracks load count
+    AtomicInteger loadCount = new AtomicInteger(0);
+    IDocumentNodeItem mockDocument = mock(IDocumentNodeItem.class);
+    URI testUri = URI.create("https://example.com/test.xml");
+
+    IDocumentLoader countingLoader = new IDocumentLoader() {
+      @Override
+      public void setUriResolver(@NonNull IUriResolver resolver) {
+        // no-op
+      }
+
+      @Override
+      public IUriResolver getUriResolver() {
+        return null;
+      }
+
+      @Override
+      @NonNull
+      public IDocumentNodeItem loadAsNodeItem(@NonNull URI uri) throws IOException {
+        loadCount.incrementAndGet();
+        // Simulate slow network loading
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException ex) {
+          Thread.currentThread().interrupt();
+        }
+        return mockDocument;
+      }
+    };
+
+    DynamicContext context = new DynamicContext();
+    context.setDocumentLoader(countingLoader);
+
+    // When: Multiple threads try to load the same document concurrently
+    int threadCount = 5;
+    CountDownLatch startLatch = new CountDownLatch(1);
+    CountDownLatch doneLatch = new CountDownLatch(threadCount);
+    IDocumentNodeItem[] results = new IDocumentNodeItem[threadCount];
+
+    for (int i = 0; i < threadCount; i++) {
+      final int index = i;
+      new Thread(() -> {
+        try {
+          startLatch.await(); // Wait for all threads to be ready
+          results[index] = context.getDocumentLoader().loadAsNodeItem(testUri);
+        } catch (Exception e) {
+          // Test will fail if any exception occurs
+        } finally {
+          doneLatch.countDown();
+        }
+      }).start();
+    }
+
+    startLatch.countDown(); // Start all threads at once
+    doneLatch.await(); // Wait for all to complete
+
+    // Then: The document should only be loaded once
+    assertEquals(1, loadCount.get(),
+        "Document should only be loaded once when multiple threads request concurrently");
+
+    // And: All threads should get the same document instance
+    for (IDocumentNodeItem result : results) {
+      assertSame(mockDocument, result, "All threads should receive the same document instance");
+    }
+  }
+
+  @Test
+  void testCachingLoaderNormalizesEquivalentUris() throws Exception {
+    // Given: A document loader that tracks load count
+    AtomicInteger loadCount = new AtomicInteger(0);
+    IDocumentNodeItem mockDocument = mock(IDocumentNodeItem.class);
+
+    IDocumentLoader countingLoader = new IDocumentLoader() {
+      @Override
+      public void setUriResolver(@NonNull IUriResolver resolver) {
+        // no-op
+      }
+
+      @Override
+      public IUriResolver getUriResolver() {
+        return null;
+      }
+
+      @Override
+      @NonNull
+      public IDocumentNodeItem loadAsNodeItem(@NonNull URI uri) throws IOException {
+        loadCount.incrementAndGet();
+        return mockDocument;
+      }
+    };
+
+    DynamicContext context = new DynamicContext();
+    context.setDocumentLoader(countingLoader);
+
+    // When: Loading document using equivalent but non-identical URIs
+    URI normalUri = URI.create("https://example.com/a/b/document.xml");
+    URI uriWithDotSegments = URI.create("https://example.com/a/b/./document.xml");
+    URI uriWithDotDotSegments = URI.create("https://example.com/a/b/c/../document.xml");
+
+    IDocumentNodeItem result1 = context.getDocumentLoader().loadAsNodeItem(normalUri);
+    IDocumentNodeItem result2 = context.getDocumentLoader().loadAsNodeItem(uriWithDotSegments);
+    IDocumentNodeItem result3 = context.getDocumentLoader().loadAsNodeItem(uriWithDotDotSegments);
+
+    // Then: Document should only be loaded once despite different URI forms
+    assertEquals(1, loadCount.get(),
+        "Document should only be loaded once for equivalent URIs");
+
+    // And: All requests should return the same cached instance
+    assertSame(result1, result2, "Same document should be returned for URI with . segments");
+    assertSame(result1, result3, "Same document should be returned for URI with .. segments");
   }
 
   /**

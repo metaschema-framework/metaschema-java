@@ -26,11 +26,13 @@ import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Iterator;
@@ -183,6 +185,7 @@ class BasicMetaschemaTest
   }
 
   @Test
+  @Timeout(value = 180, unit = TimeUnit.SECONDS) // Network-dependent test needs extended timeout
   void testExistsWithVariable() throws IOException, MetaschemaException {
     IBindingContext bindingContext = newBindingContext();
 

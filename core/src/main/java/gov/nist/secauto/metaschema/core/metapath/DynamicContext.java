@@ -22,6 +22,7 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.time.Clock;
 import java.time.Duration;
@@ -113,7 +114,12 @@ public class DynamicContext { // NOPMD - intentional data class
       this.implicitTimeZone = ObjectUtils.notNull(clock.getZone());
 
       this.currentDateTime = ObjectUtils.notNull(ZonedDateTime.now(clock));
-      this.availableDocuments = new ConcurrentHashMap<>();
+      this.availableDocuments = ObjectUtils.notNull(Caffeine.newBuilder()
+          .maximumSize(MetapathEvaluationFeature.DOCUMENT_CACHE_MAXIMUM_SIZE.getDefault())
+          .expireAfterAccess(
+              MetapathEvaluationFeature.DOCUMENT_CACHE_EXPIRE_AFTER_ACCESS_MINUTES.getDefault(),
+              TimeUnit.MINUTES)
+          .<URI, IDocumentNodeItem>build().asMap());
       this.functionResultCache = ObjectUtils.notNull(Caffeine.newBuilder()
           .maximumSize(5000)
           .expireAfterAccess(10, TimeUnit.MINUTES)
@@ -483,12 +489,18 @@ public class DynamicContext { // NOPMD - intentional data class
 
     @Override
     public IDocumentNodeItem loadAsNodeItem(URI uri) throws IOException {
-      IDocumentNodeItem retval = sharedState.availableDocuments.get(uri);
-      if (retval == null) {
-        retval = getProxiedDocumentLoader().loadAsNodeItem(uri);
-        sharedState.availableDocuments.put(uri, retval);
+      URI normalizedUri = uri.normalize();
+      try {
+        return sharedState.availableDocuments.computeIfAbsent(normalizedUri, key -> {
+          try {
+            return getProxiedDocumentLoader().loadAsNodeItem(key);
+          } catch (IOException e) {
+            throw new UncheckedIOException(e);
+          }
+        });
+      } catch (UncheckedIOException e) {
+        throw e.getCause();
       }
-      return retval;
     }
 
     public class ContextUriResolver implements IUriResolver {
