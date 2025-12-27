@@ -5,8 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
-
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
@@ -36,7 +34,6 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -114,16 +111,8 @@ public class DynamicContext { // NOPMD - intentional data class
       this.implicitTimeZone = ObjectUtils.notNull(clock.getZone());
 
       this.currentDateTime = ObjectUtils.notNull(ZonedDateTime.now(clock));
-      this.availableDocuments = ObjectUtils.notNull(Caffeine.newBuilder()
-          .maximumSize(MetapathEvaluationFeature.DOCUMENT_CACHE_MAXIMUM_SIZE.getDefault())
-          .expireAfterAccess(
-              MetapathEvaluationFeature.DOCUMENT_CACHE_EXPIRE_AFTER_ACCESS_MINUTES.getDefault(),
-              TimeUnit.MINUTES)
-          .<URI, IDocumentNodeItem>build().asMap());
-      this.functionResultCache = ObjectUtils.notNull(Caffeine.newBuilder()
-          .maximumSize(5000)
-          .expireAfterAccess(10, TimeUnit.MINUTES)
-          .<CalledContext, ISequence<?>>build().asMap());
+      this.availableDocuments = new ConcurrentHashMap<>();
+      this.functionResultCache = new ConcurrentHashMap<>();
       this.configuration = new DefaultConfiguration<>();
       this.configuration.enableFeature(MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES);
     }

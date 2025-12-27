@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -100,6 +101,7 @@ class DynamicContextTest {
     CountDownLatch startLatch = new CountDownLatch(1);
     CountDownLatch doneLatch = new CountDownLatch(threadCount);
     IDocumentNodeItem[] results = new IDocumentNodeItem[threadCount];
+    AtomicReference<Exception> threadException = new AtomicReference<>();
 
     for (int i = 0; i < threadCount; i++) {
       final int index = i;
@@ -108,7 +110,7 @@ class DynamicContextTest {
           startLatch.await(); // Wait for all threads to be ready
           results[index] = context.getDocumentLoader().loadAsNodeItem(testUri);
         } catch (Exception e) {
-          // Test will fail if any exception occurs
+          threadException.compareAndSet(null, e);
         } finally {
           doneLatch.countDown();
         }
@@ -117,6 +119,11 @@ class DynamicContextTest {
 
     startLatch.countDown(); // Start all threads at once
     doneLatch.await(); // Wait for all to complete
+
+    // Rethrow any exception from threads to fail the test with clear diagnostics
+    if (threadException.get() != null) {
+      throw new AssertionError("Thread threw exception during concurrent loading", threadException.get());
+    }
 
     // Then: The document should only be loaded once
     assertEquals(1, loadCount.get(),
