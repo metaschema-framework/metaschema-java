@@ -8,14 +8,21 @@ package gov.nist.secauto.metaschema.databind.codegen.typeinfo;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.WildcardTypeName;
 
+import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
 import gov.nist.secauto.metaschema.core.model.IGroupable;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
+import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.codegen.config.IBindingConfiguration;
+import gov.nist.secauto.metaschema.databind.codegen.config.IChoiceGroupBindingConfiguration;
+import gov.nist.secauto.metaschema.databind.codegen.config.IDefinitionBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundChoiceGroup;
 
@@ -51,6 +58,55 @@ public class ChoiceGroupTypeInfoImpl
   @Override
   public TypeName getJavaItemType() {
     return getParentTypeInfo().getTypeResolver().getClassName(getInstance());
+  }
+
+  /**
+   * Get the Java field type for this choice group instance.
+   *
+   * <p>
+   * Returns a collection type ({@link List} or {@link Map}) when maxOccurs allows
+   * multiple items, or the item type directly for single-valued instances. When
+   * binding configuration specifies a custom item type with wildcard usage
+   * enabled, generates bounded wildcard types (e.g.,
+   * {@code List<? extends Type>}).
+   *
+   * @return the Java field type for code generation
+   */
+  @NonNull
+  @Override
+  public TypeName getJavaFieldType() {
+    TypeName item = getJavaItemType();
+
+    @NonNull
+    TypeName retval;
+    IChoiceGroupInstance instance = getInstance();
+    int maxOccurrence = instance.getMaxOccurs();
+    if (maxOccurrence == -1 || maxOccurrence > 1) {
+      // Check if we should use wildcard types
+      TypeName collectionItemType = item;
+      IAssemblyDefinition parent = instance.getContainingDefinition();
+      ITypeResolver resolver = getParentTypeInfo().getTypeResolver();
+      IBindingConfiguration bindingConfig = resolver.getBindingConfiguration();
+      IDefinitionBindingConfiguration defConfig = bindingConfig.getBindingConfigurationForDefinition(parent);
+      if (defConfig != null) {
+        IChoiceGroupBindingConfiguration choiceConfig = defConfig.getChoiceGroupBindings()
+            .get(instance.getGroupAsName());
+        if (choiceConfig != null && choiceConfig.getItemTypeName() != null && choiceConfig.isUseWildcard()) {
+          // Use wildcard type for flexibility
+          collectionItemType = WildcardTypeName.subtypeOf(item);
+        }
+      }
+
+      if (JsonGroupAsBehavior.KEYED.equals(instance.getJsonGroupAsBehavior())) {
+        retval = ObjectUtils.notNull(
+            ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), collectionItemType));
+      } else {
+        retval = ObjectUtils.notNull(ParameterizedTypeName.get(ClassName.get(List.class), collectionItemType));
+      }
+    } else {
+      retval = item;
+    }
+    return retval;
   }
 
   @Override

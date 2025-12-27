@@ -67,4 +67,15 @@ public interface IBindingConfiguration {
    */
   @NonNull
   List<String> getQualifiedSuperinterfaceClassNames(@NonNull IModelDefinition definition);
+
+  /**
+   * Retrieve the binding configuration for the provided definition.
+   *
+   * @param definition
+   *          the definition to get the configuration for
+   * @return the binding configuration, or {@code null} if there is no
+   *         configuration for this definition
+   */
+  @Nullable
+  IDefinitionBindingConfiguration getBindingConfigurationForDefinition(@NonNull IModelDefinition definition);
 }

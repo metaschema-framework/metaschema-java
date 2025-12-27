@@ -335,6 +335,9 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
 
           // Process property bindings for this assembly
           processAssemblyPropertyBindings(metaschemaConfig, name, assemblyBinding.getPropertyBindings());
+
+          // Process choice group bindings for this assembly
+          processChoiceGroupBindings(config, assemblyBinding.getChoiceGroupBindings());
         }
       }
     }
@@ -454,6 +457,33 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
         MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding::getName,
         MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding::getJava,
         MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding.Java::getCollectionClass);
+  }
+
+  /**
+   * Process choice group bindings from a define-assembly-binding element.
+   *
+   * @param config
+   *          the definition binding configuration to add choice group bindings to
+   * @param choiceGroupBindings
+   *          the list of choice group bindings to process
+   */
+  private static void processChoiceGroupBindings(
+      @NonNull IDefinitionBindingConfiguration config,
+      @Nullable List<
+          MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding> choiceGroupBindings) {
+    if (choiceGroupBindings == null || !(config instanceof DefaultDefinitionBindingConfiguration)) {
+      return;
+    }
+
+    DefaultDefinitionBindingConfiguration mutableConfig = (DefaultDefinitionBindingConfiguration) config;
+    for (MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding choiceGroupBinding : choiceGroupBindings) {
+      String groupAsName = choiceGroupBinding.getName();
+      if (groupAsName != null) {
+        IChoiceGroupBindingConfiguration choiceGroupConfig
+            = new DefaultChoiceGroupBindingConfiguration(choiceGroupBinding);
+        mutableConfig.addChoiceGroupBinding(groupAsName, choiceGroupConfig);
+      }
+    }
   }
 
   @NonNull

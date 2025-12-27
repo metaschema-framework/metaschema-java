@@ -140,6 +140,35 @@ METASCHEMA:
                         formal-name: Collection Class
                         description: A fully qualified Java collection class name to use instead of the default.
                         as-type: token
+              - object-type: assembly
+                name: choice-group-binding
+                formal-name: Choice Group Binding
+                description: Provides binding configuration for a choice group within the parent assembly.
+                max-occurs: unbounded
+                group-as:
+                  name: choice-group-bindings
+                  in-json: ARRAY
+                flags:
+                - object-type: flag
+                  name: name
+                  formal-name: Name
+                  description: The name of the choice group (matches the group-as name in the metaschema).
+                  as-type: token
+                  required: "yes"
+                model:
+                  instances:
+                  - object-type: field
+                    name: item-type
+                    formal-name: Item Type
+                    description: A fully qualified Java type for collection items. When specified, the generated field and getter will use this type instead of Object.
+                    as-type: token
+                    flags:
+                    - object-type: flag
+                      name: use-wildcard
+                      formal-name: Use Wildcard
+                      description: Whether to use a wildcard bounded type (List<? extends Type>). Defaults to true.
+                      as-type: boolean
+                      default: "true"
           - object-type: assembly
             name: define-field-binding
             formal-name: Define Field Binding

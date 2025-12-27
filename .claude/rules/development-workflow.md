@@ -1,5 +1,7 @@
 # Development Workflow
 
+> **Scope:** This document describes development workflows for AI agents (Claude + superpowers plugin) and automated code review. Human developers should adapt these TDD, parallel-execution, and review principles to their tooling and IDE.
+
 ## Skill Usage Protocol (MANDATORY)
 
 Before responding to ANY task, complete this checklist:
@@ -53,9 +55,17 @@ User instructions describe WHAT to do, not HOW. "Add X" or "Fix Y" does NOT mean
 
 ---
 
-## Test-Driven Development (MANDATORY)
+## Test-Driven Development (MANDATORY - BLOCKING)
 
-**ALL code changes MUST follow TDD. No exceptions.**
+**ALL code changes MUST follow TDD. No exceptions. This is BLOCKING.**
+
+### The Iron Law of TDD
+
+```text
+TESTS MUST BE WRITTEN AND FAIL BEFORE ANY IMPLEMENTATION CODE EXISTS
+```
+
+This is non-negotiable. Implementation code written before tests is a violation.
 
 ### The TDD Cycle
 
@@ -65,14 +75,39 @@ User instructions describe WHAT to do, not HOW. "Add X" or "Fix Y" does NOT mean
 4. **Refactor** - Clean up while keeping tests green
 5. **Repeat** - For each new behavior
 
+### Enforcement Gate
+
+**Before writing ANY implementation code, you MUST have:**
+- [ ] A test file created for the new functionality
+- [ ] At least one failing test that exercises the code path
+- [ ] Verification that the test fails for the expected reason (not a syntax error)
+
+**If you haven't completed these steps, STOP. Go back and write tests first.**
+
+### What's Allowed with TDD
+
+Multiple test-writing agents **CAN run in parallel** with each other. Only implementation agents must wait for all test agents to complete. See "TDD with Parallel Agents" section below.
+
 ### Red Flags (You're Skipping TDD)
 
-If you catch yourself doing ANY of these, STOP:
+If you catch yourself doing ANY of these, STOP IMMEDIATELY:
 - Writing implementation code before tests
 - "I'll add tests after I get it working"
 - "This is too simple to need tests"
 - "Let me just make this small change first"
+- Dispatching implementation agents before test agents complete
+- Dispatching tests and implementation in the same parallel batch
 - Modifying code without first verifying existing test coverage
+
+### Common Rationalizations That Violate TDD
+
+| Rationalization | Why It's Wrong |
+|-----------------|----------------|
+| "Tests slow me down" | Tests written after are harder to write and less effective |
+| "I'll write tests once I know the design" | TDD helps you discover the design |
+| "Implementation is straightforward" | Straightforward code still needs tests first |
+| "Tests and impl in parallel for efficiency" | Tests MUST complete before implementation starts |
+| "The code already works" | Prove it works by writing the test first |
 
 ### When Tests Already Exist
 
@@ -86,6 +121,7 @@ When modifying existing code:
 - Use `superpowers:test-driven-development` skill for the full workflow
 - The skill will guide you through RED-GREEN-REFACTOR
 - Never skip the "watch it fail" step - it proves your test works
+- **Agents dispatched for implementation MUST have tests written first**
 
 ---
 
@@ -131,6 +167,7 @@ PRDs/[date]-[name]/
 - **Do NOT proceed to development until PRD is approved**
 
 ### Phase 3: Development
+
 Execute the plan using these skills:
 - `superpowers:executing-plans` - Execute tasks in batches with review checkpoints
 - `superpowers:test-driven-development` - Write tests first, then implementation
@@ -144,6 +181,64 @@ Execute the plan using these skills:
 - Mark acceptance criteria as `[x]` when completed
 - Update PR status in implementation-plan.md
 - Add notes about deviations from plan
+
+#### Parallel Agent Usage
+
+**Use multiple agents in parallel whenever tasks are independent.**
+
+Dispatch multiple agents in a single message when:
+- Tasks operate on different files with no dependencies
+- Tasks can be clearly scoped with complete context
+- Each task can succeed or fail independently
+- Waiting for sequential completion would waste time
+
+| Scenario | Parallel Approach |
+|----------|-------------------|
+| Implementing 3 new classes | One agent per class |
+| Updating interface + implementation | Agent for each file |
+| Writing tests for multiple components | Agent per test class |
+| Code review + linting | Separate review agents |
+| Reading multiple files for context | Agent per exploration area |
+
+**How to dispatch:** Use a SINGLE message with multiple Task tool calls. Do not dispatch agents sequentially when they can run in parallel.
+
+**Dispatch granularity:** When deciding agent scope, prefer finer-grained agents (one per file/class) over coarse-grained agents (one for entire feature). Smaller scopes:
+- Fail independently without blocking other work
+- Produce clearer error messages
+- Enable better parallelism
+
+**Detecting dependencies:** Tasks have dependencies when:
+- One task's output is another's input (e.g., interface before implementation)
+- Shared state must be modified in sequence
+- Compilation order matters (e.g., base class before subclass)
+
+Tasks are independent when they touch different files with no shared interfaces.
+
+**Red flags (you're not using parallel agents):**
+- Dispatching one agent, waiting for result, then dispatching another
+- "I'll run this agent first to see what happens"
+- "These tasks might have dependencies" (when they clearly don't)
+- Running sequential agents for independent file changes
+
+#### TDD with Parallel Agents
+
+Tests MUST be written before implementation, but test-writing agents CAN run in parallel:
+- Dispatch multiple test-writing agents in parallel (one per test class)
+- Wait for all test agents to complete
+- Verify tests fail for the correct reasons
+- THEN dispatch implementation agents in parallel
+
+**Correct order:**
+1. Parallel agents write tests → all complete
+2. Run the full test suite and verify new tests fail correctly:
+   - Failures should be assertion failures (e.g., "expected X but was Y"), not compilation errors
+   - Review failure messages to confirm they match test intent, not "class not found" or similar
+3. Parallel agents write implementation → all complete
+4. Verify tests pass
+
+**Wrong order:**
+- Tests and implementation agents in the same parallel batch
+- Implementation agents before test agents complete
 
 ### Phase 4: Code Review Cycle
 Perform iterative code review until all issues are resolved:
@@ -161,7 +256,7 @@ Perform iterative code review until all issues are resolved:
 
 5. **Repeat** until all issues are resolved and changes are accepted
 
-```
+```text
 Code Complete
     ↓
 Code Review Agents (parallel) → Consolidated Issues Report
@@ -173,6 +268,24 @@ Work Issues → Re-review
 No Issues → Proceed to Verification
 ```
 
+#### Handling Optional Nitpicks
+
+When reviewers (human or automated) mark feedback as "nitpick" or "optional":
+
+**Address nitpicks when they:**
+- Improve code quality in files already being changed
+- Reduce duplication or improve readability
+- Add low-risk enhancements (e.g., additional test cases)
+- Can be implemented without significant new changes
+
+**Defer nitpicks when they:**
+- Require changes outside the PR's scope
+- Introduce significant new code or risk
+- Would substantially increase PR size
+- Conflict with the PR's focused purpose
+
+**When deferring:** Note the suggestion in a comment or issue for future consideration.
+
 ### Phase 5: Verification & PR
 - `superpowers:verification-before-completion` - Confirm all tests pass
 - Verify all code review issues are resolved
@@ -180,6 +293,12 @@ No Issues → Proceed to Verification
 - Always use squash merge with branch deletion (`gh pr merge --squash --delete-branch`)
 
 #### Build Verification Summary Format
+
+**When:** After running a full build with quality checks (e.g., `mvn clean install -PCI -Prelease`).
+
+**Who:** Developer or AI agent. Manual compilation from tool output is acceptable; automation is preferred.
+
+**Where:** Include in the conversation output or PR description before proceeding to merge.
 
 After running builds with quality checks, provide a scannable summary:
 
@@ -210,20 +329,21 @@ Build failed:
 ```
 
 ### Workflow Summary
-```
+```text
 GitHub issue/prompt
     ↓
 brainstorming → prd-construction → PRDs/[date]-[name]/
     ↓
 User Approves PRD
     ↓
-executing-plans + TDD + subagents
+Phase 3: Development (TDD with Parallel Agents)
+  ├─ Parallel test agents → verify failures (MUST complete first)
+  ├─ Parallel implementation agents → verify passes (only after tests pass)
+  └─ Update implementation-plan.md with progress [x]
     ↓
-Update implementation-plan.md with progress [x]
+Phase 4: Code review cycle (parallel review agents)
     ↓
-verification-before-completion
-    ↓
-PR to develop
+Phase 5: verification-before-completion → PR to develop
 ```
 
 ---
@@ -268,7 +388,7 @@ Once root cause is confirmed:
 1. **Check for existing test** - Does a test cover this scenario?
 2. **If no test exists** - Use `superpowers:test-driven-development` to:
    - Write a failing test that reproduces the bug
-   - Confirm the test fails for the right reason
+   - Confirm the test fails for the intended reason
    - Do NOT proceed to fix until test fails correctly
 
 ### Step 3: Implement Fix

@@ -19,6 +19,8 @@ import gov.nist.secauto.metaschema.core.model.INamedModelInstanceGrouped;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.codegen.ClassUtils;
 import gov.nist.secauto.metaschema.databind.codegen.config.IBindingConfiguration;
+import gov.nist.secauto.metaschema.databind.codegen.config.IChoiceGroupBindingConfiguration;
+import gov.nist.secauto.metaschema.databind.codegen.config.IDefinitionBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IFieldDefinitionTypeInfo;
@@ -65,7 +67,8 @@ class DefaultTypeResolver implements ITypeResolver {
     this.bindingConfiguration = bindingConfiguration;
   }
 
-  protected IBindingConfiguration getBindingConfiguration() {
+  @Override
+  public IBindingConfiguration getBindingConfiguration() {
     return bindingConfiguration;
   }
 
@@ -179,7 +182,14 @@ class DefaultTypeResolver implements ITypeResolver {
 
   @Override
   public ClassName getClassName(IChoiceGroupInstance instance) {
-    // TODO: Support some form of binding override for a common interface type
+    IAssemblyDefinition parent = instance.getContainingDefinition();
+    IDefinitionBindingConfiguration config = getBindingConfiguration().getBindingConfigurationForDefinition(parent);
+    if (config != null) {
+      IChoiceGroupBindingConfiguration choiceConfig = config.getChoiceGroupBindings().get(instance.getGroupAsName());
+      if (choiceConfig != null && choiceConfig.getItemTypeName() != null) {
+        return ClassName.bestGuess(choiceConfig.getItemTypeName());
+      }
+    }
     return ObjectUtils.notNull(ClassName.get(Object.class));
   }
 
