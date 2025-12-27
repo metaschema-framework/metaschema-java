@@ -6,6 +6,12 @@ This module provides the data binding framework and code generation capabilities
 
 This module contains two sets of pre-generated binding classes that are checked into source control due to circular dependency constraints with the `metaschema-maven-plugin`.
 
+**Prerequisites:** The model binding classes require the `core/metaschema` git submodule. Initialize submodules before regenerating:
+
+```bash
+git submodule update --init --recursive
+```
+
 ### Config Binding Classes
 
 Package: `gov.nist.secauto.metaschema.databind.config.binding`

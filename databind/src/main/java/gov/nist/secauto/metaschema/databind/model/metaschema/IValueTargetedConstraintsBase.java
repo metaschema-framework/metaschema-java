@@ -11,6 +11,14 @@ import java.util.List;
  * Provides a common interface for targeted value constraint binding objects.
  */
 public interface IValueTargetedConstraintsBase extends IValueConstraintsBase {
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Returns the targeted constraint rules that apply to values matching the
+   * target expression.
+   *
+   * @return the list of targeted constraint rules
+   */
   @Override
   List<? extends ITargetedConstraintBase> getRules();
 }
