@@ -43,8 +43,8 @@ class MetaschemaModuleMetaschemaTest {
   void testReadMetaschemaAsXml() throws IOException {
     IBindingContext context = IBindingContext.newInstance();
 
-    // Disable required field validation since Metaschema modules are validated by
-    // schema and the pre-generated binding classes don't preserve choice group info
+    // Disable required field validation because pre-generated binding classes
+    // don't preserve choice group information. See issue #594.
     IDeserializer<METASCHEMA> xmlDeserializer = context.newDeserializer(Format.XML, METASCHEMA.class);
     xmlDeserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
     METASCHEMA metaschema = xmlDeserializer.deserialize(METASCHEMA_FILE);

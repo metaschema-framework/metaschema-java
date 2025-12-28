@@ -64,9 +64,9 @@ public class BindingModuleLoader
       @NonNull ModuleLoadingPostProcessor postProcessor) {
     this.loader = Lazy.of(() -> {
       IBoundLoader boundLoader = bindingContext.newBoundLoader();
-      // Disable required field validation during module loading since:
-      // 1. Metaschema modules have their own schema validation
-      // 2. Module parsing is an internal operation with trusted input
+      // Disable required field validation because pre-generated binding classes
+      // (METASCHEMA) don't preserve choice group information. See issue #594.
+      // TODO: Remove this workaround when #594 is implemented.
       boundLoader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
       return boundLoader;
     });

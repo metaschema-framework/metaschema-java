@@ -8,6 +8,8 @@ package gov.nist.secauto.metaschema.databind.codegen.config;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
@@ -408,12 +410,12 @@ class DefaultBindingConfigurationTest {
 
     DefaultBindingConfiguration config = new DefaultBindingConfiguration();
 
-    BindingException exception = org.junit.jupiter.api.Assertions.assertThrows(
+    BindingException exception = assertThrows(
         BindingException.class,
         () -> config.load(bindingConfigFile));
 
     String message = exception.getMessage();
-    org.junit.jupiter.api.Assertions.assertTrue(
+    assertTrue(
         message != null && (message.contains("Collection") || message.contains("collection")),
         "Error message should indicate type incompatibility: " + message);
   }
@@ -425,12 +427,12 @@ class DefaultBindingConfigurationTest {
 
     DefaultBindingConfiguration config = new DefaultBindingConfiguration();
 
-    BindingException exception = org.junit.jupiter.api.Assertions.assertThrows(
+    BindingException exception = assertThrows(
         BindingException.class,
         () -> config.load(bindingConfigFile));
 
     String message = exception.getMessage();
-    org.junit.jupiter.api.Assertions.assertTrue(
+    assertTrue(
         message != null && (message.contains("class") || message.contains("ClassNotFound")),
         "Error message should indicate class not found: " + message);
   }

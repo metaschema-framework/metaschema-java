@@ -148,6 +148,11 @@ public class DefinitionAssemblyGlobal
     return ObjectUtils.notNull(modelContainer.get());
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Returns choice instances from the model container.
+   */
   @Override
   public List<IChoiceInstance> getChoiceInstances() {
     return getModelContainer().getChoiceInstances();

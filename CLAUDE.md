@@ -198,9 +198,36 @@ Checkstyle enforces these rules (configured in [oss-maven checkstyle.xml](https:
 - `AtclauseOrder` - tags must follow order: `@param`, `@return`, `@throws`, `@deprecated`
 
 Exceptions (no Javadoc required):
-- `@Override` methods (inherit documentation)
+- `@Override` methods (inherit documentation from interface/superclass)
 - `@Test` methods (use descriptive names)
 - Generated code (`*.antlr` packages)
+
+When adding implementation-specific behavior to `@Override` methods, use `{@inheritDoc}` with additional notes:
+
+```java
+/**
+ * {@inheritDoc}
+ * <p>
+ * Implementation note: delegates to the model container.
+ */
+@Override
+public List<IChoiceInstance> getChoiceInstances() {
+  return getModelContainer().getChoiceInstances();
+}
+```
+
+### Addressing Automated Review Feedback
+
+When automated reviewers (e.g., CodeRabbit) flag Javadoc issues:
+
+1. **Critical/blocking issues**: Address immediately per project conventions
+2. **@Override method flags**: Use `{@inheritDoc}` if adding implementation notes, otherwise explain the project exception
+3. **Missing `@throws` tags**: Add for declared exceptions
+4. **Nitpick suggestions**: Address if in scope, defer otherwise with explanation
+
+After addressing review comments:
+- Reply explaining what was fixed or why the comment doesn't apply
+- Close resolved conversation threads
 
 ```bash
 # Check Javadoc compliance
