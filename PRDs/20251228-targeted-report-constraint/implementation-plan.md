@@ -55,6 +55,8 @@ This document details the implementation for adding constraint processing suppor
 | `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidator.java` | Add `validateReport()` method and integrate into validation flow |
 | `databind/src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/impl/ConstraintBindingSupport.java` | Add `TargetedReportConstraint` handling to `parse()` methods and `newReport()` factory |
 | `databind/src/test/java/gov/nist/secauto/metaschema/databind/model/metaschema/BindingConstraintLoaderTest.java` | Add test for loading TargetedReportConstraint |
+| `.claude/skills/metaschema-constraints-authoring.md` | Add `report` constraint type documentation |
+| `.claude/skills/metaschema-java-library.md` | Add `IReportConstraint` interface (if applicable) |
 
 #### Implementation Approach
 
@@ -152,7 +154,23 @@ This document details the implementation for adding constraint processing suppor
      - Kind mapping: ERROR/CRITICAL → FAIL, all others → INFORMATIONAL
    - Call `validateReport()` in `validateFlag()`, `validateField()`, `validateAssembly()`
 
-##### Step 6: Final Verification
+##### Step 6: Update Skill Documentation
+
+Update Claude Code skills to document the new constraint type:
+
+1. **Update `.claude/skills/metaschema-constraints-authoring.md`**:
+   - Add `report` to Constraint Types Overview table
+   - Add new section for `report` constraint with:
+     - Purpose: Report/fail when Metapath condition is TRUE (opposite of expect)
+     - Attributes: `test`, `target`, `message`, `level` (default: INFORMATIONAL)
+     - YAML and XML syntax examples
+     - Semantic distinction from `expect`
+
+2. **Update `.claude/skills/metaschema-java-library.md`** (if constraint interfaces are documented):
+   - Add `IReportConstraint` interface
+   - Document relationship to `IExpectConstraint`
+
+##### Step 7: Final Verification
 
 1. Run full test suite: `mvn test`
 2. Run full build with checks: `mvn clean install -PCI -Prelease`
@@ -172,6 +190,8 @@ This document details the implementation for adding constraint processing suppor
 - [ ] `DefaultConstraintValidator.validateReport()` generates findings when test is TRUE
 - [ ] Report constraints default to INFORMATIONAL level
 - [ ] Report constraints at ERROR/CRITICAL cause validation failures (Kind.FAIL)
+- [ ] `metaschema-constraints-authoring.md` skill updated with `report` constraint
+- [ ] `metaschema-java-library.md` skill updated if applicable
 - [ ] Unit tests for `IReportConstraint` builder and behavior
 - [ ] Unit tests for constraint loading
 - [ ] Unit tests for constraint validation

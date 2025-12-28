@@ -132,6 +132,11 @@ Update `IConstraintVisitor` to:
 - Include `visitReportConstraint()` method
 - Update all visitor implementations
 
+#### FR-6: Skill Documentation Updates
+Update Claude Code skills to document the new constraint type:
+- `.claude/skills/metaschema-constraints-authoring.md` - Add `report` constraint type with syntax and examples
+- `.claude/skills/metaschema-java-library.md` - Add `IReportConstraint` interface if constraint interfaces are documented
+
 ### 3.2 Non-Functional Requirements
 
 #### NFR-1: API Consistency
@@ -180,6 +185,8 @@ All development follows TDD:
 - [ ] Report constraints default to INFORMATIONAL level
 - [ ] Report constraints at ERROR/CRITICAL level cause validation failures (Kind.FAIL)
 - [ ] Visitor pattern updated with `visitReportConstraint()`
+- [ ] `metaschema-constraints-authoring.md` skill updated with `report` constraint
+- [ ] `metaschema-java-library.md` skill updated if applicable
 - [ ] All new code has Javadoc
 - [ ] All unit tests pass
 - [ ] Build succeeds with `mvn clean install -PCI -Prelease`
