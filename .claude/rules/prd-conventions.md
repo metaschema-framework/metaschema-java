@@ -37,14 +37,16 @@ Include this in every PR's acceptance criteria.
 
 ## PRD Tracking
 
-### Active PRD Management
+### Active PRD Management (BLOCKING)
 
 When starting development on a PRD:
 1. Add entry to CLAUDE.md "Active PRDs" table with status "In Progress"
 
-When completing a PRD:
-1. Update status to "Completed" with completion date
-2. Archive or remove from active list as appropriate
+When completing a PRD (before final push of PR):
+1. **Remove the entry from the "Active PRDs" table** in CLAUDE.md
+2. Add entry to "Completed PRDs" table with completion date
+3. Include this CLAUDE.md update in the PR so it is applied when the PR is merged
+4. This is BLOCKING - do not push the final PR without updating CLAUDE.md
 
 ### Status Values
 
