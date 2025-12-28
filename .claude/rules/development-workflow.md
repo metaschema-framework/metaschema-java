@@ -286,6 +286,19 @@ When reviewers (human or automated) mark feedback as "nitpick" or "optional":
 
 **When deferring:** Note the suggestion in a comment or issue for future consideration.
 
+#### Responding to Automated Reviewers
+
+When addressing feedback from automated reviewers (e.g., CodeRabbit):
+
+1. **Mention the reviewer** - Start replies with `@coderabbitai` to ensure proper notification
+2. **Explain the resolution** - Briefly describe how the issue was addressed or why it doesn't apply
+3. **Reference commits** - Include the commit hash where the fix was made (e.g., "Addressed in commit abc1234")
+
+**Example reply:**
+```text
+@coderabbitai Addressed in commit e45cabea. Aligned with the @NonNull contract from AbstractDeserializer by removing the null-handling code.
+```
+
 ### Phase 5: Verification & PR
 - `superpowers:verification-before-completion` - Confirm all tests pass
 - Verify all code review issues are resolved
