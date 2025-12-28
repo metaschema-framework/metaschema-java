@@ -34,6 +34,10 @@ import nl.talsmasoftware.lazy4j.Lazy;
  */
 public class DefaultJsonDeserializer<CLASS extends IBoundObject>
     extends AbstractDeserializer<CLASS> {
+  /**
+   * A synthetic URI used as a fallback when the document URI is null. This allows
+   * parsing to proceed with location tracking even when the source is unknown.
+   */
   private static final URI UNKNOWN_SOURCE = URI.create("unknown:source");
   private Lazy<JsonFactory> factory;
 

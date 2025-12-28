@@ -173,7 +173,7 @@ default void handleMissingInstances(
 
 **Acceptance Criteria**:
 - [x] New overloaded method with ValidationContext
-- [x] Backward compatible default implementation
+- [x] Backward-compatible default implementation
 - [x] @FunctionalInterface annotation added
 - [x] Javadoc complete
 
@@ -233,7 +233,7 @@ Add overloaded methods with ValidationContext for XML-specific handling.
 
 **Acceptance Criteria**:
 - [x] New overloaded methods with ValidationContext
-- [x] Backward compatible default implementations
+- [x] Backward-compatible default implementations
 - [x] Javadoc complete
 
 ### Task 3.6: Handle null URI gracefully

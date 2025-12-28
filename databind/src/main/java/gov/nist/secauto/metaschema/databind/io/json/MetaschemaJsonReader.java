@@ -78,6 +78,9 @@ public class MetaschemaJsonReader
   private final URI source;
   @NonNull
   private final IJsonProblemHandler problemHandler;
+  /**
+   * Tracks the current parsing path for context-aware error reporting.
+   */
   @NonNull
   private final PathTracker pathTracker = new PathTracker();
 

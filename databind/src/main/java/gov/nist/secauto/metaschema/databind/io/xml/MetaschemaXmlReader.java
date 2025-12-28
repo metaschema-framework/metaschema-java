@@ -75,6 +75,9 @@ public class MetaschemaXmlReader
   private final URI source;
   @NonNull
   private final IXmlProblemHandler problemHandler;
+  /**
+   * Tracks the current parsing path for context-aware error reporting.
+   */
   @NonNull
   private final PathTracker pathTracker = new PathTracker();
 

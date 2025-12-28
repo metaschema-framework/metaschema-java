@@ -133,6 +133,11 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
     return ObjectUtils.notNull(factory.get());
   }
 
+  /**
+   * A synthetic URI used as a fallback when the actual resource URI is null. This
+   * ensures location reporting can proceed even when the document source is
+   * unknown.
+   */
   private static final URI UNKNOWN_SOURCE = URI.create("unknown:source");
 
   @NonNull
@@ -150,10 +155,18 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
 
   @Override
   protected final IDocumentNodeItem deserializeToNodeItemInternal(Reader reader, URI documentUri) throws IOException {
+    // Handle null URI gracefully - use a synthetic URI for node item creation
+    URI effectiveUri = documentUri != null ? documentUri : UNKNOWN_SOURCE;
     Object value = deserializeToValueInternal(reader, documentUri);
-    return INodeItemFactory.instance().newDocumentNodeItem(rootDefinition, documentUri, value);
+    return INodeItemFactory.instance().newDocumentNodeItem(rootDefinition, effectiveUri, value);
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * This implementation accepts a {@code null} resource URI and substitutes a
+   * synthetic URI for location reporting purposes.
+   */
   @Override
   public final CLASS deserializeToValueInternal(Reader reader, @Nullable URI resource) throws IOException {
     // Handle null URI gracefully - use a synthetic URI for parsing
