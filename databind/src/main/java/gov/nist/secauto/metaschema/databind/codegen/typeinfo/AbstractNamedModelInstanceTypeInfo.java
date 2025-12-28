@@ -67,6 +67,7 @@ abstract class AbstractNamedModelInstanceTypeInfo<INSTANCE extends INamedModelIn
    * @param choiceId
    *          the choice ID to set
    */
+  @Override
   public void setChoiceId(@Nullable String choiceId) {
     this.choiceId = choiceId;
   }

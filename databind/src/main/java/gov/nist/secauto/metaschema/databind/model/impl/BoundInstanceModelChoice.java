@@ -22,6 +22,7 @@ import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelNamed;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Represents a choice instance for annotation-based bound definitions.
@@ -132,6 +133,7 @@ public final class BoundInstanceModelChoice
   }
 
   @Override
+  @Nullable
   public MarkupMultiline getRemarks() {
     // no remarks for annotation-based bindings
     return null;
