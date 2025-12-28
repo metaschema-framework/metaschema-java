@@ -124,6 +124,8 @@ This document details the implementation for adding constraint processing suppor
    }
    ```
 
+   **Note:** There are currently no implementations of `IConstraintVisitor` in the codebase. The interface is prepared for future visitor pattern usage. Only the interface itself needs the new method.
+
 ##### Step 4: Update Constraint Loader (TDD)
 
 1. **Write test** in `BindingConstraintLoaderTest.java` for loading `TargetedReportConstraint`
@@ -152,7 +154,10 @@ This document details the implementation for adding constraint processing suppor
      - Generate finding when test is TRUE (opposite of expect)
      - Use constraint's configured level (default: INFORMATIONAL)
      - Kind mapping: ERROR/CRITICAL → FAIL, all others → INFORMATIONAL
-   - Call `validateReport()` in `validateFlag()`, `validateField()`, `validateAssembly()`
+   - Add `validateReport()` call to all three validation entry points:
+     - `validateFlag()` (line ~190) - add after other constraint validations
+     - `validateField()` (line ~217) - add after other constraint validations
+     - `validateAssembly()` (line ~243) - add after other constraint validations
 
 ##### Step 6: Update Skill Documentation
 

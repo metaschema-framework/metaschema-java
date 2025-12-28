@@ -199,7 +199,7 @@ All development follows TDD:
 |------|--------|------------|------------|
 | Report semantics differ from expect | Medium | Low | Clear documentation, separate validation method |
 | Breaking existing constraint handling | High | Low | Comprehensive test coverage, incremental changes |
-| Missing visitor implementations | Medium | Medium | Search for all IConstraintVisitor implementations |
+| Missing visitor implementations | Low | Low | No current implementations exist; only interface needs update |
 
 ---
 
@@ -217,7 +217,7 @@ All development follows TDD:
 | ERROR | FAIL |
 | CRITICAL | FAIL |
 
-**Rationale:** This allows authors to use report constraints for both informational messages and hard errors when detecting problematic patterns.
+**Rationale:** Report constraints are fundamentally about "reporting" when a condition is detected. At WARNING level and below, findings remain informational since no validation failure should occur. Only ERROR/CRITICAL elevate to FAIL, indicating the detected condition is serious enough to fail validation. This differs from expect constraints where WARNING produces Kind.PASS (a successful but cautionary result).
 
 ### DD-2: Semantic Distinction from Expect
 
