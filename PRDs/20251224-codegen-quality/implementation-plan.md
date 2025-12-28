@@ -309,6 +309,91 @@ Currently, when a required field/flag is missing from input data, the generated 
 
 ---
 
+## PR 5: Choice Instance Support for Annotation-Based Bindings
+
+| Attribute | Value |
+|-----------|-------|
+| **Files Changed** | ~10 |
+| **Risk Level** | Medium |
+| **Dependencies** | PR 4 |
+| **Target Branch** | develop |
+| **Status** | Pending |
+| **Issue** | [#594](https://github.com/metaschema-framework/metaschema-java/issues/594), [#262](https://github.com/metaschema-framework/metaschema-java/issues/262) |
+
+This PR adds full choice instance support to annotation-based bindings, enabling required field validation to work correctly for dynamically compiled modules.
+
+### Background
+
+Metaschema has two related but distinct concepts:
+
+| Concept | Interface | Purpose | Current Support |
+|---------|-----------|---------|-----------------|
+| **Choice** | `IChoiceInstance` | Mutually exclusive alternatives | ❌ Not supported |
+| **Choice Group** | `IChoiceGroupInstance` | Polymorphic collection with discriminator | ✅ `@BoundChoiceGroup` |
+
+PR 4 added required field validation with choice group support, but only for `DefinitionAssemblyGlobal` (Metaschema-loaded modules). Dynamically compiled modules use `DefinitionAssembly` which returns an empty list for `getChoiceInstances()`.
+
+### Files to Create
+
+| File | Purpose |
+|------|---------|
+| `databind/.../annotations/BoundChoice.java` | Annotation to mark fields in a choice |
+| `databind/.../model/impl/InstanceModelChoice.java` | `IChoiceInstance` implementation for bindings |
+
+### Files to Modify
+
+| File | Changes |
+|------|---------|
+| `databind/.../model/impl/AssemblyModelGenerator.java` | Group `@BoundChoice` fields, create choice instances |
+| `databind/.../codegen/typeinfo/AbstractModelInstanceTypeInfo.java` | Emit `@BoundChoice` for fields in choices |
+| Bootstrap binding classes | Regenerate with new annotations |
+
+### Implementation Approach
+
+1. **New `@BoundChoice` annotation**
+   - `choiceId` attribute to group mutually exclusive fields
+   - Applied to fields within Metaschema `<choice>` elements
+
+2. **New `InstanceModelChoice` class**
+   - Implements `IChoiceInstance`
+   - Wraps a list of `IBoundInstanceModelNamed<?>` instances
+   - Provides `getNamedModelInstances()` for validation
+
+3. **Update `AssemblyModelGenerator`**
+   - Collect fields annotated with `@BoundChoice`
+   - Group by `choiceId`
+   - Create `InstanceModelChoice` for each group
+   - Call `builder.append(choiceInstance)`
+
+4. **Update code generator**
+   - Track choice context during model traversal
+   - Emit `@BoundChoice(choiceId = "choice-N")` on fields within choices
+
+5. **Adjacency validation**
+   - Choice fields must be adjacent in the model (same position in serialization order)
+   - Validate at binding initialization that all fields with same `choiceId` are consecutive
+   - Throw `IllegalStateException` if non-adjacent choice fields detected
+   - Catches code generator bugs, manual edits, and inheritance issues
+
+### Acceptance Criteria
+
+- [ ] New `@BoundChoice` annotation created with `choiceId` attribute
+- [ ] `InstanceModelChoice` implements `IChoiceInstance` correctly
+- [ ] `AssemblyModelGenerator` groups fields by choice and creates instances
+- [ ] Adjacency validation - verify choice fields are consecutive at initialization
+- [ ] Code generator emits `@BoundChoice` for fields in Metaschema choices
+- [ ] `DefinitionAssembly.getChoiceInstances()` returns proper choice instances
+- [ ] Required field validation works for dynamically compiled modules
+- [ ] Remove workarounds added in PR 4 for choice group limitation
+- [ ] Bootstrap binding classes regenerated with new annotations
+- [ ] Unit tests for choice instance creation and validation
+- [ ] Unit tests for adjacency validation (positive and negative cases)
+- [ ] `mvn checkstyle:check` passes
+- [ ] All tests pass: `mvn test`
+- [ ] Build succeeds: `mvn clean install -PCI -Prelease`
+
+---
+
 ## PR Summary Table
 
 | PR | Description | Files | Risk | Dependencies | Status |
@@ -317,9 +402,10 @@ Currently, when a required field/flag is missing from input data, the generated 
 | 2 | Collection class override support | ~15 | Low | PR 1 | ✅ Completed ([#584](https://github.com/metaschema-framework/metaschema-java/pull/584)) |
 | 3 | Databind bootstrap setup + regeneration | ~55 | Medium | PR 1, PR 2 | ✅ Completed (combined with PR 2) |
 | 4 | Parser required field validation | ~25 | Medium | PR 1 | ✅ Completed ([#593](https://github.com/metaschema-framework/metaschema-java/pull/593)) |
+| 5 | Choice instance support for bindings | ~10 | Medium | PR 4 | Pending ([#594](https://github.com/metaschema-framework/metaschema-java/issues/594)) |
 
-**Total Estimated PRs**: 4 (3 actual - PR 2 and PR 3 combined)
-**Total Estimated Files**: ~100
+**Total Estimated PRs**: 5 (4 actual - PR 2 and PR 3 combined)
+**Total Estimated Files**: ~110
 
 ---
 
