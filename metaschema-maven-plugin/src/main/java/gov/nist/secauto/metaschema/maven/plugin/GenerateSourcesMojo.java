@@ -10,6 +10,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.codegen.IProduction;
 import gov.nist.secauto.metaschema.databind.codegen.JavaGenerator;
 import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;
+import gov.nist.secauto.metaschema.databind.io.BindingException;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -88,7 +89,7 @@ public class GenerateSourcesMojo
           getLog().info("Loading binding configuration: " + config.getPath());
         }
         bindingConfiguration.load(config);
-      } catch (IOException ex) {
+      } catch (IOException | BindingException ex) {
         throw new MojoExecutionException(
             String.format("Unable to load binding configuration from '%s'.", config.getPath()), ex);
       }

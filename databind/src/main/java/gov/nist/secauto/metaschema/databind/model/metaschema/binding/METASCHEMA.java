@@ -25,6 +25,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValue;
 import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValues;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundChoice;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFieldValue;
@@ -769,6 +770,8 @@ public class METASCHEMA implements IBoundObject {
         formalName = "Use Name",
         description = "Allows the name of the definition to be overridden.",
         useName = "use-name")
+    @BoundChoice(
+        choiceId = "choice-1")
     private UseName _useName;
 
     /**
@@ -780,6 +783,8 @@ public class METASCHEMA implements IBoundObject {
         description = "Provides a root name, for when the definition is used as the root of a node hierarchy.",
         useName = "root-name",
         minOccurs = 1)
+    @BoundChoice(
+        choiceId = "choice-1")
     private RootName _rootName;
 
     /**
@@ -1533,11 +1538,15 @@ public class METASCHEMA implements IBoundObject {
         formalName = "Field Value JSON Property Name",
         useName = "json-value-key",
         typeAdapter = TokenAdapter.class)
+    @BoundChoice(
+        choiceId = "choice-1")
     private String _jsonValueKey;
 
     @BoundAssembly(
         formalName = "Flag Used as the Field Value's JSON Property Name",
         useName = "json-value-key-flag")
+    @BoundChoice(
+        choiceId = "choice-1")
     private JsonValueKeyFlag _jsonValueKeyFlag;
 
     @BoundChoiceGroup(

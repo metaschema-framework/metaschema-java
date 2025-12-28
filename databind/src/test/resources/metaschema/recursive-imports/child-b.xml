@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+  <schema-name>Child B Metaschema</schema-name>
+  <schema-version>1.0</schema-version>
+  <short-name>child-b</short-name>
+  <namespace>http://csrc.nist.gov/ns/metaschema/testing/recursive-imports</namespace>
+  <json-base-uri>http://csrc.nist.gov/ns/metaschema/testing/recursive-imports</json-base-uri>
+
+  <define-assembly name="child-b-assembly">
+    <formal-name>Child B Assembly</formal-name>
+    <description>Assembly defined in child B module</description>
+    <root-name>child-b-root</root-name>
+    <model/>
+  </define-assembly>
+</METASCHEMA>

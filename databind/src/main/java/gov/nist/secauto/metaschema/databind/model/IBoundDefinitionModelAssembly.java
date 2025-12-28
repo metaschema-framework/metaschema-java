@@ -62,13 +62,6 @@ public interface IBoundDefinitionModelAssembly
 
   @Override
   @NonNull
-  default List<IChoiceInstance> getChoiceInstances() {
-    // not supported
-    return CollectionUtil.emptyList();
-  }
-
-  @Override
-  @NonNull
   default Map<String, IBoundProperty<?>> getJsonProperties(@Nullable Predicate<IBoundInstanceFlag> flagFilter) {
     Stream<? extends IBoundInstanceFlag> flagStream = getFlagInstances().stream();
 

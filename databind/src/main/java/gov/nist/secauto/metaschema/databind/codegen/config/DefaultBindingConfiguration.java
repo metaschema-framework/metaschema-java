@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.codegen.ClassUtils;
 import gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings;
+import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IDeserializer;
 
@@ -25,6 +26,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -295,8 +297,10 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
    *          the configuration resource
    * @throws IOException
    *           if an error occurred while reading the {@code file}
+   * @throws BindingException
+   *           if an error occurred while processing the binding configuration
    */
-  public void load(Path file) throws IOException {
+  public void load(Path file) throws IOException, BindingException {
     URL resource = file.toAbsolutePath().normalize().toUri().toURL();
     load(resource);
   }
@@ -308,8 +312,10 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
    *          the configuration resource
    * @throws IOException
    *           if an error occurred while reading the {@code file}
+   * @throws BindingException
+   *           if an error occurred while processing the binding configuration
    */
-  public void load(File file) throws IOException {
+  public void load(File file) throws IOException, BindingException {
     load(file.toPath());
   }
 
@@ -320,8 +326,10 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
    *          the configuration resource
    * @throws IOException
    *           if an error occurred while reading the {@code resource}
+   * @throws BindingException
+   *           if an error occurred while processing the binding configuration
    */
-  public void load(URL resource) throws IOException {
+  public void load(URL resource) throws IOException, BindingException {
     IBindingContext context = IBindingContext.newInstance();
     IDeserializer<MetaschemaBindings> deserializer = context.newDeserializer(Format.XML, MetaschemaBindings.class);
 
@@ -364,7 +372,7 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
   }
 
   private void processMetaschemaBindingConfig(URL configResource, MetaschemaBindings.MetaschemaBinding metaschema)
-      throws MalformedURLException, URISyntaxException {
+      throws MalformedURLException, URISyntaxException, BindingException {
     String href = metaschema.getHref().toString();
     URL moduleUrl = new URL(configResource, href);
     String moduleUri = ObjectUtils.notNull(moduleUrl.toURI().normalize().toString());
@@ -441,6 +449,8 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
    *          function to extract the Java config from a binding
    * @param collectionClassAccessor
    *          function to extract the collection class name from a Java config
+   * @throws BindingException
+   *           if the collection class is invalid or cannot be found
    */
   private static <P, J> void processPropertyBindings(
       @NonNull MetaschemaBindingConfiguration metaschemaConfig,
@@ -448,7 +458,7 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
       @Nullable List<P> propertyBindings,
       @NonNull Function<P, String> nameAccessor,
       @NonNull Function<P, J> javaAccessor,
-      @NonNull Function<J, String> collectionClassAccessor) {
+      @NonNull Function<J, String> collectionClassAccessor) throws BindingException {
     if (propertyBindings == null) {
       return;
     }
@@ -466,10 +476,49 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
 
       String collectionClassName = collectionClassAccessor.apply(java);
       if (collectionClassName != null) {
+        // Validate the collection class
+        validateCollectionClass(collectionClassName, definitionName, propertyName);
+
         IMutablePropertyBindingConfiguration config = new DefaultPropertyBindingConfiguration();
         config.setCollectionClassName(collectionClassName);
         metaschemaConfig.addPropertyBindingConfig(definitionName, propertyName, config);
       }
+    }
+  }
+
+  /**
+   * Validate that the specified collection class exists and implements a
+   * supported collection interface (Collection or Map).
+   *
+   * @param collectionClassName
+   *          the fully qualified class name to validate
+   * @param definitionName
+   *          the name of the containing definition (for error messages)
+   * @param propertyName
+   *          the name of the property (for error messages)
+   * @throws BindingException
+   *           if the class cannot be found or does not implement a supported
+   *           collection interface
+   */
+  private static void validateCollectionClass(
+      @NonNull String collectionClassName,
+      @NonNull String definitionName,
+      @NonNull String propertyName) throws BindingException {
+    Class<?> collectionClass;
+    try {
+      collectionClass = Class.forName(collectionClassName);
+    } catch (ClassNotFoundException ex) {
+      throw new BindingException(String.format(
+          "Collection class '%s' for property '%s' in definition '%s' could not be found",
+          collectionClassName, propertyName, definitionName), ex);
+    }
+
+    // Check if the class implements Collection or Map
+    if (!Collection.class.isAssignableFrom(collectionClass) && !Map.class.isAssignableFrom(collectionClass)) {
+      throw new BindingException(String.format(
+          "Collection class '%s' for property '%s' in definition '%s' must implement "
+              + "java.util.Collection or java.util.Map",
+          collectionClassName, propertyName, definitionName));
     }
   }
 
@@ -482,11 +531,14 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
    *          the name of the containing definition
    * @param propertyBindings
    *          the list of property bindings to process
+   * @throws BindingException
+   *           if the collection class is invalid or cannot be found
    */
   private static void processAssemblyPropertyBindings(
       @NonNull MetaschemaBindingConfiguration metaschemaConfig,
       @NonNull String definitionName,
-      @Nullable List<MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding> propertyBindings) {
+      @Nullable List<MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding> propertyBindings)
+      throws BindingException {
     processPropertyBindings(
         metaschemaConfig,
         definitionName,
@@ -505,11 +557,14 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
    *          the name of the containing definition
    * @param propertyBindings
    *          the list of property bindings to process
+   * @throws BindingException
+   *           if the collection class is invalid or cannot be found
    */
   private static void processFieldPropertyBindings(
       @NonNull MetaschemaBindingConfiguration metaschemaConfig,
       @NonNull String definitionName,
-      @Nullable List<MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding> propertyBindings) {
+      @Nullable List<MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding> propertyBindings)
+      throws BindingException {
     processPropertyBindings(
         metaschemaConfig,
         definitionName,

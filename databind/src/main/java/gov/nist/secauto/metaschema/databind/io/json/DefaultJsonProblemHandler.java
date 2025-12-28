@@ -29,6 +29,24 @@ public class DefaultJsonProblemHandler
     IGNORED_FIELD_NAMES.add(JSON_SCHEMA_FIELD_NAME);
   }
 
+  /**
+   * Construct a new problem handler with required field validation enabled.
+   */
+  public DefaultJsonProblemHandler() {
+    super();
+  }
+
+  /**
+   * Construct a new problem handler with the specified validation setting.
+   *
+   * @param validateRequiredFields
+   *          {@code true} to validate that required fields are present,
+   *          {@code false} to skip validation
+   */
+  public DefaultJsonProblemHandler(boolean validateRequiredFields) {
+    super(validateRequiredFields);
+  }
+
   @Override
   public boolean handleUnknownProperty(
       IBoundDefinitionModelComplex classBinding,

@@ -1,0 +1,8 @@
+{
+  "root": {
+    "required-flag": "value1",
+    "required-assembly": {
+      "id": "assembly-1"
+    }
+  }
+}

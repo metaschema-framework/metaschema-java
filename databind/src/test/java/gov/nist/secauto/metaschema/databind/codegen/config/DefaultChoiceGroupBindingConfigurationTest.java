@@ -16,6 +16,7 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.model.ModelType;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.io.BindingException;
 
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
@@ -53,7 +54,7 @@ class DefaultChoiceGroupBindingConfigurationTest {
   private DefaultBindingConfiguration bindingConfig;
 
   @BeforeEach
-  void setUp() throws IOException {
+  void setUp() throws IOException, BindingException {
     bindingConfig = new DefaultBindingConfiguration();
     bindingConfig.load(BINDING_CONFIG_FILE);
   }

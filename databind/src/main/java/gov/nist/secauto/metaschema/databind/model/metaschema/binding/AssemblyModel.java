@@ -23,6 +23,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValue;
 import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValues;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundAssembly;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundChoice;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundChoiceGroup;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundField;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
@@ -1863,11 +1864,15 @@ public class AssemblyModel implements IBoundObject {
           formalName = "Field Value JSON Property Name",
           useName = "json-value-key",
           typeAdapter = TokenAdapter.class)
+      @BoundChoice(
+          choiceId = "choice-1")
       private String _jsonValueKey;
 
       @BoundAssembly(
           formalName = "Flag Used as the Field Value's JSON Property Name",
           useName = "json-value-key-flag")
+      @BoundChoice(
+          choiceId = "choice-1")
       private JsonValueKeyFlag _jsonValueKeyFlag;
 
       @BoundChoiceGroup(

@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.databind.io;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -39,44 +40,44 @@ class MetaschemaModuleMetaschemaTest {
         .build();
   }
 
+  /**
+   * Deserialize content with required field validation disabled.
+   * <p>
+   * Required field validation is disabled because pre-generated binding classes
+   * don't preserve choice group information. See issue #594. TODO: Remove this
+   * workaround when #594 is implemented.
+   */
+  @NonNull
+  private static <T extends IBoundObject> T deserializeWithValidationDisabled(
+      @NonNull IBindingContext context,
+      @NonNull Format format,
+      @NonNull Class<T> clazz,
+      @NonNull Path path) throws IOException {
+    IDeserializer<T> deserializer = context.newDeserializer(format, clazz);
+    deserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+    return deserializer.deserialize(path);
+  }
+
   @Test
   void testReadMetaschemaAsXml() throws IOException {
     IBindingContext context = IBindingContext.newInstance();
 
-    METASCHEMA metaschema = context.newDeserializer(Format.XML, METASCHEMA.class).deserialize(METASCHEMA_FILE);
+    METASCHEMA metaschema = deserializeWithValidationDisabled(
+        context, Format.XML, METASCHEMA.class, METASCHEMA_FILE);
 
-    {
-      ISerializer<METASCHEMA> serializer = context.newSerializer(Format.XML, METASCHEMA.class);
-      serializer.serialize(metaschema, ObjectUtils.notNull(Paths.get("target/metaschema.xml")));
-    }
+    // Serialize to all formats
+    Path xmlPath = ObjectUtils.notNull(Paths.get("target/metaschema.xml"));
+    Path jsonPath = ObjectUtils.notNull(Paths.get("target/metaschema.json"));
+    Path yamlPath = ObjectUtils.notNull(Paths.get("target/metaschema.yaml"));
 
-    {
-      ISerializer<METASCHEMA> serializer = context.newSerializer(Format.JSON, METASCHEMA.class);
-      serializer.serialize(metaschema, ObjectUtils.notNull(Paths.get("target/metaschema.json")));
-    }
+    context.newSerializer(Format.XML, METASCHEMA.class).serialize(metaschema, xmlPath);
+    context.newSerializer(Format.JSON, METASCHEMA.class).serialize(metaschema, jsonPath);
+    context.newSerializer(Format.YAML, METASCHEMA.class).serialize(metaschema, yamlPath);
 
-    {
-      ISerializer<METASCHEMA> serializer = context.newSerializer(Format.YAML, METASCHEMA.class);
-      serializer.serialize(metaschema, ObjectUtils.notNull(Paths.get("target/metaschema.yaml")));
-    }
-
-    {
-      IDeserializer<METASCHEMA> deserializer = context.newDeserializer(Format.XML, METASCHEMA.class);
-      deserializer.deserialize(
-          ObjectUtils.notNull(Paths.get("target/metaschema.xml")));
-    }
-
-    {
-      IDeserializer<METASCHEMA> deserializer = context.newDeserializer(Format.JSON, METASCHEMA.class);
-      deserializer.deserialize(
-          ObjectUtils.notNull(Paths.get("target/metaschema.json")));
-    }
-
-    {
-      IDeserializer<METASCHEMA> deserializer = context.newDeserializer(Format.YAML, METASCHEMA.class);
-      deserializer.deserialize(
-          ObjectUtils.notNull(Paths.get("target/metaschema.yaml")));
-    }
+    // Round-trip: deserialize from all formats
+    deserializeWithValidationDisabled(context, Format.XML, METASCHEMA.class, xmlPath);
+    deserializeWithValidationDisabled(context, Format.JSON, METASCHEMA.class, jsonPath);
+    deserializeWithValidationDisabled(context, Format.YAML, METASCHEMA.class, yamlPath);
   }
 
   @Test

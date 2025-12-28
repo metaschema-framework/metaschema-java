@@ -103,12 +103,35 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
     return ObjectUtils.notNull(getJsonFactory().createParser(reader));
   }
 
+  /**
+   * Create a new JSON reader with the appropriate problem handler based on the
+   * current configuration.
+   *
+   * @param jsonParser
+   *          the JSON parser to use
+   * @param documentUri
+   *          the URI of the document being parsed
+   * @return the new reader
+   * @throws IOException
+   *           if an error occurred creating the reader
+   */
+  @NonNull
+  private MetaschemaJsonReader newMetaschemaJsonReader(
+      @NonNull JsonParser jsonParser,
+      @NonNull URI documentUri) throws IOException {
+    boolean validateRequired = isFeatureEnabled(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+    return new MetaschemaJsonReader(
+        jsonParser,
+        documentUri,
+        new DefaultJsonProblemHandler(validateRequired));
+  }
+
   @Override
   protected INodeItem deserializeToNodeItemInternal(@NonNull Reader reader, @NonNull URI documentUri)
       throws IOException {
     INodeItem retval;
     try (JsonParser jsonParser = newJsonParser(reader)) {
-      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser, documentUri);
+      MetaschemaJsonReader parser = newMetaschemaJsonReader(jsonParser, documentUri);
       IBoundDefinitionModelAssembly definition = getDefinition();
       IConfiguration<DeserializationFeature<?>> configuration = getConfiguration();
 
@@ -133,7 +156,7 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
   @Override
   public CLASS deserializeToValueInternal(@NonNull Reader reader, @NonNull URI documentUri) throws IOException {
     try (JsonParser jsonParser = newJsonParser(reader)) {
-      MetaschemaJsonReader parser = new MetaschemaJsonReader(jsonParser, documentUri);
+      MetaschemaJsonReader parser = newMetaschemaJsonReader(jsonParser, documentUri);
       IBoundDefinitionModelAssembly definition = getDefinition();
       IConfiguration<DeserializationFeature<?>> configuration = getConfiguration();
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+  <schema-name>Grandchild Metaschema</schema-name>
+  <schema-version>1.0</schema-version>
+  <short-name>grandchild</short-name>
+  <namespace>http://csrc.nist.gov/ns/metaschema/testing/recursive-imports</namespace>
+  <json-base-uri>http://csrc.nist.gov/ns/metaschema/testing/recursive-imports</json-base-uri>
+
+  <define-assembly name="grandchild-assembly">
+    <formal-name>Grandchild Assembly</formal-name>
+    <description>Assembly defined in grandchild module</description>
+    <root-name>grandchild-root</root-name>
+    <model/>
+  </define-assembly>
+</METASCHEMA>

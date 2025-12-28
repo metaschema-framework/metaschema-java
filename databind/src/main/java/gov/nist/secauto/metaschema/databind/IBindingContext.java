@@ -447,6 +447,8 @@ public interface IBindingContext {
       @Nullable IConfiguration<ValidationFeature<?>> config) {
     IBoundLoader loader = newBoundLoader();
     loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
+    // Disable required field validation since schema validation handles this
+    loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
     DynamicContext context = new DynamicContext();
     context.setDocumentLoader(loader);
@@ -570,6 +572,8 @@ public interface IBindingContext {
       throws IOException, ConstraintValidationException {
     IBoundLoader loader = newBoundLoader();
     loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
+    // Disable required field validation since schema validation handles this
+    loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
     IDocumentNodeItem nodeItem = loader.loadAsNodeItem(target);
 
     return validate(nodeItem, loader, config);

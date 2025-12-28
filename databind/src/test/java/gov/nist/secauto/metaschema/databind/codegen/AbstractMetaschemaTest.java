@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;
+import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IDeserializer;
 
@@ -64,7 +65,7 @@ public abstract class AbstractMetaschemaTest {
       @Nullable Path bindingFile,
       @NonNull String rootClassName,
       @NonNull Path classDir)
-      throws IOException, ClassNotFoundException, MetaschemaException {
+      throws IOException, ClassNotFoundException, MetaschemaException, BindingException {
     IModule module = newBindingContext().loadMetaschema(moduleFile);
 
     DefaultBindingConfiguration bindingConfiguration = new DefaultBindingConfiguration();
@@ -109,7 +110,7 @@ public abstract class AbstractMetaschemaTest {
   }
 
   public void runTests(@NonNull String testPath, @NonNull String rootClassName, @NonNull Path classDir)
-      throws ClassNotFoundException, IOException, MetaschemaException {
+      throws ClassNotFoundException, IOException, MetaschemaException, BindingException {
     runTests(testPath, rootClassName, classDir, null);
   }
 
@@ -118,7 +119,7 @@ public abstract class AbstractMetaschemaTest {
       @NonNull String rootClassName,
       @NonNull Path classDir,
       java.util.function.Consumer<Object> assertions)
-      throws ClassNotFoundException, IOException, MetaschemaException {
+      throws ClassNotFoundException, IOException, MetaschemaException, BindingException {
     runTests(
         ObjectUtils.notNull(Paths.get(String.format("src/test/resources/metaschema/%s/metaschema.xml", testPath))),
         ObjectUtils.notNull(Paths.get(String.format("src/test/resources/metaschema/%s/binding.xml", testPath))),
@@ -135,7 +136,7 @@ public abstract class AbstractMetaschemaTest {
       @NonNull String rootClassName,
       @NonNull Path classDir,
       java.util.function.Consumer<Object> assertions)
-      throws ClassNotFoundException, IOException, MetaschemaException {
+      throws ClassNotFoundException, IOException, MetaschemaException, BindingException {
 
     Class<? extends IBoundObject> rootClass = compileModule(
         metaschemaPath,

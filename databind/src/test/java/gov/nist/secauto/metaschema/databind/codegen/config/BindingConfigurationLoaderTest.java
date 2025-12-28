@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.io.BindingException;
 
 import org.junit.jupiter.api.Test;
 
@@ -53,7 +54,7 @@ class BindingConfigurationLoaderTest {
   }
 
   @Test
-  void test() throws MalformedURLException, IOException {
+  void testLoadOscalBindingConfiguration() throws MalformedURLException, IOException, BindingException {
     File configFile = new File("src/main/metaschema-bindings/oscal-metaschema-bindings.xml");
     DefaultBindingConfiguration config = new DefaultBindingConfiguration();
     config.load(configFile);
