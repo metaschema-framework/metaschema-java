@@ -10,6 +10,7 @@ import java.util.Deque;
 import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * A lightweight utility for tracking the current path during parsing.
@@ -53,6 +54,7 @@ public class PathTracker {
    *
    * @return the removed segment, or null if the path was empty
    */
+  @Nullable
   public String pop() {
     return segments.poll();
   }

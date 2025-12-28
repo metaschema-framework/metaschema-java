@@ -31,6 +31,7 @@ import javax.xml.stream.XMLResolver;
 import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
@@ -154,7 +155,7 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
   }
 
   @Override
-  public final CLASS deserializeToValueInternal(Reader reader, URI resource) throws IOException {
+  public final CLASS deserializeToValueInternal(Reader reader, @Nullable URI resource) throws IOException {
     // Handle null URI gracefully - use a synthetic URI for parsing
     URI effectiveResource = resource != null ? resource : UNKNOWN_SOURCE;
 
