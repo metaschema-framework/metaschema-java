@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+  <schema-name>Parent Metaschema</schema-name>
+  <schema-version>1.0</schema-version>
+  <short-name>parent</short-name>
+  <namespace>http://csrc.nist.gov/ns/metaschema/testing/recursive-imports</namespace>
+  <json-base-uri>http://csrc.nist.gov/ns/metaschema/testing/recursive-imports</json-base-uri>
+
+  <import href="child-a.xml"/>
+  <import href="child-b.xml"/>
+
+  <define-assembly name="parent-root">
+    <formal-name>Parent Root</formal-name>
+    <description>Root assembly in parent module</description>
+    <root-name>parent-root</root-name>
+    <model>
+      <assembly ref="child-a-assembly"/>
+      <assembly ref="child-b-assembly"/>
+    </model>
+  </define-assembly>
+</METASCHEMA>

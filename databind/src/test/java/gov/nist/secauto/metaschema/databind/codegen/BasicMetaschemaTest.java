@@ -27,14 +27,11 @@ import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
@@ -186,12 +183,13 @@ class BasicMetaschemaTest
   }
 
   @Test
-  @Timeout(value = 180, unit = TimeUnit.SECONDS) // Network-dependent test needs extended timeout
   void testExistsWithVariable() throws IOException, MetaschemaException {
     IBindingContext bindingContext = newBindingContext();
 
-    IBindingMetaschemaModule module = bindingContext.loadMetaschema(
-        new URL("https://raw.githubusercontent.com/usnistgov/OSCAL/main/src/metaschema/oscal_complete_metaschema.xml"));
+    // Use local test resources instead of remote OSCAL metaschema to avoid network
+    // flakiness
+    IBindingMetaschemaModule module = bindingContext.loadMetaschema(ObjectUtils.notNull(
+        Paths.get("src/test/resources/metaschema/recursive-imports/parent.xml")));
 
     IDocumentNodeItem moduleItem = ObjectUtils.requireNonNull(module.getSourceNodeItem());
     // METASCHEMA moduleData =
