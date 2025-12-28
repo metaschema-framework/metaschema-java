@@ -436,3 +436,5 @@ mvn -pl metaschema-testing test
 | #572 | Interface patterns + collection class override | PR 2, PR 3 |
 | #573 | Bootstrap standardization | PR 3 |
 | #575 | Consolidated improvements | ✅ PR 1 |
+| #594 | Choice instance support for annotation-based bindings | PR 5 |
+| #595 | Format-appropriate names in validation error messages | Future |
