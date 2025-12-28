@@ -5,6 +5,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Build Commands
 
 ```bash
+# Initialize submodules (required before first build, or in new worktrees)
+git submodule update --init --recursive
+
 # Build and install all modules
 mvn install
 
@@ -296,6 +299,7 @@ PRDs are stored in `PRDs/<YYYYMMDD>-<name>/` with:
 
 | PRD | Description | Completed |
 |-----|-------------|-----------|
+| `PRDs/20251228-validation-errors/` | Validation error message improvements (#595, #596, #205) | 2025-12-28 |
 | `PRDs/20251224-codegen-quality/` | Code generator Javadoc and quality improvements | 2025-12-28 |
 | `PRDs/20251217-cli-processor-refactor/` | CLI processor refactoring (issue #252) | 2025-12-21 |
 | `PRDs/20251217-context-functions/` | Complete Metapath context functions (issue #162) | 2025-12-17 |
