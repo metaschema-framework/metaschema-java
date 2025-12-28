@@ -29,7 +29,6 @@ import gov.nist.secauto.metaschema.core.util.IVersionInfo;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.IBindingContext.ISchemaValidationProvider;
-import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 import gov.nist.secauto.metaschema.modules.sarif.SarifValidationHandler;
@@ -244,10 +243,6 @@ public abstract class AbstractValidateContentCommand
 
       IBindingContext bindingContext = getBindingContext(constraintSets);
       IBoundLoader loader = bindingContext.newBoundLoader();
-      // Disable required field validation because pre-generated binding classes
-      // don't preserve choice group information. See issue #594.
-      // TODO: Remove this workaround when #594 is implemented.
-      loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
       Format asFormat = MetaschemaCommands.determineSourceFormat(
           cmdLine,
           MetaschemaCommands.AS_FORMAT_OPTION,

@@ -156,21 +156,26 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
   }
 
   /**
-   * Check if a choice is satisfied (at least one option was provided).
+   * Check if a choice is satisfied.
    * <p>
-   * Note: This method assumes the choice has at least one named model instance,
-   * which is guaranteed by valid Metaschema definitions.
+   * A choice is satisfied if:
+   * <ul>
+   * <li>At least one alternative was provided, OR</li>
+   * <li>The choice is optional (minOccurs = 0) and no alternative is required
+   * </li>
+   * </ul>
    *
    * @param choice
    *          the choice to check
    * @param unhandledNames
    *          the set of instance names that were NOT provided
-   * @return {@code true} if at least one option in the choice was provided,
-   *         {@code false} if all options are missing
+   * @return {@code true} if the choice requirements are satisfied, {@code false}
+   *         if a required alternative is missing
    */
   private static boolean isChoiceSatisfied(
       @NonNull IChoiceInstance choice,
       @NonNull Set<String> unhandledNames) {
+    // Check if any alternative was provided
     for (INamedModelInstanceAbsolute modelInstance : choice.getNamedModelInstances()) {
       String name = modelInstance.getJsonName();
       if (!unhandledNames.contains(name)) {
@@ -178,8 +183,10 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
         return true;
       }
     }
-    // All siblings are in the unhandled list - choice is not satisfied
-    return false;
+
+    // All siblings are in the unhandled list - check if choice is optional
+    // If choice.getMinOccurs() == 0, having no selection is valid
+    return choice.getMinOccurs() == 0;
   }
 
   /**

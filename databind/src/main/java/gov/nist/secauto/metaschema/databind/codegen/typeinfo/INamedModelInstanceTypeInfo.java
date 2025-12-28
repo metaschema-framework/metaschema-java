@@ -13,10 +13,22 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface INamedModelInstanceTypeInfo extends IModelInstanceTypeInfo {
   @Override
   INamedModelInstanceAbsolute getInstance();
+
+  /**
+   * Set the choice ID for this instance.
+   * <p>
+   * This should be called when the instance is part of a Metaschema choice to
+   * associate it with its choice group.
+   *
+   * @param choiceId
+   *          the choice ID to set, or {@code null} to clear it
+   */
+  void setChoiceId(@Nullable String choiceId);
 
   /**
    * Generate annotation values that are common to all named model instances.

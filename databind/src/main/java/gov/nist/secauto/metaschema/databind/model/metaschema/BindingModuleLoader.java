@@ -62,14 +62,7 @@ public class BindingModuleLoader
   public BindingModuleLoader(
       @NonNull IBindingContext bindingContext,
       @NonNull ModuleLoadingPostProcessor postProcessor) {
-    this.loader = Lazy.of(() -> {
-      IBoundLoader boundLoader = bindingContext.newBoundLoader();
-      // Disable required field validation because pre-generated binding classes
-      // (METASCHEMA) don't preserve choice group information. See issue #594.
-      // TODO: Remove this workaround when #594 is implemented.
-      boundLoader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
-      return boundLoader;
-    });
+    this.loader = Lazy.of(() -> bindingContext.newBoundLoader());
     this.postProcessor = postProcessor;
   }
 

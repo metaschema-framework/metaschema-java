@@ -16,6 +16,7 @@ import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.IInstanceTypeInfo;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.IModelInstanceTypeInfo;
+import gov.nist.secauto.metaschema.databind.codegen.typeinfo.INamedModelInstanceTypeInfo;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.IPropertyTypeInfo;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.ITypeResolver;
 
@@ -40,6 +41,8 @@ class AssemblyDefinitionTypeInfoImpl
   private final Lazy<Map<String, IPropertyTypeInfo>> propertyNameToTypeInfoMap;
   @NonNull
   private final Lazy<Map<IInstance, IInstanceTypeInfo>> instanceToTypeInfoMap;
+
+  private int choiceCounter;
 
   public AssemblyDefinitionTypeInfoImpl(@NonNull IAssemblyDefinition definition, @NonNull ITypeResolver typeResolver) {
     super(definition, typeResolver);
@@ -76,6 +79,23 @@ class AssemblyDefinitionTypeInfoImpl
 
   private Stream<? extends IModelInstanceTypeInfo> processModel(
       @NonNull IContainerModelAbsolute model) {
+    return processModel(model, null);
+  }
+
+  /**
+   * Process a model container, optionally associating named instances with a
+   * choice ID.
+   *
+   * @param model
+   *          the model to process
+   * @param choiceId
+   *          the choice ID to associate with named instances, or {@code null}
+   * @return a stream of model instance type info objects
+   */
+  @NonNull
+  private Stream<? extends IModelInstanceTypeInfo> processModel(
+      @NonNull IContainerModelAbsolute model,
+      @edu.umd.cs.findbugs.annotations.Nullable String choiceId) {
     Stream<IModelInstanceTypeInfo> modelInstances = Stream.empty();
     // create model instances for the model
     for (IModelInstanceAbsolute instance : model.getModelInstances()) {
@@ -86,14 +106,24 @@ class AssemblyDefinitionTypeInfoImpl
             modelInstances,
             Stream.of(getTypeResolver().getTypeInfo((IChoiceGroupInstance) instance, this)));
       } else if (instance instanceof IChoiceInstance) {
+        // Generate a unique choice ID for this choice instance
+        String newChoiceId = "choice-" + (++choiceCounter);
         modelInstances = Stream.concat(
             modelInstances,
-            processModel((IChoiceInstance) instance));
+            processModel((IChoiceInstance) instance, newChoiceId));
       } else if (instance instanceof INamedModelInstanceAbsolute) {
         // else the instance is an object model instance with a name
+        INamedModelInstanceTypeInfo typeInfo = getTypeResolver()
+            .getTypeInfo((INamedModelInstanceAbsolute) instance, this);
+
+        // Set the choice ID if this instance is part of a choice
+        if (choiceId != null) {
+          typeInfo.setChoiceId(choiceId);
+        }
+
         modelInstances = Stream.concat(
             modelInstances,
-            Stream.of(getTypeResolver().getTypeInfo((INamedModelInstanceAbsolute) instance, this)));
+            Stream.of(typeInfo));
       }
     }
     return modelInstances;

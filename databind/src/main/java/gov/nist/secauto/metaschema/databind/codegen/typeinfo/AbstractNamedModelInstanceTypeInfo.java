@@ -23,6 +23,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.codegen.ClassUtils;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IModelDefinitionTypeInfo;
+import gov.nist.secauto.metaschema.databind.model.annotations.BoundChoice;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -32,14 +33,42 @@ import java.util.Set;
 import javax.lang.model.element.Modifier;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 abstract class AbstractNamedModelInstanceTypeInfo<INSTANCE extends INamedModelInstanceAbsolute>
     extends AbstractModelInstanceTypeInfo<INSTANCE>
     implements INamedModelInstanceTypeInfo {
+
+  @Nullable
+  private String choiceId;
+
   public AbstractNamedModelInstanceTypeInfo(
       @NonNull INSTANCE instance,
       @NonNull IAssemblyDefinitionTypeInfo parentDefinition) {
     super(instance, parentDefinition);
+  }
+
+  /**
+   * Get the choice ID if this instance is part of a choice.
+   *
+   * @return the choice ID, or {@code null} if not part of a choice
+   */
+  @Nullable
+  public String getChoiceId() {
+    return choiceId;
+  }
+
+  /**
+   * Set the choice ID for this instance.
+   * <p>
+   * This should be called when the instance is part of a Metaschema choice to
+   * associate it with its choice group.
+   *
+   * @param choiceId
+   *          the choice ID to set
+   */
+  public void setChoiceId(@Nullable String choiceId) {
+    this.choiceId = choiceId;
   }
 
   @Override
@@ -85,6 +114,14 @@ abstract class AbstractNamedModelInstanceTypeInfo<INSTANCE extends INamedModelIn
       TypeSpec.Builder typeBuilder,
       FieldSpec.Builder fieldBuilder) {
     Set<IModelDefinition> retval = super.buildField(typeBuilder, fieldBuilder);
+
+    // Add @BoundChoice annotation if this instance is part of a choice
+    String choiceIdValue = getChoiceId();
+    if (choiceIdValue != null) {
+      AnnotationSpec.Builder choiceAnnotation = AnnotationSpec.builder(BoundChoice.class);
+      choiceAnnotation.addMember("choiceId", "$S", choiceIdValue);
+      fieldBuilder.addAnnotation(choiceAnnotation.build());
+    }
 
     IModelDefinition definition = getInstance().getDefinition();
     if (definition.isInline() && (definition.hasChildren() || definition instanceof IAssemblyDefinition)) {

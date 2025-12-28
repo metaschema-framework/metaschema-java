@@ -15,7 +15,6 @@ import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.util.AutoCloser;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 
@@ -129,10 +128,6 @@ public abstract class AbstractConvertSubcommand
       try {
         IBindingContext bindingContext = getBindingContext();
         IBoundLoader loader = bindingContext.newBoundLoader();
-        // Disable required field validation because pre-generated binding classes
-        // don't preserve choice group information. See issue #594.
-        // TODO: Remove this workaround when #594 is implemented.
-        loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
         if (LOGGER.isInfoEnabled()) {
           LOGGER.info("Converting '{}'.", source);
         }

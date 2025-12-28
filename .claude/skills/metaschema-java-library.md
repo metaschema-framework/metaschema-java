@@ -37,6 +37,76 @@ metaschema-framework (parent)
 | `gov.nist.secauto.metaschema.core.model.constraint` | Constraint validation |
 | `gov.nist.secauto.metaschema.databind` | Data binding context |
 | `gov.nist.secauto.metaschema.databind.io` | Serialization/deserialization |
+| `gov.nist.secauto.metaschema.databind.model.annotations` | Binding annotations (`@BoundField`, `@BoundChoice`, etc.) |
+| `gov.nist.secauto.metaschema.databind.codegen` | Code generation from Metaschema modules |
+
+## Annotation-Based Binding Model
+
+The databind module provides annotation-based bindings that map Java classes to Metaschema definitions.
+
+### Core Binding Annotations
+
+| Annotation | Purpose |
+|------------|---------|
+| `@MetaschemaAssembly` | Marks a class as a bound assembly definition |
+| `@MetaschemaField` | Marks a class as a bound field definition |
+| `@BoundAssembly` | Marks a field as a bound assembly instance |
+| `@BoundField` | Marks a field as a bound field instance |
+| `@BoundFlag` | Marks a field as a bound flag instance |
+| `@BoundChoice` | Marks a field as part of a mutually exclusive choice |
+| `@BoundChoiceGroup` | Marks a field as a polymorphic collection with discriminator |
+
+### Choice Support
+
+**Choice (`@BoundChoice`)**: Mutually exclusive alternatives at the same position in the model.
+
+```java
+@MetaschemaAssembly(name = "my-assembly", moduleClass = MyModule.class)
+public class MyAssembly implements IBoundObject {
+  @BoundField(useName = "option-a")
+  @BoundChoice(choiceId = "choice-1")
+  private String optionA;
+
+  @BoundField(useName = "option-b")
+  @BoundChoice(choiceId = "choice-1")
+  private String optionB;
+}
+```
+
+**Adjacency requirement**: All fields with the same `choiceId` must be declared consecutively.
+
+**Choice Groups (`@BoundChoiceGroup`)**: Polymorphic collections with type discriminators.
+
+```java
+@BoundChoiceGroup(
+    maxOccurs = -1,
+    assemblies = {
+        @BoundGroupedAssembly(useName = "child-a", binding = ChildA.class),
+        @BoundGroupedAssembly(useName = "child-b", binding = ChildB.class)
+    },
+    groupAs = @GroupAs(name = "children", inJson = JsonGroupAsBehavior.LIST))
+private List<Object> children;
+```
+
+### Choice Instance Interface
+
+The `IChoiceInstance` interface represents a choice in the model:
+
+```java
+IChoiceInstance choice = ...;
+
+// Check cardinality
+int minOccurs = choice.getMinOccurs();  // 0 = optional, ≥1 = required
+int maxOccurs = choice.getMaxOccurs();  // -1 = unbounded
+
+// Get alternatives
+Collection<INamedModelInstanceAbsolute> alternatives = choice.getNamedModelInstances();
+
+// Get parent
+IAssemblyDefinition parent = choice.getContainingDefinition();
+```
+
+For annotation-based bindings, choices are optional by default (`minOccurs = 0`).
 
 ## Loading Metaschema Modules
 
@@ -107,6 +177,86 @@ DynamicContext dynamicContext = new DynamicContext(staticContext);
 dynamicContext.setDocumentLoader(loader);
 ```
 
+## Binding Configuration (Code Generation)
+
+Binding configuration files customize how Java classes are generated from Metaschema modules.
+
+### Configuration File Location
+
+Binding configurations are XML files in `{module}/src/main/metaschema-bindings/`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<metaschema-bindings xmlns="https://csrc.nist.gov/ns/metaschema-binding/1.0">
+  <metaschema-binding href="../metaschema/my-module.yaml">
+    <define-assembly-binding name="my-assembly">
+      <java>
+        <use-class-name>MyCustomClassName</use-class-name>
+        <implement-interface>com.example.MyInterface</implement-interface>
+        <extend-base-class>com.example.BaseClass</extend-base-class>
+      </java>
+    </define-assembly-binding>
+  </metaschema-binding>
+</metaschema-bindings>
+```
+
+### Configuration Options
+
+| Element | Purpose |
+|---------|---------|
+| `use-class-name` | Override generated class name |
+| `implement-interface` | Add interface to implements clause (repeatable) |
+| `extend-base-class` | Set base class for generated class |
+| `collection-class` | Override default collection type (e.g., `java.util.LinkedList`) |
+
+### Typed Choice Group Collections
+
+By default, choice group fields use `List<Object>`. Use binding configuration to specify a common interface:
+
+```xml
+<define-assembly-binding name="parent-assembly">
+  <choice-group-binding name="children">
+    <item-type use-wildcard="true">com.example.IChildItem</item-type>
+  </choice-group-binding>
+</define-assembly-binding>
+```
+
+This generates:
+
+```java
+// With use-wildcard="true" (default)
+private List<? extends IChildItem> children;
+
+// With use-wildcard="false"
+private List<IChildItem> children;
+```
+
+### Property-Level Collection Override
+
+Override collection type for specific properties:
+
+```xml
+<define-assembly-binding name="my-assembly">
+  <property-binding name="items">
+    <java>
+      <collection-class>java.util.LinkedHashSet</collection-class>
+    </java>
+  </property-binding>
+</define-assembly-binding>
+```
+
+### Targeting Inline Definitions
+
+Use `target` attribute with Metapath expressions to configure inline definitions:
+
+```xml
+<define-assembly-binding target="//define-assembly[@name='inline-def']">
+  <java>
+    <implement-interface>com.example.InlineInterface</implement-interface>
+  </java>
+</define-assembly-binding>
+```
+
 ## Serialization and Deserialization
 
 ### Deserializing Content
@@ -144,6 +294,38 @@ serializer.serialize(object, outputStream);
 | `Format.XML` | XML serialization |
 | `Format.JSON` | JSON serialization |
 | `Format.YAML` | YAML serialization |
+
+### Deserialization Features
+
+Control deserialization behavior with `DeserializationFeature`:
+
+```java
+IDeserializer<MyClass> deserializer = bindingContext.newDeserializer(Format.JSON, MyClass.class);
+
+// Enable/disable features
+deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+deserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+```
+
+| Feature | Default | Description |
+|---------|---------|-------------|
+| `DESERIALIZE_VALIDATE_REQUIRED_FIELDS` | enabled | Validate that required fields (`minOccurs >= 1`) are present |
+| `DESERIALIZE_XML_ALLOW_ENTITY_RESOLUTION` | disabled | Allow XML entity resolution (security consideration) |
+
+### Required Field Validation
+
+When `DESERIALIZE_VALIDATE_REQUIRED_FIELDS` is enabled:
+
+- Fields with `minOccurs >= 1` must be provided in the input
+- Default values are applied for missing optional fields
+- Choice groups are validated correctly:
+  - If any alternative is provided, the choice is satisfied
+  - If no alternative is provided, `minOccurs` on the choice determines validity
+
+```java
+// Throws IOException if required fields are missing
+MyClass obj = deserializer.deserialize(inputStream);
+```
 
 ## Constraint Validation
 
@@ -424,6 +606,45 @@ void testWithDocument() {
   // assertions
 }
 ```
+
+## Generated Code Quality
+
+### Null-Safety Annotations
+
+Generated binding classes include SpotBugs null-safety annotations:
+
+```java
+// Field annotations
+@Nullable
+private String optionalField;
+
+@NonNull
+private String requiredField;
+
+// Getter annotations
+@Nullable
+public String getOptionalField() { ... }
+
+@NonNull
+public String getRequiredField() { ... }
+
+// Setter annotations
+public void setRequiredField(@NonNull String value) { ... }
+```
+
+**Rules for generated code:**
+- Fields with `minOccurs = 0` → `@Nullable`
+- Fields with `minOccurs >= 1` → `@NonNull`
+- Getters follow field nullability
+- Required field setters have `@NonNull` parameters
+
+### Javadoc Generation
+
+Generated classes include comprehensive Javadoc:
+
+- Class-level documentation describes the Metaschema definition
+- Field documentation includes formal name and description
+- Getter/setter methods reference the underlying property
 
 ## References
 
