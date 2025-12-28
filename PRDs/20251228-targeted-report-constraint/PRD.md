@@ -125,7 +125,7 @@ Update the validation system to:
 - Call report constraint validation at appropriate points
 - Generate findings when report test expressions evaluate to TRUE
 - Default level is INFORMATIONAL (unlike expect's default of ERROR)
-- Map Kind based on severity: ERROR/CRITICAL → FAIL, WARNING → PASS, others → INFORMATIONAL
+- Map Kind based on severity: ERROR/CRITICAL → FAIL, all other levels → INFORMATIONAL
 
 #### FR-5: Visitor Pattern Support
 Update `IConstraintVisitor` to:
