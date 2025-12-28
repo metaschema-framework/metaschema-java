@@ -5,10 +5,10 @@
 | Field | Value |
 |-------|-------|
 | **PRD ID** | CODEGEN-001 |
-| **Status** | In Progress |
+| **Status** | Completed |
 | **Author** | David Waltermire |
 | **Created** | 2025-12-24 |
-| **Last Updated** | 2025-12-25 |
+| **Last Updated** | 2025-12-28 |
 
 ---
 
@@ -141,17 +141,36 @@ Fix the code generator to produce complete Javadoc and null-safety annotations, 
 
 **Status:** Completed - [PR #577](https://github.com/metaschema-framework/metaschema-java/pull/577)
 
-### PR 2: Collection Class Override Support
+### PR 2: Collection Class Override Support ✅
 Extend the binding configuration to support overriding default collection implementation classes. This addresses issue #572 (partial).
 
 Key changes:
 - Add `<collection-class>` element to binding configuration schema
 - Parse collection class override in `DefaultBindingConfiguration`
 - Pass override to `getCollectionImplementationClass()` in type info classes
-- Validate type compatibility (List implementations vs Map implementations)
 
-### PR 3: Databind Bootstrap and Regeneration
+**Status:** Completed - [PR #584](https://github.com/metaschema-framework/metaschema-java/pull/584)
+
+### PR 3: Databind Bootstrap and Regeneration ✅
 Create databind bootstrap POM and documentation. Regenerate databind binding classes using the improved generator. This addresses issues #572 (remaining) and #573.
+
+**Status:** Completed - Combined with PR 2 in [PR #584](https://github.com/metaschema-framework/metaschema-java/pull/584)
+
+### PR 4: Parser Required Field Validation ✅
+Add validation during parsing to emit meaningful errors when required fields are missing, and validate type compatibility for collection class overrides.
+
+Key changes:
+- Parser validates required fields are present during deserialization
+- Missing required field produces clear error with field name and location
+- Collection class override validates type compatibility (Collection/Map)
+- Choice group support - only error if ALL options in choice are missing
+
+**Status:** Completed - [PR #593](https://github.com/metaschema-framework/metaschema-java/pull/593)
+
+### PR 5: Choice Instance Support for Bindings ✅
+Add full choice instance support to annotation-based bindings, enabling required field validation to work correctly for dynamically compiled modules.
+
+**Status:** Completed - Addressed by [PR #593](https://github.com/metaschema-framework/metaschema-java/pull/593) using typed collections approach
 
 See [Implementation Plan](./implementation-plan.md) for detailed breakdown.
 
@@ -167,13 +186,16 @@ See [Implementation Plan](./implementation-plan.md) for detailed breakdown.
 
 ### 5.2 Verification Checklist
 
-- [ ] Generated Javadoc contains no extraneous quotes
-- [ ] Constructor Javadoc includes all required tags
-- [ ] Accessor Javadoc includes `@param` and `@return` tags
-- [ ] Null-safety annotations are present on all applicable elements
-- [ ] `mvn checkstyle:check` passes on generated code
-- [ ] Regenerated databind classes compile and tests pass
-- [ ] Bootstrap documentation is complete and accurate
+- [x] Generated Javadoc contains no extraneous quotes
+- [x] Constructor Javadoc includes all required tags
+- [x] Accessor Javadoc includes `@param` and `@return` tags
+- [x] Null-safety annotations are present on all applicable elements
+- [x] `mvn checkstyle:check` passes on generated code
+- [x] Regenerated databind classes compile and tests pass
+- [x] Bootstrap documentation is complete and accurate
+- [x] Required field validation at parse time
+- [x] Collection class type compatibility validation
+- [x] Choice instance support for annotation-based bindings (PR 5)
 
 ---
 
