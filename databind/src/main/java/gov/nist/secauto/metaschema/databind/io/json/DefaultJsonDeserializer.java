@@ -34,11 +34,6 @@ import nl.talsmasoftware.lazy4j.Lazy;
  */
 public class DefaultJsonDeserializer<CLASS extends IBoundObject>
     extends AbstractDeserializer<CLASS> {
-  /**
-   * A synthetic URI used as a fallback when the document URI is null. This allows
-   * parsing to proceed with location tracking even when the source is unknown.
-   */
-  private static final URI UNKNOWN_SOURCE = URI.create("unknown:source");
   private Lazy<JsonFactory> factory;
 
   /**
@@ -134,12 +129,9 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
   @Override
   protected INodeItem deserializeToNodeItemInternal(@NonNull Reader reader, @NonNull URI documentUri)
       throws IOException {
-    // Handle null URI gracefully - use a synthetic URI for parsing
-    URI effectiveUri = documentUri != null ? documentUri : UNKNOWN_SOURCE;
-
     INodeItem retval;
     try (JsonParser jsonParser = newJsonParser(reader)) {
-      MetaschemaJsonReader parser = newMetaschemaJsonReader(jsonParser, effectiveUri);
+      MetaschemaJsonReader parser = newMetaschemaJsonReader(jsonParser, documentUri);
       IBoundDefinitionModelAssembly definition = getDefinition();
       IConfiguration<DeserializationFeature<?>> configuration = getConfiguration();
 
@@ -150,12 +142,12 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
             definition,
             ObjectUtils.notNull(definition.getRootJsonName())));
 
-        retval = INodeItemFactory.instance().newDocumentNodeItem(definition, effectiveUri, value);
+        retval = INodeItemFactory.instance().newDocumentNodeItem(definition, documentUri, value);
       } else {
         // read the top-level definition
         CLASS value = ObjectUtils.asType(parser.readObject(definition));
 
-        retval = INodeItemFactory.instance().newAssemblyNodeItem(definition, effectiveUri, value);
+        retval = INodeItemFactory.instance().newAssemblyNodeItem(definition, documentUri, value);
       }
       return retval;
     }
@@ -163,11 +155,8 @@ public class DefaultJsonDeserializer<CLASS extends IBoundObject>
 
   @Override
   public CLASS deserializeToValueInternal(@NonNull Reader reader, @NonNull URI documentUri) throws IOException {
-    // Handle null URI gracefully - use a synthetic URI for parsing
-    URI effectiveUri = documentUri != null ? documentUri : UNKNOWN_SOURCE;
-
     try (JsonParser jsonParser = newJsonParser(reader)) {
-      MetaschemaJsonReader parser = newMetaschemaJsonReader(jsonParser, effectiveUri);
+      MetaschemaJsonReader parser = newMetaschemaJsonReader(jsonParser, documentUri);
       IBoundDefinitionModelAssembly definition = getDefinition();
       IConfiguration<DeserializationFeature<?>> configuration = getConfiguration();
 

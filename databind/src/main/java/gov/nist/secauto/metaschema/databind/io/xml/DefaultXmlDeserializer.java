@@ -31,7 +31,6 @@ import javax.xml.stream.XMLResolver;
 import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;
 
@@ -133,13 +132,6 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
     return ObjectUtils.notNull(factory.get());
   }
 
-  /**
-   * A synthetic URI used as a fallback when the actual resource URI is null. This
-   * ensures location reporting can proceed even when the document source is
-   * unknown.
-   */
-  private static final URI UNKNOWN_SOURCE = URI.create("unknown:source");
-
   @NonNull
   private XMLEventReader2 newXMLEventReader2(
       @NonNull URI documentUri,
@@ -155,27 +147,16 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
 
   @Override
   protected final IDocumentNodeItem deserializeToNodeItemInternal(Reader reader, URI documentUri) throws IOException {
-    // Handle null URI gracefully - use a synthetic URI for node item creation
-    URI effectiveUri = documentUri != null ? documentUri : UNKNOWN_SOURCE;
     Object value = deserializeToValueInternal(reader, documentUri);
-    return INodeItemFactory.instance().newDocumentNodeItem(rootDefinition, effectiveUri, value);
+    return INodeItemFactory.instance().newDocumentNodeItem(rootDefinition, documentUri, value);
   }
 
-  /**
-   * {@inheritDoc}
-   * <p>
-   * This implementation accepts a {@code null} resource URI and substitutes a
-   * synthetic URI for location reporting purposes.
-   */
   @Override
-  public final CLASS deserializeToValueInternal(Reader reader, @Nullable URI resource) throws IOException {
-    // Handle null URI gracefully - use a synthetic URI for parsing
-    URI effectiveResource = resource != null ? resource : UNKNOWN_SOURCE;
-
+  public final CLASS deserializeToValueInternal(Reader reader, URI resource) throws IOException {
     // doesn't auto close the underlying reader
     try (AutoCloser<XMLEventReader2, XMLStreamException> closer = AutoCloser.autoClose(
-        newXMLEventReader2(effectiveResource, reader), XMLEventReader::close)) {
-      return parseXmlInternal(closer.getResource(), effectiveResource);
+        newXMLEventReader2(resource, reader), XMLEventReader::close)) {
+      return parseXmlInternal(closer.getResource(), resource);
     } catch (XMLStreamException ex) {
       throw new IOException("Unable to create a new XMLEventReader2 instance.", ex);
     }

@@ -360,6 +360,7 @@ class ValidationErrorMessageTest
 
     @Test
     void testErrorWithoutSourceUri() throws IOException {
+      // Test that error messages are still useful even with a generic/unknown URI
       String xml = "<root xmlns='http://csrc.nist.gov/ns/metaschema/testing/validation-errors'>"
           + "<required-field>value</required-field>"
           + "<required-assembly id='a1'/>"
@@ -369,14 +370,14 @@ class ValidationErrorMessageTest
       IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
-      // Parse without URI - should still work and not throw NPE
+      // Use a generic URI - error messages should still be informative
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), null);
+        deserializer.deserialize(new StringReader(xml), URI.create("unknown:source"));
       });
 
       String message = exception.getMessage();
       assertNotNull(message, "Exception message should not be null");
-      // Should still have useful error message even without URI
+      // Should still have useful error message
       assertTrue(message.toLowerCase().contains("required") || message.toLowerCase().contains("missing"),
           "Error message should indicate missing required property: " + message);
     }
