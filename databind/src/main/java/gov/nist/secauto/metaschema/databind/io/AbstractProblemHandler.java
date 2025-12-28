@@ -157,6 +157,9 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
 
   /**
    * Check if a choice is satisfied (at least one option was provided).
+   * <p>
+   * Note: This method assumes the choice has at least one named model instance,
+   * which is guaranteed by valid Metaschema definitions.
    *
    * @param choice
    *          the choice to check
