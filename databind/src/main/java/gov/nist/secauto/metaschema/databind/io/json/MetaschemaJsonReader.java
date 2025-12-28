@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.SimpleResourceLocation;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
@@ -496,7 +495,7 @@ public class MetaschemaJsonReader
     IBoundObject item = definition.newInstance(
         JsonLocation.NA.equals(location)
             ? null
-            : () -> new MetaschemaData(ObjectUtils.requireNonNull(location)));
+            : () -> SimpleResourceLocation.fromJsonLocation(ObjectUtils.requireNonNull(location)));
 
     try {
       // call pre-parse initialization hook
@@ -918,41 +917,6 @@ public class MetaschemaJsonReader
     public ITEM readItem() throws IOException {
       IBoundInstanceModel<ITEM> instance = getCollectionInfo().getInstance();
       return instance.readItem(getParentObject(), MetaschemaJsonReader.this);
-    }
-  }
-
-  @SuppressWarnings("PMD.DataClass")
-  private static class MetaschemaData implements IMetaschemaData {
-    private final int line;
-    private final int column;
-    private final long charOffset;
-    private final long byteOffset;
-
-    public MetaschemaData(@NonNull JsonLocation location) {
-      this.line = location.getLineNr();
-      this.column = location.getColumnNr();
-      this.charOffset = location.getCharOffset();
-      this.byteOffset = location.getByteOffset();
-    }
-
-    @Override
-    public int getLine() {
-      return line;
-    }
-
-    @Override
-    public int getColumn() {
-      return column;
-    }
-
-    @Override
-    public long getCharOffset() {
-      return charOffset;
-    }
-
-    @Override
-    public long getByteOffset() {
-      return byteOffset;
     }
   }
 

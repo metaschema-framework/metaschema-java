@@ -12,13 +12,16 @@ import javax.xml.stream.Location;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A simple implementation of {@link IResourceLocation} that stores location
+ * A simple implementation of {@link IMetaschemaData} that stores location
  * information from various parser sources.
+ * <p>
+ * This class can be used both for bound object metadata during parsing and for
+ * validation context in error messages.
  */
-public final class SimpleResourceLocation implements IResourceLocation {
+public final class SimpleResourceLocation implements IMetaschemaData {
   /** A constant representing an unknown location. */
   @NonNull
-  public static final IResourceLocation UNKNOWN = new SimpleResourceLocation(-1, -1, -1L, -1L);
+  public static final IMetaschemaData UNKNOWN = new SimpleResourceLocation(-1, -1, -1L, -1L);
 
   private final int line;
   private final int column;
@@ -52,7 +55,7 @@ public final class SimpleResourceLocation implements IResourceLocation {
    * @return a new resource location, or {@link #UNKNOWN} if the input is null
    */
   @NonNull
-  public static IResourceLocation fromXmlLocation(Location location) {
+  public static IMetaschemaData fromXmlLocation(Location location) {
     if (location == null) {
       return UNKNOWN;
     }
@@ -71,7 +74,7 @@ public final class SimpleResourceLocation implements IResourceLocation {
    * @return a new resource location, or {@link #UNKNOWN} if the input is null
    */
   @NonNull
-  public static IResourceLocation fromJsonLocation(JsonLocation location) {
+  public static IMetaschemaData fromJsonLocation(JsonLocation location) {
     if (location == null) {
       return UNKNOWN;
     }
@@ -92,7 +95,7 @@ public final class SimpleResourceLocation implements IResourceLocation {
    * @return a new resource location
    */
   @NonNull
-  public static IResourceLocation of(int line, int column) {
+  public static IMetaschemaData of(int line, int column) {
     return new SimpleResourceLocation(line, column, -1L, -1L);
   }
 

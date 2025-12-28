@@ -6,7 +6,6 @@
 package gov.nist.secauto.metaschema.databind.io.xml;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.SimpleResourceLocation;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
@@ -511,7 +510,8 @@ public class MetaschemaXmlReader
         Location location = start.getLocation();
 
         // construct the item
-        IBoundObject item = definition.newInstance(location == null ? null : () -> new MetaschemaData(location));
+        IBoundObject item = definition.newInstance(
+            location == null ? null : () -> SimpleResourceLocation.fromXmlLocation(location));
 
         // call pre-parse initialization hook
         definition.callBeforeDeserialize(item, parent);
@@ -702,38 +702,6 @@ public class MetaschemaXmlReader
       } catch (XMLStreamException ex) {
         throw new IOException(ex);
       }
-    }
-  }
-
-  private static class MetaschemaData implements IMetaschemaData {
-    private final int line;
-    private final int column;
-    private final long charOffset;
-
-    public MetaschemaData(@NonNull Location location) {
-      this.line = location.getLineNumber();
-      this.column = location.getColumnNumber();
-      this.charOffset = location.getCharacterOffset();
-    }
-
-    @Override
-    public int getLine() {
-      return line;
-    }
-
-    @Override
-    public int getColumn() {
-      return column;
-    }
-
-    @Override
-    public long getCharOffset() {
-      return charOffset;
-    }
-
-    @Override
-    public long getByteOffset() {
-      return -1;
     }
   }
 
