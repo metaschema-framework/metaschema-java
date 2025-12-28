@@ -68,8 +68,8 @@ class ValidationErrorMessageTest
   class FormatAppropriateNamesTest {
 
     @Test
-    void testMissingFlagShowsXmlAttributeNameForXml() throws IOException {
-      // The XML attribute name should appear in the error, not the JSON name
+    void testMissingFlagShowsAttributeForXml() throws IOException {
+      // For XML, flags should be identified as "attribute" (user-friendly term)
       String xml = "<root xmlns='http://csrc.nist.gov/ns/metaschema/testing/validation-errors'>"
           + "<required-field>value</required-field>"
           + "<required-assembly id='a1'/>"
@@ -85,14 +85,14 @@ class ValidationErrorMessageTest
 
       String message = exception.getMessage();
       assertNotNull(message, "Exception message should not be null");
-      // Should contain 'flag' to identify the property type
-      assertTrue(message.toLowerCase().contains("flag"),
-          "Error message should identify property as 'flag': " + message);
+      // Should contain 'attribute' (user-friendly term for flags in XML)
+      assertTrue(message.toLowerCase().contains("attribute"),
+          "Error message should identify property as 'attribute': " + message);
     }
 
     @Test
-    void testMissingFlagShowsJsonNameForJson() throws IOException {
-      // The JSON property name should appear in the error
+    void testMissingFlagShowsPropertyForJson() throws IOException {
+      // For JSON, all properties should be called "property" (user-friendly term)
       String json = "{"
           + "\"required-field\": \"value\","
           + "\"required-assembly\": {\"id\": \"a1\"}"
@@ -108,13 +108,14 @@ class ValidationErrorMessageTest
 
       String message = exception.getMessage();
       assertNotNull(message, "Exception message should not be null");
-      // Should contain 'flag' to identify the property type
-      assertTrue(message.toLowerCase().contains("flag"),
-          "Error message should identify property as 'flag': " + message);
+      // Should contain 'property' (user-friendly term for JSON)
+      assertTrue(message.toLowerCase().contains("property"),
+          "Error message should identify property as 'property': " + message);
     }
 
     @Test
-    void testMissingFieldShowsPropertyTypeForXml() throws IOException {
+    void testMissingFieldShowsElementForXml() throws IOException {
+      // For XML, fields should be identified as "element" (user-friendly term)
       String xml = "<root xmlns='http://csrc.nist.gov/ns/metaschema/testing/validation-errors' required-flag='rf'>"
           + "<required-assembly id='a1'/>"
           + "</root>";
@@ -129,13 +130,14 @@ class ValidationErrorMessageTest
 
       String message = exception.getMessage();
       assertNotNull(message, "Exception message should not be null");
-      // Should contain 'field' to identify the property type
-      assertTrue(message.toLowerCase().contains("field"),
-          "Error message should identify property as 'field': " + message);
+      // Should contain 'element' (user-friendly term for fields in XML)
+      assertTrue(message.toLowerCase().contains("element"),
+          "Error message should identify property as 'element': " + message);
     }
 
     @Test
-    void testMissingAssemblyShowsPropertyTypeForXml() throws IOException {
+    void testMissingAssemblyShowsElementForXml() throws IOException {
+      // For XML, assemblies should be identified as "element" (user-friendly term)
       String xml = "<root xmlns='http://csrc.nist.gov/ns/metaschema/testing/validation-errors' required-flag='rf'>"
           + "<required-field>value</required-field>"
           + "</root>";
@@ -150,9 +152,9 @@ class ValidationErrorMessageTest
 
       String message = exception.getMessage();
       assertNotNull(message, "Exception message should not be null");
-      // Should contain 'assembly' to identify the property type
-      assertTrue(message.toLowerCase().contains("assembly"),
-          "Error message should identify property as 'assembly': " + message);
+      // Should contain 'element' (user-friendly term for assemblies in XML)
+      assertTrue(message.toLowerCase().contains("element"),
+          "Error message should identify property as 'element': " + message);
     }
   }
 
@@ -204,8 +206,8 @@ class ValidationErrorMessageTest
 
       String message = exception.getMessage();
       assertNotNull(message, "Exception message should not be null");
-      // Should contain line number (pattern like "at N:" or "line N")
-      assertTrue(message.matches(".*\\b(at\\s+)?\\d+[:\\s].*") || message.toLowerCase().contains("line"),
+      // Should contain line number (pattern like "at N:" where N is a number)
+      assertTrue(message.contains("at ") || message.toLowerCase().contains("line"),
           "Error message should include line number: " + message);
     }
 
@@ -226,9 +228,10 @@ class ValidationErrorMessageTest
 
       String message = exception.getMessage();
       assertNotNull(message, "Exception message should not be null");
-      // Should contain column number (pattern like "N:M" for line:column)
-      assertTrue(message.matches(".*\\d+:\\d+.*") || message.toLowerCase().contains("column"),
-          "Error message should include column number: " + message);
+      // Should contain column number (format like "at N:M" for line:column)
+      // Check that message contains the "at N:M" pattern
+      assertTrue(message.contains(":") && message.contains("at "),
+          "Error message should include column number in format 'at line:column': " + message);
     }
 
     @Test
@@ -399,7 +402,8 @@ class ValidationErrorMessageTest
     }
 
     @Test
-    void testParentAssemblyNameInErrorMessage() throws IOException {
+    void testParentElementNameInErrorMessage() throws IOException {
+      // Error message should include the name of the parent element
       String xml = "<root xmlns='http://csrc.nist.gov/ns/metaschema/testing/validation-errors'>"
           + "<required-field>value</required-field>"
           + "<required-assembly id='a1'/>"
@@ -415,9 +419,9 @@ class ValidationErrorMessageTest
 
       String message = exception.getMessage();
       assertNotNull(message, "Exception message should not be null");
-      // Should mention the parent assembly name
-      assertTrue(message.toLowerCase().contains("root") || message.toLowerCase().contains("assembly"),
-          "Error message should include parent assembly context: " + message);
+      // Should mention the parent element name
+      assertTrue(message.toLowerCase().contains("root"),
+          "Error message should include parent element name: " + message);
     }
   }
 

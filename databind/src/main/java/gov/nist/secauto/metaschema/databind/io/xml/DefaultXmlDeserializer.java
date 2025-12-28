@@ -132,12 +132,17 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
     return ObjectUtils.notNull(factory.get());
   }
 
+  private static final URI UNKNOWN_SOURCE = URI.create("unknown:source");
+
   @NonNull
   private XMLEventReader2 newXMLEventReader2(
       @NonNull URI documentUri,
       @NonNull Reader reader) throws XMLStreamException {
+    // Use the URI for creating the event reader - this is used for location
+    // reporting
+    String systemId = documentUri.toASCIIString();
     XMLEventReader2 eventReader
-        = (XMLEventReader2) getXMLInputFactory().createXMLEventReader(documentUri.toASCIIString(), reader);
+        = (XMLEventReader2) getXMLInputFactory().createXMLEventReader(systemId, reader);
     EventFilter filter = new CommentFilter();
     return ObjectUtils.notNull((XMLEventReader2) getXMLInputFactory().createFilteredReader(eventReader, filter));
   }
@@ -150,10 +155,13 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
 
   @Override
   public final CLASS deserializeToValueInternal(Reader reader, URI resource) throws IOException {
+    // Handle null URI gracefully - use a synthetic URI for parsing
+    URI effectiveResource = resource != null ? resource : UNKNOWN_SOURCE;
+
     // doesn't auto close the underlying reader
     try (AutoCloser<XMLEventReader2, XMLStreamException> closer = AutoCloser.autoClose(
-        newXMLEventReader2(resource, reader), XMLEventReader::close)) {
-      return parseXmlInternal(closer.getResource(), resource);
+        newXMLEventReader2(effectiveResource, reader), XMLEventReader::close)) {
+      return parseXmlInternal(closer.getResource(), effectiveResource);
     } catch (XMLStreamException ex) {
       throw new IOException("Unable to create a new XMLEventReader2 instance.", ex);
     }

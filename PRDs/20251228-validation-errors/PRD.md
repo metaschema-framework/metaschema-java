@@ -66,13 +66,20 @@ Errors must include document path showing location in structure:
 
 Path is built during parsing using a lightweight `PathTracker` utility.
 
-### R4: Property Type Identification (Issue #596)
+### R4: User-Friendly Terminology (Issue #596)
 
-Error messages must identify the type of missing/invalid property:
+Error messages must use format-appropriate, user-friendly terminology that does not require understanding of Metaschema concepts:
 
-- "flag" for `IFlagInstance`
-- "field" for `IFieldInstance`
-- "assembly" for `IAssemblyInstance`
+| Format | Flag Instance | Field/Assembly Instance |
+|--------|---------------|------------------------|
+| XML | "attribute" | "element" |
+| JSON | "property" | "property" |
+| YAML | "property" | "property" |
+
+This approach:
+- Uses terms familiar to users of each format
+- Avoids Metaschema-specific jargon ("flag", "field", "assembly")
+- Makes error messages actionable without Metaschema knowledge
 
 ### R5: Null Field Value Handling (Issue #205)
 
@@ -99,12 +106,23 @@ public class ValidationContext {
 Standard format for validation errors:
 
 ```text
-Missing required {type} '{name}' in {parentType} '{parentName}'
+Missing required {type} '{name}' in '{parentName}'
   Location: {uri} at {line}:{column}
   Path: {path}
 ```
 
-For multiple missing properties, group by type.
+Where `{type}` uses format-appropriate terminology per R4.
+
+For multiple missing properties of different types:
+
+```text
+Missing required properties in '{parentName}':
+  Attributes: attr1, attr2  (XML only)
+  Elements: elem1, elem2    (XML only)
+  Properties: prop1, prop2  (JSON/YAML)
+  Location: {uri} at {line}:{column}
+  Path: {path}
+```
 
 ## Edge Cases
 

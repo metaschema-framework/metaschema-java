@@ -13,9 +13,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.IResourceLocation;
+import gov.nist.secauto.metaschema.core.model.SimpleResourceLocation;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
+import gov.nist.secauto.metaschema.databind.io.Format;
+import gov.nist.secauto.metaschema.databind.io.PathTracker;
+import gov.nist.secauto.metaschema.databind.io.ValidationContext;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
@@ -73,6 +78,8 @@ public class MetaschemaJsonReader
   private final URI source;
   @NonNull
   private final IJsonProblemHandler problemHandler;
+  @NonNull
+  private final PathTracker pathTracker = new PathTracker();
 
   /**
    * Construct a new Module-aware JSON parser using the default problem handler.
@@ -168,6 +175,22 @@ public class MetaschemaJsonReader
   @Override
   public IJsonProblemHandler getProblemHandler() {
     return problemHandler;
+  }
+
+  /**
+   * Build a validation context from the current parser state.
+   *
+   * @return a new validation context with current location and path
+   */
+  @SuppressWarnings("resource")
+  @NonNull
+  private ValidationContext buildValidationContext() {
+    JsonParser parser = getReader();
+    JsonLocation location = parser.currentLocation();
+    IResourceLocation resourceLocation = JsonLocation.NA.equals(location)
+        ? SimpleResourceLocation.UNKNOWN
+        : SimpleResourceLocation.fromJsonLocation(location);
+    return ValidationContext.of(source, resourceLocation, pathTracker.getCurrentPath(), Format.JSON);
   }
 
   /**
@@ -597,62 +620,72 @@ public class MetaschemaJsonReader
       JsonParser parser = getReader();
       URI resource = getSource();
 
-      // advance past the start object
-      JsonUtil.assertAndAdvance(parser, resource, JsonToken.START_OBJECT);
+      // Track path for error messages
+      pathTracker.push(definition.getEffectiveName());
 
-      // make a copy, since we use the remaining values to initialize default values
-      Map<String, IBoundProperty<?>> remainingInstances = new HashMap<>(jsonProperties); // NOPMD not concurrent
+      try {
+        // advance past the start object
+        JsonUtil.assertAndAdvance(parser, resource, JsonToken.START_OBJECT);
 
-      // handle each property
-      while (JsonToken.FIELD_NAME.equals(parser.currentToken())) {
+        // make a copy, since we use the remaining values to initialize default values
+        Map<String, IBoundProperty<?>> remainingInstances = new HashMap<>(jsonProperties); // NOPMD not concurrent
 
-        // the parser's current token should be the JSON field name
-        String propertyName = ObjectUtils.notNull(parser.currentName());
-        if (LOGGER.isTraceEnabled()) {
-          LOGGER.trace("reading property {}", propertyName);
-        }
+        // handle each property
+        while (JsonToken.FIELD_NAME.equals(parser.currentToken())) {
 
-        IBoundProperty<?> property = remainingInstances.get(propertyName);
-
-        boolean handled = false;
-        if (property != null) {
-          // advance past the field name
-          parser.nextToken();
-
-          Object value = readObjectProperty(parent, property);
-          if (value != null) {
-            property.setValue(parent, value);
+          // the parser's current token should be the JSON field name
+          String propertyName = ObjectUtils.notNull(parser.currentName());
+          if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("reading property {}", propertyName);
           }
 
-          // mark handled
-          remainingInstances.remove(propertyName);
-          handled = true;
+          IBoundProperty<?> property = remainingInstances.get(propertyName);
+
+          boolean handled = false;
+          if (property != null) {
+            // advance past the field name
+            parser.nextToken();
+
+            Object value = readObjectProperty(parent, property);
+            if (value != null) {
+              property.setValue(parent, value);
+            }
+
+            // mark handled
+            remainingInstances.remove(propertyName);
+            handled = true;
+          }
+
+          if (!handled && !problemHandler.handleUnknownProperty(
+              definition,
+              parent,
+              propertyName,
+              MetaschemaJsonReader.this)) {
+            if (LOGGER.isWarnEnabled()) {
+              LOGGER.warn("Skipping unhandled JSON field '{}' {}.", propertyName, JsonUtil.toString(parser, resource));
+            }
+            JsonUtil.assertAndAdvance(parser, resource, JsonToken.FIELD_NAME);
+            JsonUtil.skipNextValue(parser, resource);
+          }
+
+          // the current token will be either the next instance field name or the end of
+          // the parent object
+          JsonUtil.assertCurrent(parser, resource, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);
         }
 
-        if (!handled && !problemHandler.handleUnknownProperty(
+        // Build validation context with current location and path
+        ValidationContext context = buildValidationContext();
+        problemHandler.handleMissingInstances(
             definition,
             parent,
-            propertyName,
-            MetaschemaJsonReader.this)) {
-          if (LOGGER.isWarnEnabled()) {
-            LOGGER.warn("Skipping unhandled JSON field '{}' {}.", propertyName, JsonUtil.toString(parser, resource));
-          }
-          JsonUtil.assertAndAdvance(parser, resource, JsonToken.FIELD_NAME);
-          JsonUtil.skipNextValue(parser, resource);
-        }
+            ObjectUtils.notNull(remainingInstances.values()),
+            context);
 
-        // the current token will be either the next instance field name or the end of
-        // the parent object
-        JsonUtil.assertCurrent(parser, resource, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);
+        // advance past the end object
+        JsonUtil.assertAndAdvance(parser, resource, JsonToken.END_OBJECT);
+      } finally {
+        pathTracker.pop();
       }
-
-      problemHandler.handleMissingInstances(
-          definition,
-          parent,
-          ObjectUtils.notNull(remainingInstances.values()));
-
-      // advance past the end object
-      JsonUtil.assertAndAdvance(parser, resource, JsonToken.END_OBJECT);
     }
   }
 
@@ -675,6 +708,15 @@ public class MetaschemaJsonReader
         IBoundObject targetObject,
         Collection<? extends IBoundProperty<?>> unhandledInstances) throws IOException {
       delegate.handleMissingInstances(parentDefinition, targetObject, unhandledInstances);
+    }
+
+    @Override
+    public void handleMissingInstances(
+        IBoundDefinitionModelComplex parentDefinition,
+        IBoundObject targetObject,
+        Collection<? extends IBoundProperty<?>> unhandledInstances,
+        ValidationContext context) throws IOException {
+      delegate.handleMissingInstances(parentDefinition, targetObject, unhandledInstances, context);
     }
 
     @Override
@@ -714,6 +756,15 @@ public class MetaschemaJsonReader
         IBoundObject targetObject,
         Collection<? extends IBoundProperty<?>> unhandledInstances) throws IOException {
       delegate.handleMissingInstances(parentDefinition, targetObject, unhandledInstances);
+    }
+
+    @Override
+    public void handleMissingInstances(
+        IBoundDefinitionModelComplex parentDefinition,
+        IBoundObject targetObject,
+        Collection<? extends IBoundProperty<?>> unhandledInstances,
+        ValidationContext context) throws IOException {
+      delegate.handleMissingInstances(parentDefinition, targetObject, unhandledInstances, context);
     }
 
     @Override
