@@ -412,6 +412,27 @@ public interface IBindingContext {
   }
 
   /**
+   * Get a new {@link IBoundLoader} instance configured for permissive loading.
+   * <p>
+   * This loader has
+   * {@link DeserializationFeature#DESERIALIZE_VALIDATE_REQUIRED_FIELDS} disabled,
+   * making it suitable for use with Metapath functions like {@code fn:doc()}
+   * where documents may be incomplete or under construction.
+   * <p>
+   * Use this method when setting up a {@link DynamicContext} for Metapath
+   * evaluation to ensure that referenced documents can be loaded without strict
+   * required field validation.
+   *
+   * @return a permissive loader instance
+   */
+  @NonNull
+  default IBoundLoader newPermissiveBoundLoader() {
+    IBoundLoader loader = newBoundLoader();
+    loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+    return loader;
+  }
+
+  /**
    * Create a deep copy of the provided bound object.
    *
    * @param <CLASS>
@@ -445,10 +466,10 @@ public interface IBindingContext {
   default IConstraintValidator newValidator(
       @NonNull IConstraintValidationHandler handler,
       @Nullable IConfiguration<ValidationFeature<?>> config) {
-    IBoundLoader loader = newBoundLoader();
+    // Use permissive loader for referenced documents
+    IBoundLoader loader = newPermissiveBoundLoader();
+    // Also disable constraint validation for referenced documents
     loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
-    // Disable required field validation since schema validation handles this
-    loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
     DynamicContext context = new DynamicContext();
     context.setDocumentLoader(loader);
@@ -570,10 +591,10 @@ public interface IBindingContext {
       @NonNull URI target,
       @Nullable IConfiguration<ValidationFeature<?>> config)
       throws IOException, ConstraintValidationException {
-    IBoundLoader loader = newBoundLoader();
+    // Use permissive loader for the target document and any referenced documents
+    IBoundLoader loader = newPermissiveBoundLoader();
+    // Also disable constraint validation during loading
     loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
-    // Disable required field validation since schema validation handles this
-    loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
     IDocumentNodeItem nodeItem = loader.loadAsNodeItem(target);
 
     return validate(nodeItem, loader, config);

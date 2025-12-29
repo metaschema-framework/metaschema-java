@@ -147,7 +147,8 @@ public abstract class AbstractDeserializer<CLASS extends IBoundObject>
     }
 
     DynamicContext dynamicContext = new DynamicContext(nodeItem.getStaticContext());
-    dynamicContext.setDocumentLoader(getBindingContext().newBoundLoader());
+    // Use permissive loader for documents referenced in constraint expressions
+    dynamicContext.setDocumentLoader(getBindingContext().newPermissiveBoundLoader());
     DefaultConstraintValidator validator = new DefaultConstraintValidator(getConstraintValidationHandler());
     validator.validate(definitionNodeItem, dynamicContext);
     validator.finalizeValidation(dynamicContext);

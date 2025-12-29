@@ -211,7 +211,7 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
       IBoundProperty<?> missing = !missingFlags.isEmpty() ? missingFlags.get(0)
           : !missingFields.isEmpty() ? missingFields.get(0)
               : missingAssemblies.get(0);
-      String type = getPropertyTypeName(missing, format);
+      String type = getPropertyTypeName(missing, format, false);
       String name = getInstanceName(missing, context);
       message.append(String.format("Missing required %s '%s' in '%s'", type, name, parentName));
     } else if (hasSingleType(missingFlags, missingFields, missingAssemblies)) {
@@ -219,9 +219,9 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
       List<IBoundProperty<?>> list = !missingFlags.isEmpty() ? missingFlags
           : !missingFields.isEmpty() ? missingFields
               : missingAssemblies;
-      String type = getPropertyTypeName(list.get(0), format);
+      String type = getPropertyTypeName(list.get(0), format, true);
       String names = formatNameList(list, context);
-      message.append(String.format("Missing required %ss in '%s': %s", type, parentName, names));
+      message.append(String.format("Missing required %s in '%s': %s", type, parentName, names));
     } else {
       // Multiple properties of different types
       message.append(String.format("Missing required properties in '%s':", parentName));
@@ -268,19 +268,24 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
    *          {@code true} if the property is a flag instance
    * @param format
    *          the format being parsed
+   * @param plural
+   *          {@code true} for plural form, {@code false} for singular
    * @return the user-friendly type name
    */
   @NonNull
-  private static String getFormatPropertyTypeName(boolean isFlag, @NonNull Format format) {
+  private static String getFormatPropertyTypeName(boolean isFlag, @NonNull Format format, boolean plural) {
     switch (format) {
     case XML:
-      return isFlag ? "attribute" : "element";
+      if (isFlag) {
+        return plural ? "attributes" : "attribute";
+      }
+      return plural ? "elements" : "element";
     case JSON:
     case YAML:
-      return "property";
+      return plural ? "properties" : "property";
     default:
       // Fallback for any future formats - use generic "property"
-      return "property";
+      return plural ? "properties" : "property";
     }
   }
 
@@ -288,6 +293,8 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
    * Get the user-friendly label for a group of properties in the given format.
    * <p>
    * Used when listing multiple properties of the same type in error messages.
+   * Delegates to {@link #getFormatPropertyTypeName(boolean, Format, boolean)} and
+   * capitalizes the result.
    *
    * @param isFlags
    *          {@code true} if listing flag instances
@@ -297,16 +304,8 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
    */
   @NonNull
   private static String getFormatPropertyGroupLabel(boolean isFlags, @NonNull Format format) {
-    switch (format) {
-    case XML:
-      return isFlags ? "Attributes" : "Elements";
-    case JSON:
-    case YAML:
-      return "Properties";
-    default:
-      // Fallback for any future formats
-      return "Properties";
-    }
+    String typeName = getFormatPropertyTypeName(isFlags, format, true);
+    return Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
   }
 
   /**
@@ -332,19 +331,24 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
   /**
    * Get the property type name for error messages in format-appropriate terms.
    * <p>
-   * Delegates to {@link #getFormatPropertyTypeName(boolean, Format)} based on
-   * whether the instance is a flag.
+   * Delegates to {@link #getFormatPropertyTypeName(boolean, Format, boolean)}
+   * based on whether the instance is a flag.
    *
    * @param instance
    *          the property instance
    * @param format
    *          the format being parsed
+   * @param plural
+   *          {@code true} for plural form, {@code false} for singular
    * @return the user-friendly type name appropriate for the format
    */
   @NonNull
-  private static String getPropertyTypeName(@NonNull IBoundProperty<?> instance, @NonNull Format format) {
+  private static String getPropertyTypeName(
+      @NonNull IBoundProperty<?> instance,
+      @NonNull Format format,
+      boolean plural) {
     boolean isFlag = instance instanceof IFlagInstance;
-    return getFormatPropertyTypeName(isFlag, format);
+    return getFormatPropertyTypeName(isFlag, format, plural);
   }
 
   /**
