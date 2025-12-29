@@ -56,11 +56,14 @@ public @interface Report {
 
   /**
    * The significance of a violation of this constraint.
+   * <p>
+   * The default level for report constraints is {@link Level#INFORMATIONAL},
+   * which differs from expect constraints that default to {@link Level#ERROR}.
    *
    * @return the level
    */
   @NonNull
-  Level level() default IConstraint.Level.ERROR;
+  Level level() default IConstraint.Level.INFORMATIONAL;
 
   /**
    * An optional metapath that points to the target flag or field value that the
