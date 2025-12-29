@@ -180,7 +180,8 @@ Use these icons in the summary table:
 | Icon | Meaning |
 |------|---------|
 | ✅ | Addressed - fix committed |
-| ⏭️ | Deferred - explained why |
+| ❌ | Rejected - feedback incorrect, explained why |
+| ⏭️ | Deferred - out of scope, will address later |
 | 🔄 | In Progress - working on it |
 | ❓ | Needs Clarification - asked reviewer |
 
