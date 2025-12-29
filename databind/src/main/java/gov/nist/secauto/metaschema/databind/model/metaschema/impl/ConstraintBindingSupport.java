@@ -24,6 +24,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
+import gov.nist.secauto.metaschema.core.model.constraint.IReportConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IValueConstrained;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -47,6 +48,7 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedInd
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedIndexHasKeyConstraint;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedIsUniqueConstraint;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedMatchesConstraint;
+import gov.nist.secauto.metaschema.databind.model.metaschema.binding.TargetedReportConstraint;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -128,6 +130,9 @@ public final class ConstraintBindingSupport {
       } else if (ruleObj instanceof TargetedMatchesConstraint) {
         IMatchesConstraint constraint = newMatches((TargetedMatchesConstraint) ruleObj, source);
         constraintSet.addConstraint(constraint);
+      } else if (ruleObj instanceof TargetedReportConstraint) {
+        IReportConstraint constraint = newReport((TargetedReportConstraint) ruleObj, source);
+        constraintSet.addConstraint(constraint);
       }
     }
   }
@@ -170,6 +175,9 @@ public final class ConstraintBindingSupport {
         constraintSet.addConstraint(constraint);
       } else if (ruleObj instanceof TargetedIsUniqueConstraint) {
         IUniqueConstraint constraint = newUnique((TargetedIsUniqueConstraint) ruleObj, source);
+        constraintSet.addConstraint(constraint);
+      } else if (ruleObj instanceof TargetedReportConstraint) {
+        IReportConstraint constraint = newReport((TargetedReportConstraint) ruleObj, source);
         constraintSet.addConstraint(constraint);
       }
     }
@@ -262,6 +270,29 @@ public final class ConstraintBindingSupport {
       @NonNull TargetedExpectConstraint obj,
       @NonNull ISource source) {
     IExpectConstraint.Builder builder = IExpectConstraint.builder()
+        .test(metapath(ObjectUtils.requireNonNull(obj.getTest()), source));
+    applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);
+
+    return builder.build();
+  }
+
+  /**
+   * Create a new report constraint from a parsed binding object.
+   * <p>
+   * Report constraints generate findings when their test expression evaluates to
+   * {@code true}, which is the opposite of expect constraints.
+   *
+   * @param obj
+   *          the parsed constraint binding object
+   * @param source
+   *          the source of the constraint
+   * @return the new report constraint
+   */
+  @NonNull
+  private static IReportConstraint newReport(
+      @NonNull TargetedReportConstraint obj,
+      @NonNull ISource source) {
+    IReportConstraint.Builder builder = IReportConstraint.builder()
         .test(metapath(ObjectUtils.requireNonNull(obj.getTest()), source));
     applyConfigurableCommonValues(obj, obj.getTarget(), source, builder);
 

@@ -188,6 +188,7 @@ public class DefaultConstraintValidator
 
     try {
       validateExpect(definition.getExpectConstraints(), item, dynamicContext);
+      validateReport(definition.getReportConstraints(), item, dynamicContext);
       validateAllowedValues(definition.getAllowedValuesConstraints(), item, dynamicContext);
       validateIndexHasKey(definition.getIndexHasKeyConstraints(), item, dynamicContext);
       validateMatches(definition.getMatchesConstraints(), item, dynamicContext);
@@ -215,6 +216,7 @@ public class DefaultConstraintValidator
 
     try {
       validateExpect(definition.getExpectConstraints(), item, dynamicContext);
+      validateReport(definition.getReportConstraints(), item, dynamicContext);
       validateAllowedValues(definition.getAllowedValuesConstraints(), item, dynamicContext);
       validateIndexHasKey(definition.getIndexHasKeyConstraints(), item, dynamicContext);
       validateMatches(definition.getMatchesConstraints(), item, dynamicContext);
@@ -241,6 +243,7 @@ public class DefaultConstraintValidator
 
     try {
       validateExpect(definition.getExpectConstraints(), item, dynamicContext);
+      validateReport(definition.getReportConstraints(), item, dynamicContext);
       validateAllowedValues(definition.getAllowedValuesConstraints(), item, dynamicContext);
       validateIndexHasKey(definition.getIndexHasKeyConstraints(), item, dynamicContext);
       validateMatches(definition.getMatchesConstraints(), item, dynamicContext);
@@ -762,6 +765,86 @@ public class DefaultConstraintValidator
             handlePass(constraint, node, item, dynamicContext);
           } else {
             handler.handleExpectViolation(constraint, node, item, dynamicContext);
+          }
+        } catch (MetapathException ex) {
+          handleError(constraint, item, ex, dynamicContext);
+        }
+      }
+    }
+  }
+
+  /**
+   * Evaluates the provided collection of report {@code constraints} in the
+   * context of the {@code item}.
+   * <p>
+   * Report constraints generate findings when their test expression evaluates to
+   * {@code true}, which is the opposite of expect constraints.
+   *
+   * @param constraints
+   *          the constraints to execute
+   * @param item
+   *          the focus of Metapath evaluation
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
+   */
+  private void validateReport(
+      @NonNull List<? extends IReportConstraint> constraints,
+      @NonNull IDefinitionNodeItem<?, ?> item,
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    for (IReportConstraint constraint : constraints) {
+      assert constraint != null;
+
+      try {
+        ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
+        validateReport(constraint, item, targets, dynamicContext);
+      } catch (MetapathException ex) {
+        handleError(constraint, item, ex, dynamicContext);
+      }
+    }
+  }
+
+  /**
+   * Evaluates the provided report {@code constraint} against each of the
+   * {@code targets}.
+   * <p>
+   * Report constraints generate findings when their test expression evaluates to
+   * {@code true}, which is the opposite of expect constraints.
+   *
+   * @param constraint
+   *          the constraint to execute
+   * @param node
+   *          the original focus of Metapath evaluation for identifying the
+   *          targets
+   * @param targets
+   *          the focus of Metapath evaluation for evaluating any constraint
+   *          Metapath clauses
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
+   * @throws ConstraintValidationException
+   *           if an unexpected error occurred while validating a constraint
+   */
+  private void validateReport(
+      @NonNull IReportConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull ISequence<? extends INodeItem> targets,
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    IMetapathExpression test = constraint.getTest();
+    IConstraintValidationHandler handler = getConstraintValidationHandler();
+    for (INodeItem item : targets) {
+      assert item != null;
+
+      if (item.hasValue()) {
+        try {
+          ISequence<?> result = test.evaluate(item, dynamicContext);
+          // Report constraints fire when test is TRUE (opposite of expect)
+          if (FnBoolean.fnBoolean(result).toBoolean()) {
+            handler.handleReportViolation(constraint, node, item, dynamicContext);
+          } else {
+            handlePass(constraint, node, item, dynamicContext);
           }
         } catch (MetapathException ex) {
           handleError(constraint, item, ex, dynamicContext);

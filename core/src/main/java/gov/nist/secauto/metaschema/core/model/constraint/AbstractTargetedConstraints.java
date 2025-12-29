@@ -85,6 +85,7 @@ public abstract class AbstractTargetedConstraints<T extends IValueConstrained>
     getMatchesConstraints().forEach(definition::addConstraint);
     getIndexHasKeyConstraints().forEach(definition::addConstraint);
     getExpectConstraints().forEach(definition::addConstraint);
+    getReportConstraints().forEach(definition::addConstraint);
   }
 
   @Override

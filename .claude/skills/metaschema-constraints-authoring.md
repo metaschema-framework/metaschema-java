@@ -12,7 +12,8 @@ This skill guides the creation of Metaschema constraints for validating document
 | Constraint | Allowed On | Purpose |
 |------------|------------|---------|
 | `allowed-values` | flag, field, assembly | Restrict values to enumerated set |
-| `expect` | flag, field, assembly | Assert Metapath condition is true |
+| `expect` | flag, field, assembly | Assert Metapath condition is true (fires when FALSE) |
+| `report` | flag, field, assembly | Report when Metapath condition is true (fires when TRUE) |
 | `matches` | flag, field, assembly | Validate against regex and/or datatype |
 | `has-cardinality` | assembly only | Enforce occurrence counts |
 | `index` | assembly only | Create named index with composite keys |
@@ -147,6 +148,58 @@ constraint:
   </expect>
 </constraint>
 ```
+
+### report
+
+Reports a finding when a Metapath expression evaluates to `true`. This is the inverse of `expect`: `expect` fires when the test is FALSE (assertion failed), while `report` fires when the test is TRUE (condition detected).
+
+**Use cases:**
+- Deprecation warnings (element is deprecated)
+- Informational notices (condition detected that user should know about)
+- Style suggestions (valid but not preferred)
+- Audit findings (specific pattern detected)
+
+**Attributes:**
+- `test`: Required - Metapath boolean expression
+- `target`: Required for fields/assemblies
+- `message`: Optional - custom message with Metapath templates
+- `level`: Typically `INFORMATIONAL` or `WARNING` (not `ERROR`)
+
+**YAML Example:**
+```yaml
+constraint:
+  rules:
+  - object-type: report
+    id: deprecated-element
+    level: WARNING
+    target: "."
+    test: "exists(@deprecated)"
+    message: "This element is deprecated. Consider using the replacement."
+  - object-type: report
+    id: large-collection
+    level: INFORMATIONAL
+    target: "./items"
+    test: "count(./item) > 100"
+    message: "Collection has { count(./item) } items, which may impact performance."
+```
+
+**XML Example:**
+```xml
+<constraint>
+  <report id="deprecated-element" level="WARNING" target="." test="exists(@deprecated)">
+    <message>This element is deprecated. Consider using the replacement.</message>
+  </report>
+  <report id="large-collection" level="INFORMATIONAL" target="./items" test="count(./item) gt 100">
+    <message>Collection has { count(./item) } items, which may impact performance.</message>
+  </report>
+</constraint>
+```
+
+**expect vs report:**
+| Constraint | Fires When | Typical Level | Use Case |
+|------------|------------|---------------|----------|
+| `expect` | test is FALSE | ERROR | Validation failures |
+| `report` | test is TRUE | WARNING/INFORMATIONAL | Detected conditions |
 
 ### matches
 

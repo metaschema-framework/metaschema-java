@@ -27,6 +27,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.ICardinalityConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IReportConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexHasKeyConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
@@ -45,6 +46,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.IsUnique;
 import gov.nist.secauto.metaschema.databind.model.annotations.KeyField;
 import gov.nist.secauto.metaschema.databind.model.annotations.Let;
 import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
+import gov.nist.secauto.metaschema.databind.model.annotations.Report;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 
 import org.apache.logging.log4j.LogBuilder;
@@ -144,6 +146,7 @@ public final class AnnotationGenerator {
       applyIndexHasKeyConstraints(annotation, definition.getIndexHasKeyConstraints());
       applyMatchesConstraints(annotation, definition.getMatchesConstraints());
       applyExpectConstraints(annotation, definition.getExpectConstraints());
+      applyReportConstraints(annotation, definition.getReportConstraints());
 
       builder.addMember("valueConstraints", "$L", annotation.build());
     }
@@ -166,9 +169,10 @@ public final class AnnotationGenerator {
     List<? extends IIndexHasKeyConstraint> indexHasKey = definition.getIndexHasKeyConstraints();
     List<? extends IMatchesConstraint> matches = definition.getMatchesConstraints();
     List<? extends IExpectConstraint> expects = definition.getExpectConstraints();
+    List<? extends IReportConstraint> reports = definition.getReportConstraints();
 
     if (!lets.isEmpty() || !allowedValues.isEmpty() || !indexHasKey.isEmpty() || !matches.isEmpty()
-        || !expects.isEmpty()) {
+        || !expects.isEmpty() || !reports.isEmpty()) {
       AnnotationSpec.Builder annotation = AnnotationSpec.builder(ValueConstraints.class);
       assert annotation != null;
 
@@ -177,6 +181,7 @@ public final class AnnotationGenerator {
       applyIndexHasKeyConstraints(annotation, indexHasKey);
       applyMatchesConstraints(annotation, matches);
       applyExpectConstraints(annotation, expects);
+      applyReportConstraints(annotation, reports);
 
       builder.addMember("valueConstraints", "$L", annotation.build());
     }
@@ -367,6 +372,31 @@ public final class AnnotationGenerator {
       }
 
       annotation.addMember("expect", "$L", constraintAnnotation.build());
+    }
+  }
+
+  private static void applyReportConstraints(
+      @NonNull AnnotationSpec.Builder annotation,
+      @NonNull List<? extends IReportConstraint> constraints) {
+    for (IReportConstraint constraint : constraints) {
+      assert constraint != null;
+
+      AnnotationSpec.Builder constraintAnnotation = AnnotationSpec.builder(Report.class);
+
+      buildConstraint(Report.class, constraintAnnotation, constraint);
+
+      constraintAnnotation.addMember("test", "$S", constraint.getTest().getPath());
+
+      if (constraint.getMessage() != null) {
+        constraintAnnotation.addMember("message", "$S", constraint.getMessage());
+      }
+
+      MarkupMultiline remarks = constraint.getRemarks();
+      if (remarks != null) {
+        constraintAnnotation.addMember("remarks", "$S", remarks.toMarkdown());
+      }
+
+      annotation.addMember("report", "$L", constraintAnnotation.build());
     }
   }
 

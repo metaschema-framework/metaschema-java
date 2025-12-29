@@ -101,4 +101,16 @@ public interface IConstraintVisitor<T, R> {
    * @return the visitation result
    */
   R visitUniqueConstraint(@NonNull IUniqueConstraint constraint, T state);
+
+  /**
+   * Implementation of this method support visitation of an
+   * {@link IReportConstraint}.
+   *
+   * @param constraint
+   *          the constraint to visit
+   * @param state
+   *          a state object passed to the visitor
+   * @return the visitation result
+   */
+  R visitReportConstraint(@NonNull IReportConstraint constraint, T state);
 }

@@ -308,6 +308,33 @@ public interface IConstraintValidationHandler {
       @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
 
   /**
+   * Handle a report test finding.
+   * <p>
+   * This happens when the report test expression evaluates to true. Unlike expect
+   * constraints which generate violations when false, report constraints generate
+   * findings when true.
+   *
+   * @param constraint
+   *          the constraint that was evaluated
+   * @param node
+   *          the node used as the evaluation focus to determine constraint
+   *          targets
+   * @param target
+   *          the target of evaluation
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
+   * @throws ConstraintValidationException
+   *           if the constraint has a custom message that contains a Metapath
+   *           expression that is invalid or if the expression failed to evaluate
+   */
+  void handleReportViolation(
+      @NonNull IReportConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
+
+  /**
    * Handle an allowed values constraint violation.
    *
    * @param failedConstraints

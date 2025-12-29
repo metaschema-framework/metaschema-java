@@ -21,6 +21,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexHasKeyConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IReportConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IKeyField;
 import gov.nist.secauto.metaschema.core.model.constraint.ILet;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
@@ -37,6 +38,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.KeyField;
 import gov.nist.secauto.metaschema.databind.model.annotations.Let;
 import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
 import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
+import gov.nist.secauto.metaschema.databind.model.annotations.Report;
 import gov.nist.secauto.metaschema.databind.model.annotations.NullJavaTypeAdapter;
 import gov.nist.secauto.metaschema.databind.model.annotations.Property;
 
@@ -289,6 +291,37 @@ final class ConstraintFactory {
   @NonNull
   static IExpectConstraint newExpectConstraint(@NonNull Expect constraint, @NonNull ISource source) {
     IExpectConstraint.Builder builder = IExpectConstraint.builder();
+    applyId(builder, constraint.id());
+    applyFormalName(builder, constraint.formalName());
+    applyDescription(builder, constraint.description());
+    builder
+        .source(source)
+        .level(constraint.level());
+    applyTarget(builder, metapath(constraint.target(), source));
+    applyProperties(builder, constraint.properties());
+    applyMessage(builder, constraint.message());
+    applyRemarks(builder, constraint.remarks());
+
+    builder.test(metapath(constraint.test(), source));
+
+    return builder.build();
+  }
+
+  /**
+   * Create a new report constraint from the provided annotation.
+   * <p>
+   * Report constraints generate findings when their test expression evaluates to
+   * {@code true}, which is the opposite of expect constraints.
+   *
+   * @param constraint
+   *          the annotation containing the constraint configuration
+   * @param source
+   *          the source of the constraint
+   * @return a new report constraint
+   */
+  @NonNull
+  static IReportConstraint newReportConstraint(@NonNull Report constraint, @NonNull ISource source) {
+    IReportConstraint.Builder builder = IReportConstraint.builder();
     applyId(builder, constraint.id());
     applyFormalName(builder, constraint.formalName());
     applyDescription(builder, constraint.description());

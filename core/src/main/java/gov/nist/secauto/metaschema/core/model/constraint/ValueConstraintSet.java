@@ -42,6 +42,8 @@ public class ValueConstraintSet implements IValueConstrained {
   private final List<IIndexHasKeyConstraint> indexHasKeyConstraints = new LinkedList<>();
   @NonNull
   private final List<IExpectConstraint> expectConstraints = new LinkedList<>();
+  @NonNull
+  private final List<IReportConstraint> reportConstraints = new LinkedList<>();
   /**
    * The lock used to manage adjustments to the contents of this constraint set.
    */
@@ -156,6 +158,17 @@ public class ValueConstraintSet implements IValueConstrained {
   }
 
   @Override
+  public List<IReportConstraint> getReportConstraints() {
+    Lock readLock = instanceLock.readLock();
+    readLock.lock();
+    try {
+      return CollectionUtil.unmodifiableList(reportConstraints);
+    } finally {
+      readLock.unlock();
+    }
+  }
+
+  @Override
   public final void addConstraint(@NonNull IAllowedValuesConstraint constraint) {
     Lock writeLock = instanceLock.writeLock();
     writeLock.lock();
@@ -198,6 +211,18 @@ public class ValueConstraintSet implements IValueConstrained {
     try {
       constraints.add(constraint);
       expectConstraints.add(constraint);
+    } finally {
+      writeLock.unlock();
+    }
+  }
+
+  @Override
+  public final void addConstraint(@NonNull IReportConstraint constraint) {
+    Lock writeLock = instanceLock.writeLock();
+    writeLock.lock();
+    try {
+      constraints.add(constraint);
+      reportConstraints.add(constraint);
     } finally {
       writeLock.unlock();
     }

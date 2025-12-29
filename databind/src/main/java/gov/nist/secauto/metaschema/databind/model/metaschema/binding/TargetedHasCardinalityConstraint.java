@@ -29,6 +29,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.Matches;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase;
+import gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase;
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +40,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     formalName = "Targeted Cardinality Constraint",
     name = "targeted-has-cardinality-constraint",
     moduleClass = MetaschemaModelModule.class)
-public class TargetedHasCardinalityConstraint implements IBoundObject, IConfigurableMessageConstraintBase {
+public class TargetedHasCardinalityConstraint
+    implements IBoundObject, ITargetedConstraintBase, IConfigurableMessageConstraintBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundFlag(

@@ -62,6 +62,11 @@ public interface IFeatureValueConstrained extends IValueConstrained {
   }
 
   @Override
+  default List<? extends IReportConstraint> getReportConstraints() {
+    return getConstraintSupport().getReportConstraints();
+  }
+
+  @Override
   default void addConstraint(IAllowedValuesConstraint constraint) {
     getConstraintSupport().addConstraint(constraint);
   }
@@ -78,6 +83,11 @@ public interface IFeatureValueConstrained extends IValueConstrained {
 
   @Override
   default void addConstraint(@NonNull IExpectConstraint constraint) {
+    getConstraintSupport().addConstraint(constraint);
+  }
+
+  @Override
+  default void addConstraint(@NonNull IReportConstraint constraint) {
     getConstraintSupport().addConstraint(constraint);
   }
 }

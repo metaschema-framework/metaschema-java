@@ -65,4 +65,17 @@ public @interface ValueConstraints {
    */
   @NonNull
   Expect[] expect() default {};
+
+  /**
+   * Get the report constraints for the type or field this annotation is applied
+   * to.
+   * <p>
+   * Report constraints generate findings when their test expression evaluates to
+   * {@code true}, which is the opposite of expect constraints.
+   *
+   * @return the report constraints or an empty array if no report constraints are
+   *         defined
+   */
+  @NonNull
+  Report[] report() default {};
 }

@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
+import gov.nist.secauto.metaschema.core.model.constraint.IReportConstraint;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.logging.log4j.LogBuilder;
@@ -288,6 +289,27 @@ public class LoggingConstraintValidationHandler
           constraint.getId(),
           target,
           newExpectViolationMessage(
+              constraint,
+              node,
+              target,
+              dynamicContext),
+          NO_EXCEPTION);
+    }
+  }
+
+  @Override
+  public void handleReportViolation(
+      @NonNull IReportConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    Level level = constraint.getLevel();
+    if (isLogged(level)) {
+      logMessage(
+          level,
+          constraint.getId(),
+          target,
+          newReportViolationMessage(
               constraint,
               node,
               target,

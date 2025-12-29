@@ -75,6 +75,14 @@ public interface IValueConstrained {
   List<? extends IExpectConstraint> getExpectConstraints();
 
   /**
+   * Get the collection of report constraints, if any.
+   *
+   * @return the constraints or an empty list
+   */
+  @NonNull
+  List<? extends IReportConstraint> getReportConstraints();
+
+  /**
    * Add a new let expression.
    *
    * @param let
@@ -115,4 +123,12 @@ public interface IValueConstrained {
    *          the constraint to add
    */
   void addConstraint(@NonNull IExpectConstraint constraint);
+
+  /**
+   * Add a new constraint.
+   *
+   * @param constraint
+   *          the constraint to add
+   */
+  void addConstraint(@NonNull IReportConstraint constraint);
 }

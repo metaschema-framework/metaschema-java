@@ -79,36 +79,43 @@
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-expect-constraint">
 			<java>
+				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
 				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-has-cardinality-constraint">
 			<java>
+				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
 				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-index-constraint">
 			<java>
+				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
 				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-index-has-key-constraint">
 			<java>
+				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
 				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-is-unique-constraint">
 			<java>
+				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
 				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-matches-constraint">
 			<java>
+				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
 				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-report-constraint">
 			<java>
+				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
 				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
