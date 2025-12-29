@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.databind.io.xml;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.databind.io.IProblemHandler;
+import gov.nist.secauto.metaschema.databind.io.ValidationContext;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceFlag;
@@ -19,6 +20,7 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 @FunctionalInterface
 public interface IXmlProblemHandler extends IProblemHandler {
@@ -96,6 +98,34 @@ public interface IXmlProblemHandler extends IProblemHandler {
   }
 
   /**
+   * A callback used to handle bound flag instances for which no data was found
+   * when the content was parsed, with additional validation context.
+   * <p>
+   * This can be used to supply default or prescribed values based on application
+   * logic.
+   *
+   * @param parentDefinition
+   *          the bound assembly class on which the missing instances are found
+   * @param targetObject
+   *          the Java object for the {@code parentDefinition}
+   * @param unhandledInstances
+   *          the set of instances that had no data to parse
+   * @param context
+   *          the validation context with location and path information, may be
+   *          null for backward compatibility
+   * @throws IOException
+   *           if an error occurred while handling the missing instances
+   */
+  default void handleMissingFlagInstances(
+      @NonNull IBoundDefinitionModelComplex parentDefinition,
+      @NonNull IBoundObject targetObject,
+      @NonNull Collection<IBoundInstanceFlag> unhandledInstances,
+      @Nullable ValidationContext context)
+      throws IOException {
+    handleMissingInstances(parentDefinition, targetObject, unhandledInstances, context);
+  }
+
+  /**
    * A callback used to handle bound model instances for which no data was found
    * when the content was parsed.
    * <p>
@@ -117,5 +147,33 @@ public interface IXmlProblemHandler extends IProblemHandler {
       @NonNull Collection<? extends IBoundInstanceModel<?>> unhandledInstances)
       throws IOException {
     handleMissingInstances(parentDefinition, targetObject, unhandledInstances);
+  }
+
+  /**
+   * A callback used to handle bound model instances for which no data was found
+   * when the content was parsed, with additional validation context.
+   * <p>
+   * This can be used to supply default or prescribed values based on application
+   * logic.
+   *
+   * @param parentDefinition
+   *          the bound assembly class on which the missing instances are found
+   * @param targetObject
+   *          the Java object for the {@code parentDefinition}
+   * @param unhandledInstances
+   *          the set of instances that had no data to parse
+   * @param context
+   *          the validation context with location and path information, may be
+   *          null for backward compatibility
+   * @throws IOException
+   *           if an error occurred while handling the missing instances
+   */
+  default void handleMissingModelInstances(
+      @NonNull IBoundDefinitionModelAssembly parentDefinition,
+      @NonNull IBoundObject targetObject,
+      @NonNull Collection<? extends IBoundInstanceModel<?>> unhandledInstances,
+      @Nullable ValidationContext context)
+      throws IOException {
+    handleMissingInstances(parentDefinition, targetObject, unhandledInstances, context);
   }
 }

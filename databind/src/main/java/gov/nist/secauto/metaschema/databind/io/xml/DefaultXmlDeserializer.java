@@ -136,8 +136,11 @@ public class DefaultXmlDeserializer<CLASS extends IBoundObject>
   private XMLEventReader2 newXMLEventReader2(
       @NonNull URI documentUri,
       @NonNull Reader reader) throws XMLStreamException {
+    // Use the URI for creating the event reader - this is used for location
+    // reporting
+    String systemId = documentUri.toASCIIString();
     XMLEventReader2 eventReader
-        = (XMLEventReader2) getXMLInputFactory().createXMLEventReader(documentUri.toASCIIString(), reader);
+        = (XMLEventReader2) getXMLInputFactory().createXMLEventReader(systemId, reader);
     EventFilter filter = new CommentFilter();
     return ObjectUtils.notNull((XMLEventReader2) getXMLInputFactory().createFilteredReader(eventReader, filter));
   }

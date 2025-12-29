@@ -6,12 +6,16 @@
 package gov.nist.secauto.metaschema.databind.io.xml;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
-import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.model.IResourceLocation;
+import gov.nist.secauto.metaschema.core.model.SimpleResourceLocation;
 import gov.nist.secauto.metaschema.core.model.util.XmlEventUtil;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.BindingException;
+import gov.nist.secauto.metaschema.databind.io.Format;
+import gov.nist.secauto.metaschema.databind.io.PathTracker;
+import gov.nist.secauto.metaschema.databind.io.ValidationContext;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
@@ -70,6 +74,11 @@ public class MetaschemaXmlReader
   private final URI source;
   @NonNull
   private final IXmlProblemHandler problemHandler;
+  /**
+   * Tracks the current parsing path for context-aware error reporting.
+   */
+  @NonNull
+  private final PathTracker pathTracker = new PathTracker();
 
   /**
    * Construct a new Module-aware XML parser using the default problem handler.
@@ -118,6 +127,21 @@ public class MetaschemaXmlReader
   @Override
   public IXmlProblemHandler getProblemHandler() {
     return problemHandler;
+  }
+
+  /**
+   * Build a validation context from the current XML parser state.
+   *
+   * @param location
+   *          the XML location, may be null
+   * @return a new validation context with current location and path
+   */
+  @NonNull
+  private ValidationContext buildValidationContext(@Nullable Location location) {
+    IResourceLocation resourceLocation = location == null
+        ? SimpleResourceLocation.UNKNOWN
+        : SimpleResourceLocation.fromXmlLocation(location);
+    return ValidationContext.of(source, resourceLocation, pathTracker.getCurrentPath(), Format.XML);
   }
 
   /**
@@ -210,7 +234,8 @@ public class MetaschemaXmlReader
       } else {
         try {
           // get the attribute value
-          Object value = instance.getDefinition().getJavaTypeAdapter().parse(ObjectUtils.notNull(attribute.getValue()));
+          Object value = instance.getDefinition().getJavaTypeAdapter()
+              .parse(ObjectUtils.notNull(attribute.getValue()));
           // apply the value to the parentObject
           instance.setValue(targetObject, value);
           flagInstanceMap.remove(qname);
@@ -226,10 +251,13 @@ public class MetaschemaXmlReader
     }
 
     if (!flagInstanceMap.isEmpty()) {
+      // Build validation context with current location and path
+      ValidationContext context = buildValidationContext(start.getLocation());
       getProblemHandler().handleMissingFlagInstances(
           targetDefinition,
           targetObject,
-          ObjectUtils.notNull(flagInstanceMap.values()));
+          ObjectUtils.notNull(flagInstanceMap.values()),
+          context);
     }
   }
 
@@ -258,7 +286,14 @@ public class MetaschemaXmlReader
     }
 
     // process all properties that did not get a value
-    getProblemHandler().handleMissingModelInstances(targetDefinition, targetObject, unhandledProperties);
+    try {
+      XMLEvent event = getReader().peek();
+      Location location = event != null ? event.getLocation() : null;
+      ValidationContext context = buildValidationContext(location);
+      getProblemHandler().handleMissingModelInstances(targetDefinition, targetObject, unhandledProperties, context);
+    } catch (XMLStreamException ex) {
+      throw new IOException(ex);
+    }
 
     XMLEventReader2 reader = getReader();
     URI resource = getSource();
@@ -465,6 +500,9 @@ public class MetaschemaXmlReader
       URI resource = getSource();
       QName expectedQName = expectedEQName.toQName();
 
+      // Track path for error messages
+      pathTracker.push(definition.getEffectiveName());
+
       try {
         // consume the start element
         XmlEventUtil.requireStartElement(reader, resource, expectedQName);
@@ -472,7 +510,8 @@ public class MetaschemaXmlReader
         Location location = start.getLocation();
 
         // construct the item
-        IBoundObject item = definition.newInstance(location == null ? null : () -> new MetaschemaData(location));
+        IBoundObject item = definition.newInstance(
+            location == null ? null : () -> SimpleResourceLocation.fromXmlLocation(location));
 
         // call pre-parse initialization hook
         definition.callBeforeDeserialize(item, parent);
@@ -493,6 +532,8 @@ public class MetaschemaXmlReader
         return ObjectUtils.asType(item);
       } catch (BindingException | XMLStreamException ex) {
         throw new IOException(ex);
+      } finally {
+        pathTracker.pop();
       }
     }
 
@@ -661,38 +702,6 @@ public class MetaschemaXmlReader
       } catch (XMLStreamException ex) {
         throw new IOException(ex);
       }
-    }
-  }
-
-  private static class MetaschemaData implements IMetaschemaData {
-    private final int line;
-    private final int column;
-    private final long charOffset;
-
-    public MetaschemaData(@NonNull Location location) {
-      this.line = location.getLineNumber();
-      this.column = location.getColumnNumber();
-      this.charOffset = location.getCharacterOffset();
-    }
-
-    @Override
-    public int getLine() {
-      return line;
-    }
-
-    @Override
-    public int getColumn() {
-      return column;
-    }
-
-    @Override
-    public long getCharOffset() {
-      return charOffset;
-    }
-
-    @Override
-    public long getByteOffset() {
-      return -1;
     }
   }
 

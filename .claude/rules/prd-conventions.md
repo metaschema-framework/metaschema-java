@@ -37,14 +37,16 @@ Include this in every PR's acceptance criteria.
 
 ## PRD Tracking
 
-### Active PRD Management
+### Active PRD Management (BLOCKING)
 
 When starting development on a PRD:
 1. Add entry to CLAUDE.md "Active PRDs" table with status "In Progress"
 
-When completing a PRD:
-1. Update status to "Completed" with completion date
-2. Archive or remove from active list as appropriate
+When completing a PRD (before final push of PR):
+1. **Remove the entry from the "Active PRDs" table** in CLAUDE.md
+2. Add entry to "Completed PRDs" table with completion date
+3. Include this CLAUDE.md update in the PR so it is applied when the PR is merged
+4. This is BLOCKING - do not push the final PR without updating CLAUDE.md
 
 ### Status Values
 
@@ -95,6 +97,32 @@ All functional code changes require test-driven development:
 2. Verify tests pass with existing implementation
 3. Make code changes
 4. Verify tests still pass
+
+## PRD Update Requirement (BLOCKING)
+
+**Before pushing any implementation changes, update the PRD documents:**
+
+1. **Mark completed tasks**: Update acceptance criteria checkboxes (`[ ]` → `[x]`) in `implementation-plan.md`
+2. **Update file lists**: Add any new files or update change types in the "Files Changed Summary"
+3. **Note deviations**: Document any changes from the original plan
+4. **Commit PRD updates**: Include PRD updates in the same commit or as a follow-up commit before pushing
+
+### When to Update PRDs
+
+| Event | Required Update |
+|-------|-----------------|
+| Task completed | Mark acceptance criteria as `[x]` |
+| New file created | Add to "Files Changed Summary" |
+| Plan deviation | Add note explaining the change |
+| Phase completed | Verify all tasks in phase are marked |
+| Before creating PR | Ensure all completed work is reflected |
+
+### Why This Matters
+
+- PRDs serve as living documentation of implementation progress
+- Reviewers use PRDs to understand what was done vs. planned
+- Future maintainers need accurate records of what was implemented
+- Incomplete PRD updates create confusion about project status
 
 ## Document Quality
 

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+  <schema-name>Validation Error Messages Test</schema-name>
+  <schema-version>1.0</schema-version>
+  <short-name>validation-errors-test</short-name>
+  <namespace>http://csrc.nist.gov/ns/metaschema/testing/validation-errors</namespace>
+  <json-base-uri>http://csrc.nist.gov/ns/metaschema/testing/validation-errors</json-base-uri>
+
+  <!-- Root assembly with required properties of different types -->
+  <define-assembly name="root">
+    <formal-name>Root</formal-name>
+    <description>Root assembly for testing validation error messages</description>
+    <root-name>root</root-name>
+    <flag ref="required-flag" required="yes" />
+    <flag ref="optional-flag" />
+    <model>
+      <field ref="required-field" min-occurs="1" />
+      <field ref="optional-field" />
+      <assembly ref="required-assembly" min-occurs="1" />
+      <assembly ref="optional-assembly" />
+      <assembly ref="nested-assembly" />
+    </model>
+  </define-assembly>
+
+  <!-- Flags -->
+  <define-flag name="required-flag">
+    <formal-name>Required Flag</formal-name>
+    <description>A required flag for testing error messages</description>
+  </define-flag>
+
+  <define-flag name="optional-flag">
+    <formal-name>Optional Flag</formal-name>
+    <description>An optional flag</description>
+  </define-flag>
+
+  <define-flag name="id">
+    <formal-name>Identifier</formal-name>
+    <description>An identifier flag</description>
+  </define-flag>
+
+  <!-- Fields -->
+  <define-field name="required-field">
+    <formal-name>Required Field</formal-name>
+    <description>A required field for testing error messages</description>
+  </define-field>
+
+  <define-field name="optional-field">
+    <formal-name>Optional Field</formal-name>
+    <description>An optional field</description>
+  </define-field>
+
+  <define-field name="nested-field">
+    <formal-name>Nested Field</formal-name>
+    <description>A field inside a nested assembly</description>
+  </define-field>
+
+  <!-- Assemblies -->
+  <define-assembly name="required-assembly">
+    <formal-name>Required Assembly</formal-name>
+    <description>A required assembly for testing error messages</description>
+    <flag ref="id" required="yes" />
+  </define-assembly>
+
+  <define-assembly name="optional-assembly">
+    <formal-name>Optional Assembly</formal-name>
+    <description>An optional assembly</description>
+  </define-assembly>
+
+  <!-- Nested assembly for testing path context -->
+  <define-assembly name="nested-assembly">
+    <formal-name>Nested Assembly</formal-name>
+    <description>An assembly with nested required properties for testing path context</description>
+    <flag ref="id" />
+    <model>
+      <field ref="nested-field" min-occurs="1" />
+    </model>
+  </define-assembly>
+
+</METASCHEMA>
