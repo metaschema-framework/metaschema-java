@@ -41,7 +41,9 @@ public interface IConstraint extends IAttributable, IDescribable {
     /** Constraint verifying index key references. */
     INDEX_HAS_KEY("index-has-key"),
     /** Constraint validating pattern matching. */
-    MATCHES("matches");
+    MATCHES("matches"),
+    /** Constraint reporting a condition. */
+    REPORT("report");
 
     @NonNull
     private final String name;
