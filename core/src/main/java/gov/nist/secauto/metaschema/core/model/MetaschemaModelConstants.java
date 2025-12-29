@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.model.constraint.IExpectConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IIndexHasKeyConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IMatchesConstraint;
+import gov.nist.secauto.metaschema.core.model.constraint.IReportConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IUniqueConstraint;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 
@@ -115,6 +116,13 @@ public final class MetaschemaModelConstants {
   @NonNull
   public static final IEnhancedQName EXPECT_CONSTRAINT_QNAME
       = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "expect");
+
+  /**
+   * The name of an {@link IReportConstraint} constraint in the Metaschema model.
+   */
+  @NonNull
+  public static final IEnhancedQName REPORT_CONSTRAINT_QNAME
+      = IEnhancedQName.of(MetaschemaConstants.METASCHEMA_NAMESPACE, "report");
 
   /**
    * The name of an {@link IIndexConstraint} constraint in the Metaschema model.

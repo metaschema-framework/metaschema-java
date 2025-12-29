@@ -53,6 +53,9 @@ public final class ConstraintSupport {
       Arrays.stream(valueAnnotation.expect())
           .map(annotation -> ConstraintFactory.newExpectConstraint(annotation, source))
           .forEachOrdered(set::addConstraint);
+      Arrays.stream(valueAnnotation.report())
+          .map(annotation -> ConstraintFactory.newReportConstraint(annotation, source))
+          .forEachOrdered(set::addConstraint);
     }
   }
 

@@ -27,6 +27,7 @@ import gov.nist.secauto.metaschema.databind.model.annotations.GroupAs;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly;
 import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase;
+import gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -36,7 +37,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     formalName = "Value Matches Constraint",
     name = "targeted-matches-constraint",
     moduleClass = MetaschemaModelModule.class)
-public class TargetedMatchesConstraint implements IBoundObject, IConfigurableMessageConstraintBase {
+public class TargetedMatchesConstraint
+    implements IBoundObject, ITargetedConstraintBase, IConfigurableMessageConstraintBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundFlag(

@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=../../../../../../../../../../../metaschema-cli/target/generated-resources/metaschema/schema/json/metaschema-model_schema.json
+metaschema-meta-constraints:
+  contexts:
+  - metapaths:
+    - target: "/level1"
+    constraints:
+      lets:
+      - var: level
+        expression: 'level1'
+      rules:
+      - object-type: report
+        id: level1-report
+        target: .
+        test: exists(@deprecated)
+        message: This element is deprecated.
+        level: INFORMATIONAL

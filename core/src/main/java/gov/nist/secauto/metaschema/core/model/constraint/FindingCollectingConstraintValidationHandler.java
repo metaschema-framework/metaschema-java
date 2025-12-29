@@ -11,6 +11,7 @@ import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
+import gov.nist.secauto.metaschema.core.model.constraint.IReportConstraint;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationFinding.Kind;
 import gov.nist.secauto.metaschema.core.model.validation.IValidationResult;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -218,6 +219,20 @@ public class FindingCollectingConstraintValidationHandler
         .kind(toKind(constraint.getLevel()))
         .target(target)
         .message(newExpectViolationMessage(constraint, node, target, dynamicContext))
+        .build());
+  }
+
+  @Override
+  public void handleReportViolation(
+      @NonNull IReportConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    addFinding(ConstraintValidationFinding.builder(constraint, node)
+        .severity(constraint.getLevel())
+        .kind(toKind(constraint.getLevel()))
+        .target(target)
+        .message(newReportViolationMessage(constraint, node, target, dynamicContext))
         .build());
   }
 

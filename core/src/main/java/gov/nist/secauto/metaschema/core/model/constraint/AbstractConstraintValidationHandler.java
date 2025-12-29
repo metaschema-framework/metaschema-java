@@ -311,6 +311,40 @@ public abstract class AbstractConstraintValidationHandler implements IConstraint
   }
 
   /**
+   * Construct a new message for the provided report {@code constraint} applied to
+   * the {@code node}.
+   * <p>
+   * Report constraints generate findings when their test expression evaluates to
+   * {@code true}, which is the opposite of expect constraints.
+   *
+   * @param constraint
+   *          the constraint the requested message pertains to
+   * @param node
+   *          the item the constraint targeted
+   * @param target
+   *          the target matching the constraint
+   * @param dynamicContext
+   *          the Metapath dynamic execution context to use for Metapath
+   *          evaluation
+   * @return the new message
+   * @throws ConstraintValidationException
+   *           if the custom message contains a Metapath expression that is
+   *           invalid or if the expression failed to evaluate
+   */
+  @NonNull
+  protected String newReportViolationMessage(
+      @NonNull IReportConstraint constraint,
+      @NonNull INodeItem node,
+      @NonNull INodeItem target,
+      @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    return constraint.getMessage() == null
+        ? ObjectUtils.notNull(String.format("Report constraint '%s' matched the data at path '%s'",
+            constraint.getTest().getPath(),
+            toPath(target)))
+        : constraint.generateMessage(target, dynamicContext);
+  }
+
+  /**
    * Construct a new violation message for the provided {@code constraint} applied
    * to the {@code node}.
    *

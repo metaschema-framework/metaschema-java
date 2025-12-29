@@ -63,6 +63,8 @@ class AnnotationGeneratorTest {
         will(returnValue(List.of()));
         allowing(flag).getExpectConstraints();
         will(returnValue(List.of()));
+        allowing(flag).getReportConstraints();
+        will(returnValue(List.of()));
       }
     });
 
