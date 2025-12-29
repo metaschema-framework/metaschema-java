@@ -41,6 +41,7 @@ gh api repos/$REPO/issues/$PR_NUMBER/comments \
 ```
 
 **Comment Types:**
+
 | Type | API Endpoint | Description |
 |------|--------------|-------------|
 | Review comments | `/pulls/{id}/comments` | Line-specific comments on files |
