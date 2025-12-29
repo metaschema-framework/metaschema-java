@@ -16,6 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides a common base implementation for datatype management during schema
+ * generation.
+ * <p>
+ * This class maintains a mapping between Metaschema data type adapters and
+ * their corresponding schema type names, handling the translation from
+ * Metaschema datatype names to format-specific type names.
+ */
 public abstract class AbstractDatatypeManager implements IDatatypeManager {
   @NonNull
   private static final Map<String, String> DATATYPE_TRANSLATION_MAP // NOPMD - intentional
@@ -50,6 +58,11 @@ public abstract class AbstractDatatypeManager implements IDatatypeManager {
   @NonNull
   private final Map<IDataTypeAdapter<?>, String> datatypeToTypeMap = new ConcurrentHashMap<>(); // NOPMD - intentional
 
+  /**
+   * Get the mapping of Metaschema datatype names to schema type names.
+   *
+   * @return an unmodifiable map of datatype name translations
+   */
   @SuppressWarnings("null")
   @NonNull
   protected static Map<String, String> getDatatypeTranslationMap() {

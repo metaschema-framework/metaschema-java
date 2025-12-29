@@ -4,8 +4,13 @@
  */
 
 /**
- * Abstract support for managing Module data type implementations aligned with a
- * given schema format for use in schema generation.
+ * Provides datatype management for schema generation.
+ * <p>
+ * This package contains interfaces and abstract classes for managing Metaschema
+ * datatypes during schema generation, including mapping Metaschema types to
+ * their corresponding schema representations.
+ *
+ * @see gov.nist.secauto.metaschema.schemagen.datatype.IDatatypeManager
  */
 
 package gov.nist.secauto.metaschema.schemagen.datatype;

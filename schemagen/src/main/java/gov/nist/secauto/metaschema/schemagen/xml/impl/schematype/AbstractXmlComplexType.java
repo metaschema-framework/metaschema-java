@@ -17,12 +17,29 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides a common base implementation for XML complex type schema elements.
+ * <p>
+ * This class represents a complex type in an XML schema that corresponds to a
+ * Metaschema model definition (assembly or field with flags).
+ *
+ * @param <D>
+ *          the type of model definition this complex type represents
+ */
 public abstract class AbstractXmlComplexType<D extends IModelDefinition>
     extends AbstractXmlType
     implements IXmlComplexType {
   @NonNull
   private final D definition;
 
+  /**
+   * Construct a new complex type.
+   *
+   * @param qname
+   *          the qualified name for the type
+   * @param definition
+   *          the model definition this type represents
+   */
   public AbstractXmlComplexType(
       @NonNull QName qname,
       @NonNull D definition) {
@@ -55,8 +72,26 @@ public abstract class AbstractXmlComplexType<D extends IModelDefinition>
     }
   }
 
+  /**
+   * Generate the body content of the complex type.
+   *
+   * @param state
+   *          the generation state for context and writing
+   * @throws XMLStreamException
+   *           if an error occurs while writing the XML
+   */
   protected abstract void generateTypeBody(@NonNull XmlGenerationState state) throws XMLStreamException;
 
+  /**
+   * Generate an XML schema attribute declaration for a flag instance.
+   *
+   * @param instance
+   *          the flag instance to generate an attribute for
+   * @param state
+   *          the generation state for context and writing
+   * @throws XMLStreamException
+   *           if an error occurs while writing the XML
+   */
   protected static void generateFlagInstance(@NonNull IFlagInstance instance, @NonNull XmlGenerationState state)
       throws XMLStreamException {
     state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "attribute", XmlSchemaGenerator.NS_XML_SCHEMA);

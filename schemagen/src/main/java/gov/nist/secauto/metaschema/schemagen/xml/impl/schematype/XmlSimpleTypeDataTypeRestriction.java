@@ -21,11 +21,29 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An XML Schema simple type that restricts a base data type with enumerated
+ * allowed values.
+ * <p>
+ * This class generates an xs:simpleType with xs:restriction containing
+ * xs:enumeration elements for each allowed value defined in the Metaschema
+ * constraints.
+ */
 public class XmlSimpleTypeDataTypeRestriction
     extends AbstractXmlSimpleType {
   @NonNull
   private final AllowedValueCollection allowedValuesCollection;
 
+  /**
+   * Construct a new data type restriction.
+   *
+   * @param qname
+   *          the qualified name for the XML Schema type
+   * @param definition
+   *          the Metaschema definition that this restriction applies to
+   * @param allowedValuesCollection
+   *          the collection of allowed values to use as enumeration constraints
+   */
   public XmlSimpleTypeDataTypeRestriction(
       @NonNull QName qname,
       @NonNull IValuedDefinition definition,
@@ -34,6 +52,11 @@ public class XmlSimpleTypeDataTypeRestriction
     this.allowedValuesCollection = allowedValuesCollection;
   }
 
+  /**
+   * Get the collection of allowed values for this restriction.
+   *
+   * @return the allowed values collection
+   */
   protected AllowedValueCollection getAllowedValuesCollection() {
     return allowedValuesCollection;
   }
@@ -84,6 +107,19 @@ public class XmlSimpleTypeDataTypeRestriction
     }
   }
 
+  /**
+   * Generate an XML Schema annotation containing documentation for an allowed
+   * value.
+   *
+   * @param description
+   *          the markup description to include in the documentation
+   * @param xmlNS
+   *          the XML namespace for documentation elements
+   * @param state
+   *          the schema generation state for writing output
+   * @throws XMLStreamException
+   *           if an error occurs while writing XML
+   */
   public static void generateDescriptionAnnotation(
       @NonNull MarkupLine description,
       @NonNull String xmlNS,

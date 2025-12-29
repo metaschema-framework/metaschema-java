@@ -19,6 +19,12 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides a base implementation for XML markup datatype providers.
+ * <p>
+ * This class handles the loading and processing of XML schema resources that
+ * define markup datatypes (such as markup-line and markup-multiline).
+ */
 public abstract class AbstractXmlMarkupDatatypeProvider
     extends AbstractXmlDatatypeProvider {
 
@@ -44,6 +50,11 @@ public abstract class AbstractXmlMarkupDatatypeProvider
         CollectionUtil.singletonMap("xs", JDom2XmlSchemaLoader.NS_XML_SCHEMA));
   }
 
+  /**
+   * Get the name of the data type provided by this provider.
+   *
+   * @return the data type name
+   */
   @NonNull
   protected abstract String getDataTypeName();
 

@@ -29,11 +29,28 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Indexes definitions from a Metaschema module for use in schema generation.
+ * <p>
+ * This class maintains an ordered index of all definitions that are reachable
+ * from root assembly definitions, tracking their reference counts, inline
+ * status, and other usage patterns relevant to schema generation.
+ */
 public class ModuleIndex {
   // needs to be ordered
   @SuppressWarnings("PMD.UseConcurrentHashMap")
   private final Map<IDefinition, DefinitionEntry> index = new LinkedHashMap<>();
 
+  /**
+   * Creates an index of all definitions reachable from the module's root assembly
+   * definitions.
+   *
+   * @param module
+   *          the Metaschema module to index
+   * @param inlineStrategy
+   *          the strategy for determining which definitions should be inlined
+   * @return a new module index containing entries for all reachable definitions
+   */
   @NonNull
   public static ModuleIndex indexDefinitions(@NonNull IModule module, @NonNull IInlineStrategy inlineStrategy) {
     Collection<? extends IAssemblyDefinition> definitions = module.getExportedRootAssemblyDefinitions();
@@ -53,10 +70,28 @@ public class ModuleIndex {
     return index;
   }
 
+  /**
+   * Checks if an entry exists in this index for the specified definition.
+   *
+   * @param definition
+   *          the definition to check
+   * @return {@code true} if an entry exists for the definition, {@code false}
+   *         otherwise
+   */
   public boolean hasEntry(@NonNull IDefinition definition) {
     return index.containsKey(definition);
   }
 
+  /**
+   * Retrieves or creates the entry for the specified definition.
+   * <p>
+   * If no entry exists for the definition, a new entry is created and added to
+   * the index.
+   *
+   * @param definition
+   *          the definition to get an entry for
+   * @return the existing or newly created entry for the definition
+   */
   @NonNull
   public DefinitionEntry getEntry(@NonNull IDefinition definition) {
     return ObjectUtils.notNull(index.computeIfAbsent(
@@ -64,6 +99,12 @@ public class ModuleIndex {
         k -> new ModuleIndex.DefinitionEntry(ObjectUtils.notNull(k))));
   }
 
+  /**
+   * Retrieves all definition entries in this index.
+   *
+   * @return an unmodifiable collection of all definition entries, in insertion
+   *         order
+   */
   @NonNull
   public Collection<DefinitionEntry> getDefinitions() {
     return ObjectUtils.notNull(index.values());
@@ -173,6 +214,12 @@ public class ModuleIndex {
     }
   }
 
+  /**
+   * Represents an entry in the module index for a single definition.
+   * <p>
+   * Each entry tracks usage information about a definition including its
+   * references, inline status, and how it is used within choice groups.
+   */
   public static class DefinitionEntry {
     @NonNull
     private final IDefinition definition;
@@ -182,71 +229,154 @@ public class ModuleIndex {
     private final AtomicBoolean usedAsChoice = new AtomicBoolean(); // false
     private final AtomicBoolean choiceSibling = new AtomicBoolean(); // false
 
+    /**
+     * Constructs a new definition entry for the specified definition.
+     *
+     * @param definition
+     *          the definition this entry represents
+     */
     public DefinitionEntry(@NonNull IDefinition definition) {
       this.definition = definition;
     }
 
+    /**
+     * Retrieves the definition associated with this entry.
+     *
+     * @return the definition
+     */
     @NonNull
     public IDefinition getDefinition() {
       return definition;
     }
 
+    /**
+     * Checks if this definition is a root assembly definition.
+     *
+     * @return {@code true} if the definition is a root assembly, {@code false}
+     *         otherwise
+     */
     public boolean isRoot() {
       return definition instanceof IAssemblyDefinition
           && ((IAssemblyDefinition) definition).isRoot();
     }
 
+    /**
+     * Checks if this definition is referenced by any instance or is a root
+     * definition.
+     *
+     * @return {@code true} if the definition has references or is a root,
+     *         {@code false} otherwise
+     */
     public boolean isReferenced() {
       return !references.isEmpty()
           || isRoot();
     }
 
+    /**
+     * Retrieves all instances that reference this definition.
+     *
+     * @return a set of referencing instances
+     */
     public Set<INamedInstance> getReferences() {
       return references;
     }
 
+    /**
+     * Adds a reference to this definition from the specified instance.
+     *
+     * @param reference
+     *          the instance referencing this definition
+     * @return {@code true} if the reference was added, {@code false} if it already
+     *         existed
+     */
     public boolean addReference(@NonNull INamedInstance reference) {
       return references.add(reference);
     }
 
+    /**
+     * Marks this definition as having been visited during indexing.
+     */
     public void markVisited() {
       visited.compareAndSet(false, true);
     }
 
+    /**
+     * Checks if this definition has been visited during indexing.
+     *
+     * @return {@code true} if the definition was visited, {@code false} otherwise
+     */
     public boolean isVisited() {
       return visited.get();
     }
 
+    /**
+     * Marks this definition as being inlined in the generated schema.
+     */
     public void markInline() {
       inline.compareAndSet(false, true);
     }
 
+    /**
+     * Checks if this definition should be inlined in the generated schema.
+     *
+     * @return {@code true} if the definition is inlined, {@code false} otherwise
+     */
     public boolean isInline() {
       return inline.get();
     }
 
+    /**
+     * Marks this definition as being used within a choice group.
+     */
     public void markUsedAsChoice() {
       usedAsChoice.compareAndSet(false, true);
     }
 
+    /**
+     * Checks if this definition is used within a choice group.
+     *
+     * @return {@code true} if the definition is used as a choice, {@code false}
+     *         otherwise
+     */
     public boolean isUsedAsChoice() {
       return usedAsChoice.get();
     }
 
+    /**
+     * Marks this definition as having sibling elements in a choice group.
+     */
     public void markAsChoiceSibling() {
       choiceSibling.compareAndSet(false, true);
     }
 
+    /**
+     * Checks if this definition has sibling elements in a choice group.
+     *
+     * @return {@code true} if the definition is a choice sibling, {@code false}
+     *         otherwise
+     */
     public boolean isChoiceSibling() {
       return choiceSibling.get();
     }
 
+    /**
+     * Checks if any reference to this definition uses a JSON key flag.
+     *
+     * @return {@code true} if any reference has a JSON key, {@code false} otherwise
+     */
     public boolean isUsedAsJsonKey() {
       return references.stream()
           .anyMatch(ref -> ref instanceof INamedModelInstance
               && ((INamedModelInstance) ref).hasJsonKey());
     }
 
+    /**
+     * Checks if this definition is used without a JSON key flag or is a flag
+     * definition.
+     *
+     * @return {@code true} if the definition is a flag or has any references
+     *         without a JSON key, {@code false} otherwise
+     */
     public boolean isUsedWithoutJsonKey() {
       return definition instanceof IFlagDefinition
           || references.isEmpty()
@@ -255,6 +385,12 @@ public class ModuleIndex {
                   && !((INamedModelInstance) ref).hasJsonKey());
     }
 
+    /**
+     * Checks if this definition is a member of a choice group.
+     *
+     * @return {@code true} if any reference is a grouped model instance,
+     *         {@code false} otherwise
+     */
     public boolean isChoiceGroupMember() {
       return references.stream()
           .anyMatch(INamedModelInstanceGrouped.class::isInstance);

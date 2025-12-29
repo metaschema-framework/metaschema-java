@@ -27,19 +27,39 @@ import java.io.Writer;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Generates JSON Schema documents from Metaschema modules.
+ * <p>
+ * This generator produces JSON Schema draft-07 compatible schemas that can be
+ * used to validate JSON and YAML content conforming to the Metaschema model.
+ */
 public class JsonSchemaGenerator
     extends AbstractSchemaGenerator<JsonGenerator, JsonDatatypeManager, JsonGenerationState> {
   @NonNull
   private final JsonFactory jsonFactory;
 
+  /**
+   * Constructs a new JSON schema generator using a default JSON factory.
+   */
   public JsonSchemaGenerator() {
     this(new JsonFactory());
   }
 
+  /**
+   * Constructs a new JSON schema generator using the specified JSON factory.
+   *
+   * @param jsonFactory
+   *          the Jackson JSON factory to use for creating JSON generators
+   */
   public JsonSchemaGenerator(@NonNull JsonFactory jsonFactory) {
     this.jsonFactory = jsonFactory;
   }
 
+  /**
+   * Retrieves the JSON factory used by this generator.
+   *
+   * @return the JSON factory instance
+   */
   @NonNull
   public JsonFactory getJsonFactory() {
     return jsonFactory;

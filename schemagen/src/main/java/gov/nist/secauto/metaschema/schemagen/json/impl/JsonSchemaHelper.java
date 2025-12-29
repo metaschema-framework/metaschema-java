@@ -46,6 +46,13 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides utility methods for generating JSON Schema elements from Metaschema
+ * model components.
+ * <p>
+ * This class contains helper methods for generating titles, descriptions,
+ * defaults, properties, and handling choice combinations in JSON Schema output.
+ */
 public final class JsonSchemaHelper {
   /**
    * Supports comparison of named properties by their property name.
@@ -58,6 +65,14 @@ public final class JsonSchemaHelper {
   public static final Comparator<IJsonSchemaDefinable> DEFINABLE_NAME_COMPARATOR
       = Comparator.comparing(IJsonSchemaDefinable::getDefinitionName);
 
+  /**
+   * Generates a title property in the JSON Schema from the element's formal name.
+   *
+   * @param named
+   *          the named model element to extract the title from
+   * @param obj
+   *          the object node to add the title property to
+   */
   public static void generateTitle(
       @NonNull INamedModelElement named,
       @NonNull ObjectNode obj) {
@@ -67,6 +82,17 @@ public final class JsonSchemaHelper {
     }
   }
 
+  /**
+   * Generates a description property in the JSON Schema from the element's
+   * description and remarks.
+   *
+   * @param <NAMED>
+   *          the type of the named model element
+   * @param named
+   *          the named model element to extract the description from
+   * @param obj
+   *          the object node to add the description property to
+   */
   public static <NAMED extends INamedModelElement & IModelElement> void generateDescription(
       @NonNull NAMED named,
       @NonNull ObjectNode obj) {
@@ -91,6 +117,15 @@ public final class JsonSchemaHelper {
     }
   }
 
+  /**
+   * Generates a default property in the JSON Schema from the instance's default
+   * value.
+   *
+   * @param instance
+   *          the valued instance to extract the default from
+   * @param obj
+   *          the object node to add the default property to
+   */
   public static void generateDefault(
       @NonNull IValuedInstance instance,
       @NonNull ObjectNode obj) {
@@ -160,6 +195,16 @@ public final class JsonSchemaHelper {
         .toString());
   }
 
+  /**
+   * Generates properties and required array for a JSON Schema object type.
+   *
+   * @param properties
+   *          the collection of properties to generate
+   * @param node
+   *          the object node to add the properties and required array to
+   * @param state
+   *          the JSON generation state
+   */
   public static void generateProperties(
       @NonNull Collection<IJsonSchemaPropertyNamed> properties,
       @NonNull ObjectNode node,
@@ -188,6 +233,22 @@ public final class JsonSchemaHelper {
     }
   }
 
+  /**
+   * Builds a list of flag property schemas for the given definition.
+   * <p>
+   * Flags used as JSON keys are excluded from the returned list.
+   *
+   * @param definition
+   *          the model definition containing the flags
+   * @param jsonKeyFlagName
+   *          the name of the flag used as JSON key, or {@code null} if none
+   * @param state
+   *          the JSON generation state
+   * @return a list of flag property schemas, excluding the JSON key flag
+   * @throws IllegalArgumentException
+   *           if the specified JSON key flag name does not exist on the
+   *           definition
+   */
   @NonNull
   public static List<IJsonSchemaPropertyFlag> buildFlagProperties(
       @NonNull IModelDefinition definition,
@@ -213,6 +274,18 @@ public final class JsonSchemaHelper {
         .collect(Collectors.toUnmodifiableList()));
   }
 
+  /**
+   * Builds a list of model property schemas for the given container definition.
+   * <p>
+   * Choice instances are excluded from the returned list as they are handled
+   * separately.
+   *
+   * @param definition
+   *          the container model definition containing the model instances
+   * @param state
+   *          the JSON generation state
+   * @return a list of model property schemas, excluding choice instances
+   */
   @NonNull
   public static List<IJsonSchemaPropertyNamed> buildModelProperties(
       @NonNull IContainerModelAbsolute definition,
@@ -224,6 +297,20 @@ public final class JsonSchemaHelper {
         .collect(Collectors.toUnmodifiableList()));
   }
 
+  /**
+   * Generates the body of a JSON Schema for a field definition.
+   * <p>
+   * For simple fields without non-value properties, generates a direct value
+   * reference. For complex fields with flags, generates an object type with
+   * properties.
+   *
+   * @param field
+   *          the field definition schema to generate body for
+   * @param node
+   *          the object node to add the schema to
+   * @param state
+   *          the JSON generation state
+   */
   public static void generateFieldBody(
       @NonNull IJsonSchemaDefinitionField field,
       @NonNull ObjectNode node,
@@ -288,6 +375,19 @@ public final class JsonSchemaHelper {
     }
   }
 
+  /**
+   * Generates the body of a JSON Schema for an assembly definition.
+   * <p>
+   * Handles choice combinations by generating either a single object type or an
+   * anyOf array when multiple choice combinations exist.
+   *
+   * @param assembly
+   *          the assembly definition schema to generate body for
+   * @param node
+   *          the object node to add the schema to
+   * @param state
+   *          the JSON generation state
+   */
   public static void generateAssemblyBody(
       @NonNull IJsonSchemaDefinitionAssembly assembly,
       @NonNull ObjectNode node,
@@ -346,6 +446,20 @@ public final class JsonSchemaHelper {
     }
   }
 
+  /**
+   * Expands a base choice into all possible combinations with choice instances.
+   * <p>
+   * Creates a Cartesian product of the base choice with all options from the
+   * provided choice instances.
+   *
+   * @param baseChoice
+   *          the base choice to expand
+   * @param choiceInstances
+   *          the choice instances to combine with
+   * @param state
+   *          the JSON generation state
+   * @return a stream of all possible choice combinations
+   */
   @NonNull
   public static Stream<Choice> explodeChoices(
       @NonNull Choice baseChoice,
@@ -359,19 +473,46 @@ public final class JsonSchemaHelper {
     return ObjectUtils.notNull(retval);
   }
 
+  /**
+   * Represents a single combination of properties in a choice group.
+   * <p>
+   * Choice objects are used to track different valid combinations of properties
+   * when generating JSON Schema for assemblies with choice elements.
+   */
   public static final class Choice {
     @NonNull
     private final List<IJsonSchemaPropertyNamed> combinations;
 
+    /**
+     * Constructs a new choice with the specified property combinations.
+     *
+     * @param combinations
+     *          the list of properties in this choice combination
+     */
     public Choice(@NonNull List<IJsonSchemaPropertyNamed> combinations) {
       this.combinations = combinations;
     }
 
+    /**
+     * Retrieves the properties in this choice combination.
+     *
+     * @return the list of property schemas
+     */
     @NonNull
     public List<IJsonSchemaPropertyNamed> getCombinations() {
       return combinations;
     }
 
+    /**
+     * Creates new choice combinations by adding each new choice to this choice.
+     * <p>
+     * If newChoices is empty, returns a stream containing only this choice.
+     *
+     * @param newChoices
+     *          the new property options to combine with this choice
+     * @return a stream of new choices, each containing this choice's properties
+     *         plus one new property
+     */
     @NonNull
     public Stream<Choice> explode(@NonNull List<IJsonSchemaPropertyNamed> newChoices) {
       return ObjectUtils.notNull(newChoices.isEmpty()

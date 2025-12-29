@@ -11,7 +11,20 @@ import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents an XML Schema complex type derived from a Metaschema model
+ * definition.
+ * <p>
+ * Complex types are used to represent Metaschema assemblies and fields that
+ * have flags (attributes) or child elements. Unlike simple types, complex types
+ * can have both element content and attributes.
+ */
 public interface IXmlComplexType extends IXmlType {
+  /**
+   * Get the Metaschema definition that this complex type is derived from.
+   *
+   * @return the underlying Metaschema definition
+   */
   @NonNull
   IDefinition getDefinition();
 

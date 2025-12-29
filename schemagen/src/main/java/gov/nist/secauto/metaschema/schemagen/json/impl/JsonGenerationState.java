@@ -44,6 +44,13 @@ import java.util.function.Supplier;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Maintains state during JSON Schema generation from a Metaschema module.
+ * <p>
+ * This class manages caches for data type schemas, definition schemas, and
+ * provides methods for generating JSON schema definitions and writing the
+ * output.
+ */
 public class JsonGenerationState
     extends AbstractGenerationState<JsonGenerator, JsonDatatypeManager>
     implements IJsonGenerationState {
@@ -67,6 +74,16 @@ public class JsonGenerationState
       Map<IEnhancedQName, IJsonSchemaPropertyGrouped>> groupedInstanceToJsonKeyToJsonSchemaMap
           = new ConcurrentHashMap<>();
 
+  /**
+   * Constructs a new JSON generation state for the specified module.
+   *
+   * @param module
+   *          the Metaschema module to generate a schema for
+   * @param writer
+   *          the JSON generator for writing the schema output
+   * @param configuration
+   *          the schema generation configuration settings
+   */
   public JsonGenerationState(
       @NonNull IModule module,
       @NonNull JsonGenerator writer,
@@ -288,26 +305,66 @@ public class JsonGenerationState
     return getTypeNameForDefinition(definition, builder.toString());
   }
 
+  /**
+   * Writes an object node to the JSON output.
+   *
+   * @param schemaNode
+   *          the object node to write
+   * @throws IOException
+   *           if an I/O error occurs during writing
+   */
   public void writeObject(ObjectNode schemaNode) throws IOException {
     getWriter().writeObject(schemaNode);
   }
 
+  /**
+   * Writes the start of a JSON object to the output.
+   *
+   * @throws IOException
+   *           if an I/O error occurs during writing
+   */
   @SuppressWarnings("resource")
   public void writeStartObject() throws IOException {
     getWriter().writeStartObject();
   }
 
+  /**
+   * Writes the end of a JSON object to the output.
+   *
+   * @throws IOException
+   *           if an I/O error occurs during writing
+   */
   @SuppressWarnings("resource")
   public void writeEndObject() throws IOException {
     getWriter().writeEndObject();
   }
 
+  /**
+   * Writes a field with a string value to the JSON output.
+   *
+   * @param fieldName
+   *          the name of the field to write
+   * @param value
+   *          the string value of the field
+   * @throws IOException
+   *           if an I/O error occurs during writing
+   */
   @SuppressWarnings("resource")
   public void writeField(String fieldName, String value) throws IOException {
     getWriter().writeStringField(fieldName, value);
 
   }
 
+  /**
+   * Writes a field with an object node value to the JSON output.
+   *
+   * @param fieldName
+   *          the name of the field to write
+   * @param obj
+   *          the object node value of the field
+   * @throws IOException
+   *           if an I/O error occurs during writing
+   */
   @SuppressWarnings("resource")
   public void writeField(String fieldName, ObjectNode obj) throws IOException {
     JsonGenerator writer = getWriter(); // NOPMD not closable here

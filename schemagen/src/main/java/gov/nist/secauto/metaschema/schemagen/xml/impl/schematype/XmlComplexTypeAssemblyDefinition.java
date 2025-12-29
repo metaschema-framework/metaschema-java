@@ -29,9 +29,25 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An XML Schema complex type implementation for Metaschema assembly
+ * definitions.
+ * <p>
+ * This class generates XML Schema complexType elements that represent
+ * Metaschema assemblies, including their child model instances (fields,
+ * assemblies, choices) and flag instances (attributes).
+ */
 public class XmlComplexTypeAssemblyDefinition
     extends AbstractXmlComplexType<IAssemblyDefinition> {
 
+  /**
+   * Construct a new complex type for an assembly definition.
+   *
+   * @param qname
+   *          the qualified name for the XML Schema type
+   * @param definition
+   *          the Metaschema assembly definition to generate the type for
+   */
   public XmlComplexTypeAssemblyDefinition(
       @NonNull QName qname,
       @NonNull IAssemblyDefinition definition) {
@@ -61,6 +77,19 @@ public class XmlComplexTypeAssemblyDefinition
     }
   }
 
+  /**
+   * Generate XML Schema elements for a model instance.
+   * <p>
+   * Handles grouped elements, assemblies, fields (wrapped and unwrapped),
+   * choices, and choice groups.
+   *
+   * @param modelInstance
+   *          the model instance to generate schema elements for
+   * @param state
+   *          the schema generation state for writing output
+   * @throws XMLStreamException
+   *           if an error occurs while writing XML
+   */
   protected void generateModelInstance( // NOPMD acceptable complexity
       @NonNull IModelInstanceAbsolute modelInstance,
       @NonNull XmlGenerationState state)
@@ -123,6 +152,18 @@ public class XmlComplexTypeAssemblyDefinition
     }
   }
 
+  /**
+   * Generate an XML Schema element declaration for a named model instance.
+   *
+   * @param modelInstance
+   *          the named model instance to generate a declaration for
+   * @param grouped
+   *          {@code true} if the instance is within a grouping element
+   * @param state
+   *          the schema generation state for writing output
+   * @throws XMLStreamException
+   *           if an error occurs while writing XML
+   */
   protected void generateNamedModelInstance(
       @NonNull INamedModelInstanceAbsolute modelInstance,
       boolean grouped,
@@ -154,6 +195,21 @@ public class XmlComplexTypeAssemblyDefinition
     state.writeEndElement(); // xs:element
   }
 
+  /**
+   * Generate an XML Schema group reference for an unwrapped field instance.
+   * <p>
+   * Unwrapped fields are used for multiline markup content that appears directly
+   * within the parent element without a wrapper element.
+   *
+   * @param fieldInstance
+   *          the unwrapped field instance to generate a reference for
+   * @param grouped
+   *          {@code true} if the instance is within a grouping element
+   * @param state
+   *          the schema generation state for writing output
+   * @throws XMLStreamException
+   *           if an error occurs while writing XML
+   */
   protected static void generateUnwrappedFieldInstance(
       @NonNull IFieldInstanceAbsolute fieldInstance,
       boolean grouped,
@@ -188,6 +244,16 @@ public class XmlComplexTypeAssemblyDefinition
     state.writeEndElement(); // xs:group
   }
 
+  /**
+   * Generate an XML Schema choice element for a choice model instance.
+   *
+   * @param choice
+   *          the choice instance to generate schema elements for
+   * @param state
+   *          the schema generation state for writing output
+   * @throws XMLStreamException
+   *           if an error occurs while writing XML
+   */
   protected void generateChoiceModelInstance(
       @NonNull IChoiceInstance choice,
       @NonNull XmlGenerationState state) throws XMLStreamException {
@@ -231,6 +297,21 @@ public class XmlComplexTypeAssemblyDefinition
     state.writeEndElement(); // xs:choice
   }
 
+  /**
+   * Generate an XML Schema element declaration for a grouped named model
+   * instance.
+   * <p>
+   * Grouped instances appear within choice groups and do not have occurrence
+   * constraints at the element level since these are handled by the parent
+   * choice.
+   *
+   * @param instance
+   *          the grouped named model instance to generate a declaration for
+   * @param state
+   *          the schema generation state for writing output
+   * @throws XMLStreamException
+   *           if an error occurs while writing XML
+   */
   protected void generateGroupedNamedModelInstance(
       @NonNull INamedModelInstanceGrouped instance,
       @NonNull XmlGenerationState state) throws XMLStreamException {

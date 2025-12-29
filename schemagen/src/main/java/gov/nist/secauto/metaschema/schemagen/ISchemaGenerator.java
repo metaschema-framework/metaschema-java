@@ -19,6 +19,9 @@ import java.nio.file.StandardOpenOption;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides the capability to generate a schema from a Metaschema module.
+ */
 @FunctionalInterface
 public interface ISchemaGenerator {
   /**
@@ -40,6 +43,21 @@ public interface ISchemaGenerator {
       @NonNull Writer writer,
       @NonNull IConfiguration<SchemaGenerationFeature<?>> configuration);
 
+  /**
+   * Generate a schema for the provided module and write it to the specified file
+   * path.
+   *
+   * @param module
+   *          the Metaschema module to generate the schema for
+   * @param destination
+   *          the file path to write the schema to
+   * @param asFormat
+   *          the schema format to generate
+   * @param configuration
+   *          the schema generation configuration
+   * @throws IOException
+   *           if an I/O error occurs while writing the schema
+   */
   static void generateSchema(
       @NonNull IModule module,
       @NonNull Path destination,
@@ -60,6 +78,24 @@ public interface ISchemaGenerator {
     }
   }
 
+  /**
+   * Generate a schema for the provided module and write it to the specified
+   * writer.
+   * <p>
+   * The writer is not closed by this method, as the caller is responsible for
+   * managing its lifecycle.
+   *
+   * @param module
+   *          the Metaschema module to generate the schema for
+   * @param writer
+   *          the writer to output the schema to
+   * @param asFormat
+   *          the schema format to generate
+   * @param configuration
+   *          the schema generation configuration
+   * @throws IOException
+   *           if an I/O error occurs while writing the schema
+   */
   static void generateSchema(
       @NonNull IModule module,
       @NonNull Writer writer,
@@ -93,6 +129,11 @@ public interface ISchemaGenerator {
       this.schemaGenerator = schemaGenerator;
     }
 
+    /**
+     * Get the schema generator implementation for this format.
+     *
+     * @return the schema generator
+     */
     @NonNull
     public ISchemaGenerator getSchemaGenerator() {
       return schemaGenerator;
