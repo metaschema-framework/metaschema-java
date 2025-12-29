@@ -26,6 +26,12 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of a grouped field reference from binding data.
+ * <p>
+ * This class represents a reference to a global field as a member of a choice
+ * group.
+ */
 public class InstanceModelGroupedFieldReference
     extends AbstractFieldInstance<
         IChoiceGroupInstance,

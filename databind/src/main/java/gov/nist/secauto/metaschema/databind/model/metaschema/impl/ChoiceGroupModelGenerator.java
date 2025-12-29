@@ -32,6 +32,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * <p>
  * This method isn't thread safe.
  */
+/**
+ * Generates choice group model structures from binding data.
+ * <p>
+ * This class handles the creation of choice group containers for assemblies
+ * that contain polymorphic model content.
+ */
 public final class ChoiceGroupModelGenerator
     extends DefaultChoiceGroupModelBuilder<
         INamedModelInstanceGrouped,

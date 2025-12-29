@@ -27,6 +27,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings("PMD.OnlyOneReturn")
+/**
+ * Support class for building flag containers from binding data.
+ * <p>
+ * This class provides utility methods for discovering and organizing flag
+ * instances from Metaschema module bindings.
+ */
 public final class FlagContainerSupport {
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   @NonNull

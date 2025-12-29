@@ -40,6 +40,12 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of a global assembly definition from binding data.
+ * <p>
+ * This class represents an assembly definition that is declared at the module
+ * level and can be referenced by instances.
+ */
 public class DefinitionAssemblyGlobal
     extends AbstractGlobalAssemblyDefinition<
         IBindingMetaschemaModule,

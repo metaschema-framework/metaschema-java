@@ -11,6 +11,15 @@ import gov.nist.secauto.metaschema.databind.io.BindingException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a bound property on a Metaschema definition.
+ * <p>
+ * A bound property combines the model object binding with Java field access and
+ * JSON naming capabilities.
+ *
+ * @param <ITEM>
+ *          the Java type for associated bound objects
+ */
 public interface IBoundProperty<ITEM> extends IBoundModelObject<ITEM>, IFeatureJavaField, IJsonNamed {
   /**
    * Copy this instance from one parent object to another.

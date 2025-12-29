@@ -16,6 +16,12 @@ import java.util.Collection;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides type information for a Metaschema definition.
+ * <p>
+ * This interface provides access to type resolution and instance information
+ * for generating Java classes from Metaschema definitions.
+ */
 public interface IDefinitionTypeInfo {
   /**
    * Get the definition associated with this type info.

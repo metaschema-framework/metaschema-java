@@ -17,6 +17,15 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Collection information for singleton model instance values.
+ * <p>
+ * This class handles model instances with a maximum occurrence of 1, where the
+ * value is stored directly rather than in a collection.
+ *
+ * @param <ITEM>
+ *          the Java type of the singleton item
+ */
 class SingletonCollectionInfo<ITEM>
     extends AbstractModelInstanceCollectionInfo<ITEM> {
 

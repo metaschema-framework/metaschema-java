@@ -47,8 +47,6 @@ import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
-
-import javax.inject.Inject;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.sonatype.plexus.build.incremental.BuildContext;
@@ -74,11 +72,31 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.inject.Inject;
 import javax.tools.DiagnosticCollector;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * Abstract base class for Metaschema Maven plugin goals.
+ * <p>
+ * This class provides common functionality for loading Metaschema modules,
+ * managing constraint sets, handling incremental builds, and performing
+ * code/schema generation. Concrete implementations should override the
+ * {@link #generate(Set)} method to provide specific generation behavior.
+ * <p>
+ * The plugin supports:
+ * <ul>
+ * <li>Loading multiple Metaschema modules from a configured directory</li>
+ * <li>Applying external constraint sets to modules</li>
+ * <li>Incremental build support through stale file tracking</li>
+ * <li>Configurable file encoding for generated sources</li>
+ * </ul>
+ *
+ * @see GenerateSourcesMojo
+ * @see GenerateSchemaMojo
+ */
 public abstract class AbstractMetaschemaMojo
     extends AbstractMojo {
   private static final String[] DEFAULT_INCLUDES = { "**/*.xml" };
@@ -205,6 +223,11 @@ public abstract class AbstractMetaschemaMojo
     return mavenProject;
   }
 
+  /**
+   * Retrieve the plugin artifacts available to this mojo.
+   *
+   * @return the list of plugin artifacts
+   */
   protected final List<Artifact> getPluginArtifacts() {
     return pluginArtifacts;
   }
@@ -290,6 +313,18 @@ public abstract class AbstractMetaschemaMojo
     return Stream.of(ds.getIncludedFiles()).map(filename -> new File(metaschemaDir, filename)).distinct();
   }
 
+  /**
+   * Create a new binding context configured with the specified module post
+   * processor.
+   *
+   * @param modulePostProcessor
+   *          the post processor to apply to loaded modules
+   * @return the configured binding context
+   * @throws IOException
+   *           if an I/O error occurs during context creation
+   * @throws MetaschemaException
+   *           if an error occurs while processing the Metaschema module
+   */
   @NonNull
   protected IBindingContext newBindingContext(
       @NonNull IModuleLoader.IModulePostProcessor modulePostProcessor) throws IOException, MetaschemaException {
@@ -403,6 +438,14 @@ public abstract class AbstractMetaschemaMojo
     return generate;
   }
 
+  /**
+   * Retrieve the combined classpath containing both project dependencies and
+   * plugin artifacts.
+   *
+   * @return a set of classpath elements as absolute paths
+   * @throws DependencyResolutionRequiredException
+   *           if the project dependencies cannot be resolved
+   */
   protected Set<String> getClassPath() throws DependencyResolutionRequiredException {
     Set<String> pathElements;
     try {
@@ -422,6 +465,21 @@ public abstract class AbstractMetaschemaMojo
     return pathElements;
   }
 
+  /**
+   * Load and validate the Metaschema modules to generate sources or schemas for.
+   *
+   * @param bindingContext
+   *          the binding context to use for module loading and validation
+   * @param modulePostProcessor
+   *          the post processor to apply to each loaded module
+   * @return the set of loaded and validated modules
+   * @throws MetaschemaException
+   *           if an error occurs while processing the Metaschema module
+   * @throws IOException
+   *           if an I/O error occurs while loading a module
+   * @throws ConstraintValidationException
+   *           if constraint validation fails on a loaded module
+   */
   @NonNull
   protected Set<IModule> getModulesToGenerateFor(
       @NonNull IBindingContext bindingContext,
@@ -458,6 +516,14 @@ public abstract class AbstractMetaschemaMojo
     return modules;
   }
 
+  /**
+   * Create or update the stale file to record the current build time.
+   *
+   * @param staleFile
+   *          the stale file to create or update
+   * @throws MojoExecutionException
+   *           if the stale file cannot be created
+   */
   protected void createStaleFile(@NonNull File staleFile) throws MojoExecutionException {
     // create the stale file
     if (!staleFileDirectory.exists() && !staleFileDirectory.mkdirs()) {
@@ -572,6 +638,18 @@ public abstract class AbstractMetaschemaMojo
   @NonNull
   protected abstract List<File> generate(@NonNull Set<IModule> modules) throws MojoExecutionException;
 
+  /**
+   * A validation result handler that logs validation findings using the Maven
+   * plugin logger.
+   * <p>
+   * Findings are logged at different levels based on their severity:
+   * <ul>
+   * <li>CRITICAL and ERROR - logged at error level</li>
+   * <li>WARNING - logged at warn level</li>
+   * <li>INFORMATIONAL - logged at info level</li>
+   * <li>All other severities - logged at debug level</li>
+   * </ul>
+   */
   protected final class LoggingValidationHandler
       extends AbstractValidationResultProcessor {
 
@@ -700,6 +778,13 @@ public abstract class AbstractMetaschemaMojo
     }
   }
 
+  /**
+   * A module binding generator that generates and compiles Java classes for
+   * Metaschema modules during plugin execution.
+   * <p>
+   * This generator uses the plugin's classpath for compilation, ensuring that all
+   * necessary dependencies are available during the code generation process.
+   */
   public class ModuleBindingGenerator implements IModuleBindingGenerator {
     @NonNull
     private final Path compilePath;
@@ -708,6 +793,14 @@ public abstract class AbstractMetaschemaMojo
     @NonNull
     private final IBindingConfiguration bindingConfiguration;
 
+    /**
+     * Construct a new module binding generator.
+     *
+     * @param compilePath
+     *          the directory path where generated classes will be compiled to
+     * @param bindingConfiguration
+     *          the binding configuration to use for code generation
+     */
     public ModuleBindingGenerator(
         @NonNull Path compilePath,
         @NonNull IBindingConfiguration bindingConfiguration) {
@@ -718,6 +811,15 @@ public abstract class AbstractMetaschemaMojo
       this.bindingConfiguration = bindingConfiguration;
     }
 
+    /**
+     * Generate Java source files for the specified module.
+     *
+     * @param module
+     *          the Metaschema module to generate classes for
+     * @return the production containing the generated class information
+     * @throws MetaschemaException
+     *           if an error occurs during class generation
+     */
     @NonNull
     public IProduction generateClasses(@NonNull IModule module) throws MetaschemaException {
       IProduction production;
@@ -797,9 +899,20 @@ public abstract class AbstractMetaschemaMojo
     }
   }
 
+  /**
+   * A module post processor that applies external constraints to modules,
+   * excluding the built-in Metaschema module to avoid duplicate constraint
+   * application.
+   */
   private static class LimitedExternalConstraintsModulePostProcessor
       extends ExternalConstraintsModulePostProcessor {
 
+    /**
+     * Construct a new post processor with the specified constraint sets.
+     *
+     * @param additionalConstraintSets
+     *          the constraint sets to apply to modules
+     */
     public LimitedExternalConstraintsModulePostProcessor(
         @NonNull Collection<IConstraintSet> additionalConstraintSets) {
       super(additionalConstraintSets);

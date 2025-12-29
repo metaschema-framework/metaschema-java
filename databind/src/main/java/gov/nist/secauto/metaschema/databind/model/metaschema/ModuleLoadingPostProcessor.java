@@ -16,6 +16,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @since 2.0.0
  */
 @FunctionalInterface
+/**
+ * Post-processor interface for module loading operations.
+ * <p>
+ * Implementations can perform additional processing on modules after they have
+ * been loaded, such as applying external constraints.
+ */
 public interface ModuleLoadingPostProcessor {
   /**
    * Post-processes the provided Metaschema module.

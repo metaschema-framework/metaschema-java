@@ -28,6 +28,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * {@link DefaultModuleBindingGenerator}.
  *
  */
+/**
+ * Loader interface for Metaschema modules using data binding.
+ * <p>
+ * This interface defines the contract for loading Metaschema modules from
+ * various sources (files, URIs, etc.) using the data binding layer.
+ */
 public interface IBindingModuleLoader
     extends IModuleLoader<IBindingMetaschemaModule>, IMutableConfiguration<DeserializationFeature<?>> {
   /**

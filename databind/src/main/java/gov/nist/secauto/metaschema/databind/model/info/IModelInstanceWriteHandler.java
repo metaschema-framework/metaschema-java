@@ -11,6 +11,16 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Handler interface for writing model instance collections during
+ * serialization.
+ * <p>
+ * This interface provides methods for iterating over collection items and
+ * writing them to an output stream.
+ *
+ * @param <ITEM>
+ *          the Java type of items being written
+ */
 public interface IModelInstanceWriteHandler<ITEM> {
   default void writeSingleton(@NonNull ITEM item) throws IOException {
     writeItem(item);

@@ -33,6 +33,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * <p>
  * This class is not thread safe.
  */
+/**
+ * Generates choice model structures from binding data.
+ * <p>
+ * This class handles the creation of choice containers for assemblies that
+ * contain exclusive model alternatives.
+ */
 public final class ChoiceModelGenerator
     extends AbstractAbsoluteModelGenerator<
         IContainerModelAbsolute,

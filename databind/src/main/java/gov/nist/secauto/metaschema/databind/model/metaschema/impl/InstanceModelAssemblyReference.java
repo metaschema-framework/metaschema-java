@@ -29,6 +29,12 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of an assembly instance reference from binding data.
+ * <p>
+ * This class represents a reference to a globally defined assembly within a
+ * containing assembly's model.
+ */
 public class InstanceModelAssemblyReference
     extends AbstractAssemblyInstance<
         IContainerModelAbsolute,

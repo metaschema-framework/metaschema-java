@@ -31,6 +31,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * is used for annotation-based bindings (classes with {@code @BoundChoice}
  * annotations).
  */
+/**
+ * Implementation of a choice instance within a bound model.
+ * <p>
+ * This class represents a choice between multiple model instances in a
+ * Metaschema assembly.
+ */
 public final class BoundInstanceModelChoice
     extends AbstractChoiceInstance<
         IBoundDefinitionModelAssembly,

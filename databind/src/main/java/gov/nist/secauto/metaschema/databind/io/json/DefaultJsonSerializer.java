@@ -22,6 +22,16 @@ import java.io.Writer;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Provides support for serializing bound Java objects to JSON format based on a
+ * Metaschema module definition.
+ * <p>
+ * This serializer uses Jackson's {@link JsonGenerator} to produce JSON output
+ * that conforms to the Metaschema-defined data structure.
+ *
+ * @param <CLASS>
+ *          the Java type of the bound object to be serialized
+ */
 public class DefaultJsonSerializer<CLASS extends IBoundObject>
     extends AbstractSerializer<CLASS> {
   private Lazy<JsonFactory> factory;
@@ -39,6 +49,12 @@ public class DefaultJsonSerializer<CLASS extends IBoundObject>
     resetFactory();
   }
 
+  /**
+   * Resets the JSON factory to use a freshly created instance.
+   * <p>
+   * This method is called when the serializer configuration changes to ensure the
+   * factory reflects the current settings.
+   */
   protected final void resetFactory() {
     this.factory = Lazy.of(this::newFactoryInstance);
   }
@@ -62,11 +78,25 @@ public class DefaultJsonSerializer<CLASS extends IBoundObject>
     return JsonFactoryFactory.instance();
   }
 
+  /**
+   * Get the configured JSON factory instance.
+   *
+   * @return the JSON factory used to create JSON generators
+   */
   @NonNull
   private JsonFactory getJsonFactory() {
     return ObjectUtils.notNull(factory.get());
   }
 
+  /**
+   * Create a new JSON generator for writing to the provided writer.
+   *
+   * @param writer
+   *          the writer to send JSON output to
+   * @return a new JSON generator configured with pretty printing
+   * @throws IOException
+   *           if an error occurs while creating the generator
+   */
   @SuppressWarnings("resource")
   @NonNull
   private JsonGenerator newJsonGenerator(@NonNull Writer writer) throws IOException {

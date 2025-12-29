@@ -22,6 +22,12 @@ import java.io.IOException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Handler interface for reading bound items during deserialization.
+ * <p>
+ * Implementations of this interface handle the reading of different types of
+ * model items (flags, fields, assemblies, choice groups).
+ */
 public interface IItemReadHandler {
   /**
    * Parse and return an item.

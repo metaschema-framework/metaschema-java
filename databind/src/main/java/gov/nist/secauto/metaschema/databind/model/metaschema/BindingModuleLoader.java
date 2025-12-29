@@ -45,6 +45,12 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * {@link SimpleModuleLoaderStrategy} initialized using the
  * {@link DefaultModuleBindingGenerator}.
  */
+/**
+ * Loads Metaschema modules from XML or YAML sources using data binding.
+ * <p>
+ * This class provides functionality to parse Metaschema module files and
+ * construct the corresponding module model.
+ */
 public class BindingModuleLoader
     extends AbstractModuleLoader<METASCHEMA, IBindingMetaschemaModule>
     implements IBindingModuleLoader {

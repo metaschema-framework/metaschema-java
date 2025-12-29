@@ -21,6 +21,15 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Collection information for map-based model instance collections.
+ * <p>
+ * This class handles model instances where items are stored in a
+ * {@link java.util.Map}, keyed by a JSON key flag value.
+ *
+ * @param <ITEM>
+ *          the Java type of items in the map
+ */
 class MapCollectionInfo<ITEM>
     extends AbstractModelInstanceCollectionInfo<ITEM> {
 

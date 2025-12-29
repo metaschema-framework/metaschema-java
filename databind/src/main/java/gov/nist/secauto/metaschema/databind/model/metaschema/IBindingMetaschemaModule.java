@@ -15,6 +15,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * A Metaschema module represented as binding to Java classes and fields.
  */
+/**
+ * Represents a Metaschema module loaded via data binding.
+ * <p>
+ * This interface provides access to the bound representation of a Metaschema
+ * module, including its definitions and constraints.
+ */
 public interface IBindingMetaschemaModule
     extends IMetaschemaModule<IBindingMetaschemaModule> {
 

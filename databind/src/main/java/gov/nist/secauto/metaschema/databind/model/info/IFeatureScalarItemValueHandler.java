@@ -12,6 +12,13 @@ import gov.nist.secauto.metaschema.databind.model.IValuedMutable;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A feature interface for handling scalar item values during binding
+ * operations.
+ * <p>
+ * Scalar items have simple values that can be converted directly by a data type
+ * adapter.
+ */
 public interface IFeatureScalarItemValueHandler
     extends IItemValueHandler<Object>, IValuedMutable {
 

@@ -20,6 +20,10 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Contains information about a generated class representing a Metaschema
+ * module.
+ */
 public class DefaultGeneratedModuleClass
     extends DefaultGeneratedClass
     implements IGeneratedModuleClass {
@@ -30,6 +34,20 @@ public class DefaultGeneratedModuleClass
   @NonNull
   private final String packageName;
 
+  /**
+   * Construct a new generated module class.
+   *
+   * @param module
+   *          the Metaschema module this class represents
+   * @param className
+   *          the type info for the generated class
+   * @param classFile
+   *          the file the class was written to
+   * @param definitionClassMap
+   *          a map of definitions to their generated classes
+   * @param packageName
+   *          the Java package name for this module
+   */
   public DefaultGeneratedModuleClass(
       @NonNull IModule module,
       @NonNull ClassName className,

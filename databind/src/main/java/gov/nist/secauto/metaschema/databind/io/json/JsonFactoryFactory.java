@@ -12,10 +12,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A factory for creating and configuring {@link JsonFactory} instances with
+ * standard Metaschema settings.
+ * <p>
+ * This class provides a singleton factory instance configured for optimal use
+ * with Metaschema data binding operations. The factory is configured to not
+ * auto-close streams and includes a default codec.
+ */
 public final class JsonFactoryFactory {
   @NonNull
   private static final JsonFactory SINGLETON = newJsonFactoryInstance();
 
+  /**
+   * Private constructor to prevent instantiation.
+   */
   private JsonFactoryFactory() {
     // disable construction
   }

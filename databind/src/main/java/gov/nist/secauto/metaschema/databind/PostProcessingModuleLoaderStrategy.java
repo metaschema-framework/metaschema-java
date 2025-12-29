@@ -24,21 +24,47 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A module loader strategy that applies post-processors to loaded modules.
+ * <p>
+ * This strategy wraps another {@link IBindingContext.IModuleLoaderStrategy} and
+ * ensures that configured {@link IModuleLoader.IModulePostProcessor} instances
+ * are invoked on each module before it is registered. Post-processing is
+ * applied only once per module, even if the module is referenced multiple
+ * times.
+ *
+ * @since 2.0.0
+ */
 public class PostProcessingModuleLoaderStrategy
     implements IBindingContext.IModuleLoaderStrategy {
   @NonNull
   private final List<IModuleLoader.IModulePostProcessor> modulePostProcessors;
-  // private final Set<IModule> resolvedModules = new HashSet<>();
-  // private final Lock resolvedModulesLock = new ReentrantLock();
   private final IBindingContext.IModuleLoaderStrategy delegate;
   private final Set<IModule> postProcessedModules = new HashSet<>();
   private final Lock postProcessedModulesLock = new ReentrantLock();
 
+  /**
+   * Construct a new post-processing module loader strategy using the default
+   * delegate strategy.
+   *
+   * @param modulePostProcessors
+   *          the post-processors to apply to loaded modules
+   */
   public PostProcessingModuleLoaderStrategy(
       @NonNull List<IModuleLoader.IModulePostProcessor> modulePostProcessors) {
     this(modulePostProcessors, new SimpleModuleLoaderStrategy());
   }
 
+  /**
+   * Construct a new post-processing module loader strategy with a custom
+   * delegate.
+   *
+   * @param modulePostProcessors
+   *          the post-processors to apply to loaded modules
+   * @param delegate
+   *          the delegate strategy to use for actual module loading and
+   *          registration
+   */
   public PostProcessingModuleLoaderStrategy(
       @NonNull List<IModuleLoader.IModulePostProcessor> modulePostProcessors,
       @NonNull IBindingContext.IModuleLoaderStrategy delegate) {
@@ -46,6 +72,11 @@ public class PostProcessingModuleLoaderStrategy
     this.delegate = delegate;
   }
 
+  /**
+   * Get the configured module post-processors.
+   *
+   * @return an unmodifiable list of post-processors
+   */
   @NonNull
   protected List<IModuleLoader.IModulePostProcessor> getModulePostProcessors() {
     return modulePostProcessors;
@@ -109,21 +140,6 @@ public class PostProcessingModuleLoaderStrategy
   public IBoundDefinitionModelComplex getBoundDefinitionForClass(
       Class<? extends IBoundObject> clazz,
       IBindingContext bindingContext) {
-
-    //
-    // resolvedModulesLock.lock();
-    // try {
-    // if (!resolvedModules.contains(module)) {
-    // // add first, to avoid loops
-    // resolvedModules.add(module);
-    // for (IModuleLoader.IModulePostProcessor postProcessor :
-    // getModulePostProcessors()) {
-    // postProcessor.processModule(module);
-    // }
-    // }
-    // } finally {
-    // resolvedModulesLock.unlock();
-    // }
     return delegate.getBoundDefinitionForClass(clazz, bindingContext);
   }
 }

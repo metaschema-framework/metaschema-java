@@ -29,6 +29,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of a global flag definition from binding data.
+ * <p>
+ * This class represents a flag definition that is declared at the module level
+ * and can be referenced by instances.
+ */
 public class DefinitionFlagGlobal
     extends AbstractGlobalFlagDefinition<IBindingMetaschemaModule, IFlagInstance> {
   @NonNull

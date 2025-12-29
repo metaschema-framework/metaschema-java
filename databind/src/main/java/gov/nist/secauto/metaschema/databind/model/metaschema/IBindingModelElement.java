@@ -10,6 +10,12 @@ import gov.nist.secauto.metaschema.core.model.IModelElement;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a Metaschema model element loaded via data binding.
+ * <p>
+ * This interface is the base type for all model elements that are loaded from
+ * Metaschema source files using data binding.
+ */
 public interface IBindingModelElement extends IModelElement {
   @Override
   IBindingMetaschemaModule getContainingModule();

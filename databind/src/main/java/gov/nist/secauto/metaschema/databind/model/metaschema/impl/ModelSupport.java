@@ -45,6 +45,12 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Utility class providing support methods for model construction.
+ * <p>
+ * This class provides common utility methods used when building model
+ * structures from Metaschema bindings.
+ */
 public final class ModelSupport {
   private ModelSupport() {
     // disable construction

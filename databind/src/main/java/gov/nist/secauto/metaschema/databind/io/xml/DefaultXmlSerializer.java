@@ -27,6 +27,16 @@ import javax.xml.stream.XMLStreamException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Provides support for serializing bound Java objects to XML format based on a
+ * Metaschema module definition.
+ * <p>
+ * This serializer uses StAX's {@link XMLStreamWriter2} to produce XML output
+ * that conforms to the Metaschema-defined data structure.
+ *
+ * @param <CLASS>
+ *          the Java type of the bound object to be serialized
+ */
 public class DefaultXmlSerializer<CLASS extends IBoundObject>
     extends AbstractSerializer<CLASS> {
   private Lazy<XMLOutputFactory2> factory;
@@ -44,6 +54,12 @@ public class DefaultXmlSerializer<CLASS extends IBoundObject>
     resetFactory();
   }
 
+  /**
+   * Resets the XML output factory to use a freshly created instance.
+   * <p>
+   * This method is called when the serializer configuration changes to ensure the
+   * factory reflects the current settings.
+   */
   protected final void resetFactory() {
     this.factory = Lazy.of(this::newFactoryInstance);
   }

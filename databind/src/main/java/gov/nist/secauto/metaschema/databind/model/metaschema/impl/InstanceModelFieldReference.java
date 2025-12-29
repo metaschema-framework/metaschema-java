@@ -30,6 +30,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of a field instance reference from binding data.
+ * <p>
+ * This class represents a reference to a globally defined field within a
+ * containing assembly's model.
+ */
 public class InstanceModelFieldReference
     extends AbstractFieldInstance<
         IContainerModelAbsolute,

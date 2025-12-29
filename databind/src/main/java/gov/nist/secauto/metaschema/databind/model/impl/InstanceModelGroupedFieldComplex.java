@@ -35,6 +35,12 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * Represents an field model instance that is a member of a choice group
  * instance.
  */
+/**
+ * Implementation of a complex field instance within a choice group.
+ * <p>
+ * This class represents a complex field that is a member of a choice group,
+ * allowing polymorphic model content.
+ */
 public class InstanceModelGroupedFieldComplex
     extends AbstractFieldInstance<
         IBoundInstanceModelChoiceGroup,

@@ -19,6 +19,15 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Collection information for list-based model instance collections.
+ * <p>
+ * This class handles model instances where multiple items are stored in a
+ * {@link java.util.List}.
+ *
+ * @param <ITEM>
+ *          the Java type of items in the list
+ */
 class ListCollectionInfo<ITEM>
     extends AbstractModelInstanceCollectionInfo<ITEM> {
 

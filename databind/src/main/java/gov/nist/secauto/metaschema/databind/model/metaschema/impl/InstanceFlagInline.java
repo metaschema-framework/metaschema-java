@@ -32,6 +32,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of an inline flag instance from binding data.
+ * <p>
+ * This class represents a flag that is defined inline within its containing
+ * definition rather than as a reference.
+ */
 public class InstanceFlagInline
     extends AbstractInlineFlagDefinition<
         IBindingDefinitionModel,

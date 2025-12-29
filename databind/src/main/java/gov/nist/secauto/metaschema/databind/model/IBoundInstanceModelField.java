@@ -19,6 +19,15 @@ import java.lang.reflect.Field;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a field instance bound to a Java field.
+ * <p>
+ * This interface handles both scalar (simple type) and complex (class-bound)
+ * field instances.
+ *
+ * @param <ITEM>
+ *          the Java type for associated bound objects
+ */
 public interface IBoundInstanceModelField<ITEM> extends IBoundInstanceModelNamed<ITEM>, IFieldInstanceAbsolute {
 
   @Override

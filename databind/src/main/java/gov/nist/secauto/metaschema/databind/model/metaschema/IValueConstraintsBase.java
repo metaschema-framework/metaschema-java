@@ -16,6 +16,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * Provides a common interface for value constraint binding objects.
  */
+/**
+ * Base interface for value-level constraint bindings.
+ * <p>
+ * This interface provides access to constraints that apply to flag and field
+ * values.
+ */
 public interface IValueConstraintsBase extends IBoundObject {
   /**
    * Get the let expressions defined for this constraint set.

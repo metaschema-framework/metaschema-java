@@ -42,6 +42,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of an inline field instance from binding data.
+ * <p>
+ * This class represents a field that is defined inline within its containing
+ * assembly rather than as a reference.
+ */
 public class InstanceModelFieldInline
     extends AbstractInlineFieldDefinition<
         IContainerModelAbsolute,

@@ -25,8 +25,17 @@ import java.util.stream.Stream;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Utility methods for processing Metaschema-based JSON data.
+ * <p>
+ * This class provides helper methods for generating mappings between JSON
+ * property names and their corresponding Metaschema model instances.
+ */
 final class MetaschemaJsonUtil {
 
+  /**
+   * Private constructor to prevent instantiation.
+   */
   private MetaschemaJsonUtil() {
     // disable construction
   }

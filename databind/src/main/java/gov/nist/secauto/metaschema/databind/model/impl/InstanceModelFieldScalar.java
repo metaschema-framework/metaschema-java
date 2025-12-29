@@ -45,6 +45,12 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * Implements a Metaschema module field instance bound to a scalar valued Java
  * field.
  */
+/**
+ * Implementation of a scalar field instance bound to a Java field.
+ * <p>
+ * This class handles the binding of a field with only a scalar value (no flags)
+ * to the containing assembly's model.
+ */
 public final class InstanceModelFieldScalar
     extends AbstractInlineFieldDefinition<
         IBoundDefinitionModelAssembly,

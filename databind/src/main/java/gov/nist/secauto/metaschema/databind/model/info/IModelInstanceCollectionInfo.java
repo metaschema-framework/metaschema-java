@@ -22,6 +22,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 // REFACTOR: parameterize the item type?
+/**
+ * Provides information about the collection type for a model instance.
+ * <p>
+ * This interface abstracts the differences between singleton, list, and map
+ * collection types for model instances.
+ *
+ * @param <ITEM>
+ *          the Java type of items in the collection
+ */
 public interface IModelInstanceCollectionInfo<ITEM> {
 
   @SuppressWarnings("PMD.ShortMethodName")

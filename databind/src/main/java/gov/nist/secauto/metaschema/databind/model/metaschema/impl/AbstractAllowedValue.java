@@ -10,6 +10,12 @@ import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Abstract base class for allowed value implementations.
+ * <p>
+ * This class provides common functionality for representing individual allowed
+ * values within an allowed-values constraint.
+ */
 public abstract class AbstractAllowedValue implements IAllowedValue {
 
   @Nullable

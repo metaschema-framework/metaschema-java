@@ -39,6 +39,12 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * Implements a Metaschema module assembly instance bound to a Java field,
  * supported by a bound definition class.
  */
+/**
+ * Implementation of an assembly instance bound to a Java field.
+ * <p>
+ * This class handles the binding of a field referencing an assembly definition
+ * to the containing assembly's model.
+ */
 public final class InstanceModelAssemblyComplex
     extends AbstractAssemblyInstance<
         IBoundDefinitionModelAssembly,

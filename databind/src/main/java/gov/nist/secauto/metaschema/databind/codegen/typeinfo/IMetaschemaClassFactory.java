@@ -18,6 +18,13 @@ import java.util.Collection;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A factory for generating Java classes from Metaschema modules and
+ * definitions.
+ * <p>
+ * This interface provides methods for generating module classes, definition
+ * classes, and package-info classes based on Metaschema constructs.
+ */
 public interface IMetaschemaClassFactory {
   /**
    * Get a new instance of the default class generation factory that uses the

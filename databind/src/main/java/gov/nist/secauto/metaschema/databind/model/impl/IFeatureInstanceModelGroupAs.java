@@ -13,6 +13,12 @@ import gov.nist.secauto.metaschema.databind.model.IGroupAs;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A feature interface for model instances that support group-as configuration.
+ * <p>
+ * This interface provides access to the group-as settings that control how
+ * collections of model instances are serialized in XML and JSON.
+ */
 public interface IFeatureInstanceModelGroupAs extends IGroupable {
   /**
    * Get the underlying group-as provider.

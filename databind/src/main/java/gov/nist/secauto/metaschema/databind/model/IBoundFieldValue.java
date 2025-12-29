@@ -18,6 +18,12 @@ import java.io.IOException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents the bound value of a field definition.
+ * <p>
+ * This interface provides access to the scalar value within a field, including
+ * support for JSON value key handling and default values.
+ */
 public interface IBoundFieldValue extends IFeatureScalarItemValueHandler, IBoundProperty<Object> {
   @Override
   @Nullable

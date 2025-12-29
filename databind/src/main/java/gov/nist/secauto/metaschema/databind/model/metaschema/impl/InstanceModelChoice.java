@@ -25,6 +25,12 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyMod
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of a choice instance from binding data.
+ * <p>
+ * This class represents a choice between exclusive model alternatives within an
+ * assembly.
+ */
 public class InstanceModelChoice
     extends AbstractChoiceInstance<
         IBindingDefinitionModelAssembly,
