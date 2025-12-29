@@ -25,17 +25,18 @@ If no PR exists, STOP and inform the user.
 Retrieve all comments on the PR (both file-level and general):
 
 ```bash
-# Get PR number
+# Get PR number and repository info
 PR_NUMBER=$(gh pr list --head $(git branch --show-current) --json number --jq '.[0].number')
+REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 
 # Fetch file-level review comments (line-specific)
 echo "=== File Review Comments ==="
-gh api repos/{owner}/{repo}/pulls/$PR_NUMBER/comments \
+gh api repos/$REPO/pulls/$PR_NUMBER/comments \
   --jq '.[] | {id: .id, type: "review", path: .path, line: .line, body: .body[0:300], user: .user.login, in_reply_to_id: .in_reply_to_id}'
 
 # Fetch general PR comments (not tied to specific lines)
 echo "=== General PR Comments ==="
-gh api repos/{owner}/{repo}/issues/$PR_NUMBER/comments \
+gh api repos/$REPO/issues/$PR_NUMBER/comments \
   --jq '.[] | {id: .id, type: "issue", body: .body[0:300], user: .user.login}'
 ```
 
@@ -117,11 +118,14 @@ Addressed in commit <hash>. <Brief explanation>
 
 Use the GitHub CLI to reply:
 ```bash
+# Get repository info (if not already set)
+REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
+
 # Get the reviewer's login from the comment
-REVIEWER_LOGIN=$(gh api repos/{owner}/{repo}/pulls/$PR_NUMBER/comments/<comment_id> --jq '.user.login')
+REVIEWER_LOGIN=$(gh api repos/$REPO/pulls/$PR_NUMBER/comments/<comment_id> --jq '.user.login')
 
 # Reply with appropriate mention
-gh api repos/{owner}/{repo}/pulls/$PR_NUMBER/comments \
+gh api repos/$REPO/pulls/$PR_NUMBER/comments \
   -X POST \
   -f body="@$REVIEWER_LOGIN Addressed in commit abc1234. <explanation>" \
   -f in_reply_to=<original_comment_id>
