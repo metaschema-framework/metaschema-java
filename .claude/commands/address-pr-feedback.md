@@ -20,18 +20,30 @@ gh pr list --head $(git branch --show-current) --json number,title,url --jq '.[0
 
 If no PR exists, STOP and inform the user.
 
-### Step 2: Fetch All Review Comments
+### Step 2: Fetch All Comments
 
-Retrieve all review comments on the PR:
+Retrieve all comments on the PR (both file-level and general):
 
 ```bash
 # Get PR number
 PR_NUMBER=$(gh pr list --head $(git branch --show-current) --json number --jq '.[0].number')
 
-# Fetch all review comments with context
+# Fetch file-level review comments (line-specific)
+echo "=== File Review Comments ==="
 gh api repos/{owner}/{repo}/pulls/$PR_NUMBER/comments \
-  --jq '.[] | {id: .id, path: .path, line: .line, body: .body[0:300], user: .user.login, in_reply_to_id: .in_reply_to_id}'
+  --jq '.[] | {id: .id, type: "review", path: .path, line: .line, body: .body[0:300], user: .user.login, in_reply_to_id: .in_reply_to_id}'
+
+# Fetch general PR comments (not tied to specific lines)
+echo "=== General PR Comments ==="
+gh api repos/{owner}/{repo}/issues/$PR_NUMBER/comments \
+  --jq '.[] | {id: .id, type: "issue", body: .body[0:300], user: .user.login}'
 ```
+
+**Comment Types:**
+| Type | API Endpoint | Description |
+|------|--------------|-------------|
+| Review comments | `/pulls/{id}/comments` | Line-specific comments on files |
+| Issue comments | `/issues/{id}/comments` | General PR-level discussion |
 
 ### Step 3: Categorize Comments
 
