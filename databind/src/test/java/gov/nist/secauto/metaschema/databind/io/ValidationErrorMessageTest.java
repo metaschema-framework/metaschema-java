@@ -460,4 +460,89 @@ class ValidationErrorMessageTest
       });
     }
   }
+
+  /**
+   * Tests for permissive document loading via newPermissiveBoundLoader.
+   * <p>
+   * These tests verify that permissive loaders skip required field validation,
+   * which is useful for the fn:doc() function when loading incomplete documents.
+   */
+  @Nested
+  class PermissiveLoadingTest {
+
+    @Test
+    void testPermissiveLoaderSkipsRequiredFieldValidation() throws IOException {
+      // Document missing all required fields
+      String xml = "<root xmlns='http://csrc.nist.gov/ns/metaschema/testing/validation-errors'>"
+          + "</root>";
+
+      IBindingContext bindingContext = newBindingContext();
+      // Create deserializer and apply permissive configuration
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      deserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+
+      // Should not throw - permissive loading skips required field validation
+      assertDoesNotThrow(() -> {
+        deserializer.deserialize(new StringReader(xml), URI.create("test://incomplete.xml"));
+      });
+    }
+
+    @Test
+    void testStrictLoaderValidatesRequiredFields() throws IOException {
+      // Document missing all required fields
+      String xml = "<root xmlns='http://csrc.nist.gov/ns/metaschema/testing/validation-errors'>"
+          + "</root>";
+
+      IBindingContext bindingContext = newBindingContext();
+      // Use deserializer with explicit strict validation enabled
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+
+      // Should throw because required fields are missing
+      assertThrows(IOException.class, () -> {
+        deserializer.deserialize(new StringReader(xml), URI.create("test://incomplete.xml"));
+      });
+    }
+
+    @Test
+    void testPermissiveLoaderAllowsPartialDocuments() throws IOException {
+      // Document with some fields but not all required ones
+      String xml = "<root xmlns='http://csrc.nist.gov/ns/metaschema/testing/validation-errors'>"
+          + "<optional-field>some value</optional-field>"
+          + "</root>";
+
+      IBindingContext bindingContext = newBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      deserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
+
+      // Should load successfully despite missing required-flag, required-field, and
+      // required-assembly
+      Object result = assertDoesNotThrow(
+          () -> deserializer.deserialize(new StringReader(xml), URI.create("test://partial.xml")));
+
+      assertNotNull(result, "Permissive loading should return a result even for partial documents");
+    }
+
+    @Test
+    void testNewPermissiveBoundLoaderHasValidationDisabled() throws IOException {
+      IBindingContext bindingContext = newBindingContext();
+      IBoundLoader permissiveLoader = bindingContext.newPermissiveBoundLoader();
+
+      // Verify that the permissive loader has DESERIALIZE_VALIDATE_REQUIRED_FIELDS
+      // disabled
+      assertFalse(permissiveLoader.isFeatureEnabled(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS),
+          "Permissive loader should have DESERIALIZE_VALIDATE_REQUIRED_FIELDS disabled");
+    }
+
+    @Test
+    void testNewBoundLoaderHasValidationEnabledByDefault() throws IOException {
+      IBindingContext bindingContext = newBindingContext();
+      IBoundLoader regularLoader = bindingContext.newBoundLoader();
+
+      // Verify that the regular loader has DESERIALIZE_VALIDATE_REQUIRED_FIELDS
+      // enabled by default
+      assertTrue(regularLoader.isFeatureEnabled(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS),
+          "Regular loader should have DESERIALIZE_VALIDATE_REQUIRED_FIELDS enabled by default");
+    }
+  }
 }

@@ -127,7 +127,8 @@ public abstract class AbstractConvertSubcommand
 
       try {
         IBindingContext bindingContext = getBindingContext();
-        IBoundLoader loader = bindingContext.newBoundLoader();
+        // Use permissive loader since convert is not a validation command
+        IBoundLoader loader = bindingContext.newPermissiveBoundLoader();
         if (LOGGER.isInfoEnabled()) {
           LOGGER.info("Converting '{}'.", source);
         }

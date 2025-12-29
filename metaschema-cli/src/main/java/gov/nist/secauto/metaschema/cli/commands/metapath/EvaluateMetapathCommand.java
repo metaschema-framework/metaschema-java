@@ -126,8 +126,12 @@ class EvaluateMetapathCommand
 
     IModule module = null;
     INodeItem item = null;
+    IBoundLoader loader = null;
     if (cmdLine.hasOption(MetaschemaCommands.METASCHEMA_OPTIONAL_OPTION)) {
       IBindingContext bindingContext = MetaschemaCommands.newBindingContextWithDynamicCompilation();
+
+      // Use permissive loader since eval is not a validation command
+      loader = bindingContext.newPermissiveBoundLoader();
 
       try {
         module = bindingContext.registerModule(MetaschemaCommands.loadModule(
@@ -142,9 +146,6 @@ class EvaluateMetapathCommand
       // determine if the query is evaluated against the module or the instance
       if (cmdLine.hasOption(CONTENT_OPTION)) {
         // load the content
-
-        IBoundLoader loader = bindingContext.newBoundLoader();
-
         String contentLocation = ObjectUtils.requireNonNull(cmdLine.getOptionValue(CONTENT_OPTION));
         URI contentResource;
         try {
@@ -196,10 +197,16 @@ class EvaluateMetapathCommand
           String.format("Must use '%s' to specify the Metapath expression.", EXPRESSION_OPTION.getArgName()));
     }
 
+    // Setup dynamic context with document loader for doc() function support
+    DynamicContext dynamicContext = new DynamicContext(staticContext);
+    if (loader != null) {
+      dynamicContext.setDocumentLoader(loader);
+    }
+
     try {
       // Parse and compile the Metapath expression
       ISequence<?> sequence = IMetapathExpression.compile(expression, staticContext)
-          .evaluate(item, new DynamicContext(staticContext));
+          .evaluate(item, dynamicContext);
 
       // handle the metapath results
       try (Writer stringWriter = new StringWriter()) {
