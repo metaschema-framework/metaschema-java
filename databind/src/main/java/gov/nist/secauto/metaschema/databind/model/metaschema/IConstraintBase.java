@@ -15,9 +15,6 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Represents constraint metadata that is common to all constraints.
- */
-/**
  * Base interface for all constraint bindings.
  * <p>
  * This interface provides access to common constraint properties such as ID,

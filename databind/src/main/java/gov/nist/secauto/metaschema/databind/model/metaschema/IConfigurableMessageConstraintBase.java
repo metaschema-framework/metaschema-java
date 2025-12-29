@@ -8,9 +8,6 @@ package gov.nist.secauto.metaschema.databind.model.metaschema;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * Represents constraint metadata that is common to all constraints.
- */
-/**
  * Base interface for constraints with configurable messages.
  * <p>
  * This interface provides access to the message configuration for constraints

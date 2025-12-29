@@ -31,7 +31,7 @@ public final class DeserializationFeature<V>
   /**
    * The default number of bytes used for format detection lookahead.
    */
-  public static final int FORMAT_DETECTION_LOOKAHEAD = 32_768; // 2 GB
+  public static final int FORMAT_DETECTION_LOOKAHEAD = 32_768; // 32 KB
 
   /**
    * If enabled, perform constraint validation on the deserialized bound objects.

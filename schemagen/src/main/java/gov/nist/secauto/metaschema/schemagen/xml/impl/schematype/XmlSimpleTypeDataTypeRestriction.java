@@ -57,6 +57,7 @@ public class XmlSimpleTypeDataTypeRestriction
    *
    * @return the allowed values collection
    */
+  @NonNull
   protected AllowedValueCollection getAllowedValuesCollection() {
     return allowedValuesCollection;
   }

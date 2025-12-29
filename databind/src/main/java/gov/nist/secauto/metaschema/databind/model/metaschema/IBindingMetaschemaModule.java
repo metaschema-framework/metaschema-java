@@ -13,9 +13,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.METASCHEMA;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * A Metaschema module represented as binding to Java classes and fields.
- */
-/**
  * Represents a Metaschema module loaded via data binding.
  * <p>
  * This interface provides access to the bound representation of a Metaschema
