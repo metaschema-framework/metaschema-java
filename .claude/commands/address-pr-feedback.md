@@ -122,14 +122,14 @@ Use the GitHub CLI to reply:
 # Get repository info (if not already set)
 REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 
-# Get the reviewer's login from the comment
-REVIEWER_LOGIN=$(gh api repos/$REPO/pulls/$PR_NUMBER/comments/<comment_id> --jq '.user.login')
+# Get the reviewer's login from the comment (available from Step 2 output)
+COMMENT_ID=<comment_id>
+REVIEWER_LOGIN=$(gh api repos/$REPO/pulls/$PR_NUMBER/comments/$COMMENT_ID --jq '.user.login')
 
-# Reply with appropriate mention
-gh api repos/$REPO/pulls/$PR_NUMBER/comments \
+# Reply using the dedicated replies endpoint
+gh api repos/$REPO/pulls/$PR_NUMBER/comments/$COMMENT_ID/replies \
   -X POST \
-  -f body="@$REVIEWER_LOGIN Addressed in commit abc1234. <explanation>" \
-  -f in_reply_to=<original_comment_id>
+  -f body="@$REVIEWER_LOGIN Addressed in commit abc1234. <explanation>"
 ```
 
 ### Step 6: Generate Summary Report
