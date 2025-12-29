@@ -28,12 +28,12 @@ This document details the implementation for adding constraint processing suppor
 
 | Attribute | Value |
 |-----------|-------|
-| **Files Changed** | ~15 |
+| **Files Changed** | 25 |
 | **Risk Level** | Medium |
 | **Dependencies** | None |
 | **Target Branch** | develop |
-| **Status** | Pending |
-| **Pull Request** | TBD |
+| **Status** | Complete |
+| **Pull Request** | [#598](https://github.com/metaschema-framework/metaschema-java/pull/598) |
 
 #### Files to Create
 
@@ -183,26 +183,26 @@ Update Claude Code skills to document the new constraint type:
 
 #### Acceptance Criteria
 
-- [ ] `IReportConstraint` interface created extending `IConfigurableMessageConstraint`
-- [ ] `IReportConstraint.getTest()` returns the test Metapath expression
-- [ ] `DefaultReportConstraint` implementation with working builder
-- [ ] `IConstraintVisitor.visitReportConstraint()` method added
-- [ ] `IValueConstrained` has `getReportConstraints()` and `addConstraint(IReportConstraint)`
-- [ ] `ValueConstraintSet` stores and retrieves report constraints
-- [ ] `AbstractTargetedConstraints.applyTo()` forwards report constraints
-- [ ] `ConstraintBindingSupport.parse()` handles `TargetedReportConstraint` in all overloads
-- [ ] `ConstraintBindingSupport.newReport()` factory method creates valid constraints
-- [ ] `DefaultConstraintValidator.validateReport()` generates findings when test is TRUE
-- [ ] Report constraints default to INFORMATIONAL level
-- [ ] Report constraints at ERROR/CRITICAL cause validation failures (Kind.FAIL)
-- [ ] `metaschema-constraints-authoring.md` skill updated with `report` constraint
-- [ ] `metaschema-java-library.md` skill updated if applicable
-- [ ] Unit tests for `IReportConstraint` builder and behavior
-- [ ] Unit tests for constraint loading
-- [ ] Unit tests for constraint validation
-- [ ] All new code has complete Javadoc
-- [ ] All tests pass: `mvn test`
-- [ ] Build succeeds: `mvn clean install -PCI -Prelease`
+- [x] `IReportConstraint` interface created extending `IConfigurableMessageConstraint`
+- [x] `IReportConstraint.getTest()` returns the test Metapath expression
+- [x] `DefaultReportConstraint` implementation with working builder
+- [x] `IConstraintVisitor.visitReportConstraint()` method added
+- [x] `IValueConstrained` has `getReportConstraints()` and `addConstraint(IReportConstraint)`
+- [x] `ValueConstraintSet` stores and retrieves report constraints
+- [x] `AbstractTargetedConstraints.applyTo()` forwards report constraints
+- [x] `ConstraintBindingSupport.parse()` handles `TargetedReportConstraint` in all overloads
+- [x] `ConstraintBindingSupport.newReport()` factory method creates valid constraints
+- [x] `DefaultConstraintValidator.validateReport()` generates findings when test is TRUE
+- [x] Report constraints default to INFORMATIONAL level
+- [x] Report constraints at ERROR/CRITICAL cause validation failures (Kind.FAIL)
+- [x] `metaschema-constraints-authoring.md` skill updated with `report` constraint
+- [x] `metaschema-java-library.md` skill updated if applicable
+- [x] Unit tests for `IReportConstraint` builder and behavior
+- [x] Unit tests for constraint loading
+- [x] Unit tests for constraint validation
+- [x] All new code has complete Javadoc
+- [x] All tests pass: `mvn test`
+- [x] Build succeeds: `mvn clean install -PCI -Prelease`
 
 ---
 
@@ -245,10 +245,10 @@ IConstraint
 
 | PR | Description | Files | Risk | Dependencies | Status |
 |----|-------------|-------|------|--------------|--------|
-| 1 | Add IReportConstraint interface and full implementation | ~15 | Medium | None | Pending |
+| [#598](https://github.com/metaschema-framework/metaschema-java/pull/598) | Add IReportConstraint interface and full implementation | 25 | Medium | None | Complete |
 
-**Total Estimated PRs**: 1
-**Total Estimated Files**: ~15
+**Total PRs**: 1
+**Total Files Changed**: 25
 
 ---
 

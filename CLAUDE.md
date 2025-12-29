@@ -294,12 +294,12 @@ PRDs are stored in `PRDs/<YYYYMMDD>-<name>/` with:
 | PRD | Description | Status |
 |-----|-------------|--------|
 | `PRDs/20251206-build-cleanup/` | Build warnings and deprecation removal | In Progress |
-| `PRDs/20251228-targeted-report-constraint/` | Add constraint processing support for TargetedReportConstraint (issue #592) | In Progress |
 
 ### Completed PRDs
 
 | PRD | Description | Completed |
 |-----|-------------|-----------|
+| `PRDs/20251228-targeted-report-constraint/` | Add constraint processing support for TargetedReportConstraint (issue #592) | 2025-12-29 |
 | `PRDs/20251228-validation-errors/` | Validation error message improvements (#595, #596, #205) | 2025-12-28 |
 | `PRDs/20251224-codegen-quality/` | Code generator Javadoc and quality improvements | 2025-12-28 |
 | `PRDs/20251217-cli-processor-refactor/` | CLI processor refactoring (issue #252) | 2025-12-21 |
