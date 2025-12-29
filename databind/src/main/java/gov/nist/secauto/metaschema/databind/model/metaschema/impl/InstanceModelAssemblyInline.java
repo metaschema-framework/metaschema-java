@@ -45,6 +45,12 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of an inline assembly instance from binding data.
+ * <p>
+ * This class represents an assembly that is defined inline within its
+ * containing assembly rather than as a reference.
+ */
 public class InstanceModelAssemblyInline
     extends AbstractInlineAssemblyDefinition<
         IContainerModelAbsolute,

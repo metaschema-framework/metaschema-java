@@ -28,6 +28,13 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * An abstract base class for Metaschema modules bound to Java classes.
+ * <p>
+ * This class provides the common implementation for modules that are defined
+ * through Java annotations on classes, enabling data binding between Metaschema
+ * module definitions and Java objects.
+ */
 public abstract class AbstractBoundModule
     extends AbstractModule<
         IBoundModule,

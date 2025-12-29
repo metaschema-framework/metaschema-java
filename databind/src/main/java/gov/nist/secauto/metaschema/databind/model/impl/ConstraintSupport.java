@@ -16,6 +16,12 @@ import java.util.Arrays;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Support class for managing constraints on bound definitions.
+ * <p>
+ * This class provides utilities for processing and applying constraints defined
+ * through binding annotations.
+ */
 public final class ConstraintSupport {
   private ConstraintSupport() {
     // disable construction

@@ -8,7 +8,10 @@ package gov.nist.secauto.metaschema.databind.model.metaschema;
 import java.util.List;
 
 /**
- * Provides a common interface for targeted value constraint binding objects.
+ * Base interface for targeted value constraint bindings.
+ * <p>
+ * This interface combines targeted and value constraint capabilities for
+ * constraints that apply to specific value nodes.
  */
 public interface IValueTargetedConstraintsBase extends IValueConstraintsBase {
   /**

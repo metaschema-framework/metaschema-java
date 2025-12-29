@@ -25,6 +25,12 @@ import gov.nist.secauto.metaschema.schemagen.IGenerationState;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents the state information used during JSON schema generation.
+ * <p>
+ * This interface extends {@link IGenerationState} with JSON-specific operations
+ * for managing schema definitions, properties, and datatype mappings.
+ */
 public interface IJsonGenerationState extends IGenerationState<JsonGenerator> {
   /**
    * Get the module this data is associated with.
@@ -129,17 +135,51 @@ public interface IJsonGenerationState extends IGenerationState<JsonGenerator> {
   @NonNull
   IJsonSchemaPropertyGrouped getJsonSchemaPropertyGrouped(@NonNull INamedModelInstanceGrouped instance);
 
+  /**
+   * Generate JSON schema definitions for all used datatypes and add them to the
+   * provided definitions node.
+   *
+   * @param definitionsNode
+   *          the JSON object node to add datatype definitions to
+   */
   void generateDataTypeDefinitions(@NonNull ObjectNode definitionsNode);
 
+  /**
+   * Get the JSON node factory used for creating JSON schema nodes.
+   *
+   * @return the JSON node factory
+   */
   @NonNull
   JsonNodeFactory getJsonNodeFactory();
 
+  /**
+   * Get the JSON schema representation for the provided datatype adapter.
+   *
+   * @param datatype
+   *          the datatype adapter to get the schema for
+   * @return the JSON schema representation for the datatype
+   */
   @NonNull
   IDataTypeJsonSchema getSchema(@NonNull IDataTypeAdapter<?> datatype);
 
+  /**
+   * Get the JSON schema representation for the datatype of the provided valued
+   * definition.
+   *
+   * @param definition
+   *          the valued definition to get the datatype schema for
+   * @return the JSON schema representation for the definition's datatype
+   */
   @NonNull
   IDataTypeJsonSchema getDataTypeSchemaForDefinition(@NonNull IValuedDefinition definition);
 
+  /**
+   * Convert a JSON key flag name to its string representation.
+   *
+   * @param jsonKeyFlagName
+   *          the qualified name of the JSON key flag
+   * @return the string representation of the flag name
+   */
   @NonNull
   default String toFlagName(@NonNull IEnhancedQName jsonKeyFlagName) {
     return jsonKeyFlagName.toEQName();

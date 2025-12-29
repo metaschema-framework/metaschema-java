@@ -30,6 +30,12 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Utility methods for processing Metaschema binding annotations.
+ * <p>
+ * This class provides helper methods for extracting and interpreting annotation
+ * values from Java classes and fields.
+ */
 public final class ModelUtil {
   // TODO: replace NO_STRING_VALUE with NULL_VALUE where possible. URIs will not
   // allow NULL_VALUE.

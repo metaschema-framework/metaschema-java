@@ -20,6 +20,15 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * @param <TYPE>
  *          the Java type of the item
  */
+/**
+ * Handler interface for processing bound item values.
+ * <p>
+ * This interface provides methods for reading and writing items, as well as
+ * deep copying items during binding operations.
+ *
+ * @param <TYPE>
+ *          the Java type of the handled item value
+ */
 public interface IItemValueHandler<TYPE> {
   /**
    * Parse and return an item.

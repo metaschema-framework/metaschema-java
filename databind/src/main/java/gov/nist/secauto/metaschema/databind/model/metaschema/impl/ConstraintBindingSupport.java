@@ -61,6 +61,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Supports parsing constraints declared within a bound object.
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
+/**
+ * Support class for building constraints from binding data.
+ * <p>
+ * This class provides utility methods for converting constraint binding
+ * representations to constraint model objects.
+ */
 public final class ConstraintBindingSupport {
   private ConstraintBindingSupport() {
     // disable construction

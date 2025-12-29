@@ -4,7 +4,13 @@
  */
 
 /**
- * Provides JSON Schema generation capabilities based on a provided Module.
+ * Provides JSON Schema generation from Metaschema modules.
+ * <p>
+ * This package contains the JSON Schema generator implementation that
+ * transforms Metaschema module definitions into JSON Schema documents
+ * conforming to the JSON Schema specification.
+ *
+ * @see gov.nist.secauto.metaschema.schemagen.json.JsonSchemaGenerator
  */
 
 package gov.nist.secauto.metaschema.schemagen.json;

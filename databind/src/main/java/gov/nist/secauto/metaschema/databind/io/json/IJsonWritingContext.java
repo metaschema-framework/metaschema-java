@@ -9,6 +9,14 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 import gov.nist.secauto.metaschema.databind.io.IWritingContext;
 
+/**
+ * Provides the writing context for serializing Java objects to JSON format.
+ * <p>
+ * This interface extends {@link IWritingContext} with a JSON-specific writer
+ * type.
+ *
+ * @see JsonGenerator
+ */
 public interface IJsonWritingContext extends IWritingContext<JsonGenerator> {
   // no additional methods
 }

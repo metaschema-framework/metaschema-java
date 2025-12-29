@@ -7,6 +7,12 @@ package gov.nist.secauto.metaschema.databind.model.metaschema;
 
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 
+/**
+ * Represents a Metaschema model definition loaded via data binding.
+ * <p>
+ * This interface provides access to the binding-specific metadata for field and
+ * assembly definitions.
+ */
 public interface IBindingDefinitionModel extends IModelDefinition, IBindingModelElement {
   // no additional methods
 }

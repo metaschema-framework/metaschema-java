@@ -10,6 +10,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Utility class for introspecting Java classes bound to Metaschema definitions.
+ * <p>
+ * This class provides methods to analyze class hierarchies and extract
+ * binding-related information from annotated classes.
+ */
 public final class ClassIntrospector {
   private ClassIntrospector() {
     // disable construction

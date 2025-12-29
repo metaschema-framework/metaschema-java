@@ -43,8 +43,17 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 @Mojo(name = "generate-schemas", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class GenerateSchemaMojo
     extends AbstractMetaschemaMojo {
+  /**
+   * Supported schema output formats for generation.
+   */
   public enum SchemaFormat {
+    /**
+     * XML Schema Definition (XSD) format.
+     */
     XSD,
+    /**
+     * JSON Schema format.
+     */
     JSON_SCHEMA;
   }
 
@@ -128,6 +137,7 @@ public class GenerateSchemaMojo
    *
    * @param modules
    *          the Metaschema modules to generate the schema for
+   * @return the list of generated schema files
    * @throws MojoExecutionException
    *           if an error occurred during generation
    */

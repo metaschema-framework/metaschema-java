@@ -28,6 +28,13 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Resolves type information for Metaschema constructs.
+ * <p>
+ * This interface provides methods for resolving Java class names, package
+ * names, and type information for Metaschema modules, definitions, and
+ * instances.
+ */
 public interface ITypeResolver {
   /**
    * Construct a new type resolver using the default implementation.

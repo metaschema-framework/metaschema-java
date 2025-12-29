@@ -41,6 +41,11 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of an inline grouped assembly instance from binding data.
+ * <p>
+ * This class represents an inline assembly member of a choice group.
+ */
 public class InstanceModelGroupedAssemblyInline
     extends AbstractInlineAssemblyDefinition<
         IChoiceGroupInstance,

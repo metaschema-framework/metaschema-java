@@ -25,6 +25,14 @@ import javax.tools.ToolProvider;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides support for compiling Java source files using the system Java
+ * compiler.
+ * <p>
+ * This class wraps the {@link javax.tools.JavaCompiler} API to provide a
+ * simplified interface for compiling generated Java source files. It supports
+ * configuring the classpath, module path, and output directory.
+ */
 public class JavaCompilerSupport {
   @Nullable
   private Logger logger;
@@ -37,43 +45,91 @@ public class JavaCompilerSupport {
   @NonNull
   private final Set<String> rootModuleNames = new LinkedHashSet<>();
 
+  /**
+   * Construct a new compiler support instance.
+   *
+   * @param classDir
+   *          the directory where compiled class files will be written
+   */
   public JavaCompilerSupport(@NonNull Path classDir) {
     this.classDir = classDir;
   }
 
+  /**
+   * Get the configured classpath entries.
+   *
+   * @return the classpath entries
+   */
   public Set<String> getClassPath() {
     return classPath;
   }
 
+  /**
+   * Get the configured module path entries.
+   *
+   * @return the module path entries
+   */
   public Set<String> getModulePath() {
     return modulePath;
   }
 
+  /**
+   * Get the configured root module names.
+   *
+   * @return the root module names
+   */
   public Set<String> getRootModuleNames() {
     return rootModuleNames;
   }
 
+  /**
+   * Add an entry to the classpath.
+   *
+   * @param entry
+   *          the classpath entry to add
+   */
   public void addToClassPath(@NonNull String entry) {
     classPath.add(entry);
   }
 
+  /**
+   * Add an entry to the module path.
+   *
+   * @param entry
+   *          the module path entry to add
+   */
   public void addToModulePath(@NonNull String entry) {
     modulePath.add(entry);
   }
 
+  /**
+   * Add a root module name.
+   *
+   * @param entry
+   *          the root module name to add
+   */
   public void addRootModule(@NonNull String entry) {
     rootModuleNames.add(entry);
   }
 
+  /**
+   * Set the logger for compilation messages.
+   *
+   * @param logger
+   *          the logger to use
+   */
   public void setLogger(@NonNull Logger logger) {
     this.logger = logger;
   }
 
+  /**
+   * Generate the compiler options based on the current configuration.
+   *
+   * @return the list of compiler options
+   */
   @NonNull
   protected List<String> generateCompilerOptions() {
     List<String> options = new LinkedList<>();
-    // options.add("-verbose");
-    // options.add("-g");
     options.add("-d");
     options.add(classDir.toString());
 
@@ -93,11 +149,11 @@ public class JavaCompilerSupport {
   }
 
   /**
-   * Generate and compile Java classes.
+   * Compile the provided Java source files.
    *
    * @param classFiles
-   *          the files to compile
-   * @return information about the generated classes
+   *          the source files to compile
+   * @return information about the compilation result
    * @throws IOException
    *           if an error occurred while compiling the classes
    * @throws IllegalArgumentException
@@ -105,7 +161,6 @@ public class JavaCompilerSupport {
    *           compilation units are of other kind than
    *           {@link javax.tools.JavaFileObject.Kind#SOURCE}
    */
-
   public CompilationResult compile(@NonNull List<Path> classFiles) throws IOException {
     DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
 
@@ -149,6 +204,9 @@ public class JavaCompilerSupport {
     }
   }
 
+  /**
+   * Contains the result of a compilation operation.
+   */
   public static final class CompilationResult {
     private final boolean successful;
     @NonNull
@@ -159,22 +217,57 @@ public class JavaCompilerSupport {
       this.diagnostics = diagnostics;
     }
 
+    /**
+     * Check if the compilation was successful.
+     *
+     * @return {@code true} if compilation succeeded, {@code false} otherwise
+     */
     public boolean isSuccessful() {
       return successful;
     }
 
+    /**
+     * Get the compilation diagnostics.
+     *
+     * @return the diagnostics collector containing any warnings or errors
+     */
     public DiagnosticCollector<?> getDiagnostics() {
       return diagnostics;
     }
   }
 
+  /**
+   * A logging interface for compilation messages.
+   */
   public interface Logger {
+    /**
+     * Check if debug logging is enabled.
+     *
+     * @return {@code true} if debug logging is enabled
+     */
     boolean isDebugEnabled();
 
+    /**
+     * Check if info logging is enabled.
+     *
+     * @return {@code true} if info logging is enabled
+     */
     boolean isInfoEnabled();
 
+    /**
+     * Log a debug message.
+     *
+     * @param msg
+     *          the message to log
+     */
     void debug(String msg);
 
+    /**
+     * Log an info message.
+     *
+     * @param msg
+     *          the message to log
+     */
     void info(String msg);
   }
 }

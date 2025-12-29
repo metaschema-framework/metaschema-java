@@ -16,11 +16,23 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A composite datatype provider specialized for prose markup types.
+ * <p>
+ * This provider extends the composite provider to additionally generate base
+ * prose datatype definitions when prose markup types are used.
+ */
 public class XmlProseCompositDatatypeProvider
     extends CompositeDatatypeProvider {
 
   private final XmlProseBaseDatatypeProvider proseBaseProvider = new XmlProseBaseDatatypeProvider();
 
+  /**
+   * Constructs a new prose composite datatype provider.
+   *
+   * @param proxiedProviders
+   *          the list of underlying providers to aggregate
+   */
   public XmlProseCompositDatatypeProvider(@NonNull List<IDatatypeProvider> proxiedProviders) {
     super(proxiedProviders);
   }

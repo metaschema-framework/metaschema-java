@@ -11,7 +11,19 @@ import gov.nist.secauto.metaschema.databind.codegen.typeinfo.def.IDefinitionType
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides type information for a Java property generated from a Metaschema
+ * construct.
+ * <p>
+ * This interface defines methods for retrieving names and types used when
+ * generating Java code for Metaschema elements.
+ */
 public interface ITypeInfo {
+  /**
+   * Get the parent definition type info that contains this type.
+   *
+   * @return the parent type info
+   */
   @NonNull
   IDefinitionTypeInfo getParentTypeInfo();
 

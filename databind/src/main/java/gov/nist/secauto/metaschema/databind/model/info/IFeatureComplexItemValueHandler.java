@@ -20,6 +20,13 @@ import java.util.function.Supplier;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A feature interface for handling complex item values during binding
+ * operations.
+ * <p>
+ * Complex items are bound to Java classes and can contain flags and other
+ * nested model content.
+ */
 public interface IFeatureComplexItemValueHandler extends IItemValueHandler<IBoundObject> {
   /**
    * Get the Metaschema definition representing the bound complex data.

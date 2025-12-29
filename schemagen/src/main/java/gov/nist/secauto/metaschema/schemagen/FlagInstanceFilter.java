@@ -14,11 +14,27 @@ import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A utility class for filtering flag instances during schema generation.
+ * <p>
+ * This class provides methods to exclude specific flag instances (such as JSON
+ * key flags or JSON value key flags) from collections before processing.
+ */
 public final class FlagInstanceFilter {
   private FlagInstanceFilter() {
     // disable construction
   }
 
+  /**
+   * Filters flag instances by excluding the specified JSON key flag.
+   *
+   * @param flags
+   *          the collection of flag instances to filter
+   * @param jsonKeyFlag
+   *          the flag instance used as a JSON key to exclude, or {@code null} if
+   *          no filtering is needed
+   * @return a collection containing all flags except the JSON key flag
+   */
   @NonNull
   public static Collection<? extends IFlagInstance> filterFlags(
       @NonNull Collection<? extends IFlagInstance> flags,
@@ -32,6 +48,20 @@ public final class FlagInstanceFilter {
     return applyFilter(flags, filter);
   }
 
+  /**
+   * Filters flag instances by excluding both the JSON key flag and JSON value key
+   * flag.
+   *
+   * @param flags
+   *          the collection of flag instances to filter
+   * @param jsonKeyFlag
+   *          the flag instance used as a JSON key to exclude, or {@code null} if
+   *          no JSON key filtering is needed
+   * @param jsonValueKeyFlag
+   *          the flag instance used as a JSON value key to exclude, or
+   *          {@code null} if no JSON value key filtering is needed
+   * @return a collection containing all flags except the excluded ones
+   */
   @NonNull
   public static Collection<? extends IFlagInstance> filterFlags(
       @NonNull Collection<? extends IFlagInstance> flags,

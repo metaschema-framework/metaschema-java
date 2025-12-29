@@ -36,6 +36,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * This class is not thread safe.
  */
 @SuppressWarnings("PMD.UseConcurrentHashMap")
+/**
+ * Generates assembly model structures from binding data.
+ * <p>
+ * This class handles the creation of model containers for assembly definitions
+ * loaded from Metaschema sources.
+ */
 public final class AssemblyModelGenerator
     extends AbstractAbsoluteModelGenerator<
         IBindingDefinitionModelAssembly,

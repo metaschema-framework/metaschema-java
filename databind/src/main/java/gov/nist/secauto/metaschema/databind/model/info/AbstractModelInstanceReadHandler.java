@@ -12,6 +12,15 @@ import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelNamed;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An abstract base class for reading model instance collections.
+ * <p>
+ * This class provides the framework for reading collections of items during
+ * deserialization, with support for different collection types.
+ *
+ * @param <ITEM>
+ *          the Java type of items being read
+ */
 public abstract class AbstractModelInstanceReadHandler<ITEM> implements IModelInstanceReadHandler<ITEM> {
   @NonNull
   private final IBoundInstanceModel<ITEM> instance;

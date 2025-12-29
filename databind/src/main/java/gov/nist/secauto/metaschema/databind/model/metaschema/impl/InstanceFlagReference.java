@@ -28,6 +28,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of a flag instance reference from binding data.
+ * <p>
+ * This class represents a reference to a globally defined flag within a
+ * containing definition.
+ */
 public class InstanceFlagReference
     extends AbstractFlagInstance<
         IBindingDefinitionModel,

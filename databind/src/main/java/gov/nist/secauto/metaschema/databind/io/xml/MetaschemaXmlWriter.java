@@ -37,6 +37,17 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides support for writing Metaschema-bound Java objects to XML format.
+ * <p>
+ * This class implements the {@link IXmlWritingContext} interface to serialize
+ * bound objects to XML using StAX's {@link XMLStreamWriter2}. It handles flags
+ * as attributes and fields/assemblies as child elements according to the
+ * Metaschema XML serialization rules.
+ *
+ * @see IXmlWritingContext
+ * @see XMLStreamWriter2
+ */
 public class MetaschemaXmlWriter implements IXmlWritingContext {
   @NonNull
   private final XMLStreamWriter2 writer;

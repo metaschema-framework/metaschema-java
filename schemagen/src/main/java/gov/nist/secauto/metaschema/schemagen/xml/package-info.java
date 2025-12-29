@@ -4,7 +4,12 @@
  */
 
 /**
- * Provides XML Schema generation capabilities based on a provided Module.
+ * Provides XML Schema (XSD) generation from Metaschema modules.
+ * <p>
+ * This package contains the XML Schema generator implementation that transforms
+ * Metaschema module definitions into W3C XML Schema Definition (XSD) documents.
+ *
+ * @see gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator
  */
 
 package gov.nist.secauto.metaschema.schemagen.xml;

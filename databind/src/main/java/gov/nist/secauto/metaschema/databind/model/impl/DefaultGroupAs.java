@@ -17,6 +17,13 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ModelUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * Default implementation of {@link IGroupAs} for bound model instances.
+ * <p>
+ * This class represents the group-as configuration for collection-type model
+ * instances, including the qualified name and grouping behaviors for XML and
+ * JSON serialization.
+ */
 public class DefaultGroupAs implements IGroupAs {
   @NonNull
   private final IEnhancedQName qname;

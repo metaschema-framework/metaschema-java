@@ -21,6 +21,10 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Default implementation of {@link IProduction} that tracks generated classes
+ * for modules and packages.
+ */
 class ProductionImpl implements IProduction {
 
   @NonNull
@@ -30,6 +34,18 @@ class ProductionImpl implements IProduction {
   private final Map<String, IPackageProduction> packageNameToProductionMap // NOPMD - immutable
       = new HashMap<>();
 
+  /**
+   * Add a module and its imports to this production.
+   *
+   * @param module
+   *          the module to add
+   * @param classFactory
+   *          the class factory to use for generation
+   * @param targetDirectory
+   *          the target directory for generated classes
+   * @throws IOException
+   *           if an error occurs during generation
+   */
   public void addModule(
       @NonNull IModule module,
       @NonNull IMetaschemaClassFactory classFactory,
@@ -45,6 +61,19 @@ class ProductionImpl implements IProduction {
     }
   }
 
+  /**
+   * Add a package to this production.
+   *
+   * @param metadata
+   *          the package metadata
+   * @param classFactory
+   *          the class factory to use for generation
+   * @param targetDirectory
+   *          the target directory for generated classes
+   * @return the generated package production
+   * @throws IOException
+   *           if an error occurs during generation
+   */
   protected IPackageProduction addPackage(
       @NonNull PackageMetadata metadata,
       @NonNull IMetaschemaClassFactory classFactory,
@@ -67,6 +96,11 @@ class ProductionImpl implements IProduction {
     return Collections.unmodifiableCollection(moduleToProductionMap.values());
   }
 
+  /**
+   * Get all package productions in this production.
+   *
+   * @return an unmodifiable collection of package productions
+   */
   @SuppressWarnings("null")
   @NonNull
   protected Collection<IPackageProduction> getPackageProductions() {

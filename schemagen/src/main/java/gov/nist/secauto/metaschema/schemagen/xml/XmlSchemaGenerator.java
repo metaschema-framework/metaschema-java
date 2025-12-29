@@ -46,6 +46,12 @@ import javax.xml.transform.stream.StreamSource;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * Generates XML Schema (XSD) documents from Metaschema modules.
+ * <p>
+ * This generator produces W3C XML Schema documents that validate XML instances
+ * conforming to the Metaschema module definitions.
+ */
 public class XmlSchemaGenerator
     extends AbstractSchemaGenerator<
         AutoCloser<XMLStreamWriter2, SchemaGenerationException>,
@@ -54,20 +60,28 @@ public class XmlSchemaGenerator
   // private static final Logger LOGGER =
   // LogManager.getLogger(XmlSchemaGenerator.class);
 
+  /** The namespace prefix for XML Schema elements. */
   @NonNull
   public static final String PREFIX_XML_SCHEMA = "xs";
+  /** The XML Schema namespace URI. */
   @NonNull
   public static final String NS_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
   @NonNull
   private static final String PREFIX_XML_SCHEMA_VERSIONING = "vs";
   @NonNull
   private static final String NS_XML_SCHEMA_VERSIONING = "http://www.w3.org/2007/XMLSchema-versioning";
+  /** The XHTML namespace URI used for documentation content. */
   @NonNull
   public static final String NS_XHTML = "http://www.w3.org/1999/xhtml";
 
   @NonNull
   private final XMLOutputFactory2 xmlOutputFactory;
 
+  /**
+   * Creates and configures a default XML output factory for schema generation.
+   *
+   * @return a configured XML output factory
+   */
   @NonNull
   private static XMLOutputFactory2 defaultXMLOutputFactory() {
     XMLOutputFactory2 xmlOutputFactory = (XMLOutputFactory2) XMLOutputFactory.newInstance();
@@ -77,15 +91,29 @@ public class XmlSchemaGenerator
     return xmlOutputFactory;
   }
 
+  /**
+   * Constructs a new XML schema generator using the default XML output factory.
+   */
   public XmlSchemaGenerator() {
     this(defaultXMLOutputFactory());
   }
 
+  /**
+   * Constructs a new XML schema generator using the specified XML output factory.
+   *
+   * @param xmlOutputFactory
+   *          the XML output factory to use for creating XML writers
+   */
   @SuppressFBWarnings("EI_EXPOSE_REP2")
   public XmlSchemaGenerator(@NonNull XMLOutputFactory2 xmlOutputFactory) {
     this.xmlOutputFactory = xmlOutputFactory;
   }
 
+  /**
+   * Retrieves the XML output factory used by this generator.
+   *
+   * @return the XML output factory
+   */
   protected XMLOutputFactory2 getXmlOutputFactory() {
     return xmlOutputFactory;
   }
@@ -216,6 +244,18 @@ public class XmlSchemaGenerator
     }
   }
 
+  /**
+   * Generates the schema metadata annotation containing module information.
+   * <p>
+   * This includes the schema name, version, short name, and optional remarks.
+   *
+   * @param module
+   *          the Metaschema module to extract metadata from
+   * @param state
+   *          the XML generation state for writing output
+   * @throws XMLStreamException
+   *           if an error occurs while writing XML content
+   */
   protected static void generateSchemaMetadata(
       @NonNull IModule module,
       @NonNull XmlGenerationState state)

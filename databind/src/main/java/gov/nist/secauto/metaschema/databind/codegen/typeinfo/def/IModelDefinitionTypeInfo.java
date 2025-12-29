@@ -20,6 +20,13 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides type information for a Metaschema model definition.
+ * <p>
+ * This interface extends {@link IDefinitionTypeInfo} to provide additional type
+ * information specific to model definitions, including class names, base
+ * classes, and flag instances.
+ */
 public interface IModelDefinitionTypeInfo extends IDefinitionTypeInfo {
   /**
    * Construct a new type information object for the provided {@code definition}.

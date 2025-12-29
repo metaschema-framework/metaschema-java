@@ -31,6 +31,7 @@ import nl.talsmasoftware.lazy4j.Lazy;
  */
 public class XmlDatatypeManager
     extends AbstractDatatypeManager {
+  /** The XML Schema namespace URI. */
   public static final String NS_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
 
   @NonNull
@@ -41,6 +42,21 @@ public class XmlDatatypeManager
               new XmlMarkupMultilineDatatypeProvider(),
               new XmlMarkupLineDatatypeProvider()))))));
 
+  /**
+   * Generates XML Schema datatype definitions for all used types.
+   * <p>
+   * Iterates through registered datatype providers to generate definitions for
+   * all required types. Throws an exception if any required types are not
+   * provided.
+   *
+   * @param writer
+   *          the XML stream writer to write datatype definitions to
+   * @throws XMLStreamException
+   *           if an error occurs while writing XML content
+   * @throws IllegalStateException
+   *           if any required datatypes are not provided by the registered
+   *           providers
+   */
   public void generateDatatypes(@NonNull XMLStreamWriter2 writer) throws XMLStreamException {
     // resolve dependencies
     Set<String> used = getUsedTypes();

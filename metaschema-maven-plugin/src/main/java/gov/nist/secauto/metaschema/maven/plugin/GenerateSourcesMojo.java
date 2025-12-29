@@ -76,6 +76,7 @@ public class GenerateSourcesMojo
    *
    * @param modules
    *          the collection of Metaschema modules to generate sources for
+   * @return the list of generated Java source files
    * @throws MojoExecutionException
    *           if an error occurred while generating sources
    */

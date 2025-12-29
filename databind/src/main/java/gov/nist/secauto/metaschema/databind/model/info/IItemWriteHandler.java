@@ -21,6 +21,12 @@ import java.io.IOException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Handler interface for writing bound items during serialization.
+ * <p>
+ * Implementations of this interface handle the writing of different types of
+ * model items (flags, fields, assemblies, choice groups).
+ */
 public interface IItemWriteHandler {
   /**
    * Write an item.

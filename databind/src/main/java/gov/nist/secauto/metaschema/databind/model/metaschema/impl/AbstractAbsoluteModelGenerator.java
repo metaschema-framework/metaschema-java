@@ -41,6 +41,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 @SuppressWarnings({
     "PMD.AbstractClassWithoutAbstractMethod",
     "PMD.UseConcurrentHashMap" })
+/**
+ * Abstract base class for generating absolute model structures from bindings.
+ * <p>
+ * This class provides common functionality for building model containers from
+ * Metaschema module bindings.
+ */
 public abstract class AbstractAbsoluteModelGenerator<
     PARENT extends IContainerModelAbsolute,
     BUILDER extends DefaultChoiceModelBuilder<

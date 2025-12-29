@@ -23,6 +23,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * An abstract base implementation of a complex model definition bound to a Java
+ * class.
+ * <p>
+ * This class provides the common implementation for field and assembly
+ * definitions that are bound to Java classes through annotations.
+ *
+ * @param <A>
+ *          the annotation type used to configure the definition
+ */
 public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
     implements IBoundDefinitionModelComplex {
   @NonNull

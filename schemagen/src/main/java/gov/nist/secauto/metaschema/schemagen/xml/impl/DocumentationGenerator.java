@@ -22,6 +22,12 @@ import javax.xml.stream.XMLStreamException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Generates XML Schema documentation elements for Metaschema model elements.
+ * <p>
+ * This class produces {@code xs:annotation} elements containing both structured
+ * application information and human-readable documentation content.
+ */
 public final class DocumentationGenerator {
 
   @Nullable
@@ -63,21 +69,41 @@ public final class DocumentationGenerator {
     this.modelElement = instance;
   }
 
+  /**
+   * Retrieves the formal name of the model element.
+   *
+   * @return the formal name, or {@code null} if not defined
+   */
   @Nullable
   public String getFormalName() {
     return formalName;
   }
 
+  /**
+   * Retrieves the description of the model element.
+   *
+   * @return the description as markup, or {@code null} if not defined
+   */
   @Nullable
   public MarkupLine getDescription() {
     return description;
   }
 
+  /**
+   * Retrieves the remarks associated with the model element.
+   *
+   * @return a list of remarks, which may be empty but never {@code null}
+   */
   @NonNull
   public List<MarkupMultiline> getRemarks() {
     return remarks;
   }
 
+  /**
+   * Retrieves the underlying model element.
+   *
+   * @return the model element
+   */
   @NonNull
   public IModelElement getModelElement() {
     return modelElement;
@@ -93,18 +119,52 @@ public final class DocumentationGenerator {
     }
   }
 
+  /**
+   * Generates XML Schema documentation for a definition.
+   *
+   * @param definition
+   *          the definition to generate documentation for
+   * @param state
+   *          the XML generation state for writing output
+   */
   public static void generateDocumentation(
       @NonNull IDefinition definition,
       @NonNull XmlGenerationState state) {
     new DocumentationGenerator(definition).generate(state);
   }
 
+  /**
+   * Generates XML Schema documentation for a named instance.
+   *
+   * @param instance
+   *          the named instance to generate documentation for
+   * @param state
+   *          the XML generation state for writing output
+   */
   public static void generateDocumentation(
       @NonNull INamedInstance instance,
       @NonNull XmlGenerationState state) {
     new DocumentationGenerator(instance).generate(state);
   }
 
+  /**
+   * Generates XML Schema documentation with explicit content.
+   * <p>
+   * Creates an {@code xs:annotation} element containing both structured
+   * application information ({@code xs:appinfo}) and human-readable documentation
+   * ({@code xs:documentation}).
+   *
+   * @param formalName
+   *          the formal name, or {@code null} if not available
+   * @param description
+   *          the description markup, or {@code null} if not available
+   * @param remarks
+   *          the list of remarks to include
+   * @param xmlNS
+   *          the target XML namespace for custom elements
+   * @param state
+   *          the XML generation state for writing output
+   */
   public static void generateDocumentation( // NOPMD acceptable complexity
       @Nullable String formalName,
       @Nullable MarkupLine description,

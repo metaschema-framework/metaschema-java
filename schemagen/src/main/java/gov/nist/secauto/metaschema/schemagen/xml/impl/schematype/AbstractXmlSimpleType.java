@@ -13,6 +13,12 @@ import javax.xml.namespace.QName;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides a common base implementation for XML simple type schema elements.
+ * <p>
+ * This class represents a simple type in an XML schema that corresponds to a
+ * Metaschema valued definition (field or flag).
+ */
 public abstract class AbstractXmlSimpleType
     extends AbstractXmlType
     implements IXmlSimpleType {
@@ -20,11 +26,24 @@ public abstract class AbstractXmlSimpleType
   @NonNull
   private final IValuedDefinition definition;
 
+  /**
+   * Construct a new simple type.
+   *
+   * @param qname
+   *          the qualified name for the type
+   * @param definition
+   *          the valued definition this type represents
+   */
   public AbstractXmlSimpleType(@NonNull QName qname, @NonNull IValuedDefinition definition) {
     super(qname);
     this.definition = definition;
   }
 
+  /**
+   * Get the valued definition this type represents.
+   *
+   * @return the valued definition
+   */
   @NonNull
   public IValuedDefinition getDefinition() {
     return definition;

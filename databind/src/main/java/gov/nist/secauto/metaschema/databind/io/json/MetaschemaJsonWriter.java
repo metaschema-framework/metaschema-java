@@ -35,6 +35,17 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides support for writing Metaschema-bound Java objects to JSON format.
+ * <p>
+ * This class implements the {@link IItemWriteHandler} interface to serialize
+ * bound objects to JSON using Jackson's {@link JsonGenerator}. It handles
+ * flags, fields, assemblies, and choice groups according to the Metaschema JSON
+ * serialization rules.
+ *
+ * @see IJsonWritingContext
+ * @see JsonGenerator
+ */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHandler {
   @NonNull

@@ -19,12 +19,28 @@ import javax.xml.stream.XMLStreamWriter;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents datatype content backed by JDOM2 elements.
+ * <p>
+ * This class stores XML Schema datatype definitions as JDOM2 elements and
+ * provides the capability to write them to an XML stream.
+ */
 public class JDom2DatatypeContent
     extends AbstractDatatypeContent {
 
   @NonNull
   private final List<Element> content;
 
+  /**
+   * Constructs a new JDOM2-backed datatype content instance.
+   *
+   * @param typeName
+   *          the name of the datatype
+   * @param content
+   *          the list of JDOM2 elements representing the datatype definition
+   * @param dependencies
+   *          the list of datatype names that this datatype depends on
+   */
   public JDom2DatatypeContent(
       @NonNull String typeName,
       @NonNull List<Element> content,
@@ -33,6 +49,11 @@ public class JDom2DatatypeContent
     this.content = CollectionUtil.unmodifiableList(new ArrayList<>(content));
   }
 
+  /**
+   * Retrieves the JDOM2 elements representing the datatype content.
+   *
+   * @return an unmodifiable list of JDOM2 elements
+   */
   protected List<Element> getContent() {
     return content;
   }

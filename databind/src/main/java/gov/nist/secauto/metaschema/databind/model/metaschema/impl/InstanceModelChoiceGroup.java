@@ -28,6 +28,12 @@ import java.math.BigInteger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of a choice group instance from binding data.
+ * <p>
+ * This class represents a collection of polymorphic model instances that can
+ * contain different types of members.
+ */
 public class InstanceModelChoiceGroup
     extends AbstractChoiceGroupInstance<
         IBindingDefinitionModelAssembly,

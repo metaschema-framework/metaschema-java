@@ -26,6 +26,12 @@ import java.util.Set;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
+/**
+ * Implementation of a grouped assembly reference from binding data.
+ * <p>
+ * This class represents a reference to a global assembly as a member of a
+ * choice group.
+ */
 public class InstanceModelGroupedAssemblyReference
     extends AbstractAssemblyInstance<
         IChoiceGroupInstance,

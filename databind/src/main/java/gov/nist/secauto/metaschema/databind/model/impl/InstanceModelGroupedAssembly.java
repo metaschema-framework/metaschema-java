@@ -32,6 +32,12 @@ import nl.talsmasoftware.lazy4j.Lazy;
  * Represents an assembly model instance that is a member of a choice group
  * instance.
  */
+/**
+ * Implementation of an assembly instance within a choice group.
+ * <p>
+ * This class represents an assembly that is a member of a choice group,
+ * allowing polymorphic model content.
+ */
 public class InstanceModelGroupedAssembly
     extends AbstractAssemblyInstance<
         IBoundInstanceModelChoiceGroup,

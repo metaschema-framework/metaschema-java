@@ -21,11 +21,28 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An XML Schema simple type that is a union of multiple member types.
+ * <p>
+ * This class generates an xs:simpleType with xs:union that combines multiple
+ * simple types. Member types may be referenced by name or inlined depending on
+ * their generation requirements.
+ */
 public class XmlSimpleTypeUnion
     extends AbstractXmlSimpleType {
   @NonNull
   private final List<IXmlSimpleType> simpleTypes;
 
+  /**
+   * Construct a new union type.
+   *
+   * @param qname
+   *          the qualified name for the XML Schema type
+   * @param definition
+   *          the Metaschema definition that this union applies to
+   * @param simpleTypes
+   *          the member types to include in the union
+   */
   public XmlSimpleTypeUnion(
       @NonNull QName qname,
       @NonNull IValuedDefinition definition,
@@ -34,6 +51,11 @@ public class XmlSimpleTypeUnion
     this.simpleTypes = CollectionUtil.requireNonEmpty(CollectionUtil.listOrEmpty(simpleTypes));
   }
 
+  /**
+   * Get the member types that make up this union.
+   *
+   * @return an unmodifiable list of member simple types
+   */
   @NonNull
   public List<IXmlSimpleType> getSimpleTypes() {
     return simpleTypes;

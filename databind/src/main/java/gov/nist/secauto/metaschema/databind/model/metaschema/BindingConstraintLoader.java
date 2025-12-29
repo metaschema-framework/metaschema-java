@@ -56,6 +56,13 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * every use. Any constraint set imported is also loaded and cached
  * automatically.
  */
+/**
+ * Loads Metaschema constraints from external constraint files using data
+ * binding.
+ * <p>
+ * This class provides functionality to parse constraint files and apply them to
+ * Metaschema modules.
+ */
 public class BindingConstraintLoader
     extends AbstractLoader<List<IConstraintSet>>
     implements IConstraintLoader {

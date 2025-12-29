@@ -9,16 +9,23 @@ import com.squareup.javapoet.ClassName;
 
 import java.nio.file.Path;
 
+/**
+ * Provides information about a generated Java class file.
+ * <p>
+ * This interface represents a Java class that has been generated during
+ * Metaschema processing, providing access to both the physical file location
+ * and the type information for the generated class.
+ */
 public interface IGeneratedClass {
   /**
-   * The file the class was written to.
+   * Get the file the class was written to.
    *
-   * @return the class file
+   * @return the class file path
    */
   Path getClassFile();
 
   /**
-   * The type info for the class.
+   * Get the type info for the class.
    *
    * @return the class's type info
    */

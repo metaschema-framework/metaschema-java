@@ -10,11 +10,28 @@ import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Configuration features that control the deserialization behavior of
+ * Metaschema-bound object readers.
+ * <p>
+ * Each feature has a default value that can be overridden when configuring a
+ * deserializer.
+ *
+ * @param <V>
+ *          the value type of the configuration feature
+ */
 @SuppressWarnings("PMD.DataClass") // not a data class
 public final class DeserializationFeature<V>
     extends AbstractConfigurationFeature<V> {
+  /**
+   * The default maximum number of codepoints that can be read from a YAML
+   * document.
+   */
   public static final int YAML_CODEPOINT_LIMIT_DEFAULT = Integer.MAX_VALUE - 1; // 2 GB
-  public static final int FORMAT_DETECTION_LOOKAHEAD = 32_768; // 2 GB
+  /**
+   * The default number of bytes used for format detection lookahead.
+   */
+  public static final int FORMAT_DETECTION_LOOKAHEAD = 32_768; // 32 KB
 
   /**
    * If enabled, perform constraint validation on the deserialized bound objects.
@@ -71,6 +88,16 @@ public final class DeserializationFeature<V>
   public static final DeserializationFeature<Boolean> DESERIALIZE_VALIDATE_REQUIRED_FIELDS
       = new DeserializationFeature<>("validate-required-fields", Boolean.class, true);
 
+  /**
+   * Construct a new deserialization feature.
+   *
+   * @param name
+   *          the feature name used for identification
+   * @param valueClass
+   *          the class of the feature value type
+   * @param defaultValue
+   *          the default value for this feature
+   */
   private DeserializationFeature(
       @NonNull String name,
       @NonNull Class<V> valueClass,

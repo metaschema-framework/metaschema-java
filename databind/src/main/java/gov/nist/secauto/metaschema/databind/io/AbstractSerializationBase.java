@@ -15,6 +15,16 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Abstract base class for serializers and deserializers that provides common
+ * configuration management functionality.
+ * <p>
+ * This class maintains a reference to the bound assembly definition and manages
+ * configuration features that control serialization/deserialization behavior.
+ *
+ * @param <T>
+ *          the type of configuration feature this class manages
+ */
 @SuppressWarnings("PMD.ReplaceVectorWithList") // false positive
 abstract class AbstractSerializationBase<T extends IConfigurationFeature<?>>
     implements IMutableConfiguration<T> {
@@ -23,6 +33,12 @@ abstract class AbstractSerializationBase<T extends IConfigurationFeature<?>>
   @NonNull
   private final DefaultConfiguration<T> configuration;
 
+  /**
+   * Construct a new serialization base with the provided definition.
+   *
+   * @param definition
+   *          the bound assembly definition describing the data structure
+   */
   protected AbstractSerializationBase(@NonNull IBoundDefinitionModelAssembly definition) {
     this.definition = definition;
     this.configuration = new DefaultConfiguration<>();
@@ -49,6 +65,15 @@ abstract class AbstractSerializationBase<T extends IConfigurationFeature<?>>
     return definition;
   }
 
+  /**
+   * Callback method invoked when the configuration has been changed.
+   * <p>
+   * Subclasses can override this method to handle configuration changes, such as
+   * resetting cached factory instances.
+   *
+   * @param config
+   *          the updated configuration
+   */
   @SuppressWarnings("unused")
   protected void configurationChanged(@NonNull IMutableConfiguration<T> config) {
     // do nothing by default. Methods can override this to deal with factory caching

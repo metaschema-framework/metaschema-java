@@ -23,6 +23,12 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Implementation of the model() Metapath function.
+ * <p>
+ * This function provides access to module model information during Metapath
+ * evaluation in the context of data binding operations.
+ */
 public final class Model {
   @NonNull
   static final IFunction SIGNATURE = IFunction.builder()

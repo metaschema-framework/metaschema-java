@@ -15,6 +15,15 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * An abstract base class for writing model instance collections.
+ * <p>
+ * This class provides the framework for writing collections of items during
+ * serialization, with support for different collection types.
+ *
+ * @param <ITEM>
+ *          the Java type of items being written
+ */
 public abstract class AbstractModelInstanceWriteHandler<ITEM>
     implements IModelInstanceWriteHandler<ITEM> {
   @NonNull

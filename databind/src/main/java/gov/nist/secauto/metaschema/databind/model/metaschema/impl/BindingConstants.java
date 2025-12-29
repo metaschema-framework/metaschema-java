@@ -6,6 +6,12 @@
 package gov.nist.secauto.metaschema.databind.model.metaschema.impl;
 
 // REFACTOR: is this needed/used?
+/**
+ * Constants used throughout the binding implementation.
+ * <p>
+ * This class defines constant values for default settings and namespace URIs
+ * used in Metaschema bindings.
+ */
 public final class BindingConstants {
   public static final String METASCHEMA_ASSEMBLY_REFERENCE_NAME = "assembly";
   public static final String METASCHEMA_ASSEMBLY_INLINE_DEFINITION_NAME = "define-assembly";

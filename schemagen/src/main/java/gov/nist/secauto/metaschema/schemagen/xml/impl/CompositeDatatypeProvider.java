@@ -23,14 +23,31 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A composite datatype provider that aggregates multiple datatype providers.
+ * <p>
+ * This class implements the composite pattern, delegating datatype operations
+ * to a collection of underlying providers.
+ */
 public class CompositeDatatypeProvider implements IDatatypeProvider {
   @NonNull
   private final List<IDatatypeProvider> proxiedProviders;
 
+  /**
+   * Constructs a new composite datatype provider with the given providers.
+   *
+   * @param proxiedProviders
+   *          the list of providers to aggregate
+   */
   public CompositeDatatypeProvider(@NonNull List<IDatatypeProvider> proxiedProviders) {
     this.proxiedProviders = CollectionUtil.unmodifiableList(new ArrayList<>(proxiedProviders));
   }
 
+  /**
+   * Retrieves the list of proxied datatype providers.
+   *
+   * @return an unmodifiable list of the underlying providers
+   */
   @NonNull
   protected List<IDatatypeProvider> getProxiedProviders() {
     return proxiedProviders;

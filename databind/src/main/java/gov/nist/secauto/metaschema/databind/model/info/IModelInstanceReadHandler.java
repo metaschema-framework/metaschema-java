@@ -12,6 +12,16 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Handler interface for reading model instance collections during
+ * deserialization.
+ * <p>
+ * This interface provides methods for accepting individual items read from a
+ * stream and combining them into a collection.
+ *
+ * @param <ITEM>
+ *          the Java type of items being read
+ */
 public interface IModelInstanceReadHandler<ITEM> {
   @Nullable
   default ITEM readSingleton() throws IOException {
