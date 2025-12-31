@@ -4,6 +4,7 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
+
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
@@ -62,9 +63,9 @@ import java.util.List;
         MetaschemaMetaConstraints.class,
         MetaschemaMetapath.class,
         MetapathContext.class
-    }
-)
-public final class MetaschemaModelModule extends AbstractBoundModule {
+    })
+public final class MetaschemaModelModule
+    extends AbstractBoundModule {
   private static final MarkupLine NAME = MarkupLine.fromMarkdown("Metaschema Model");
 
   private static final String SHORT_NAME = "metaschema-model";
@@ -79,9 +80,9 @@ public final class MetaschemaModelModule extends AbstractBoundModule {
    * Construct a new module instance.
    *
    * @param importedModules
-   *           modules imported by this module
+   *          modules imported by this module
    * @param bindingContext
-   *           the binding context to associate with this module
+   *          the binding context to associate with this module
    */
   public MetaschemaModelModule(List<? extends IBoundModule> importedModules,
       IBindingContext bindingContext) {

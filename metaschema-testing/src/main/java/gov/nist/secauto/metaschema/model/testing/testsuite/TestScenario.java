@@ -4,6 +4,7 @@
  */
 // Generated from: ../../../../../../../../metaschema/unit-tests.yaml
 // Do not edit - changes will be lost when regenerated.
+
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -29,8 +30,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     formalName = "Test Scenario",
     description = "A test scenario that validates a metaschema and its content.",
     name = "test-scenario",
-    moduleClass = MetaschemaTestSuiteModule.class
-)
+    moduleClass = MetaschemaTestSuiteModule.class)
 public class TestScenario implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -42,8 +42,7 @@ public class TestScenario implements IBoundObject {
       description = "The name of this test scenario.",
       name = "name",
       required = true,
-      typeAdapter = StringAdapter.class
-  )
+      typeAdapter = StringAdapter.class)
   private String _name;
 
   /**
@@ -52,8 +51,7 @@ public class TestScenario implements IBoundObject {
   @BoundAssembly(
       formalName = "Generate Schema",
       description = "Defines schema generation parameters and expected results.",
-      useName = "generate-schema"
-  )
+      useName = "generate-schema")
   private GenerateSchema _generateSchema;
 
   /**
@@ -64,22 +62,25 @@ public class TestScenario implements IBoundObject {
       description = "A content validation test case.",
       useName = "validation-case",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "validation-cases", inJson = JsonGroupAsBehavior.LIST)
-  )
+      groupAs = @GroupAs(name = "validation-cases", inJson = JsonGroupAsBehavior.LIST))
   private List<ValidationCase> _validationCases;
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestScenario} instance with no metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestScenario}
+   * instance with no metadata.
    */
   public TestScenario() {
     this(null);
   }
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestScenario} instance with the specified metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestScenario}
+   * instance with the specified metadata.
    *
    * @param data
-   *           the metaschema data, or {@code null} if none
+   *          the metaschema data, or {@code null} if none
    */
   public TestScenario(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -110,7 +111,7 @@ public class TestScenario implements IBoundObject {
    * The name of this test scenario.
    *
    * @param value
-   *           the name value to set
+   *          the name value to set
    */
   public void setName(@NonNull String value) {
     _name = value;
@@ -136,7 +137,7 @@ public class TestScenario implements IBoundObject {
    * Defines schema generation parameters and expected results.
    *
    * @param value
-   *           the generate-schema value to set
+   *          the generate-schema value to set, or {@code null} to clear
    */
   public void setGenerateSchema(@Nullable GenerateSchema value) {
     _generateSchema = value;
@@ -165,7 +166,7 @@ public class TestScenario implements IBoundObject {
    * A content validation test case.
    *
    * @param value
-   *           the validation-case value to set
+   *          the validation-case value to set
    */
   public void setValidationCases(@NonNull List<ValidationCase> value) {
     _validationCases = value;
@@ -173,11 +174,13 @@ public class TestScenario implements IBoundObject {
 
   /**
    * Add a new {@link ValidationCase} item to the underlying collection.
-   * @param item the item to add
+   *
+   * @param item
+   *          the item to add
    * @return {@code true}
    */
   public boolean addValidationCase(ValidationCase item) {
-    ValidationCase value = ObjectUtils.requireNonNull(item,"item cannot be null");
+    ValidationCase value = ObjectUtils.requireNonNull(item, "item cannot be null");
     if (_validationCases == null) {
       _validationCases = new LinkedList<>();
     }
@@ -185,12 +188,15 @@ public class TestScenario implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link ValidationCase} item from the underlying collection.
-   * @param item the item to remove
+   * Remove the first matching {@link ValidationCase} item from the underlying
+   * collection.
+   *
+   * @param item
+   *          the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeValidationCase(ValidationCase item) {
-    ValidationCase value = ObjectUtils.requireNonNull(item,"item cannot be null");
+    ValidationCase value = ObjectUtils.requireNonNull(item, "item cannot be null");
     return _validationCases != null && _validationCases.remove(value);
   }
 

@@ -50,6 +50,16 @@ If you think any of these, STOP and check for skills:
 - `superpowers:requesting-code-review` - Review implementation against plan
 - `superpowers:testing-anti-patterns` - Avoid common testing mistakes
 
+### Project Conventions Override Skill Defaults
+
+Managed skills (superpowers plugin) provide general templates that may specify default file paths or workflows. **Project-specific conventions in `.claude/rules/` always take precedence.**
+
+Examples:
+- Brainstorming skill outputs to `docs/plans/` by default → Use `PRDs/[date]-[name]/` per `prd-conventions.md`
+- Skills may have their own directory structures → Follow project conventions instead
+
+When in doubt, check `.claude/rules/` for project-specific guidance before following skill defaults.
+
 ### Instructions ≠ Permission to Skip Workflows
 User instructions describe WHAT to do, not HOW. "Add X" or "Fix Y" does NOT mean skip brainstorming, TDD, or verification workflows.
 

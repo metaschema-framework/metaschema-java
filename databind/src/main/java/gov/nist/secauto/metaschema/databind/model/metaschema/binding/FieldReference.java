@@ -4,6 +4,7 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
+
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -37,8 +38,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MetaschemaAssembly(
     formalName = "Field Reference",
     name = "field-reference",
-    moduleClass = MetaschemaModelModule.class
-)
+    moduleClass = MetaschemaModelModule.class)
 public class FieldReference implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -46,37 +46,32 @@ public class FieldReference implements IBoundObject {
       formalName = "Global Field Reference",
       name = "ref",
       required = true,
-      typeAdapter = TokenAdapter.class
-  )
+      typeAdapter = TokenAdapter.class)
   private String _ref;
 
   @BoundFlag(
       formalName = "Field Reference Binary Name",
       name = "index",
-      typeAdapter = PositiveIntegerAdapter.class
-  )
+      typeAdapter = PositiveIntegerAdapter.class)
   private BigInteger _index;
 
   @BoundFlag(
       formalName = "Deprecated Version",
       name = "deprecated",
-      typeAdapter = StringAdapter.class
-  )
+      typeAdapter = StringAdapter.class)
   private String _deprecated;
 
   @BoundFlag(
       formalName = "Default Field Value",
       name = "default",
-      typeAdapter = StringAdapter.class
-  )
+      typeAdapter = StringAdapter.class)
   private String _default;
 
   @BoundFlag(
       formalName = "Minimum Occurrence",
       name = "min-occurs",
       defaultValue = "0",
-      typeAdapter = NonNegativeIntegerAdapter.class
-  )
+      typeAdapter = NonNegativeIntegerAdapter.class)
   private BigInteger _minOccurs;
 
   @BoundFlag(
@@ -84,8 +79,8 @@ public class FieldReference implements IBoundObject {
       name = "max-occurs",
       defaultValue = "1",
       typeAdapter = StringAdapter.class,
-      valueConstraints = @ValueConstraints(matches = @Matches(level = IConstraint.Level.ERROR, pattern = "^[1-9][0-9]*|unbounded$"))
-  )
+      valueConstraints = @ValueConstraints(
+          matches = @Matches(level = IConstraint.Level.ERROR, pattern = "^[1-9][0-9]*|unbounded$")))
   private String _maxOccurs;
 
   @BoundFlag(
@@ -93,8 +88,12 @@ public class FieldReference implements IBoundObject {
       name = "in-xml",
       defaultValue = "WRAPPED",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "WRAPPED", description = "Block contents of a markup-multiline field will be represented with a containing (wrapper) element in the XML."), @AllowedValue(value = "UNWRAPPED", description = "Block contents of a markup-multiline will be represented in the XML with no wrapper, making the field implicit. Among sibling fields in a given model, only one of them may be designated as UNWRAPPED."), @AllowedValue(value = "WITH_WRAPPER", description = "Alias for WRAPPED.", deprecatedVersion = "0.9.0")}))
-  )
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+          @AllowedValue(value = "WRAPPED",
+              description = "Block contents of a markup-multiline field will be represented with a containing (wrapper) element in the XML."),
+          @AllowedValue(value = "UNWRAPPED",
+              description = "Block contents of a markup-multiline will be represented in the XML with no wrapper, making the field implicit. Among sibling fields in a given model, only one of them may be designated as UNWRAPPED."),
+          @AllowedValue(value = "WITH_WRAPPER", description = "Alias for WRAPPED.", deprecatedVersion = "0.9.0") })))
   private String _inXml;
 
   /**
@@ -104,27 +103,25 @@ public class FieldReference implements IBoundObject {
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name",
-      typeAdapter = StringAdapter.class
-  )
+      typeAdapter = StringAdapter.class)
   private String _formalName;
 
   /**
-   * A short description of the data construct's purpose, describing the constructs semantics.
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
    */
   @BoundField(
       formalName = "Description",
       description = "A short description of the data construct's purpose, describing the constructs semantics.",
       useName = "description",
-      typeAdapter = MarkupLineAdapter.class
-  )
+      typeAdapter = MarkupLineAdapter.class)
   private MarkupLine _description;
 
   @BoundAssembly(
       formalName = "Property",
       useName = "prop",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST)
-  )
+      groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST))
   private List<Property> _props;
 
   /**
@@ -133,38 +130,40 @@ public class FieldReference implements IBoundObject {
   @BoundField(
       formalName = "Use Name",
       description = "Allows the name of the definition to be overridden.",
-      useName = "use-name"
-  )
+      useName = "use-name")
   private UseName _useName;
 
   @BoundAssembly(
       formalName = "Group As",
-      useName = "group-as"
-  )
+      useName = "group-as")
   private GroupingAs _groupAs;
 
   /**
-   * Any explanatory or helpful information to be provided about the remarks parent.
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
    */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
-      useName = "remarks"
-  )
+      useName = "remarks")
   private Remarks _remarks;
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldReference} instance with no metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldReference}
+   * instance with no metadata.
    */
   public FieldReference() {
     this(null);
   }
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldReference} instance with the specified metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldReference}
+   * instance with the specified metadata.
    *
    * @param data
-   *           the metaschema data, or {@code null} if none
+   *          the metaschema data, or {@code null} if none
    */
   public FieldReference(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -189,7 +188,7 @@ public class FieldReference implements IBoundObject {
    * Set the global Field Reference.
    *
    * @param value
-   *           the ref value to set
+   *          the ref value to set
    */
   public void setRef(@NonNull String value) {
     _ref = value;
@@ -209,7 +208,7 @@ public class FieldReference implements IBoundObject {
    * Set the field Reference Binary Name.
    *
    * @param value
-   *           the index value to set
+   *          the index value to set, or {@code null} to clear
    */
   public void setIndex(@Nullable BigInteger value) {
     _index = value;
@@ -229,7 +228,7 @@ public class FieldReference implements IBoundObject {
    * Set the deprecated Version.
    *
    * @param value
-   *           the deprecated value to set
+   *          the deprecated value to set, or {@code null} to clear
    */
   public void setDeprecated(@Nullable String value) {
     _deprecated = value;
@@ -249,7 +248,7 @@ public class FieldReference implements IBoundObject {
    * Set the default Field Value.
    *
    * @param value
-   *           the default value to set
+   *          the default value to set, or {@code null} to clear
    */
   public void setDefault(@Nullable String value) {
     _default = value;
@@ -269,7 +268,7 @@ public class FieldReference implements IBoundObject {
    * Set the minimum Occurrence.
    *
    * @param value
-   *           the min-occurs value to set
+   *          the min-occurs value to set, or {@code null} to clear
    */
   public void setMinOccurs(@Nullable BigInteger value) {
     _minOccurs = value;
@@ -289,7 +288,7 @@ public class FieldReference implements IBoundObject {
    * Set the maximum Occurrence.
    *
    * @param value
-   *           the max-occurs value to set
+   *          the max-occurs value to set, or {@code null} to clear
    */
   public void setMaxOccurs(@Nullable String value) {
     _maxOccurs = value;
@@ -309,7 +308,7 @@ public class FieldReference implements IBoundObject {
    * Set the field In XML.
    *
    * @param value
-   *           the in-xml value to set
+   *          the in-xml value to set, or {@code null} to clear
    */
   public void setInXml(@Nullable String value) {
     _inXml = value;
@@ -335,7 +334,7 @@ public class FieldReference implements IBoundObject {
    * A formal name for the data construct, to be presented in documentation.
    *
    * @param value
-   *           the formal-name value to set
+   *          the formal-name value to set, or {@code null} to clear
    */
   public void setFormalName(@Nullable String value) {
     _formalName = value;
@@ -345,7 +344,8 @@ public class FieldReference implements IBoundObject {
    * Get the description.
    *
    * <p>
-   * A short description of the data construct's purpose, describing the constructs semantics.
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
    *
    * @return the description value, or {@code null} if not set
    */
@@ -358,10 +358,11 @@ public class FieldReference implements IBoundObject {
    * Set the description.
    *
    * <p>
-   * A short description of the data construct's purpose, describing the constructs semantics.
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
    *
    * @param value
-   *           the description value to set
+   *          the description value to set, or {@code null} to clear
    */
   public void setDescription(@Nullable MarkupLine value) {
     _description = value;
@@ -384,7 +385,7 @@ public class FieldReference implements IBoundObject {
    * Set the property.
    *
    * @param value
-   *           the prop value to set
+   *          the prop value to set
    */
   public void setProps(@NonNull List<Property> value) {
     _props = value;
@@ -392,11 +393,13 @@ public class FieldReference implements IBoundObject {
 
   /**
    * Add a new {@link Property} item to the underlying collection.
-   * @param item the item to add
+   *
+   * @param item
+   *          the item to add
    * @return {@code true}
    */
   public boolean addProp(Property item) {
-    Property value = ObjectUtils.requireNonNull(item,"item cannot be null");
+    Property value = ObjectUtils.requireNonNull(item, "item cannot be null");
     if (_props == null) {
       _props = new LinkedList<>();
     }
@@ -404,12 +407,15 @@ public class FieldReference implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link Property} item from the underlying collection.
-   * @param item the item to remove
+   * Remove the first matching {@link Property} item from the underlying
+   * collection.
+   *
+   * @param item
+   *          the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeProp(Property item) {
-    Property value = ObjectUtils.requireNonNull(item,"item cannot be null");
+    Property value = ObjectUtils.requireNonNull(item, "item cannot be null");
     return _props != null && _props.remove(value);
   }
 
@@ -433,7 +439,7 @@ public class FieldReference implements IBoundObject {
    * Allows the name of the definition to be overridden.
    *
    * @param value
-   *           the use-name value to set
+   *          the use-name value to set, or {@code null} to clear
    */
   public void setUseName(@Nullable UseName value) {
     _useName = value;
@@ -453,7 +459,7 @@ public class FieldReference implements IBoundObject {
    * Set the group As.
    *
    * @param value
-   *           the group-as value to set
+   *          the group-as value to set, or {@code null} to clear
    */
   public void setGroupAs(@Nullable GroupingAs value) {
     _groupAs = value;
@@ -463,7 +469,8 @@ public class FieldReference implements IBoundObject {
    * Get the remarks.
    *
    * <p>
-   * Any explanatory or helpful information to be provided about the remarks parent.
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
    *
    * @return the remarks value, or {@code null} if not set
    */
@@ -476,10 +483,11 @@ public class FieldReference implements IBoundObject {
    * Set the remarks.
    *
    * <p>
-   * Any explanatory or helpful information to be provided about the remarks parent.
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
    *
    * @param value
-   *           the remarks value to set
+   *          the remarks value to set, or {@code null} to clear
    */
   public void setRemarks(@Nullable Remarks value) {
     _remarks = value;
