@@ -87,34 +87,36 @@ public class XmlSchemaLoader {
     this.document = document;
   }
 
+  /**
+   * Creates a namespace-aware document builder.
+   *
+   * @return a configured document builder
+   */
   @NonNull
-  private static Document parseDocument(@NonNull Path path) throws SAXException, IOException {
+  private static DocumentBuilder createDocumentBuilder() {
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setNamespaceAware(true);
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      Document doc = builder.parse(path.toFile());
-      // Normalize to ensure deferred DOM nodes are fully loaded for XPath evaluation
-      doc.normalizeDocument();
-      return doc;
+      return factory.newDocumentBuilder();
     } catch (ParserConfigurationException ex) {
       throw new IllegalStateException("Failed to create document builder", ex);
     }
   }
 
   @NonNull
+  private static Document parseDocument(@NonNull Path path) throws SAXException, IOException {
+    Document doc = createDocumentBuilder().parse(path.toFile());
+    // Normalize to ensure deferred DOM nodes are fully loaded for XPath evaluation
+    doc.normalizeDocument();
+    return doc;
+  }
+
+  @NonNull
   private static Document parseDocument(@NonNull InputStream is) throws SAXException, IOException {
-    try {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      factory.setNamespaceAware(true);
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      Document doc = builder.parse(is);
-      // Normalize to ensure deferred DOM nodes are fully loaded for XPath evaluation
-      doc.normalizeDocument();
-      return doc;
-    } catch (ParserConfigurationException ex) {
-      throw new IllegalStateException("Failed to create document builder", ex);
-    }
+    Document doc = createDocumentBuilder().parse(is);
+    // Normalize to ensure deferred DOM nodes are fully loaded for XPath evaluation
+    doc.normalizeDocument();
+    return doc;
   }
 
   /**

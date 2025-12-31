@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.schemagen.xml.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -148,8 +149,8 @@ class IndentingXMLStreamWriterTest {
 
       // Just verify it doesn't throw and produces valid output
       String result = sw.toString();
-      assertEquals(true, result.contains("<xs:schema"));
-      assertEquals(true, result.contains("<xs:element"));
+      assertTrue(result.contains("<xs:schema"));
+      assertTrue(result.contains("<xs:element"));
     }
   }
 
@@ -262,7 +263,7 @@ class IndentingXMLStreamWriterTest {
       // Once whitespace text is written, we're in mixed content mode
       // The child element should NOT get indentation added
       String result = sw.toString();
-      assertEquals(true, result.contains("<element>   <child/></element>"));
+      assertTrue(result.contains("<element>   <child/></element>"));
     }
 
     @Test
@@ -310,7 +311,7 @@ class IndentingXMLStreamWriterTest {
       }
 
       String result = sw.toString();
-      assertEquals(true, result.contains("<![CDATA[CDATA content with <special> chars]]>"));
+      assertTrue(result.contains("<![CDATA[CDATA content with <special> chars]]>"));
     }
 
     @Test
@@ -402,7 +403,7 @@ class IndentingXMLStreamWriterTest {
       String result = sw.toString();
       // The p element should be indented as element-only content
       // But the text inside p should not have added whitespace
-      assertEquals(true, result.contains("<p:p>This is documentation.</p:p>"));
+      assertTrue(result.contains("<p:p>This is documentation.</p:p>"));
     }
 
     @Test
@@ -425,7 +426,7 @@ class IndentingXMLStreamWriterTest {
 
       String result = sw.toString();
       // No whitespace corruption in mixed content
-      assertEquals(true, result.contains("<p:p>Text with <b:b>bold</b:b> content.</p:p>"));
+      assertTrue(result.contains("<p:p>Text with <b:b>bold</b:b> content.</p:p>"));
     }
 
     @Test
@@ -538,7 +539,7 @@ class IndentingXMLStreamWriterTest {
       // Once text is written to parent, subsequent content should not be indented
       String result = sw.toString();
       // The child was indented, but after the text, parent is in mixed content mode
-      assertEquals(true, result.contains("</child>parent text after child</root>"));
+      assertTrue(result.contains("</child>parent text after child</root>"));
     }
 
     @Test

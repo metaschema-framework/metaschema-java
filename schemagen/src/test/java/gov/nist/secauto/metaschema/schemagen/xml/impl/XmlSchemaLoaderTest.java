@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.schemagen.xml.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
@@ -78,9 +79,9 @@ class XmlSchemaLoaderTest {
           .collect(Collectors.toList());
 
       // Check for some expected core datatypes
-      assertEquals(true, typeNames.contains("Base64Datatype"),
+      assertTrue(typeNames.contains("Base64Datatype"),
           "Should contain Base64Datatype");
-      assertEquals(true, typeNames.contains("StringDatatype"),
+      assertTrue(typeNames.contains("StringDatatype"),
           "Should contain StringDatatype");
     }
 
@@ -108,7 +109,7 @@ class XmlSchemaLoaderTest {
           .distinct()
           .collect(Collectors.toList());
 
-      assertEquals(true, elementNames.contains("simpleType"),
+      assertTrue(elementNames.contains("simpleType"),
           "Should contain simpleType elements");
     }
   }

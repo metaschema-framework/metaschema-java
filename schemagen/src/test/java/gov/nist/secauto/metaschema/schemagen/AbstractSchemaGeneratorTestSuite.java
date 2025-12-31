@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.schemagen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gov.nist.secauto.metaschema.core.configuration.DefaultConfiguration;
 import gov.nist.secauto.metaschema.core.configuration.IConfiguration;
@@ -265,7 +266,7 @@ public abstract class AbstractSchemaGeneratorTestSuite
     case JSON:
     case YAML:
       Path jsonSchema = produceJsonSchema(module, generationDir.resolve(generatedSchemaName + ".json"));
-      assertEquals(true, validateWithSchema(JSON_SCHEMA_VALIDATOR, jsonSchema),
+      assertTrue(validateWithSchema(JSON_SCHEMA_VALIDATOR, jsonSchema),
           String.format("JSON schema '%s' was invalid", jsonSchema.toString()));
       schemaPath = jsonSchema;
       break;
