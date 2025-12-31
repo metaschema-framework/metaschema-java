@@ -146,6 +146,11 @@ public class InstanceModelAssemblyInline
     }));
   }
 
+  /**
+   * Gets the underlying binding object for this inline assembly instance.
+   *
+   * @return the binding object
+   */
   @NonNull
   protected InlineDefineAssembly getBinding() {
     getContainingDefinition();

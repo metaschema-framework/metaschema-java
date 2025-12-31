@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
@@ -19,9 +18,9 @@ import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.AssemblyConstraintSet;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.model.constraint.IModelConstrained;
 import gov.nist.secauto.metaschema.core.model.constraint.IReportConstraint;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
@@ -48,10 +47,11 @@ class BindingConstraintLoaderTest {
     IConstraintLoader loader = new BindingConstraintLoader(bindingContext);
 
     List<IConstraintSet> constraints = loader.load(
-        Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-valid.yaml"));
+        ObjectUtils
+            .notNull(Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-valid.yaml")));
     assertEquals(1, constraints.size());
 
-    Path compileDir = Paths.get("target/generated-test-modules/meta-constraints/");
+    Path compileDir = ObjectUtils.notNull(Paths.get("target/generated-test-modules/meta-constraints/"));
     Files.createDirectories(compileDir);
 
     bindingContext = IBindingContext.builder()
@@ -60,7 +60,7 @@ class BindingConstraintLoaderTest {
         .build();
 
     IBindingMetaschemaModule metaschema = bindingContext.loadMetaschema(
-        Paths.get("src/test/resources/content/constraints/meta-constraints/metaschema.xml"));
+        ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints/meta-constraints/metaschema.xml")));
     IBoundModule module = bindingContext.registerModule(metaschema);
 
     final IAssemblyDefinition level1
@@ -80,14 +80,14 @@ class BindingConstraintLoaderTest {
 
     assertAll(
         () -> assertNotNull(level1),
-        () -> assertEquals(1, level1 == null ? 0 : level1.getLetExpressions().size(), "level 1 let"),
-        () -> assertEquals(1, level1 == null ? 0 : level1.getExpectConstraints().size(), "level 1 expect"),
+        () -> assertEquals(1, level1.getLetExpressions().size(), "level 1 let"),
+        () -> assertEquals(1, level1.getExpectConstraints().size(), "level 1 expect"),
         () -> assertNotNull(level2),
-        () -> assertEquals(1, level2 == null ? 0 : level2.getLetExpressions().size(), "level 2 let"),
-        () -> assertEquals(1, level2 == null ? 0 : level2.getExpectConstraints().size(), "level 2 expect"),
+        () -> assertEquals(1, level2.getLetExpressions().size(), "level 2 let"),
+        () -> assertEquals(1, level2.getExpectConstraints().size(), "level 2 expect"),
         () -> assertNotNull(level3),
-        () -> assertEquals(1, level3 == null ? 0 : level3.getLetExpressions().size(), "level 3 let"),
-        () -> assertEquals(1, level3 == null ? 0 : level3.getExpectConstraints().size(), "level 3 expect"));
+        () -> assertEquals(1, level3.getLetExpressions().size(), "level 3 let"),
+        () -> assertEquals(1, level3.getExpectConstraints().size(), "level 3 expect"));
   }
 
   @Test
@@ -96,7 +96,8 @@ class BindingConstraintLoaderTest {
     IConstraintLoader loader = new BindingConstraintLoader(bindingContext);
 
     List<IConstraintSet> constraints = loader.load(
-        Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-report.yaml"));
+        ObjectUtils.notNull(
+            Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-report.yaml")));
     assertEquals(1, constraints.size(), "should load exactly one constraint set");
 
     // Get the constraint set and verify it has the context with report constraint
@@ -104,7 +105,7 @@ class BindingConstraintLoaderTest {
     assertNotNull(constraintSet, "constraint set should not be null");
 
     // Now test that it applies to level1
-    Path compileDir = Paths.get("target/generated-test-modules/meta-constraints-report/");
+    Path compileDir = ObjectUtils.notNull(Paths.get("target/generated-test-modules/meta-constraints-report/"));
     Files.createDirectories(compileDir);
 
     bindingContext = IBindingContext.builder()
@@ -113,7 +114,7 @@ class BindingConstraintLoaderTest {
         .build();
 
     IBindingMetaschemaModule metaschema = bindingContext.loadMetaschema(
-        Paths.get("src/test/resources/content/constraints/meta-constraints/metaschema.xml"));
+        ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints/meta-constraints/metaschema.xml")));
     IBoundModule module = bindingContext.registerModule(metaschema);
 
     final IAssemblyDefinition level1
@@ -158,8 +159,9 @@ class BindingConstraintLoaderTest {
     trace.append("STEP 1: Parse YAML to binding object\n");
     IBindingContext bindingContext = IBindingContext.newInstance();
     IBoundLoader loader = bindingContext.newBoundLoader();
-    URI resourceUri = Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-report.yaml")
-        .toUri();
+    URI resourceUri = ObjectUtils
+        .notNull(Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-report.yaml")
+            .toUri());
 
     Object constraintsDocument = loader.load(resourceUri);
     trace.append("  Document type: ").append(constraintsDocument.getClass().getName()).append("\n");
@@ -172,18 +174,15 @@ class BindingConstraintLoaderTest {
     trace.append("\nSTEP 2: Check parsed contexts\n");
     List<gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathContext> contexts
         = metaConstraints.getContexts();
-    trace.append("  Number of contexts: ").append(contexts == null ? "null" : contexts.size()).append("\n");
-    assertNotNull(contexts, "Contexts should not be null");
+    trace.append("  Number of contexts: ").append(contexts.size()).append("\n");
     assertFalse(contexts.isEmpty(), "Should have at least one context");
 
     // Step 3: Check first context's constraints
     trace.append("\nSTEP 3: Check first context's constraints\n");
     gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathContext firstContext = contexts.get(0);
     trace.append("  First context metapaths: ");
-    if (firstContext.getMetapaths() != null) {
-      for (var mp : firstContext.getMetapaths()) {
-        trace.append(mp.getTarget()).append(" ");
-      }
+    for (var mp : firstContext.getMetapaths()) {
+      trace.append(mp.getTarget()).append(" ");
     }
     trace.append("\n");
 
@@ -194,10 +193,9 @@ class BindingConstraintLoaderTest {
     // Step 4: Check rules in constraints
     trace.append("\nSTEP 4: Check rules in AssemblyConstraints\n");
     List<? extends ITargetedConstraintBase> rules = assemblyConstraints.getRules();
-    trace.append("  Number of rules: ").append(rules == null ? "null" : rules.size()).append("\n");
-    assertNotNull(rules, "Rules should not be null");
+    trace.append("  Number of rules: ").append(rules.size()).append("\n");
 
-    if (rules != null && !rules.isEmpty()) {
+    if (!rules.isEmpty()) {
       for (int i = 0; i < rules.size(); i++) {
         Object rule = rules.get(i);
         trace.append("  Rule ").append(i).append(": ");
@@ -256,8 +254,9 @@ class BindingConstraintLoaderTest {
     // Step 1: Parse YAML directly to binding object
     IBindingContext bindingContext = IBindingContext.newInstance();
     IBoundLoader loader = bindingContext.newBoundLoader();
-    URI resourceUri = Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-report.yaml")
-        .toUri();
+    URI resourceUri = ObjectUtils
+        .notNull(Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-report.yaml")
+            .toUri());
 
     MetaschemaMetaConstraints metaConstraints = (MetaschemaMetaConstraints) loader.load(resourceUri);
     var contexts = metaConstraints.getContexts();
@@ -326,7 +325,8 @@ class BindingConstraintLoaderTest {
     IConstraintLoader loader = new BindingConstraintLoader(bindingContext);
 
     List<IConstraintSet> constraintSets = loader.load(
-        Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-report.yaml"));
+        ObjectUtils.notNull(
+            Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-report.yaml")));
 
     trace.append("Constraint sets loaded: ").append(constraintSets.size()).append("\n\n");
     assertEquals(1, constraintSets.size(), "Should have exactly one constraint set");
@@ -341,7 +341,7 @@ class BindingConstraintLoaderTest {
     }
 
     // Now test applying constraints to see if they work
-    Path compileDir = Paths.get("target/generated-test-modules/meta-constraints-report-trace/");
+    Path compileDir = ObjectUtils.notNull(Paths.get("target/generated-test-modules/meta-constraints-report-trace/"));
     Files.createDirectories(compileDir);
 
     bindingContext = IBindingContext.builder()
@@ -350,7 +350,7 @@ class BindingConstraintLoaderTest {
         .build();
 
     IBindingMetaschemaModule metaschema = bindingContext.loadMetaschema(
-        Paths.get("src/test/resources/content/constraints/meta-constraints/metaschema.xml"));
+        ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints/meta-constraints/metaschema.xml")));
 
     trace.append("\nBefore registerModule:\n");
     IAssemblyDefinition level1Before
@@ -394,9 +394,10 @@ class BindingConstraintLoaderTest {
     IConstraintLoader loader = new BindingConstraintLoader(bindingContext);
 
     List<IConstraintSet> constraints = loader.load(
-        Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-valid.yaml"));
+        ObjectUtils
+            .notNull(Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-valid.yaml")));
 
-    Path compileDir = Paths.get("target/generated-test-modules/meta-constraints-trace-expect/");
+    Path compileDir = ObjectUtils.notNull(Paths.get("target/generated-test-modules/meta-constraints-trace-expect/"));
     Files.createDirectories(compileDir);
 
     bindingContext = IBindingContext.builder()
@@ -405,7 +406,7 @@ class BindingConstraintLoaderTest {
         .build();
 
     IBindingMetaschemaModule metaschema = bindingContext.loadMetaschema(
-        Paths.get("src/test/resources/content/constraints/meta-constraints/metaschema.xml"));
+        ObjectUtils.notNull(Paths.get("src/test/resources/content/constraints/meta-constraints/metaschema.xml")));
 
     // Verify expect constraint exists before registerModule
     IAssemblyDefinition level1Before
@@ -438,10 +439,12 @@ class BindingConstraintLoaderTest {
     IBoundLoader loader = bindingContext.newBoundLoader();
 
     // Load both YAML files
-    URI expectUri = Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-valid.yaml")
-        .toUri();
-    URI reportUri = Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-report.yaml")
-        .toUri();
+    URI expectUri = ObjectUtils
+        .notNull(Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-valid.yaml")
+            .toUri());
+    URI reportUri = ObjectUtils
+        .notNull(Paths.get("src/test/resources/content/constraints/meta-constraints/meta-constraints-report.yaml")
+            .toUri());
 
     Object expectDoc = loader.load(expectUri);
     Object reportDoc = loader.load(reportUri);
@@ -458,13 +461,9 @@ class BindingConstraintLoaderTest {
 
     // Compare contexts
     comparison.append("Contexts:\n");
-    comparison.append("  Expect contexts: ").append(
-        expectConstraints.getContexts() == null ? "null" : expectConstraints.getContexts().size()).append("\n");
-    comparison.append("  Report contexts: ").append(
-        reportConstraints.getContexts() == null ? "null" : reportConstraints.getContexts().size()).append("\n\n");
+    comparison.append("  Expect contexts: ").append(expectConstraints.getContexts().size()).append("\n");
+    comparison.append("  Report contexts: ").append(reportConstraints.getContexts().size()).append("\n\n");
 
-    assertNotNull(expectConstraints.getContexts(), "Expect contexts should not be null");
-    assertNotNull(reportConstraints.getContexts(), "Report contexts should not be null");
     assertFalse(expectConstraints.getContexts().isEmpty(), "Expect contexts should not be empty");
     assertFalse(reportConstraints.getContexts().isEmpty(), "Report contexts should not be empty");
 
@@ -501,10 +500,10 @@ class BindingConstraintLoaderTest {
     List<? extends ITargetedConstraintBase> reportRules = reportAssemblyConstraints.getRules();
 
     comparison.append("Rules:\n");
-    comparison.append("  Expect rules count: ").append(expectRules == null ? "null" : expectRules.size()).append("\n");
-    comparison.append("  Report rules count: ").append(reportRules == null ? "null" : reportRules.size()).append("\n");
+    comparison.append("  Expect rules count: ").append(expectRules.size()).append("\n");
+    comparison.append("  Report rules count: ").append(reportRules.size()).append("\n");
 
-    if (expectRules != null && !expectRules.isEmpty()) {
+    if (!expectRules.isEmpty()) {
       comparison.append("  Expect rules types:\n");
       for (int i = 0; i < expectRules.size(); i++) {
         Object rule = expectRules.get(i);
@@ -513,7 +512,7 @@ class BindingConstraintLoaderTest {
       }
     }
 
-    if (reportRules != null && !reportRules.isEmpty()) {
+    if (!reportRules.isEmpty()) {
       comparison.append("  Report rules types:\n");
       for (int i = 0; i < reportRules.size(); i++) {
         Object rule = reportRules.get(i);
@@ -521,15 +520,11 @@ class BindingConstraintLoaderTest {
             rule == null ? "null" : rule.getClass().getSimpleName()).append("\n");
       }
     } else {
-      comparison.append("  Report rules: EMPTY OR NULL - THIS IS THE PROBLEM!\n");
+      comparison.append("  Report rules: EMPTY - THIS IS THE PROBLEM!\n");
     }
 
     // Output comparison for debugging
     System.out.println(comparison);
-
-    // Key assertions
-    assertNotNull(expectRules, "Expect rules should not be null");
-    assertNotNull(reportRules, "Report rules should not be null. Comparison:\n" + comparison);
     assertFalse(expectRules.isEmpty(), "Expect rules should not be empty");
     assertFalse(reportRules.isEmpty(),
         "Report rules should not be empty - YAML parsing failed! Comparison:\n" + comparison);

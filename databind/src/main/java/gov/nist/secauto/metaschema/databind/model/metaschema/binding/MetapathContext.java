@@ -100,7 +100,7 @@ public class MetapathContext implements IBoundObject {
     if (_metapaths == null) {
       _metapaths = new LinkedList<>();
     }
-    return _metapaths;
+    return ObjectUtils.notNull(_metapaths);
   }
 
   /**
@@ -175,7 +175,7 @@ public class MetapathContext implements IBoundObject {
     if (_contexts == null) {
       _contexts = new LinkedList<>();
     }
-    return _contexts;
+    return ObjectUtils.notNull(_contexts);
   }
 
   /**
@@ -246,6 +246,6 @@ public class MetapathContext implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

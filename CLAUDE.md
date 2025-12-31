@@ -299,6 +299,7 @@ PRDs are stored in `PRDs/<YYYYMMDD>-<name>/` with:
 
 | PRD | Description | Completed |
 |-----|-------------|-----------|
+| `PRDs/20251229-javadoc-coverage/` | Complete Javadoc coverage for schemagen, databind, and maven-plugin modules | 2025-12-29 |
 | `PRDs/20251228-targeted-report-constraint/` | Add constraint processing support for TargetedReportConstraint (issue #592) | 2025-12-29 |
 | `PRDs/20251228-validation-errors/` | Validation error message improvements (#595, #596, #205) | 2025-12-28 |
 | `PRDs/20251224-codegen-quality/` | Code generator Javadoc and quality improvements | 2025-12-28 |

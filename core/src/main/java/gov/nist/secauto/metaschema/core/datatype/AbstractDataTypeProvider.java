@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.datatype;
 
 import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import gov.nist.secauto.metaschema.core.metapath.type.DataTypeItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
@@ -66,7 +67,7 @@ public abstract class AbstractDataTypeProvider implements IDataTypeProvider {
    *           if the type is not abstract
    */
   protected void register(@NonNull IAtomicOrUnionType<?> type) {
-    if (type.getAdapter() != null) {
+    if (type instanceof DataTypeItemType) {
       throw new IllegalArgumentException(
           String.format("The type '%s' has an adapter and must be registered using the adapter.",
               type.toSignature()));

@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.eclipse.jdt.annotation.NotOwning;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.PrintStream;
@@ -105,6 +106,7 @@ public class CLIProcessor {
   @NonNull
   private final Map<String, IVersionInfo> versionInfos;
   @NonNull
+  @NotOwning
   private final PrintStream outputStream;
 
   /**
@@ -162,10 +164,12 @@ public class CLIProcessor {
    *          the version info to display when the version option is provided
    * @param outputStream
    *          the output stream to write to, or {@code null} to use the default
-   *          console
+   *          console. The caller retains ownership of this stream and is
+   *          responsible for closing it.
    */
+  @SuppressWarnings("resource")
   public CLIProcessor(@NonNull String exec, @NonNull Map<String, IVersionInfo> versionInfos,
-      @Nullable PrintStream outputStream) {
+      @Nullable @NotOwning PrintStream outputStream) {
     this.exec = exec;
     this.versionInfos = versionInfos;
     if (outputStream == null) {
@@ -275,10 +279,13 @@ public class CLIProcessor {
 
   /**
    * Get the output stream used for writing CLI output.
+   * <p>
+   * The caller does not own this stream and must not close it.
    *
    * @return the output stream
    */
   @NonNull
+  @NotOwning
   PrintStream getOutputStream() {
     return outputStream;
   }

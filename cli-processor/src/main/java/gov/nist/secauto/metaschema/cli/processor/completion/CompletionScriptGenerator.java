@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.cli.processor.completion;
 
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.cli.Option;
 
@@ -134,7 +135,7 @@ public class CompletionScriptGenerator {
     // Register completion
     sb.append("complete -F ").append(funcName).append(" ").append(programName).append("\n");
 
-    return sb.toString();
+    return ObjectUtils.notNull(sb.toString());
   }
 
   /**
@@ -182,7 +183,7 @@ public class CompletionScriptGenerator {
 
     sb.append(funcName).append(" \"$@\"\n");
 
-    return sb.toString();
+    return ObjectUtils.notNull(sb.toString());
   }
 
   private void generateBashCommandCase(StringBuilder sb, ICommand cmd, int depth) {
@@ -211,7 +212,7 @@ public class CompletionScriptGenerator {
     } else {
       // Generate option completions
       String optionNames = options.stream()
-          .map(this::getBashOptionName)
+          .map(CompletionScriptGenerator::getBashOptionName)
           .collect(Collectors.joining(" "));
 
       sb.append(indent).append("    if [[ \"$cur\" == -* ]]; then\n");
@@ -254,7 +255,7 @@ public class CompletionScriptGenerator {
     sb.append(indent).append("    ;;\n");
   }
 
-  private void generateZshCommandCase(StringBuilder sb, ICommand cmd) {
+  private static void generateZshCommandCase(StringBuilder sb, ICommand cmd) {
     sb.append("                ").append(cmd.getName()).append(")\n");
 
     Collection<? extends Option> options = cmd.gatherOptions();
@@ -292,7 +293,7 @@ public class CompletionScriptGenerator {
   }
 
   @NonNull
-  private String getBashOptionName(Option opt) {
+  private static String getBashOptionName(Option opt) {
     StringBuilder sb = new StringBuilder();
     if (opt.getOpt() != null) {
       sb.append("-").append(opt.getOpt());
@@ -303,11 +304,11 @@ public class CompletionScriptGenerator {
       }
       sb.append("--").append(opt.getLongOpt());
     }
-    return sb.toString();
+    return ObjectUtils.notNull(sb.toString());
   }
 
   @NonNull
-  private String getZshOptionSpec(Option opt) {
+  private static String getZshOptionSpec(Option opt) {
     StringBuilder sb = new StringBuilder("'");
     if (opt.getLongOpt() != null) {
       sb.append("--").append(opt.getLongOpt());
@@ -331,11 +332,11 @@ public class CompletionScriptGenerator {
     }
 
     sb.append("'");
-    return sb.toString();
+    return ObjectUtils.notNull(sb.toString());
   }
 
   @NonNull
-  private String getCompletionForOption(Option opt, Shell shell) {
+  private static String getCompletionForOption(Option opt, Shell shell) {
     Object typeObj = opt.getType();
     Class<?> type = typeObj instanceof Class ? (Class<?>) typeObj : null;
     ICompletionType completion = CompletionTypeRegistry.lookup(type);
@@ -346,7 +347,7 @@ public class CompletionScriptGenerator {
   }
 
   @NonNull
-  private String getCompletionForExtraArgument(ExtraArgument arg, Shell shell) {
+  private static String getCompletionForExtraArgument(ExtraArgument arg, Shell shell) {
     Class<?> type = arg.getType();
     ICompletionType completion = CompletionTypeRegistry.lookup(type);
     if (completion != null) {
@@ -356,7 +357,7 @@ public class CompletionScriptGenerator {
   }
 
   @NonNull
-  private String getDefaultExtraArgumentCompletion(List<ExtraArgument> args, Shell shell) {
+  private static String getDefaultExtraArgumentCompletion(List<ExtraArgument> args, Shell shell) {
     // Use the first argument's type, or default to file completion
     if (!args.isEmpty()) {
       String completion = getCompletionForExtraArgument(args.get(0), shell);
@@ -372,7 +373,7 @@ public class CompletionScriptGenerator {
   }
 
   @NonNull
-  private String sanitizeFunctionName(String name) {
-    return name.replaceAll("[^a-zA-Z0-9_]", "_");
+  private static String sanitizeFunctionName(String name) {
+    return ObjectUtils.notNull(name.replaceAll("[^a-zA-Z0-9_]", "_"));
   }
 }

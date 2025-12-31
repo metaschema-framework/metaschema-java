@@ -52,6 +52,18 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
   @Nullable
   private final Method afterDeserializeMethod;
 
+  /**
+   * Constructs a new complex model definition bound to a Java class.
+   *
+   * @param clazz
+   *          the Java class bound to this definition
+   * @param annotation
+   *          the binding annotation on the class
+   * @param module
+   *          the module containing this definition
+   * @param bindingContext
+   *          the binding context used for resolving definitions
+   */
   protected AbstractBoundDefinitionModelComplex(
       @NonNull Class<? extends IBoundObject> clazz,
       @NonNull A annotation,
@@ -82,6 +94,11 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
     return clazz;
   }
 
+  /**
+   * Gets the binding annotation associated with this definition.
+   *
+   * @return the annotation used to configure this definition
+   */
   @NonNull
   public A getAnnotation() {
     return annotation;
@@ -145,6 +162,19 @@ public abstract class AbstractBoundDefinitionModelComplex<A extends Annotation>
     return instance;
   }
 
+  /**
+   * Performs the internal deep copy of data from one bound object to another.
+   * <p>
+   * This implementation copies all flag instances. Subclasses should override
+   * this method to copy additional model content.
+   *
+   * @param fromObject
+   *          the source object to copy from
+   * @param toObject
+   *          the target object to copy to
+   * @throws BindingException
+   *           if an error occurs during the copy operation
+   */
   protected void deepCopyItemInternal(@NonNull IBoundObject fromObject, @NonNull IBoundObject toObject)
       throws BindingException {
     for (IBoundInstanceFlag instance : getFlagInstances()) {

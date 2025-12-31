@@ -46,11 +46,11 @@ class AbstractConfigurableMessageConstraintTest
     document.getRootAssemblyNodeItem().getDefinition().addConstraint(expect);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    validator.validate(
-        document,
-        new DynamicContext(document.getStaticContext()));
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      validator.validate(
+          document,
+          new DynamicContext(document.getStaticContext()));
+    }
     assertAll(
         () -> assertTrue(handler.isPassing()),
         () -> assertEquals(0, handler.getFindings().size()));
@@ -73,11 +73,11 @@ class AbstractConfigurableMessageConstraintTest
     document.getRootAssemblyNodeItem().getDefinition().addConstraint(expect);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    validator.validate(
-        document,
-        new DynamicContext(document.getStaticContext()));
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      validator.validate(
+          document,
+          new DynamicContext(document.getStaticContext()));
+    }
     assertAll(
         () -> assertTrue(handler.isPassing()),
         () -> assertEquals(0, handler.getFindings().size()));
@@ -101,11 +101,11 @@ class AbstractConfigurableMessageConstraintTest
     document.getRootAssemblyNodeItem().getDefinition().addConstraint(expect);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    validator.validate(
-        document,
-        new DynamicContext(document.getStaticContext()));
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      validator.validate(
+          document,
+          new DynamicContext(document.getStaticContext()));
+    }
     assertAll(
         () -> assertTrue(handler.isPassing()),
         () -> assertEquals(0, handler.getFindings().size()));
@@ -128,11 +128,11 @@ class AbstractConfigurableMessageConstraintTest
     document.getRootAssemblyNodeItem().getDefinition().addConstraint(expect);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    validator.validate(
-        document,
-        new DynamicContext(document.getStaticContext()));
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      validator.validate(
+          document,
+          new DynamicContext(document.getStaticContext()));
+    }
     assertAll(
         () -> assertTrue(handler.isPassing()),
         () -> assertEquals(0, handler.getFindings().size()));

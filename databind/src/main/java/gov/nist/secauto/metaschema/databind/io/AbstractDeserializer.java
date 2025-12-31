@@ -149,11 +149,24 @@ public abstract class AbstractDeserializer<CLASS extends IBoundObject>
     DynamicContext dynamicContext = new DynamicContext(nodeItem.getStaticContext());
     // Use permissive loader for documents referenced in constraint expressions
     dynamicContext.setDocumentLoader(getBindingContext().newPermissiveBoundLoader());
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(getConstraintValidationHandler());
-    validator.validate(definitionNodeItem, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(getConstraintValidationHandler())) {
+      validator.validate(definitionNodeItem, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
   }
 
+  /**
+   * This abstract method delegates parsing to the concrete implementation,
+   * returning the deserialized value directly.
+   *
+   * @param reader
+   *          the reader instance to read data from
+   * @param documentUri
+   *          the URI of the document that is being read
+   * @return the deserialized object
+   * @throws IOException
+   *           if an error occurred while reading data from the stream
+   */
   @NonNull
   protected abstract CLASS deserializeToValueInternal(@NonNull Reader reader, @NonNull URI documentUri)
       throws IOException;

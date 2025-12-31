@@ -50,6 +50,8 @@ import gov.nist.secauto.metaschema.databind.model.annotations.XmlSchema;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -77,6 +79,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
     "PMD.CyclomaticComplexity" // ok
 })
 public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
+  private static final Logger LOGGER = LogManager.getLogger();
+
   @NonNull
   private final ITypeResolver typeResolver;
 
@@ -143,10 +147,10 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
       URI generatedDirUri = generatedFileDir.toUri();
 
       // Calculate relative path from generated file directory to source file
-      return UriUtils.relativize(generatedDirUri, location, true).toString();
-    } catch (URISyntaxException ex) {
+      return ObjectUtils.notNull(UriUtils.relativize(generatedDirUri, location, true).toString());
+    } catch (@SuppressWarnings("unused") URISyntaxException ex) {
       // Fall back to absolute URI if relativization fails
-      return location.toString();
+      return ObjectUtils.notNull(location.toString());
     }
   }
 
@@ -183,11 +187,11 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
 
     TypeSpec.Builder classSpec = newClassBuilder(module, className);
 
-    JavaFile.Builder javaFileBuilder = JavaFile.builder(className.packageName(), classSpec.build())
-        .skipJavaLangImports(true);
+    JavaFile.Builder javaFileBuilder = ObjectUtils.notNull(JavaFile.builder(className.packageName(), classSpec.build())
+        .skipJavaLangImports(true));
 
     // Add file header comment indicating this is generated code
-    addGeneratedFileComment(javaFileBuilder, module, className.packageName(), targetDirectory);
+    addGeneratedFileComment(javaFileBuilder, module, ObjectUtils.notNull(className.packageName()), targetDirectory);
 
     JavaFile javaFile = javaFileBuilder.build();
     Path classFile = ObjectUtils.notNull(javaFile.writeToPath(targetDirectory));
@@ -256,12 +260,12 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
 
     TypeSpec.Builder classSpec = newClassBuilder(typeInfo, false);
 
-    JavaFile.Builder javaFileBuilder = JavaFile.builder(className.packageName(), classSpec.build())
-        .skipJavaLangImports(true);
+    JavaFile.Builder javaFileBuilder = ObjectUtils.notNull(JavaFile.builder(className.packageName(), classSpec.build())
+        .skipJavaLangImports(true));
 
     // Add file header comment indicating this is generated code
     IModule module = typeInfo.getDefinition().getContainingModule();
-    addGeneratedFileComment(javaFileBuilder, module, className.packageName(), targetDirectory);
+    addGeneratedFileComment(javaFileBuilder, module, ObjectUtils.notNull(className.packageName()), targetDirectory);
 
     JavaFile javaFile = javaFileBuilder.build();
     Path classFile = ObjectUtils.notNull(javaFile.writeToPath(targetDirectory));
@@ -289,6 +293,30 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
         writer.format("// Generated from: %s%n", sourceReference);
       }
       writer.format("// Do not edit - changes will be lost when regenerated.%n");
+
+      // Add Javadoc for the package (required for JXR to generate HTML)
+      writer.format("/**%n");
+      // Build module names for the summary line
+      StringBuilder moduleNames = new StringBuilder();
+      for (IGeneratedModuleClass moduleProduction : moduleProductions) {
+        if (moduleNames.length() > 0) {
+          moduleNames.append(", ");
+        }
+        moduleNames.append(moduleProduction.getModule().getName().toHtml());
+      }
+      writer.format(" * Provides generated Metaschema binding classes for module(s): %s.%n", moduleNames);
+
+      for (IGeneratedModuleClass moduleProduction : moduleProductions) {
+        IModule module = moduleProduction.getModule();
+        writer.format(" * <p>%n");
+        writer.format(" * version %s%n", module.getVersion());
+        MarkupMultiline remarks = module.getRemarks();
+        if (remarks != null) {
+          writer.format(" * <p>%n");
+          writer.format(" * %s%n", remarks.toHtml());
+        }
+      }
+      writer.format(" */%n");
 
       writer.format("@%1$s(moduleClass = {%n", MetaschemaPackage.class.getName());
 
@@ -476,7 +504,11 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
     }
     // builder.addModifiers(Modifier.FINAL);
 
-    builder.addSuperinterface(ClassName.get(IBoundObject.class));
+    // Only add IBoundObject if none of the superinterfaces already extend it
+    List<ClassName> superinterfaces = typeInfo.getSuperinterfaces();
+    if (!extendsIBoundObject(superinterfaces)) {
+      builder.addSuperinterface(ClassName.get(IBoundObject.class));
+    }
 
     // add field for Metaschema info
     builder.addField(FieldSpec.builder(IMetaschemaData.class, "__metaschemaData", Modifier.PRIVATE, Modifier.FINAL)
@@ -688,8 +720,8 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
     // generate a toString method that will help with debugging
     MethodSpec.Builder toString = MethodSpec.methodBuilder("toString").addModifiers(Modifier.PUBLIC)
         .returns(String.class).addAnnotation(Override.class);
-    toString.addStatement("return new $T(this, $T.MULTI_LINE_STYLE).toString()", ReflectionToStringBuilder.class,
-        ToStringStyle.class);
+    toString.addStatement("return $T.notNull(new $T(this, $T.MULTI_LINE_STYLE).toString())",
+        ObjectUtils.class, ReflectionToStringBuilder.class, ToStringStyle.class);
     builder.addMethod(toString.build());
     return CollectionUtil.unmodifiableSet(additionalChildClasses);
   }
@@ -720,5 +752,43 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
     builder.addMember("name", "$S", definition.getName());
     IModule module = definition.getContainingModule();
     builder.addMember("moduleClass", "$T.class", getTypeResolver().getClassName(module));
+  }
+
+  /**
+   * Checks if any of the given superinterfaces extend {@link IBoundObject}.
+   * <p>
+   * This method attempts to load each superinterface class and check if it is
+   * assignable to IBoundObject. If a class cannot be loaded (e.g., it doesn't
+   * exist yet or is not on the classpath), it is assumed to not extend
+   * IBoundObject, which may result in a redundant IBoundObject interface being
+   * added to the generated class.
+   * <p>
+   * <b>Important:</b> When using custom superinterfaces via binding
+   * configuration, ensure they are available on the code generator's classpath.
+   * For Maven users, add the containing artifact as a plugin dependency.
+   *
+   * @param superinterfaces
+   *          the list of superinterface class names to check
+   * @return {@code true} if any superinterface extends IBoundObject,
+   *         {@code false} otherwise
+   */
+  private static boolean extendsIBoundObject(@NonNull List<ClassName> superinterfaces) {
+    for (ClassName superinterface : superinterfaces) {
+      try {
+        Class<?> clazz = Class.forName(superinterface.reflectionName());
+        if (IBoundObject.class.isAssignableFrom(clazz)) {
+          return true;
+        }
+      } catch (@SuppressWarnings("unused") ClassNotFoundException ex) {
+        // Class not on classpath; assume it doesn't extend IBoundObject
+        if (LOGGER.isWarnEnabled()) {
+          LOGGER.warn("Superinterface '{}' not found on classpath during code generation. "
+              + "Cannot determine if it extends IBoundObject; a redundant IBoundObject interface may be added. "
+              + "If using Maven, add the containing artifact as a plugin dependency.",
+              superinterface.reflectionName());
+        }
+      }
+    }
+    return false;
   }
 }

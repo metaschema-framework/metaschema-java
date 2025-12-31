@@ -7,7 +7,7 @@ package gov.nist.secauto.metaschema.schemagen.xml.impl.schematype;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IValuedDefinition;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.IXmlGenerationState;
 
 import javax.xml.namespace.QName;
 
@@ -55,12 +55,12 @@ public abstract class AbstractXmlSimpleType
   }
 
   @Override
-  public boolean isInline(XmlGenerationState state) {
+  public boolean isInline(IXmlGenerationState state) {
     return state.isInline(getDefinition());
   }
 
   @Override
-  public boolean isGeneratedType(XmlGenerationState state) {
+  public boolean isGeneratedType(IXmlGenerationState state) {
     // these types are a restriction on a base type
     return true;
   }

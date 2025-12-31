@@ -83,7 +83,7 @@ public class TestSuite implements IBoundObject {
     if (_testCollections == null) {
       _testCollections = new LinkedList<>();
     }
-    return _testCollections;
+    return ObjectUtils.notNull(_testCollections);
   }
 
   /**
@@ -129,6 +129,6 @@ public class TestSuite implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

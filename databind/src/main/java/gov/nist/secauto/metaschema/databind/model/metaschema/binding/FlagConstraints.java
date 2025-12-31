@@ -8,7 +8,6 @@
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
@@ -27,7 +26,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MetaschemaAssembly(
     name = "flag-constraints",
     moduleClass = MetaschemaModelModule.class)
-public class FlagConstraints implements IBoundObject, IValueConstraintsBase {
+public class FlagConstraints implements IValueConstraintsBase {
   private final IMetaschemaData __metaschemaData;
 
   @BoundAssembly(
@@ -87,11 +86,12 @@ public class FlagConstraints implements IBoundObject, IValueConstraintsBase {
    * @return the let value
    */
   @NonNull
+  @Override
   public List<ConstraintLetExpression> getLets() {
     if (_lets == null) {
       _lets = new LinkedList<>();
     }
-    return _lets;
+    return ObjectUtils.notNull(_lets);
   }
 
   /**
@@ -141,11 +141,12 @@ public class FlagConstraints implements IBoundObject, IValueConstraintsBase {
    * @return the rules items
    */
   @NonNull
+  @Override
   public List<? extends IConstraintBase> getRules() {
     if (_rules == null) {
       _rules = new LinkedList<>();
     }
-    return _rules;
+    return ObjectUtils.notNull(_rules);
   }
 
   /**
@@ -163,6 +164,6 @@ public class FlagConstraints implements IBoundObject, IValueConstraintsBase {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

@@ -134,12 +134,27 @@ Wait for explicit user approval before proceeding.
 
 ## Step 6: Respond to Comments
 
-For review threads, you cannot use the REST API replies endpoint (returns 404).
-Instead, either:
+**CRITICAL: Replies must be inline in the conversation thread, not general PR comments.**
 
+For review threads, use the REST API with `in_reply_to` parameter:
+
+```bash
+# Reply inline to a review comment
+gh api repos/<OWNER>/<REPO>/pulls/<PR_NUMBER>/comments \
+  -X POST \
+  -F in_reply_to=<COMMENT_ID> \
+  -f body="@coderabbitai Addressed in commit abc1234. <explanation>"
+```
+
+**Important:**
+- Use `-F in_reply_to=<id>` (capital F for integer parameter)
+- The `in_reply_to` value must be the numeric comment ID from Step 1
+- This creates a reply within the existing conversation thread
+- Do NOT use `gh pr comment` which creates a top-level comment
+
+**Alternative methods:**
 1. **Let the bot auto-resolve** - Some bots (like CodeRabbit) auto-detect fixes and resolve threads
-2. **Post a consolidated PR comment** - Summarize all fixes in one comment
-3. **Resolve via GraphQL** - Use the mutation API (see Step 7)
+2. **Resolve via GraphQL** - Use the mutation API (see Step 7)
 
 ## Step 7: Resolve Review Threads
 
@@ -247,17 +262,117 @@ Address Feedback → Push → Wait for CI/Bot Review
 |------|--------|
 | Fetch PR comments | `gh pr view <N> --comments` |
 | Fetch file comments | `gh api repos/.../pulls/<N>/comments` |
+| Post inline reply | `gh api repos/.../pulls/<N>/comments -X POST -F in_reply_to=<id> -f body=<msg>` |
 | Verify GraphQL field exists | `gh api graphql -f query='{ __type(name: "X") { fields { name } } }'` |
 | Get thread IDs | GraphQL `reviewThreads` query |
 | Resolve thread | GraphQL `resolveReviewThread` mutation |
 | Verify resolved | GraphQL query checking `isResolved` |
 
+## Identifying and Commenting in Unresolved Conversations
+
+Use this workflow to systematically find and respond to all unresolved review
+threads. This complements Step 6 by providing a discovery mechanism when you
+need to identify which threads still need responses.
+
+After addressing feedback, identify unresolved threads that need inline replies:
+
+### Step 1: Find Unresolved Threads with Comment IDs
+
+```bash
+gh api graphql -f query='
+query {
+  repository(owner: "<OWNER>", name: "<REPO>") {
+    pullRequest(number: <PR_NUMBER>) {
+      reviewThreads(first: 50) {
+        nodes {
+          id
+          isResolved
+          path
+          comments(first: 1) {
+            nodes {
+              fullDatabaseId
+              author {
+                login
+              }
+              body
+            }
+          }
+        }
+      }
+    }
+  }
+}'
+```
+
+### Step 2: Filter for Unresolved Threads
+
+Look for threads where `isResolved: false`. Each has:
+- `fullDatabaseId` - The numeric ID needed for inline replies (use this instead of deprecated `databaseId`)
+- `path` - The file path for context
+- `body` - Preview of what the comment is about
+- `author.login` - Who made the comment (e.g., `coderabbitai`)
+
+### Step 3: Post Inline Replies
+
+For each unresolved thread, use the `fullDatabaseId` to reply inline.
+Use the `author` field from Step 1's jq output as `<author_login>`:
+
+```bash
+gh api repos/<OWNER>/<REPO>/pulls/<PR_NUMBER>/comments \
+  -X POST \
+  -F in_reply_to=<FULL_DATABASE_ID> \
+  -f body="@<author_login> Addressed in commit <hash>. <explanation>"
+```
+
+**Example workflow:**
+
+The jq filter iterates through all threads, keeps only unresolved ones, and
+extracts the first comment's ID and author for reply purposes:
+
+```bash
+# 1. Get unresolved threads with jq extraction
+#    The jq filter:
+#    - .data.repository.pullRequest.reviewThreads.nodes[] : iterate all threads
+#    - select(.isResolved==false) : keep only unresolved ones
+#    - {id, fullDatabaseId: ..., path, author: ...} : extract needed fields
+gh api graphql -f query='...' --jq '
+  .data.repository.pullRequest.reviewThreads.nodes[]
+  | select(.isResolved==false)
+  | {
+      id,
+      fullDatabaseId: .comments.nodes[0].fullDatabaseId,
+      path,
+      author: .comments.nodes[0].author.login
+    }'
+
+# 2. For each unresolved thread, note the fullDatabaseId from the output
+
+# 3. Post inline reply using the fullDatabaseId and author from step 1
+gh api repos/owner/repo/pulls/123/comments \
+  -X POST \
+  -F in_reply_to=2653785779 \
+  -f body="@coderabbitai Addressed in commit abc123. Fixed the documentation."
+```
+
+### When to Use This Workflow
+
+- After pushing fixes for review feedback
+- When the user asks "there are open conversations that haven't been commented in"
+- Before requesting a re-review to ensure all feedback has responses
+- When CodeRabbit or other bots don't auto-resolve threads
+
+---
+
 ## Common Pitfalls
 
-1. **REST replies endpoint 404** - The `/pulls/comments/{id}/replies` endpoint doesn't work for review comments. Use GraphQL instead.
+1. **Using wrong reply API** - The `/pulls/comments/{id}/replies` endpoint returns 404. Use `POST /pulls/{id}/comments` with `-F in_reply_to=<comment_id>` instead.
 
-2. **Unresolved threads blocking merge** - Some repos require all threads resolved. Always verify with the GraphQL query.
+2. **Top-level comments instead of inline** - Using `gh pr comment` creates a top-level comment that doesn't appear in the conversation thread. Always use the API with `in_reply_to` for inline replies.
 
-3. **Missing feedback** - Check both `comments` (general) and `reviews` (code review) in the PR data.
+3. **Unresolved threads blocking merge** - Some repos require all threads resolved. Always verify with the GraphQL query.
 
-4. **Incorrect automated feedback** - Bots like CodeRabbit can make mistakes. Verify technical claims against official docs or schema introspection before implementing.
+4. **Missing feedback** - Check both `comments` (general) and `reviews` (code review) in the PR data.
+
+5. **Incorrect automated feedback** - Bots like CodeRabbit can make mistakes. Verify technical claims against official docs or schema introspection before implementing.
+
+6. **Not getting databaseId for inline replies** - The GraphQL thread `id` (node ID) is for resolving threads. The `databaseId` from the first comment is needed for inline replies via REST API.

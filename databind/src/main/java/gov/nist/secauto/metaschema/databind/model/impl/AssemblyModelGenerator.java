@@ -118,10 +118,11 @@ final class AssemblyModelGenerator {
     Map<String, BoundInstanceModelChoice> choiceInstances = new LinkedHashMap<>();
     for (Map.Entry<String, List<ChoiceInstanceEntry>> entry : choiceGroups.entrySet()) {
       String choiceId = entry.getKey();
-      List<IBoundInstanceModelNamed<?>> instances = entry.getValue().stream()
+      List<IBoundInstanceModelNamed<?>> instances = ObjectUtils.notNull(entry.getValue().stream()
           .map(ChoiceInstanceEntry::getInstance)
-          .collect(Collectors.toList());
-      choiceInstances.put(choiceId, new BoundInstanceModelChoice(choiceId, containingDefinition, instances));
+          .collect(Collectors.toList()));
+      choiceInstances.put(choiceId, new BoundInstanceModelChoice(
+          ObjectUtils.notNull(choiceId), containingDefinition, instances));
     }
 
     for (IBoundInstanceModel<?> instance : modelInstances) {
@@ -141,6 +142,7 @@ final class AssemblyModelGenerator {
     // Append choice instances to the builder (only to choice list, not model
     // instances)
     for (BoundInstanceModelChoice choice : choiceInstances.values()) {
+      assert choice != null;
       builder.appendChoiceOnly(choice);
     }
 

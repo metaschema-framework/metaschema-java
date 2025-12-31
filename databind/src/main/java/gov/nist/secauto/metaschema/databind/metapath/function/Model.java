@@ -22,6 +22,7 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModelElemen
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Implementation of the model() Metapath function.
@@ -51,6 +52,23 @@ public final class Model {
     // disable construction
   }
 
+  /**
+   * Execute the model() function.
+   * <p>
+   * This function returns the source model node item for a given definition node
+   * item, providing access to the original Metaschema module definition.
+   *
+   * @param function
+   *          the function being executed
+   * @param arguments
+   *          the function arguments
+   * @param dynamicContext
+   *          the dynamic evaluation context
+   * @param focus
+   *          the current focus item
+   * @return a sequence containing the model node item, or an empty sequence if
+   *         not available
+   */
   @SuppressWarnings({ "unused",
       "PMD.OnlyOneReturn" // readability
   })
@@ -79,6 +97,17 @@ public final class Model {
     return ISequence.of(node);
   }
 
+  /**
+   * Get the source model node item for the given definition node item.
+   * <p>
+   * This method retrieves the original Metaschema model element that corresponds
+   * to the provided definition, if it was loaded via data binding.
+   *
+   * @param definitionNodeItem
+   *          the definition node item to get the model for
+   * @return the source node item, or {@code null} if not available
+   */
+  @Nullable
   public static INodeItem getModel(@NonNull IDefinitionNodeItem<?, ?> definitionNodeItem) {
     INamedInstance instance = definitionNodeItem.getInstance();
 

@@ -12,6 +12,8 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.datatype.IDatatypeManager;
 
+import org.eclipse.jdt.annotation.Owning;
+
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,6 +42,8 @@ public abstract class AbstractSchemaGenerator<
 
   /**
    * Create a new writer to use to write the schema.
+   * <p>
+   * The caller owns the returned writer and is responsible for closing it.
    *
    * @param out
    *          the {@link Writer} to write the schema content to
@@ -48,6 +52,7 @@ public abstract class AbstractSchemaGenerator<
    *           if an error occurred while creating the writer
    */
   @NonNull
+  @Owning
   protected abstract T newWriter(@NonNull Writer out);
 
   /**

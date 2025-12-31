@@ -5,7 +5,8 @@
 
 package gov.nist.secauto.metaschema.databind.codegen.config;
 
-import java.util.Collections;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class DefaultDefinitionBindingConfiguration implements IMutableDefinition
 
   @Override
   public Map<String, IChoiceGroupBindingConfiguration> getChoiceGroupBindings() {
-    return Collections.unmodifiableMap(choiceGroupBindings);
+    return CollectionUtil.unmodifiableMap(choiceGroupBindings);
   }
 
   /**

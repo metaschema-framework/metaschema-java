@@ -154,6 +154,7 @@ public class FlagIndexHasKey implements IBoundObject, IConfigurableMessageConstr
    * @return the id value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getId() {
     return _id;
   }
@@ -174,6 +175,7 @@ public class FlagIndexHasKey implements IBoundObject, IConfigurableMessageConstr
    * @return the level value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getLevel() {
     return _level;
   }
@@ -217,6 +219,7 @@ public class FlagIndexHasKey implements IBoundObject, IConfigurableMessageConstr
    * @return the formal-name value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getFormalName() {
     return _formalName;
   }
@@ -244,6 +247,7 @@ public class FlagIndexHasKey implements IBoundObject, IConfigurableMessageConstr
    * @return the description value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public MarkupLine getDescription() {
     return _description;
   }
@@ -268,11 +272,12 @@ public class FlagIndexHasKey implements IBoundObject, IConfigurableMessageConstr
    * @return the prop value
    */
   @NonNull
+  @Override
   public List<Property> getProps() {
     if (_props == null) {
       _props = new LinkedList<>();
     }
-    return _props;
+    return ObjectUtils.notNull(_props);
   }
 
   /**
@@ -323,7 +328,7 @@ public class FlagIndexHasKey implements IBoundObject, IConfigurableMessageConstr
     if (_keyFields == null) {
       _keyFields = new LinkedList<>();
     }
-    return _keyFields;
+    return ObjectUtils.notNull(_keyFields);
   }
 
   /**
@@ -370,6 +375,7 @@ public class FlagIndexHasKey implements IBoundObject, IConfigurableMessageConstr
    * @return the message value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getMessage() {
     return _message;
   }
@@ -394,6 +400,7 @@ public class FlagIndexHasKey implements IBoundObject, IConfigurableMessageConstr
    * @return the remarks value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public Remarks getRemarks() {
     return _remarks;
   }
@@ -414,6 +421,6 @@ public class FlagIndexHasKey implements IBoundObject, IConfigurableMessageConstr
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

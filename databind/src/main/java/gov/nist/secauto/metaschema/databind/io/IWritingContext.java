@@ -40,6 +40,16 @@ public interface IWritingContext<WRITER> {
   @FunctionalInterface
   interface ObjectWriter<T extends IFeatureComplexItemValueHandler> {
 
+    /**
+     * Write the properties of the provided parent item using the given handler.
+     *
+     * @param parentItem
+     *          the parent object whose properties are being written
+     * @param handler
+     *          the handler that provides property writing capabilities
+     * @throws IOException
+     *           if an error occurred while writing
+     */
     void accept(@NonNull IBoundObject parentItem, @NonNull T handler) throws IOException;
 
     /**

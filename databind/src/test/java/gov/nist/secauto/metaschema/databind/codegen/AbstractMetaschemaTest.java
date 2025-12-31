@@ -33,6 +33,10 @@ import java.util.Collection;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Base class providing utilities for testing Metaschema module compilation and
+ * binding.
+ */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
 public abstract class AbstractMetaschemaTest {
 
@@ -42,11 +46,27 @@ public abstract class AbstractMetaschemaTest {
   @NonNull
   protected Path generationDir = ObjectUtils.notNull(Paths.get("target/generated-test-sources/metaschema"));
 
+  /**
+   * Creates a new binding context with no constraints.
+   *
+   * @return a new binding context instance
+   * @throws IOException
+   *           if an I/O error occurs while creating the context
+   */
   @NonNull
   protected static IBindingContext newBindingContext() throws IOException {
     return newBindingContext(CollectionUtil.emptyList());
   }
 
+  /**
+   * Creates a new binding context with the specified constraints.
+   *
+   * @param constraints
+   *          the constraint sets to apply
+   * @return a new binding context instance
+   * @throws IOException
+   *           if an I/O error occurs while creating the context
+   */
   @NonNull
   protected static IBindingContext newBindingContext(@NonNull Collection<IConstraintSet> constraints)
       throws IOException {
@@ -59,6 +79,27 @@ public abstract class AbstractMetaschemaTest {
         .build();
   }
 
+  /**
+   * Compiles a Metaschema module and returns the root class.
+   *
+   * @param moduleFile
+   *          the path to the Metaschema module file
+   * @param bindingFile
+   *          the path to the binding configuration file, or {@code null}
+   * @param rootClassName
+   *          the fully-qualified name of the root class
+   * @param classDir
+   *          the directory where compiled classes are output
+   * @return the compiled root class
+   * @throws IOException
+   *           if an I/O error occurs
+   * @throws ClassNotFoundException
+   *           if the root class cannot be found
+   * @throws MetaschemaException
+   *           if a Metaschema error occurs
+   * @throws BindingException
+   *           if a binding error occurs
+   */
   @NonNull
   public Class<? extends IBoundObject> compileModule(
       @NonNull Path moduleFile,
@@ -109,11 +150,49 @@ public abstract class AbstractMetaschemaTest {
     }
   }
 
+  /**
+   * Runs tests using the default test resources location.
+   *
+   * @param testPath
+   *          the relative path within the test resources
+   * @param rootClassName
+   *          the fully-qualified name of the root class
+   * @param classDir
+   *          the directory where compiled classes are output
+   * @throws ClassNotFoundException
+   *           if the root class cannot be found
+   * @throws IOException
+   *           if an I/O error occurs
+   * @throws MetaschemaException
+   *           if a Metaschema error occurs
+   * @throws BindingException
+   *           if a binding error occurs
+   */
   public void runTests(@NonNull String testPath, @NonNull String rootClassName, @NonNull Path classDir)
       throws ClassNotFoundException, IOException, MetaschemaException, BindingException {
     runTests(testPath, rootClassName, classDir, null);
   }
 
+  /**
+   * Runs tests using the default test resources location with assertions.
+   *
+   * @param testPath
+   *          the relative path within the test resources
+   * @param rootClassName
+   *          the fully-qualified name of the root class
+   * @param classDir
+   *          the directory where compiled classes are output
+   * @param assertions
+   *          optional assertions to run on the deserialized object
+   * @throws ClassNotFoundException
+   *           if the root class cannot be found
+   * @throws IOException
+   *           if an I/O error occurs
+   * @throws MetaschemaException
+   *           if a Metaschema error occurs
+   * @throws BindingException
+   *           if a binding error occurs
+   */
   public void runTests(
       @NonNull String testPath,
       @NonNull String rootClassName,
@@ -129,6 +208,30 @@ public abstract class AbstractMetaschemaTest {
         assertions);
   }
 
+  /**
+   * Runs tests using explicit paths with assertions.
+   *
+   * @param metaschemaPath
+   *          the path to the Metaschema module file
+   * @param bindingPath
+   *          the path to the binding configuration file
+   * @param examplePath
+   *          the path to an example content file, or {@code null}
+   * @param rootClassName
+   *          the fully-qualified name of the root class
+   * @param classDir
+   *          the directory where compiled classes are output
+   * @param assertions
+   *          optional assertions to run on the deserialized object
+   * @throws ClassNotFoundException
+   *           if the root class cannot be found
+   * @throws IOException
+   *           if an I/O error occurs
+   * @throws MetaschemaException
+   *           if a Metaschema error occurs
+   * @throws BindingException
+   *           if a binding error occurs
+   */
   public void runTests(
       @NonNull Path metaschemaPath,
       @NonNull Path bindingPath,
@@ -146,6 +249,20 @@ public abstract class AbstractMetaschemaTest {
     runTests(examplePath, rootClass, assertions);
   }
 
+  /**
+   * Runs tests on the specified example content using the given root class.
+   *
+   * @param <T>
+   *          the type of the root object
+   * @param examplePath
+   *          the path to an example content file, or {@code null}
+   * @param rootClass
+   *          the root class to deserialize into
+   * @param assertions
+   *          optional assertions to run on the deserialized object
+   * @throws IOException
+   *           if an I/O error occurs
+   */
   public <T extends IBoundObject> void runTests(
       @Nullable Path examplePath,
       @NonNull Class<? extends T> rootClass,

@@ -97,21 +97,29 @@ public class ModelDetector {
   /**
    * Analyzes the data from the provided {@code inputStream} to determine it's
    * model.
+   * <p>
+   * <b>Ownership semantics:</b> This method transfers ownership of the input
+   * stream to the returned {@link Result} object. The stream is wrapped in a
+   * {@code MergedStream} that replays the buffered detection data followed by the
+   * remaining stream content. The caller should NOT close the original stream;
+   * instead, close the Result object which will close the underlying stream.
    *
    * @param inputStream
-   *          the resource stream to analyze
+   *          the resource stream to analyze. Ownership is transferred to the
+   *          returned Result; the caller should not close this stream directly.
    * @param resource
    *          the resource being parsed
    * @param format
    *          the expected format of the data to read
-   * @return the analysis result
+   * @return the analysis result. The caller owns this result and is responsible
+   *         for closing it, which will close the underlying stream.
    * @throws IOException
    *           if an error occurred while reading the resource
    */
   @NonNull
   @Owning
   public Result detect(
-      @NonNull @NotOwning InputStream inputStream,
+      @NonNull @Owning InputStream inputStream,
       @NonNull URI resource,
       @NonNull Format format)
       throws IOException {
@@ -250,6 +258,8 @@ public class ModelDetector {
     /**
      * Get an {@link InputStream} that can be used to read the analyzed data from
      * the start.
+     * <p>
+     * The caller owns this stream and is responsible for closing it.
      *
      * @return the stream
      */

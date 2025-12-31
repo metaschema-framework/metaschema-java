@@ -17,6 +17,7 @@ import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.ISource;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
@@ -152,12 +153,13 @@ class FindingCollectingConstraintValidationHandlerTest {
    * @param metapath
    *          the metapath for the target node
    */
-  private void addFinding(
+  @SuppressWarnings("null")
+  private static void addFinding(
       @NonNull FindingCollectingConstraintValidationHandler handler,
       @NonNull Level level,
       @NonNull String metapath) {
     // Create mock constraint
-    IExpectConstraint constraint = mock(IExpectConstraint.class);
+    IExpectConstraint constraint = ObjectUtils.notNull(mock(IExpectConstraint.class));
     ISource source = mock(ISource.class);
     doReturn(source).when(constraint).getSource();
     doReturn(level).when(constraint).getLevel();
@@ -165,24 +167,22 @@ class FindingCollectingConstraintValidationHandlerTest {
     doReturn("Test violation message").when(constraint).getMessage();
     try {
       doReturn("Test violation message").when(constraint).generateMessage(any(), any());
-    } catch (ConstraintValidationException e) {
+    } catch (@SuppressWarnings("unused") ConstraintValidationException ex) {
       // Mockito stub doesn't actually call the method
     }
     doReturn(StaticContext.instance()).when(source).getStaticContext();
 
     // Create mock node item with the specified metapath
-    INodeItem node = mock(INodeItem.class);
+    INodeItem node = ObjectUtils.notNull(mock(INodeItem.class));
     doReturn(metapath).when(node).getMetapath();
     doReturn(metapath).when(node).toPath(any(IPathFormatter.class));
-
-    INodeItem target = node;
 
     // Create dynamic context
     DynamicContext context = new DynamicContext(StaticContext.instance());
 
     // Add the finding
     try {
-      handler.handleExpectViolation(constraint, node, target, context);
+      handler.handleExpectViolation(constraint, node, node, context);
     } catch (ConstraintValidationException e) {
       throw new RuntimeException("Unexpected exception during test", e);
     }

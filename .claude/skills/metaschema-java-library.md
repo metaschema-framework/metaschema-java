@@ -257,6 +257,42 @@ Use `target` attribute with Metapath expressions to configure inline definitions
 </define-assembly-binding>
 ```
 
+### Classpath Requirements for Code Generation
+
+When configuring custom base classes or superinterfaces, those classes **must be available on the classpath during code generation**. The generator uses reflection to:
+
+1. **Detect method overrides**: Checks if getter/setter methods are declared in superinterfaces to add `@Override` annotations
+2. **Determine IBoundObject extension**: Checks if configured superinterfaces extend `IBoundObject` to avoid redundant interface declarations
+
+**Maven Plugin Configuration:**
+
+Add dependencies to the `metaschema-maven-plugin` configuration to ensure classes are available:
+
+```xml
+<plugin>
+  <groupId>gov.nist.secauto.metaschema</groupId>
+  <artifactId>metaschema-maven-plugin</artifactId>
+  <dependencies>
+    <!-- Add dependency containing custom interfaces/base classes -->
+    <dependency>
+      <groupId>com.example</groupId>
+      <artifactId>my-interfaces</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</plugin>
+```
+
+**Behavior when classes are not on classpath:**
+
+| Scenario | Behavior |
+|----------|----------|
+| Base class not found | `@Override` annotations may be missing from getters/setters |
+| Superinterface not found | `@Override` annotations may be missing; interface may be redundantly added |
+| Generated interface not yet compiled | Use multi-phase generation or ensure build order |
+
+**Multi-module projects:** When the superinterface is defined in another module, ensure that module is built and available as a dependency before code generation runs.
+
 ## Serialization and Deserialization
 
 ### Deserializing Content
@@ -340,11 +376,12 @@ import gov.nist.secauto.metaschema.core.model.constraint.FindingCollectingConstr
 FindingCollectingConstraintValidationHandler handler =
     new FindingCollectingConstraintValidationHandler();
 
-// Create validator
-IConstraintValidator validator = new DefaultConstraintValidator(handler);
-
-// Validate document
-validator.validate(documentNodeItem, dynamicContext);
+// Create and use validator with try-with-resources
+// IConstraintValidator implements AutoCloseable to release thread pools
+try (IConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+    // Validate document
+    validator.validate(documentNodeItem, dynamicContext);
+}
 
 // Check results
 IValidationResult result = handler.toValidationResult();

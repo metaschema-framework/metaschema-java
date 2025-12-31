@@ -38,6 +38,17 @@ public final class TypeInfoUtils {
     return Character.toLowerCase(text.charAt(0)) + text.substring(1);
   }
 
+  /**
+   * Builds common binding annotation values for a named model instance.
+   * <p>
+   * This method populates the annotation builder with common attributes such as
+   * formal name, description, use name, use index, and remarks.
+   *
+   * @param instance
+   *          the named model instance to extract values from
+   * @param annotation
+   *          the annotation builder to populate with values
+   */
   public static void buildCommonBindingAnnotationValues(
       @NonNull INamedModelInstance instance,
       @NonNull AnnotationSpec.Builder annotation) {

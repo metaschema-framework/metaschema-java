@@ -6,7 +6,7 @@
 package gov.nist.secauto.metaschema.schemagen.xml.impl.schematype;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.IXmlGenerationState;
 
 import javax.xml.namespace.QName;
 
@@ -48,19 +48,19 @@ public class XmlSimpleTypeDataTypeReference
   }
 
   @Override
-  public void generate(XmlGenerationState state) {
+  public void generate(IXmlGenerationState state) {
     // do nothing, this is a direct reference to the underlying Module data type
     // the type is generated for the built-in type by the data type manager
   }
 
   @Override
-  public boolean isInline(XmlGenerationState state) {
+  public boolean isInline(IXmlGenerationState state) {
     // these types are never inlined
     return false;
   }
 
   @Override
-  public boolean isGeneratedType(XmlGenerationState state) {
+  public boolean isGeneratedType(IXmlGenerationState state) {
     // these types are not generated, since they are handled by the datatype manager
     return false;
   }

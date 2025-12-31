@@ -203,7 +203,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
     if (_imports == null) {
       _imports = new LinkedList<>();
     }
-    return _imports;
+    return ObjectUtils.notNull(_imports);
   }
 
   /**
@@ -261,7 +261,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
     if (_namespaceBindings == null) {
       _namespaceBindings = new LinkedList<>();
     }
-    return _namespaceBindings;
+    return ObjectUtils.notNull(_namespaceBindings);
   }
 
   /**
@@ -316,7 +316,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
     if (_scopes == null) {
       _scopes = new LinkedList<>();
     }
-    return _scopes;
+    return ObjectUtils.notNull(_scopes);
   }
 
   /**
@@ -358,7 +358,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 
   /**
@@ -439,7 +439,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
     @Override
     public String toString() {
-      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+      return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
   }
 
@@ -567,7 +567,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
       if (_constraints == null) {
         _constraints = new LinkedList<>();
       }
-      return _constraints;
+      return ObjectUtils.notNull(_constraints);
     }
 
     /**
@@ -633,13 +633,13 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
     @Override
     public String toString() {
-      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+      return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
 
     @MetaschemaAssembly(
         name = "assembly",
         moduleClass = MetaschemaModelModule.class)
-    public static class Assembly implements IBoundObject, IValueTargetedConstraintsBase {
+    public static class Assembly implements IValueTargetedConstraintsBase {
       private final IMetaschemaData __metaschemaData;
 
       @BoundFlag(
@@ -728,11 +728,12 @@ public class MetaschemaModuleConstraints implements IBoundObject {
        * @return the rules items
        */
       @NonNull
+      @Override
       public List<? extends ITargetedConstraintBase> getRules() {
         if (_rules == null) {
           _rules = new LinkedList<>();
         }
-        return _rules;
+        return ObjectUtils.notNull(_rules);
       }
 
       /**
@@ -750,14 +751,14 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
       @Override
       public String toString() {
-        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+        return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
       }
     }
 
     @MetaschemaAssembly(
         name = "field",
         moduleClass = MetaschemaModelModule.class)
-    public static class Field implements IBoundObject, IValueTargetedConstraintsBase {
+    public static class Field implements IValueTargetedConstraintsBase {
       private final IMetaschemaData __metaschemaData;
 
       @BoundFlag(
@@ -840,11 +841,12 @@ public class MetaschemaModuleConstraints implements IBoundObject {
        * @return the rules items
        */
       @NonNull
+      @Override
       public List<? extends ITargetedConstraintBase> getRules() {
         if (_rules == null) {
           _rules = new LinkedList<>();
         }
-        return _rules;
+        return ObjectUtils.notNull(_rules);
       }
 
       /**
@@ -862,14 +864,14 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
       @Override
       public String toString() {
-        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+        return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
       }
     }
 
     @MetaschemaAssembly(
         name = "flag",
         moduleClass = MetaschemaModelModule.class)
-    public static class Flag implements IBoundObject, IValueConstraintsBase {
+    public static class Flag implements IValueConstraintsBase {
       private final IMetaschemaData __metaschemaData;
 
       @BoundFlag(
@@ -952,11 +954,12 @@ public class MetaschemaModuleConstraints implements IBoundObject {
        * @return the rules items
        */
       @NonNull
+      @Override
       public List<? extends IConstraintBase> getRules() {
         if (_rules == null) {
           _rules = new LinkedList<>();
         }
-        return _rules;
+        return ObjectUtils.notNull(_rules);
       }
 
       /**
@@ -974,7 +977,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
       @Override
       public String toString() {
-        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+        return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
       }
     }
   }

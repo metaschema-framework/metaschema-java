@@ -47,6 +47,8 @@ public final class ModuleCompilerHelper {
   /**
    * Create a new classloader capable of loading Java classes generated in the
    * provided {@code classDir}.
+   * <p>
+   * The caller owns the returned class loader and is responsible for closing it.
    *
    * @param classDir
    *          the directory where generated Java classes have been compiled

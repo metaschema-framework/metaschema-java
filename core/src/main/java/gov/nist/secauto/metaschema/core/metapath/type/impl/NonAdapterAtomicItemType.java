@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.type.impl;
 
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import gov.nist.secauto.metaschema.core.metapath.type.AbstractAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
@@ -13,7 +12,6 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import java.util.Objects;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * An abstract implementation of an abstract atomic type.
@@ -52,13 +50,6 @@ public class NonAdapterAtomicItemType<T extends IAnyAtomicItem>
   @Override
   public String toString() {
     return toSignature();
-  }
-
-  @Override
-  @Nullable
-  public IDataTypeAdapter<?> getAdapter() {
-    // always null
-    return null;
   }
 
   @Override

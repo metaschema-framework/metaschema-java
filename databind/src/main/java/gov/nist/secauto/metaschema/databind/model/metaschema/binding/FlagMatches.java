@@ -211,6 +211,7 @@ public class FlagMatches implements IBoundObject, IConfigurableMessageConstraint
    * @return the id value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getId() {
     return _id;
   }
@@ -231,6 +232,7 @@ public class FlagMatches implements IBoundObject, IConfigurableMessageConstraint
    * @return the level value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getLevel() {
     return _level;
   }
@@ -294,6 +296,7 @@ public class FlagMatches implements IBoundObject, IConfigurableMessageConstraint
    * @return the formal-name value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getFormalName() {
     return _formalName;
   }
@@ -321,6 +324,7 @@ public class FlagMatches implements IBoundObject, IConfigurableMessageConstraint
    * @return the description value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public MarkupLine getDescription() {
     return _description;
   }
@@ -345,11 +349,12 @@ public class FlagMatches implements IBoundObject, IConfigurableMessageConstraint
    * @return the prop value
    */
   @NonNull
+  @Override
   public List<Property> getProps() {
     if (_props == null) {
       _props = new LinkedList<>();
     }
-    return _props;
+    return ObjectUtils.notNull(_props);
   }
 
   /**
@@ -396,6 +401,7 @@ public class FlagMatches implements IBoundObject, IConfigurableMessageConstraint
    * @return the message value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getMessage() {
     return _message;
   }
@@ -420,6 +426,7 @@ public class FlagMatches implements IBoundObject, IConfigurableMessageConstraint
    * @return the remarks value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public Remarks getRemarks() {
     return _remarks;
   }
@@ -440,6 +447,6 @@ public class FlagMatches implements IBoundObject, IConfigurableMessageConstraint
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.model.constraint;
 
+import org.eclipse.jdt.annotation.Owning;
+
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
@@ -35,6 +37,7 @@ public final class ParallelValidationConfig implements AutoCloseable {
    * <p>
    * This instance does not need to be closed.
    */
+  @SuppressWarnings("resource")
   @NonNull
   public static final ParallelValidationConfig SEQUENTIAL = new ParallelValidationConfig(null, 1, false);
 
@@ -60,6 +63,8 @@ public final class ParallelValidationConfig implements AutoCloseable {
    * <p>
    * The executor is NOT shut down by {@link #close()}; the caller retains
    * ownership.
+   * <p>
+   * The caller owns the returned configuration and is responsible for closing it.
    *
    * @param executor
    *          the executor service to use for parallel tasks
@@ -68,6 +73,7 @@ public final class ParallelValidationConfig implements AutoCloseable {
    *           if executor is null
    */
   @NonNull
+  @Owning
   public static ParallelValidationConfig withExecutor(@NonNull ExecutorService executor) {
     Objects.requireNonNull(executor, "executor must not be null");
     return new ParallelValidationConfig(executor, 0, false);
@@ -77,6 +83,8 @@ public final class ParallelValidationConfig implements AutoCloseable {
    * Create configuration that creates an internal thread pool.
    * <p>
    * The internal pool is shut down when {@link #close()} is called.
+   * <p>
+   * The caller owns the returned configuration and is responsible for closing it.
    *
    * @param threadCount
    *          number of threads (must be &gt;= 1)
@@ -85,6 +93,7 @@ public final class ParallelValidationConfig implements AutoCloseable {
    *           if threadCount &lt; 1
    */
   @NonNull
+  @Owning
   public static ParallelValidationConfig withThreads(int threadCount) {
     if (threadCount < 1) {
       throw new IllegalArgumentException("threadCount must be at least 1, got: " + threadCount);
@@ -148,7 +157,7 @@ public final class ParallelValidationConfig implements AutoCloseable {
         if (!exec.awaitTermination(60, TimeUnit.SECONDS)) {
           exec.shutdownNow();
         }
-      } catch (InterruptedException e) {
+      } catch (@SuppressWarnings("unused") InterruptedException ex) {
         exec.shutdownNow();
         Thread.currentThread().interrupt();
       }

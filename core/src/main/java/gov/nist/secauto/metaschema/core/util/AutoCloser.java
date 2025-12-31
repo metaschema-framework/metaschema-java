@@ -32,6 +32,8 @@ public final class AutoCloser<T, E extends Exception> implements AutoCloseable {
   /**
    * Adapt the the provided {@code resource} to be {@link AutoCloseable}, using a
    * provided closer {@code lambda}.
+   * <p>
+   * The caller owns the returned wrapper and is responsible for closing it.
    *
    * @param <T>
    *          the resource's type
@@ -110,6 +112,8 @@ public final class AutoCloser<T, E extends Exception> implements AutoCloseable {
    * <p>
    * This is useful for protecting standard streams. i.e. {@link System#out},
    * {@link System#err}.
+   * <p>
+   * The caller owns the returned stream and is responsible for closing it.
    *
    * @param out
    *          the stream to wrap

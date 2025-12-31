@@ -43,6 +43,11 @@ public @interface MetaschemaModule {
   @NonNull
   Class<? extends IBoundModule>[] imports() default {};
 
+  /**
+   * Get the namespace prefix bindings for this module.
+   *
+   * @return an array of namespace bindings
+   */
   @NonNull
   NsBinding[] nsBindings() default {};
 

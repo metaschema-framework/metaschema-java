@@ -270,7 +270,10 @@ class CompletionScriptGeneratorTest {
 
     @Override
     public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-      return null;
+      // Return no-op executor - this is never called in completion tests
+      return () -> {
+        // intentionally empty - executor is never invoked in completion generation
+      };
     }
   }
 
@@ -316,7 +319,10 @@ class CompletionScriptGeneratorTest {
 
     @Override
     public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-      return null;
+      // Return no-op executor - this is never called in completion tests
+      return () -> {
+        // intentionally empty - executor is never invoked in completion generation
+      };
     }
   }
 }

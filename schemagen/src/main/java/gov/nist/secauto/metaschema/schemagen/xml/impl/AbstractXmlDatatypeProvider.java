@@ -35,6 +35,8 @@ public abstract class AbstractXmlDatatypeProvider implements IDatatypeProvider {
 
   /**
    * Get the input stream for the schema resource containing datatype definitions.
+   * <p>
+   * The caller owns the returned stream and is responsible for closing it.
    *
    * @return the schema resource input stream
    */

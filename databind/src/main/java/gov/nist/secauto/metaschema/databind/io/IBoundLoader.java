@@ -140,6 +140,8 @@ public interface IBoundLoader extends IDocumentLoader, IMutableConfiguration<Des
    * <p>
    * This method will not close any {@link InputStream} provided by the
    * {@link InputSource}, since it does not own the stream.
+   * <p>
+   * The caller owns the returned result and is responsible for closing it.
    *
    * @param is
    *          an input stream for the resource

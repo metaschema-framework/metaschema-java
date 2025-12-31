@@ -18,6 +18,15 @@ public class GroupedAssemblyInstanceTypeInfo
     extends AbstractGroupedNamedModelInstanceTypeInfo<IAssemblyInstanceGrouped>
     implements IGroupedAssemblyInstanceTypeInfo {
 
+  /**
+   * Constructs a new type information object for a grouped assembly instance.
+   *
+   * @param modelInstance
+   *          the grouped assembly instance
+   * @param choiceGroupTypeInfo
+   *          the type information for the parent choice group containing this
+   *          instance
+   */
   public GroupedAssemblyInstanceTypeInfo(
       @NonNull IAssemblyInstanceGrouped modelInstance,
       @NonNull IChoiceGroupTypeInfo choiceGroupTypeInfo) {

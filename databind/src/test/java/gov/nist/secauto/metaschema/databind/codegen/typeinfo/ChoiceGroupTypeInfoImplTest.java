@@ -17,6 +17,7 @@ import com.squareup.javapoet.WildcardTypeName;
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
 import gov.nist.secauto.metaschema.core.model.JsonGroupAsBehavior;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.codegen.config.IBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.config.IChoiceGroupBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.config.IDefinitionBindingConfiguration;
@@ -32,6 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * Unit tests for {@link ChoiceGroupTypeInfoImpl} field type generation.
  */
@@ -44,9 +47,14 @@ class ChoiceGroupTypeInfoImplTest {
     }
   };
 
-  private final IChoiceGroupInstance choiceGroupInstance = context.mock(IChoiceGroupInstance.class);
-  private final IAssemblyDefinition assemblyDefinition = context.mock(IAssemblyDefinition.class);
-  private final IAssemblyDefinitionTypeInfo parentTypeInfo = context.mock(IAssemblyDefinitionTypeInfo.class);
+  @NonNull
+  private final IChoiceGroupInstance choiceGroupInstance
+      = ObjectUtils.notNull(context.mock(IChoiceGroupInstance.class));
+  @NonNull
+  private final IAssemblyDefinition assemblyDefinition = ObjectUtils.notNull(context.mock(IAssemblyDefinition.class));
+  @NonNull
+  private final IAssemblyDefinitionTypeInfo parentTypeInfo
+      = ObjectUtils.notNull(context.mock(IAssemblyDefinitionTypeInfo.class));
 
   /**
    * Test that getJavaFieldType returns List with wildcard type when useWildcard
@@ -54,9 +62,11 @@ class ChoiceGroupTypeInfoImplTest {
    */
   @Test
   void testGetJavaFieldTypeReturnsWildcardTypeWhenConfigured() {
-    IBindingConfiguration bindingConfig = context.mock(IBindingConfiguration.class);
-    IDefinitionBindingConfiguration defConfig = context.mock(IDefinitionBindingConfiguration.class);
-    IChoiceGroupBindingConfiguration choiceConfig = context.mock(IChoiceGroupBindingConfiguration.class);
+    IBindingConfiguration bindingConfig = ObjectUtils.notNull(context.mock(IBindingConfiguration.class));
+    IDefinitionBindingConfiguration defConfig
+        = ObjectUtils.notNull(context.mock(IDefinitionBindingConfiguration.class));
+    IChoiceGroupBindingConfiguration choiceConfig
+        = ObjectUtils.notNull(context.mock(IChoiceGroupBindingConfiguration.class));
 
     String groupAsName = "test-choices";
     String itemTypeName = "com.example.ITestInterface";
@@ -124,9 +134,11 @@ class ChoiceGroupTypeInfoImplTest {
    */
   @Test
   void testGetJavaFieldTypeReturnsNonWildcardTypeWhenNotConfigured() {
-    IBindingConfiguration bindingConfig = context.mock(IBindingConfiguration.class);
-    IDefinitionBindingConfiguration defConfig = context.mock(IDefinitionBindingConfiguration.class);
-    IChoiceGroupBindingConfiguration choiceConfig = context.mock(IChoiceGroupBindingConfiguration.class);
+    IBindingConfiguration bindingConfig = ObjectUtils.notNull(context.mock(IBindingConfiguration.class));
+    IDefinitionBindingConfiguration defConfig
+        = ObjectUtils.notNull(context.mock(IDefinitionBindingConfiguration.class));
+    IChoiceGroupBindingConfiguration choiceConfig
+        = ObjectUtils.notNull(context.mock(IChoiceGroupBindingConfiguration.class));
 
     String groupAsName = "test-choices";
     String itemTypeName = "com.example.ITestInterface";
@@ -188,9 +200,11 @@ class ChoiceGroupTypeInfoImplTest {
    */
   @Test
   void testGetJavaFieldTypeReturnsMapWithWildcardForKeyedGroups() {
-    IBindingConfiguration bindingConfig = context.mock(IBindingConfiguration.class);
-    IDefinitionBindingConfiguration defConfig = context.mock(IDefinitionBindingConfiguration.class);
-    IChoiceGroupBindingConfiguration choiceConfig = context.mock(IChoiceGroupBindingConfiguration.class);
+    IBindingConfiguration bindingConfig = ObjectUtils.notNull(context.mock(IBindingConfiguration.class));
+    IDefinitionBindingConfiguration defConfig
+        = ObjectUtils.notNull(context.mock(IDefinitionBindingConfiguration.class));
+    IChoiceGroupBindingConfiguration choiceConfig
+        = ObjectUtils.notNull(context.mock(IChoiceGroupBindingConfiguration.class));
 
     String groupAsName = "test-choices";
     String itemTypeName = "com.example.ITestInterface";
@@ -261,7 +275,7 @@ class ChoiceGroupTypeInfoImplTest {
   @Test
   void testGetJavaFieldTypeReturnsSingletonWhenMaxOccursIsOne() {
     ClassName itemClass = ClassName.get(Object.class);
-    IBindingConfiguration bindingConfig = context.mock(IBindingConfiguration.class);
+    IBindingConfiguration bindingConfig = ObjectUtils.notNull(context.mock(IBindingConfiguration.class));
     DefaultTypeResolver typeResolver = new DefaultTypeResolver(bindingConfig);
 
     context.checking(new Expectations() {
@@ -294,7 +308,7 @@ class ChoiceGroupTypeInfoImplTest {
   @Test
   void testGetJavaFieldTypeReturnsListOfObjectWhenNoBindingConfig() {
     ClassName itemClass = ClassName.get(Object.class);
-    IBindingConfiguration bindingConfig = context.mock(IBindingConfiguration.class);
+    IBindingConfiguration bindingConfig = ObjectUtils.notNull(context.mock(IBindingConfiguration.class));
     DefaultTypeResolver typeResolver = new DefaultTypeResolver(bindingConfig);
 
     context.checking(new Expectations() {
@@ -333,13 +347,14 @@ class ChoiceGroupTypeInfoImplTest {
    */
   @Test
   void testGetJavaFieldTypeWithMaxOccursGreaterThanOne() {
-    IBindingConfiguration bindingConfig = context.mock(IBindingConfiguration.class);
-    IDefinitionBindingConfiguration defConfig = context.mock(IDefinitionBindingConfiguration.class);
-    IChoiceGroupBindingConfiguration choiceConfig = context.mock(IChoiceGroupBindingConfiguration.class);
+    IBindingConfiguration bindingConfig = ObjectUtils.notNull(context.mock(IBindingConfiguration.class));
+    IDefinitionBindingConfiguration defConfig
+        = ObjectUtils.notNull(context.mock(IDefinitionBindingConfiguration.class));
+    IChoiceGroupBindingConfiguration choiceConfig
+        = ObjectUtils.notNull(context.mock(IChoiceGroupBindingConfiguration.class));
 
     String groupAsName = "test-choices";
     String itemTypeName = "com.example.ITestInterface";
-    ClassName itemClass = ClassName.bestGuess(itemTypeName);
 
     Map<String, IChoiceGroupBindingConfiguration> choiceGroupBindings = new HashMap<>();
     choiceGroupBindings.put(groupAsName, choiceConfig);

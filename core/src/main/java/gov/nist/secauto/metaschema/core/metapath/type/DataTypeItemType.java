@@ -42,7 +42,11 @@ public class DataTypeItemType<T extends IAnyAtomicItem>
     this.adapter = adapter;
   }
 
-  @Override
+  /**
+   * Get the data type adapter associated with this type.
+   *
+   * @return the adapter
+   */
   @NonNull
   public IDataTypeAdapter<?> getAdapter() {
     return adapter;

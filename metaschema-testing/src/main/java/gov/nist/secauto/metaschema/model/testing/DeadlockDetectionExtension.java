@@ -64,7 +64,7 @@ public class DeadlockDetectionExtension implements TestWatcher {
         || isTimeoutException(cause.getCause());
   }
 
-  private void dumpThreadInfo(ExtensionContext context, String reason) {
+  private static void dumpThreadInfo(ExtensionContext context, String reason) {
     StringBuilder sb = new StringBuilder();
     sb.append("\n");
     sb.append("=".repeat(80)).append("\n");
@@ -97,7 +97,7 @@ public class DeadlockDetectionExtension implements TestWatcher {
     }
   }
 
-  private void detectDeadlocks() {
+  private static void detectDeadlocks() {
     ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
     long[] deadlockedThreadIds = threadMXBean.findDeadlockedThreads();
 

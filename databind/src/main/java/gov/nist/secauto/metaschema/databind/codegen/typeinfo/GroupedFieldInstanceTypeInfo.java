@@ -18,6 +18,15 @@ public class GroupedFieldInstanceTypeInfo
     extends AbstractGroupedNamedModelInstanceTypeInfo<IFieldInstanceGrouped>
     implements IGroupedFieldInstanceTypeInfo {
 
+  /**
+   * Constructs a new type information object for a grouped field instance.
+   *
+   * @param modelInstance
+   *          the grouped field instance
+   * @param choiceGroupTypeInfo
+   *          the type information for the parent choice group containing this
+   *          instance
+   */
   public GroupedFieldInstanceTypeInfo(
       @NonNull IFieldInstanceGrouped modelInstance,
       @NonNull IChoiceGroupTypeInfo choiceGroupTypeInfo) {

@@ -34,12 +34,30 @@ public interface IGroupAs {
     }
   };
 
+  /**
+   * Get the qualified name for the group-as, which is used for JSON/YAML key
+   * naming.
+   *
+   * @return the qualified name, or {@code null} if this is a singleton group-as
+   */
   @Nullable
   IEnhancedQName getGroupAsQName();
 
+  /**
+   * Get the JSON group-as behavior that determines how grouped items are
+   * serialized in JSON/YAML formats.
+   *
+   * @return the JSON group-as behavior
+   */
   @NonNull
   JsonGroupAsBehavior getJsonGroupAsBehavior();
 
+  /**
+   * Get the XML group-as behavior that determines how grouped items are
+   * serialized in XML format.
+   *
+   * @return the XML group-as behavior
+   */
   @NonNull
   XmlGroupAsBehavior getXmlGroupAsBehavior();
 }

@@ -23,8 +23,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * This construction allows a single JSON property value.
  */
 public final class CardinalityBehaviorSingleton
-    extends AbstractCardinalityBehavior
-    implements ICardinalityBehavior {
+    extends AbstractCardinalityBehavior {
 
   @NonNull
   private static final CardinalityBehaviorSingleton SINGLETON = new CardinalityBehaviorSingleton();

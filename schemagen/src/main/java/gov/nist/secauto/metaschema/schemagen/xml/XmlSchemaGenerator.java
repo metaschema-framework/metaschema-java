@@ -17,11 +17,13 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlDatatypeManager;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlType;
 
 import org.codehaus.stax2.XMLOutputFactory2;
 import org.codehaus.stax2.XMLStreamWriter2;
+import org.eclipse.jdt.annotation.Owning;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,17 +64,17 @@ public class XmlSchemaGenerator
 
   /** The namespace prefix for XML Schema elements. */
   @NonNull
-  public static final String PREFIX_XML_SCHEMA = "xs";
+  public static final String PREFIX_XML_SCHEMA = XmlDatatypeManager.PREFIX_XML_SCHEMA;
   /** The XML Schema namespace URI. */
   @NonNull
-  public static final String NS_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+  public static final String NS_XML_SCHEMA = XmlDatatypeManager.NS_XML_SCHEMA;
   @NonNull
   private static final String PREFIX_XML_SCHEMA_VERSIONING = "vs";
   @NonNull
   private static final String NS_XML_SCHEMA_VERSIONING = "http://www.w3.org/2007/XMLSchema-versioning";
   /** The XHTML namespace URI used for documentation content. */
   @NonNull
-  public static final String NS_XHTML = "http://www.w3.org/1999/xhtml";
+  public static final String NS_XHTML = XmlDatatypeManager.NS_XHTML;
 
   @NonNull
   private final XMLOutputFactory2 xmlOutputFactory;
@@ -119,6 +121,7 @@ public class XmlSchemaGenerator
   }
 
   @Override
+  @Owning
   protected AutoCloser<XMLStreamWriter2, SchemaGenerationException> newWriter(
       Writer out) {
     XMLStreamWriter2 writer;

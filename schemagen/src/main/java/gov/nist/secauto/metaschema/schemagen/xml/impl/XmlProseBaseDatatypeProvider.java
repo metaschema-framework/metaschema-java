@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import org.eclipse.jdt.annotation.Owning;
 import org.jdom2.Element;
 
 import java.io.InputStream;
@@ -21,7 +22,9 @@ public class XmlProseBaseDatatypeProvider
     extends AbstractXmlDatatypeProvider {
   private static final String DATATYPE_NAME = "ProseBase";
 
+  @SuppressWarnings("resource")
   @Override
+  @Owning
   protected InputStream getSchemaResource() {
     return ObjectUtils.requireNonNull(IModule.class.getResourceAsStream("/schema/xml/metaschema-prose-base.xsd"));
   }

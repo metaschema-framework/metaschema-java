@@ -34,6 +34,19 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * instances from Metaschema module bindings.
  */
 public final class FlagContainerSupport {
+  /**
+   * Creates a new flag container from a list of flag binding objects.
+   *
+   * @param flags
+   *          the list of flag binding objects, may be {@code null} or empty
+   * @param bindingInstance
+   *          the parent binding instance
+   * @param parent
+   *          the parent definition model containing the flags
+   * @param jsonKeyName
+   *          the JSON key flag name if applicable, or {@code null}
+   * @return the flag container, or an empty container if no flags
+   */
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   @NonNull
   public static IContainerFlagSupport<IFlagInstance> newFlagContainer(

@@ -20,6 +20,15 @@ public interface IBindingModelElement extends IModelElement {
   @Override
   IBindingMetaschemaModule getContainingModule();
 
+  /**
+   * Get the source node item representing this model element in the original
+   * Metaschema module.
+   * <p>
+   * This provides access to the parsed Metaschema source data that was used to
+   * create this model element.
+   *
+   * @return the source assembly node item
+   */
   @NonNull
   IAssemblyNodeItem getSourceNodeItem();
 }

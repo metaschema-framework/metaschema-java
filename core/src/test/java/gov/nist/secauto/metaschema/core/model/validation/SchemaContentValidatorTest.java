@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
@@ -61,7 +62,7 @@ class SchemaContentValidatorTest {
       + "}";
 
   @NonNull
-  private static final URI TEST_URI = URI.create("file:///test-document");
+  private static final URI TEST_URI = ObjectUtils.notNull(URI.create("file:///test-document"));
 
   /**
    * Test XML validation with valid content - should pass with no findings.
@@ -296,12 +297,14 @@ class SchemaContentValidatorTest {
    */
   @NonNull
   private static XmlSchemaContentValidator createXmlValidator() throws IOException {
+    // Don't use try-with-resources - the XmlSchemaContentValidator constructor
+    // takes @Owning ownership of the stream and closes it in toSchema()
     InputStream schemaIs = SchemaContentValidatorTest.class
         .getResourceAsStream("/schema-validation/simple-test.xsd");
     assertNotNull(schemaIs, "Schema resource should be found on classpath");
 
     StreamSource schemaSource = new StreamSource(schemaIs);
-    return new XmlSchemaContentValidator(List.of(schemaSource));
+    return new XmlSchemaContentValidator(ObjectUtils.notNull(List.of(schemaSource)));
   }
 
   /**
@@ -313,10 +316,11 @@ class SchemaContentValidatorTest {
    */
   @NonNull
   private static JsonSchemaContentValidator createJsonValidator() throws IOException {
-    InputStream schemaIs = SchemaContentValidatorTest.class
-        .getResourceAsStream("/schema-validation/simple-test-schema.json");
-    assertNotNull(schemaIs, "Schema resource should be found on classpath");
+    try (InputStream schemaIs = SchemaContentValidatorTest.class
+        .getResourceAsStream("/schema-validation/simple-test-schema.json")) {
+      assertNotNull(schemaIs, "Schema resource should be found on classpath");
 
-    return new JsonSchemaContentValidator(schemaIs);
+      return new JsonSchemaContentValidator(schemaIs);
+    }
   }
 }

@@ -29,6 +29,12 @@ public abstract class AbstractModelInstanceWriteHandler<ITEM>
   @NonNull
   private final IBoundInstanceModel<ITEM> instance;
 
+  /**
+   * Construct a new write handler for the provided model instance.
+   *
+   * @param instance
+   *          the model instance to write
+   */
   public AbstractModelInstanceWriteHandler(@NonNull IBoundInstanceModel<ITEM> instance) {
     this.instance = instance;
   }

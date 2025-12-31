@@ -19,6 +19,9 @@ import gov.nist.secauto.metaschema.databind.io.BindingException;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IDeserializer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -37,6 +40,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class DefaultBindingConfiguration implements IBindingConfiguration {
+  private static final Logger LOGGER = LogManager.getLogger(DefaultBindingConfiguration.class);
+
   private final Map<String, String> namespaceToPackageNameMap = new ConcurrentHashMap<>();
   // metaschema location -> ModelType -> Definition name -> IBindingConfiguration
   private final Map<String, MetaschemaBindingConfiguration> moduleUrlToMetaschemaBindingConfigurationMap
@@ -60,6 +65,7 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
    * @return the binding configuration or {@code null} if there is not
    *         configuration
    */
+  @Override
   @Nullable
   public IDefinitionBindingConfiguration getBindingConfigurationForDefinition(
       @NonNull IModelDefinition definition) {
@@ -114,7 +120,7 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
     StringBuilder path = new StringBuilder();
     IModelDefinition current = definition;
 
-    while (current != null && current.isInline()) {
+    while (current.isInline()) {
       if (path.length() > 0) {
         path.insert(0, "/");
       }
@@ -301,7 +307,7 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
    *           if an error occurred while processing the binding configuration
    */
   public void load(Path file) throws IOException, BindingException {
-    URL resource = file.toAbsolutePath().normalize().toUri().toURL();
+    URL resource = ObjectUtils.notNull(file.toAbsolutePath().normalize().toUri().toURL());
     load(resource);
   }
 
@@ -329,7 +335,7 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
    * @throws BindingException
    *           if an error occurred while processing the binding configuration
    */
-  public void load(URL resource) throws IOException, BindingException {
+  public void load(@NonNull URL resource) throws IOException, BindingException {
     IBindingContext context = IBindingContext.newInstance();
     IDeserializer<MetaschemaBindings> deserializer = context.newDeserializer(Format.XML, MetaschemaBindings.class);
 
@@ -341,20 +347,16 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
     }
 
     List<MetaschemaBindings.ModelBinding> modelBindings = bindings.getModelBindings();
-    if (modelBindings != null) {
-      for (MetaschemaBindings.ModelBinding model : modelBindings) {
-        processModelBindingConfig(model);
-      }
+    for (MetaschemaBindings.ModelBinding model : modelBindings) {
+      processModelBindingConfig(model);
     }
 
     List<MetaschemaBindings.MetaschemaBinding> metaschemaBindings = bindings.getMetaschemaBindings();
-    if (metaschemaBindings != null) {
-      for (MetaschemaBindings.MetaschemaBinding metaschema : metaschemaBindings) {
-        try {
-          processMetaschemaBindingConfig(resource, metaschema);
-        } catch (MalformedURLException | URISyntaxException ex) {
-          throw new IOException(ex);
-        }
+    for (MetaschemaBindings.MetaschemaBinding metaschema : metaschemaBindings) {
+      try {
+        processMetaschemaBindingConfig(resource, metaschema);
+      } catch (MalformedURLException | URISyntaxException ex) {
+        throw new IOException(ex);
       }
     }
   }
@@ -385,44 +387,46 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
 
     List<MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding> assemblyBindings
         = metaschema.getDefineAssemblyBindings();
-    if (assemblyBindings != null) {
-      for (MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding assemblyBinding : assemblyBindings) {
-        String name = assemblyBinding.getName();
-        String target = assemblyBinding.getTarget();
+    for (MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding assemblyBinding : assemblyBindings) {
+      String name = assemblyBinding.getName();
+      String target = assemblyBinding.getTarget();
 
-        // Determine the lookup key - use name if provided, otherwise use target
-        String lookupKey = name != null ? name : target;
-        if (lookupKey != null) {
-          IDefinitionBindingConfiguration config = metaschemaConfig.getAssemblyDefinitionBindingConfig(lookupKey);
-          config = processDefinitionBindingConfiguration(config, assemblyBinding.getJava());
-          metaschemaConfig.addAssemblyDefinitionBindingConfig(lookupKey, config);
+      // Determine the lookup key - use name if provided, otherwise use target
+      String lookupKey = name != null ? name : target;
+      if (lookupKey != null) {
+        IDefinitionBindingConfiguration config = metaschemaConfig.getAssemblyDefinitionBindingConfig(lookupKey);
+        config = processDefinitionBindingConfiguration(config, assemblyBinding.getJava());
+        metaschemaConfig.addAssemblyDefinitionBindingConfig(lookupKey, config);
 
-          // Process property bindings for this assembly
-          processAssemblyPropertyBindings(metaschemaConfig, lookupKey, assemblyBinding.getPropertyBindings());
+        // Process property bindings for this assembly
+        processAssemblyPropertyBindings(metaschemaConfig, lookupKey, assemblyBinding.getPropertyBindings());
 
-          // Process choice group bindings for this assembly
-          processChoiceGroupBindings(config, assemblyBinding.getChoiceGroupBindings());
-        }
+        // Process choice group bindings for this assembly
+        processChoiceGroupBindings(config, assemblyBinding.getChoiceGroupBindings());
+      } else {
+        LOGGER.warn("Assembly binding in metaschema '{}' has neither 'name' nor 'target' attribute; skipping",
+            moduleUri);
       }
     }
 
     List<MetaschemaBindings.MetaschemaBinding.DefineFieldBinding> fieldBindings
         = metaschema.getDefineFieldBindings();
-    if (fieldBindings != null) {
-      for (MetaschemaBindings.MetaschemaBinding.DefineFieldBinding fieldBinding : fieldBindings) {
-        String name = fieldBinding.getName();
-        String target = fieldBinding.getTarget();
+    for (MetaschemaBindings.MetaschemaBinding.DefineFieldBinding fieldBinding : fieldBindings) {
+      String name = fieldBinding.getName();
+      String target = fieldBinding.getTarget();
 
-        // Determine the lookup key - use name if provided, otherwise use target
-        String lookupKey = name != null ? name : target;
-        if (lookupKey != null) {
-          IDefinitionBindingConfiguration config = metaschemaConfig.getFieldDefinitionBindingConfig(lookupKey);
-          config = processDefinitionBindingConfiguration(config, fieldBinding.getJava());
-          metaschemaConfig.addFieldDefinitionBindingConfig(lookupKey, config);
+      // Determine the lookup key - use name if provided, otherwise use target
+      String lookupKey = name != null ? name : target;
+      if (lookupKey != null) {
+        IDefinitionBindingConfiguration config = metaschemaConfig.getFieldDefinitionBindingConfig(lookupKey);
+        config = processDefinitionBindingConfiguration(config, fieldBinding.getJava());
+        metaschemaConfig.addFieldDefinitionBindingConfig(lookupKey, config);
 
-          // Process property bindings for this field
-          processFieldPropertyBindings(metaschemaConfig, lookupKey, fieldBinding.getPropertyBindings());
-        }
+        // Process property bindings for this field
+        processFieldPropertyBindings(metaschemaConfig, lookupKey, fieldBinding.getPropertyBindings());
+      } else {
+        LOGGER.warn("Field binding in metaschema '{}' has neither 'name' nor 'target' attribute; skipping",
+            moduleUri);
       }
     }
   }
@@ -593,11 +597,9 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
     DefaultDefinitionBindingConfiguration mutableConfig = (DefaultDefinitionBindingConfiguration) config;
     for (MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding choiceGroupBinding : choiceGroupBindings) {
       String groupAsName = choiceGroupBinding.getName();
-      if (groupAsName != null) {
-        IChoiceGroupBindingConfiguration choiceGroupConfig
-            = new DefaultChoiceGroupBindingConfiguration(choiceGroupBinding);
-        mutableConfig.addChoiceGroupBinding(groupAsName, choiceGroupConfig);
-      }
+      IChoiceGroupBindingConfiguration choiceGroupConfig
+          = new DefaultChoiceGroupBindingConfiguration(choiceGroupBinding);
+      mutableConfig.addChoiceGroupBinding(groupAsName, choiceGroupConfig);
     }
   }
 
@@ -621,10 +623,9 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
       }
 
       List<String> interfaces = java.getImplementInterfaces();
-      if (interfaces != null) {
-        for (String interfaceName : interfaces) {
-          config.addInterfaceToImplement(ObjectUtils.notNull(interfaceName));
-        }
+      for (String interfaceName : interfaces) {
+        config.addInterfaceToImplement(Objects.requireNonNull(interfaceName,
+            "interface name cannot be null in implement-interfaces configuration"));
       }
     }
     return config;
@@ -650,10 +651,9 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
       }
 
       List<String> interfaces = java.getImplementInterfaces();
-      if (interfaces != null) {
-        for (String interfaceName : interfaces) {
-          config.addInterfaceToImplement(ObjectUtils.notNull(interfaceName));
-        }
+      for (String interfaceName : interfaces) {
+        config.addInterfaceToImplement(Objects.requireNonNull(interfaceName,
+            "interface name cannot be null in implement-interfaces configuration"));
       }
     }
     return config;

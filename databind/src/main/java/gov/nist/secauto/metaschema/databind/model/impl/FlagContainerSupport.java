@@ -35,6 +35,19 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
   @Nullable
   private IBoundInstanceFlag jsonKeyFlag;
 
+  /**
+   * Constructs a new flag container by introspecting the bound class for flag
+   * instances.
+   * <p>
+   * This constructor scans the definition's bound class and its superclasses for
+   * fields annotated with {@link BoundFlag}, creating flag instances for each.
+   *
+   * @param definition
+   *          the complex model definition whose bound class will be introspected
+   * @param peeker
+   *          an optional consumer to receive each flag instance as it is
+   *          processed, or {@code null} if no additional processing is needed
+   */
   @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public FlagContainerSupport(

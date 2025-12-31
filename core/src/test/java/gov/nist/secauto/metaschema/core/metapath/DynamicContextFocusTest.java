@@ -87,9 +87,9 @@ class DynamicContextFocusTest {
 
     DynamicContext context = parent.subContext(focus);
     FocusContext retrievedFocus = context.getFocusContext();
+    assertNotNull(retrievedFocus);
 
     assertAll(
-        () -> assertNotNull(retrievedFocus),
         () -> assertSame(item, retrievedFocus.getContextItem()),
         () -> assertEquals(3, retrievedFocus.getPosition()),
         () -> assertEquals(7, retrievedFocus.getSize()));

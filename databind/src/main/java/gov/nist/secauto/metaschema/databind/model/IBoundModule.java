@@ -25,6 +25,19 @@ public interface IBoundModule
         IBoundDefinitionModelField<?>,
         IBoundDefinitionModelAssembly> {
 
+  /**
+   * Create a new instance of a bound module using reflection.
+   *
+   * @param clazz
+   *          the bound module class to instantiate
+   * @param bindingContext
+   *          the binding context for the module
+   * @param importedModules
+   *          the list of modules imported by this module
+   * @return the new module instance
+   * @throws IllegalArgumentException
+   *           if the module cannot be instantiated
+   */
   @NonNull
   static IBoundModule newInstance(
       @NonNull Class<? extends IBoundModule> clazz,

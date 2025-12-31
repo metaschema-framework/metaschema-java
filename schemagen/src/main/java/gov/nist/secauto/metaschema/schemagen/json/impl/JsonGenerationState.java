@@ -323,7 +323,6 @@ public class JsonGenerationState
    * @throws IOException
    *           if an I/O error occurs during writing
    */
-  @SuppressWarnings("resource")
   public void writeStartObject() throws IOException {
     getWriter().writeStartObject();
   }
@@ -334,7 +333,6 @@ public class JsonGenerationState
    * @throws IOException
    *           if an I/O error occurs during writing
    */
-  @SuppressWarnings("resource")
   public void writeEndObject() throws IOException {
     getWriter().writeEndObject();
   }
@@ -349,7 +347,6 @@ public class JsonGenerationState
    * @throws IOException
    *           if an I/O error occurs during writing
    */
-  @SuppressWarnings("resource")
   public void writeField(String fieldName, String value) throws IOException {
     getWriter().writeStringField(fieldName, value);
 
@@ -365,7 +362,6 @@ public class JsonGenerationState
    * @throws IOException
    *           if an I/O error occurs during writing
    */
-  @SuppressWarnings("resource")
   public void writeField(String fieldName, ObjectNode obj) throws IOException {
     JsonGenerator writer = getWriter(); // NOPMD not closable here
 
@@ -373,7 +369,6 @@ public class JsonGenerationState
     writer.writeTree(obj);
   }
 
-  @SuppressWarnings("resource")
   @Override
   public void flushWriter() throws IOException {
     getWriter().flush();

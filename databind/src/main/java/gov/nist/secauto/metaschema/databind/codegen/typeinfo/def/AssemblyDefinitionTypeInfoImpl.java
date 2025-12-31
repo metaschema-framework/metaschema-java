@@ -126,6 +126,6 @@ class AssemblyDefinitionTypeInfoImpl
             Stream.of(typeInfo));
       }
     }
-    return modelInstances;
+    return ObjectUtils.notNull(modelInstances);
   }
 }

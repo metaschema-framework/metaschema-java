@@ -93,6 +93,11 @@ public class DefinitionFlagGlobal
         position))));
   }
 
+  /**
+   * Gets the underlying binding object for this flag definition.
+   *
+   * @return the binding object
+   */
   @NonNull
   protected METASCHEMA.DefineFlag getBinding() {
     return binding;
@@ -158,6 +163,12 @@ public class DefinitionFlagGlobal
     return ModelSupport.remarks(getBinding().getRemarks());
   }
 
+  /**
+   * Gets the node item representing this flag definition in the Metapath data
+   * model.
+   *
+   * @return the node item for this flag definition
+   */
   @NonNull
   public INodeItem getNodeItem() {
     return ObjectUtils.notNull(boundNodeItem.get());

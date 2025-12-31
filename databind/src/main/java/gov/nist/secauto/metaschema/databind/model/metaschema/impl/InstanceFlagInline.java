@@ -57,6 +57,19 @@ public class InstanceFlagInline
   @NonNull
   private final Lazy<IAssemblyNodeItem> boundNodeItem;
 
+  /**
+   * Construct a new inline flag instance from binding data.
+   *
+   * @param binding
+   *          the underlying bound inline flag definition object
+   * @param bindingInstance
+   *          the assembly instance for the underlying bound class
+   * @param position
+   *          the zero-based position of this instance relative to its bound
+   *          siblings
+   * @param parent
+   *          the parent definition model containing this flag
+   */
   public InstanceFlagInline(
       @NonNull InlineDefineFlag binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
@@ -86,6 +99,11 @@ public class InstanceFlagInline
             .get(position)));
   }
 
+  /**
+   * Gets the underlying binding object for this inline flag instance.
+   *
+   * @return the binding object
+   */
   @NonNull
   protected InlineDefineFlag getBinding() {
     return binding;

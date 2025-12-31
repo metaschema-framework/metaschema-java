@@ -8,8 +8,8 @@ package gov.nist.secauto.metaschema.schemagen.xml.impl.schematype;
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
-import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.IXmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlDatatypeManager;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -42,7 +42,7 @@ public class XmlComplexTypeFieldDefinition
   }
 
   @Override
-  protected void generateTypeBody(XmlGenerationState state) throws XMLStreamException {
+  protected void generateTypeBody(IXmlGenerationState state) throws XMLStreamException {
     IFieldDefinition definition = getDefinition();
     IXmlSimpleType valueType = state.getSimpleType(definition);
     IDataTypeAdapter<?> datatype = valueType.getDataTypeAdapter();
@@ -53,8 +53,8 @@ public class XmlComplexTypeFieldDefinition
     } else {
       xmlContentType = "simpleContent"; // without attributes
     }
-    state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, xmlContentType, XmlSchemaGenerator.NS_XML_SCHEMA);
-    state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "extension", XmlSchemaGenerator.NS_XML_SCHEMA);
+    state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, xmlContentType, XmlDatatypeManager.NS_XML_SCHEMA);
+    state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "extension", XmlDatatypeManager.NS_XML_SCHEMA);
     state.writeAttribute("base", valueType.getTypeReference());
 
     for (IFlagInstance flagInstance : definition.getFlagInstances()) {

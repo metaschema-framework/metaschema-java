@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.databind.test.util;
 
-import org.eclipse.jdt.annotation.NotOwning;
+import org.eclipse.jdt.annotation.Owning;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,22 +13,29 @@ import java.io.OutputStream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A test utility that wraps an input stream to detect when it is closed.
+ * <p>
+ * This class is used in tests to verify that resource ownership semantics are
+ * correctly implemented. It tracks whether {@link #close()} has been called,
+ * allowing tests to assert that streams are properly closed when expected.
+ */
 public class CloseDetectingInputStream
     extends InputStream {
 
-  @SuppressWarnings("resource")
-  @NotOwning
+  @Owning
   private final InputStream delegate;
   private boolean closed;
 
   /**
    * Create a new input stream that will proxy calls to the provided
-   * {@code delegate}.
+   * {@code delegate} and record when {@link #close()} is called on this instance.
    *
    * @param delegate
-   *          the underlying input stream
+   *          the underlying input stream. The new instance owns this stream and
+   *          is responsible for closing it.
    */
-  public CloseDetectingInputStream(@NotOwning @NonNull InputStream delegate) {
+  public CloseDetectingInputStream(@Owning @NonNull InputStream delegate) {
     this.delegate = delegate;
   }
 

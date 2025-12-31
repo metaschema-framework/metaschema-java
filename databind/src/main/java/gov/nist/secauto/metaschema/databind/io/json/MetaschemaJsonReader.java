@@ -184,7 +184,6 @@ public class MetaschemaJsonReader
    *
    * @return a new validation context with current location and path
    */
-  @SuppressWarnings("resource")
   @NonNull
   private ValidationContext buildValidationContext() {
     JsonParser parser = getReader();

@@ -31,9 +31,13 @@ public class DefaultItemWriter implements IItemWriter {
 
   /**
    * Construct a new item writer.
+   * <p>
+   * This instance takes ownership of the provided writer and is responsible for
+   * managing its lifecycle.
    *
    * @param writer
-   *          the writer to append text to
+   *          the writer to append text to. Ownership is transferred to this
+   *          instance.
    */
   public DefaultItemWriter(@NonNull PrintWriter writer) {
     this.writer = writer;

@@ -66,7 +66,7 @@ class RequiredFieldValidationTest
   void testValidXmlParsesSuccessfully() throws IOException {
     IBindingContext bindingContext = newBindingContext();
     assertDoesNotThrow(() -> {
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       Object result = deserializer.deserialize(ObjectUtils.notNull(VALID_XML_PATH));
       assertNotNull(result, "Valid XML should parse successfully");
     });
@@ -76,7 +76,7 @@ class RequiredFieldValidationTest
   void testValidJsonParsesSuccessfully() throws IOException {
     IBindingContext bindingContext = newBindingContext();
     assertDoesNotThrow(() -> {
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, rootClass);
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, ObjectUtils.notNull(rootClass));
       Object result = deserializer.deserialize(ObjectUtils.notNull(VALID_JSON_PATH));
       assertNotNull(result, "Valid JSON should parse successfully");
     });
@@ -85,7 +85,7 @@ class RequiredFieldValidationTest
   @Test
   void testMissingRequiredFlagInXmlThrowsError() throws IOException {
     IBindingContext bindingContext = newBindingContext();
-    IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+    IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
     deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
     IOException exception = assertThrows(IOException.class, () -> {
@@ -100,7 +100,7 @@ class RequiredFieldValidationTest
   @Test
   void testMissingRequiredFieldInXmlThrowsError() throws IOException {
     IBindingContext bindingContext = newBindingContext();
-    IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+    IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
     deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
     IOException exception = assertThrows(IOException.class, () -> {
@@ -115,7 +115,7 @@ class RequiredFieldValidationTest
   @Test
   void testMissingRequiredAssemblyInXmlThrowsError() throws IOException {
     IBindingContext bindingContext = newBindingContext();
-    IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+    IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
     deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
     IOException exception = assertThrows(IOException.class, () -> {
@@ -130,7 +130,7 @@ class RequiredFieldValidationTest
   @Test
   void testMissingRequiredFlagInJsonThrowsError() throws IOException {
     IBindingContext bindingContext = newBindingContext();
-    IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, rootClass);
+    IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, ObjectUtils.notNull(rootClass));
     deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
     IOException exception = assertThrows(IOException.class, () -> {
@@ -145,7 +145,7 @@ class RequiredFieldValidationTest
   @Test
   void testMissingRequiredFieldInJsonThrowsError() throws IOException {
     IBindingContext bindingContext = newBindingContext();
-    IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, rootClass);
+    IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, ObjectUtils.notNull(rootClass));
     deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
     IOException exception = assertThrows(IOException.class, () -> {
@@ -162,13 +162,13 @@ class RequiredFieldValidationTest
     IBindingContext bindingContext = newBindingContext();
 
     // First verify that validation is enabled by default (throws error)
-    IDeserializer<?> deserializer1 = bindingContext.newDeserializer(Format.XML, rootClass);
+    IDeserializer<?> deserializer1 = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
     assertThrows(IOException.class, () -> {
       deserializer1.deserialize(ObjectUtils.notNull(MISSING_FLAG_XML_PATH));
     }, "Should throw when validation is enabled by default");
 
     // Now disable validation and verify it parses without error
-    IDeserializer<?> deserializer2 = bindingContext.newDeserializer(Format.XML, rootClass);
+    IDeserializer<?> deserializer2 = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
     deserializer2.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
     assertDoesNotThrow(() -> {
       Object result = deserializer2.deserialize(ObjectUtils.notNull(MISSING_FLAG_XML_PATH));
@@ -183,7 +183,7 @@ class RequiredFieldValidationTest
     Path missingFlagPath = format == Format.XML ? MISSING_FLAG_XML_PATH : MISSING_FLAG_JSON_PATH;
 
     IBindingContext bindingContext = newBindingContext();
-    IDeserializer<?> deserializer = bindingContext.newDeserializer(format, rootClass);
+    IDeserializer<?> deserializer = bindingContext.newDeserializer(format, ObjectUtils.notNull(rootClass));
     deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
     IOException exception = assertThrows(IOException.class, () -> {

@@ -34,6 +34,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.annotation.Owning;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,6 +77,7 @@ public class DefaultConstraintValidator
   @NonNull
   private final IMutableConfiguration<ValidationFeature<?>> configuration;
   @NonNull
+  @Owning
   private final ParallelValidationConfig parallelConfig;
 
   /**
@@ -116,16 +118,19 @@ public class DefaultConstraintValidator
   }
 
   @Override
+  @Owning
   public DefaultConstraintValidator enableFeature(ValidationFeature<?> feature) {
     return set(feature, true);
   }
 
   @Override
+  @Owning
   public DefaultConstraintValidator disableFeature(ValidationFeature<?> feature) {
     return set(feature, false);
   }
 
   @Override
+  @Owning
   public DefaultConstraintValidator applyConfiguration(
       @NonNull IConfiguration<ValidationFeature<?>> other) {
     getConfiguration().applyConfiguration(other);
@@ -133,6 +138,7 @@ public class DefaultConstraintValidator
   }
 
   @Override
+  @Owning
   public DefaultConstraintValidator set(ValidationFeature<?> feature, Object value) {
     getConfiguration().set(feature, value);
     return this;
@@ -156,6 +162,11 @@ public class DefaultConstraintValidator
   @NonNull
   protected IConstraintValidationHandler getConstraintValidationHandler() {
     return handler;
+  }
+
+  @Override
+  public void close() {
+    parallelConfig.close();
   }
 
   @Override

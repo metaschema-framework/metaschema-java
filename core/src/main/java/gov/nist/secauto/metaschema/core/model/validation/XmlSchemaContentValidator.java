@@ -64,9 +64,14 @@ public class XmlSchemaContentValidator
 
   /**
    * Construct a new XML schema validator using the provided XML schema sources.
+   * <p>
+   * This constructor takes ownership of the provided schema sources and is
+   * responsible for closing any associated input streams.
    *
    * @param schemaSources
-   *          the XML schemas to use for validation
+   *          the XML schemas to use for validation. Ownership of these sources is
+   *          transferred to this constructor, which will close any associated
+   *          input streams.
    * @throws IOException
    *           if an error occurred while parsing the provided XML schemas
    */

@@ -113,6 +113,19 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
     }
   }
 
+  /**
+   * Handle a module that is not already bound to a Java class.
+   * <p>
+   * This method is called when a module is encountered that does not implement
+   * {@link IBoundModule}. Implementations must determine the appropriate bound
+   * module class to use for the given module.
+   *
+   * @param key
+   *          the unbound module to handle
+   * @return the class of the bound module to use
+   * @throws MetaschemaException
+   *           if an error occurs while determining the bound module class
+   */
   @NonNull
   protected abstract Class<? extends IBoundModule> handleUnboundModule(@NonNull IModule key) throws MetaschemaException;
 
@@ -152,6 +165,18 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
     return retval;
   }
 
+  /**
+   * Register a binding matcher for a root assembly definition.
+   * <p>
+   * The binding matcher is used to match document root elements to their
+   * corresponding assembly definitions during deserialization.
+   *
+   * @param definition
+   *          the root assembly definition to register a matcher for
+   * @return the registered binding matcher
+   * @throws IllegalArgumentException
+   *           if the provided definition is not a root assembly
+   */
   @NonNull
   protected IBindingMatcher registerBindingMatcher(@NonNull IBoundDefinitionModelAssembly definition) {
     IBindingMatcher retval;

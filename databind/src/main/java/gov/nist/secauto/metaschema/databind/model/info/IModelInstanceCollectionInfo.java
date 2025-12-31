@@ -33,6 +33,18 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 public interface IModelInstanceCollectionInfo<ITEM> {
 
+  /**
+   * Create a new collection info instance for the provided model instance.
+   * <p>
+   * The appropriate collection info type is determined based on the instance's
+   * maximum occurrence and JSON group-as behavior.
+   *
+   * @param <T>
+   *          the Java type of items in the collection
+   * @param instance
+   *          the model instance to create collection info for
+   * @return the new collection info instance
+   */
   @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static <T> IModelInstanceCollectionInfo<T> of(
@@ -141,17 +153,47 @@ public interface IModelInstanceCollectionInfo<ITEM> {
   @NonNull
   Class<? extends ITEM> getItemType();
 
+  /**
+   * Get the items from a parent instance's property value.
+   *
+   * @param parentInstance
+   *          the parent instance to get items from
+   * @return a collection of items, which may be empty but never {@code null}
+   */
   @NonNull
   default Collection<? extends ITEM> getItemsFromParentInstance(@NonNull Object parentInstance) {
     Object value = getInstance().getValue(parentInstance);
     return getItemsFromValue(value);
   }
 
+  /**
+   * Get the items from a raw value object.
+   *
+   * @param value
+   *          the value object to extract items from
+   * @return a collection of items, which may be empty but never {@code null}
+   */
   @NonNull
   Collection<? extends ITEM> getItemsFromValue(Object value);
 
+  /**
+   * Get an empty value appropriate for this collection type.
+   *
+   * @return an empty collection value, or {@code null} for singleton types
+   */
   Object emptyValue();
 
+  /**
+   * Create a deep copy of items from one object to another.
+   *
+   * @param fromObject
+   *          the source object to copy items from
+   * @param toObject
+   *          the target object to copy items to
+   * @return the copied value
+   * @throws BindingException
+   *           if an error occurs during the deep copy
+   */
   Object deepCopyItems(@NonNull IBoundObject fromObject, @NonNull IBoundObject toObject) throws BindingException;
 
   /**
@@ -169,6 +211,16 @@ public interface IModelInstanceCollectionInfo<ITEM> {
   @Nullable
   Object readItems(@NonNull IModelInstanceReadHandler<ITEM> handler) throws IOException;
 
+  /**
+   * Write the items represented by the given value.
+   *
+   * @param handler
+   *          the item writing handler
+   * @param value
+   *          the value containing items to write
+   * @throws IOException
+   *           if there was an error when writing the data
+   */
   void writeItems(
       @NonNull IModelInstanceWriteHandler<ITEM> handler,
       @NonNull Object value) throws IOException;

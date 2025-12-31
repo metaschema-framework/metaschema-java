@@ -258,7 +258,6 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
    * @return the new sequence, or the same sequence if items is already an
    *         {@link ISequence}
    */
-  @SuppressWarnings("unchecked")
   @NonNull
   static <ITEM_TYPE extends IItem> ISequence<ITEM_TYPE> ofCollection( // NOPMD - intentional
       @NonNull Collection<ITEM_TYPE> items) {

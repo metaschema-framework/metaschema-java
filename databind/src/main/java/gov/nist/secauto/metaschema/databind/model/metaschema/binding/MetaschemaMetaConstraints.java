@@ -136,7 +136,7 @@ public class MetaschemaMetaConstraints implements IBoundObject {
     if (_imports == null) {
       _imports = new LinkedList<>();
     }
-    return _imports;
+    return ObjectUtils.notNull(_imports);
   }
 
   /**
@@ -194,7 +194,7 @@ public class MetaschemaMetaConstraints implements IBoundObject {
     if (_namespaceBindings == null) {
       _namespaceBindings = new LinkedList<>();
     }
-    return _namespaceBindings;
+    return ObjectUtils.notNull(_namespaceBindings);
   }
 
   /**
@@ -269,7 +269,7 @@ public class MetaschemaMetaConstraints implements IBoundObject {
     if (_contexts == null) {
       _contexts = new LinkedList<>();
     }
-    return _contexts;
+    return ObjectUtils.notNull(_contexts);
   }
 
   /**
@@ -312,7 +312,7 @@ public class MetaschemaMetaConstraints implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 
   /**
@@ -393,7 +393,7 @@ public class MetaschemaMetaConstraints implements IBoundObject {
 
     @Override
     public String toString() {
-      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+      return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
   }
 
@@ -546,7 +546,7 @@ public class MetaschemaMetaConstraints implements IBoundObject {
 
     @Override
     public String toString() {
-      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+      return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
   }
 }

@@ -82,11 +82,11 @@ class DefaultConstraintValidatorTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "doesn't pass");
   }
 
@@ -133,11 +133,11 @@ class DefaultConstraintValidatorTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "doesn't pass");
   }
 
@@ -196,10 +196,11 @@ class DefaultConstraintValidatorTest {
     doReturn(CollectionUtil.emptyList()).when(flagDefinition).getIndexHasKeyConstraints();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    validator.validate(flag1, dynamicContext);
-    validator.validate(flag2, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      validator.validate(flag1, dynamicContext);
+      validator.validate(flag2, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "must pass"),
         () -> assertThat("only 1 finding", handler.getFindings(), hasSize(1)),

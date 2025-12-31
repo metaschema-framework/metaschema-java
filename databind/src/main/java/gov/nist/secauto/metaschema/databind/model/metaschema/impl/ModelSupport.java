@@ -13,6 +13,7 @@ import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.StaticMetapathException;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import gov.nist.secauto.metaschema.core.metapath.type.DataTypeItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.IAtomicOrUnionType;
 import gov.nist.secauto.metaschema.core.model.IAttributable;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
@@ -56,6 +57,13 @@ public final class ModelSupport {
     // disable construction
   }
 
+  /**
+   * Parses a list of property bindings into a map of attributable keys to values.
+   *
+   * @param props
+   *          the list of property bindings to parse
+   * @return an unmodifiable map of property keys to their values
+   */
   @NonNull
   public static Map<IAttributable.Key, Set<String>> parseProperties(@NonNull List<Property> props) {
     return CollectionUtil.unmodifiableMap(ObjectUtils.notNull(props.stream()
@@ -72,6 +80,13 @@ public final class ModelSupport {
                     Collectors.toCollection(LinkedHashSet::new))))));
   }
 
+  /**
+   * Converts a yes/no text value to a boolean.
+   *
+   * @param allowOther
+   *          the text value to convert
+   * @return {@code true} if the value equals "yes", {@code false} otherwise
+   */
   public static boolean yesOrNo(String allowOther) {
     return "yes".equals(allowOther);
   }
@@ -98,16 +113,37 @@ public final class ModelSupport {
     return retval;
   }
 
+  /**
+   * Converts a BigInteger index to an Integer.
+   *
+   * @param index
+   *          the BigInteger index, or {@code null}
+   * @return the Integer value, or {@code null} if the input is {@code null}
+   */
   @Nullable
   public static Integer index(@Nullable BigInteger index) {
     return index == null ? null : index.intValueExact();
   }
 
+  /**
+   * Extracts the use name from a UseName binding.
+   *
+   * @param useName
+   *          the UseName binding, or {@code null}
+   * @return the use name string, or {@code null} if not present
+   */
   @Nullable
   public static String useName(@Nullable UseName useName) {
     return useName == null ? null : useName.getName();
   }
 
+  /**
+   * Extracts the use index from a UseName binding.
+   *
+   * @param useName
+   *          the UseName binding, or {@code null}
+   * @return the use index as an Integer, or {@code null} if not present
+   */
   @Nullable
   public static Integer useIndex(@Nullable UseName useName) {
     Integer retval = null;
@@ -120,11 +156,29 @@ public final class ModelSupport {
     return retval;
   }
 
+  /**
+   * Extracts the remarks markup from a Remarks binding.
+   *
+   * @param remarks
+   *          the Remarks binding, or {@code null}
+   * @return the remarks as MarkupMultiline, or {@code null} if not present
+   */
   @Nullable
   public static MarkupMultiline remarks(@Nullable Remarks remarks) {
     return remarks == null ? null : remarks.getRemark();
   }
 
+  /**
+   * Resolves a data type name to its corresponding data type adapter.
+   *
+   * @param dataType
+   *          the data type name string, or {@code null} for the default type
+   * @param source
+   *          the source context for type resolution
+   * @return the data type adapter for the specified type
+   * @throws IllegalStateException
+   *           if the data type is unrecognized or has no adapter
+   */
   @NonNull
   public static IDataTypeAdapter<?> dataType(
       @Nullable String dataType,
@@ -142,14 +196,23 @@ public final class ModelSupport {
         throw new IllegalStateException("Unrecognized data type: " + qname, ex);
 
       }
-      retval = type.getAdapter();
-      if (retval == null) {
+      if (!(type instanceof DataTypeItemType)) {
         throw new IllegalStateException("No type adapter registered for data type: " + qname);
       }
+      retval = ((DataTypeItemType<?>) type).getAdapter();
     }
     return retval;
   }
 
+  /**
+   * Resolves a default value string using the specified data type adapter.
+   *
+   * @param defaultValue
+   *          the default value string, or {@code null}
+   * @param javaTypeAdapter
+   *          the data type adapter to use for parsing
+   * @return the parsed default value object, or {@code null} if no default
+   */
   @Nullable
   public static Object defaultValue(
       @Nullable String defaultValue,
@@ -157,14 +220,35 @@ public final class ModelSupport {
     return defaultValue == null ? null : ModelUtil.resolveDefaultValue(defaultValue, javaTypeAdapter);
   }
 
+  /**
+   * Parses a max-occurs value to an integer.
+   *
+   * @param maxOccurs
+   *          the max-occurs string value
+   * @return -1 for "unbounded", otherwise the parsed integer value
+   */
   public static int maxOccurs(@NonNull String maxOccurs) {
     return "unbounded".equals(maxOccurs) ? -1 : Integer.parseInt(maxOccurs);
   }
 
+  /**
+   * Extracts the root name from a RootName binding.
+   *
+   * @param rootName
+   *          the RootName binding, or {@code null}
+   * @return the root name string, or {@code null} if not present
+   */
   public static String rootName(@Nullable RootName rootName) {
     return rootName == null ? null : rootName.getName();
   }
 
+  /**
+   * Extracts the root index from a RootName binding.
+   *
+   * @param rootName
+   *          the RootName binding, or {@code null}
+   * @return the root index as an Integer, or {@code null} if not present
+   */
   public static Integer rootIndex(@Nullable RootName rootName) {
     Integer retval = null;
     if (rootName != null) {
@@ -176,6 +260,13 @@ public final class ModelSupport {
     return retval;
   }
 
+  /**
+   * Determines if a field should be wrapped in XML based on the in-xml value.
+   *
+   * @param inXml
+   *          the in-xml string value, or {@code null}
+   * @return {@code true} if the field should be wrapped, {@code false} otherwise
+   */
   public static boolean fieldInXml(@Nullable String inXml) {
     boolean retval = IFieldInstance.DEFAULT_FIELD_IN_XML_WRAPPED;
     if (inXml != null) {
@@ -192,6 +283,15 @@ public final class ModelSupport {
     return retval;
   }
 
+  /**
+   * Converts a {@link GroupingAs} binding to an {@link IGroupAs} instance.
+   *
+   * @param groupAs
+   *          the grouping-as binding, or {@code null} for singleton grouping
+   * @param module
+   *          the containing module
+   * @return the group-as instance
+   */
   @NonNull
   public static IGroupAs groupAs(
       @Nullable GroupingAs groupAs,
@@ -201,6 +301,13 @@ public final class ModelSupport {
         : new GroupAsImpl(groupAs, module);
   }
 
+  /**
+   * Resolves the JSON group-as behavior from a string representation.
+   *
+   * @param inJson
+   *          the JSON group-as behavior string, or {@code null} for default
+   * @return the resolved JSON group-as behavior
+   */
   @NonNull
   public static JsonGroupAsBehavior groupAsJsonBehavior(@Nullable String inJson) {
     JsonGroupAsBehavior retval = IGroupable.DEFAULT_JSON_GROUP_AS_BEHAVIOR;
@@ -223,6 +330,13 @@ public final class ModelSupport {
     return retval;
   }
 
+  /**
+   * Resolves the XML group-as behavior from a string representation.
+   *
+   * @param inXml
+   *          the XML group-as behavior string, or {@code null} for default
+   * @return the resolved XML group-as behavior
+   */
   @NonNull
   public static XmlGroupAsBehavior groupAsXmlBehavior(@Nullable String inXml) {
     XmlGroupAsBehavior retval = IGroupable.DEFAULT_XML_GROUP_AS_BEHAVIOR;
@@ -242,6 +356,19 @@ public final class ModelSupport {
     return retval;
   }
 
+  /**
+   * Retrieves a node item from a binding module by qualified name and position.
+   *
+   * @param <NODE>
+   *          the node item type
+   * @param module
+   *          the binding module to retrieve from
+   * @param definitionQName
+   *          the qualified name of the definition
+   * @param position
+   *          the position index of the node item
+   * @return the node item at the specified position, or {@code null} if not found
+   */
   @SuppressWarnings("unchecked")
   @Nullable
   public static <NODE extends IAssemblyNodeItem> NODE toNodeItem(

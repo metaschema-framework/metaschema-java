@@ -11,8 +11,8 @@ import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState.AllowedValueCollection;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
-import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.IXmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlDatatypeManager;
 
 import org.codehaus.stax2.XMLStreamWriter2;
 
@@ -63,29 +63,29 @@ public class XmlSimpleTypeDataTypeRestriction
   }
 
   @Override
-  public boolean isInline(XmlGenerationState state) {
+  public boolean isInline(IXmlGenerationState state) {
     return true;
   }
 
   @Override
-  public boolean isGeneratedType(XmlGenerationState state) {
+  public boolean isGeneratedType(IXmlGenerationState state) {
     return true;
   }
 
   @Override
-  public void generate(XmlGenerationState state) {
+  public void generate(IXmlGenerationState state) {
     try {
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "simpleType", XmlSchemaGenerator.NS_XML_SCHEMA);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "simpleType", XmlDatatypeManager.NS_XML_SCHEMA);
 
       if (!isInline(state)) {
         state.writeAttribute("name", ObjectUtils.notNull(getQName().getLocalPart()));
       }
 
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "restriction", XmlSchemaGenerator.NS_XML_SCHEMA);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "restriction", XmlDatatypeManager.NS_XML_SCHEMA);
       state.writeAttribute("base", state.getSimpleType(getDataTypeAdapter()).getTypeReference());
 
       for (IAllowedValue allowedValue : getAllowedValuesCollection().getValues()) {
-        state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "enumeration", XmlSchemaGenerator.NS_XML_SCHEMA);
+        state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "enumeration", XmlDatatypeManager.NS_XML_SCHEMA);
         state.writeAttribute("value", allowedValue.getValue());
 
         MarkupLine description = allowedValue.getDescription();
@@ -124,10 +124,10 @@ public class XmlSimpleTypeDataTypeRestriction
   public static void generateDescriptionAnnotation(
       @NonNull MarkupLine description,
       @NonNull String xmlNS,
-      @NonNull XmlGenerationState state) throws XMLStreamException {
+      @NonNull IXmlGenerationState state) throws XMLStreamException {
     XMLStreamWriter2 writer = state.getXMLStreamWriter();
-    writer.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "annotation", XmlSchemaGenerator.NS_XML_SCHEMA);
-    writer.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "documentation", XmlSchemaGenerator.NS_XML_SCHEMA);
+    writer.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "annotation", XmlDatatypeManager.NS_XML_SCHEMA);
+    writer.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "documentation", XmlDatatypeManager.NS_XML_SCHEMA);
 
     // write description
     writer.writeStartElement(xmlNS, "p");

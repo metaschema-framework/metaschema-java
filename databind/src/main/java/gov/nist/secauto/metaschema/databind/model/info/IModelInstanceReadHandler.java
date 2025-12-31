@@ -23,14 +23,35 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  *          the Java type of items being read
  */
 public interface IModelInstanceReadHandler<ITEM> {
+  /**
+   * Read a singleton item.
+   *
+   * @return the item read, or {@code null} if no item was present
+   * @throws IOException
+   *           if an error occurred while reading the input
+   */
   @Nullable
   default ITEM readSingleton() throws IOException {
     return readItem();
   }
 
+  /**
+   * Read items into a list collection.
+   *
+   * @return the list of items read
+   * @throws IOException
+   *           if an error occurred while reading the input
+   */
   @NonNull
   List<ITEM> readList() throws IOException;
 
+  /**
+   * Read items into a map collection, keyed by JSON key flag value.
+   *
+   * @return the map of items read, keyed by JSON key flag value
+   * @throws IOException
+   *           if an error occurred while reading the input
+   */
   @NonNull
   Map<String, ITEM> readMap() throws IOException;
 
@@ -45,6 +66,11 @@ public interface IModelInstanceReadHandler<ITEM> {
   @Nullable
   ITEM readItem() throws IOException;
 
+  /**
+   * Get the name of the JSON key flag, if one is configured for this instance.
+   *
+   * @return the JSON key flag name, or {@code null} if no JSON key is configured
+   */
   @Nullable
   String getJsonKeyFlagName();
 }

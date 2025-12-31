@@ -25,6 +25,7 @@ import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.testsupport.MockedModelTestSupport;
 import gov.nist.secauto.metaschema.core.testsupport.builder.IFieldBuilder;
 import gov.nist.secauto.metaschema.core.testsupport.builder.IModuleBuilder;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +48,7 @@ class NodeItemTraversalTest {
   @Test
   void testCreateDocumentNodeItem() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     IModule module = IModuleBuilder.builder()
         .namespace(TEST_NAMESPACE)
@@ -82,7 +83,7 @@ class NodeItemTraversalTest {
   @Test
   void testCreateAssemblyWithFlags() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     IModule module = IModuleBuilder.builder()
         .namespace(TEST_NAMESPACE)
@@ -136,7 +137,7 @@ class NodeItemTraversalTest {
   @Test
   void testParentChildNavigation() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     IModule module = IModuleBuilder.builder()
         .namespace(TEST_NAMESPACE)
@@ -178,7 +179,7 @@ class NodeItemTraversalTest {
   @Test
   void testAncestorAxis() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     IModule module = IModuleBuilder.builder()
         .namespace(TEST_NAMESPACE)
@@ -230,7 +231,7 @@ class NodeItemTraversalTest {
   @Test
   void testDescendantAxis() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     IModule module = IModuleBuilder.builder()
         .namespace(TEST_NAMESPACE)
@@ -314,7 +315,7 @@ class NodeItemTraversalTest {
   @Test
   void testFlagAccessOnFieldsAndAssemblies() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     // Create field definition separately so we can configure flags on it properly
     IFieldBuilder fieldBuilder = mocking.field()
@@ -374,7 +375,7 @@ class NodeItemTraversalTest {
   @Test
   void testNodeTypeIdentification() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     IModule module = IModuleBuilder.builder()
         .namespace(TEST_NAMESPACE)
@@ -405,6 +406,7 @@ class NodeItemTraversalTest {
 
     // Get flag
     IFlagNodeItem flag = assembly.getFlagByName(IEnhancedQName.of(TEST_NAMESPACE, "test-flag"));
+    assertNotNull(flag, "Flag should exist");
 
     // Test node types
     assertEquals(INodeItem.NodeType.DOCUMENT, document.getNodeType(), "Should identify as document");
@@ -419,7 +421,7 @@ class NodeItemTraversalTest {
   @Test
   void testMetapathGeneration() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     IModule module = IModuleBuilder.builder()
         .namespace(TEST_NAMESPACE)
@@ -468,7 +470,7 @@ class NodeItemTraversalTest {
   @Test
   void testModelItemsByName() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     IModule module = IModuleBuilder.builder()
         .namespace(TEST_NAMESPACE)
@@ -527,7 +529,7 @@ class NodeItemTraversalTest {
   @Test
   void testComplexAssemblyHierarchy() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     IModule module = IModuleBuilder.builder()
         .namespace(TEST_NAMESPACE)
@@ -586,7 +588,7 @@ class NodeItemTraversalTest {
   @Test
   void testModuleNodeItem() {
     MockedModelTestSupport mocking = new MockedModelTestSupport();
-    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+    ISource source = ISource.externalSource(ObjectUtils.notNull(URI.create(TEST_NAMESPACE)));
 
     IModule module = IModuleBuilder.builder()
         .namespace(TEST_NAMESPACE)

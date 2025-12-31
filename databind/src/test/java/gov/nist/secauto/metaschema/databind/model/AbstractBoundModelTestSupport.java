@@ -22,6 +22,10 @@ import java.io.Reader;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Base class providing test support for bound model tests with mocking
+ * capabilities.
+ */
 public class AbstractBoundModelTestSupport
     extends AbstractMetaschemaTest {
   @RegisterExtension
@@ -31,17 +35,40 @@ public class AbstractBoundModelTestSupport
     }
   };
 
+  /**
+   * Gets the JUnit5 mockery context for creating mocks.
+   *
+   * @return the mockery context
+   */
   @NonNull
   protected JUnit5Mockery getJUnit5Mockery() {
     return ObjectUtils.requireNonNull(context);
   }
 
+  /**
+   * Gets the bound assembly definition for the root test assembly.
+   *
+   * @return the bound assembly definition
+   * @throws IOException
+   *           if an I/O error occurs
+   */
   @NonNull
   protected IBoundDefinitionModelAssembly getRootAssemblyClassBinding() throws IOException {
     return ObjectUtils.requireNonNull((IBoundDefinitionModelAssembly) newBindingContext()
         .getBoundDefinitionForClass(RootBoundAssembly.class));
   }
 
+  /**
+   * Creates a new JSON parser for the given reader.
+   *
+   * @param reader
+   *          the reader to parse from
+   * @return a new JSON parser
+   * @throws JsonParseException
+   *           if a JSON parsing error occurs
+   * @throws IOException
+   *           if an I/O error occurs
+   */
   @SuppressWarnings("resource")
   @NonNull
   protected JsonParser newJsonParser(@NonNull Reader reader) throws JsonParseException, IOException {

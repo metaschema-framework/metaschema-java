@@ -97,7 +97,12 @@ Track progress with a checklist:
 
 ### Step 5: Reply to Close Conversations
 
-For EACH addressed comment, reply to close the conversation.
+For EACH addressed comment, reply **inline in the conversation thread** to close it.
+
+**CRITICAL: Replies must be inline, not general PR comments.**
+- Use the `in_reply_to` parameter to reply within the existing conversation thread
+- Do NOT use `gh pr comment` which creates a new top-level comment
+- Inline replies keep the conversation organized and allow proper thread resolution
 
 **Use the reviewer's actual handle** from the comment's `user.login` field:
 
@@ -117,20 +122,23 @@ Addressed in commit <hash>. <Brief explanation>
 ```
 (No @ mention needed for human reviewers)
 
-Use the GitHub CLI to reply:
+Use the GitHub CLI to reply inline:
 ```bash
 # Get repository info (if not already set)
 REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 
-# Get the reviewer's login from the comment (available from Step 2 output)
-COMMENT_ID=<comment_id>
-REVIEWER_LOGIN=$(gh api repos/$REPO/pulls/$PR_NUMBER/comments/$COMMENT_ID --jq '.user.login')
-
-# Reply using the dedicated replies endpoint
-gh api repos/$REPO/pulls/$PR_NUMBER/comments/$COMMENT_ID/replies \
+# Reply inline to a review comment using in_reply_to parameter
+# The COMMENT_ID is the id of the comment you are replying to
+gh api repos/$REPO/pulls/$PR_NUMBER/comments \
   -X POST \
-  -f body="@$REVIEWER_LOGIN Addressed in commit abc1234. <explanation>"
+  -F in_reply_to=<COMMENT_ID> \
+  -f body="@coderabbitai Addressed in commit abc1234. <explanation>"
 ```
+
+**Important API notes:**
+- Use `-F in_reply_to=<id>` (capital F for integer parameter)
+- The `in_reply_to` value must be the numeric comment ID
+- This creates a reply within the existing conversation thread
 
 ### Step 6: Generate Summary Report
 

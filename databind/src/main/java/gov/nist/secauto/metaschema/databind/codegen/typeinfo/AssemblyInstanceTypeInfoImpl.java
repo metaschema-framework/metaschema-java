@@ -18,6 +18,15 @@ public class AssemblyInstanceTypeInfoImpl
     extends AbstractNamedModelInstanceTypeInfo<IAssemblyInstanceAbsolute>
     implements IAssemblyInstanceTypeInfo {
 
+  /**
+   * Constructs a new type information object for an assembly instance.
+   *
+   * @param instance
+   *          the assembly instance
+   * @param parentDefinition
+   *          the type information for the parent assembly definition containing
+   *          this instance
+   */
   public AssemblyInstanceTypeInfoImpl(
       @NonNull IAssemblyInstanceAbsolute instance,
       @NonNull IAssemblyDefinitionTypeInfo parentDefinition) {

@@ -20,7 +20,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractGenerationState;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
-import gov.nist.secauto.metaschema.schemagen.xml.XmlDatatypeManager;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlComplexType;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlSimpleType;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlType;
@@ -51,7 +50,8 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * Schema elements during the schema generation process.
  */
 public class XmlGenerationState
-    extends AbstractGenerationState<AutoCloser<XMLStreamWriter2, SchemaGenerationException>, XmlDatatypeManager> {
+    extends AbstractGenerationState<AutoCloser<XMLStreamWriter2, SchemaGenerationException>, XmlDatatypeManager>
+    implements IXmlGenerationState {
   @NonNull
   private final String defaultNS;
   @NonNull
@@ -88,7 +88,7 @@ public class XmlGenerationState
    *
    * @return the XML stream writer
    */
-  @SuppressWarnings("resource")
+  @Override
   @NonNull
   public XMLStreamWriter2 getXMLStreamWriter() {
     return getWriter().getResource();
@@ -99,6 +99,7 @@ public class XmlGenerationState
    *
    * @return the default namespace URI
    */
+  @Override
   @NonNull
   public String getDefaultNS() {
     return defaultNS;
@@ -122,6 +123,7 @@ public class XmlGenerationState
    * @return the XML namespace URI
    */
   @SuppressWarnings("null")
+  @Override
   @NonNull
   public String getNS(@NonNull IModelElement modelElement) {
     return modelElement.getContainingModule().getXmlNamespace().toASCIIString();
@@ -199,6 +201,7 @@ public class XmlGenerationState
    * @throws UnsupportedOperationException
    *           if the definition is a choice or choice group
    */
+  @Override
   public IXmlType getXmlForDefinition(@NonNull IDefinition definition) {
     IXmlType retval = definitionToTypeMap.get(definition);
     if (retval == null) {
@@ -236,6 +239,7 @@ public class XmlGenerationState
    *          the data type adapter
    * @return the XML simple type representation
    */
+  @Override
   @NonNull
   public IXmlSimpleType getSimpleType(@NonNull IDataTypeAdapter<?> dataType) {
     IXmlSimpleType type = dataTypeToSimpleTypeMap.get(dataType);
@@ -261,6 +265,7 @@ public class XmlGenerationState
    *          the valued definition
    * @return the XML simple type representation
    */
+  @Override
   @NonNull
   public IXmlSimpleType getSimpleType(@NonNull IValuedDefinition definition) {
     IXmlSimpleType simpleType = definitionToSimpleTypeMap.get(definition);
@@ -354,6 +359,7 @@ public class XmlGenerationState
    * @throws XMLStreamException
    *           if an error occurs while writing
    */
+  @Override
   public void writeAttribute(@NonNull String localName, @NonNull String value) throws XMLStreamException {
     getXMLStreamWriter().writeAttribute(localName, value);
   }
@@ -368,6 +374,7 @@ public class XmlGenerationState
    * @throws XMLStreamException
    *           if an error occurs while writing
    */
+  @Override
   public void writeStartElement(@NonNull String namespaceUri, @NonNull String localName) throws XMLStreamException {
     getXMLStreamWriter().writeStartElement(namespaceUri, localName);
   }
@@ -384,12 +391,12 @@ public class XmlGenerationState
    * @throws XMLStreamException
    *           if an error occurs while writing
    */
+  @Override
   public void writeStartElement(
       @NonNull String prefix,
       @NonNull String localName,
       @NonNull String namespaceUri) throws XMLStreamException {
     getXMLStreamWriter().writeStartElement(prefix, localName, namespaceUri);
-
   }
 
   /**
@@ -398,6 +405,7 @@ public class XmlGenerationState
    * @throws XMLStreamException
    *           if an error occurs while writing
    */
+  @Override
   public void writeEndElement() throws XMLStreamException {
     getXMLStreamWriter().writeEndElement();
   }
@@ -410,6 +418,7 @@ public class XmlGenerationState
    * @throws XMLStreamException
    *           if an error occurs while writing
    */
+  @Override
   public void writeCharacters(@NonNull String text) throws XMLStreamException {
     getXMLStreamWriter().writeCharacters(text);
   }
@@ -424,11 +433,11 @@ public class XmlGenerationState
    * @throws XMLStreamException
    *           if an error occurs while writing
    */
+  @Override
   public void writeNamespace(String prefix, String namespaceUri) throws XMLStreamException {
     getXMLStreamWriter().writeNamespace(prefix, namespaceUri);
   }
 
-  @SuppressWarnings("resource")
   @Override
   public void flushWriter() throws IOException {
     try {

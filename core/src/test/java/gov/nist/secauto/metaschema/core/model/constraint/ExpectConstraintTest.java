@@ -24,7 +24,6 @@ import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.mdm.IDMFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
@@ -54,23 +53,6 @@ class ExpectConstraintTest {
   @NonNull
   private static IEnhancedQName qname(@NonNull String name) {
     return IEnhancedQName.of(NS, name);
-  }
-
-  /**
-   * Mock constraint methods on a flag definition to prevent null pointer
-   * exceptions during validation.
-   *
-   * @param flag
-   *          the flag node item whose definition to mock
-   */
-  @SuppressWarnings("null")
-  private static void mockFlagDefinitionConstraints(@NonNull IFlagNodeItem flag) {
-    IFlagDefinition definition = flag.getDefinition();
-    doReturn(CollectionUtil.emptyMap()).when(definition).getLetExpressions();
-    doReturn(CollectionUtil.emptyList()).when(definition).getAllowedValuesConstraints();
-    doReturn(CollectionUtil.emptyList()).when(definition).getExpectConstraints();
-    doReturn(CollectionUtil.emptyList()).when(definition).getMatchesConstraints();
-    doReturn(CollectionUtil.emptyList()).when(definition).getIndexHasKeyConstraints();
   }
 
   /**
@@ -109,11 +91,11 @@ class ExpectConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "constraint should pass when test expression evaluates to true");
   }
 
@@ -153,11 +135,11 @@ class ExpectConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "constraint should fail when test expression evaluates to false"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),
@@ -204,11 +186,11 @@ class ExpectConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "constraint should fail"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),
@@ -257,11 +239,11 @@ class ExpectConstraintTest {
     fieldDef.addConstraint(expectConstraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(field, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(field, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "constraint should fail when target test fails"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)));
@@ -304,11 +286,11 @@ class ExpectConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertTrue(handler.isPassing(), "validation should pass with WARNING level violation"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),
@@ -353,11 +335,11 @@ class ExpectConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "validation should fail with ERROR level violation"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),
@@ -402,11 +384,11 @@ class ExpectConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "validation should fail with CRITICAL level violation"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),
@@ -450,11 +432,11 @@ class ExpectConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "constraint should pass when complex expression evaluates to true");
   }
 
@@ -498,11 +480,11 @@ class ExpectConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "constraint should fail"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),

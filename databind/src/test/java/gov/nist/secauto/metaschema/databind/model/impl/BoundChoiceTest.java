@@ -164,9 +164,11 @@ class BoundChoiceTest {
 
     // Attempting to get definition for class with non-adjacent choice fields
     // should throw IllegalStateException when model is accessed
+    IBoundDefinitionModelAssembly definition = (IBoundDefinitionModelAssembly) context
+        .getBoundDefinitionForClass(InvalidChoiceAssembly.class);
+    assertNotNull(definition, "Definition should not be null before accessing model");
+
     assertThrows(IllegalStateException.class, () -> {
-      IBoundDefinitionModelAssembly definition = (IBoundDefinitionModelAssembly) context
-          .getBoundDefinitionForClass(InvalidChoiceAssembly.class);
       // Force model initialization by accessing the choice instances
       definition.getChoiceInstances();
     }, "Should throw exception for non-adjacent choice fields");
@@ -196,6 +198,7 @@ class BoundChoiceTest {
     IBindingContext context = IBindingContext.newInstance();
     IBoundDefinitionModelAssembly definition = (IBoundDefinitionModelAssembly) context
         .getBoundDefinitionForClass(ValidChoiceAssembly.class);
+    assertNotNull(definition, "Definition should not be null");
 
     List<IChoiceInstance> choices = definition.getChoiceInstances();
     IChoiceInstance choice = choices.get(0);
@@ -218,6 +221,7 @@ class BoundChoiceTest {
     IBindingContext context = IBindingContext.newInstance();
     IBoundDefinitionModelAssembly definition = (IBoundDefinitionModelAssembly) context
         .getBoundDefinitionForClass(ValidChoiceAssembly.class);
+    assertNotNull(definition, "Definition should not be null");
 
     List<IChoiceInstance> choices = definition.getChoiceInstances();
     BoundInstanceModelChoice choice = (BoundInstanceModelChoice) choices.get(0);

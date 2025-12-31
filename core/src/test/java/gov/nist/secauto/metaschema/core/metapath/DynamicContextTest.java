@@ -14,12 +14,13 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.model.IUriResolver;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -65,8 +66,8 @@ class DynamicContextTest {
   void testConcurrentDocumentLoadingLoadsOnlyOnce() throws Exception {
     // Given: A document loader that tracks load count
     AtomicInteger loadCount = new AtomicInteger(0);
-    IDocumentNodeItem mockDocument = mock(IDocumentNodeItem.class);
-    URI testUri = URI.create("https://example.com/test.xml");
+    IDocumentNodeItem mockDocument = ObjectUtils.notNull(mock(IDocumentNodeItem.class));
+    URI testUri = ObjectUtils.notNull(URI.create("https://example.com/test.xml"));
 
     IDocumentLoader countingLoader = new IDocumentLoader() {
       @Override
@@ -86,7 +87,7 @@ class DynamicContextTest {
         // Simulate slow network loading
         try {
           Thread.sleep(50);
-        } catch (InterruptedException ex) {
+        } catch (@SuppressWarnings("unused") InterruptedException ex) {
           Thread.currentThread().interrupt();
         }
         return mockDocument;
@@ -139,7 +140,7 @@ class DynamicContextTest {
   void testCachingLoaderNormalizesEquivalentUris() throws Exception {
     // Given: A document loader that tracks load count
     AtomicInteger loadCount = new AtomicInteger(0);
-    IDocumentNodeItem mockDocument = mock(IDocumentNodeItem.class);
+    IDocumentNodeItem mockDocument = ObjectUtils.notNull(mock(IDocumentNodeItem.class));
 
     IDocumentLoader countingLoader = new IDocumentLoader() {
       @Override
@@ -154,6 +155,7 @@ class DynamicContextTest {
 
       @Override
       @NonNull
+
       public IDocumentNodeItem loadAsNodeItem(@NonNull URI uri) throws IOException {
         loadCount.incrementAndGet();
         return mockDocument;
@@ -164,9 +166,9 @@ class DynamicContextTest {
     context.setDocumentLoader(countingLoader);
 
     // When: Loading document using equivalent but non-identical URIs
-    URI normalUri = URI.create("https://example.com/a/b/document.xml");
-    URI uriWithDotSegments = URI.create("https://example.com/a/b/./document.xml");
-    URI uriWithDotDotSegments = URI.create("https://example.com/a/b/c/../document.xml");
+    URI normalUri = ObjectUtils.notNull(URI.create("https://example.com/a/b/document.xml"));
+    URI uriWithDotSegments = ObjectUtils.notNull(URI.create("https://example.com/a/b/./document.xml"));
+    URI uriWithDotDotSegments = ObjectUtils.notNull(URI.create("https://example.com/a/b/c/../document.xml"));
 
     IDocumentNodeItem result1 = context.getDocumentLoader().loadAsNodeItem(normalUri);
     IDocumentNodeItem result2 = context.getDocumentLoader().loadAsNodeItem(uriWithDotSegments);
@@ -199,7 +201,7 @@ class DynamicContextTest {
     @Override
     @NonNull
     public List<? extends IExpression> getChildren() {
-      return Collections.emptyList();
+      return CollectionUtil.emptyList();
     }
 
     @Override

@@ -22,8 +22,6 @@ import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelChoiceGroup
 import gov.nist.secauto.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.AssemblyModel;
 
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -77,8 +75,7 @@ public final class ChoiceGroupModelGenerator
           @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
           @NonNull IChoiceGroupInstance parent,
           @NonNull INodeItemFactory nodeItemFactory) {
-    List<Object> instances;
-    return binding == null || (instances = binding.getChoices()) == null || instances.isEmpty()
+    return binding == null || binding.getChoices().isEmpty()
         ? IContainerModelSupport.empty()
         : newInstance(
             binding,

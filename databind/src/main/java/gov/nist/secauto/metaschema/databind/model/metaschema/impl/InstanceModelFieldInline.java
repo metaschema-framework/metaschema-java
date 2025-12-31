@@ -74,6 +74,19 @@ public class InstanceModelFieldInline
   @NonNull
   private final Lazy<IValueConstrained> valueConstraints;
 
+  /**
+   * Construct a new inline field instance from binding data.
+   *
+   * @param binding
+   *          the underlying bound inline field definition object
+   * @param bindingInstance
+   *          the assembly instance for the underlying bound class
+   * @param position
+   *          the zero-based position of this instance relative to its bound
+   *          siblings
+   * @param parent
+   *          the parent container model containing this field
+   */
   public InstanceModelFieldInline(
       @NonNull InlineDefineField binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,

@@ -22,6 +22,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public interface IParsingContext<READER, PROBLEM_HANDLER extends IProblemHandler> {
   /**
    * The parser used for reading data associated with the supported format.
+   * <p>
+   * The caller does not own this reader and must not close it.
    *
    * @return the parser
    */

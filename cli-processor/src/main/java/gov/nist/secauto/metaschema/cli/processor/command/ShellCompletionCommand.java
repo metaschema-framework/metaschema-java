@@ -151,7 +151,7 @@ public class ShellCompletionCommand
 
     Shell shell;
     try {
-      shell = Shell.fromString(extraArgs.get(0));
+      shell = Shell.fromString(ObjectUtils.notNull(extraArgs.get(0)));
     } catch (IllegalArgumentException ex) {
       throw new CommandExecutionException(ExitCode.INVALID_ARGUMENTS, ex.getMessage());
     }
@@ -173,9 +173,9 @@ public class ShellCompletionCommand
     }
   }
 
-  private void writeToFile(@NonNull String outputFile, @NonNull String script)
+  private static void writeToFile(@NonNull String outputFile, @NonNull String script)
       throws CommandExecutionException {
-    Path path = resolveAgainstCWD(Path.of(outputFile));
+    Path path = resolveAgainstCWD(ObjectUtils.notNull(Path.of(outputFile)));
     try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
       writer.write(script);
     } catch (IOException ex) {
@@ -187,7 +187,7 @@ public class ShellCompletionCommand
   }
 
   @SuppressWarnings("PMD.SystemPrintln")
-  private void writeToStdout(@NonNull String script) {
+  private static void writeToStdout(@NonNull String script) {
     PrintWriter writer = new PrintWriter(
         new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
     writer.print(script);

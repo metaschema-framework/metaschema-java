@@ -12,6 +12,7 @@ import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelInstance;
 import gov.nist.secauto.metaschema.core.model.INamedModelInstanceAbsolute;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelComplex;
 import gov.nist.secauto.metaschema.databind.model.IBoundProperty;
@@ -112,6 +113,7 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
     // Build a set of unhandled instance names for quick lookup
     Set<String> unhandledNames = new HashSet<>();
     for (IBoundProperty<?> instance : unhandledInstances) {
+      assert instance != null;
       unhandledNames.add(getInstanceName(instance, context));
     }
 
@@ -124,6 +126,7 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
     List<IBoundProperty<?>> missingAssemblies = new ArrayList<>();
 
     for (IBoundProperty<?> instance : unhandledInstances) {
+      assert instance != null;
       if (isRequiredAndMissingDefault(instance)) {
         String instanceName = getInstanceName(instance, context);
         IChoiceInstance choice = instanceToChoice.get(instanceName);
@@ -193,7 +196,7 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
    * @return a formatted error message
    */
   @NonNull
-  private String formatMissingPropertiesMessage(
+  private static String formatMissingPropertiesMessage(
       @NonNull IBoundDefinitionModelComplex parentDefinition,
       @NonNull List<IBoundProperty<?>> missingFlags,
       @NonNull List<IBoundProperty<?>> missingFields,
@@ -208,9 +211,9 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
 
     if (totalMissing == 1) {
       // Single missing property - use specific format
-      IBoundProperty<?> missing = !missingFlags.isEmpty() ? missingFlags.get(0)
+      IBoundProperty<?> missing = ObjectUtils.notNull(!missingFlags.isEmpty() ? missingFlags.get(0)
           : !missingFields.isEmpty() ? missingFields.get(0)
-              : missingAssemblies.get(0);
+              : missingAssemblies.get(0));
       String type = getPropertyTypeName(missing, format, false);
       String name = getInstanceName(missing, context);
       message.append(String.format("Missing required %s '%s' in '%s'", type, name, parentName));
@@ -219,7 +222,7 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
       List<IBoundProperty<?>> list = !missingFlags.isEmpty() ? missingFlags
           : !missingFields.isEmpty() ? missingFields
               : missingAssemblies;
-      String type = getPropertyTypeName(list.get(0), format, true);
+      String type = getPropertyTypeName(ObjectUtils.notNull(list.get(0)), format, true);
       String names = formatNameList(list, context);
       message.append(String.format("Missing required %s in '%s': %s", type, parentName, names));
     } else {
@@ -251,7 +254,7 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
       }
     }
 
-    return message.toString();
+    return ObjectUtils.notNull(message.toString());
   }
 
   /**
@@ -355,12 +358,12 @@ public abstract class AbstractProblemHandler implements IProblemHandler {
    * Format a list of property names as a comma-separated string.
    */
   @NonNull
-  private String formatNameList(
+  private static String formatNameList(
       @NonNull List<IBoundProperty<?>> instances,
       @Nullable ValidationContext context) {
-    return instances.stream()
-        .map(i -> getInstanceName(i, context))
-        .collect(Collectors.joining(", "));
+    return ObjectUtils.notNull(instances.stream()
+        .map(i -> getInstanceName(ObjectUtils.notNull(i), context))
+        .collect(Collectors.joining(", ")));
   }
 
   /**

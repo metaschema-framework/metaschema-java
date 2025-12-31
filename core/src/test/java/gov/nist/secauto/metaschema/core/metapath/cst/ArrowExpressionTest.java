@@ -75,10 +75,8 @@ class ArrowExpressionTest
             .evaluate(null, dynamicContext));
     assertThat(thrown)
         .isExactlyInstanceOf(StaticMetapathException.class)
-        .extracting(
-            ex -> ex instanceof StaticMetapathException
-                ? ex.getErrorCode().getCode()
-                : null)
+        .extracting(StaticMetapathException::getErrorCode)
+        .extracting(code -> code.getCode())
         .isEqualTo(StaticMetapathException.NOT_DEFINED);
   }
 }

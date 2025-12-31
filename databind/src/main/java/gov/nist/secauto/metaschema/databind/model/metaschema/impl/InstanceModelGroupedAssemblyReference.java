@@ -48,6 +48,23 @@ public class InstanceModelGroupedAssemblyReference
   @NonNull
   private final Lazy<IAssemblyNodeItem> boundNodeItem;
 
+  /**
+   * Construct a new grouped assembly reference from binding data.
+   *
+   * @param binding
+   *          the underlying bound assembly reference object
+   * @param bindingInstance
+   *          the assembly instance for the underlying bound class
+   * @param position
+   *          the zero-based position of this instance relative to its bound
+   *          siblings; must be a valid index within the model items
+   * @param definition
+   *          the global assembly definition being referenced
+   * @param parent
+   *          the parent choice group instance containing this reference
+   * @throws IndexOutOfBoundsException
+   *           if the position is invalid when the source node item is accessed
+   */
   public InstanceModelGroupedAssemblyReference(
       @NonNull AssemblyModel.ChoiceGroup.Assembly binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,

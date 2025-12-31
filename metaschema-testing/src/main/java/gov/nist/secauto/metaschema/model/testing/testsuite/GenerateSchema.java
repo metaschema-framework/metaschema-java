@@ -205,7 +205,7 @@ public class GenerateSchema implements IBoundObject {
     if (_generationCases == null) {
       _generationCases = new LinkedList<>();
     }
-    return _generationCases;
+    return ObjectUtils.notNull(_generationCases);
   }
 
   /**
@@ -251,6 +251,6 @@ public class GenerateSchema implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

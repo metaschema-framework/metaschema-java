@@ -66,6 +66,21 @@ public class InstanceModelGroupedFieldInline
   @NonNull
   private final Lazy<IAssemblyNodeItem> boundNodeItem;
 
+  /**
+   * Construct a new inline grouped field instance from binding data.
+   *
+   * @param binding
+   *          the underlying bound inline field definition object
+   * @param bindingInstance
+   *          the assembly instance for the underlying bound class
+   * @param position
+   *          the zero-based position of this instance relative to its bound
+   *          siblings; must be a valid index within the model items
+   * @param parent
+   *          the parent choice group instance containing this field
+   * @throws IndexOutOfBoundsException
+   *           if the position is invalid when the source node item is accessed
+   */
   public InstanceModelGroupedFieldInline(
       @NonNull AssemblyModel.ChoiceGroup.DefineField binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
@@ -189,10 +204,8 @@ public class InstanceModelGroupedFieldInline
     IFlagInstance retval = null;
     if (obj != null) {
       String flagName = obj.getFlagRef();
-      if (flagName != null) {
-        String namespace = getQName().getNamespace();
-        retval = getFlagInstanceByName(IEnhancedQName.of(namespace, flagName).getIndexPosition());
-      }
+      String namespace = getQName().getNamespace();
+      retval = getFlagInstanceByName(IEnhancedQName.of(namespace, flagName).getIndexPosition());
     }
     return retval;
   }

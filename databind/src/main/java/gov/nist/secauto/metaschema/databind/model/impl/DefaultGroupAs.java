@@ -30,6 +30,16 @@ public class DefaultGroupAs implements IGroupAs {
   @NonNull
   private final GroupAs annotation;
 
+  /**
+   * Constructs a new group-as configuration from the given annotation.
+   *
+   * @param annotation
+   *          the {@link GroupAs} annotation providing the configuration
+   * @param module
+   *          the module used to resolve the namespace for the group name
+   * @throws IllegalStateException
+   *           if the annotation's name value resolves to {@code null}
+   */
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public DefaultGroupAs(
       @NonNull GroupAs annotation,

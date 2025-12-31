@@ -16,16 +16,19 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.help.HelpFormatter;
+import org.apache.commons.cli.help.OptionFormatter;
+import org.apache.commons.cli.help.TextHelpAppendable;
 import org.fusesource.jansi.AnsiPrintStream;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -167,16 +170,17 @@ public class CallingContext {
 
       if (cmdLine.hasOption(CLIProcessor.VERSION_OPTION)) {
         cliProcessor.showVersion();
-        return Optional.of(ExitCode.OK.exit());
+        return ObjectUtils.notNull(Optional.of(ExitCode.OK.exit()));
       }
       if (cmdLine.hasOption(CLIProcessor.HELP_OPTION)) {
         showHelp();
-        return Optional.of(ExitCode.OK.exit());
+        return ObjectUtils.notNull(Optional.of(ExitCode.OK.exit()));
       }
     } catch (ParseException ex) {
-      return Optional.of(handleInvalidCommand(ObjectUtils.notNull(ex.getMessage())));
+      String msg = ex.getMessage();
+      return ObjectUtils.notNull(Optional.of(handleInvalidCommand(msg != null ? msg : "Invalid command")));
     }
-    return Optional.empty();
+    return ObjectUtils.notNull(Optional.empty());
   }
 
   /**
@@ -207,16 +211,16 @@ public class CallingContext {
   protected Optional<ExitStatus> validateExtraArguments(@NonNull CommandLine cmdLine) {
     ICommand target = getTargetCommand();
     if (target == null) {
-      return Optional.empty();
+      return ObjectUtils.notNull(Optional.empty());
     }
     try {
       target.validateExtraArguments(this, cmdLine);
-      return Optional.empty();
+      return ObjectUtils.notNull(Optional.empty());
     } catch (InvalidArgumentException ex) {
-      return Optional.of(handleError(
+      return ObjectUtils.notNull(Optional.of(handleError(
           ExitCode.INVALID_ARGUMENTS.exitMessage(ex.getLocalizedMessage()),
           cmdLine,
-          true));
+          true)));
     }
   }
 
@@ -236,11 +240,10 @@ public class CallingContext {
         cmd.validateOptions(this, cmdLine);
       } catch (InvalidArgumentException ex) {
         String msg = ex.getMessage();
-        assert msg != null;
-        return Optional.of(handleInvalidCommand(msg));
+        return ObjectUtils.notNull(Optional.of(handleInvalidCommand(msg != null ? msg : "Invalid argument")));
       }
     }
-    return Optional.empty();
+    return ObjectUtils.notNull(Optional.empty());
   }
 
   /**
@@ -279,8 +282,7 @@ public class CallingContext {
       cmdLine = parseOptions();
     } catch (ParseException ex) {
       String msg = ex.getMessage();
-      assert msg != null;
-      return handleInvalidCommand(msg);
+      return handleInvalidCommand(msg != null ? msg : "Parse error");
     }
 
     // Phase 3-4: Validate arguments and options
@@ -389,7 +391,7 @@ public class CallingContext {
    * @return the header or {@code null}
    */
   @Nullable
-  private String buildHelpHeader() {
+  private static String buildHelpHeader() {
     // TODO: build a suitable header
     return null;
   }
@@ -495,7 +497,7 @@ public class CallingContext {
   }
 
   @NonNull
-  private CharSequence getSubCommands(ICommand targetCommand) {
+  private static CharSequence getSubCommands(@NonNull ICommand targetCommand) {
     Collection<ICommand> subCommands = targetCommand.getSubCommands();
 
     StringBuilder builder = new StringBuilder();
@@ -515,7 +517,7 @@ public class CallingContext {
   }
 
   @NonNull
-  private CharSequence getExtraArguments(@NonNull ICommand targetCommand) {
+  private static CharSequence getExtraArguments(@NonNull ICommand targetCommand) {
     StringBuilder builder = new StringBuilder();
     for (ExtraArgument argument : targetCommand.getExtraArguments()) {
       builder.append(' ');
@@ -540,11 +542,11 @@ public class CallingContext {
 
   /**
    * Output the help text to the console.
+   *
+   * @throws UncheckedIOException
+   *           if an error occurs while writing help output
    */
   public void showHelp() {
-    HelpFormatter formatter = new HelpFormatter();
-    formatter.setLongOptSeparator("=");
-
     PrintStream out = cliProcessor.getOutputStream();
     int terminalWidth = (out instanceof AnsiPrintStream)
         ? ((AnsiPrintStream) out).getTerminalWidth()
@@ -554,16 +556,25 @@ public class CallingContext {
         AutoCloser.preventClose(out),
         true,
         StandardCharsets.UTF_8)) {
-      formatter.printHelp(
-          writer,
-          Math.max(terminalWidth, 50),
-          buildHelpCliSyntax(),
-          buildHelpHeader(),
-          toOptions(),
-          HelpFormatter.DEFAULT_LEFT_PAD,
-          HelpFormatter.DEFAULT_DESC_PAD,
-          buildHelpFooter(),
-          false);
+      TextHelpAppendable appendable = new TextHelpAppendable(writer);
+      appendable.setMaxWidth(Math.max(terminalWidth, 50));
+
+      HelpFormatter formatter = HelpFormatter.builder()
+          .setHelpAppendable(appendable)
+          .setOptionFormatBuilder(OptionFormatter.builder().setOptArgSeparator("="))
+          .get();
+
+      try {
+        formatter.printHelp(
+            buildHelpCliSyntax(),
+            buildHelpHeader(),
+            toOptions(),
+            buildHelpFooter(),
+            false);
+      } catch (IOException ex) {
+        throw new UncheckedIOException("Failed to write help output", ex);
+      }
+
       writer.flush();
     }
   }

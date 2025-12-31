@@ -401,7 +401,7 @@ public class InlineDefineFlag implements IBoundObject {
     if (_props == null) {
       _props = new LinkedList<>();
     }
-    return _props;
+    return ObjectUtils.notNull(_props);
   }
 
   /**
@@ -500,7 +500,7 @@ public class InlineDefineFlag implements IBoundObject {
     if (_examples == null) {
       _examples = new LinkedList<>();
     }
-    return _examples;
+    return ObjectUtils.notNull(_examples);
   }
 
   /**
@@ -543,6 +543,6 @@ public class InlineDefineFlag implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

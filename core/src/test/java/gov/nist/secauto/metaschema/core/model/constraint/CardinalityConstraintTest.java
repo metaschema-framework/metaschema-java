@@ -114,11 +114,11 @@ class CardinalityConstraintTest {
     awf.assemblyDef.addConstraint(constraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "should pass with 3 items when minOccurs=2");
   }
 
@@ -151,11 +151,11 @@ class CardinalityConstraintTest {
     awf.assemblyDef.addConstraint(constraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "should fail with 1 item when minOccurs=2"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),
@@ -194,11 +194,11 @@ class CardinalityConstraintTest {
     awf.assemblyDef.addConstraint(constraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "should pass with 2 items when maxOccurs=3");
   }
 
@@ -234,11 +234,11 @@ class CardinalityConstraintTest {
     awf.assemblyDef.addConstraint(constraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "should fail with 4 items when maxOccurs=3"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),
@@ -280,11 +280,11 @@ class CardinalityConstraintTest {
     awf.assemblyDef.addConstraint(constraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "should pass with 3 items when minOccurs=2 and maxOccurs=5");
   }
 
@@ -320,11 +320,11 @@ class CardinalityConstraintTest {
     awf.assemblyDef.addConstraint(constraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "should fail with 1 item when minOccurs=2 and maxOccurs=5"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),
@@ -370,11 +370,11 @@ class CardinalityConstraintTest {
     awf.assemblyDef.addConstraint(constraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "should fail with 6 items when minOccurs=2 and maxOccurs=5"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),
@@ -414,11 +414,11 @@ class CardinalityConstraintTest {
     awf.assemblyDef.addConstraint(constraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "should pass with 0 items when minOccurs=0 and maxOccurs=3");
   }
 
@@ -452,11 +452,11 @@ class CardinalityConstraintTest {
     awf.assemblyDef.addConstraint(constraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "should fail with 0 items when minOccurs=1"),
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),

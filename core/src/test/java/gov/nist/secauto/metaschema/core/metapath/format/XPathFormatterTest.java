@@ -6,6 +6,7 @@
 package gov.nist.secauto.metaschema.core.metapath.format;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -15,14 +16,10 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFieldNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IFlagNodeItem;
-import gov.nist.secauto.metaschema.core.metapath.item.node.IModelNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IRootAssemblyNodeItem;
-import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IAssemblyInstance;
-import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
-import gov.nist.secauto.metaschema.core.model.IFlagDefinition;
 import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.testsupport.mocking.MockNodeItemFactory;
@@ -34,7 +31,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.util.List;
 
 /**
  * Unit tests for {@link XPathFormatter}.
@@ -475,11 +471,12 @@ class XPathFormatterTest {
       doReturn(assemblyInstance).when(assembly).getInstance();
       doReturn(XmlGroupAsBehavior.UNGROUPED).when(assemblyInstance).getXmlGroupAsBehavior();
 
-      IDocumentNodeItem document = mockFactory.document(
+      // Create document to establish parent hierarchy for formatting
+      assertNotNull(mockFactory.document(
           URI.create("https://example.com/catalog.xml"),
           rootQname,
           CollectionUtil.emptyList(),
-          CollectionUtil.singletonList(assembly));
+          CollectionUtil.singletonList(assembly)));
 
       // Format from flag - the path should traverse up through parent nodes
       String result = formatter.format(flag);
@@ -514,11 +511,12 @@ class XPathFormatterTest {
       doReturn(groupInstance).when(group).getInstance();
       doReturn(XmlGroupAsBehavior.UNGROUPED).when(groupInstance).getXmlGroupAsBehavior();
 
-      IDocumentNodeItem document = mockFactory.document(
+      // Create document to establish parent hierarchy for formatting
+      assertNotNull(mockFactory.document(
           URI.create("https://example.com/catalog.xml"),
           rootQname,
           CollectionUtil.emptyList(),
-          CollectionUtil.singletonList(group));
+          CollectionUtil.singletonList(group)));
 
       String result = formatter.format(flag);
 
@@ -546,11 +544,12 @@ class XPathFormatterTest {
       doReturn(XmlGroupAsBehavior.GROUPED).when(controlInstance).getXmlGroupAsBehavior();
       doReturn(wrapperQname).when(controlInstance).getEffectiveXmlGroupAsQName();
 
-      IDocumentNodeItem document = mockFactory.document(
+      // Create document to establish parent hierarchy for formatting
+      assertNotNull(mockFactory.document(
           URI.create("https://example.com/catalog.xml"),
           rootQname,
           CollectionUtil.emptyList(),
-          CollectionUtil.singletonList(control));
+          CollectionUtil.singletonList(control)));
 
       String result = formatter.format(flag);
 

@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.core.configuration;
 
+import org.eclipse.jdt.annotation.Owning;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -28,6 +30,7 @@ public interface IMutableConfiguration<T extends IConfigurationFeature<?>>
    * @see IConfigurationFeature#getValueClass()
    */
   @NonNull
+  @Owning
   default IMutableConfiguration<T> enableFeature(@NonNull T feature) {
     return set(feature, true);
   }
@@ -43,6 +46,7 @@ public interface IMutableConfiguration<T extends IConfigurationFeature<?>>
    * @see IConfigurationFeature#getValueClass()
    */
   @NonNull
+  @Owning
   default IMutableConfiguration<T> disableFeature(@NonNull T feature) {
     return set(feature, false);
   }
@@ -55,6 +59,7 @@ public interface IMutableConfiguration<T extends IConfigurationFeature<?>>
    * @return the updated configuration
    */
   @NonNull
+  @Owning
   IMutableConfiguration<T> applyConfiguration(@NonNull IConfiguration<T> other);
 
   /**
@@ -71,5 +76,6 @@ public interface IMutableConfiguration<T extends IConfigurationFeature<?>>
    * @see IConfigurationFeature#getValueClass()
    */
   @NonNull
+  @Owning
   IMutableConfiguration<T> set(@NonNull T feature, @NonNull Object value);
 }

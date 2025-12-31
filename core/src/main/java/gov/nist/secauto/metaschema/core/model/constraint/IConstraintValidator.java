@@ -14,8 +14,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 /**
  * This interface provides an entry point for performing validations over
  * Metapath items associated with a Metaschema model.
+ * <p>
+ * Implementations may hold resources such as thread pools that must be released
+ * when validation is complete. Callers should use try-with-resources or
+ * explicitly call {@link #close()} when done with the validator.
  */
-public interface IConstraintValidator {
+public interface IConstraintValidator extends AutoCloseable {
   /**
    * Validate the provided item against any associated constraints.
    *
@@ -47,4 +51,14 @@ public interface IConstraintValidator {
    *           constraint
    */
   void finalizeValidation(@NonNull DynamicContext dynamicContext) throws ConstraintValidationException;
+
+  /**
+   * Release any resources held by this validator.
+   * <p>
+   * This method should be called when the validator is no longer needed to
+   * release resources such as thread pools. For validators using sequential
+   * execution, this method does nothing.
+   */
+  @Override
+  void close();
 }

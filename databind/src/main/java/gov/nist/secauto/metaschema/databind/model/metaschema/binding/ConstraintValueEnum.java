@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLineAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFieldValue;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
 import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaField;
@@ -80,6 +81,7 @@ public class ConstraintValueEnum
    * @return the value value
    */
   @NonNull
+  @Override
   public String getValue() {
     return _value;
   }
@@ -100,6 +102,7 @@ public class ConstraintValueEnum
    * @return the deprecated value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getDeprecated() {
     return _deprecated;
   }
@@ -115,6 +118,7 @@ public class ConstraintValueEnum
   }
 
   @Nullable
+  @Override
   public MarkupLine getRemark() {
     return _remark;
   }
@@ -125,6 +129,6 @@ public class ConstraintValueEnum
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }
