@@ -4,6 +4,7 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
+
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -24,8 +25,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MetaschemaAssembly(
     formalName = "Group As",
     name = "group-as",
-    moduleClass = MetaschemaModelModule.class
-)
+    moduleClass = MetaschemaModelModule.class)
 public class GroupingAs implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -33,8 +33,7 @@ public class GroupingAs implements IBoundObject {
       formalName = "Grouping Name",
       name = "name",
       required = true,
-      typeAdapter = TokenAdapter.class
-  )
+      typeAdapter = TokenAdapter.class)
   private String _name;
 
   @BoundFlag(
@@ -42,8 +41,12 @@ public class GroupingAs implements IBoundObject {
       name = "in-json",
       defaultValue = "SINGLETON_OR_ARRAY",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "ARRAY", description = "Always use an array."), @AllowedValue(value = "SINGLETON_OR_ARRAY", description = "Produce a singleton for a single member or an array for multiple members."), @AllowedValue(value = "BY_KEY", description = "For any group of one or more members, produce an object with properties for each member, using a designated flag for their property name values, which must be distinct.")}))
-  )
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+          @AllowedValue(value = "ARRAY", description = "Always use an array."),
+          @AllowedValue(value = "SINGLETON_OR_ARRAY",
+              description = "Produce a singleton for a single member or an array for multiple members."),
+          @AllowedValue(value = "BY_KEY",
+              description = "For any group of one or more members, produce an object with properties for each member, using a designated flag for their property name values, which must be distinct.") })))
   private String _inJson;
 
   @BoundFlag(
@@ -51,22 +54,27 @@ public class GroupingAs implements IBoundObject {
       name = "in-xml",
       defaultValue = "UNGROUPED",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "GROUPED", description = "Use a wrapper element."), @AllowedValue(value = "UNGROUPED", description = "Do not use a wrapper element.")}))
-  )
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
+          values = { @AllowedValue(value = "GROUPED", description = "Use a wrapper element."),
+              @AllowedValue(value = "UNGROUPED", description = "Do not use a wrapper element.") })))
   private String _inXml;
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.GroupingAs} instance with no metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.GroupingAs}
+   * instance with no metadata.
    */
   public GroupingAs() {
     this(null);
   }
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.GroupingAs} instance with the specified metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.GroupingAs}
+   * instance with the specified metadata.
    *
    * @param data
-   *           the metaschema data, or {@code null} if none
+   *          the metaschema data, or {@code null} if none
    */
   public GroupingAs(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -91,7 +99,7 @@ public class GroupingAs implements IBoundObject {
    * Set the grouping Name.
    *
    * @param value
-   *           the name value to set
+   *          the name value to set
    */
   public void setName(@NonNull String value) {
     _name = value;
@@ -111,7 +119,7 @@ public class GroupingAs implements IBoundObject {
    * Set the in JSON Grouping Syntax.
    *
    * @param value
-   *           the in-json value to set
+   *          the in-json value to set, or {@code null} to clear
    */
   public void setInJson(@Nullable String value) {
     _inJson = value;
@@ -131,7 +139,7 @@ public class GroupingAs implements IBoundObject {
    * Set the in XML Grouping Syntax.
    *
    * @param value
-   *           the in-xml value to set
+   *          the in-xml value to set, or {@code null} to clear
    */
   public void setInXml(@Nullable String value) {
     _inXml = value;

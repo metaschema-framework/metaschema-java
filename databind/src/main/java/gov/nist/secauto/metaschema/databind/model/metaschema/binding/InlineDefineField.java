@@ -4,6 +4,7 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
+
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -40,8 +41,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MetaschemaAssembly(
     formalName = "Inline Field Definition",
     name = "inline-define-field",
-    moduleClass = MetaschemaModelModule.class
-)
+    moduleClass = MetaschemaModelModule.class)
 public class InlineDefineField implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -49,22 +49,19 @@ public class InlineDefineField implements IBoundObject {
       formalName = "Inline Field Name",
       name = "name",
       required = true,
-      typeAdapter = TokenAdapter.class
-  )
+      typeAdapter = TokenAdapter.class)
   private String _name;
 
   @BoundFlag(
       formalName = "Inline Field Binary Name",
       name = "index",
-      typeAdapter = PositiveIntegerAdapter.class
-  )
+      typeAdapter = PositiveIntegerAdapter.class)
   private BigInteger _index;
 
   @BoundFlag(
       formalName = "Deprecated Version",
       name = "deprecated",
-      typeAdapter = StringAdapter.class
-  )
+      typeAdapter = StringAdapter.class)
   private String _deprecated;
 
   @BoundFlag(
@@ -72,23 +69,83 @@ public class InlineDefineField implements IBoundObject {
       name = "as-type",
       defaultValue = "string",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, allowOthers = true, values = {@AllowedValue(value = "markup-line", description = "The [markup-line](https://framework.metaschema.dev/specification/datatypes/#markup-line) data type."), @AllowedValue(value = "markup-multiline", description = "The [markup-multiline](https://framework.metaschema.dev/specification/datatypes/#markup-multiline) data type."), @AllowedValue(value = "base64", description = "The [base64](https://framework.metaschema.dev/specification/datatypes/#base64) data type."), @AllowedValue(value = "boolean", description = "The [boolean](https://framework.metaschema.dev/specification/datatypes/#boolean) data type."), @AllowedValue(value = "date", description = "The [date](https://framework.metaschema.dev/specification/datatypes/#date) data type."), @AllowedValue(value = "date-time", description = "The [date-time](https://framework.metaschema.dev/specification/datatypes/#date-time) data type."), @AllowedValue(value = "date-time-with-timezone", description = "The [date-time-with-timezone](https://framework.metaschema.dev/specification/datatypes/#date-time-with-timezone) data type."), @AllowedValue(value = "date-with-timezone", description = "The [date-with-timezone](https://framework.metaschema.dev/specification/datatypes/#date-with-timezone) data type."), @AllowedValue(value = "day-time-duration", description = "The [day-time-duration](https://framework.metaschema.dev/specification/datatypes/#day-time-duration) data type."), @AllowedValue(value = "decimal", description = "The [decimal](https://framework.metaschema.dev/specification/datatypes/#decimal) data type."), @AllowedValue(value = "email-address", description = "The [email-address](https://framework.metaschema.dev/specification/datatypes/#email-address) data type."), @AllowedValue(value = "hostname", description = "The [hostname](https://framework.metaschema.dev/specification/datatypes/#hostname) data type."), @AllowedValue(value = "integer", description = "The [integer](https://framework.metaschema.dev/specification/datatypes/#integer) data type."), @AllowedValue(value = "ip-v4-address", description = "The [ip-v4-address](https://framework.metaschema.dev/specification/datatypes/#ip-v4-address) data type."), @AllowedValue(value = "ip-v6-address", description = "The [ip-v6-address](https://framework.metaschema.dev/specification/datatypes/#ip-v6-address) data type."), @AllowedValue(value = "non-negative-integer", description = "The [non-negative-integer](https://framework.metaschema.dev/specification/datatypes/#non-negative-integer) data type."), @AllowedValue(value = "positive-integer", description = "The [positive-integer](https://framework.metaschema.dev/specification/datatypes/#positive-integer) data type."), @AllowedValue(value = "string", description = "The [string](https://framework.metaschema.dev/specification/datatypes/#string) data type."), @AllowedValue(value = "token", description = "The [token](https://framework.metaschema.dev/specification/datatypes/#token) data type."), @AllowedValue(value = "uri", description = "The [uri](https://framework.metaschema.dev/specification/datatypes/#uri) data type."), @AllowedValue(value = "uri-reference", description = "The [uri-reference](https://framework.metaschema.dev/specification/datatypes/#uri-reference) data type."), @AllowedValue(value = "uuid", description = "The [uuid](https://framework.metaschema.dev/specification/datatypes/#uuid) data type."), @AllowedValue(value = "base64Binary", description = "An old name which is deprecated for use in favor of the 'base64' data type.", deprecatedVersion = "1.0.0"), @AllowedValue(value = "dateTime", description = "An old name which is deprecated for use in favor of the 'date-time' data type.", deprecatedVersion = "1.0.0"), @AllowedValue(value = "dateTime-with-timezone", description = "An old name which is deprecated for use in favor of the 'date-time-with-timezone' data type.", deprecatedVersion = "1.0.0"), @AllowedValue(value = "email", description = "An old name which is deprecated for use in favor of the 'email-address' data type.", deprecatedVersion = "1.0.0"), @AllowedValue(value = "nonNegativeInteger", description = "An old name which is deprecated for use in favor of the 'non-negative-integer' data type.", deprecatedVersion = "1.0.0"), @AllowedValue(value = "positiveInteger", description = "An old name which is deprecated for use in favor of the 'positive-integer' data type.", deprecatedVersion = "1.0.0")}))
-  )
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
+          allowOthers = true,
+          values = { @AllowedValue(value = "markup-line",
+              description = "The [markup-line](https://framework.metaschema.dev/specification/datatypes/#markup-line) data type."),
+              @AllowedValue(value = "markup-multiline",
+                  description = "The [markup-multiline](https://framework.metaschema.dev/specification/datatypes/#markup-multiline) data type."),
+              @AllowedValue(value = "base64",
+                  description = "The [base64](https://framework.metaschema.dev/specification/datatypes/#base64) data type."),
+              @AllowedValue(value = "boolean",
+                  description = "The [boolean](https://framework.metaschema.dev/specification/datatypes/#boolean) data type."),
+              @AllowedValue(value = "date",
+                  description = "The [date](https://framework.metaschema.dev/specification/datatypes/#date) data type."),
+              @AllowedValue(value = "date-time",
+                  description = "The [date-time](https://framework.metaschema.dev/specification/datatypes/#date-time) data type."),
+              @AllowedValue(value = "date-time-with-timezone",
+                  description = "The [date-time-with-timezone](https://framework.metaschema.dev/specification/datatypes/#date-time-with-timezone) data type."),
+              @AllowedValue(value = "date-with-timezone",
+                  description = "The [date-with-timezone](https://framework.metaschema.dev/specification/datatypes/#date-with-timezone) data type."),
+              @AllowedValue(value = "day-time-duration",
+                  description = "The [day-time-duration](https://framework.metaschema.dev/specification/datatypes/#day-time-duration) data type."),
+              @AllowedValue(value = "decimal",
+                  description = "The [decimal](https://framework.metaschema.dev/specification/datatypes/#decimal) data type."),
+              @AllowedValue(value = "email-address",
+                  description = "The [email-address](https://framework.metaschema.dev/specification/datatypes/#email-address) data type."),
+              @AllowedValue(value = "hostname",
+                  description = "The [hostname](https://framework.metaschema.dev/specification/datatypes/#hostname) data type."),
+              @AllowedValue(value = "integer",
+                  description = "The [integer](https://framework.metaschema.dev/specification/datatypes/#integer) data type."),
+              @AllowedValue(value = "ip-v4-address",
+                  description = "The [ip-v4-address](https://framework.metaschema.dev/specification/datatypes/#ip-v4-address) data type."),
+              @AllowedValue(value = "ip-v6-address",
+                  description = "The [ip-v6-address](https://framework.metaschema.dev/specification/datatypes/#ip-v6-address) data type."),
+              @AllowedValue(value = "non-negative-integer",
+                  description = "The [non-negative-integer](https://framework.metaschema.dev/specification/datatypes/#non-negative-integer) data type."),
+              @AllowedValue(value = "positive-integer",
+                  description = "The [positive-integer](https://framework.metaschema.dev/specification/datatypes/#positive-integer) data type."),
+              @AllowedValue(value = "string",
+                  description = "The [string](https://framework.metaschema.dev/specification/datatypes/#string) data type."),
+              @AllowedValue(value = "token",
+                  description = "The [token](https://framework.metaschema.dev/specification/datatypes/#token) data type."),
+              @AllowedValue(value = "uri",
+                  description = "The [uri](https://framework.metaschema.dev/specification/datatypes/#uri) data type."),
+              @AllowedValue(value = "uri-reference",
+                  description = "The [uri-reference](https://framework.metaschema.dev/specification/datatypes/#uri-reference) data type."),
+              @AllowedValue(value = "uuid",
+                  description = "The [uuid](https://framework.metaschema.dev/specification/datatypes/#uuid) data type."),
+              @AllowedValue(value = "base64Binary",
+                  description = "An old name which is deprecated for use in favor of the 'base64' data type.",
+                  deprecatedVersion = "1.0.0"),
+              @AllowedValue(value = "dateTime",
+                  description = "An old name which is deprecated for use in favor of the 'date-time' data type.",
+                  deprecatedVersion = "1.0.0"),
+              @AllowedValue(value = "dateTime-with-timezone",
+                  description = "An old name which is deprecated for use in favor of the 'date-time-with-timezone' data type.",
+                  deprecatedVersion = "1.0.0"),
+              @AllowedValue(value = "email",
+                  description = "An old name which is deprecated for use in favor of the 'email-address' data type.",
+                  deprecatedVersion = "1.0.0"),
+              @AllowedValue(value = "nonNegativeInteger",
+                  description = "An old name which is deprecated for use in favor of the 'non-negative-integer' data type.",
+                  deprecatedVersion = "1.0.0"),
+              @AllowedValue(value = "positiveInteger",
+                  description = "An old name which is deprecated for use in favor of the 'positive-integer' data type.",
+                  deprecatedVersion = "1.0.0") })))
   private String _asType;
 
   @BoundFlag(
       formalName = "Default Field Value",
       name = "default",
-      typeAdapter = StringAdapter.class
-  )
+      typeAdapter = StringAdapter.class)
   private String _default;
 
   @BoundFlag(
       formalName = "Minimum Occurrence",
       name = "min-occurs",
       defaultValue = "0",
-      typeAdapter = NonNegativeIntegerAdapter.class
-  )
+      typeAdapter = NonNegativeIntegerAdapter.class)
   private BigInteger _minOccurs;
 
   @BoundFlag(
@@ -96,8 +153,8 @@ public class InlineDefineField implements IBoundObject {
       name = "max-occurs",
       defaultValue = "1",
       typeAdapter = StringAdapter.class,
-      valueConstraints = @ValueConstraints(matches = @Matches(level = IConstraint.Level.ERROR, pattern = "^[1-9][0-9]*|unbounded$"))
-  )
+      valueConstraints = @ValueConstraints(
+          matches = @Matches(level = IConstraint.Level.ERROR, pattern = "^[1-9][0-9]*|unbounded$")))
   private String _maxOccurs;
 
   @BoundFlag(
@@ -105,8 +162,12 @@ public class InlineDefineField implements IBoundObject {
       name = "in-xml",
       defaultValue = "WRAPPED",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "WRAPPED", description = "Block contents of a markup-multiline field will be represented with a containing (wrapper) element in the XML."), @AllowedValue(value = "UNWRAPPED", description = "Block contents of a markup-multiline will be represented in the XML with no wrapper, making the field implicit. Among sibling fields in a given model, only one of them may be designated as UNWRAPPED."), @AllowedValue(value = "WITH_WRAPPER", description = "Alias for WRAPPED.", deprecatedVersion = "0.9.0")}))
-  )
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+          @AllowedValue(value = "WRAPPED",
+              description = "Block contents of a markup-multiline field will be represented with a containing (wrapper) element in the XML."),
+          @AllowedValue(value = "UNWRAPPED",
+              description = "Block contents of a markup-multiline will be represented in the XML with no wrapper, making the field implicit. Among sibling fields in a given model, only one of them may be designated as UNWRAPPED."),
+          @AllowedValue(value = "WITH_WRAPPER", description = "Alias for WRAPPED.", deprecatedVersion = "0.9.0") })))
   private String _inXml;
 
   /**
@@ -116,109 +177,106 @@ public class InlineDefineField implements IBoundObject {
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name",
-      typeAdapter = StringAdapter.class
-  )
+      typeAdapter = StringAdapter.class)
   private String _formalName;
 
   /**
-   * A short description of the data construct's purpose, describing the constructs semantics.
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
    */
   @BoundField(
       formalName = "Description",
       description = "A short description of the data construct's purpose, describing the constructs semantics.",
       useName = "description",
-      typeAdapter = MarkupLineAdapter.class
-  )
+      typeAdapter = MarkupLineAdapter.class)
   private MarkupLine _description;
 
   @BoundAssembly(
       formalName = "Property",
       useName = "prop",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST)
-  )
+      groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST))
   private List<Property> _props;
 
   /**
-   * Used in JSON (and similar formats) to identify a flag that will be used as the property name in an object hold a collection of sibling objects. Requires that siblings must never share <code>json-key</code> values.
+   * Used in JSON (and similar formats) to identify a flag that will be used as
+   * the property name in an object hold a collection of sibling objects. Requires
+   * that siblings must never share <code>json-key</code> values.
    */
   @BoundAssembly(
       formalName = "JSON Key",
       description = "Used in JSON (and similar formats) to identify a flag that will be used as the property name in an object hold a collection of sibling objects. Requires that siblings must never share `json-key` values.",
-      useName = "json-key"
-  )
+      useName = "json-key")
   private JsonKey _jsonKey;
 
   @BoundField(
       formalName = "Field Value JSON Property Name",
       useName = "json-value-key",
-      typeAdapter = TokenAdapter.class
-  )
+      typeAdapter = TokenAdapter.class)
   @BoundChoice(
-      choiceId = "choice-1"
-  )
+      choiceId = "choice-1")
   private String _jsonValueKey;
 
   @BoundAssembly(
       formalName = "Flag Used as the Field Value's JSON Property Name",
-      useName = "json-value-key-flag"
-  )
+      useName = "json-value-key-flag")
   @BoundChoice(
-      choiceId = "choice-1"
-  )
+      choiceId = "choice-1")
   private JsonValueKeyFlag _jsonValueKeyFlag;
 
   @BoundAssembly(
       formalName = "Group As",
-      useName = "group-as"
-  )
+      useName = "group-as")
   private GroupingAs _groupAs;
 
   @BoundChoiceGroup(
       maxOccurs = -1,
       groupAs = @GroupAs(name = "flags", inJson = JsonGroupAsBehavior.LIST),
       assemblies = {
-          @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag", discriminatorValue = "flag", binding = InlineDefineFlag.class),
-          @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", discriminatorValue = "flag-ref", binding = FlagReference.class)
-      }
-  )
+          @BoundGroupedAssembly(formalName = "Inline Flag Definition", useName = "define-flag",
+              discriminatorValue = "flag", binding = InlineDefineFlag.class),
+          @BoundGroupedAssembly(formalName = "Flag Reference", useName = "flag", discriminatorValue = "flag-ref",
+              binding = FlagReference.class)
+      })
   private List<Object> _flags;
 
   @BoundAssembly(
-      useName = "constraint"
-  )
+      useName = "constraint")
   private FieldConstraints _constraint;
 
   /**
-   * Any explanatory or helpful information to be provided about the remarks parent.
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
    */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
-      useName = "remarks"
-  )
+      useName = "remarks")
   private Remarks _remarks;
 
   @BoundAssembly(
       formalName = "Example",
       useName = "example",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "examples", inJson = JsonGroupAsBehavior.LIST)
-  )
+      groupAs = @GroupAs(name = "examples", inJson = JsonGroupAsBehavior.LIST))
   private List<Example> _examples;
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField} instance with no metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField}
+   * instance with no metadata.
    */
   public InlineDefineField() {
     this(null);
   }
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField} instance with the specified metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField}
+   * instance with the specified metadata.
    *
    * @param data
-   *           the metaschema data, or {@code null} if none
+   *          the metaschema data, or {@code null} if none
    */
   public InlineDefineField(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -243,7 +301,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the inline Field Name.
    *
    * @param value
-   *           the name value to set
+   *          the name value to set
    */
   public void setName(@NonNull String value) {
     _name = value;
@@ -263,7 +321,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the inline Field Binary Name.
    *
    * @param value
-   *           the index value to set
+   *          the index value to set, or {@code null} to clear
    */
   public void setIndex(@Nullable BigInteger value) {
     _index = value;
@@ -283,7 +341,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the deprecated Version.
    *
    * @param value
-   *           the deprecated value to set
+   *          the deprecated value to set, or {@code null} to clear
    */
   public void setDeprecated(@Nullable String value) {
     _deprecated = value;
@@ -303,7 +361,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the field Value Data Type.
    *
    * @param value
-   *           the as-type value to set
+   *          the as-type value to set, or {@code null} to clear
    */
   public void setAsType(@Nullable String value) {
     _asType = value;
@@ -323,7 +381,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the default Field Value.
    *
    * @param value
-   *           the default value to set
+   *          the default value to set, or {@code null} to clear
    */
   public void setDefault(@Nullable String value) {
     _default = value;
@@ -343,7 +401,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the minimum Occurrence.
    *
    * @param value
-   *           the min-occurs value to set
+   *          the min-occurs value to set, or {@code null} to clear
    */
   public void setMinOccurs(@Nullable BigInteger value) {
     _minOccurs = value;
@@ -363,7 +421,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the maximum Occurrence.
    *
    * @param value
-   *           the max-occurs value to set
+   *          the max-occurs value to set, or {@code null} to clear
    */
   public void setMaxOccurs(@Nullable String value) {
     _maxOccurs = value;
@@ -383,7 +441,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the field In XML.
    *
    * @param value
-   *           the in-xml value to set
+   *          the in-xml value to set, or {@code null} to clear
    */
   public void setInXml(@Nullable String value) {
     _inXml = value;
@@ -409,7 +467,7 @@ public class InlineDefineField implements IBoundObject {
    * A formal name for the data construct, to be presented in documentation.
    *
    * @param value
-   *           the formal-name value to set
+   *          the formal-name value to set, or {@code null} to clear
    */
   public void setFormalName(@Nullable String value) {
     _formalName = value;
@@ -419,7 +477,8 @@ public class InlineDefineField implements IBoundObject {
    * Get the description.
    *
    * <p>
-   * A short description of the data construct's purpose, describing the constructs semantics.
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
    *
    * @return the description value, or {@code null} if not set
    */
@@ -432,10 +491,11 @@ public class InlineDefineField implements IBoundObject {
    * Set the description.
    *
    * <p>
-   * A short description of the data construct's purpose, describing the constructs semantics.
+   * A short description of the data construct's purpose, describing the
+   * constructs semantics.
    *
    * @param value
-   *           the description value to set
+   *          the description value to set, or {@code null} to clear
    */
   public void setDescription(@Nullable MarkupLine value) {
     _description = value;
@@ -458,7 +518,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the property.
    *
    * @param value
-   *           the prop value to set
+   *          the prop value to set
    */
   public void setProps(@NonNull List<Property> value) {
     _props = value;
@@ -466,11 +526,13 @@ public class InlineDefineField implements IBoundObject {
 
   /**
    * Add a new {@link Property} item to the underlying collection.
-   * @param item the item to add
+   *
+   * @param item
+   *          the item to add
    * @return {@code true}
    */
   public boolean addProp(Property item) {
-    Property value = ObjectUtils.requireNonNull(item,"item cannot be null");
+    Property value = ObjectUtils.requireNonNull(item, "item cannot be null");
     if (_props == null) {
       _props = new LinkedList<>();
     }
@@ -478,12 +540,15 @@ public class InlineDefineField implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link Property} item from the underlying collection.
-   * @param item the item to remove
+   * Remove the first matching {@link Property} item from the underlying
+   * collection.
+   *
+   * @param item
+   *          the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeProp(Property item) {
-    Property value = ObjectUtils.requireNonNull(item,"item cannot be null");
+    Property value = ObjectUtils.requireNonNull(item, "item cannot be null");
     return _props != null && _props.remove(value);
   }
 
@@ -491,7 +556,9 @@ public class InlineDefineField implements IBoundObject {
    * Get the jSON Key.
    *
    * <p>
-   * Used in JSON (and similar formats) to identify a flag that will be used as the property name in an object hold a collection of sibling objects. Requires that siblings must never share <code>json-key</code> values.
+   * Used in JSON (and similar formats) to identify a flag that will be used as
+   * the property name in an object hold a collection of sibling objects. Requires
+   * that siblings must never share <code>json-key</code> values.
    *
    * @return the json-key value, or {@code null} if not set
    */
@@ -504,10 +571,12 @@ public class InlineDefineField implements IBoundObject {
    * Set the jSON Key.
    *
    * <p>
-   * Used in JSON (and similar formats) to identify a flag that will be used as the property name in an object hold a collection of sibling objects. Requires that siblings must never share <code>json-key</code> values.
+   * Used in JSON (and similar formats) to identify a flag that will be used as
+   * the property name in an object hold a collection of sibling objects. Requires
+   * that siblings must never share <code>json-key</code> values.
    *
    * @param value
-   *           the json-key value to set
+   *          the json-key value to set, or {@code null} to clear
    */
   public void setJsonKey(@Nullable JsonKey value) {
     _jsonKey = value;
@@ -527,7 +596,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the field Value JSON Property Name.
    *
    * @param value
-   *           the json-value-key value to set
+   *          the json-value-key value to set, or {@code null} to clear
    */
   public void setJsonValueKey(@Nullable String value) {
     _jsonValueKey = value;
@@ -547,7 +616,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the flag Used as the Field Value's JSON Property Name.
    *
    * @param value
-   *           the json-value-key-flag value to set
+   *          the json-value-key-flag value to set, or {@code null} to clear
    */
   public void setJsonValueKeyFlag(@Nullable JsonValueKeyFlag value) {
     _jsonValueKeyFlag = value;
@@ -567,7 +636,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the group As.
    *
    * @param value
-   *           the group-as value to set
+   *          the group-as value to set, or {@code null} to clear
    */
   public void setGroupAs(@Nullable GroupingAs value) {
     _groupAs = value;
@@ -590,7 +659,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the {@code flags} choice group items.
    *
    * @param value
-   *           the flags items to set
+   *          the flags items to set
    */
   public void setFlags(@NonNull List<Object> value) {
     _flags = value;
@@ -610,7 +679,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the {@code constraint} property.
    *
    * @param value
-   *           the constraint value to set
+   *          the constraint value to set, or {@code null} to clear
    */
   public void setConstraint(@Nullable FieldConstraints value) {
     _constraint = value;
@@ -620,7 +689,8 @@ public class InlineDefineField implements IBoundObject {
    * Get the remarks.
    *
    * <p>
-   * Any explanatory or helpful information to be provided about the remarks parent.
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
    *
    * @return the remarks value, or {@code null} if not set
    */
@@ -633,10 +703,11 @@ public class InlineDefineField implements IBoundObject {
    * Set the remarks.
    *
    * <p>
-   * Any explanatory or helpful information to be provided about the remarks parent.
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
    *
    * @param value
-   *           the remarks value to set
+   *          the remarks value to set, or {@code null} to clear
    */
   public void setRemarks(@Nullable Remarks value) {
     _remarks = value;
@@ -659,7 +730,7 @@ public class InlineDefineField implements IBoundObject {
    * Set the example.
    *
    * @param value
-   *           the example value to set
+   *          the example value to set
    */
   public void setExamples(@NonNull List<Example> value) {
     _examples = value;
@@ -667,11 +738,13 @@ public class InlineDefineField implements IBoundObject {
 
   /**
    * Add a new {@link Example} item to the underlying collection.
-   * @param item the item to add
+   *
+   * @param item
+   *          the item to add
    * @return {@code true}
    */
   public boolean addExample(Example item) {
-    Example value = ObjectUtils.requireNonNull(item,"item cannot be null");
+    Example value = ObjectUtils.requireNonNull(item, "item cannot be null");
     if (_examples == null) {
       _examples = new LinkedList<>();
     }
@@ -679,12 +752,15 @@ public class InlineDefineField implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link Example} item from the underlying collection.
-   * @param item the item to remove
+   * Remove the first matching {@link Example} item from the underlying
+   * collection.
+   *
+   * @param item
+   *          the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeExample(Example item) {
-    Example value = ObjectUtils.requireNonNull(item,"item cannot be null");
+    Example value = ObjectUtils.requireNonNull(item, "item cannot be null");
     return _examples != null && _examples.remove(value);
   }
 

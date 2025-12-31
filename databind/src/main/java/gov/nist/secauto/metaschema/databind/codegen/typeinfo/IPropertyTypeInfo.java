@@ -18,14 +18,21 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 
 public interface IPropertyTypeInfo extends ITypeInfo {
   /**
-   * Determines if this property is required to have a value.
+   * Determines if this property is unconditionally required to have a value.
    *
    * <p>
    * For flags, this checks
    * {@link gov.nist.secauto.metaschema.core.model.IFlagInstance#isRequired()}.
    * For model instances, this is based on minimum occurrence constraints.
    *
-   * @return {@code true} if a value is required, or {@code false} otherwise
+   * <p>
+   * <strong>Choice blocks:</strong> Properties inside Metaschema choice blocks
+   * always return {@code false}, regardless of their {@code min-occurs} value.
+   * The requirement is conditional on the choice branch being taken, so for
+   * null-safety purposes they are treated as optional.
+   *
+   * @return {@code true} if a value is unconditionally required, or {@code false}
+   *         otherwise
    */
   default boolean isRequired() {
     return false;

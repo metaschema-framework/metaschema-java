@@ -4,6 +4,7 @@
  */
 // Generated from: ../../../../../../../../metaschema/unit-tests.yaml
 // Do not edit - changes will be lost when regenerated.
+
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -33,8 +34,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     formalName = "Generate Schema",
     description = "Defines schema generation parameters and expected results.",
     name = "generate-schema",
-    moduleClass = MetaschemaTestSuiteModule.class
-)
+    moduleClass = MetaschemaTestSuiteModule.class)
 public class GenerateSchema implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -47,8 +47,9 @@ public class GenerateSchema implements IBoundObject {
       name = "generation-result",
       defaultValue = "SUCCESS",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "SUCCESS", description = "Generation succeeded."), @AllowedValue(value = "FAILURE", description = "Generation resulted in failure caused by some error.")}))
-  )
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+          @AllowedValue(value = "SUCCESS", description = "Generation succeeded."),
+          @AllowedValue(value = "FAILURE", description = "Generation resulted in failure caused by some error.") })))
   private String _generationResult;
 
   /**
@@ -60,8 +61,10 @@ public class GenerateSchema implements IBoundObject {
       name = "validation-result",
       defaultValue = "VALID",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "VALID", description = "Validation succeeded."), @AllowedValue(value = "INVALID", description = "Validation resulted in failure caused by some content defect or error.")}))
-  )
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
+          values = { @AllowedValue(value = "VALID", description = "Validation succeeded."),
+              @AllowedValue(value = "INVALID",
+                  description = "Validation resulted in failure caused by some content defect or error.") })))
   private String _validationResult;
 
   /**
@@ -71,8 +74,7 @@ public class GenerateSchema implements IBoundObject {
       formalName = "Metaschema",
       description = "Reference to a metaschema module to load.",
       useName = "metaschema",
-      minOccurs = 1
-  )
+      minOccurs = 1)
   private Metaschema _metaschema;
 
   /**
@@ -83,22 +85,25 @@ public class GenerateSchema implements IBoundObject {
       description = "A schema generation comparison test case.",
       useName = "generation-case",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "generation-cases", inJson = JsonGroupAsBehavior.LIST)
-  )
+      groupAs = @GroupAs(name = "generation-cases", inJson = JsonGroupAsBehavior.LIST))
   private List<GenerationCase> _generationCases;
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.GenerateSchema} instance with no metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.GenerateSchema}
+   * instance with no metadata.
    */
   public GenerateSchema() {
     this(null);
   }
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.GenerateSchema} instance with the specified metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.GenerateSchema}
+   * instance with the specified metadata.
    *
    * @param data
-   *           the metaschema data, or {@code null} if none
+   *          the metaschema data, or {@code null} if none
    */
   public GenerateSchema(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -129,7 +134,7 @@ public class GenerateSchema implements IBoundObject {
    * The expected result of schema generation.
    *
    * @param value
-   *           the generation-result value to set
+   *          the generation-result value to set, or {@code null} to clear
    */
   public void setGenerationResult(@Nullable String value) {
     _generationResult = value;
@@ -155,7 +160,7 @@ public class GenerateSchema implements IBoundObject {
    * The expected result of content validation.
    *
    * @param value
-   *           the validation-result value to set
+   *          the validation-result value to set, or {@code null} to clear
    */
   public void setValidationResult(@Nullable String value) {
     _validationResult = value;
@@ -181,7 +186,7 @@ public class GenerateSchema implements IBoundObject {
    * Reference to a metaschema module to load.
    *
    * @param value
-   *           the metaschema value to set
+   *          the metaschema value to set
    */
   public void setMetaschema(@NonNull Metaschema value) {
     _metaschema = value;
@@ -210,7 +215,7 @@ public class GenerateSchema implements IBoundObject {
    * A schema generation comparison test case.
    *
    * @param value
-   *           the generation-case value to set
+   *          the generation-case value to set
    */
   public void setGenerationCases(@NonNull List<GenerationCase> value) {
     _generationCases = value;
@@ -218,11 +223,13 @@ public class GenerateSchema implements IBoundObject {
 
   /**
    * Add a new {@link GenerationCase} item to the underlying collection.
-   * @param item the item to add
+   *
+   * @param item
+   *          the item to add
    * @return {@code true}
    */
   public boolean addGenerationCase(GenerationCase item) {
-    GenerationCase value = ObjectUtils.requireNonNull(item,"item cannot be null");
+    GenerationCase value = ObjectUtils.requireNonNull(item, "item cannot be null");
     if (_generationCases == null) {
       _generationCases = new LinkedList<>();
     }
@@ -230,12 +237,15 @@ public class GenerateSchema implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link GenerationCase} item from the underlying collection.
-   * @param item the item to remove
+   * Remove the first matching {@link GenerationCase} item from the underlying
+   * collection.
+   *
+   * @param item
+   *          the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeGenerationCase(GenerationCase item) {
-    GenerationCase value = ObjectUtils.requireNonNull(item,"item cannot be null");
+    GenerationCase value = ObjectUtils.requireNonNull(item, "item cannot be null");
     return _generationCases != null && _generationCases.remove(value);
   }
 

@@ -4,6 +4,7 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
+
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -21,8 +22,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MetaschemaAssembly(
     formalName = "Key Constraint",
     name = "key-constraint-field",
-    moduleClass = MetaschemaModelModule.class
-)
+    moduleClass = MetaschemaModelModule.class)
 public class KeyConstraintField implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -30,39 +30,41 @@ public class KeyConstraintField implements IBoundObject {
       formalName = "Key Field Value Target",
       name = "target",
       required = true,
-      typeAdapter = StringAdapter.class
-  )
+      typeAdapter = StringAdapter.class)
   private String _target;
 
   @BoundFlag(
       formalName = "Key Field Value Pattern",
       name = "pattern",
-      typeAdapter = StringAdapter.class
-  )
+      typeAdapter = StringAdapter.class)
   private String _pattern;
 
   /**
-   * Any explanatory or helpful information to be provided about the remarks parent.
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
    */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
-      useName = "remarks"
-  )
+      useName = "remarks")
   private Remarks _remarks;
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.KeyConstraintField} instance with no metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.KeyConstraintField}
+   * instance with no metadata.
    */
   public KeyConstraintField() {
     this(null);
   }
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.KeyConstraintField} instance with the specified metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.KeyConstraintField}
+   * instance with the specified metadata.
    *
    * @param data
-   *           the metaschema data, or {@code null} if none
+   *          the metaschema data, or {@code null} if none
    */
   public KeyConstraintField(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -87,7 +89,7 @@ public class KeyConstraintField implements IBoundObject {
    * Set the key Field Value Target.
    *
    * @param value
-   *           the target value to set
+   *          the target value to set
    */
   public void setTarget(@NonNull String value) {
     _target = value;
@@ -107,7 +109,7 @@ public class KeyConstraintField implements IBoundObject {
    * Set the key Field Value Pattern.
    *
    * @param value
-   *           the pattern value to set
+   *          the pattern value to set, or {@code null} to clear
    */
   public void setPattern(@Nullable String value) {
     _pattern = value;
@@ -117,7 +119,8 @@ public class KeyConstraintField implements IBoundObject {
    * Get the remarks.
    *
    * <p>
-   * Any explanatory or helpful information to be provided about the remarks parent.
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
    *
    * @return the remarks value, or {@code null} if not set
    */
@@ -130,10 +133,11 @@ public class KeyConstraintField implements IBoundObject {
    * Set the remarks.
    *
    * <p>
-   * Any explanatory or helpful information to be provided about the remarks parent.
+   * Any explanatory or helpful information to be provided about the remarks
+   * parent.
    *
    * @param value
-   *           the remarks value to set
+   *          the remarks value to set, or {@code null} to clear
    */
   public void setRemarks(@Nullable Remarks value) {
     _remarks = value;

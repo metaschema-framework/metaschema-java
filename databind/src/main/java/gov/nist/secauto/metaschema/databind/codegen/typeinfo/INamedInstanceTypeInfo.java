@@ -101,6 +101,12 @@ public interface INamedInstanceTypeInfo extends IInstanceTypeInfo {
 
     builder.addJavadoc("\n");
     builder.addJavadoc("@param $L\n", paramName);
-    builder.addJavadoc("          the $L value to set\n", propertyName);
+    // Collections and required properties require non-null values;
+    // optional properties can be set to null to clear
+    if (isRequired() || isCollectionType()) {
+      builder.addJavadoc("          the $L value to set\n", propertyName);
+    } else {
+      builder.addJavadoc("          the $L value to set, or {@code null} to clear\n", propertyName);
+    }
   }
 }

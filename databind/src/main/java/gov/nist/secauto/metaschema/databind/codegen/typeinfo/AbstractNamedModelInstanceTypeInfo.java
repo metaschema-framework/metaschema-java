@@ -74,6 +74,12 @@ abstract class AbstractNamedModelInstanceTypeInfo<INSTANCE extends INamedModelIn
 
   @Override
   public boolean isRequired() {
+    // Properties inside choice blocks are never required because
+    // the requirement is conditional on the choice branch being taken
+    if (getChoiceId() != null) {
+      return false;
+    }
+
     INSTANCE instance = getInstance();
     // A model instance is required if minOccurs >= 1 AND it's a single item (not a
     // collection)

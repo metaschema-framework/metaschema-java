@@ -4,6 +4,7 @@
  */
 // Generated from: ../../../../../../../../metaschema/unit-tests.yaml
 // Do not edit - changes will be lost when regenerated.
+
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -30,8 +31,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     formalName = "Generation Case",
     description = "A schema generation comparison test case.",
     name = "generation-case",
-    moduleClass = MetaschemaTestSuiteModule.class
-)
+    moduleClass = MetaschemaTestSuiteModule.class)
 public class GenerationCase implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -43,8 +43,10 @@ public class GenerationCase implements IBoundObject {
       description = "The format of the source content.",
       name = "source-format",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "XML", description = "Content is XML."), @AllowedValue(value = "JSON", description = "Content is JSON."), @AllowedValue(value = "YAML", description = "Content is YAML.")}))
-  )
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
+          values = { @AllowedValue(value = "XML", description = "Content is XML."),
+              @AllowedValue(value = "JSON", description = "Content is JSON."),
+              @AllowedValue(value = "YAML", description = "Content is YAML.") })))
   private String _sourceFormat;
 
   /**
@@ -55,8 +57,7 @@ public class GenerationCase implements IBoundObject {
       description = "A URI reference to the expected schema file location.",
       name = "location",
       required = true,
-      typeAdapter = UriReferenceAdapter.class
-  )
+      typeAdapter = UriReferenceAdapter.class)
   private URI _location;
 
   /**
@@ -68,22 +69,27 @@ public class GenerationCase implements IBoundObject {
       name = "match-result",
       defaultValue = "MATCH",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "MATCH", description = "The actual content matched the expected content."), @AllowedValue(value = "MISMATCH", description = "The actual content did not match the expected content.")}))
-  )
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {
+          @AllowedValue(value = "MATCH", description = "The actual content matched the expected content."),
+          @AllowedValue(value = "MISMATCH", description = "The actual content did not match the expected content.") })))
   private String _matchResult;
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.GenerationCase} instance with no metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.GenerationCase}
+   * instance with no metadata.
    */
   public GenerationCase() {
     this(null);
   }
 
   /**
-   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.GenerationCase} instance with the specified metadata.
+   * Constructs a new
+   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.GenerationCase}
+   * instance with the specified metadata.
    *
    * @param data
-   *           the metaschema data, or {@code null} if none
+   *          the metaschema data, or {@code null} if none
    */
   public GenerationCase(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -114,7 +120,7 @@ public class GenerationCase implements IBoundObject {
    * The format of the source content.
    *
    * @param value
-   *           the source-format value to set
+   *          the source-format value to set, or {@code null} to clear
    */
   public void setSourceFormat(@Nullable String value) {
     _sourceFormat = value;
@@ -140,7 +146,7 @@ public class GenerationCase implements IBoundObject {
    * A URI reference to the expected schema file location.
    *
    * @param value
-   *           the location value to set
+   *          the location value to set
    */
   public void setLocation(@NonNull URI value) {
     _location = value;
@@ -166,7 +172,7 @@ public class GenerationCase implements IBoundObject {
    * The expected result of content comparison.
    *
    * @param value
-   *           the match-result value to set
+   *          the match-result value to set, or {@code null} to clear
    */
   public void setMatchResult(@Nullable String value) {
     _matchResult = value;
