@@ -50,22 +50,8 @@
 			<artifactId>log4j-jul</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.jdom</groupId>
-			<artifactId>jdom2</artifactId>
-		</dependency>
-		<dependency>
-			<!-- For JDOM2 XPath support -->
-			<groupId>jaxen</groupId>
-			<artifactId>jaxen</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.codehaus.woodstox</groupId>
 			<artifactId>stax2-api</artifactId>
-		</dependency>
-		<dependency>
-			<!-- Needed for XML schema generation-->
-			<groupId>net.sf.saxon</groupId>
-			<artifactId>Saxon-HE</artifactId>
 		</dependency>
 	</dependencies>
 </project>

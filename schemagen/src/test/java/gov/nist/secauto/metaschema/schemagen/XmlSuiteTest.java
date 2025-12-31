@@ -18,14 +18,6 @@ import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
 
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.Namespace;
-import org.jdom2.filter.Filters;
-import org.jdom2.input.StAXEventBuilder;
-import org.jdom2.xpath.XPathExpression;
-import org.jdom2.xpath.XPathFactory;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;
@@ -33,23 +25,31 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Iterator;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 class XmlSuiteTest
     extends AbstractSchemaGeneratorTestSuite {
@@ -152,7 +152,8 @@ class XmlSuiteTest
   }
 
   @Test
-  void testLiboscalJavaIssue181() throws IOException, MetaschemaException, XMLStreamException, JDOMException {
+  void testLiboscalJavaIssue181()
+      throws IOException, MetaschemaException, SAXException, ParserConfigurationException, XPathExpressionException {
     IBindingContext bindingContext = newBindingContext();
 
     IBindingModuleLoader loader = bindingContext.newModuleLoader();
@@ -173,20 +174,40 @@ class XmlSuiteTest
     }
 
     // check for missing attribute types per liboscal-java#181
-    XMLInputFactory factory = XMLInputFactory.newFactory();
-    try (Reader fileReader = Files.newBufferedReader(schemaPath, StandardCharsets.UTF_8)) {
-      XMLEventReader reader = factory.createXMLEventReader(fileReader);
-      StAXEventBuilder builder = new StAXEventBuilder();
-      Document document = builder.build(reader);
-
-      XPathExpression<Element> xpath = XPathFactory.instance()
-          .compile("//xs:attribute[not(@type or xs:simpleType)]",
-              Filters.element(),
-              null,
-              Namespace.getNamespace("xs", "http://www.w3.org/2001/XMLSchema"));
-      List<Element> result = xpath.evaluate(document);
-
-      assertTrue(result.isEmpty());
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setNamespaceAware(true);
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    Document document;
+    try (InputStream is = Files.newInputStream(schemaPath)) {
+      document = builder.parse(is);
     }
+
+    XPath xpath = XPathFactory.newInstance().newXPath();
+    xpath.setNamespaceContext(new NamespaceContext() {
+      @Override
+      public String getNamespaceURI(String prefix) {
+        if ("xs".equals(prefix)) {
+          return "http://www.w3.org/2001/XMLSchema";
+        }
+        return null;
+      }
+
+      @Override
+      public String getPrefix(String namespaceURI) {
+        return null;
+      }
+
+      @Override
+      public Iterator<String> getPrefixes(String namespaceURI) {
+        return null;
+      }
+    });
+
+    NodeList result = (NodeList) xpath.evaluate(
+        "//xs:attribute[not(@type or xs:simpleType)]",
+        document,
+        XPathConstants.NODESET);
+
+    assertTrue(result.getLength() == 0, "Found " + result.getLength() + " attributes without type");
   }
 }

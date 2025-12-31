@@ -10,7 +10,7 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.eclipse.jdt.annotation.Owning;
-import org.jdom2.Element;
+import org.w3c.dom.Element;
 
 import java.io.InputStream;
 import java.util.List;
@@ -18,6 +18,9 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides prose base datatype from the metaschema-prose-base.xsd resource.
+ */
 public class XmlProseBaseDatatypeProvider
     extends AbstractXmlDatatypeProvider {
   private static final String DATATYPE_NAME = "ProseBase";
@@ -30,10 +33,10 @@ public class XmlProseBaseDatatypeProvider
   }
 
   @Override
-  protected List<Element> queryElements(JDom2XmlSchemaLoader loader) {
+  protected List<Element> queryElements(XmlSchemaLoader loader) {
     return loader.getContent(
         "/xs:schema/*",
-        CollectionUtil.singletonMap("xs", JDom2XmlSchemaLoader.NS_XML_SCHEMA));
+        CollectionUtil.singletonMap("xs", XmlSchemaLoader.NS_XML_SCHEMA));
   }
 
   @Override
@@ -41,7 +44,7 @@ public class XmlProseBaseDatatypeProvider
   protected Map<String, IDatatypeContent> handleResults(@NonNull List<Element> items) {
     return CollectionUtil.singletonMap(
         DATATYPE_NAME,
-        new JDom2DatatypeContent(
+        new DomDatatypeContent(
             DATATYPE_NAME,
             items,
             CollectionUtil.emptyList()));

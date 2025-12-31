@@ -19,9 +19,7 @@ module gov.nist.secauto.metaschema.schemagen {
   requires nl.talsmasoftware.lazy4j;
   requires transitive org.apache.commons.lang3;
   requires org.apache.logging.log4j;
-  requires org.jdom2;
-
-  requires Saxon.HE;
+  requires org.codehaus.stax2;
   requires org.eclipse.jdt.annotation;
 
   exports gov.nist.secauto.metaschema.schemagen;
