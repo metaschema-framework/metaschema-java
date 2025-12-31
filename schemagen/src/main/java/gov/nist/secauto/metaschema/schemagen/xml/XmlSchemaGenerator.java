@@ -17,6 +17,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.AbstractSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationFeature;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.IndentingXMLStreamWriter2;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlDatatypeManager;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.schematype.IXmlType;
@@ -25,10 +26,6 @@ import org.codehaus.stax2.XMLOutputFactory2;
 import org.codehaus.stax2.XMLStreamWriter2;
 import org.eclipse.jdt.annotation.Owning;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
@@ -37,13 +34,6 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -86,8 +76,7 @@ public class XmlSchemaGenerator
    */
   @NonNull
   private static XMLOutputFactory2 defaultXMLOutputFactory() {
-    XMLOutputFactory2 xmlOutputFactory = (XMLOutputFactory2) XMLOutputFactory.newInstance();
-    assert xmlOutputFactory instanceof WstxOutputFactory;
+    WstxOutputFactory xmlOutputFactory = new WstxOutputFactory();
     xmlOutputFactory.configureForSpeed();
     xmlOutputFactory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
     return xmlOutputFactory;
@@ -126,7 +115,9 @@ public class XmlSchemaGenerator
       Writer out) {
     XMLStreamWriter2 writer;
     try {
-      writer = ObjectUtils.notNull((XMLStreamWriter2) getXmlOutputFactory().createXMLStreamWriter(out));
+      XMLStreamWriter2 baseWriter
+          = ObjectUtils.notNull((XMLStreamWriter2) getXmlOutputFactory().createXMLStreamWriter(out));
+      writer = new IndentingXMLStreamWriter2(baseWriter);
     } catch (XMLStreamException ex) {
       throw new SchemaGenerationException(ex);
     }
@@ -145,41 +136,6 @@ public class XmlSchemaGenerator
       AutoCloser<XMLStreamWriter2, SchemaGenerationException> schemaWriter,
       IConfiguration<SchemaGenerationFeature<?>> configuration) {
     return new XmlGenerationState(module, schemaWriter, configuration);
-  }
-
-  @Override
-  public void generateFromModule(
-      @NonNull IModule module,
-      @NonNull Writer out,
-      @NonNull IConfiguration<SchemaGenerationFeature<?>> configuration) {
-    // super.generateFromModule(module, out, configuration);
-
-    String generatedSchema;
-    try (StringWriter stringWriter = new StringWriter()) {
-      super.generateFromModule(module, stringWriter, configuration);
-      generatedSchema = stringWriter.toString();
-    } catch (IOException ex) {
-      throw new SchemaGenerationException(ex);
-    }
-
-    try (InputStream is = getClass().getResourceAsStream("/identity.xsl")) {
-      Source xsltSource = new StreamSource(is);
-
-      // TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      TransformerFactory transformerFactory = new net.sf.saxon.TransformerFactoryImpl();
-      Transformer transformer = transformerFactory.newTransformer(xsltSource);
-
-      try (StringReader stringReader = new StringReader(generatedSchema)) {
-        Source xmlSource = new StreamSource(stringReader);
-
-        StreamResult result = new StreamResult(out);
-        transformer.transform(xmlSource, result);
-      } catch (TransformerException ex) {
-        throw new SchemaGenerationException(ex);
-      }
-    } catch (IOException | TransformerConfigurationException ex) {
-      throw new SchemaGenerationException(ex);
-    }
   }
 
   @Override

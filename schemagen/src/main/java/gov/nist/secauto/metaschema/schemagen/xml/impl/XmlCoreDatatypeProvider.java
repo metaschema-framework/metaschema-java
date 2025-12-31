@@ -10,21 +10,28 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.eclipse.jdt.annotation.Owning;
-import org.jdom2.Attribute;
-import org.jdom2.Element;
-import org.jdom2.filter.Filters;
-import org.jdom2.xpath.XPathExpression;
-import org.jdom2.xpath.XPathFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides core XML Schema datatypes from the metaschema-datatypes.xsd
+ * resource.
+ */
 public class XmlCoreDatatypeProvider
     extends AbstractXmlDatatypeProvider {
 
@@ -36,20 +43,31 @@ public class XmlCoreDatatypeProvider
   }
 
   @Override
-  protected List<Element> queryElements(JDom2XmlSchemaLoader loader) {
+  protected List<Element> queryElements(XmlSchemaLoader loader) {
     return loader.getContent(
         "/xs:schema/xs:simpleType",
-        CollectionUtil.singletonMap("xs", JDom2XmlSchemaLoader.NS_XML_SCHEMA));
+        CollectionUtil.singletonMap("xs", XmlSchemaLoader.NS_XML_SCHEMA));
   }
 
   @NonNull
   private static List<String> analyzeDependencies(@NonNull Element element) {
-    XPathExpression<Attribute> xpath = XPathFactory.instance().compile(".//@base", Filters.attribute());
-    return ObjectUtils.notNull(xpath.evaluate(element).stream()
-        .map(Attribute::getValue)
-        .filter(type -> !type.startsWith("xs:"))
-        .distinct()
-        .collect(Collectors.toList()));
+    try {
+      XPath xpath = XPathFactory.newInstance().newXPath();
+      NodeList nodes = (NodeList) xpath.evaluate(".//@base", element, XPathConstants.NODESET);
+
+      List<String> dependencies = new ArrayList<>();
+      for (int i = 0; i < nodes.getLength(); i++) {
+        String value = nodes.item(i).getNodeValue();
+        if (value != null && !value.startsWith("xs:")) {
+          if (!dependencies.contains(value)) {
+            dependencies.add(value);
+          }
+        }
+      }
+      return dependencies;
+    } catch (XPathExpressionException ex) {
+      throw new IllegalStateException("Failed to analyze dependencies", ex);
+    }
   }
 
   @Override
@@ -57,8 +75,8 @@ public class XmlCoreDatatypeProvider
   protected Map<String, IDatatypeContent> handleResults(
       @NonNull List<Element> items) {
     return ObjectUtils.notNull(items.stream()
-        .map(element -> new JDom2DatatypeContent(
-            ObjectUtils.requireNonNull(element.getAttributeValue("name")),
+        .map(element -> new DomDatatypeContent(
+            ObjectUtils.requireNonNull(element.getAttribute("name")),
             CollectionUtil.singletonList(element),
             analyzeDependencies(element)))
         .collect(Collectors.toMap((Function<? super IDatatypeContent, ? extends String>) IDatatypeContent::getTypeName,

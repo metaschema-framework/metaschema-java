@@ -10,7 +10,7 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.eclipse.jdt.annotation.Owning;
-import org.jdom2.Element;
+import org.w3c.dom.Element;
 
 import java.io.InputStream;
 import java.util.List;
@@ -44,10 +44,10 @@ public abstract class AbstractXmlMarkupDatatypeProvider
   protected abstract String getSchemaResourcePath();
 
   @Override
-  protected List<Element> queryElements(JDom2XmlSchemaLoader loader) {
+  protected List<Element> queryElements(XmlSchemaLoader loader) {
     return loader.getContent(
         "/xs:schema/*",
-        CollectionUtil.singletonMap("xs", JDom2XmlSchemaLoader.NS_XML_SCHEMA));
+        CollectionUtil.singletonMap("xs", XmlSchemaLoader.NS_XML_SCHEMA));
   }
 
   /**
@@ -63,10 +63,10 @@ public abstract class AbstractXmlMarkupDatatypeProvider
     String dataTypeName = getDataTypeName();
     return CollectionUtil.singletonMap(
         dataTypeName,
-        new JDom2DatatypeContent(
+        new DomDatatypeContent(
             dataTypeName,
             ObjectUtils.notNull(items.stream()
-                .filter(element -> !"include".equals(element.getName()))
+                .filter(element -> !"include".equals(element.getLocalName()))
                 .collect(Collectors.toList())),
             CollectionUtil.emptyList()));
   }

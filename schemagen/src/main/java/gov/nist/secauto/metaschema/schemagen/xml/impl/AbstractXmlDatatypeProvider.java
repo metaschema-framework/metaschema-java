@@ -7,8 +7,8 @@ package gov.nist.secauto.metaschema.schemagen.xml.impl;
 
 import org.codehaus.stax2.XMLStreamWriter2;
 import org.eclipse.jdt.annotation.Owning;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,12 +49,12 @@ public abstract class AbstractXmlDatatypeProvider implements IDatatypeProvider {
       if (datatypes == null) {
         try (InputStream is = getSchemaResource()) {
           assert is != null;
-          JDom2XmlSchemaLoader loader = new JDom2XmlSchemaLoader(is);
+          XmlSchemaLoader loader = new XmlSchemaLoader(is);
 
           List<Element> elements = queryElements(loader);
 
           datatypes = Collections.unmodifiableMap(handleResults(elements));
-        } catch (JDOMException | IOException ex) {
+        } catch (SAXException | IOException ex) {
           throw new IllegalStateException(ex);
         }
       }
@@ -69,7 +69,7 @@ public abstract class AbstractXmlDatatypeProvider implements IDatatypeProvider {
    * @return the list of elements representing datatype definitions
    */
   @NonNull
-  protected abstract List<Element> queryElements(JDom2XmlSchemaLoader loader);
+  protected abstract List<Element> queryElements(XmlSchemaLoader loader);
 
   /**
    * Process the queried elements and create datatype content mappings.
