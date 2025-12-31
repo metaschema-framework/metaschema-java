@@ -127,6 +127,12 @@ jobs:
         else
           echo "No CodeQL results directory found." >> $GITHUB_STEP_SUMMARY
         fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ env.UPLOAD_SCAN_SARIF }}" == "true" ]; then
+          echo ":white_check_mark: Results uploaded to GitHub Security tab" >> $GITHUB_STEP_SUMMARY
+        else
+          echo ":information_source: Results not uploaded (branch/PR not targeting develop or release)" >> $GITHUB_STEP_SUMMARY
+        fi
     # -------------------------
     # Trivy Security Scan
     # -------------------------
@@ -251,7 +257,8 @@ jobs:
     - name: Link Checker Summary
       if: always()
       run: |
-        echo "## Link Checker Results" >> $GITHUB_STEP_SUMMARY
+        echo "<details>" >> $GITHUB_STEP_SUMMARY
+        echo "<summary><h2>Link Checker Results</h2></summary>" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         if [ -f "html-link-report.md" ]; then
           # Extract summary stats from the report
@@ -259,19 +266,17 @@ jobs:
           if [ "$ERRORS" -gt 0 ]; then
             echo ":x: **Found $ERRORS broken link(s)**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "<details>" >> $GITHUB_STEP_SUMMARY
-            echo "<summary>Broken Links</summary>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             grep "^\[ERR\]" html-link-report.md >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
-            echo "</details>" >> $GITHUB_STEP_SUMMARY
           else
             echo ":white_check_mark: **All links valid**" >> $GITHUB_STEP_SUMMARY
           fi
         else
           echo ":warning: No link check report found." >> $GITHUB_STEP_SUMMARY
         fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "</details>" >> $GITHUB_STEP_SUMMARY
     - name: Upload link check report
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
