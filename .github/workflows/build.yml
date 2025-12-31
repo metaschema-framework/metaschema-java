@@ -113,13 +113,15 @@ jobs:
         if [ -d "codeql-results" ]; then
           for sarif in codeql-results/*.sarif; do
             if [ -f "$sarif" ]; then
+              FILENAME=$(basename "$sarif" .sarif)
               RESULTS=$(jq -r '.runs[0].results | length' "$sarif" 2>/dev/null || echo "0")
               # Count rules from driver and all extensions
               DRIVER_RULES=$(jq -r '.runs[0].tool.driver.rules // [] | length' "$sarif" 2>/dev/null || echo "0")
               EXT_RULES=$(jq -r '[.runs[0].tool.extensions[]?.rules // [] | length] | add // 0' "$sarif" 2>/dev/null || echo "0")
               RULES=$((DRIVER_RULES + EXT_RULES))
-              echo "- **Results found:** $RESULTS" >> $GITHUB_STEP_SUMMARY
-              echo "- **Rules checked:** $RULES" >> $GITHUB_STEP_SUMMARY
+              echo "**Language:** $FILENAME" >> $GITHUB_STEP_SUMMARY
+              echo "- Results found: $RESULTS" >> $GITHUB_STEP_SUMMARY
+              echo "- Rules checked: $RULES" >> $GITHUB_STEP_SUMMARY
             fi
           done
         else
@@ -281,7 +283,7 @@ jobs:
       uses: peter-evans/create-issue-from-file@fca9117c27cdc29c6c4db3b86c48e4115a786710
       with:
         title: Scheduled Check of Website Content Found Bad Hyperlinks
-        content-filepath: ./lychee/out.md
+        content-filepath: html-link-report.md
         labels: |
           bug
           documentation
