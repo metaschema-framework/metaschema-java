@@ -155,6 +155,7 @@ public class TargetedExpectConstraint
    * @return the id value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getId() {
     return _id;
   }
@@ -175,6 +176,7 @@ public class TargetedExpectConstraint
    * @return the level value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getLevel() {
     return _level;
   }
@@ -215,6 +217,7 @@ public class TargetedExpectConstraint
    * @return the target value
    */
   @NonNull
+  @Override
   public String getTarget() {
     return _target;
   }
@@ -238,6 +241,7 @@ public class TargetedExpectConstraint
    * @return the formal-name value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getFormalName() {
     return _formalName;
   }
@@ -265,6 +269,7 @@ public class TargetedExpectConstraint
    * @return the description value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public MarkupLine getDescription() {
     return _description;
   }
@@ -289,11 +294,12 @@ public class TargetedExpectConstraint
    * @return the prop value
    */
   @NonNull
+  @Override
   public List<Property> getProps() {
     if (_props == null) {
       _props = new LinkedList<>();
     }
-    return _props;
+    return ObjectUtils.notNull(_props);
   }
 
   /**
@@ -340,6 +346,7 @@ public class TargetedExpectConstraint
    * @return the message value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getMessage() {
     return _message;
   }
@@ -364,6 +371,7 @@ public class TargetedExpectConstraint
    * @return the remarks value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public Remarks getRemarks() {
     return _remarks;
   }
@@ -384,6 +392,6 @@ public class TargetedExpectConstraint
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

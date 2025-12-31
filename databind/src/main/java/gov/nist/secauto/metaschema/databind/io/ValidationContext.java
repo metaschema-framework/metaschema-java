@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.databind.io;
 
 import gov.nist.secauto.metaschema.core.model.IResourceLocation;
 import gov.nist.secauto.metaschema.core.model.SimpleResourceLocation;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import java.net.URI;
 
@@ -171,7 +172,7 @@ public final class ValidationContext {
       }
     }
 
-    return sb.toString();
+    return ObjectUtils.notNull(sb.toString());
   }
 
   /**
@@ -183,18 +184,19 @@ public final class ValidationContext {
    */
   @NonNull
   private String formatSourceName() {
-    if (source == null) {
+    URI sourceUri = source;
+    if (sourceUri == null) {
       return "";
     }
-    String path = source.getPath();
+    String path = sourceUri.getPath();
     if (path != null && !path.isEmpty()) {
       int lastSlash = path.lastIndexOf('/');
       if (lastSlash >= 0 && lastSlash < path.length() - 1) {
-        return path.substring(lastSlash + 1);
+        return ObjectUtils.notNull(path.substring(lastSlash + 1));
       }
-      return path;
+      return ObjectUtils.notNull(path);
     }
-    return source.toString();
+    return ObjectUtils.notNull(sourceUri.toString());
   }
 
   /**

@@ -22,12 +22,36 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *          the Java type of items being written
  */
 public interface IModelInstanceWriteHandler<ITEM> {
+  /**
+   * Write a singleton item.
+   *
+   * @param item
+   *          the item to write
+   * @throws IOException
+   *           if an error occurred while writing the output
+   */
   default void writeSingleton(@NonNull ITEM item) throws IOException {
     writeItem(item);
   }
 
+  /**
+   * Write items from a list collection.
+   *
+   * @param items
+   *          the list of items to write
+   * @throws IOException
+   *           if an error occurred while writing the output
+   */
   void writeList(@NonNull List<ITEM> items) throws IOException;
 
+  /**
+   * Write items from a map collection.
+   *
+   * @param items
+   *          the map of items to write, keyed by JSON key flag value
+   * @throws IOException
+   *           if an error occurred while writing the output
+   */
   void writeMap(@NonNull Map<String, ITEM> items) throws IOException;
 
   /**

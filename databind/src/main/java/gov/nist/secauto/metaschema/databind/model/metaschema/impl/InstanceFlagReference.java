@@ -51,6 +51,21 @@ public class InstanceFlagReference
   @NonNull
   private final Lazy<IAssemblyNodeItem> boundNodeItem;
 
+  /**
+   * Construct a new flag reference instance from binding data.
+   *
+   * @param binding
+   *          the underlying bound flag reference object
+   * @param bindingInstance
+   *          the assembly instance for the underlying bound class
+   * @param position
+   *          the zero-based position of this instance relative to its bound
+   *          siblings
+   * @param definition
+   *          the global flag definition being referenced
+   * @param parent
+   *          the parent definition model containing this reference
+   */
   public InstanceFlagReference(
       @NonNull FlagReference binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
@@ -68,6 +83,11 @@ public class InstanceFlagReference
             .get(position)));
   }
 
+  /**
+   * Gets the underlying binding object for this flag reference.
+   *
+   * @return the binding object
+   */
   @NonNull
   protected FlagReference getBinding() {
     return binding;

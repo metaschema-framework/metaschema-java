@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.datatype.adapter.UriReferenceAdapter;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.core.model.IMetaschemaData;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraint;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValue;
 import gov.nist.secauto.metaschema.databind.model.annotations.AllowedValues;
 import gov.nist.secauto.metaschema.databind.model.annotations.BoundFlag;
@@ -180,6 +181,6 @@ public class ValidationCase implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

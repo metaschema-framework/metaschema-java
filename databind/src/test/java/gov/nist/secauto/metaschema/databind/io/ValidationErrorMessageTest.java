@@ -62,6 +62,18 @@ class ValidationErrorMessageTest
   }
 
   /**
+   * Create a new binding context. This method is provided to avoid synthetic
+   * accessor warnings when called from nested test classes.
+   *
+   * @return a new binding context
+   * @throws IOException
+   *           if an error occurred loading the binding context
+   */
+  IBindingContext createBindingContext() throws IOException {
+    return newBindingContext();
+  }
+
+  /**
    * Tests for format-appropriate names in error messages (Issue #595).
    */
   @Nested
@@ -75,12 +87,12 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
       });
 
       String message = exception.getMessage();
@@ -98,12 +110,12 @@ class ValidationErrorMessageTest
           + "\"required-assembly\": {\"id\": \"a1\"}"
           + "}";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(json), URI.create("test://example.json"));
+        deserializer.deserialize(new StringReader(json), ObjectUtils.notNull(URI.create("test://example.json")));
       });
 
       String message = exception.getMessage();
@@ -120,12 +132,12 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
       });
 
       String message = exception.getMessage();
@@ -142,12 +154,12 @@ class ValidationErrorMessageTest
           + "<required-field>value</required-field>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
       });
 
       String message = exception.getMessage();
@@ -171,10 +183,10 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      URI sourceUri = URI.create("file:///path/to/example.xml");
+      URI sourceUri = ObjectUtils.notNull(URI.create("file:///path/to/example.xml"));
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
@@ -196,12 +208,12 @@ class ValidationErrorMessageTest
           + "  <required-assembly id='a1'/>\n"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
       });
 
       String message = exception.getMessage();
@@ -218,12 +230,12 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
       });
 
       String message = exception.getMessage();
@@ -241,12 +253,12 @@ class ValidationErrorMessageTest
           + "  \"required-assembly\": {\"id\": \"a1\"}\n"
           + "}";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(json), URI.create("test://example.json"));
+        deserializer.deserialize(new StringReader(json), ObjectUtils.notNull(URI.create("test://example.json")));
       });
 
       String message = exception.getMessage();
@@ -270,12 +282,12 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
       });
 
       String message = exception.getMessage();
@@ -292,12 +304,12 @@ class ValidationErrorMessageTest
           + "\"required-assembly\": {\"id\": \"a1\"}"
           + "}";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.JSON, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(json), URI.create("test://example.json"));
+        deserializer.deserialize(new StringReader(json), ObjectUtils.notNull(URI.create("test://example.json")));
       });
 
       String message = exception.getMessage();
@@ -314,12 +326,12 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
       });
 
       String message = exception.getMessage();
@@ -343,12 +355,12 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
       });
 
       String message = exception.getMessage();
@@ -366,13 +378,13 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       // Use a generic URI - error messages should still be informative
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("unknown:source"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("unknown:source")));
       });
 
       String message = exception.getMessage();
@@ -391,13 +403,14 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       // This should parse successfully with all required fields present
       assertDoesNotThrow(() -> {
-        Object result = deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+        Object result
+            = deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
         assertNotNull(result, "Should parse successfully with all required fields");
       });
     }
@@ -410,12 +423,12 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       IOException exception = assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
       });
 
       String message = exception.getMessage();
@@ -445,13 +458,13 @@ class ValidationErrorMessageTest
           + "<required-assembly id='a1'/>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
 
       // Should not throw NullPointerException
       assertDoesNotThrow(() -> {
         try {
-          deserializer.deserialize(new StringReader(xml), URI.create("test://example.xml"));
+          deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://example.xml")));
         } catch (IOException e) {
           // IOException is acceptable, NPE is not
           assertFalse(e.getCause() instanceof NullPointerException,
@@ -476,14 +489,14 @@ class ValidationErrorMessageTest
       String xml = "<root xmlns='http://csrc.nist.gov/ns/metaschema/testing/validation-errors'>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
+      IBindingContext bindingContext = createBindingContext();
       // Create deserializer and apply permissive configuration
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       // Should not throw - permissive loading skips required field validation
       assertDoesNotThrow(() -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://incomplete.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://incomplete.xml")));
       });
     }
 
@@ -493,14 +506,14 @@ class ValidationErrorMessageTest
       String xml = "<root xmlns='http://csrc.nist.gov/ns/metaschema/testing/validation-errors'>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
+      IBindingContext bindingContext = createBindingContext();
       // Use deserializer with explicit strict validation enabled
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       // Should throw because required fields are missing
       assertThrows(IOException.class, () -> {
-        deserializer.deserialize(new StringReader(xml), URI.create("test://incomplete.xml"));
+        deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://incomplete.xml")));
       });
     }
 
@@ -511,21 +524,21 @@ class ValidationErrorMessageTest
           + "<optional-field>some value</optional-field>"
           + "</root>";
 
-      IBindingContext bindingContext = newBindingContext();
-      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, rootClass);
+      IBindingContext bindingContext = createBindingContext();
+      IDeserializer<?> deserializer = bindingContext.newDeserializer(Format.XML, ObjectUtils.notNull(rootClass));
       deserializer.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_REQUIRED_FIELDS);
 
       // Should load successfully despite missing required-flag, required-field, and
       // required-assembly
       Object result = assertDoesNotThrow(
-          () -> deserializer.deserialize(new StringReader(xml), URI.create("test://partial.xml")));
+          () -> deserializer.deserialize(new StringReader(xml), ObjectUtils.notNull(URI.create("test://partial.xml"))));
 
       assertNotNull(result, "Permissive loading should return a result even for partial documents");
     }
 
     @Test
     void testNewPermissiveBoundLoaderHasValidationDisabled() throws IOException {
-      IBindingContext bindingContext = newBindingContext();
+      IBindingContext bindingContext = createBindingContext();
       IBoundLoader permissiveLoader = bindingContext.newPermissiveBoundLoader();
 
       // Verify that the permissive loader has DESERIALIZE_VALIDATE_REQUIRED_FIELDS
@@ -536,7 +549,7 @@ class ValidationErrorMessageTest
 
     @Test
     void testNewBoundLoaderHasValidationEnabledByDefault() throws IOException {
-      IBindingContext bindingContext = newBindingContext();
+      IBindingContext bindingContext = createBindingContext();
       IBoundLoader regularLoader = bindingContext.newBoundLoader();
 
       // Verify that the regular loader has DESERIALIZE_VALIDATE_REQUIRED_FIELDS

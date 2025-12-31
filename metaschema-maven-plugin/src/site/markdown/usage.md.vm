@@ -41,3 +41,51 @@ The following is an example of a Maven configuration for this plugin.
 </project>
 ```
 
+## Custom Superinterfaces and Base Classes
+
+When using [binding configuration](../metaschema-databind/binding-configuration.html) to specify custom superinterfaces or base classes for generated code, those classes must be available on the plugin's classpath during code generation.
+
+The code generator uses reflection to:
+
+1. **Detect method overrides** - Check if getter/setter methods are declared in superinterfaces to add `@Override` annotations
+2. **Determine IBoundObject extension** - Check if configured superinterfaces extend `IBoundObject` to avoid adding redundant interface declarations
+
+If the classes are not on the classpath, you will see warnings during code generation, and the generated code may have missing `@Override` annotations or redundant interface declarations.
+
+### Adding Plugin Dependencies
+
+To make custom interfaces available during code generation, add them as plugin dependencies:
+
+```xml
+<plugin>
+	<groupId>${project.groupId}</groupId>
+	<artifactId>${project.artifactId}</artifactId>
+	<version>${project.version}</version>
+	<executions>
+		<execution>
+			<id>generate-model-sources</id>
+			<goals>
+				<goal>generate-sources</goal>
+			</goals>
+			<configuration>
+				<configs>
+					<config>src/main/metaschema-bindings/bindings.xml</config>
+				</configs>
+			</configuration>
+		</execution>
+	</executions>
+	<!-- Add dependencies containing custom interfaces/base classes -->
+	<dependencies>
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>my-interfaces</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	</dependencies>
+</plugin>
+```
+
+### Multi-Module Projects
+
+When the superinterface is defined in another module of the same project, ensure that module is built before code generation runs. You can use Maven's reactor build order by declaring appropriate dependencies, or use a multi-phase build approach.
+

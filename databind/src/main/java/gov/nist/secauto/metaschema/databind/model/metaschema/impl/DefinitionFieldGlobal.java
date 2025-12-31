@@ -58,6 +58,19 @@ public class DefinitionFieldGlobal
   @NonNull
   private final Lazy<IAssemblyNodeItem> boundNodeItem;
 
+  /**
+   * Construct a new global field definition from binding data.
+   *
+   * @param binding
+   *          the underlying bound field definition object
+   * @param bindingInstance
+   *          the assembly instance for the underlying bound class
+   * @param position
+   *          the zero-based position of this instance relative to its bound
+   *          siblings
+   * @param module
+   *          the Metaschema module containing this binding
+   */
   public DefinitionFieldGlobal(
       @NonNull METASCHEMA.DefineField binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
@@ -95,6 +108,11 @@ public class DefinitionFieldGlobal
         position))));
   }
 
+  /**
+   * Gets the underlying binding object for this field definition.
+   *
+   * @return the binding object
+   */
   @NonNull
   protected METASCHEMA.DefineField getBinding() {
     return binding;

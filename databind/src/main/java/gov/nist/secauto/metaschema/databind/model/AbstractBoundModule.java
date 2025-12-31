@@ -130,6 +130,11 @@ public abstract class AbstractBoundModule
             LinkedHashMap::new)));
   }
 
+  /**
+   * Get the namespace binding annotations associated with this module.
+   *
+   * @return the namespace bindings array, or an empty array if none are defined
+   */
   @SuppressWarnings({ "null" })
   @NonNull
   protected NsBinding[] getNsBindings() {

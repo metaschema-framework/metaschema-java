@@ -89,8 +89,9 @@ class JavadocGenerationTest
    * @throws IOException
    *           if the file cannot be found or an I/O error occurs
    */
+  @SuppressWarnings("resource")
   @NonNull
-  private Path findGeneratedFile(@NonNull Path dir, @NonNull String fileName) throws IOException {
+  private static Path findGeneratedFile(@NonNull Path dir, @NonNull String fileName) throws IOException {
     return ObjectUtils.notNull(Files.walk(dir)
         .filter(p -> p.getFileName().toString().equals(fileName))
         .findFirst()

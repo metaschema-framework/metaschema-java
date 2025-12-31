@@ -33,6 +33,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class FlagInstanceTypeInfoImpl
     extends AbstractInstanceTypeInfo<IFlagInstance, IDefinitionTypeInfo>
     implements IFlagInstanceTypeInfo {
+  /**
+   * Constructs a new type information object for a flag instance.
+   *
+   * @param instance
+   *          the flag instance
+   * @param parentDefinition
+   *          the type information for the parent definition containing this
+   *          instance
+   */
   public FlagInstanceTypeInfoImpl(@NonNull IFlagInstance instance, @NonNull IDefinitionTypeInfo parentDefinition) {
     super(instance, parentDefinition);
   }

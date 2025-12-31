@@ -207,15 +207,17 @@ public class ChoiceGroupTypeInfoImpl
 
     // Add item type information if configured
     IChoiceGroupBindingConfiguration choiceConfig = getChoiceGroupBindingConfiguration();
-    String itemTypeName = choiceConfig == null ? null : choiceConfig.getItemTypeName();
-    if (itemTypeName != null) {
-      builder.addJavadoc("\n");
-      builder.addJavadoc("<p>\n");
-      String simpleTypeName = itemTypeName.substring(itemTypeName.lastIndexOf('.') + 1);
-      if (choiceConfig.isUseWildcard()) {
-        builder.addJavadoc("Items in this collection implement {@link $L}.\n", simpleTypeName);
-      } else {
-        builder.addJavadoc("Items in this collection are of type {@link $L}.\n", simpleTypeName);
+    if (choiceConfig != null) {
+      String itemTypeName = choiceConfig.getItemTypeName();
+      if (itemTypeName != null) {
+        builder.addJavadoc("\n");
+        builder.addJavadoc("<p>\n");
+        String simpleTypeName = itemTypeName.substring(itemTypeName.lastIndexOf('.') + 1);
+        if (choiceConfig.isUseWildcard()) {
+          builder.addJavadoc("Items in this collection implement {@link $L}.\n", simpleTypeName);
+        } else {
+          builder.addJavadoc("Items in this collection are of type {@link $L}.\n", simpleTypeName);
+        }
       }
     }
 
@@ -239,15 +241,17 @@ public class ChoiceGroupTypeInfoImpl
 
     // Add item type information if configured
     IChoiceGroupBindingConfiguration choiceConfig = getChoiceGroupBindingConfiguration();
-    String itemTypeName = choiceConfig == null ? null : choiceConfig.getItemTypeName();
-    if (itemTypeName != null) {
-      builder.addJavadoc("\n");
-      builder.addJavadoc("<p>\n");
-      String simpleTypeName = itemTypeName.substring(itemTypeName.lastIndexOf('.') + 1);
-      if (choiceConfig.isUseWildcard()) {
-        builder.addJavadoc("Items in this collection must implement {@link $L}.\n", simpleTypeName);
-      } else {
-        builder.addJavadoc("Items in this collection must be of type {@link $L}.\n", simpleTypeName);
+    if (choiceConfig != null) {
+      String itemTypeName = choiceConfig.getItemTypeName();
+      if (itemTypeName != null) {
+        builder.addJavadoc("\n");
+        builder.addJavadoc("<p>\n");
+        String simpleTypeName = itemTypeName.substring(itemTypeName.lastIndexOf('.') + 1);
+        if (choiceConfig.isUseWildcard()) {
+          builder.addJavadoc("Items in this collection must implement {@link $L}.\n", simpleTypeName);
+        } else {
+          builder.addJavadoc("Items in this collection must be of type {@link $L}.\n", simpleTypeName);
+        }
       }
     }
 

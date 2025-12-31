@@ -21,7 +21,6 @@ import gov.nist.secauto.metaschema.core.metapath.item.IItem;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IIntegerItem;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
-import gov.nist.secauto.metaschema.core.metapath.type.IItemType;
 import gov.nist.secauto.metaschema.core.metapath.type.ISequenceType;
 import gov.nist.secauto.metaschema.core.metapath.type.Occurrence;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;

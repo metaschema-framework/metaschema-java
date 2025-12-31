@@ -163,6 +163,7 @@ public class TargetedIndexConstraint
    * @return the id value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getId() {
     return _id;
   }
@@ -183,6 +184,7 @@ public class TargetedIndexConstraint
    * @return the level value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getLevel() {
     return _level;
   }
@@ -223,6 +225,7 @@ public class TargetedIndexConstraint
    * @return the target value
    */
   @NonNull
+  @Override
   public String getTarget() {
     return _target;
   }
@@ -246,6 +249,7 @@ public class TargetedIndexConstraint
    * @return the formal-name value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getFormalName() {
     return _formalName;
   }
@@ -273,6 +277,7 @@ public class TargetedIndexConstraint
    * @return the description value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public MarkupLine getDescription() {
     return _description;
   }
@@ -297,11 +302,12 @@ public class TargetedIndexConstraint
    * @return the prop value
    */
   @NonNull
+  @Override
   public List<Property> getProps() {
     if (_props == null) {
       _props = new LinkedList<>();
     }
-    return _props;
+    return ObjectUtils.notNull(_props);
   }
 
   /**
@@ -352,7 +358,7 @@ public class TargetedIndexConstraint
     if (_keyFields == null) {
       _keyFields = new LinkedList<>();
     }
-    return _keyFields;
+    return ObjectUtils.notNull(_keyFields);
   }
 
   /**
@@ -399,6 +405,7 @@ public class TargetedIndexConstraint
    * @return the message value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getMessage() {
     return _message;
   }
@@ -423,6 +430,7 @@ public class TargetedIndexConstraint
    * @return the remarks value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public Remarks getRemarks() {
     return _remarks;
   }
@@ -443,6 +451,6 @@ public class TargetedIndexConstraint
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

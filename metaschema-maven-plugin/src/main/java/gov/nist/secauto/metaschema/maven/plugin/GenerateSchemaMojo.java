@@ -194,7 +194,7 @@ public class GenerateSchemaMojo
 
   @SuppressWarnings("PMD.AvoidCatchingGenericException")
   @NonNull
-  private List<File> generateSchemas(
+  private static List<File> generateSchemas(
       @NonNull IModule module,
       @NonNull IConfiguration<SchemaGenerationFeature<?>> schemaGenerationConfig,
       @NonNull Path outputDirectory,

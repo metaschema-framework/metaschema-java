@@ -265,8 +265,8 @@ public class BindingConstraintLoader
             .map(MetaschemaMetapath::getTarget)
             .map(metapath -> IMetapathExpression.lazyCompile(
                 ObjectUtils.requireNonNull(metapath),
-                source.getStaticContext())))
-        .collect(Collectors.toUnmodifiableList());
+                source.getStaticContext()))
+            .collect(Collectors.toUnmodifiableList()));
 
     // parse the constraints
     AssemblyConstraints contextConstraints = contextObj.getConstraints();

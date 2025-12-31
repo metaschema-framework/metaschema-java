@@ -18,9 +18,9 @@ import gov.nist.secauto.metaschema.core.model.XmlGroupAsBehavior;
 import gov.nist.secauto.metaschema.core.qname.IEnhancedQName;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
-import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.DocumentationGenerator;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.IXmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlDatatypeManager;
 
 import java.util.Collection;
 
@@ -55,12 +55,12 @@ public class XmlComplexTypeAssemblyDefinition
   }
 
   @Override
-  protected void generateTypeBody(XmlGenerationState state) throws XMLStreamException {
+  protected void generateTypeBody(IXmlGenerationState state) throws XMLStreamException {
     IAssemblyDefinition definition = getDefinition();
 
     Collection<? extends IModelInstanceAbsolute> modelInstances = definition.getModelInstances();
     if (!modelInstances.isEmpty()) {
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "sequence", XmlSchemaGenerator.NS_XML_SCHEMA);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "sequence", XmlDatatypeManager.NS_XML_SCHEMA);
       for (IModelInstanceAbsolute modelInstance : modelInstances) {
         assert modelInstance != null;
         generateModelInstance(modelInstance, state);
@@ -92,13 +92,13 @@ public class XmlComplexTypeAssemblyDefinition
    */
   protected void generateModelInstance( // NOPMD acceptable complexity
       @NonNull IModelInstanceAbsolute modelInstance,
-      @NonNull XmlGenerationState state)
+      @NonNull IXmlGenerationState state)
       throws XMLStreamException {
 
     boolean grouped = false;
     if (XmlGroupAsBehavior.GROUPED.equals(modelInstance.getXmlGroupAsBehavior())) {
       // handle grouping
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "element", XmlSchemaGenerator.NS_XML_SCHEMA);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "element", XmlDatatypeManager.NS_XML_SCHEMA);
 
       IEnhancedQName groupAsQName = ObjectUtils.requireNonNull(modelInstance.getEffectiveXmlGroupAsQName());
 
@@ -115,8 +115,8 @@ public class XmlComplexTypeAssemblyDefinition
       }
 
       // now generate the child elements of the group
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "complexType", XmlSchemaGenerator.NS_XML_SCHEMA);
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "sequence", XmlSchemaGenerator.NS_XML_SCHEMA);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "complexType", XmlDatatypeManager.NS_XML_SCHEMA);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "sequence", XmlDatatypeManager.NS_XML_SCHEMA);
 
       // mark that we need to close these elements
       grouped = true;
@@ -167,8 +167,8 @@ public class XmlComplexTypeAssemblyDefinition
   protected void generateNamedModelInstance(
       @NonNull INamedModelInstanceAbsolute modelInstance,
       boolean grouped,
-      @NonNull XmlGenerationState state) throws XMLStreamException {
-    state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "element", XmlSchemaGenerator.NS_XML_SCHEMA);
+      @NonNull IXmlGenerationState state) throws XMLStreamException {
+    state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "element", XmlDatatypeManager.NS_XML_SCHEMA);
 
     state.writeAttribute("name", modelInstance.getEffectiveName());
 
@@ -213,13 +213,13 @@ public class XmlComplexTypeAssemblyDefinition
   protected static void generateUnwrappedFieldInstance(
       @NonNull IFieldInstanceAbsolute fieldInstance,
       boolean grouped,
-      @NonNull XmlGenerationState state) throws XMLStreamException {
+      @NonNull IXmlGenerationState state) throws XMLStreamException {
 
     if (!MarkupDataTypeProvider.MARKUP_MULTILINE.equals(fieldInstance.getDefinition().getJavaTypeAdapter())) {
       throw new IllegalStateException();
     }
 
-    state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "group", XmlSchemaGenerator.NS_XML_SCHEMA);
+    state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "group", XmlDatatypeManager.NS_XML_SCHEMA);
 
     state.writeAttribute("ref", "blockElementGroup");
 
@@ -256,8 +256,8 @@ public class XmlComplexTypeAssemblyDefinition
    */
   protected void generateChoiceModelInstance(
       @NonNull IChoiceInstance choice,
-      @NonNull XmlGenerationState state) throws XMLStreamException {
-    state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "choice", XmlSchemaGenerator.NS_XML_SCHEMA);
+      @NonNull IXmlGenerationState state) throws XMLStreamException {
+    state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "choice", XmlDatatypeManager.NS_XML_SCHEMA);
 
     for (IModelInstanceAbsolute instance : choice.getModelInstances()) {
       assert instance != null;
@@ -272,9 +272,9 @@ public class XmlComplexTypeAssemblyDefinition
     state.writeEndElement(); // xs:choice
   }
 
-  private void generateChoiceGroupInstance(IChoiceGroupInstance choiceGroup, XmlGenerationState state)
+  private void generateChoiceGroupInstance(IChoiceGroupInstance choiceGroup, IXmlGenerationState state)
       throws XMLStreamException {
-    state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "choice", XmlSchemaGenerator.NS_XML_SCHEMA);
+    state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "choice", XmlDatatypeManager.NS_XML_SCHEMA);
 
     int min = choiceGroup.getMinOccurs();
     if (min != 1) {
@@ -314,8 +314,8 @@ public class XmlComplexTypeAssemblyDefinition
    */
   protected void generateGroupedNamedModelInstance(
       @NonNull INamedModelInstanceGrouped instance,
-      @NonNull XmlGenerationState state) throws XMLStreamException {
-    state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "element", XmlSchemaGenerator.NS_XML_SCHEMA);
+      @NonNull IXmlGenerationState state) throws XMLStreamException {
+    state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "element", XmlDatatypeManager.NS_XML_SCHEMA);
 
     state.writeAttribute("name", instance.getEffectiveName());
 

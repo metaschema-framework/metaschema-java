@@ -3,15 +3,10 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.schemagen.xml;
+package gov.nist.secauto.metaschema.schemagen.xml.impl;
 
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.datatype.AbstractDatatypeManager;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.IDatatypeProvider;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlCoreDatatypeProvider;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlMarkupLineDatatypeProvider;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlMarkupMultilineDatatypeProvider;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlProseCompositDatatypeProvider;
 
 import org.codehaus.stax2.XMLStreamWriter2;
 
@@ -31,8 +26,15 @@ import nl.talsmasoftware.lazy4j.Lazy;
  */
 public class XmlDatatypeManager
     extends AbstractDatatypeManager {
+  /** The namespace prefix for XML Schema elements. */
+  @NonNull
+  public static final String PREFIX_XML_SCHEMA = "xs";
   /** The XML Schema namespace URI. */
+  @NonNull
   public static final String NS_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+  /** The XHTML namespace URI used for documentation content. */
+  @NonNull
+  public static final String NS_XHTML = "http://www.w3.org/1999/xhtml";
 
   @NonNull
   private static final Lazy<List<IDatatypeProvider>> DATATYPE_PROVIDERS = ObjectUtils.notNull(Lazy.of(() -> List.of(

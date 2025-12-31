@@ -20,6 +20,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.annotation.Owning;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -210,9 +211,10 @@ public class MetaConstraintSet
     }
 
     @NonNull
+    @Owning
     private static Stream<IMetapathExpression> concatMetapaths(
         @Nullable MetaConstraintSet.Context parent,
-        @NonNull Stream<IMetapathExpression> metapaths,
+        @NonNull @Owning Stream<IMetapathExpression> metapaths,
         @NonNull ISource source) {
 
       Stream<IMetapathExpression> retval = metapaths;

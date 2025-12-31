@@ -30,6 +30,15 @@ public abstract class AbstractGroupedNamedModelInstanceTypeInfo<I extends INamed
   @NonNull
   private final IChoiceGroupTypeInfo parentTypeInfo;
 
+  /**
+   * Constructs a new type information object for a grouped named model instance.
+   *
+   * @param instance
+   *          the grouped named model instance
+   * @param parentTypeInfo
+   *          the type information for the parent choice group containing this
+   *          instance
+   */
   protected AbstractGroupedNamedModelInstanceTypeInfo(
       @NonNull I instance,
       @NonNull IChoiceGroupTypeInfo parentTypeInfo) {
@@ -37,17 +46,40 @@ public abstract class AbstractGroupedNamedModelInstanceTypeInfo<I extends INamed
     this.parentTypeInfo = parentTypeInfo;
   }
 
+  /**
+   * Get the binding annotation class to use for this grouped instance.
+   *
+   * @return the annotation class
+   */
   protected abstract Class<? extends Annotation> getBindingAnnotation();
 
+  /**
+   * Applies the instance annotation to the choice group annotation.
+   *
+   * @param instanceAnnotation
+   *          the instance annotation builder containing the member details
+   * @param choiceGroupAnnotation
+   *          the choice group annotation builder to add the member to
+   */
   protected abstract void applyInstanceAnnotation(
       @NonNull AnnotationSpec.Builder instanceAnnotation,
       @NonNull AnnotationSpec.Builder choiceGroupAnnotation);
 
+  /**
+   * Get the grouped named model instance.
+   *
+   * @return the instance
+   */
   @NonNull
   protected I getInstance() {
     return instance;
   }
 
+  /**
+   * Get the type information for the parent choice group.
+   *
+   * @return the choice group type information
+   */
   protected IChoiceGroupTypeInfo getChoiceGroupTypeInfo() {
     return parentTypeInfo;
   }

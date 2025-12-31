@@ -156,7 +156,7 @@ public class TestScenario implements IBoundObject {
     if (_validationCases == null) {
       _validationCases = new LinkedList<>();
     }
-    return _validationCases;
+    return ObjectUtils.notNull(_validationCases);
   }
 
   /**
@@ -202,6 +202,6 @@ public class TestScenario implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

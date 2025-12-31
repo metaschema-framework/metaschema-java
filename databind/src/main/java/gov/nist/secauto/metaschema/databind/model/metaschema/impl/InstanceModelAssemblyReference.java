@@ -91,6 +91,11 @@ public class InstanceModelAssemblyReference
     return definition;
   }
 
+  /**
+   * Gets the underlying binding object for this assembly reference.
+   *
+   * @return the binding object
+   */
   @NonNull
   protected AssemblyReference getBinding() {
     return binding;

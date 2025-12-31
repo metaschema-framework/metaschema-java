@@ -48,6 +48,21 @@ public class InstanceModelChoice
   @NonNull
   private final Lazy<IAssemblyNodeItem> boundNodeItem;
 
+  /**
+   * Construct a new choice instance from binding data.
+   *
+   * @param binding
+   *          the underlying bound choice object
+   * @param bindingInstance
+   *          the assembly instance for the underlying bound class
+   * @param position
+   *          the zero-based position of this instance relative to its bound
+   *          siblings
+   * @param parent
+   *          the parent assembly definition containing this choice
+   * @param nodeItemFactory
+   *          the node item factory used to generate child nodes
+   */
   public InstanceModelChoice(
       @NonNull AssemblyModel.Choice binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,

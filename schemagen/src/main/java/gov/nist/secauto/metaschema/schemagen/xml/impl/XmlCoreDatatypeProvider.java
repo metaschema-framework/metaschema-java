@@ -9,6 +9,7 @@ import gov.nist.secauto.metaschema.core.model.IModule;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
+import org.eclipse.jdt.annotation.Owning;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
 import org.jdom2.filter.Filters;
@@ -27,7 +28,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class XmlCoreDatatypeProvider
     extends AbstractXmlDatatypeProvider {
 
+  @SuppressWarnings("resource")
   @Override
+  @Owning
   protected InputStream getSchemaResource() {
     return ObjectUtils.requireNonNull(IModule.class.getResourceAsStream("/schema/xml/metaschema-datatypes.xsd"));
   }

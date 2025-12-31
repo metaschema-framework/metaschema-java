@@ -30,8 +30,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -194,11 +192,11 @@ class IndexUniqueConstraintTest {
     awf.assemblyDef.addConstraint(indexConstraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "should pass with unique index entries");
   }
 
@@ -244,11 +242,11 @@ class IndexUniqueConstraintTest {
     awf.assemblyDef.addConstraint(indexConstraint2);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "should fail with duplicate index name"),
         () -> assertThat("should have findings", handler.getFindings(), hasSize(1)));
@@ -286,11 +284,11 @@ class IndexUniqueConstraintTest {
     awf.assemblyDef.addConstraint(indexConstraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "should fail with duplicate keys"),
         () -> assertThat("should have findings", handler.getFindings(), hasSize(1)));
@@ -328,11 +326,11 @@ class IndexUniqueConstraintTest {
     awf.assemblyDef.addConstraint(uniqueConstraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "should pass with all unique values");
   }
 
@@ -368,11 +366,11 @@ class IndexUniqueConstraintTest {
     awf.assemblyDef.addConstraint(uniqueConstraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "should fail with duplicate values"),
         () -> assertThat("should have findings", handler.getFindings(), hasSize(1)));
@@ -428,11 +426,11 @@ class IndexUniqueConstraintTest {
     awff.assemblyDef.addConstraint(uniqueConstraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "should pass with unique compound keys");
   }
 
@@ -486,11 +484,11 @@ class IndexUniqueConstraintTest {
     awff.assemblyDef.addConstraint(uniqueConstraint);
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(assembly, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(assembly, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "should fail with duplicate compound keys"),
         () -> assertThat("should have findings", handler.getFindings(), hasSize(1)),

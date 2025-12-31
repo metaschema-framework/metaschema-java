@@ -79,6 +79,21 @@ public class InstanceModelGroupedAssemblyInline
   @NonNull
   private final Lazy<IAssemblyNodeItem> boundNodeItem;
 
+  /**
+   * Construct a new inline grouped assembly instance from binding data.
+   *
+   * @param binding
+   *          the underlying bound inline assembly definition object
+   * @param bindingInstance
+   *          the assembly instance for the underlying bound class
+   * @param position
+   *          the zero-based position of this instance relative to its bound
+   *          siblings
+   * @param parent
+   *          the parent choice group instance containing this assembly
+   * @param nodeItemFactory
+   *          the node item factory used to generate child nodes
+   */
   public InstanceModelGroupedAssemblyInline(
       @NonNull AssemblyModel.ChoiceGroup.DefineAssembly binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,

@@ -107,10 +107,32 @@ public interface IFeatureComplexItemValueHandler extends IItemValueHandler<IBoun
     }
   }
 
+  /**
+   * Invoke the before-deserialize lifecycle callback on the target object.
+   *
+   * @param targetObject
+   *          the object being deserialized
+   * @param parentObject
+   *          the parent object containing the target, or {@code null} if there is
+   *          no parent
+   * @throws BindingException
+   *           if an error occurs during the callback
+   */
   void callBeforeDeserialize(
       @NonNull IBoundObject targetObject,
       @Nullable IBoundObject parentObject) throws BindingException;
 
+  /**
+   * Invoke the after-deserialize lifecycle callback on the target object.
+   *
+   * @param targetObject
+   *          the object that was deserialized
+   * @param parentObject
+   *          the parent object containing the target, or {@code null} if there is
+   *          no parent
+   * @throws BindingException
+   *           if an error occurs during the callback
+   */
   void callAfterDeserialize(
       @NonNull IBoundObject targetObject,
       @Nullable IBoundObject parentObject) throws BindingException;

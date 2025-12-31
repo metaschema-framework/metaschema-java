@@ -33,6 +33,8 @@ public interface IGenerationState<WRITER> {
 
   /**
    * Get the writer used for schema output.
+   * <p>
+   * The caller does not own this writer and must not close it.
    *
    * @return the writer instance
    */

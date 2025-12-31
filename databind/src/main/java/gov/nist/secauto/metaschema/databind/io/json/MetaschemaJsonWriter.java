@@ -30,6 +30,8 @@ import gov.nist.secauto.metaschema.databind.model.info.IFeatureScalarItemValueHa
 import gov.nist.secauto.metaschema.databind.model.info.IItemWriteHandler;
 import gov.nist.secauto.metaschema.databind.model.info.IModelInstanceCollectionInfo;
 
+import org.eclipse.jdt.annotation.NotOwning;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -49,16 +51,18 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHandler {
   @NonNull
+  @NotOwning
   private final JsonGenerator generator;
 
   /**
    * Construct a new Module-aware JSON writer.
    *
    * @param generator
-   *          the JSON generator to write with
+   *          the JSON generator to write with. The caller retains ownership of
+   *          this generator and is responsible for closing it.
    * @see DefaultJsonProblemHandler
    */
-  public MetaschemaJsonWriter(@NonNull JsonGenerator generator) {
+  public MetaschemaJsonWriter(@NonNull @NotOwning JsonGenerator generator) {
     this.generator = generator;
   }
 

@@ -12,14 +12,9 @@ import com.squareup.javapoet.ClassName;
 
 import gov.nist.secauto.metaschema.core.model.IAssemblyDefinition;
 import gov.nist.secauto.metaschema.core.model.IChoiceGroupInstance;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.databind.codegen.config.DefaultBindingConfiguration;
-import gov.nist.secauto.metaschema.databind.codegen.config.DefaultChoiceGroupBindingConfiguration;
-import gov.nist.secauto.metaschema.databind.codegen.config.DefaultDefinitionBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.config.IBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.config.IChoiceGroupBindingConfiguration;
 import gov.nist.secauto.metaschema.databind.codegen.config.IDefinitionBindingConfiguration;
-import gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings;
 
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;

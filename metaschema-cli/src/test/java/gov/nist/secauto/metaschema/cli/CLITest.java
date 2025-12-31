@@ -40,6 +40,7 @@ public class CLITest {
    * A PrintStream that discards all output, used to suppress CLI console output
    * during tests.
    */
+  @SuppressWarnings("resource")
   private static final PrintStream NULL_STREAM = new PrintStream(new OutputStream() {
     @Override
     public void write(int b) {
@@ -72,7 +73,7 @@ public class CLITest {
             () -> buildThrowableMismatchMessage(thrownClass, thrown, args)));
   }
 
-  private String buildExitCodeMismatchMessage(@NonNull ExitStatus status, @NonNull ExitCode expectedCode,
+  private static String buildExitCodeMismatchMessage(@NonNull ExitStatus status, @NonNull ExitCode expectedCode,
       Throwable thrown, @NonNull String[] args) {
     StringBuilder sb = new StringBuilder();
     sb.append("exit code mismatch: expected <").append(expectedCode).append("> but was <")
@@ -88,7 +89,7 @@ public class CLITest {
     return sb.toString();
   }
 
-  private String buildUnexpectedThrowableMessage(Throwable thrown, @NonNull String[] args) {
+  private static String buildUnexpectedThrowableMessage(Throwable thrown, @NonNull String[] args) {
     if (thrown == null) {
       return "expected null Throwable";
     }
@@ -100,7 +101,7 @@ public class CLITest {
     return sb.toString();
   }
 
-  private String buildThrowableMismatchMessage(Class<? extends Throwable> expectedClass, Throwable thrown,
+  private static String buildThrowableMismatchMessage(Class<? extends Throwable> expectedClass, Throwable thrown,
       @NonNull String[] args) {
     StringBuilder sb = new StringBuilder();
     sb.append("expected Throwable mismatch: expected <")
@@ -116,7 +117,7 @@ public class CLITest {
     return sb.toString();
   }
 
-  private String getStackTraceAsString(Throwable throwable) {
+  private static String getStackTraceAsString(Throwable throwable) {
     java.io.StringWriter sw = new java.io.StringWriter();
     throwable.printStackTrace(new java.io.PrintWriter(sw));
     return sw.toString();

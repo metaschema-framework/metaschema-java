@@ -378,7 +378,7 @@ public class FieldReference implements IBoundObject {
     if (_props == null) {
       _props = new LinkedList<>();
     }
-    return _props;
+    return ObjectUtils.notNull(_props);
   }
 
   /**
@@ -495,6 +495,6 @@ public class FieldReference implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

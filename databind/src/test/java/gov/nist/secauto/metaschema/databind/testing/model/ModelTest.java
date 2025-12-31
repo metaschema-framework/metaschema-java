@@ -183,7 +183,7 @@ class ModelTest
                 ObjectUtils.requireNonNull(item).getField1(),
                 "defaultField"),
             () -> {
-              List<String> value = ObjectUtils.requireNonNull(item).getField2();
+              List<String> value = ObjectUtils.notNull(ObjectUtils.requireNonNull(item).getField2());
               assertAll(
                   "field2",
                   () -> assertNotNull(value, "field2"),
@@ -199,7 +199,7 @@ class ModelTest
                 ObjectUtils.requireNonNull(item).getField5(),
                 "field-flag-value-key"),
             () -> {
-              Map<String, JsonKeyField> value = ObjectUtils.requireNonNull(item).getField6();
+              Map<String, JsonKeyField> value = ObjectUtils.notNull(ObjectUtils.requireNonNull(item).getField6());
               assertAll(
                   "field-json-key",
                   () -> assertNotNull(value, "field-json-key"),
@@ -285,7 +285,8 @@ class ModelTest
                       "list contents not equal"));
             },
             () -> {
-              Map<String, RootAssemblyWithFields.JsonKeyField> value = ObjectUtils.requireNonNull(item).getField6();
+              Map<String, RootAssemblyWithFields.JsonKeyField> value
+                  = ObjectUtils.notNull(ObjectUtils.requireNonNull(item).getField6());
               assertAll(
                   "field6",
                   () -> assertNotNull(value, "field6"),
@@ -390,7 +391,8 @@ class ModelTest
                       "list contents not equal"));
             },
             () -> {
-              Map<String, RootAssemblyWithFields.JsonKeyField> value = ObjectUtils.requireNonNull(item).getField6();
+              Map<String, RootAssemblyWithFields.JsonKeyField> value
+                  = ObjectUtils.notNull(ObjectUtils.requireNonNull(item).getField6());
               assertAll(
                   "field6",
                   () -> assertNotNull(value, "field6"),
@@ -445,7 +447,7 @@ class ModelTest
                 ObjectUtils.requireNonNull(item).getField1(),
                 "defaultField"),
             () -> {
-              List<String> value = ObjectUtils.requireNonNull(item).getField2();
+              List<String> value = ObjectUtils.notNull(ObjectUtils.requireNonNull(item).getField2());
               assertAll(
                   "field2",
                   () -> assertNotNull(value, "field2"),
@@ -461,7 +463,7 @@ class ModelTest
                 ObjectUtils.requireNonNull(item).getField5(),
                 "field-flag-value-key"),
             () -> {
-              Map<String, JsonKeyField> value = ObjectUtils.requireNonNull(item).getField6();
+              Map<String, JsonKeyField> value = ObjectUtils.notNull(ObjectUtils.requireNonNull(item).getField6());
               assertAll(
                   "field-json-key",
                   () -> assertNotNull(value, "field-json-key"),
@@ -501,7 +503,7 @@ class ModelTest
                 ObjectUtils.requireNonNull(item).getField1(),
                 "defaultField"),
             () -> {
-              List<String> value = ObjectUtils.requireNonNull(item).getField2();
+              List<String> value = ObjectUtils.notNull(ObjectUtils.requireNonNull(item).getField2());
               assertAll(
                   "field2",
                   () -> assertNotNull(value, "field2"),
@@ -528,7 +530,8 @@ class ModelTest
                       "field value list contents not equal"));
             },
             () -> {
-              Map<String, RootAssemblyWithFields.JsonKeyField> value = ObjectUtils.requireNonNull(item).getField6();
+              Map<String, RootAssemblyWithFields.JsonKeyField> value
+                  = ObjectUtils.notNull(ObjectUtils.requireNonNull(item).getField6());
               assertAll(
                   "field6",
                   () -> assertNotNull(value, "field6"),
@@ -635,7 +638,8 @@ class ModelTest
                       "list contents not equal"));
             },
             () -> {
-              Map<String, RootAssemblyWithFields.JsonKeyField> value = ObjectUtils.requireNonNull(item).getField6();
+              Map<String, RootAssemblyWithFields.JsonKeyField> value
+                  = ObjectUtils.notNull(ObjectUtils.requireNonNull(item).getField6());
               assertAll(
                   "field6",
                   () -> assertNotNull(value, "field6"),
@@ -753,7 +757,8 @@ class ModelTest
                       "list contents not equal"));
             },
             () -> {
-              Map<String, RootAssemblyWithFields.JsonKeyField> value = ObjectUtils.requireNonNull(item).getField6();
+              Map<String, RootAssemblyWithFields.JsonKeyField> value
+                  = ObjectUtils.notNull(ObjectUtils.requireNonNull(item).getField6());
               assertAll(
                   "field6",
                   () -> assertNotNull(value, "field6"),

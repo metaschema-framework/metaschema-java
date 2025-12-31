@@ -36,7 +36,7 @@ class MetaschemaModuleExternalConstraintsTest {
     IConstraintLoader constraintLoader = bindingContext.newConstraintLoader();
 
     List<IConstraintSet> constraints = constraintLoader.load(
-        Paths.get("src/test/resources/content/external-constraint.yml"));
+        ObjectUtils.notNull(Paths.get("src/test/resources/content/external-constraint.yml")));
 
     bindingContext = IBindingContext.builder().constraintSet(constraints).build();
 
@@ -56,14 +56,14 @@ class MetaschemaModuleExternalConstraintsTest {
     IConstraintLoader constraintLoader = bindingContext.newConstraintLoader();
 
     List<IConstraintSet> constraints = constraintLoader.load(
-        Paths.get("src/test/resources/content/external-constraint.yml"));
+        ObjectUtils.notNull(Paths.get("src/test/resources/content/external-constraint.yml")));
 
     bindingContext = IBindingContext.builder().constraintSet(constraints)
-        .compilePath(Paths.get("target/generated-modules")).build();
+        .compilePath(ObjectUtils.notNull(Paths.get("target/generated-modules"))).build();
 
     IBindingModuleLoader moduleLoader = bindingContext.newModuleLoader();
     IModule module = moduleLoader
-        .load(Paths.get("../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml"));
+        .load(ObjectUtils.notNull(Paths.get("../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml")));
     module = bindingContext.registerModule(module);
 
     IBoundDefinitionModelComplex internalDefinition

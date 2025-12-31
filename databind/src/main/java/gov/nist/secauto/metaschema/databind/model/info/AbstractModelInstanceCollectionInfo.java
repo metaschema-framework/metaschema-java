@@ -25,6 +25,12 @@ public abstract class AbstractModelInstanceCollectionInfo<ITEM>
   @NonNull
   private final IBoundInstanceModel<ITEM> instance;
 
+  /**
+   * Construct a new collection info for the provided model instance.
+   *
+   * @param instance
+   *          the model instance this collection info is for
+   */
   public AbstractModelInstanceCollectionInfo(
       @NonNull IBoundInstanceModel<ITEM> instance) {
     this.instance = instance;

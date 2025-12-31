@@ -7,6 +7,8 @@ package gov.nist.secauto.metaschema.databind.codegen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -44,7 +46,7 @@ class ClassUtilsTest {
       "Class, Clazz"
   })
   void testToPropertyName(String input, String expected) {
-    assertEquals(expected, ClassUtils.toPropertyName(input));
+    assertEquals(expected, ClassUtils.toPropertyName(ObjectUtils.notNull(input)));
   }
 
   /**
@@ -71,7 +73,7 @@ class ClassUtilsTest {
       "PROPERTY, property"
   })
   void testToVariableName(String input, String expected) {
-    assertEquals(expected, ClassUtils.toVariableName(input));
+    assertEquals(expected, ClassUtils.toVariableName(ObjectUtils.notNull(input)));
   }
 
   /**
@@ -95,7 +97,7 @@ class ClassUtilsTest {
       "MyClass, MyClass"
   })
   void testToClassName(String input, String expected) {
-    assertEquals(expected, ClassUtils.toClassName(input));
+    assertEquals(expected, ClassUtils.toClassName(ObjectUtils.notNull(input)));
   }
 
   /**
@@ -119,7 +121,7 @@ class ClassUtilsTest {
       "https://example.com/---/test, com.example.___.test"
   })
   void testToPackageName(String input, String expected) {
-    assertEquals(expected, ClassUtils.toPackageName(input));
+    assertEquals(expected, ClassUtils.toPackageName(ObjectUtils.notNull(input)));
   }
 
   /**
@@ -141,7 +143,7 @@ class ClassUtilsTest {
       "1st-item, 1stItem"
   })
   void testToPropertyNameWithDigitPrefix(String input, String expected) {
-    assertEquals(expected, ClassUtils.toPropertyName(input));
+    assertEquals(expected, ClassUtils.toPropertyName(ObjectUtils.notNull(input)));
   }
 
   /**
@@ -156,7 +158,7 @@ class ClassUtilsTest {
       "1st-item, 1stItem"
   })
   void testToClassNameWithDigitPrefix(String input, String expected) {
-    assertEquals(expected, ClassUtils.toClassName(input));
+    assertEquals(expected, ClassUtils.toClassName(ObjectUtils.notNull(input)));
   }
 
   /**
@@ -183,6 +185,6 @@ class ClassUtilsTest {
       "https://example.com/permits/test, com.example._permits.test"
   })
   void testToPackageNameWithContextualKeyword(String input, String expected) {
-    assertEquals(expected, ClassUtils.toPackageName(input));
+    assertEquals(expected, ClassUtils.toPackageName(ObjectUtils.notNull(input)));
   }
 }

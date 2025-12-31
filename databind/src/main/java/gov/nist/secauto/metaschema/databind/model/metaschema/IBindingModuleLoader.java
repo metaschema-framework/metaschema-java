@@ -8,9 +8,6 @@ package gov.nist.secauto.metaschema.databind.model.metaschema;
 import gov.nist.secauto.metaschema.core.configuration.IMutableConfiguration;
 import gov.nist.secauto.metaschema.core.model.IModuleLoader;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.IBindingContext.IModuleLoaderStrategy;
-import gov.nist.secauto.metaschema.databind.SimpleModuleLoaderStrategy;
-import gov.nist.secauto.metaschema.databind.codegen.DefaultModuleBindingGenerator;
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 
 import edu.umd.cs.findbugs.annotations.NonNull;

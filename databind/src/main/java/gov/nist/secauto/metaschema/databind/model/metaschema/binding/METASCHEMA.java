@@ -475,7 +475,7 @@ public class METASCHEMA implements IBoundObject {
     if (_imports == null) {
       _imports = new LinkedList<>();
     }
-    return _imports;
+    return ObjectUtils.notNull(_imports);
   }
 
   /**
@@ -533,7 +533,7 @@ public class METASCHEMA implements IBoundObject {
     if (_namespaceBindings == null) {
       _namespaceBindings = new LinkedList<>();
     }
-    return _namespaceBindings;
+    return ObjectUtils.notNull(_namespaceBindings);
   }
 
   /**
@@ -588,7 +588,7 @@ public class METASCHEMA implements IBoundObject {
     if (_definitions == null) {
       _definitions = new LinkedList<>();
     }
-    return _definitions;
+    return ObjectUtils.notNull(_definitions);
   }
 
   /**
@@ -603,7 +603,7 @@ public class METASCHEMA implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 
   /**
@@ -686,7 +686,7 @@ public class METASCHEMA implements IBoundObject {
 
     @Override
     public String toString() {
-      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+      return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
   }
 
@@ -1004,7 +1004,7 @@ public class METASCHEMA implements IBoundObject {
       if (_props == null) {
         _props = new LinkedList<>();
       }
-      return _props;
+      return ObjectUtils.notNull(_props);
     }
 
     /**
@@ -1139,7 +1139,7 @@ public class METASCHEMA implements IBoundObject {
       if (_flags == null) {
         _flags = new LinkedList<>();
       }
-      return _flags;
+      return ObjectUtils.notNull(_flags);
     }
 
     /**
@@ -1230,7 +1230,7 @@ public class METASCHEMA implements IBoundObject {
       if (_examples == null) {
         _examples = new LinkedList<>();
       }
-      return _examples;
+      return ObjectUtils.notNull(_examples);
     }
 
     /**
@@ -1273,7 +1273,7 @@ public class METASCHEMA implements IBoundObject {
 
     @Override
     public String toString() {
-      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+      return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
 
     /**
@@ -1366,7 +1366,7 @@ public class METASCHEMA implements IBoundObject {
 
       @Override
       public String toString() {
-        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+        return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
       }
     }
   }
@@ -1791,7 +1791,7 @@ public class METASCHEMA implements IBoundObject {
       if (_props == null) {
         _props = new LinkedList<>();
       }
-      return _props;
+      return ObjectUtils.notNull(_props);
     }
 
     /**
@@ -1938,7 +1938,7 @@ public class METASCHEMA implements IBoundObject {
       if (_flags == null) {
         _flags = new LinkedList<>();
       }
-      return _flags;
+      return ObjectUtils.notNull(_flags);
     }
 
     /**
@@ -2009,7 +2009,7 @@ public class METASCHEMA implements IBoundObject {
       if (_examples == null) {
         _examples = new LinkedList<>();
       }
-      return _examples;
+      return ObjectUtils.notNull(_examples);
     }
 
     /**
@@ -2052,7 +2052,7 @@ public class METASCHEMA implements IBoundObject {
 
     @Override
     public String toString() {
-      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+      return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
   }
 
@@ -2435,7 +2435,7 @@ public class METASCHEMA implements IBoundObject {
       if (_props == null) {
         _props = new LinkedList<>();
       }
-      return _props;
+      return ObjectUtils.notNull(_props);
     }
 
     /**
@@ -2560,7 +2560,7 @@ public class METASCHEMA implements IBoundObject {
       if (_examples == null) {
         _examples = new LinkedList<>();
       }
-      return _examples;
+      return ObjectUtils.notNull(_examples);
     }
 
     /**
@@ -2603,7 +2603,7 @@ public class METASCHEMA implements IBoundObject {
 
     @Override
     public String toString() {
-      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+      return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
   }
 }

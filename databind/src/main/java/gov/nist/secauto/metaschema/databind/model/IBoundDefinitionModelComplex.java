@@ -23,9 +23,24 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public interface IBoundDefinitionModelComplex
     extends IBoundDefinitionModel<IBoundObject>, IFeatureComplexItemValueHandler {
 
+  /**
+   * Get a mapping of JSON property names to their corresponding bound properties.
+   *
+   * @param flagFilter
+   *          a predicate to filter which flag instances to include, or
+   *          {@code null} to include all flags
+   * @return a map of property names to bound properties
+   */
   @NonNull
   Map<String, IBoundProperty<?>> getJsonProperties(@Nullable Predicate<IBoundInstanceFlag> flagFilter);
 
+  /**
+   * Get the "beforeDeserialize" method for this bound class, if one exists.
+   * <p>
+   * This method is called before data is read and applied during deserialization.
+   *
+   * @return the method, or {@code null} if no such method exists
+   */
   @Nullable
   Method getBeforeDeserializeMethod();
 
@@ -56,6 +71,13 @@ public interface IBoundDefinitionModelComplex
     }
   }
 
+  /**
+   * Get the "afterDeserialize" method for this bound class, if one exists.
+   * <p>
+   * This method is called after data is read and applied during deserialization.
+   *
+   * @return the method, or {@code null} if no such method exists
+   */
   @Nullable
   Method getAfterDeserializeMethod();
 

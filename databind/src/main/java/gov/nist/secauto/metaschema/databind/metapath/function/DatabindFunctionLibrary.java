@@ -16,6 +16,10 @@ import gov.nist.secauto.metaschema.core.metapath.function.FunctionLibrary;
 public class DatabindFunctionLibrary
     extends FunctionLibrary {
 
+  /**
+   * Construct a new databind function library, registering all databind-specific
+   * Metapath functions.
+   */
   public DatabindFunctionLibrary() {
     registerFunction(Model.SIGNATURE);
   }

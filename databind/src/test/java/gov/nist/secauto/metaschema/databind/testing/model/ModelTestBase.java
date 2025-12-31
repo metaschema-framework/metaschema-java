@@ -27,8 +27,21 @@ import java.util.Optional;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Base class providing assertion utilities for testing Metaschema model
+ * bindings.
+ */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
 public abstract class ModelTestBase {
+  /**
+   * Asserts that the given bound assembly definition matches the expected values
+   * from the class annotations.
+   *
+   * @param assemblyClass
+   *          the annotated Java class for the assembly
+   * @param assembly
+   *          the bound assembly definition to verify
+   */
   public static void assertAssemblyDefinition(
       @NonNull Class<?> assemblyClass,
       @NonNull IBoundDefinitionModelAssembly assembly) {
@@ -78,6 +91,23 @@ public abstract class ModelTestBase {
         });
   }
 
+  /**
+   * Asserts that the given bound flag instance matches the expected values from
+   * the field annotations.
+   *
+   * @param fieldOrAssemblyClass
+   *          the Java class containing the flag field
+   * @param flagJavaFieldName
+   *          the name of the Java field annotated with {@code @BoundFlag}
+   * @param flag
+   *          the bound flag instance to verify
+   * @param context
+   *          the binding context used to resolve data type adapters
+   * @throws NoSuchFieldException
+   *           if the specified field does not exist in the class
+   * @throws SecurityException
+   *           if access to the field is denied
+   */
   public static void assertFlagInstance(
       @NonNull Class<?> fieldOrAssemblyClass,
       @NonNull String flagJavaFieldName,
@@ -125,6 +155,23 @@ public abstract class ModelTestBase {
             "remarks"));
   }
 
+  /**
+   * Asserts that the given bound field instance matches the expected values from
+   * the field annotations.
+   *
+   * @param assemblyClass
+   *          the Java class containing the field
+   * @param fieldJavaFieldName
+   *          the name of the Java field annotated with {@code @BoundField}
+   * @param field
+   *          the bound field instance to verify
+   * @param context
+   *          the binding context used to resolve data type adapters
+   * @throws NoSuchFieldException
+   *           if the specified field does not exist in the class
+   * @throws SecurityException
+   *           if access to the field is denied
+   */
   public static void assertFieldInstance(
       @NonNull Class<?> assemblyClass,
       @NonNull String fieldJavaFieldName,

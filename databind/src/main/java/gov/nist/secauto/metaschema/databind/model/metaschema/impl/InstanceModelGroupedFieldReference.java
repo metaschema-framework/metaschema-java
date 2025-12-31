@@ -48,6 +48,21 @@ public class InstanceModelGroupedFieldReference
   @NonNull
   private final Lazy<IAssemblyNodeItem> boundNodeItem;
 
+  /**
+   * Construct a new grouped field reference from binding data.
+   *
+   * @param binding
+   *          the underlying bound field reference object
+   * @param bindingInstance
+   *          the assembly instance for the underlying bound class
+   * @param position
+   *          the zero-based position of this instance relative to its bound
+   *          siblings
+   * @param definition
+   *          the global field definition being referenced
+   * @param parent
+   *          the parent choice group instance containing this reference
+   */
   protected InstanceModelGroupedFieldReference(
       @NonNull AssemblyModel.ChoiceGroup.Field binding,
       @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,

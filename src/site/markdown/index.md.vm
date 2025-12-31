@@ -1,6 +1,6 @@
 # Metaschema Java Tools
 
-This project provides a Java implementation of the [Metaschema](https://metaschema.dev/) framework that supports format-agnostic information modeling and processing. A set of tools and libraries are provvided that allow developers to quickly develop applications using Metaschema-based models.
+This project provides a Java implementation of the [Metaschema](https://framework.metaschema.dev/) framework that supports format-agnostic information modeling and processing. A set of tools and libraries are provided that allow developers to quickly develop applications using Metaschema-based models.
 
 This project supports the following features:
 

@@ -11,10 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
+import org.eclipse.jdt.annotation.Owning;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -27,6 +29,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * Unit tests for {@link CallingContext} phase methods.
  */
@@ -34,19 +38,27 @@ import java.util.Optional;
 class CallingContextTest {
 
   private CLIProcessor processor;
+  @SuppressWarnings("resource")
+  @Owning
+  private PrintStream nullOutput;
 
   @BeforeEach
   void setUp() {
-    PrintStream nullOutput = new PrintStream(OutputStream.nullOutputStream(), true, StandardCharsets.UTF_8);
+    nullOutput = new PrintStream(OutputStream.nullOutputStream(), true, StandardCharsets.UTF_8);
     processor = new CLIProcessor(
         "test-cli",
-        Map.of(CLIProcessor.COMMAND_VERSION, new TestVersionInfo()),
+        ObjectUtils.notNull(Map.of(CLIProcessor.COMMAND_VERSION, new TestVersionInfo())),
         nullOutput);
+  }
+
+  @AfterEach
+  void tearDown() {
+    nullOutput.close();
   }
 
   @NonNull
   private CallingContext createContext(@NonNull String... args) {
-    return new CallingContext(processor, Arrays.asList(args));
+    return new CallingContext(ObjectUtils.notNull(processor), ObjectUtils.notNull(Arrays.asList(args)));
   }
 
   @Nested

@@ -6,23 +6,22 @@
 package gov.nist.secauto.metaschema.core.model.constraint;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.IMetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.model.ISource;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -43,19 +42,64 @@ class DefaultConstraintValidatorThreadSafetyTest {
    */
   @Test
   void testParallelValidationBehavioralEquivalence() throws Exception {
-    // This test verifies that parallel validation doesn't crash
-    // and that the ParallelValidationConfig integrates correctly
-    FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
+    // Run validation with sequential config
+    FindingCollectingConstraintValidationHandler sequentialHandler = new FindingCollectingConstraintValidationHandler();
+    try (DefaultConstraintValidator sequentialValidator
+        = new DefaultConstraintValidator(sequentialHandler, ParallelValidationConfig.SEQUENTIAL)) {
+      runValidationOperations(sequentialValidator);
+    }
+    int sequentialFindingCount = sequentialHandler.getFindings().size();
 
+    // Run validation with parallel config
+    FindingCollectingConstraintValidationHandler parallelHandler = new FindingCollectingConstraintValidationHandler();
     try (ParallelValidationConfig config = ParallelValidationConfig.withThreads(4)) {
-      DefaultConstraintValidator validator = new DefaultConstraintValidator(handler, config);
-
-      // Verify the validator was created successfully with parallel config
       assertTrue(config.isParallel(), "Config should be parallel with 4 threads");
 
-      // The executor should be created lazily
-      java.util.concurrent.ExecutorService executor = config.getExecutor();
-      assertTrue(executor != null, "Executor should be created");
+      try (DefaultConstraintValidator parallelValidator = new DefaultConstraintValidator(parallelHandler, config)) {
+        assertNotNull(parallelValidator);
+
+        // The executor should be created lazily
+        java.util.concurrent.ExecutorService executor = config.getExecutor();
+        assertNotNull(executor, "Executor should be created");
+
+        runValidationOperations(parallelValidator);
+      }
+    }
+    int parallelFindingCount = parallelHandler.getFindings().size();
+
+    // Both should produce the same number of findings
+    assertEquals(sequentialFindingCount, parallelFindingCount,
+        "Sequential and parallel validation should produce the same number of findings");
+  }
+
+  /**
+   * Helper method to run a set of validation operations on a validator.
+   *
+   * @param validator
+   *          the validator to run operations on
+   * @throws Exception
+   *           if an error occurs during validation
+   */
+  private void runValidationOperations(@NonNull DefaultConstraintValidator validator) throws Exception {
+    // Perform a series of index-has-key validations
+    String indexName = "test-index";
+    for (int i = 0; i < 10; i++) {
+      IIndexHasKeyConstraint constraint = createMockIndexHasKeyConstraint(indexName);
+      IDefinitionNodeItem<?, ?> node = createMockDefinitionNodeItem("/item" + i);
+      ISequence<? extends INodeItem> targets = createMockSequence();
+      invokeValidateIndexHasKey(validator, constraint, node, targets);
+    }
+
+    // Perform a series of allowed-values tracking operations
+    for (int i = 0; i < 10; i++) {
+      INodeItem targetItem = createMockNodeItemWithValue("/value" + i);
+      IAllowedValuesConstraint constraint = createMockAllowedValuesConstraint();
+      IDefinitionNodeItem<?, ?> node = createMockDefinitionNodeItem("/node" + i);
+      try {
+        validator.updateValueStatus(targetItem, constraint, node);
+      } catch (@SuppressWarnings("unused") ConstraintValidationException ex) {
+        // Expected for some constraint combinations
+      }
     }
   }
 
@@ -67,14 +111,15 @@ class DefaultConstraintValidatorThreadSafetyTest {
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
 
     // Old constructor should still work
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      assertNotNull(validator, "Old constructor should work");
+    }
 
     // New constructor with SEQUENTIAL config should also work
-    DefaultConstraintValidator validator2 = new DefaultConstraintValidator(
-        handler, ParallelValidationConfig.SEQUENTIAL);
-
-    // Both should work without errors
-    assertTrue(true, "Both constructors should work");
+    try (DefaultConstraintValidator validator
+        = new DefaultConstraintValidator(handler, ParallelValidationConfig.SEQUENTIAL)) {
+      assertNotNull(validator, "New constructor with SEQUENTIAL should work");
+    }
   }
 
   /**
@@ -84,52 +129,56 @@ class DefaultConstraintValidatorThreadSafetyTest {
   @Test
   void testConcurrentIndexHasKeyAccumulation() throws Exception {
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
 
-    int threadCount = 10;
-    int keysPerThread = 50;
-    ExecutorService executor = Executors.newFixedThreadPool(threadCount);
-    CountDownLatch startLatch = new CountDownLatch(1);
-    CountDownLatch doneLatch = new CountDownLatch(threadCount);
-    ConcurrentLinkedQueue<String> errorMessages = new ConcurrentLinkedQueue<>();
+      int threadCount = 10;
+      int keysPerThread = 50;
+      ExecutorService executor = ObjectUtils.notNull(Executors.newFixedThreadPool(threadCount));
+      try {
+        CountDownLatch startLatch = new CountDownLatch(1);
+        CountDownLatch doneLatch = new CountDownLatch(threadCount);
+        ConcurrentLinkedQueue<String> errorMessages = new ConcurrentLinkedQueue<>();
 
-    // All threads will add key references to the same index name
-    String indexName = "test-index";
+        // All threads will add key references to the same index name
+        String indexName = "test-index";
 
-    for (int t = 0; t < threadCount; t++) {
-      final int threadId = t;
-      executor.submit(() -> {
-        try {
-          startLatch.await(); // Wait for all threads to be ready
-          for (int i = 0; i < keysPerThread; i++) {
-            IIndexHasKeyConstraint constraint = createMockIndexHasKeyConstraint(indexName);
-            IDefinitionNodeItem<?, ?> node = createMockDefinitionNodeItem("/thread" + threadId + "/item" + i);
-            ISequence<? extends INodeItem> targets = createMockSequence();
+        for (int t = 0; t < threadCount; t++) {
+          final int threadId = t;
+          executor.submit(() -> {
+            try {
+              startLatch.await(); // Wait for all threads to be ready
+              for (int i = 0; i < keysPerThread; i++) {
+                IIndexHasKeyConstraint constraint = createMockIndexHasKeyConstraint(indexName);
+                IDefinitionNodeItem<?, ?> node = createMockDefinitionNodeItem("/thread" + threadId + "/item" + i);
+                ISequence<? extends INodeItem> targets = createMockSequence();
 
-            // This method adds to indexNameToKeyRefMap
-            invokeValidateIndexHasKey(validator, constraint, node, targets);
-          }
-        } catch (Exception e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Thread ").append(threadId).append(" error: ")
-              .append(e.getClass().getName()).append(": ").append(e.getMessage());
-          if (e.getCause() != null) {
-            sb.append(" Caused by: ").append(e.getCause().getClass().getName())
-                .append(": ").append(e.getCause().getMessage());
-          }
-          errorMessages.add(sb.toString());
-        } finally {
-          doneLatch.countDown();
+                // This method adds to indexNameToKeyRefMap
+                invokeValidateIndexHasKey(validator, constraint, node, targets);
+              }
+            } catch (Exception e) {
+              StringBuilder sb = new StringBuilder();
+              sb.append("Thread ").append(threadId).append(" error: ")
+                  .append(e.getClass().getName()).append(": ").append(e.getMessage());
+              if (e.getCause() != null) {
+                sb.append(" Caused by: ").append(e.getCause().getClass().getName())
+                    .append(": ").append(e.getCause().getMessage());
+              }
+              errorMessages.add(sb.toString());
+            } finally {
+              doneLatch.countDown();
+            }
+          });
         }
-      });
+
+        startLatch.countDown(); // Start all threads simultaneously
+        assertTrue(doneLatch.await(30, TimeUnit.SECONDS), "Threads should complete within timeout");
+
+        assertEquals(0, errorMessages.size(),
+            "No errors should occur during concurrent access. Errors: " + errorMessages);
+      } finally {
+        executor.shutdown();
+      }
     }
-
-    startLatch.countDown(); // Start all threads simultaneously
-    assertTrue(doneLatch.await(30, TimeUnit.SECONDS), "Threads should complete within timeout");
-    executor.shutdown();
-
-    assertEquals(0, errorMessages.size(),
-        "No errors should occur during concurrent access. Errors: " + errorMessages);
   }
 
   /**
@@ -139,59 +188,63 @@ class DefaultConstraintValidatorThreadSafetyTest {
   @Test
   void testConcurrentAllowedValuesTracking() throws Exception {
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
 
-    int threadCount = 8;
-    int itemsPerThread = 25;
-    ExecutorService executor = Executors.newFixedThreadPool(threadCount);
-    CountDownLatch startLatch = new CountDownLatch(1);
-    CountDownLatch doneLatch = new CountDownLatch(threadCount);
-    ConcurrentLinkedQueue<String> errorMessages = new ConcurrentLinkedQueue<>();
+      int threadCount = 8;
+      int itemsPerThread = 25;
+      ExecutorService executor = ObjectUtils.notNull(Executors.newFixedThreadPool(threadCount));
+      try {
+        CountDownLatch startLatch = new CountDownLatch(1);
+        CountDownLatch doneLatch = new CountDownLatch(threadCount);
+        ConcurrentLinkedQueue<String> errorMessages = new ConcurrentLinkedQueue<>();
 
-    for (int t = 0; t < threadCount; t++) {
-      final int threadId = t;
-      executor.submit(() -> {
-        try {
-          startLatch.await();
-          for (int i = 0; i < itemsPerThread; i++) {
-            INodeItem targetItem = createMockNodeItemWithValue("/thread" + threadId + "/value" + i);
-            IAllowedValuesConstraint constraint = createMockAllowedValuesConstraint();
-            IDefinitionNodeItem<?, ?> node = createMockDefinitionNodeItem("/thread" + threadId + "/node" + i);
-
+        for (int t = 0; t < threadCount; t++) {
+          final int threadId = t;
+          executor.submit(() -> {
             try {
-              validator.updateValueStatus(targetItem, constraint, node);
-            } catch (ConstraintValidationException ex) {
-              // Expected for some constraint combinations
+              startLatch.await();
+              for (int i = 0; i < itemsPerThread; i++) {
+                INodeItem targetItem = createMockNodeItemWithValue("/thread" + threadId + "/value" + i);
+                IAllowedValuesConstraint constraint = createMockAllowedValuesConstraint();
+                IDefinitionNodeItem<?, ?> node = createMockDefinitionNodeItem("/thread" + threadId + "/node" + i);
+
+                try {
+                  validator.updateValueStatus(targetItem, constraint, node);
+                } catch (@SuppressWarnings("unused") ConstraintValidationException ex) {
+                  // Expected for some constraint combinations
+                }
+              }
+            } catch (Exception e) {
+              StringBuilder sb = new StringBuilder();
+              sb.append("Thread ").append(threadId).append(" error: ")
+                  .append(e.getClass().getName()).append(": ").append(e.getMessage());
+              if (e.getCause() != null) {
+                sb.append(" Caused by: ").append(e.getCause().getClass().getName())
+                    .append(": ").append(e.getCause().getMessage());
+              }
+              errorMessages.add(sb.toString());
+            } finally {
+              doneLatch.countDown();
             }
-          }
-        } catch (Exception e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Thread ").append(threadId).append(" error: ")
-              .append(e.getClass().getName()).append(": ").append(e.getMessage());
-          if (e.getCause() != null) {
-            sb.append(" Caused by: ").append(e.getCause().getClass().getName())
-                .append(": ").append(e.getCause().getMessage());
-          }
-          errorMessages.add(sb.toString());
-        } finally {
-          doneLatch.countDown();
+          });
         }
-      });
+
+        startLatch.countDown();
+        assertTrue(doneLatch.await(30, TimeUnit.SECONDS), "Threads should complete within timeout");
+
+        assertEquals(0, errorMessages.size(),
+            "No errors should occur during concurrent access. Errors: " + errorMessages);
+      } finally {
+        executor.shutdown();
+      }
     }
-
-    startLatch.countDown();
-    assertTrue(doneLatch.await(30, TimeUnit.SECONDS), "Threads should complete within timeout");
-    executor.shutdown();
-
-    assertEquals(0, errorMessages.size(),
-        "No errors should occur during concurrent access. Errors: " + errorMessages);
   }
 
   // Helper methods
 
   @NonNull
-  private IIndexHasKeyConstraint createMockIndexHasKeyConstraint(@NonNull String indexName) {
-    IIndexHasKeyConstraint constraint = mock(IIndexHasKeyConstraint.class);
+  private static IIndexHasKeyConstraint createMockIndexHasKeyConstraint(@NonNull String indexName) {
+    IIndexHasKeyConstraint constraint = ObjectUtils.notNull(mock(IIndexHasKeyConstraint.class));
     ISource source = mock(ISource.class);
     doReturn(source).when(constraint).getSource();
     doReturn(StaticContext.instance()).when(source).getStaticContext();
@@ -201,17 +254,16 @@ class DefaultConstraintValidatorThreadSafetyTest {
     return constraint;
   }
 
-  @SuppressWarnings("unchecked")
   @NonNull
-  private IDefinitionNodeItem<?, ?> createMockDefinitionNodeItem(@NonNull String metapath) {
-    IDefinitionNodeItem<?, ?> item = mock(IDefinitionNodeItem.class);
+  private static IDefinitionNodeItem<?, ?> createMockDefinitionNodeItem(@NonNull String metapath) {
+    IDefinitionNodeItem<?, ?> item = ObjectUtils.notNull(mock(IDefinitionNodeItem.class));
     doReturn(metapath).when(item).getMetapath();
     return item;
   }
 
   @NonNull
-  private INodeItem createMockNodeItemWithValue(@NonNull String metapath) {
-    INodeItem item = mock(INodeItem.class);
+  private static INodeItem createMockNodeItemWithValue(@NonNull String metapath) {
+    INodeItem item = ObjectUtils.notNull(mock(INodeItem.class));
     doReturn(metapath).when(item).getMetapath();
     doReturn(true).when(item).hasValue();
 
@@ -225,15 +277,15 @@ class DefaultConstraintValidatorThreadSafetyTest {
   }
 
   @NonNull
-  private ISequence<? extends INodeItem> createMockSequence() {
+  private static ISequence<? extends INodeItem> createMockSequence() {
     // Return an actual empty sequence instead of a mock
     // This avoids issues with incomplete mock implementations
     return ISequence.empty();
   }
 
   @NonNull
-  private IAllowedValuesConstraint createMockAllowedValuesConstraint() {
-    IAllowedValuesConstraint constraint = mock(IAllowedValuesConstraint.class);
+  private static IAllowedValuesConstraint createMockAllowedValuesConstraint() {
+    IAllowedValuesConstraint constraint = ObjectUtils.notNull(mock(IAllowedValuesConstraint.class));
     ISource source = mock(ISource.class);
     doReturn(source).when(constraint).getSource();
     doReturn(StaticContext.instance()).when(source).getStaticContext();
@@ -251,7 +303,7 @@ class DefaultConstraintValidatorThreadSafetyTest {
    * validateIndexHasKey is private, we use reflection to test the thread-safety
    * of the underlying data structure operations.
    */
-  private void invokeValidateIndexHasKey(
+  private static void invokeValidateIndexHasKey(
       @NonNull DefaultConstraintValidator validator,
       @NonNull IIndexHasKeyConstraint constraint,
       @NonNull IDefinitionNodeItem<?, ?> node,

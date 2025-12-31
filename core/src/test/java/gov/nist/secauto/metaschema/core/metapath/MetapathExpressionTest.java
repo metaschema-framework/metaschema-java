@@ -19,8 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import java.io.IOException;
-
 import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
 import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 
@@ -41,11 +39,11 @@ class MetapathExpressionTest {
         && !line.contains("number(")
         && !line.contains("current(")
         && !line.contains("last(")) {
-      if (line.endsWith(";")) {
-        line = line.substring(0, line.length() - 1);
-      }
+      String expression = line.endsWith(";")
+          ? line.substring(0, line.length() - 1)
+          : line;
       // System.out.println(line);
-      IMetapathExpression.compile(line);
+      IMetapathExpression.compile(expression);
     }
   }
   //
@@ -83,7 +81,7 @@ class MetapathExpressionTest {
   }
 
   @Test
-  void testMalformedIf() throws IOException {
+  void testMalformedIf() {
     InvalidMetapathGrammarException thrown = assertThrows(InvalidMetapathGrammarException.class, () -> {
       IMetapathExpression.compile("if 'a' = '1.1.2' then true() else false()");
     });

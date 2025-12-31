@@ -5,7 +5,6 @@
 
 package gov.nist.secauto.metaschema.core.metapath.type;
 
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
 import gov.nist.secauto.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
@@ -51,14 +50,6 @@ public interface IAtomicOrUnionType<I extends IAnyAtomicItem> extends IItemType 
    */
   @NonNull
   IEnhancedQName getQName();
-
-  /**
-   * Get the data type adapter associated with this type.
-   *
-   * @return the adapter or {@code null} if no adapter is associated with this
-   *         type, such as the case with an abstract type
-   */
-  IDataTypeAdapter<?> getAdapter();
 
   /**
    * Get the Java class for the item this type supports.

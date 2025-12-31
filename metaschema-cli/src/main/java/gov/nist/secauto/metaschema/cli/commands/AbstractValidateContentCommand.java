@@ -383,7 +383,6 @@ public abstract class AbstractValidateContentCommand
      * @return the resolved path formatter
      */
     @NonNull
-    @SuppressWarnings("synthetic-access")
     private IPathFormatter resolvePathFormatter(
         @NonNull CommandLine commandLine,
         @NonNull Format asFormat) {
@@ -407,7 +406,6 @@ public abstract class AbstractValidateContentCommand
      * @return the parsed selection, defaults to AUTO if unrecognized
      */
     @NonNull
-    @SuppressWarnings("synthetic-access")
     private PathFormatSelection parsePathFormatSelection(@NonNull String value) {
       switch (value.toLowerCase(Locale.ROOT)) {
       case "auto":

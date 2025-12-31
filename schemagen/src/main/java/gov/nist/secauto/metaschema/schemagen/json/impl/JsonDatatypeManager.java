@@ -64,7 +64,7 @@ public class JsonDatatypeManager
 
   private static Stream<String> getDependencies(@NonNull JsonNode node) {
     Stream<String> retval = Stream.empty();
-    for (Map.Entry<String, JsonNode> entry : CollectionUtil.toIterable(ObjectUtils.notNull(node.fields()))) {
+    for (Map.Entry<String, JsonNode> entry : ObjectUtils.notNull(node.properties())) {
       JsonNode value = entry.getValue();
       assert value != null;
       if ("$ref".equals(entry.getKey())) {

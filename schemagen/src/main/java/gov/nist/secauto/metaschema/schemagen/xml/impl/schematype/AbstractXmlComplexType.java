@@ -8,9 +8,9 @@ package gov.nist.secauto.metaschema.schemagen.xml.impl.schematype;
 import gov.nist.secauto.metaschema.core.model.IFlagInstance;
 import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
-import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
 import gov.nist.secauto.metaschema.schemagen.xml.impl.DocumentationGenerator;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.IXmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlDatatypeManager;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -54,9 +54,9 @@ public abstract class AbstractXmlComplexType<D extends IModelDefinition>
   }
 
   @Override
-  public void generate(@NonNull XmlGenerationState state) {
+  public void generate(@NonNull IXmlGenerationState state) {
     try {
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "complexType", XmlSchemaGenerator.NS_XML_SCHEMA);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "complexType", XmlDatatypeManager.NS_XML_SCHEMA);
 
       if (!isInline(state)) {
         state.writeAttribute("name", getTypeName());
@@ -80,7 +80,7 @@ public abstract class AbstractXmlComplexType<D extends IModelDefinition>
    * @throws XMLStreamException
    *           if an error occurs while writing the XML
    */
-  protected abstract void generateTypeBody(@NonNull XmlGenerationState state) throws XMLStreamException;
+  protected abstract void generateTypeBody(@NonNull IXmlGenerationState state) throws XMLStreamException;
 
   /**
    * Generate an XML schema attribute declaration for a flag instance.
@@ -92,9 +92,9 @@ public abstract class AbstractXmlComplexType<D extends IModelDefinition>
    * @throws XMLStreamException
    *           if an error occurs while writing the XML
    */
-  protected static void generateFlagInstance(@NonNull IFlagInstance instance, @NonNull XmlGenerationState state)
+  protected static void generateFlagInstance(@NonNull IFlagInstance instance, @NonNull IXmlGenerationState state)
       throws XMLStreamException {
-    state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "attribute", XmlSchemaGenerator.NS_XML_SCHEMA);
+    state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "attribute", XmlDatatypeManager.NS_XML_SCHEMA);
 
     state.writeAttribute("name", instance.getEffectiveName());
 
@@ -117,7 +117,7 @@ public abstract class AbstractXmlComplexType<D extends IModelDefinition>
   }
 
   @Override
-  public boolean isInline(XmlGenerationState state) {
+  public boolean isInline(IXmlGenerationState state) {
     return state.isInline(getDefinition());
   }
 }

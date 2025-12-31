@@ -101,17 +101,14 @@ public class PredicateExpression
 
       Stream<? extends IItem> stream = ObjectUtils.notNull(
           retval.stream().map(item -> {
+            assert item != null;
             int pos = index.incrementAndGet();
             DynamicContext subContext = dynamicContext.subContext(
                 FocusContext.of(item, pos, size));
             return Map.entry(subContext, item);
           }).filter(entry -> {
-            @SuppressWarnings("null")
-            @NonNull
-            IItem item = entry.getValue();
-            @SuppressWarnings("null")
-            @NonNull
-            DynamicContext subContext = entry.getKey();
+            IItem item = ObjectUtils.notNull(entry.getValue());
+            DynamicContext subContext = ObjectUtils.notNull(entry.getKey());
 
             // return false if any predicate evaluates to false
             return !predicates.stream()
@@ -122,7 +119,9 @@ public class PredicateExpression
                     BigInteger predicateIndex = ((IntegerLiteral) predicateExpr).getValue().asInteger();
 
                     // get the position of the item from the context
-                    final BigInteger position = BigInteger.valueOf(subContext.getFocusContext().getPosition());
+                    // focus context is guaranteed non-null since we created it in subContext above
+                    final BigInteger position = BigInteger.valueOf(
+                        ObjectUtils.requireNonNull(subContext.getFocusContext()).getPosition());
 
                     // it is a match if the position matches
                     bool = position.equals(predicateIndex);

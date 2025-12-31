@@ -25,6 +25,7 @@ class EvaluateMetapathSubCommandTest {
    * A PrintStream that discards all output, used to suppress CLI console output
    * during tests.
    */
+  @SuppressWarnings("resource")
   private static final PrintStream NULL_STREAM = new PrintStream(new OutputStream() {
     @Override
     public void write(int b) {

@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ExecutorService;
@@ -24,15 +26,17 @@ class ParallelValidationConfigTest {
 
   @Test
   void testWithThreadsOneIsNotParallel() {
-    ParallelValidationConfig config = ParallelValidationConfig.withThreads(1);
-    assertFalse(config.isParallel());
+    try (ParallelValidationConfig config = ParallelValidationConfig.withThreads(1)) {
+      assertFalse(config.isParallel());
+    }
   }
 
   @Test
   void testWithThreadsFourIsParallel() {
-    ParallelValidationConfig config = ParallelValidationConfig.withThreads(4);
-    assertTrue(config.isParallel());
-    config.close();
+    try (ParallelValidationConfig config = ParallelValidationConfig.withThreads(4)) {
+      assertTrue(config.isParallel());
+      config.close();
+    }
   }
 
   @Test
@@ -47,15 +51,15 @@ class ParallelValidationConfigTest {
 
   @Test
   void testWithExecutorIsParallel() {
-    ExecutorService executor = Executors.newFixedThreadPool(2);
-    try {
-      ParallelValidationConfig config = ParallelValidationConfig.withExecutor(executor);
+    ExecutorService executor = ObjectUtils.notNull(Executors.newFixedThreadPool(2));
+    try (ParallelValidationConfig config = ParallelValidationConfig.withExecutor(executor)) {
       assertTrue(config.isParallel());
     } finally {
       executor.shutdown();
     }
   }
 
+  @SuppressWarnings("null")
   @Test
   void testWithExecutorNullThrows() {
     assertThrows(NullPointerException.class, () -> ParallelValidationConfig.withExecutor(null));
@@ -63,18 +67,18 @@ class ParallelValidationConfigTest {
 
   @Test
   void testCloseShutdownsInternalExecutor() {
-    ParallelValidationConfig config = ParallelValidationConfig.withThreads(2);
-    ExecutorService executor = config.getExecutor();
-    assertFalse(executor.isShutdown());
-    config.close();
-    assertTrue(executor.isShutdown());
+    try (ParallelValidationConfig config = ParallelValidationConfig.withThreads(2)) {
+      ExecutorService executor = config.getExecutor();
+      assertFalse(executor.isShutdown());
+      config.close();
+      assertTrue(executor.isShutdown());
+    }
   }
 
   @Test
   void testCloseDoesNotShutdownExternalExecutor() {
-    ExecutorService executor = Executors.newFixedThreadPool(2);
-    try {
-      ParallelValidationConfig config = ParallelValidationConfig.withExecutor(executor);
+    ExecutorService executor = ObjectUtils.notNull(Executors.newFixedThreadPool(2));
+    try (ParallelValidationConfig config = ParallelValidationConfig.withExecutor(executor)) {
       config.close();
       assertFalse(executor.isShutdown());
     } finally {

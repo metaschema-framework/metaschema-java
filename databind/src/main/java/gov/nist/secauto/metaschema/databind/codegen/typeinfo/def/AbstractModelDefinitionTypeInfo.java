@@ -48,6 +48,14 @@ public abstract class AbstractModelDefinitionTypeInfo<DEF extends IModelDefiniti
   @NonNull
   private final Lazy<Map<String, IFlagInstanceTypeInfo>> flagTypeInfos;
 
+  /**
+   * Constructs a new type information object for a model definition.
+   *
+   * @param definition
+   *          the model definition
+   * @param typeResolver
+   *          the type resolver used to resolve type names and related information
+   */
   public AbstractModelDefinitionTypeInfo(
       @NonNull DEF definition,
       @NonNull ITypeResolver typeResolver) {
@@ -102,12 +110,29 @@ public abstract class AbstractModelDefinitionTypeInfo<DEF extends IModelDefiniti
         });
   }
 
+  /**
+   * Get the map of property names to property type information for this
+   * definition.
+   *
+   * @return the property type information map
+   */
   @NonNull
   protected abstract Map<String, IPropertyTypeInfo> getPropertyTypeInfoMap();
 
+  /**
+   * Get the map of instances to instance type information for this definition.
+   *
+   * @return the instance type information map
+   */
   @NonNull
   protected abstract Map<IInstance, IInstanceTypeInfo> getInstanceTypeInfoMap();
 
+  /**
+   * Get the map of property names to flag instance type information for this
+   * definition.
+   *
+   * @return the flag instance type information map
+   */
   @NonNull
   protected Map<String, IFlagInstanceTypeInfo> getFlagInstanceTypeInfoMap() {
     return ObjectUtils.notNull(flagTypeInfos.get());

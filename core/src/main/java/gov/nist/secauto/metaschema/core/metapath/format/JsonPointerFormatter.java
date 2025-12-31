@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * An {@link IPathFormatter} that produces RFC 6901 compliant JSON Pointer
@@ -108,7 +107,7 @@ public class JsonPointerFormatter implements IPathFormatter {
    * @return the formatted path segment
    */
   @NonNull
-  private String formatModelItem(@NonNull IModelNodeItem<?, ?> item) {
+  private static String formatModelItem(@NonNull IModelNodeItem<?, ?> item) {
     INamedModelInstance instance = item.getInstance();
     if (instance == null) {
       // No instance - use local name only
@@ -166,7 +165,7 @@ public class JsonPointerFormatter implements IPathFormatter {
       LOGGER.warn("Unable to resolve JSON key for KEYED collection item '{}', falling back to numeric index",
           item.getQName().getLocalName());
     }
-    return String.valueOf(item.getPosition() - 1);
+    return ObjectUtils.notNull(String.valueOf(item.getPosition() - 1));
   }
 
   /**

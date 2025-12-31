@@ -64,7 +64,7 @@ jobs:
         annotations: |
           maintainers="Metaschema Community Admin <admin@metaschema.dev>"
           org.opencontainers.image.authors="Metaschema Community Admin <admin@metaschema.dev>"
-          org.opencontainers.image.documentation="https://metaschema.dev"
+          org.opencontainers.image.documentation="https://framework.metaschema.dev"
           org.opencontainers.image.source="https://github.com/metaschema-framework/metaschema-java"
           org.opencontainers.image.vendor="Metaschema Community"
           org.opencontainers.image.title="metaschema-cli"

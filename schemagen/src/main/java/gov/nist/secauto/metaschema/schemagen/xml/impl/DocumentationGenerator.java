@@ -12,7 +12,6 @@ import gov.nist.secauto.metaschema.core.model.IModelElement;
 import gov.nist.secauto.metaschema.core.model.INamedInstance;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
-import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +108,7 @@ public final class DocumentationGenerator {
     return modelElement;
   }
 
-  private void generate(@NonNull XmlGenerationState state) {
+  private void generate(@NonNull IXmlGenerationState state) {
     String formalName = getFormalName();
     MarkupLine description = getDescription();
     List<MarkupMultiline> remarks = getRemarks();
@@ -129,7 +128,7 @@ public final class DocumentationGenerator {
    */
   public static void generateDocumentation(
       @NonNull IDefinition definition,
-      @NonNull XmlGenerationState state) {
+      @NonNull IXmlGenerationState state) {
     new DocumentationGenerator(definition).generate(state);
   }
 
@@ -143,7 +142,7 @@ public final class DocumentationGenerator {
    */
   public static void generateDocumentation(
       @NonNull INamedInstance instance,
-      @NonNull XmlGenerationState state) {
+      @NonNull IXmlGenerationState state) {
     new DocumentationGenerator(instance).generate(state);
   }
 
@@ -169,12 +168,12 @@ public final class DocumentationGenerator {
       @Nullable String formalName,
       @Nullable MarkupLine description,
       @NonNull List<MarkupMultiline> remarks,
-      @NonNull String xmlNS, @NonNull XmlGenerationState state) {
+      @NonNull String xmlNS, @NonNull IXmlGenerationState state) {
 
     try {
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "annotation", XmlSchemaGenerator.NS_XML_SCHEMA);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "annotation", XmlDatatypeManager.NS_XML_SCHEMA);
       if (formalName != null || description != null) {
-        state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "appinfo", XmlSchemaGenerator.NS_XML_SCHEMA);
+        state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "appinfo", XmlDatatypeManager.NS_XML_SCHEMA);
 
         if (formalName != null) {
           state.writeStartElement(xmlNS, "formal-name");
@@ -191,26 +190,26 @@ public final class DocumentationGenerator {
         state.writeEndElement(); // xs:appInfo
       }
 
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "documentation", XmlSchemaGenerator.NS_XML_SCHEMA);
-      state.writeNamespace("", XmlSchemaGenerator.NS_XHTML);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "documentation", XmlDatatypeManager.NS_XML_SCHEMA);
+      state.writeNamespace("", XmlDatatypeManager.NS_XHTML);
 
       if (description != null) {
         // write description
-        state.writeStartElement(XmlSchemaGenerator.NS_XHTML, "p");
+        state.writeStartElement(XmlDatatypeManager.NS_XHTML, "p");
 
         if (formalName != null) {
-          state.writeStartElement(XmlSchemaGenerator.NS_XHTML, "b");
+          state.writeStartElement(XmlDatatypeManager.NS_XHTML, "b");
           state.writeCharacters(formalName);
           state.writeEndElement();
           state.writeCharacters(": ");
         }
 
-        description.writeXHtml(XmlSchemaGenerator.NS_XHTML, state.getXMLStreamWriter());
+        description.writeXHtml(XmlDatatypeManager.NS_XHTML, state.getXMLStreamWriter());
         state.writeEndElement(); // p
       }
 
       for (MarkupMultiline remark : remarks) {
-        remark.writeXHtml(XmlSchemaGenerator.NS_XHTML, state.getXMLStreamWriter());
+        remark.writeXHtml(XmlDatatypeManager.NS_XHTML, state.getXMLStreamWriter());
       }
 
       state.writeEndElement(); // xs:documentation

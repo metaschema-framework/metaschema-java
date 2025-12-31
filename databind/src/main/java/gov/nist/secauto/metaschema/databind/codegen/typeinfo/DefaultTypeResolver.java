@@ -187,7 +187,7 @@ class DefaultTypeResolver implements ITypeResolver {
     if (config != null) {
       IChoiceGroupBindingConfiguration choiceConfig = config.getChoiceGroupBindings().get(instance.getGroupAsName());
       if (choiceConfig != null && choiceConfig.getItemTypeName() != null) {
-        return ClassName.bestGuess(choiceConfig.getItemTypeName());
+        return ObjectUtils.notNull(ClassName.bestGuess(choiceConfig.getItemTypeName()));
       }
     }
     return ObjectUtils.notNull(ClassName.get(Object.class));

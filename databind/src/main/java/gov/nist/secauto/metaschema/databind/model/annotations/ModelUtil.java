@@ -261,6 +261,15 @@ public final class ModelUtil {
         : new DefaultGroupAs(groupAs, module);
   }
 
+  /**
+   * Get a location string for the given bound object based on its metaschema
+   * data.
+   *
+   * @param obj
+   *          the bound object to get the location for
+   * @return a location string in the format "line:column", or an empty string if
+   *         location information is not available
+   */
   public static String toLocation(@NonNull IBoundObject obj) {
     IMetaschemaData data = obj.getMetaschemaData();
 
@@ -274,6 +283,18 @@ public final class ModelUtil {
     return retval;
   }
 
+  /**
+   * Get a location string for the given bound object, optionally including a URI.
+   *
+   * @param obj
+   *          the bound object to get the location for
+   * @param uri
+   *          the URI of the document containing the object, or {@code null} if
+   *          not available
+   * @return a location string in the format "uri@line:column", or just the URI or
+   *         location portion if only one is available, or an empty string if
+   *         neither is available
+   */
   public static String toLocation(@NonNull IBoundObject obj, @Nullable URI uri) {
     String retval = uri == null ? "" : uri.toASCIIString();
 
@@ -284,6 +305,14 @@ public final class ModelUtil {
     return retval;
   }
 
+  /**
+   * Convert a {@link Property} annotation to a map entry suitable for use in an
+   * {@link IAttributable} properties map.
+   *
+   * @param property
+   *          the property annotation to convert
+   * @return a map entry containing the property key and its set of values
+   */
   public static Map.Entry<IAttributable.Key, Set<String>> toPropertyEntry(@NonNull Property property) {
     String name = property.name();
     String namespace = property.namespace();

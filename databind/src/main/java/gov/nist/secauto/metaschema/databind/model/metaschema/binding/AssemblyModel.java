@@ -102,7 +102,7 @@ public class AssemblyModel implements IBoundObject {
     if (_instances == null) {
       _instances = new LinkedList<>();
     }
-    return _instances;
+    return ObjectUtils.notNull(_instances);
   }
 
   /**
@@ -137,7 +137,7 @@ public class AssemblyModel implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 
   @MetaschemaAssembly(
@@ -204,7 +204,7 @@ public class AssemblyModel implements IBoundObject {
       if (_choices == null) {
         _choices = new LinkedList<>();
       }
-      return _choices;
+      return ObjectUtils.notNull(_choices);
     }
 
     /**
@@ -239,7 +239,7 @@ public class AssemblyModel implements IBoundObject {
 
     @Override
     public String toString() {
-      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+      return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
   }
 
@@ -462,7 +462,7 @@ public class AssemblyModel implements IBoundObject {
       if (_choices == null) {
         _choices = new LinkedList<>();
       }
-      return _choices;
+      return ObjectUtils.notNull(_choices);
     }
 
     /**
@@ -505,7 +505,7 @@ public class AssemblyModel implements IBoundObject {
 
     @Override
     public String toString() {
-      return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+      return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
 
     @MetaschemaAssembly(
@@ -737,7 +737,7 @@ public class AssemblyModel implements IBoundObject {
         if (_props == null) {
           _props = new LinkedList<>();
         }
-        return _props;
+        return ObjectUtils.notNull(_props);
       }
 
       /**
@@ -854,7 +854,7 @@ public class AssemblyModel implements IBoundObject {
 
       @Override
       public String toString() {
-        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+        return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
       }
     }
 
@@ -1104,7 +1104,7 @@ public class AssemblyModel implements IBoundObject {
         if (_props == null) {
           _props = new LinkedList<>();
         }
-        return _props;
+        return ObjectUtils.notNull(_props);
       }
 
       /**
@@ -1175,7 +1175,7 @@ public class AssemblyModel implements IBoundObject {
         if (_flags == null) {
           _flags = new LinkedList<>();
         }
-        return _flags;
+        return ObjectUtils.notNull(_flags);
       }
 
       /**
@@ -1266,7 +1266,7 @@ public class AssemblyModel implements IBoundObject {
         if (_examples == null) {
           _examples = new LinkedList<>();
         }
-        return _examples;
+        return ObjectUtils.notNull(_examples);
       }
 
       /**
@@ -1309,7 +1309,7 @@ public class AssemblyModel implements IBoundObject {
 
       @Override
       public String toString() {
-        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+        return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
       }
     }
 
@@ -1602,7 +1602,7 @@ public class AssemblyModel implements IBoundObject {
         if (_props == null) {
           _props = new LinkedList<>();
         }
-        return _props;
+        return ObjectUtils.notNull(_props);
       }
 
       /**
@@ -1719,7 +1719,7 @@ public class AssemblyModel implements IBoundObject {
 
       @Override
       public String toString() {
-        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+        return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
       }
     }
 
@@ -2097,7 +2097,7 @@ public class AssemblyModel implements IBoundObject {
         if (_props == null) {
           _props = new LinkedList<>();
         }
-        return _props;
+        return ObjectUtils.notNull(_props);
       }
 
       /**
@@ -2208,7 +2208,7 @@ public class AssemblyModel implements IBoundObject {
         if (_flags == null) {
           _flags = new LinkedList<>();
         }
-        return _flags;
+        return ObjectUtils.notNull(_flags);
       }
 
       /**
@@ -2279,7 +2279,7 @@ public class AssemblyModel implements IBoundObject {
         if (_examples == null) {
           _examples = new LinkedList<>();
         }
-        return _examples;
+        return ObjectUtils.notNull(_examples);
       }
 
       /**
@@ -2322,7 +2322,7 @@ public class AssemblyModel implements IBoundObject {
 
       @Override
       public String toString() {
-        return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+        return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
       }
     }
   }

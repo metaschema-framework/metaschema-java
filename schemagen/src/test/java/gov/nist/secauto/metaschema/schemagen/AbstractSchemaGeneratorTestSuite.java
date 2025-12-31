@@ -47,6 +47,10 @@ import javax.xml.transform.stream.StreamSource;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Base class for schema generation test suites, providing utilities for XML and
+ * JSON schema generation and validation.
+ */
 public abstract class AbstractSchemaGeneratorTestSuite
     extends AbstractTestSuite {
   @NonNull
@@ -140,11 +144,27 @@ public abstract class AbstractSchemaGeneratorTestSuite
     JSON_CONTENT_VALIDATOR_PROVIDER = jsonContentValidatorProvider;
   }
 
+  /**
+   * Creates a new binding context with no constraints.
+   *
+   * @return a new binding context instance
+   * @throws IOException
+   *           if an I/O error occurs while creating the context
+   */
   @NonNull
   protected static IBindingContext newBindingContext() throws IOException {
     return newBindingContext(CollectionUtil.emptyList());
   }
 
+  /**
+   * Creates a new binding context with the specified constraints.
+   *
+   * @param constraints
+   *          the constraint sets to apply
+   * @return a new binding context instance
+   * @throws IOException
+   *           if an I/O error occurs while creating the context
+   */
   @NonNull
   protected static IBindingContext newBindingContext(@NonNull Collection<IConstraintSet> constraints)
       throws IOException {
@@ -168,17 +188,57 @@ public abstract class AbstractSchemaGeneratorTestSuite
     return ObjectUtils.notNull(Paths.get("target/test-schemagen"));
   }
 
+  /**
+   * Generates an XML schema for the given module and writes it to the specified
+   * path.
+   *
+   * @param module
+   *          the Metaschema module to generate the schema for
+   * @param schemaPath
+   *          the path where the schema should be written
+   * @return the path to the generated schema
+   * @throws IOException
+   *           if an I/O error occurs
+   */
   protected Path produceXmlSchema(@NonNull IModule module, @NonNull Path schemaPath) throws IOException {
     generateSchema(module, schemaPath, XML_SCHEMA_PROVIDER);
     return schemaPath;
   }
 
+  /**
+   * Generates a JSON schema for the given module and writes it to the specified
+   * path.
+   *
+   * @param module
+   *          the Metaschema module to generate the schema for
+   * @param schemaPath
+   *          the path where the schema should be written
+   * @return the path to the generated schema
+   * @throws IOException
+   *           if an I/O error occurs
+   */
   protected Path produceJsonSchema(@NonNull IModule module, @NonNull Path schemaPath)
       throws IOException {
     generateSchema(module, schemaPath, JSON_SCHEMA_PROVIDER);
     return schemaPath;
   }
 
+  /**
+   * Runs a schema generation and validation test.
+   *
+   * @param collectionName
+   *          the name of the test collection directory
+   * @param metaschemaName
+   *          the name of the Metaschema file to load
+   * @param generatedSchemaName
+   *          the base name for the generated schema file
+   * @param contentCases
+   *          the content validation test cases to run
+   * @throws IOException
+   *           if an I/O error occurs
+   * @throws MetaschemaException
+   *           if a Metaschema error occurs
+   */
   @SuppressWarnings("null")
   protected void doTest(
       @NonNull String collectionName,
@@ -230,6 +290,17 @@ public abstract class AbstractSchemaGeneratorTestSuite
     }
   }
 
+  /**
+   * Creates a new content validation test case.
+   *
+   * @param actualFormat
+   *          the format of the content file
+   * @param contentName
+   *          the name of the content file
+   * @param valid
+   *          whether the content is expected to be valid
+   * @return a new content case
+   */
   @NonNull
   protected ContentCase contentCase(
       @NonNull Format actualFormat,
@@ -238,6 +309,9 @@ public abstract class AbstractSchemaGeneratorTestSuite
     return new ContentCase(contentName, actualFormat, valid);
   }
 
+  /**
+   * Represents a content validation test case.
+   */
   protected static class ContentCase {
     @NonNull
     private final String name;
@@ -245,22 +319,47 @@ public abstract class AbstractSchemaGeneratorTestSuite
     private final Format actualFormat;
     private final boolean valid;
 
+    /**
+     * Constructs a new content case.
+     *
+     * @param name
+     *          the name of the content file
+     * @param actualFormat
+     *          the format of the content file
+     * @param valid
+     *          whether the content is expected to be valid
+     */
     public ContentCase(@NonNull String name, @NonNull Format actualFormat, boolean valid) {
       this.name = name;
       this.actualFormat = actualFormat;
       this.valid = valid;
     }
 
+    /**
+     * Gets the name of the content file.
+     *
+     * @return the content file name
+     */
     @NonNull
     public String getName() {
       return name;
     }
 
+    /**
+     * Gets the format of the content file.
+     *
+     * @return the content format
+     */
     @NonNull
     public Format getActualFormat() {
       return actualFormat;
     }
 
+    /**
+     * Checks whether the content is expected to be valid.
+     *
+     * @return {@code true} if the content should be valid, {@code false} otherwise
+     */
     public boolean isValid() {
       return valid;
     }

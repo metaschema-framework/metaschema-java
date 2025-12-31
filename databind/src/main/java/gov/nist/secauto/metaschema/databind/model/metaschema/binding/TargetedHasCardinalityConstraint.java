@@ -165,6 +165,7 @@ public class TargetedHasCardinalityConstraint
    * @return the id value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getId() {
     return _id;
   }
@@ -185,6 +186,7 @@ public class TargetedHasCardinalityConstraint
    * @return the level value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getLevel() {
     return _level;
   }
@@ -245,6 +247,7 @@ public class TargetedHasCardinalityConstraint
    * @return the target value
    */
   @NonNull
+  @Override
   public String getTarget() {
     return _target;
   }
@@ -268,6 +271,7 @@ public class TargetedHasCardinalityConstraint
    * @return the formal-name value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getFormalName() {
     return _formalName;
   }
@@ -295,6 +299,7 @@ public class TargetedHasCardinalityConstraint
    * @return the description value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public MarkupLine getDescription() {
     return _description;
   }
@@ -319,11 +324,12 @@ public class TargetedHasCardinalityConstraint
    * @return the prop value
    */
   @NonNull
+  @Override
   public List<Property> getProps() {
     if (_props == null) {
       _props = new LinkedList<>();
     }
-    return _props;
+    return ObjectUtils.notNull(_props);
   }
 
   /**
@@ -370,6 +376,7 @@ public class TargetedHasCardinalityConstraint
    * @return the message value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public String getMessage() {
     return _message;
   }
@@ -394,6 +401,7 @@ public class TargetedHasCardinalityConstraint
    * @return the remarks value, or {@code null} if not set
    */
   @Nullable
+  @Override
   public Remarks getRemarks() {
     return _remarks;
   }
@@ -414,6 +422,6 @@ public class TargetedHasCardinalityConstraint
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

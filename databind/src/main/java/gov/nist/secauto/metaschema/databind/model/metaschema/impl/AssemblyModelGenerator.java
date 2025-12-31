@@ -25,8 +25,6 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.binding.FieldRefere
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineAssembly;
 import gov.nist.secauto.metaschema.databind.model.metaschema.binding.InlineDefineField;
 
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -81,8 +79,7 @@ public final class AssemblyModelGenerator
           @NonNull IBoundInstanceModelAssembly bindingInstance,
           @NonNull IBindingDefinitionModelAssembly parent,
           @NonNull INodeItemFactory nodeItemFactory) {
-    List<Object> instances;
-    return binding == null || (instances = binding.getInstances()) == null || instances.isEmpty()
+    return binding == null || binding.getInstances().isEmpty()
         ? IContainerModelAssemblySupport.empty()
         : newInstance(
             binding,

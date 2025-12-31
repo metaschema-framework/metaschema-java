@@ -5,9 +5,10 @@
 
 package gov.nist.secauto.metaschema.databind.io;
 
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.stream.Collectors;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -78,7 +79,7 @@ public class PathTracker {
     for (int i = arr.length - 1; i >= 0; i--) {
       sb.append('/').append(arr[i]);
     }
-    return sb.toString();
+    return ObjectUtils.notNull(sb.toString());
   }
 
   /**

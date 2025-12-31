@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.cli.processor.completion;
 
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -80,10 +82,10 @@ public final class CompletionTypeRegistry {
    */
   @NonNull
   public static <E extends Enum<E>> ICompletionType forEnum(@NonNull Class<E> enumClass) {
-    String values = Arrays.stream(enumClass.getEnumConstants())
+    String values = ObjectUtils.notNull(Arrays.stream(enumClass.getEnumConstants())
         .map(Enum::name)
         .map(String::toLowerCase)
-        .collect(Collectors.joining(" "));
+        .collect(Collectors.joining(" ")));
 
     return new EnumCompletionType(values);
   }

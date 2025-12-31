@@ -90,6 +90,9 @@ public final class MermaidErDiagramGenerator {
     // writer.print(visitor.getDiagram());
   }
 
+  /**
+   * Visitor that generates Mermaid ER diagram syntax for diagram nodes.
+   */
   private static final class MermaidNodeVistor implements IDiagramNodeVisitor {
     @NonNull
     private final DiagramNodeModelVisitor nodeVisitor;
@@ -97,6 +100,15 @@ public final class MermaidErDiagramGenerator {
     @NonNull
     private final PrintWriter writer;
 
+    /**
+     * Create a new Mermaid node visitor.
+     *
+     * @param nodeVisitor
+     *          the node visitor for looking up diagram nodes
+     * @param writer
+     *          the writer for output. The caller retains ownership of this writer
+     *          and is responsible for closing it.
+     */
     private MermaidNodeVistor(
         @NonNull DiagramNodeModelVisitor nodeVisitor,
         @NotOwning @NonNull PrintWriter writer) {
@@ -104,11 +116,23 @@ public final class MermaidErDiagramGenerator {
       this.writer = writer;
     }
 
+    /**
+     * Get the node visitor for diagram node lookups.
+     *
+     * @return the node visitor
+     */
     @NonNull
     public DiagramNodeModelVisitor getNodeVisitor() {
       return nodeVisitor;
     }
 
+    /**
+     * Get the writer for generating Mermaid output.
+     * <p>
+     * The caller does not own this writer and must not close it.
+     *
+     * @return the writer
+     */
     @NonNull
     @NotOwning
     public PrintWriter getWriter() {

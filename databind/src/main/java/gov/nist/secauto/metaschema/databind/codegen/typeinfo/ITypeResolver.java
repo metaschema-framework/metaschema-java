@@ -98,6 +98,16 @@ public interface ITypeResolver {
     return new ChoiceGroupTypeInfoImpl(instance, parent);
   }
 
+  /**
+   * Get type information for the provided grouped model {@code instance}.
+   *
+   * @param modelInstance
+   *          the grouped model instance to get type information for
+   * @param choiceGroupTypeInfoImpl
+   *          the type information for the parent choice group containing this
+   *          instance
+   * @return the type information
+   */
   @NonNull
   IGroupedNamedModelInstanceTypeInfo getTypeInfo(
       @NonNull INamedModelInstanceGrouped modelInstance,
@@ -225,6 +235,15 @@ public interface ITypeResolver {
   @NonNull
   String getPackageName(@NonNull IModule module);
 
+  /**
+   * Get a unique property name for use within the given parent definition.
+   *
+   * @param parent
+   *          the type information for the parent definition
+   * @param name
+   *          the base name to derive the property name from
+   * @return a unique property name suitable for use in the generated class
+   */
   @NonNull
   String getPropertyName(@NonNull IDefinitionTypeInfo parent, @NonNull String name);
 }

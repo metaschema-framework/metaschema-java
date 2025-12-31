@@ -19,7 +19,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * the tree.
  */
 public class ParseTreePrinter {
-  @SuppressWarnings("resource")
   @NotOwning
   @NonNull
   private final PrintStream outputStream;
@@ -29,7 +28,8 @@ public class ParseTreePrinter {
    * Construct a new concrete syntax tree (CST) printer.
    *
    * @param outputStream
-   *          the stream to print to
+   *          the stream to print to. The caller retains ownership of this stream
+   *          and is responsible for closing it.
    */
   public ParseTreePrinter(@NotOwning @NonNull PrintStream outputStream) {
     this.outputStream = outputStream;

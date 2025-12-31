@@ -111,6 +111,7 @@ class CompletionTypeRegistryTest {
   @Test
   void testFileCompletionTypeBash() {
     ICompletionType completion = CompletionTypeRegistry.lookup(File.class);
+    assertNotNull(completion, "File.class should be registered");
     assertEquals("_filedir", completion.getBashCompletion(),
         "File bash completion should use _filedir");
   }
@@ -118,6 +119,7 @@ class CompletionTypeRegistryTest {
   @Test
   void testFileCompletionTypeZsh() {
     ICompletionType completion = CompletionTypeRegistry.lookup(File.class);
+    assertNotNull(completion, "File.class should be registered");
     assertEquals("_files", completion.getZshCompletion(),
         "File zsh completion should use _files");
   }
@@ -125,6 +127,7 @@ class CompletionTypeRegistryTest {
   @Test
   void testUriCompletionTypeBash() {
     ICompletionType completion = CompletionTypeRegistry.lookup(URI.class);
+    assertNotNull(completion, "URI.class should be registered");
     assertEquals("", completion.getBashCompletion(),
         "URI bash completion should be freeform (empty string)");
   }
@@ -132,6 +135,7 @@ class CompletionTypeRegistryTest {
   @Test
   void testUriCompletionTypeZsh() {
     ICompletionType completion = CompletionTypeRegistry.lookup(URI.class);
+    assertNotNull(completion, "URI.class should be registered");
     assertEquals("_urls", completion.getZshCompletion(),
         "URI zsh completion should use _urls");
   }
@@ -139,6 +143,7 @@ class CompletionTypeRegistryTest {
   @Test
   void testUrlCompletionTypeBash() {
     ICompletionType completion = CompletionTypeRegistry.lookup(URL.class);
+    assertNotNull(completion, "URL.class should be registered");
     assertEquals("", completion.getBashCompletion(),
         "URL bash completion should be freeform (empty string)");
   }
@@ -146,6 +151,7 @@ class CompletionTypeRegistryTest {
   @Test
   void testUrlCompletionTypeZsh() {
     ICompletionType completion = CompletionTypeRegistry.lookup(URL.class);
+    assertNotNull(completion, "URL.class should be registered");
     assertEquals("_urls", completion.getZshCompletion(),
         "URL zsh completion should use _urls");
   }

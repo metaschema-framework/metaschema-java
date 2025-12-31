@@ -25,7 +25,16 @@ import nl.talsmasoftware.lazy4j.Lazy;
 public class UuidItemImpl
     extends AbstractAnyAtomicItem<UUID>
     implements IUuidItem {
-  private final Lazy<String> stringValue = Lazy.of(super::asString);
+  private final Lazy<String> stringValue = Lazy.of(this::computeAsString);
+
+  /**
+   * Compute the string value by delegating to the parent implementation.
+   *
+   * @return the string representation
+   */
+  private String computeAsString() {
+    return super.asString();
+  }
 
   /**
    * Construct a new item with the provided {@code value}.

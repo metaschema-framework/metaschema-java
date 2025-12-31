@@ -9,8 +9,8 @@ import gov.nist.secauto.metaschema.core.model.IValuedDefinition;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.SchemaGenerationException;
-import gov.nist.secauto.metaschema.schemagen.xml.XmlSchemaGenerator;
-import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.IXmlGenerationState;
+import gov.nist.secauto.metaschema.schemagen.xml.impl.XmlDatatypeManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -62,20 +62,20 @@ public class XmlSimpleTypeUnion
   }
 
   @Override
-  public boolean isInline(XmlGenerationState state) {
+  public boolean isInline(IXmlGenerationState state) {
     return true;
   }
 
   @Override
-  public void generate(XmlGenerationState state) { // NOPMD unavoidable complexity
+  public void generate(IXmlGenerationState state) { // NOPMD unavoidable complexity
     try {
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "simpleType", XmlSchemaGenerator.NS_XML_SCHEMA);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "simpleType", XmlDatatypeManager.NS_XML_SCHEMA);
 
       if (!isInline(state)) {
         state.writeAttribute("name", ObjectUtils.notNull(getQName().getLocalPart()));
       }
 
-      state.writeStartElement(XmlSchemaGenerator.PREFIX_XML_SCHEMA, "union", XmlSchemaGenerator.NS_XML_SCHEMA);
+      state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "union", XmlDatatypeManager.NS_XML_SCHEMA);
 
       List<IXmlSimpleType> memberTypes = new LinkedList<>();
       List<IXmlSimpleType> inlineTypes = new LinkedList<>();

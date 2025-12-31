@@ -17,6 +17,8 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.schemagen.datatype.IDatatypeManager;
 
+import org.eclipse.jdt.annotation.NotOwning;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,6 +82,7 @@ public abstract class AbstractGenerationState<WRITER, DATATYPE_MANAGER extends I
   }
 
   @Override
+  @NotOwning
   public WRITER getWriter() {
     return writer;
   }

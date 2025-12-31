@@ -52,6 +52,7 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingMetaschemaM
 import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import gov.nist.secauto.metaschema.databind.model.metaschema.ModuleLoadingPostProcessor;
 
+import org.eclipse.jdt.annotation.Owning;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.xml.sax.SAXException;
@@ -455,14 +456,31 @@ public interface IBindingContext {
 
   /**
    * Get a new single use constraint validator.
+   * <p>
+   * The caller owns the returned validator and is responsible for closing it to
+   * release any resources (such as thread pools) when validation is complete.
+   * <p>
+   * Example usage:
+   *
+   * <pre>{@code
+   * try (IConstraintValidator validator = context.newValidator(handler, config)) {
+   *   validator.validate(item, documentUri);
+   *   validator.finalizeValidation();
+   * }
+   * }</pre>
+   * <p>
+   * The {@code @SuppressWarnings("resource")} annotation on this method is
+   * intentional: ownership transfers to the caller who must close the validator.
    *
    * @param handler
    *          the validation handler to use to process the validation results
    * @param config
    *          the validation configuration
-   *
    * @return the validator
    */
+  @SuppressWarnings("resource")
+  @NonNull
+  @Owning
   default IConstraintValidator newValidator(
       @NonNull IConstraintValidationHandler handler,
       @Nullable IConfiguration<ValidationFeature<?>> config) {
@@ -532,14 +550,15 @@ public interface IBindingContext {
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
 
-    IConstraintValidator validator = newValidator(handler, config);
+    try (IConstraintValidator validator = newValidator(handler, config)) {
 
-    DynamicContext dynamicContext = new DynamicContext(nodeItem.getStaticContext());
-    dynamicContext.setDocumentLoader(loader);
+      DynamicContext dynamicContext = new DynamicContext(nodeItem.getStaticContext());
+      dynamicContext.setDocumentLoader(loader);
 
-    validator.validate(nodeItem, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-    return handler;
+      validator.validate(nodeItem, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+      return handler;
+    }
   }
 
   /**

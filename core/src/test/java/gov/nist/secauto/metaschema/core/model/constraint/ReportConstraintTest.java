@@ -256,11 +256,11 @@ class ReportConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertTrue(handler.isPassing(),
             "Validation should pass because default level is INFORMATIONAL"),
@@ -312,11 +312,11 @@ class ReportConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertTrue(handler.isPassing(), "Validation should pass"),
         () -> assertThat("should have no findings", handler.getFindings(), hasSize(0)));
@@ -361,11 +361,11 @@ class ReportConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(),
             "Validation should fail because report with ERROR level fired"),
@@ -414,11 +414,11 @@ class ReportConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertTrue(handler.isPassing(),
             "Validation should pass because WARNING level does not fail validation"),
@@ -466,11 +466,11 @@ class ReportConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(),
             "Validation should fail because CRITICAL level report fired"),
@@ -519,11 +519,11 @@ class ReportConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertThat("should have 1 finding", handler.getFindings(), hasSize(1)),
         () -> assertThat("finding should have the custom message", handler.getFindings(),
@@ -581,11 +581,11 @@ class ReportConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     // Report fires when TRUE (has finding), Expect passes when TRUE (no finding)
     // So only Report should generate a finding
     assertAll(

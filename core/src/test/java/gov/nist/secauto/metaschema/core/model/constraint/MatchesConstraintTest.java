@@ -83,11 +83,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "expected validation to pass");
   }
 
@@ -125,11 +125,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "expected validation to fail"),
         () -> assertThat("expected one finding", handler.getFindings(), hasSize(1)),
@@ -172,11 +172,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "expected validation to pass");
   }
 
@@ -214,11 +214,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "expected validation to fail"),
         () -> assertThat("expected one finding", handler.getFindings(), hasSize(1)),
@@ -262,11 +262,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "expected validation to pass");
   }
 
@@ -308,11 +308,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     // The validation should fail because the datatype check fails
     assertAll(
         () -> assertFalse(handler.isPassing(), "expected validation to fail"),
@@ -356,11 +356,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "expected validation to pass");
   }
 
@@ -399,11 +399,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "expected validation to fail"),
         () -> assertThat("expected one finding", handler.getFindings(), hasSize(1)),
@@ -446,11 +446,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "expected validation to pass");
   }
 
@@ -489,11 +489,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "expected validation to pass");
   }
 
@@ -532,11 +532,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "expected validation to pass");
   }
 
@@ -575,11 +575,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertTrue(handler.isPassing(), "expected validation to pass");
   }
 
@@ -618,11 +618,11 @@ class MatchesConstraintTest {
     doReturn(staticContext).when(source).getStaticContext();
 
     FindingCollectingConstraintValidationHandler handler = new FindingCollectingConstraintValidationHandler();
-    DefaultConstraintValidator validator = new DefaultConstraintValidator(handler);
-    DynamicContext dynamicContext = new DynamicContext(staticContext);
-    validator.validate(flag, dynamicContext);
-    validator.finalizeValidation(dynamicContext);
-
+    try (DefaultConstraintValidator validator = new DefaultConstraintValidator(handler)) {
+      DynamicContext dynamicContext = new DynamicContext(staticContext);
+      validator.validate(flag, dynamicContext);
+      validator.finalizeValidation(dynamicContext);
+    }
     assertAll(
         () -> assertFalse(handler.isPassing(), "expected validation to fail"),
         () -> assertThat("expected one finding", handler.getFindings(), hasSize(1)),

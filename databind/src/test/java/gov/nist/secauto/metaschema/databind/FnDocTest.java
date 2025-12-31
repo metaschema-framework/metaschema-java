@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
 import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.item.atomic.IStringItem;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,7 @@ class FnDocTest {
     IBindingContext bindingContext = IBindingContext.newInstance();
 
     StaticContext staticContext = StaticContext.builder()
-        .baseUri(Paths.get(".").toUri())
+        .baseUri(ObjectUtils.notNull(Paths.get(".").toUri()))
         .build();
     DynamicContext dynamicContext = new DynamicContext(staticContext);
     dynamicContext.setDocumentLoader(bindingContext.newBoundLoader());

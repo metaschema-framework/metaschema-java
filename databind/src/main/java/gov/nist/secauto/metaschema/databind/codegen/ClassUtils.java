@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.metaschema.databind.codegen;
 
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -49,7 +51,6 @@ public final class ClassUtils {
    *          the name of an information element definition
    * @return a Java variable name
    */
-  @SuppressWarnings("null")
   @NonNull
   public static String toVariableName(@NonNull String name) {
     return lowerCamelCase(name);
@@ -63,7 +64,6 @@ public final class ClassUtils {
    *          the name of an information element definition
    * @return a Java variable name
    */
-  @SuppressWarnings("null")
   @NonNull
   public static String toClassName(@NonNull String name) {
     return upperCamelCase(name);
@@ -77,7 +77,6 @@ public final class ClassUtils {
    *          a namespace URI to convert to a package name
    * @return a Java package name
    */
-  @SuppressWarnings("null")
   @NonNull
   public static String toPackageName(@NonNull String namespace) {
     return getPackageFromNamespace(namespace);
@@ -105,7 +104,7 @@ public final class ClassUtils {
         }
       }
     }
-    return sb.length() > 0 ? sb.toString() : name;
+    return sb.length() > 0 ? ObjectUtils.notNull(sb.toString()) : name;
   }
 
   /**
@@ -136,7 +135,7 @@ public final class ClassUtils {
         }
       }
     }
-    return sb.length() > 0 ? sb.toString() : name;
+    return sb.length() > 0 ? ObjectUtils.notNull(sb.toString()) : name;
   }
 
   /**
@@ -207,7 +206,7 @@ public final class ClassUtils {
           if (sb.length() > 0) {
             sb.append('.');
           }
-          sb.append(normalizePackagePart(hostParts[i]));
+          sb.append(normalizePackagePart(ObjectUtils.notNull(hostParts[i])));
         }
       }
 
@@ -225,10 +224,10 @@ public final class ClassUtils {
         }
       }
 
-      return sb.length() > 0 ? sb.toString() : "generated";
-    } catch (URISyntaxException e) {
+      return sb.length() > 0 ? ObjectUtils.notNull(sb.toString()) : "generated";
+    } catch (@SuppressWarnings("unused") URISyntaxException ex) {
       // Fall back to a simple approach if URI parsing fails
-      return normalizePackagePart(namespace.replaceAll("[^a-zA-Z0-9]", "_"));
+      return normalizePackagePart(ObjectUtils.notNull(namespace.replaceAll("[^a-zA-Z0-9]", "_")));
     }
   }
 
@@ -271,7 +270,7 @@ public final class ClassUtils {
       }
     }
 
-    String result = sb.toString();
+    String result = ObjectUtils.notNull(sb.toString());
     // Handle Java reserved words
     if (isJavaReservedWord(result)) {
       return "_" + result;

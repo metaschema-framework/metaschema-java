@@ -27,6 +27,14 @@ public abstract class AbstractModelInstanceReadHandler<ITEM> implements IModelIn
   @NonNull
   private final IBoundObject parentObject;
 
+  /**
+   * Construct a new read handler for the provided model instance.
+   *
+   * @param instance
+   *          the model instance to read
+   * @param parentObject
+   *          the parent object that will contain the read data
+   */
   protected AbstractModelInstanceReadHandler(
       @NonNull IBoundInstanceModel<ITEM> instance,
       @NonNull IBoundObject parentObject) {

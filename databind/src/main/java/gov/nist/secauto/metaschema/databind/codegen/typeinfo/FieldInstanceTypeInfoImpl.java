@@ -12,7 +12,6 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter;
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import gov.nist.secauto.metaschema.core.model.IFieldDefinition;
 import gov.nist.secauto.metaschema.core.model.IFieldInstance;
 import gov.nist.secauto.metaschema.core.model.IFieldInstanceAbsolute;
@@ -30,6 +29,15 @@ public class FieldInstanceTypeInfoImpl
     extends AbstractNamedModelInstanceTypeInfo<IFieldInstanceAbsolute>
     implements IFieldInstanceTypeInfo {
 
+  /**
+   * Constructs a new type information object for a field instance.
+   *
+   * @param instance
+   *          the field instance
+   * @param parentDefinition
+   *          the type information for the parent assembly definition containing
+   *          this instance
+   */
   public FieldInstanceTypeInfoImpl(
       @NonNull IFieldInstanceAbsolute instance,
       @NonNull IAssemblyDefinitionTypeInfo parentDefinition) {

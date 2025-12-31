@@ -160,7 +160,7 @@ public class TestCollection implements IBoundObject {
     if (_testScenarios == null) {
       _testScenarios = new LinkedList<>();
     }
-    return _testScenarios;
+    return ObjectUtils.notNull(_testScenarios);
   }
 
   /**
@@ -206,6 +206,6 @@ public class TestCollection implements IBoundObject {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+    return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 }

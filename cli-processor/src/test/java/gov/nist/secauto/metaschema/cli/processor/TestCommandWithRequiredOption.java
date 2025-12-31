@@ -7,6 +7,7 @@ package gov.nist.secauto.metaschema.cli.processor;
 
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
+import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
@@ -27,7 +28,7 @@ class TestCommandWithRequiredOption
       .desc("A required option for testing")
       .hasArg()
       .argName("VALUE")
-      .build();
+      .get();
 
   @Override
   @NonNull
@@ -43,7 +44,7 @@ class TestCommandWithRequiredOption
 
   @Override
   public Collection<? extends Option> gatherOptions() {
-    return List.of(REQUIRED_OPTION);
+    return ObjectUtils.notNull(List.of(REQUIRED_OPTION));
   }
 
   @Override

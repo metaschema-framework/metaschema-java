@@ -21,6 +21,22 @@ public final class ClassIntrospector {
     // disable construction
   }
 
+  /**
+   * Finds all methods with the specified name and parameter types in the class
+   * hierarchy.
+   * <p>
+   * This method searches the given class and all superclasses for methods
+   * matching the specified name and parameter types.
+   *
+   * @param clazz
+   *          the class to search
+   * @param name
+   *          the method name to find
+   * @param parameterTypes
+   *          the parameter types of the method
+   * @return an unmodifiable list of matching methods found in the class
+   *         hierarchy, or an empty list if no matches are found
+   */
   @SuppressWarnings("PMD.EmptyCatchBlock")
   public static List<Method> getMatchingMethods(Class<?> clazz, String name, Class<?>... parameterTypes) {
     List<Method> retval = new LinkedList<>();
@@ -37,6 +53,22 @@ public final class ClassIntrospector {
     return retval.isEmpty() ? Collections.emptyList() : Collections.unmodifiableList(retval);
   }
 
+  /**
+   * Finds the first method with the specified name and parameter types in the
+   * class hierarchy.
+   * <p>
+   * This method searches the given class and all superclasses, returning the
+   * first method found that matches the specified name and parameter types.
+   *
+   * @param clazz
+   *          the class to search
+   * @param name
+   *          the method name to find
+   * @param parameterTypes
+   *          the parameter types of the method
+   * @return the first matching method found in the class hierarchy, or
+   *         {@code null} if no match is found
+   */
   @SuppressWarnings("PMD.EmptyCatchBlock")
   public static Method getMatchingMethod(Class<?> clazz, String name, Class<?>... parameterTypes) {
     Method retval = null;
