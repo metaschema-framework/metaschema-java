@@ -196,6 +196,9 @@ public class XmlSchemaLoader {
 
     @Override
     public Iterator<String> getPrefixes(String namespaceURI) {
+      if (namespaceURI == null) {
+        throw new IllegalArgumentException("namespaceURI cannot be null");
+      }
       List<String> prefixes = new ArrayList<>();
       for (Map.Entry<String, String> entry : prefixToNamespace.entrySet()) {
         if (namespaceURI.equals(entry.getValue())) {
