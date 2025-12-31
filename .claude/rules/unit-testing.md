@@ -15,6 +15,19 @@
 3. Re-run CI to verify it's not caused by your changes
 4. Open an issue to track the flaky test if not already tracked
 
+### No Excuses for Test Failures (BLOCKING)
+
+**"Pre-existing failure" is NOT a valid excuse.** Any broken test in your branch IS your responsibility:
+
+- Do not claim "tests were already failing before my changes"
+- Do not dismiss failures as "not caused by my change"
+- Do not proceed with commits or pushes when tests fail
+
+**When encountering test failures:**
+1. Fix them, even if they predate your changes
+2. If truly unrelated, stash your work, fix on a separate branch, and merge
+3. The 100% pass rate policy has no exceptions
+
 ## Core Principles
 
 ### What NOT to Test

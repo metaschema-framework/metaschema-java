@@ -76,8 +76,7 @@ public class XmlSchemaGenerator
    */
   @NonNull
   private static XMLOutputFactory2 defaultXMLOutputFactory() {
-    XMLOutputFactory2 xmlOutputFactory = (XMLOutputFactory2) XMLOutputFactory.newInstance();
-    assert xmlOutputFactory instanceof WstxOutputFactory;
+    WstxOutputFactory xmlOutputFactory = new WstxOutputFactory();
     xmlOutputFactory.configureForSpeed();
     xmlOutputFactory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
     return xmlOutputFactory;
