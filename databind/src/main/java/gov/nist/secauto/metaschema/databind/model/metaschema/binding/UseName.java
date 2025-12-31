@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -27,7 +26,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     formalName = "Use Name",
     description = "Allows the name of the definition to be overridden.",
     name = "use-name",
-    moduleClass = MetaschemaModelModule.class)
+    moduleClass = MetaschemaModelModule.class
+)
 public class UseName implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -38,30 +38,28 @@ public class UseName implements IBoundObject {
       formalName = "Numeric Index",
       description = "Used for binary formats instead of the textual name.",
       name = "index",
-      typeAdapter = NonNegativeIntegerAdapter.class)
+      typeAdapter = NonNegativeIntegerAdapter.class
+  )
   private BigInteger _index;
 
   @BoundFieldValue(
       valueKeyName = "name",
-      typeAdapter = TokenAdapter.class)
+      typeAdapter = TokenAdapter.class
+  )
   private String _name;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.UseName}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.UseName} instance with no metadata.
    */
   public UseName() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.UseName}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.UseName} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public UseName(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -92,7 +90,7 @@ public class UseName implements IBoundObject {
    * Used for binary formats instead of the textual name.
    *
    * @param value
-   *          the index value to set
+   *           the index value to set
    */
   public void setIndex(@Nullable BigInteger value) {
     _index = value;

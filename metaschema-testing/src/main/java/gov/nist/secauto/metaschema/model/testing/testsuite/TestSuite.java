@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../metaschema/unit-tests.yaml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -28,7 +27,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     description = "The root element containing a collection of test collections.",
     name = "test-suite",
     moduleClass = MetaschemaTestSuiteModule.class,
-    rootName = "test-suite")
+    rootName = "test-suite"
+)
 public class TestSuite implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -41,25 +41,22 @@ public class TestSuite implements IBoundObject {
       useName = "test-collection",
       minOccurs = 1,
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "test-collections", inJson = JsonGroupAsBehavior.LIST))
+      groupAs = @GroupAs(name = "test-collections", inJson = JsonGroupAsBehavior.LIST)
+  )
   private List<TestCollection> _testCollections;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestSuite}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestSuite} instance with no metadata.
    */
   public TestSuite() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestSuite}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestSuite} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public TestSuite(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -93,7 +90,7 @@ public class TestSuite implements IBoundObject {
    * A collection of test scenarios located at a specific path.
    *
    * @param value
-   *          the test-collection value to set
+   *           the test-collection value to set
    */
   public void setTestCollections(@NonNull List<TestCollection> value) {
     _testCollections = value;
@@ -101,13 +98,11 @@ public class TestSuite implements IBoundObject {
 
   /**
    * Add a new {@link TestCollection} item to the underlying collection.
-   *
-   * @param item
-   *          the item to add
+   * @param item the item to add
    * @return {@code true}
    */
   public boolean addTestCollection(TestCollection item) {
-    TestCollection value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    TestCollection value = ObjectUtils.requireNonNull(item,"item cannot be null");
     if (_testCollections == null) {
       _testCollections = new LinkedList<>();
     }
@@ -115,15 +110,12 @@ public class TestSuite implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link TestCollection} item from the underlying
-   * collection.
-   *
-   * @param item
-   *          the item to remove
+   * Remove the first matching {@link TestCollection} item from the underlying collection.
+   * @param item the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeTestCollection(TestCollection item) {
-    TestCollection value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    TestCollection value = ObjectUtils.requireNonNull(item,"item cannot be null");
     return _testCollections != null && _testCollections.remove(value);
   }
 

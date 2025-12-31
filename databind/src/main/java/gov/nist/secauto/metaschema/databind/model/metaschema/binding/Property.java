@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -24,7 +23,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MetaschemaAssembly(
     formalName = "Property",
     name = "property",
-    moduleClass = MetaschemaModelModule.class)
+    moduleClass = MetaschemaModelModule.class
+)
 public class Property implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -32,39 +32,38 @@ public class Property implements IBoundObject {
       formalName = "Property Name",
       name = "name",
       required = true,
-      typeAdapter = TokenAdapter.class)
+      typeAdapter = TokenAdapter.class
+  )
   private String _name;
 
   @BoundFlag(
       formalName = "Property Namespace",
       name = "namespace",
       defaultValue = "http://csrc.nist.gov/ns/oscal/metaschema/1.0",
-      typeAdapter = UriAdapter.class)
+      typeAdapter = UriAdapter.class
+  )
   private URI _namespace;
 
   @BoundFlag(
       formalName = "Property Value",
       name = "value",
       required = true,
-      typeAdapter = StringAdapter.class)
+      typeAdapter = StringAdapter.class
+  )
   private String _value;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.Property}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.Property} instance with no metadata.
    */
   public Property() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.Property}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.Property} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public Property(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -89,7 +88,7 @@ public class Property implements IBoundObject {
    * Set the property Name.
    *
    * @param value
-   *          the name value to set
+   *           the name value to set
    */
   public void setName(@NonNull String value) {
     _name = value;
@@ -109,7 +108,7 @@ public class Property implements IBoundObject {
    * Set the property Namespace.
    *
    * @param value
-   *          the namespace value to set
+   *           the namespace value to set
    */
   public void setNamespace(@Nullable URI value) {
     _namespace = value;
@@ -129,7 +128,7 @@ public class Property implements IBoundObject {
    * Set the property Value.
    *
    * @param value
-   *          the value value to set
+   *           the value value to set
    */
   public void setValue(@NonNull String value) {
     _value = value;

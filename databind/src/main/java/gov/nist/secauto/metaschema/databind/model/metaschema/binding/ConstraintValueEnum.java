@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -25,46 +24,44 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MetaschemaField(
     formalName = "Allowed Value Enumeration",
     name = "constraint-value-enum",
-    moduleClass = MetaschemaModelModule.class)
-public class ConstraintValueEnum
-    extends AbstractAllowedValue
-    implements IBoundObject {
+    moduleClass = MetaschemaModelModule.class
+)
+public class ConstraintValueEnum extends AbstractAllowedValue implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
   @BoundFlag(
       formalName = "Allowed Value Enumeration Value",
       name = "value",
       required = true,
-      typeAdapter = StringAdapter.class)
+      typeAdapter = StringAdapter.class
+  )
   private String _value;
 
   @BoundFlag(
       formalName = "Allowed Value Deprecation Version",
       name = "deprecated",
-      typeAdapter = StringAdapter.class)
+      typeAdapter = StringAdapter.class
+  )
   private String _deprecated;
 
   @BoundFieldValue(
       valueKeyName = "remark",
-      typeAdapter = MarkupLineAdapter.class)
+      typeAdapter = MarkupLineAdapter.class
+  )
   private MarkupLine _remark;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintValueEnum}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintValueEnum} instance with no metadata.
    */
   public ConstraintValueEnum() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintValueEnum}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintValueEnum} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public ConstraintValueEnum(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -90,7 +87,7 @@ public class ConstraintValueEnum
    * Set the allowed Value Enumeration Value.
    *
    * @param value
-   *          the value value to set
+   *           the value value to set
    */
   public void setValue(@NonNull String value) {
     _value = value;
@@ -111,7 +108,7 @@ public class ConstraintValueEnum
    * Set the allowed Value Deprecation Version.
    *
    * @param value
-   *          the deprecated value to set
+   *           the deprecated value to set
    */
   public void setDeprecated(@Nullable String value) {
     _deprecated = value;

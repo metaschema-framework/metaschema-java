@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -20,14 +19,14 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Assigns a Metapath namespace to a prefix for use in a Metapath expression in
- * a lexical qualified name.
+ * Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.
  */
 @MetaschemaAssembly(
     formalName = "Metapath Namespace Declaration",
     description = "Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.",
     name = "metapath-namespace",
-    moduleClass = MetaschemaModelModule.class)
+    moduleClass = MetaschemaModelModule.class
+)
 public class MetapathNamespace implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -39,7 +38,8 @@ public class MetapathNamespace implements IBoundObject {
       description = "The namespace URI to bind to the prefix.",
       name = "uri",
       required = true,
-      typeAdapter = UriAdapter.class)
+      typeAdapter = UriAdapter.class
+  )
   private URI _uri;
 
   /**
@@ -50,25 +50,22 @@ public class MetapathNamespace implements IBoundObject {
       description = "The prefix that is bound to the namespace.",
       name = "prefix",
       required = true,
-      typeAdapter = TokenAdapter.class)
+      typeAdapter = TokenAdapter.class
+  )
   private String _prefix;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathNamespace}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathNamespace} instance with no metadata.
    */
   public MetapathNamespace() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathNamespace}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetapathNamespace} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public MetapathNamespace(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -99,7 +96,7 @@ public class MetapathNamespace implements IBoundObject {
    * The namespace URI to bind to the prefix.
    *
    * @param value
-   *          the uri value to set
+   *           the uri value to set
    */
   public void setUri(@NonNull URI value) {
     _uri = value;
@@ -125,7 +122,7 @@ public class MetapathNamespace implements IBoundObject {
    * The prefix that is bound to the namespace.
    *
    * @param value
-   *          the prefix value to set
+   *           the prefix value to set
    */
   public void setPrefix(@NonNull String value) {
     _prefix = value;

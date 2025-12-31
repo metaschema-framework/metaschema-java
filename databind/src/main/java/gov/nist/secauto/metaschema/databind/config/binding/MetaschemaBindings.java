@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../metaschema/metaschema-bindings.yaml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.databind.config.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -39,20 +38,21 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     description = "The root element for a set of metaschema binding customizations.",
     name = "metaschema-bindings",
     moduleClass = MetaschemaBindingsModule.class,
-    rootName = "metaschema-bindings")
+    rootName = "metaschema-bindings"
+)
 public class MetaschemaBindings implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
   /**
-   * Defines binding configurations that apply to a whole model described by a
-   * namespace.
+   * Defines binding configurations that apply to a whole model described by a namespace.
    */
   @BoundAssembly(
       formalName = "Model Binding",
       description = "Defines binding configurations that apply to a whole model described by a namespace.",
       useName = "model-binding",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "model-bindings", inJson = JsonGroupAsBehavior.LIST))
+      groupAs = @GroupAs(name = "model-bindings", inJson = JsonGroupAsBehavior.LIST)
+  )
   private List<ModelBinding> _modelBindings;
 
   /**
@@ -63,25 +63,22 @@ public class MetaschemaBindings implements IBoundObject {
       description = "Defines a binding for a given metaschema identified by a relative URL.",
       useName = "metaschema-binding",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "metaschema-bindings", inJson = JsonGroupAsBehavior.LIST))
+      groupAs = @GroupAs(name = "metaschema-bindings", inJson = JsonGroupAsBehavior.LIST)
+  )
   private List<MetaschemaBinding> _metaschemaBindings;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings} instance with no metadata.
    */
   public MetaschemaBindings() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public MetaschemaBindings(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -96,8 +93,7 @@ public class MetaschemaBindings implements IBoundObject {
    * Get the model Binding.
    *
    * <p>
-   * Defines binding configurations that apply to a whole model described by a
-   * namespace.
+   * Defines binding configurations that apply to a whole model described by a namespace.
    *
    * @return the model-binding value
    */
@@ -113,11 +109,10 @@ public class MetaschemaBindings implements IBoundObject {
    * Set the model Binding.
    *
    * <p>
-   * Defines binding configurations that apply to a whole model described by a
-   * namespace.
+   * Defines binding configurations that apply to a whole model described by a namespace.
    *
    * @param value
-   *          the model-binding value to set
+   *           the model-binding value to set
    */
   public void setModelBindings(@NonNull List<ModelBinding> value) {
     _modelBindings = value;
@@ -125,13 +120,11 @@ public class MetaschemaBindings implements IBoundObject {
 
   /**
    * Add a new {@link ModelBinding} item to the underlying collection.
-   *
-   * @param item
-   *          the item to add
+   * @param item the item to add
    * @return {@code true}
    */
   public boolean addModelBinding(ModelBinding item) {
-    ModelBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    ModelBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
     if (_modelBindings == null) {
       _modelBindings = new LinkedList<>();
     }
@@ -139,15 +132,12 @@ public class MetaschemaBindings implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link ModelBinding} item from the underlying
-   * collection.
-   *
-   * @param item
-   *          the item to remove
+   * Remove the first matching {@link ModelBinding} item from the underlying collection.
+   * @param item the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeModelBinding(ModelBinding item) {
-    ModelBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    ModelBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
     return _modelBindings != null && _modelBindings.remove(value);
   }
 
@@ -174,7 +164,7 @@ public class MetaschemaBindings implements IBoundObject {
    * Defines a binding for a given metaschema identified by a relative URL.
    *
    * @param value
-   *          the metaschema-binding value to set
+   *           the metaschema-binding value to set
    */
   public void setMetaschemaBindings(@NonNull List<MetaschemaBinding> value) {
     _metaschemaBindings = value;
@@ -182,13 +172,11 @@ public class MetaschemaBindings implements IBoundObject {
 
   /**
    * Add a new {@link MetaschemaBinding} item to the underlying collection.
-   *
-   * @param item
-   *          the item to add
+   * @param item the item to add
    * @return {@code true}
    */
   public boolean addMetaschemaBinding(MetaschemaBinding item) {
-    MetaschemaBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    MetaschemaBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
     if (_metaschemaBindings == null) {
       _metaschemaBindings = new LinkedList<>();
     }
@@ -196,15 +184,12 @@ public class MetaschemaBindings implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link MetaschemaBinding} item from the underlying
-   * collection.
-   *
-   * @param item
-   *          the item to remove
+   * Remove the first matching {@link MetaschemaBinding} item from the underlying collection.
+   * @param item the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeMetaschemaBinding(MetaschemaBinding item) {
-    MetaschemaBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    MetaschemaBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
     return _metaschemaBindings != null && _metaschemaBindings.remove(value);
   }
 
@@ -214,27 +199,27 @@ public class MetaschemaBindings implements IBoundObject {
   }
 
   /**
-   * Defines binding configurations that apply to a whole model described by a
-   * namespace.
+   * Defines binding configurations that apply to a whole model described by a namespace.
    */
   @MetaschemaAssembly(
       formalName = "Model Binding",
       description = "Defines binding configurations that apply to a whole model described by a namespace.",
       name = "model-binding",
-      moduleClass = MetaschemaBindingsModule.class)
+      moduleClass = MetaschemaBindingsModule.class
+  )
   public static class ModelBinding implements IBoundObject {
     private final IMetaschemaData __metaschemaData;
 
     /**
-     * A URI referencing the namespace of one or more related metaschema
-     * definitions.
+     * A URI referencing the namespace of one or more related metaschema definitions.
      */
     @BoundFlag(
         formalName = "Namespace",
         description = "A URI referencing the namespace of one or more related metaschema definitions.",
         name = "namespace",
         required = true,
-        typeAdapter = UriAdapter.class)
+        typeAdapter = UriAdapter.class
+    )
     private URI _namespace;
 
     /**
@@ -243,25 +228,22 @@ public class MetaschemaBindings implements IBoundObject {
     @BoundAssembly(
         formalName = "Java Model Binding",
         description = "Java-specific binding configuration for a model namespace.",
-        useName = "java")
+        useName = "java"
+    )
     private Java _java;
 
     /**
-     * Constructs a new
-     * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.ModelBinding}
-     * instance with no metadata.
+     * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.ModelBinding} instance with no metadata.
      */
     public ModelBinding() {
       this(null);
     }
 
     /**
-     * Constructs a new
-     * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.ModelBinding}
-     * instance with the specified metadata.
+     * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.ModelBinding} instance with the specified metadata.
      *
      * @param data
-     *          the metaschema data, or {@code null} if none
+     *           the metaschema data, or {@code null} if none
      */
     public ModelBinding(IMetaschemaData data) {
       this.__metaschemaData = data;
@@ -276,8 +258,7 @@ public class MetaschemaBindings implements IBoundObject {
      * Get the namespace.
      *
      * <p>
-     * A URI referencing the namespace of one or more related metaschema
-     * definitions.
+     * A URI referencing the namespace of one or more related metaschema definitions.
      *
      * @return the namespace value
      */
@@ -290,11 +271,10 @@ public class MetaschemaBindings implements IBoundObject {
      * Set the namespace.
      *
      * <p>
-     * A URI referencing the namespace of one or more related metaschema
-     * definitions.
+     * A URI referencing the namespace of one or more related metaschema definitions.
      *
      * @param value
-     *          the namespace value to set
+     *           the namespace value to set
      */
     public void setNamespace(@NonNull URI value) {
       _namespace = value;
@@ -320,7 +300,7 @@ public class MetaschemaBindings implements IBoundObject {
      * Java-specific binding configuration for a model namespace.
      *
      * @param value
-     *          the java value to set
+     *           the java value to set
      */
     public void setJava(@Nullable Java value) {
       _java = value;
@@ -338,7 +318,8 @@ public class MetaschemaBindings implements IBoundObject {
         formalName = "Java Model Binding",
         description = "Java-specific binding configuration for a model namespace.",
         name = "java",
-        moduleClass = MetaschemaBindingsModule.class)
+        moduleClass = MetaschemaBindingsModule.class
+    )
     public static class Java implements IBoundObject {
       private final IMetaschemaData __metaschemaData;
 
@@ -349,25 +330,22 @@ public class MetaschemaBindings implements IBoundObject {
           formalName = "Use Package Name",
           description = "The Java package name to use for classes generated from this namespace.",
           useName = "use-package-name",
-          typeAdapter = TokenAdapter.class)
+          typeAdapter = TokenAdapter.class
+      )
       private String _usePackageName;
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.ModelBinding.Java}
-       * instance with no metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.ModelBinding.Java} instance with no metadata.
        */
       public Java() {
         this(null);
       }
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.ModelBinding.Java}
-       * instance with the specified metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.ModelBinding.Java} instance with the specified metadata.
        *
        * @param data
-       *          the metaschema data, or {@code null} if none
+       *           the metaschema data, or {@code null} if none
        */
       public Java(IMetaschemaData data) {
         this.__metaschemaData = data;
@@ -398,7 +376,7 @@ public class MetaschemaBindings implements IBoundObject {
        * The Java package name to use for classes generated from this namespace.
        *
        * @param value
-       *          the use-package-name value to set
+       *           the use-package-name value to set
        */
       public void setUsePackageName(@Nullable String value) {
         _usePackageName = value;
@@ -418,62 +396,59 @@ public class MetaschemaBindings implements IBoundObject {
       formalName = "Metaschema Binding",
       description = "Defines a binding for a given metaschema identified by a relative URL.",
       name = "metaschema-binding",
-      moduleClass = MetaschemaBindingsModule.class)
+      moduleClass = MetaschemaBindingsModule.class
+  )
   public static class MetaschemaBinding implements IBoundObject {
     private final IMetaschemaData __metaschemaData;
 
     /**
-     * A URL relative to this binding configuration file, pointing to a metaschema
-     * definition.
+     * A URL relative to this binding configuration file, pointing to a metaschema definition.
      */
     @BoundFlag(
         formalName = "Href",
         description = "A URL relative to this binding configuration file, pointing to a metaschema definition.",
         name = "href",
         required = true,
-        typeAdapter = UriReferenceAdapter.class)
+        typeAdapter = UriReferenceAdapter.class
+    )
     private URI _href;
 
     /**
-     * Provides binding configurations for a given defined assembly within the
-     * parent metaschema.
+     * Provides binding configurations for a given defined assembly within the parent metaschema.
      */
     @BoundAssembly(
         formalName = "Define Assembly Binding",
         description = "Provides binding configurations for a given defined assembly within the parent metaschema.",
         useName = "define-assembly-binding",
         maxOccurs = -1,
-        groupAs = @GroupAs(name = "define-assembly-bindings", inJson = JsonGroupAsBehavior.LIST))
+        groupAs = @GroupAs(name = "define-assembly-bindings", inJson = JsonGroupAsBehavior.LIST)
+    )
     private List<DefineAssemblyBinding> _defineAssemblyBindings;
 
     /**
-     * Provides binding configurations for a given defined field within the parent
-     * metaschema.
+     * Provides binding configurations for a given defined field within the parent metaschema.
      */
     @BoundAssembly(
         formalName = "Define Field Binding",
         description = "Provides binding configurations for a given defined field within the parent metaschema.",
         useName = "define-field-binding",
         maxOccurs = -1,
-        groupAs = @GroupAs(name = "define-field-bindings", inJson = JsonGroupAsBehavior.LIST))
+        groupAs = @GroupAs(name = "define-field-bindings", inJson = JsonGroupAsBehavior.LIST)
+    )
     private List<DefineFieldBinding> _defineFieldBindings;
 
     /**
-     * Constructs a new
-     * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding}
-     * instance with no metadata.
+     * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding} instance with no metadata.
      */
     public MetaschemaBinding() {
       this(null);
     }
 
     /**
-     * Constructs a new
-     * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding}
-     * instance with the specified metadata.
+     * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding} instance with the specified metadata.
      *
      * @param data
-     *          the metaschema data, or {@code null} if none
+     *           the metaschema data, or {@code null} if none
      */
     public MetaschemaBinding(IMetaschemaData data) {
       this.__metaschemaData = data;
@@ -488,8 +463,7 @@ public class MetaschemaBindings implements IBoundObject {
      * Get the href.
      *
      * <p>
-     * A URL relative to this binding configuration file, pointing to a metaschema
-     * definition.
+     * A URL relative to this binding configuration file, pointing to a metaschema definition.
      *
      * @return the href value
      */
@@ -502,11 +476,10 @@ public class MetaschemaBindings implements IBoundObject {
      * Set the href.
      *
      * <p>
-     * A URL relative to this binding configuration file, pointing to a metaschema
-     * definition.
+     * A URL relative to this binding configuration file, pointing to a metaschema definition.
      *
      * @param value
-     *          the href value to set
+     *           the href value to set
      */
     public void setHref(@NonNull URI value) {
       _href = value;
@@ -516,8 +489,7 @@ public class MetaschemaBindings implements IBoundObject {
      * Get the define Assembly Binding.
      *
      * <p>
-     * Provides binding configurations for a given defined assembly within the
-     * parent metaschema.
+     * Provides binding configurations for a given defined assembly within the parent metaschema.
      *
      * @return the define-assembly-binding value
      */
@@ -533,11 +505,10 @@ public class MetaschemaBindings implements IBoundObject {
      * Set the define Assembly Binding.
      *
      * <p>
-     * Provides binding configurations for a given defined assembly within the
-     * parent metaschema.
+     * Provides binding configurations for a given defined assembly within the parent metaschema.
      *
      * @param value
-     *          the define-assembly-binding value to set
+     *           the define-assembly-binding value to set
      */
     public void setDefineAssemblyBindings(@NonNull List<DefineAssemblyBinding> value) {
       _defineAssemblyBindings = value;
@@ -545,13 +516,11 @@ public class MetaschemaBindings implements IBoundObject {
 
     /**
      * Add a new {@link DefineAssemblyBinding} item to the underlying collection.
-     *
-     * @param item
-     *          the item to add
+     * @param item the item to add
      * @return {@code true}
      */
     public boolean addDefineAssemblyBinding(DefineAssemblyBinding item) {
-      DefineAssemblyBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+      DefineAssemblyBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
       if (_defineAssemblyBindings == null) {
         _defineAssemblyBindings = new LinkedList<>();
       }
@@ -559,15 +528,12 @@ public class MetaschemaBindings implements IBoundObject {
     }
 
     /**
-     * Remove the first matching {@link DefineAssemblyBinding} item from the
-     * underlying collection.
-     *
-     * @param item
-     *          the item to remove
+     * Remove the first matching {@link DefineAssemblyBinding} item from the underlying collection.
+     * @param item the item to remove
      * @return {@code true} if the item was removed or {@code false} otherwise
      */
     public boolean removeDefineAssemblyBinding(DefineAssemblyBinding item) {
-      DefineAssemblyBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+      DefineAssemblyBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
       return _defineAssemblyBindings != null && _defineAssemblyBindings.remove(value);
     }
 
@@ -575,8 +541,7 @@ public class MetaschemaBindings implements IBoundObject {
      * Get the define Field Binding.
      *
      * <p>
-     * Provides binding configurations for a given defined field within the parent
-     * metaschema.
+     * Provides binding configurations for a given defined field within the parent metaschema.
      *
      * @return the define-field-binding value
      */
@@ -592,11 +557,10 @@ public class MetaschemaBindings implements IBoundObject {
      * Set the define Field Binding.
      *
      * <p>
-     * Provides binding configurations for a given defined field within the parent
-     * metaschema.
+     * Provides binding configurations for a given defined field within the parent metaschema.
      *
      * @param value
-     *          the define-field-binding value to set
+     *           the define-field-binding value to set
      */
     public void setDefineFieldBindings(@NonNull List<DefineFieldBinding> value) {
       _defineFieldBindings = value;
@@ -604,13 +568,11 @@ public class MetaschemaBindings implements IBoundObject {
 
     /**
      * Add a new {@link DefineFieldBinding} item to the underlying collection.
-     *
-     * @param item
-     *          the item to add
+     * @param item the item to add
      * @return {@code true}
      */
     public boolean addDefineFieldBinding(DefineFieldBinding item) {
-      DefineFieldBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+      DefineFieldBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
       if (_defineFieldBindings == null) {
         _defineFieldBindings = new LinkedList<>();
       }
@@ -618,15 +580,12 @@ public class MetaschemaBindings implements IBoundObject {
     }
 
     /**
-     * Remove the first matching {@link DefineFieldBinding} item from the underlying
-     * collection.
-     *
-     * @param item
-     *          the item to remove
+     * Remove the first matching {@link DefineFieldBinding} item from the underlying collection.
+     * @param item the item to remove
      * @return {@code true} if the item was removed or {@code false} otherwise
      */
     public boolean removeDefineFieldBinding(DefineFieldBinding item) {
-      DefineFieldBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+      DefineFieldBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
       return _defineFieldBindings != null && _defineFieldBindings.remove(value);
     }
 
@@ -636,14 +595,14 @@ public class MetaschemaBindings implements IBoundObject {
     }
 
     /**
-     * Provides binding configurations for a given defined assembly within the
-     * parent metaschema.
+     * Provides binding configurations for a given defined assembly within the parent metaschema.
      */
     @MetaschemaAssembly(
         formalName = "Define Assembly Binding",
         description = "Provides binding configurations for a given defined assembly within the parent metaschema.",
         name = "define-assembly-binding",
-        moduleClass = MetaschemaBindingsModule.class)
+        moduleClass = MetaschemaBindingsModule.class
+    )
     public static class DefineAssemblyBinding implements IBoundObject {
       private final IMetaschemaData __metaschemaData;
 
@@ -654,18 +613,19 @@ public class MetaschemaBindings implements IBoundObject {
           formalName = "Name",
           description = "The name of the metaschema assembly. Used for top-level definitions.",
           name = "name",
-          typeAdapter = TokenAdapter.class)
+          typeAdapter = TokenAdapter.class
+      )
       private String _name;
 
       /**
-       * A Metapath expression targeting the assembly definition(s) within the
-       * metaschema. Used for inline definitions.
+       * A Metapath expression targeting the assembly definition(s) within the metaschema. Used for inline definitions.
        */
       @BoundFlag(
           formalName = "Target",
           description = "A Metapath expression targeting the assembly definition(s) within the metaschema. Used for inline definitions.",
           name = "target",
-          typeAdapter = StringAdapter.class)
+          typeAdapter = StringAdapter.class
+      )
       private String _target;
 
       /**
@@ -674,7 +634,8 @@ public class MetaschemaBindings implements IBoundObject {
       @BoundAssembly(
           formalName = "Java Object Definition Binding",
           description = "Field and assembly binding configurations for Java bound classes.",
-          useName = "java")
+          useName = "java"
+      )
       private Java _java;
 
       /**
@@ -685,7 +646,8 @@ public class MetaschemaBindings implements IBoundObject {
           description = "Provides binding configurations for a property within the parent definition.",
           useName = "property-binding",
           maxOccurs = -1,
-          groupAs = @GroupAs(name = "property-bindings", inJson = JsonGroupAsBehavior.LIST))
+          groupAs = @GroupAs(name = "property-bindings", inJson = JsonGroupAsBehavior.LIST)
+      )
       private List<PropertyBinding> _propertyBindings;
 
       /**
@@ -696,25 +658,22 @@ public class MetaschemaBindings implements IBoundObject {
           description = "Provides binding configuration for a choice group within the parent assembly.",
           useName = "choice-group-binding",
           maxOccurs = -1,
-          groupAs = @GroupAs(name = "choice-group-bindings", inJson = JsonGroupAsBehavior.LIST))
+          groupAs = @GroupAs(name = "choice-group-bindings", inJson = JsonGroupAsBehavior.LIST)
+      )
       private List<ChoiceGroupBinding> _choiceGroupBindings;
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding}
-       * instance with no metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding} instance with no metadata.
        */
       public DefineAssemblyBinding() {
         this(null);
       }
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding}
-       * instance with the specified metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding} instance with the specified metadata.
        *
        * @param data
-       *          the metaschema data, or {@code null} if none
+       *           the metaschema data, or {@code null} if none
        */
       public DefineAssemblyBinding(IMetaschemaData data) {
         this.__metaschemaData = data;
@@ -745,7 +704,7 @@ public class MetaschemaBindings implements IBoundObject {
        * The name of the metaschema assembly. Used for top-level definitions.
        *
        * @param value
-       *          the name value to set
+       *           the name value to set
        */
       public void setName(@Nullable String value) {
         _name = value;
@@ -755,8 +714,7 @@ public class MetaschemaBindings implements IBoundObject {
        * Get the target.
        *
        * <p>
-       * A Metapath expression targeting the assembly definition(s) within the
-       * metaschema. Used for inline definitions.
+       * A Metapath expression targeting the assembly definition(s) within the metaschema. Used for inline definitions.
        *
        * @return the target value, or {@code null} if not set
        */
@@ -769,11 +727,10 @@ public class MetaschemaBindings implements IBoundObject {
        * Set the target.
        *
        * <p>
-       * A Metapath expression targeting the assembly definition(s) within the
-       * metaschema. Used for inline definitions.
+       * A Metapath expression targeting the assembly definition(s) within the metaschema. Used for inline definitions.
        *
        * @param value
-       *          the target value to set
+       *           the target value to set
        */
       public void setTarget(@Nullable String value) {
         _target = value;
@@ -799,7 +756,7 @@ public class MetaschemaBindings implements IBoundObject {
        * Field and assembly binding configurations for Java bound classes.
        *
        * @param value
-       *          the java value to set
+       *           the java value to set
        */
       public void setJava(@Nullable Java value) {
         _java = value;
@@ -828,7 +785,7 @@ public class MetaschemaBindings implements IBoundObject {
        * Provides binding configurations for a property within the parent definition.
        *
        * @param value
-       *          the property-binding value to set
+       *           the property-binding value to set
        */
       public void setPropertyBindings(@NonNull List<PropertyBinding> value) {
         _propertyBindings = value;
@@ -836,13 +793,11 @@ public class MetaschemaBindings implements IBoundObject {
 
       /**
        * Add a new {@link PropertyBinding} item to the underlying collection.
-       *
-       * @param item
-       *          the item to add
+       * @param item the item to add
        * @return {@code true}
        */
       public boolean addPropertyBinding(PropertyBinding item) {
-        PropertyBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+        PropertyBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
         if (_propertyBindings == null) {
           _propertyBindings = new LinkedList<>();
         }
@@ -850,15 +805,12 @@ public class MetaschemaBindings implements IBoundObject {
       }
 
       /**
-       * Remove the first matching {@link PropertyBinding} item from the underlying
-       * collection.
-       *
-       * @param item
-       *          the item to remove
+       * Remove the first matching {@link PropertyBinding} item from the underlying collection.
+       * @param item the item to remove
        * @return {@code true} if the item was removed or {@code false} otherwise
        */
       public boolean removePropertyBinding(PropertyBinding item) {
-        PropertyBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+        PropertyBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
         return _propertyBindings != null && _propertyBindings.remove(value);
       }
 
@@ -885,7 +837,7 @@ public class MetaschemaBindings implements IBoundObject {
        * Provides binding configuration for a choice group within the parent assembly.
        *
        * @param value
-       *          the choice-group-binding value to set
+       *           the choice-group-binding value to set
        */
       public void setChoiceGroupBindings(@NonNull List<ChoiceGroupBinding> value) {
         _choiceGroupBindings = value;
@@ -893,13 +845,11 @@ public class MetaschemaBindings implements IBoundObject {
 
       /**
        * Add a new {@link ChoiceGroupBinding} item to the underlying collection.
-       *
-       * @param item
-       *          the item to add
+       * @param item the item to add
        * @return {@code true}
        */
       public boolean addChoiceGroupBinding(ChoiceGroupBinding item) {
-        ChoiceGroupBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+        ChoiceGroupBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
         if (_choiceGroupBindings == null) {
           _choiceGroupBindings = new LinkedList<>();
         }
@@ -907,15 +857,12 @@ public class MetaschemaBindings implements IBoundObject {
       }
 
       /**
-       * Remove the first matching {@link ChoiceGroupBinding} item from the underlying
-       * collection.
-       *
-       * @param item
-       *          the item to remove
+       * Remove the first matching {@link ChoiceGroupBinding} item from the underlying collection.
+       * @param item the item to remove
        * @return {@code true} if the item was removed or {@code false} otherwise
        */
       public boolean removeChoiceGroupBinding(ChoiceGroupBinding item) {
-        ChoiceGroupBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+        ChoiceGroupBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
         return _choiceGroupBindings != null && _choiceGroupBindings.remove(value);
       }
 
@@ -931,7 +878,8 @@ public class MetaschemaBindings implements IBoundObject {
           formalName = "Java Object Definition Binding",
           description = "Field and assembly binding configurations for Java bound classes.",
           name = "java",
-          moduleClass = MetaschemaBindingsModule.class)
+          moduleClass = MetaschemaBindingsModule.class
+      )
       public static class Java implements IBoundObject {
         private final IMetaschemaData __metaschemaData;
 
@@ -942,12 +890,12 @@ public class MetaschemaBindings implements IBoundObject {
             formalName = "Use Class Name",
             description = "The Java class name to use for the generated class.",
             useName = "use-class-name",
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private String _useClassName;
 
         /**
-         * A fully qualified Java interface name that the generated class should
-         * implement.
+         * A fully qualified Java interface name that the generated class should implement.
          */
         @BoundField(
             formalName = "Implement Interface",
@@ -955,7 +903,8 @@ public class MetaschemaBindings implements IBoundObject {
             useName = "implement-interface",
             maxOccurs = -1,
             groupAs = @GroupAs(name = "implement-interfaces", inJson = JsonGroupAsBehavior.LIST),
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private List<String> _implementInterfaces;
 
         /**
@@ -965,7 +914,8 @@ public class MetaschemaBindings implements IBoundObject {
             formalName = "Extend Base Class",
             description = "A fully qualified Java class name that the generated class should extend.",
             useName = "extend-base-class",
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private String _extendBaseClass;
 
         /**
@@ -975,25 +925,22 @@ public class MetaschemaBindings implements IBoundObject {
             formalName = "Collection Class",
             description = "A fully qualified Java collection class name to use instead of the default.",
             useName = "collection-class",
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private String _collectionClass;
 
         /**
-         * Constructs a new
-         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.Java}
-         * instance with no metadata.
+         * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.Java} instance with no metadata.
          */
         public Java() {
           this(null);
         }
 
         /**
-         * Constructs a new
-         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.Java}
-         * instance with the specified metadata.
+         * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.Java} instance with the specified metadata.
          *
          * @param data
-         *          the metaschema data, or {@code null} if none
+         *           the metaschema data, or {@code null} if none
          */
         public Java(IMetaschemaData data) {
           this.__metaschemaData = data;
@@ -1024,7 +971,7 @@ public class MetaschemaBindings implements IBoundObject {
          * The Java class name to use for the generated class.
          *
          * @param value
-         *          the use-class-name value to set
+         *           the use-class-name value to set
          */
         public void setUseClassName(@Nullable String value) {
           _useClassName = value;
@@ -1034,8 +981,7 @@ public class MetaschemaBindings implements IBoundObject {
          * Get the implement Interface.
          *
          * <p>
-         * A fully qualified Java interface name that the generated class should
-         * implement.
+         * A fully qualified Java interface name that the generated class should implement.
          *
          * @return the implement-interface value
          */
@@ -1051,11 +997,10 @@ public class MetaschemaBindings implements IBoundObject {
          * Set the implement Interface.
          *
          * <p>
-         * A fully qualified Java interface name that the generated class should
-         * implement.
+         * A fully qualified Java interface name that the generated class should implement.
          *
          * @param value
-         *          the implement-interface value to set
+         *           the implement-interface value to set
          */
         public void setImplementInterfaces(@NonNull List<String> value) {
           _implementInterfaces = value;
@@ -1063,13 +1008,11 @@ public class MetaschemaBindings implements IBoundObject {
 
         /**
          * Add a new {@link String} item to the underlying collection.
-         *
-         * @param item
-         *          the item to add
+         * @param item the item to add
          * @return {@code true}
          */
         public boolean addImplementInterface(String item) {
-          String value = ObjectUtils.requireNonNull(item, "item cannot be null");
+          String value = ObjectUtils.requireNonNull(item,"item cannot be null");
           if (_implementInterfaces == null) {
             _implementInterfaces = new LinkedList<>();
           }
@@ -1078,13 +1021,11 @@ public class MetaschemaBindings implements IBoundObject {
 
         /**
          * Remove the first matching {@link String} item from the underlying collection.
-         *
-         * @param item
-         *          the item to remove
+         * @param item the item to remove
          * @return {@code true} if the item was removed or {@code false} otherwise
          */
         public boolean removeImplementInterface(String item) {
-          String value = ObjectUtils.requireNonNull(item, "item cannot be null");
+          String value = ObjectUtils.requireNonNull(item,"item cannot be null");
           return _implementInterfaces != null && _implementInterfaces.remove(value);
         }
 
@@ -1108,7 +1049,7 @@ public class MetaschemaBindings implements IBoundObject {
          * A fully qualified Java class name that the generated class should extend.
          *
          * @param value
-         *          the extend-base-class value to set
+         *           the extend-base-class value to set
          */
         public void setExtendBaseClass(@Nullable String value) {
           _extendBaseClass = value;
@@ -1134,7 +1075,7 @@ public class MetaschemaBindings implements IBoundObject {
          * A fully qualified Java collection class name to use instead of the default.
          *
          * @param value
-         *          the collection-class value to set
+         *           the collection-class value to set
          */
         public void setCollectionClass(@Nullable String value) {
           _collectionClass = value;
@@ -1153,7 +1094,8 @@ public class MetaschemaBindings implements IBoundObject {
           formalName = "Property Binding",
           description = "Provides binding configurations for a property within the parent definition.",
           name = "property-binding",
-          moduleClass = MetaschemaBindingsModule.class)
+          moduleClass = MetaschemaBindingsModule.class
+      )
       public static class PropertyBinding implements IBoundObject {
         private final IMetaschemaData __metaschemaData;
 
@@ -1165,7 +1107,8 @@ public class MetaschemaBindings implements IBoundObject {
             description = "The name of the property within the parent definition.",
             name = "name",
             required = true,
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private String _name;
 
         /**
@@ -1174,25 +1117,22 @@ public class MetaschemaBindings implements IBoundObject {
         @BoundAssembly(
             formalName = "Java Property Binding",
             description = "Java-specific binding configuration for a property.",
-            useName = "java")
+            useName = "java"
+        )
         private Java _java;
 
         /**
-         * Constructs a new
-         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding}
-         * instance with no metadata.
+         * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding} instance with no metadata.
          */
         public PropertyBinding() {
           this(null);
         }
 
         /**
-         * Constructs a new
-         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding}
-         * instance with the specified metadata.
+         * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding} instance with the specified metadata.
          *
          * @param data
-         *          the metaschema data, or {@code null} if none
+         *           the metaschema data, or {@code null} if none
          */
         public PropertyBinding(IMetaschemaData data) {
           this.__metaschemaData = data;
@@ -1223,7 +1163,7 @@ public class MetaschemaBindings implements IBoundObject {
          * The name of the property within the parent definition.
          *
          * @param value
-         *          the name value to set
+         *           the name value to set
          */
         public void setName(@NonNull String value) {
           _name = value;
@@ -1249,7 +1189,7 @@ public class MetaschemaBindings implements IBoundObject {
          * Java-specific binding configuration for a property.
          *
          * @param value
-         *          the java value to set
+         *           the java value to set
          */
         public void setJava(@Nullable Java value) {
           _java = value;
@@ -1267,7 +1207,8 @@ public class MetaschemaBindings implements IBoundObject {
             formalName = "Java Property Binding",
             description = "Java-specific binding configuration for a property.",
             name = "java",
-            moduleClass = MetaschemaBindingsModule.class)
+            moduleClass = MetaschemaBindingsModule.class
+        )
         public static class Java implements IBoundObject {
           private final IMetaschemaData __metaschemaData;
 
@@ -1278,25 +1219,22 @@ public class MetaschemaBindings implements IBoundObject {
               formalName = "Collection Class",
               description = "A fully qualified Java collection class name to use instead of the default.",
               useName = "collection-class",
-              typeAdapter = TokenAdapter.class)
+              typeAdapter = TokenAdapter.class
+          )
           private String _collectionClass;
 
           /**
-           * Constructs a new
-           * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding.Java}
-           * instance with no metadata.
+           * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding.Java} instance with no metadata.
            */
           public Java() {
             this(null);
           }
 
           /**
-           * Constructs a new
-           * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding.Java}
-           * instance with the specified metadata.
+           * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.PropertyBinding.Java} instance with the specified metadata.
            *
            * @param data
-           *          the metaschema data, or {@code null} if none
+           *           the metaschema data, or {@code null} if none
            */
           public Java(IMetaschemaData data) {
             this.__metaschemaData = data;
@@ -1327,7 +1265,7 @@ public class MetaschemaBindings implements IBoundObject {
            * A fully qualified Java collection class name to use instead of the default.
            *
            * @param value
-           *          the collection-class value to set
+           *           the collection-class value to set
            */
           public void setCollectionClass(@Nullable String value) {
             _collectionClass = value;
@@ -1347,7 +1285,8 @@ public class MetaschemaBindings implements IBoundObject {
           formalName = "Choice Group Binding",
           description = "Provides binding configuration for a choice group within the parent assembly.",
           name = "choice-group-binding",
-          moduleClass = MetaschemaBindingsModule.class)
+          moduleClass = MetaschemaBindingsModule.class
+      )
       public static class ChoiceGroupBinding implements IBoundObject {
         private final IMetaschemaData __metaschemaData;
 
@@ -1359,35 +1298,32 @@ public class MetaschemaBindings implements IBoundObject {
             description = "The name of the choice group (matches the group-as name in the metaschema).",
             name = "name",
             required = true,
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private String _name;
 
         /**
-         * A fully qualified Java type for collection items. When specified, the
-         * generated field and getter will use this type instead of Object.
+         * A fully qualified Java type for collection items. When specified, the generated field and getter will use this type instead of Object.
          */
         @BoundField(
             formalName = "Item Type",
             description = "A fully qualified Java type for collection items. When specified, the generated field and getter will use this type instead of Object.",
-            useName = "item-type")
+            useName = "item-type"
+        )
         private ItemType _itemType;
 
         /**
-         * Constructs a new
-         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding}
-         * instance with no metadata.
+         * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding} instance with no metadata.
          */
         public ChoiceGroupBinding() {
           this(null);
         }
 
         /**
-         * Constructs a new
-         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding}
-         * instance with the specified metadata.
+         * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding} instance with the specified metadata.
          *
          * @param data
-         *          the metaschema data, or {@code null} if none
+         *           the metaschema data, or {@code null} if none
          */
         public ChoiceGroupBinding(IMetaschemaData data) {
           this.__metaschemaData = data;
@@ -1418,7 +1354,7 @@ public class MetaschemaBindings implements IBoundObject {
          * The name of the choice group (matches the group-as name in the metaschema).
          *
          * @param value
-         *          the name value to set
+         *           the name value to set
          */
         public void setName(@NonNull String value) {
           _name = value;
@@ -1428,8 +1364,7 @@ public class MetaschemaBindings implements IBoundObject {
          * Get the item Type.
          *
          * <p>
-         * A fully qualified Java type for collection items. When specified, the
-         * generated field and getter will use this type instead of Object.
+         * A fully qualified Java type for collection items. When specified, the generated field and getter will use this type instead of Object.
          *
          * @return the item-type value, or {@code null} if not set
          */
@@ -1442,11 +1377,10 @@ public class MetaschemaBindings implements IBoundObject {
          * Set the item Type.
          *
          * <p>
-         * A fully qualified Java type for collection items. When specified, the
-         * generated field and getter will use this type instead of Object.
+         * A fully qualified Java type for collection items. When specified, the generated field and getter will use this type instead of Object.
          *
          * @param value
-         *          the item-type value to set
+         *           the item-type value to set
          */
         public void setItemType(@Nullable ItemType value) {
           _itemType = value;
@@ -1458,50 +1392,47 @@ public class MetaschemaBindings implements IBoundObject {
         }
 
         /**
-         * A fully qualified Java type for collection items. When specified, the
-         * generated field and getter will use this type instead of Object.
+         * A fully qualified Java type for collection items. When specified, the generated field and getter will use this type instead of Object.
          */
         @MetaschemaField(
             formalName = "Item Type",
             description = "A fully qualified Java type for collection items. When specified, the generated field and getter will use this type instead of Object.",
             name = "item-type",
-            moduleClass = MetaschemaBindingsModule.class)
+            moduleClass = MetaschemaBindingsModule.class
+        )
         public static class ItemType implements IBoundObject {
           private final IMetaschemaData __metaschemaData;
 
           /**
-           * Whether to use a wildcard bounded type (List&lt;? extends Type&gt;). Defaults
-           * to true.
+           * Whether to use a wildcard bounded type (List&lt;? extends Type&gt;). Defaults to true.
            */
           @BoundFlag(
               formalName = "Use Wildcard",
               description = "Whether to use a wildcard bounded type (List<? extends Type>). Defaults to true.",
               name = "use-wildcard",
               defaultValue = "true",
-              typeAdapter = BooleanAdapter.class)
+              typeAdapter = BooleanAdapter.class
+          )
           private Boolean _useWildcard;
 
           @BoundFieldValue(
               valueKeyName = "STRVALUE",
-              typeAdapter = TokenAdapter.class)
+              typeAdapter = TokenAdapter.class
+          )
           private String _value;
 
           /**
-           * Constructs a new
-           * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding.ItemType}
-           * instance with no metadata.
+           * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding.ItemType} instance with no metadata.
            */
           public ItemType() {
             this(null);
           }
 
           /**
-           * Constructs a new
-           * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding.ItemType}
-           * instance with the specified metadata.
+           * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineAssemblyBinding.ChoiceGroupBinding.ItemType} instance with the specified metadata.
            *
            * @param data
-           *          the metaschema data, or {@code null} if none
+           *           the metaschema data, or {@code null} if none
            */
           public ItemType(IMetaschemaData data) {
             this.__metaschemaData = data;
@@ -1516,8 +1447,7 @@ public class MetaschemaBindings implements IBoundObject {
            * Get the use Wildcard.
            *
            * <p>
-           * Whether to use a wildcard bounded type (List&lt;? extends Type&gt;). Defaults
-           * to true.
+           * Whether to use a wildcard bounded type (List&lt;? extends Type&gt;). Defaults to true.
            *
            * @return the use-wildcard value, or {@code null} if not set
            */
@@ -1530,11 +1460,10 @@ public class MetaschemaBindings implements IBoundObject {
            * Set the use Wildcard.
            *
            * <p>
-           * Whether to use a wildcard bounded type (List&lt;? extends Type&gt;). Defaults
-           * to true.
+           * Whether to use a wildcard bounded type (List&lt;? extends Type&gt;). Defaults to true.
            *
            * @param value
-           *          the use-wildcard value to set
+           *           the use-wildcard value to set
            */
           public void setUseWildcard(@Nullable Boolean value) {
             _useWildcard = value;
@@ -1558,14 +1487,14 @@ public class MetaschemaBindings implements IBoundObject {
     }
 
     /**
-     * Provides binding configurations for a given defined field within the parent
-     * metaschema.
+     * Provides binding configurations for a given defined field within the parent metaschema.
      */
     @MetaschemaAssembly(
         formalName = "Define Field Binding",
         description = "Provides binding configurations for a given defined field within the parent metaschema.",
         name = "define-field-binding",
-        moduleClass = MetaschemaBindingsModule.class)
+        moduleClass = MetaschemaBindingsModule.class
+    )
     public static class DefineFieldBinding implements IBoundObject {
       private final IMetaschemaData __metaschemaData;
 
@@ -1576,18 +1505,19 @@ public class MetaschemaBindings implements IBoundObject {
           formalName = "Name",
           description = "The name of the metaschema field. Used for top-level definitions.",
           name = "name",
-          typeAdapter = TokenAdapter.class)
+          typeAdapter = TokenAdapter.class
+      )
       private String _name;
 
       /**
-       * A Metapath expression targeting the field definition(s) within the
-       * metaschema. Used for inline definitions.
+       * A Metapath expression targeting the field definition(s) within the metaschema. Used for inline definitions.
        */
       @BoundFlag(
           formalName = "Target",
           description = "A Metapath expression targeting the field definition(s) within the metaschema. Used for inline definitions.",
           name = "target",
-          typeAdapter = StringAdapter.class)
+          typeAdapter = StringAdapter.class
+      )
       private String _target;
 
       /**
@@ -1596,7 +1526,8 @@ public class MetaschemaBindings implements IBoundObject {
       @BoundAssembly(
           formalName = "Java Object Definition Binding",
           description = "Field and assembly binding configurations for Java bound classes.",
-          useName = "java")
+          useName = "java"
+      )
       private Java _java;
 
       /**
@@ -1607,25 +1538,22 @@ public class MetaschemaBindings implements IBoundObject {
           description = "Provides binding configurations for a property within the parent definition.",
           useName = "property-binding",
           maxOccurs = -1,
-          groupAs = @GroupAs(name = "property-bindings", inJson = JsonGroupAsBehavior.LIST))
+          groupAs = @GroupAs(name = "property-bindings", inJson = JsonGroupAsBehavior.LIST)
+      )
       private List<PropertyBinding> _propertyBindings;
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding}
-       * instance with no metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding} instance with no metadata.
        */
       public DefineFieldBinding() {
         this(null);
       }
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding}
-       * instance with the specified metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding} instance with the specified metadata.
        *
        * @param data
-       *          the metaschema data, or {@code null} if none
+       *           the metaschema data, or {@code null} if none
        */
       public DefineFieldBinding(IMetaschemaData data) {
         this.__metaschemaData = data;
@@ -1656,7 +1584,7 @@ public class MetaschemaBindings implements IBoundObject {
        * The name of the metaschema field. Used for top-level definitions.
        *
        * @param value
-       *          the name value to set
+       *           the name value to set
        */
       public void setName(@Nullable String value) {
         _name = value;
@@ -1666,8 +1594,7 @@ public class MetaschemaBindings implements IBoundObject {
        * Get the target.
        *
        * <p>
-       * A Metapath expression targeting the field definition(s) within the
-       * metaschema. Used for inline definitions.
+       * A Metapath expression targeting the field definition(s) within the metaschema. Used for inline definitions.
        *
        * @return the target value, or {@code null} if not set
        */
@@ -1680,11 +1607,10 @@ public class MetaschemaBindings implements IBoundObject {
        * Set the target.
        *
        * <p>
-       * A Metapath expression targeting the field definition(s) within the
-       * metaschema. Used for inline definitions.
+       * A Metapath expression targeting the field definition(s) within the metaschema. Used for inline definitions.
        *
        * @param value
-       *          the target value to set
+       *           the target value to set
        */
       public void setTarget(@Nullable String value) {
         _target = value;
@@ -1710,7 +1636,7 @@ public class MetaschemaBindings implements IBoundObject {
        * Field and assembly binding configurations for Java bound classes.
        *
        * @param value
-       *          the java value to set
+       *           the java value to set
        */
       public void setJava(@Nullable Java value) {
         _java = value;
@@ -1739,7 +1665,7 @@ public class MetaschemaBindings implements IBoundObject {
        * Provides binding configurations for a property within the parent definition.
        *
        * @param value
-       *          the property-binding value to set
+       *           the property-binding value to set
        */
       public void setPropertyBindings(@NonNull List<PropertyBinding> value) {
         _propertyBindings = value;
@@ -1747,13 +1673,11 @@ public class MetaschemaBindings implements IBoundObject {
 
       /**
        * Add a new {@link PropertyBinding} item to the underlying collection.
-       *
-       * @param item
-       *          the item to add
+       * @param item the item to add
        * @return {@code true}
        */
       public boolean addPropertyBinding(PropertyBinding item) {
-        PropertyBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+        PropertyBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
         if (_propertyBindings == null) {
           _propertyBindings = new LinkedList<>();
         }
@@ -1761,15 +1685,12 @@ public class MetaschemaBindings implements IBoundObject {
       }
 
       /**
-       * Remove the first matching {@link PropertyBinding} item from the underlying
-       * collection.
-       *
-       * @param item
-       *          the item to remove
+       * Remove the first matching {@link PropertyBinding} item from the underlying collection.
+       * @param item the item to remove
        * @return {@code true} if the item was removed or {@code false} otherwise
        */
       public boolean removePropertyBinding(PropertyBinding item) {
-        PropertyBinding value = ObjectUtils.requireNonNull(item, "item cannot be null");
+        PropertyBinding value = ObjectUtils.requireNonNull(item,"item cannot be null");
         return _propertyBindings != null && _propertyBindings.remove(value);
       }
 
@@ -1785,7 +1706,8 @@ public class MetaschemaBindings implements IBoundObject {
           formalName = "Java Object Definition Binding",
           description = "Field and assembly binding configurations for Java bound classes.",
           name = "java",
-          moduleClass = MetaschemaBindingsModule.class)
+          moduleClass = MetaschemaBindingsModule.class
+      )
       public static class Java implements IBoundObject {
         private final IMetaschemaData __metaschemaData;
 
@@ -1796,12 +1718,12 @@ public class MetaschemaBindings implements IBoundObject {
             formalName = "Use Class Name",
             description = "The Java class name to use for the generated class.",
             useName = "use-class-name",
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private String _useClassName;
 
         /**
-         * A fully qualified Java interface name that the generated class should
-         * implement.
+         * A fully qualified Java interface name that the generated class should implement.
          */
         @BoundField(
             formalName = "Implement Interface",
@@ -1809,7 +1731,8 @@ public class MetaschemaBindings implements IBoundObject {
             useName = "implement-interface",
             maxOccurs = -1,
             groupAs = @GroupAs(name = "implement-interfaces", inJson = JsonGroupAsBehavior.LIST),
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private List<String> _implementInterfaces;
 
         /**
@@ -1819,7 +1742,8 @@ public class MetaschemaBindings implements IBoundObject {
             formalName = "Extend Base Class",
             description = "A fully qualified Java class name that the generated class should extend.",
             useName = "extend-base-class",
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private String _extendBaseClass;
 
         /**
@@ -1829,25 +1753,22 @@ public class MetaschemaBindings implements IBoundObject {
             formalName = "Collection Class",
             description = "A fully qualified Java collection class name to use instead of the default.",
             useName = "collection-class",
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private String _collectionClass;
 
         /**
-         * Constructs a new
-         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.Java}
-         * instance with no metadata.
+         * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.Java} instance with no metadata.
          */
         public Java() {
           this(null);
         }
 
         /**
-         * Constructs a new
-         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.Java}
-         * instance with the specified metadata.
+         * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.Java} instance with the specified metadata.
          *
          * @param data
-         *          the metaschema data, or {@code null} if none
+         *           the metaschema data, or {@code null} if none
          */
         public Java(IMetaschemaData data) {
           this.__metaschemaData = data;
@@ -1878,7 +1799,7 @@ public class MetaschemaBindings implements IBoundObject {
          * The Java class name to use for the generated class.
          *
          * @param value
-         *          the use-class-name value to set
+         *           the use-class-name value to set
          */
         public void setUseClassName(@Nullable String value) {
           _useClassName = value;
@@ -1888,8 +1809,7 @@ public class MetaschemaBindings implements IBoundObject {
          * Get the implement Interface.
          *
          * <p>
-         * A fully qualified Java interface name that the generated class should
-         * implement.
+         * A fully qualified Java interface name that the generated class should implement.
          *
          * @return the implement-interface value
          */
@@ -1905,11 +1825,10 @@ public class MetaschemaBindings implements IBoundObject {
          * Set the implement Interface.
          *
          * <p>
-         * A fully qualified Java interface name that the generated class should
-         * implement.
+         * A fully qualified Java interface name that the generated class should implement.
          *
          * @param value
-         *          the implement-interface value to set
+         *           the implement-interface value to set
          */
         public void setImplementInterfaces(@NonNull List<String> value) {
           _implementInterfaces = value;
@@ -1917,13 +1836,11 @@ public class MetaschemaBindings implements IBoundObject {
 
         /**
          * Add a new {@link String} item to the underlying collection.
-         *
-         * @param item
-         *          the item to add
+         * @param item the item to add
          * @return {@code true}
          */
         public boolean addImplementInterface(String item) {
-          String value = ObjectUtils.requireNonNull(item, "item cannot be null");
+          String value = ObjectUtils.requireNonNull(item,"item cannot be null");
           if (_implementInterfaces == null) {
             _implementInterfaces = new LinkedList<>();
           }
@@ -1932,13 +1849,11 @@ public class MetaschemaBindings implements IBoundObject {
 
         /**
          * Remove the first matching {@link String} item from the underlying collection.
-         *
-         * @param item
-         *          the item to remove
+         * @param item the item to remove
          * @return {@code true} if the item was removed or {@code false} otherwise
          */
         public boolean removeImplementInterface(String item) {
-          String value = ObjectUtils.requireNonNull(item, "item cannot be null");
+          String value = ObjectUtils.requireNonNull(item,"item cannot be null");
           return _implementInterfaces != null && _implementInterfaces.remove(value);
         }
 
@@ -1962,7 +1877,7 @@ public class MetaschemaBindings implements IBoundObject {
          * A fully qualified Java class name that the generated class should extend.
          *
          * @param value
-         *          the extend-base-class value to set
+         *           the extend-base-class value to set
          */
         public void setExtendBaseClass(@Nullable String value) {
           _extendBaseClass = value;
@@ -1988,7 +1903,7 @@ public class MetaschemaBindings implements IBoundObject {
          * A fully qualified Java collection class name to use instead of the default.
          *
          * @param value
-         *          the collection-class value to set
+         *           the collection-class value to set
          */
         public void setCollectionClass(@Nullable String value) {
           _collectionClass = value;
@@ -2007,7 +1922,8 @@ public class MetaschemaBindings implements IBoundObject {
           formalName = "Property Binding",
           description = "Provides binding configurations for a property within the parent definition.",
           name = "property-binding",
-          moduleClass = MetaschemaBindingsModule.class)
+          moduleClass = MetaschemaBindingsModule.class
+      )
       public static class PropertyBinding implements IBoundObject {
         private final IMetaschemaData __metaschemaData;
 
@@ -2019,7 +1935,8 @@ public class MetaschemaBindings implements IBoundObject {
             description = "The name of the property within the parent definition.",
             name = "name",
             required = true,
-            typeAdapter = TokenAdapter.class)
+            typeAdapter = TokenAdapter.class
+        )
         private String _name;
 
         /**
@@ -2028,25 +1945,22 @@ public class MetaschemaBindings implements IBoundObject {
         @BoundAssembly(
             formalName = "Java Property Binding",
             description = "Java-specific binding configuration for a property.",
-            useName = "java")
+            useName = "java"
+        )
         private Java _java;
 
         /**
-         * Constructs a new
-         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding}
-         * instance with no metadata.
+         * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding} instance with no metadata.
          */
         public PropertyBinding() {
           this(null);
         }
 
         /**
-         * Constructs a new
-         * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding}
-         * instance with the specified metadata.
+         * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding} instance with the specified metadata.
          *
          * @param data
-         *          the metaschema data, or {@code null} if none
+         *           the metaschema data, or {@code null} if none
          */
         public PropertyBinding(IMetaschemaData data) {
           this.__metaschemaData = data;
@@ -2077,7 +1991,7 @@ public class MetaschemaBindings implements IBoundObject {
          * The name of the property within the parent definition.
          *
          * @param value
-         *          the name value to set
+         *           the name value to set
          */
         public void setName(@NonNull String value) {
           _name = value;
@@ -2103,7 +2017,7 @@ public class MetaschemaBindings implements IBoundObject {
          * Java-specific binding configuration for a property.
          *
          * @param value
-         *          the java value to set
+         *           the java value to set
          */
         public void setJava(@Nullable Java value) {
           _java = value;
@@ -2121,7 +2035,8 @@ public class MetaschemaBindings implements IBoundObject {
             formalName = "Java Property Binding",
             description = "Java-specific binding configuration for a property.",
             name = "java",
-            moduleClass = MetaschemaBindingsModule.class)
+            moduleClass = MetaschemaBindingsModule.class
+        )
         public static class Java implements IBoundObject {
           private final IMetaschemaData __metaschemaData;
 
@@ -2132,25 +2047,22 @@ public class MetaschemaBindings implements IBoundObject {
               formalName = "Collection Class",
               description = "A fully qualified Java collection class name to use instead of the default.",
               useName = "collection-class",
-              typeAdapter = TokenAdapter.class)
+              typeAdapter = TokenAdapter.class
+          )
           private String _collectionClass;
 
           /**
-           * Constructs a new
-           * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding.Java}
-           * instance with no metadata.
+           * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding.Java} instance with no metadata.
            */
           public Java() {
             this(null);
           }
 
           /**
-           * Constructs a new
-           * {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding.Java}
-           * instance with the specified metadata.
+           * Constructs a new {@code gov.nist.secauto.metaschema.databind.config.binding.MetaschemaBindings.MetaschemaBinding.DefineFieldBinding.PropertyBinding.Java} instance with the specified metadata.
            *
            * @param data
-           *          the metaschema data, or {@code null} if none
+           *           the metaschema data, or {@code null} if none
            */
           public Java(IMetaschemaData data) {
             this.__metaschemaData = data;
@@ -2181,7 +2093,7 @@ public class MetaschemaBindings implements IBoundObject {
            * A fully qualified Java collection class name to use instead of the default.
            *
            * @param value
-           *          the collection-class value to set
+           *           the collection-class value to set
            */
           public void setCollectionClass(@Nullable String value) {
             _collectionClass = value;

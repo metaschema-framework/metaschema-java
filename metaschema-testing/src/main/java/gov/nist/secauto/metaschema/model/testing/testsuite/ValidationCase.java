@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../metaschema/unit-tests.yaml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -31,7 +30,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     formalName = "Validation Case",
     description = "A content validation test case.",
     name = "validation-case",
-    moduleClass = MetaschemaTestSuiteModule.class)
+    moduleClass = MetaschemaTestSuiteModule.class
+)
 public class ValidationCase implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -43,10 +43,8 @@ public class ValidationCase implements IBoundObject {
       description = "The format of the source content.",
       name = "source-format",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
-          values = { @AllowedValue(value = "XML", description = "Content is XML."),
-              @AllowedValue(value = "JSON", description = "Content is JSON."),
-              @AllowedValue(value = "YAML", description = "Content is YAML.") })))
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "XML", description = "Content is XML."), @AllowedValue(value = "JSON", description = "Content is JSON."), @AllowedValue(value = "YAML", description = "Content is YAML.")}))
+  )
   private String _sourceFormat;
 
   /**
@@ -57,7 +55,8 @@ public class ValidationCase implements IBoundObject {
       description = "A URI reference to the content file location.",
       name = "location",
       required = true,
-      typeAdapter = UriReferenceAdapter.class)
+      typeAdapter = UriReferenceAdapter.class
+  )
   private URI _location;
 
   /**
@@ -69,28 +68,22 @@ public class ValidationCase implements IBoundObject {
       name = "validation-result",
       defaultValue = "VALID",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
-          values = { @AllowedValue(value = "VALID", description = "Validation succeeded."),
-              @AllowedValue(value = "INVALID",
-                  description = "Validation resulted in failure caused by some content defect or error.") })))
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "VALID", description = "Validation succeeded."), @AllowedValue(value = "INVALID", description = "Validation resulted in failure caused by some content defect or error.")}))
+  )
   private String _validationResult;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.ValidationCase}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.ValidationCase} instance with no metadata.
    */
   public ValidationCase() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.ValidationCase}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.ValidationCase} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public ValidationCase(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -121,7 +114,7 @@ public class ValidationCase implements IBoundObject {
    * The format of the source content.
    *
    * @param value
-   *          the source-format value to set
+   *           the source-format value to set
    */
   public void setSourceFormat(@Nullable String value) {
     _sourceFormat = value;
@@ -147,7 +140,7 @@ public class ValidationCase implements IBoundObject {
    * A URI reference to the content file location.
    *
    * @param value
-   *          the location value to set
+   *           the location value to set
    */
   public void setLocation(@NonNull URI value) {
     _location = value;
@@ -173,7 +166,7 @@ public class ValidationCase implements IBoundObject {
    * The expected result of content validation.
    *
    * @param value
-   *          the validation-result value to set
+   *           the validation-result value to set
    */
   public void setValidationResult(@Nullable String value) {
     _validationResult = value;

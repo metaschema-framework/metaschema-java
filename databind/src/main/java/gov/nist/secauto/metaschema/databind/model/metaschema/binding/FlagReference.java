@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -36,7 +35,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MetaschemaAssembly(
     formalName = "Flag Reference",
     name = "flag-reference",
-    moduleClass = MetaschemaModelModule.class)
+    moduleClass = MetaschemaModelModule.class
+)
 public class FlagReference implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -44,25 +44,29 @@ public class FlagReference implements IBoundObject {
       formalName = "Global Flag Reference",
       name = "ref",
       required = true,
-      typeAdapter = TokenAdapter.class)
+      typeAdapter = TokenAdapter.class
+  )
   private String _ref;
 
   @BoundFlag(
       formalName = "Flag Reference Binary Name",
       name = "index",
-      typeAdapter = PositiveIntegerAdapter.class)
+      typeAdapter = PositiveIntegerAdapter.class
+  )
   private BigInteger _index;
 
   @BoundFlag(
       formalName = "Deprecated Version",
       name = "deprecated",
-      typeAdapter = StringAdapter.class)
+      typeAdapter = StringAdapter.class
+  )
   private String _deprecated;
 
   @BoundFlag(
       formalName = "Default Flag Value",
       name = "default",
-      typeAdapter = StringAdapter.class)
+      typeAdapter = StringAdapter.class
+  )
   private String _default;
 
   @BoundFlag(
@@ -70,9 +74,8 @@ public class FlagReference implements IBoundObject {
       name = "required",
       defaultValue = "no",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
-          values = { @AllowedValue(value = "yes", description = "The flag is required."),
-              @AllowedValue(value = "no", description = "The flag is optional.") })))
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "yes", description = "The flag is required."), @AllowedValue(value = "no", description = "The flag is optional.")}))
+  )
   private String _required;
 
   /**
@@ -82,25 +85,27 @@ public class FlagReference implements IBoundObject {
       formalName = "Formal Name",
       description = "A formal name for the data construct, to be presented in documentation.",
       useName = "formal-name",
-      typeAdapter = StringAdapter.class)
+      typeAdapter = StringAdapter.class
+  )
   private String _formalName;
 
   /**
-   * A short description of the data construct's purpose, describing the
-   * constructs semantics.
+   * A short description of the data construct's purpose, describing the constructs semantics.
    */
   @BoundField(
       formalName = "Description",
       description = "A short description of the data construct's purpose, describing the constructs semantics.",
       useName = "description",
-      typeAdapter = MarkupLineAdapter.class)
+      typeAdapter = MarkupLineAdapter.class
+  )
   private MarkupLine _description;
 
   @BoundAssembly(
       formalName = "Property",
       useName = "prop",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST))
+      groupAs = @GroupAs(name = "props", inJson = JsonGroupAsBehavior.LIST)
+  )
   private List<Property> _props;
 
   /**
@@ -109,35 +114,32 @@ public class FlagReference implements IBoundObject {
   @BoundField(
       formalName = "Use Name",
       description = "Allows the name of the definition to be overridden.",
-      useName = "use-name")
+      useName = "use-name"
+  )
   private UseName _useName;
 
   /**
-   * Any explanatory or helpful information to be provided about the remarks
-   * parent.
+   * Any explanatory or helpful information to be provided about the remarks parent.
    */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
-      useName = "remarks")
+      useName = "remarks"
+  )
   private Remarks _remarks;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagReference}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagReference} instance with no metadata.
    */
   public FlagReference() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagReference}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.FlagReference} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public FlagReference(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -162,7 +164,7 @@ public class FlagReference implements IBoundObject {
    * Set the global Flag Reference.
    *
    * @param value
-   *          the ref value to set
+   *           the ref value to set
    */
   public void setRef(@NonNull String value) {
     _ref = value;
@@ -182,7 +184,7 @@ public class FlagReference implements IBoundObject {
    * Set the flag Reference Binary Name.
    *
    * @param value
-   *          the index value to set
+   *           the index value to set
    */
   public void setIndex(@Nullable BigInteger value) {
     _index = value;
@@ -202,7 +204,7 @@ public class FlagReference implements IBoundObject {
    * Set the deprecated Version.
    *
    * @param value
-   *          the deprecated value to set
+   *           the deprecated value to set
    */
   public void setDeprecated(@Nullable String value) {
     _deprecated = value;
@@ -222,7 +224,7 @@ public class FlagReference implements IBoundObject {
    * Set the default Flag Value.
    *
    * @param value
-   *          the default value to set
+   *           the default value to set
    */
   public void setDefault(@Nullable String value) {
     _default = value;
@@ -242,7 +244,7 @@ public class FlagReference implements IBoundObject {
    * Set the is Flag Required?.
    *
    * @param value
-   *          the required value to set
+   *           the required value to set
    */
   public void setRequired(@Nullable String value) {
     _required = value;
@@ -268,7 +270,7 @@ public class FlagReference implements IBoundObject {
    * A formal name for the data construct, to be presented in documentation.
    *
    * @param value
-   *          the formal-name value to set
+   *           the formal-name value to set
    */
   public void setFormalName(@Nullable String value) {
     _formalName = value;
@@ -278,8 +280,7 @@ public class FlagReference implements IBoundObject {
    * Get the description.
    *
    * <p>
-   * A short description of the data construct's purpose, describing the
-   * constructs semantics.
+   * A short description of the data construct's purpose, describing the constructs semantics.
    *
    * @return the description value, or {@code null} if not set
    */
@@ -292,11 +293,10 @@ public class FlagReference implements IBoundObject {
    * Set the description.
    *
    * <p>
-   * A short description of the data construct's purpose, describing the
-   * constructs semantics.
+   * A short description of the data construct's purpose, describing the constructs semantics.
    *
    * @param value
-   *          the description value to set
+   *           the description value to set
    */
   public void setDescription(@Nullable MarkupLine value) {
     _description = value;
@@ -319,7 +319,7 @@ public class FlagReference implements IBoundObject {
    * Set the property.
    *
    * @param value
-   *          the prop value to set
+   *           the prop value to set
    */
   public void setProps(@NonNull List<Property> value) {
     _props = value;
@@ -327,13 +327,11 @@ public class FlagReference implements IBoundObject {
 
   /**
    * Add a new {@link Property} item to the underlying collection.
-   *
-   * @param item
-   *          the item to add
+   * @param item the item to add
    * @return {@code true}
    */
   public boolean addProp(Property item) {
-    Property value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    Property value = ObjectUtils.requireNonNull(item,"item cannot be null");
     if (_props == null) {
       _props = new LinkedList<>();
     }
@@ -341,15 +339,12 @@ public class FlagReference implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link Property} item from the underlying
-   * collection.
-   *
-   * @param item
-   *          the item to remove
+   * Remove the first matching {@link Property} item from the underlying collection.
+   * @param item the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeProp(Property item) {
-    Property value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    Property value = ObjectUtils.requireNonNull(item,"item cannot be null");
     return _props != null && _props.remove(value);
   }
 
@@ -373,7 +368,7 @@ public class FlagReference implements IBoundObject {
    * Allows the name of the definition to be overridden.
    *
    * @param value
-   *          the use-name value to set
+   *           the use-name value to set
    */
   public void setUseName(@Nullable UseName value) {
     _useName = value;
@@ -383,8 +378,7 @@ public class FlagReference implements IBoundObject {
    * Get the remarks.
    *
    * <p>
-   * Any explanatory or helpful information to be provided about the remarks
-   * parent.
+   * Any explanatory or helpful information to be provided about the remarks parent.
    *
    * @return the remarks value, or {@code null} if not set
    */
@@ -397,11 +391,10 @@ public class FlagReference implements IBoundObject {
    * Set the remarks.
    *
    * <p>
-   * Any explanatory or helpful information to be provided about the remarks
-   * parent.
+   * Any explanatory or helpful information to be provided about the remarks parent.
    *
    * @param value
-   *          the remarks value to set
+   *           the remarks value to set
    */
   public void setRemarks(@Nullable Remarks value) {
     _remarks = value;

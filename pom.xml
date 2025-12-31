@@ -578,6 +578,7 @@
 					<configuration>
 						<excludes>
 							<exclude>**/module-info.java</exclude>
+							<!-- JXR excludes package-info.java by design (see DirectoryScanner.addDefaultExcludes) -->
 						</excludes>
 					</configuration>
 				</plugin>
@@ -710,6 +711,12 @@
 						<rulesets>
 							<ruleset>src/main/config/pmd/ruleset.xml</ruleset>
 						</rulesets>
+						<!-- Exclude package-info.java to match JXR behavior (JXR excludes these by design,
+						     so PMD links to xref would be broken). These generated files only have
+						     low-priority UnnecessaryFullyQualifiedName warnings anyway. -->
+						<excludes>
+							<exclude>**/package-info.java</exclude>
+						</excludes>
 					</configuration>
 					<executions>
 						<execution>
