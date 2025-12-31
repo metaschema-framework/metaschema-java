@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../metaschema/unit-tests.yaml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
@@ -28,9 +27,9 @@ import java.util.List;
         Metaschema.class,
         ValidationCase.class,
         GenerationCase.class
-    })
-public final class MetaschemaTestSuiteModule
-    extends AbstractBoundModule {
+    }
+)
+public final class MetaschemaTestSuiteModule extends AbstractBoundModule {
   private static final MarkupLine NAME = MarkupLine.fromMarkdown("Metaschema Test Suite");
 
   private static final String SHORT_NAME = "metaschema-test-suite";
@@ -45,9 +44,9 @@ public final class MetaschemaTestSuiteModule
    * Construct a new module instance.
    *
    * @param importedModules
-   *          modules imported by this module
+   *           modules imported by this module
    * @param bindingContext
-   *          the binding context to associate with this module
+   *           the binding context to associate with this module
    */
   public MetaschemaTestSuiteModule(List<? extends IBoundModule> importedModules,
       IBindingContext bindingContext) {

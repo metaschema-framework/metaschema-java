@@ -38,8 +38,8 @@ env:
   JAVA_VERSION_FILE: .java-version
   # Post Maven artifacts to the artifact repo if the branch is 'develop' or 'release/*'. This avoids publishing artifacts for pull requests
   COMMIT_MAVEN_ARTIFACTS: ${{ (github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) && github.repository_owner == 'metaschema-framework' }}
-  # Upload CodeQL results if the branch is 'develop' or 'release/*' or a pull request targeting these branches.
-  UPLOAD_CODEQL: ${{ ((github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && (github.base_ref == 'refs/heads/develop' || startsWith(github.base_ref, 'refs/heads/release/')))) && 'always' || 'never' }}
+  # Upload security scan SARIF results if the branch is 'develop' or 'release/*' or a pull request targeting these branches.
+  UPLOAD_SCAN_SARIF: ${{ (github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && (github.base_ref == 'develop' || startsWith(github.base_ref, 'release/'))) }}
 jobs:
   build-code:
     name: Code
@@ -104,7 +104,78 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
       with:
-        upload: ${{ env.UPLOAD_CODEQL }}
+        upload: 'never'
+        output: codeql-results
+    - name: CodeQL Summary
+      run: |
+        echo "## CodeQL Security Scan Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ -d "codeql-results" ]; then
+          for sarif in codeql-results/*.sarif; do
+            if [ -f "$sarif" ]; then
+              RESULTS=$(jq -r '.runs[0].results | length' "$sarif" 2>/dev/null || echo "0")
+              # Count rules from driver and all extensions
+              DRIVER_RULES=$(jq -r '.runs[0].tool.driver.rules // [] | length' "$sarif" 2>/dev/null || echo "0")
+              EXT_RULES=$(jq -r '[.runs[0].tool.extensions[]?.rules // [] | length] | add // 0' "$sarif" 2>/dev/null || echo "0")
+              RULES=$((DRIVER_RULES + EXT_RULES))
+              echo "- **Results found:** $RESULTS" >> $GITHUB_STEP_SUMMARY
+              echo "- **Rules checked:** $RULES" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+        else
+          echo "No CodeQL results directory found." >> $GITHUB_STEP_SUMMARY
+        fi
+    # -------------------------
+    # Trivy Security Scan
+    # -------------------------
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        scanners: 'vuln'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN'
+        # Exclude submodule (has its own security scanning) and Maven plugin IT target dirs
+        skip-dirs: 'core/metaschema,metaschema-maven-plugin/target'
+    - name: Trivy Summary
+      run: |
+        echo "## Trivy Security Scan Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ -f "trivy-results.sarif" ]; then
+          TOTAL=$(jq -r '.runs[0].results | length' trivy-results.sarif 2>/dev/null || echo "0")
+          # Trivy SARIF level mapping: error=CRITICAL, warning=HIGH, note=MEDIUM/LOW
+          CRITICAL=$(jq -r '[.runs[0].results[] | select(.level == "error")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          HIGH=$(jq -r '[.runs[0].results[] | select(.level == "warning")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          MEDIUM_LOW=$(jq -r '[.runs[0].results[] | select(.level == "note")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| :red_circle: Critical | $CRITICAL |" >> $GITHUB_STEP_SUMMARY
+          echo "| :orange_circle: High | $HIGH |" >> $GITHUB_STEP_SUMMARY
+          echo "| :yellow_circle: Medium/Low | $MEDIUM_LOW |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Total** | **$TOTAL** |" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "No Trivy results file found." >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ env.UPLOAD_SCAN_SARIF }}" == "true" ]; then
+          echo ":white_check_mark: Results uploaded to GitHub Security tab" >> $GITHUB_STEP_SUMMARY
+        else
+          echo ":information_source: Results not uploaded (branch/PR not targeting develop or release)" >> $GITHUB_STEP_SUMMARY
+        fi
+    - name: Upload CodeQL scan results to GitHub Security tab
+      if: env.UPLOAD_SCAN_SARIF == 'true'
+      uses: github/codeql-action/upload-sarif@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
+      with:
+        sarif_file: codeql-results/java.sarif
+        category: 'codeql'
+    - name: Upload Trivy scan results to GitHub Security tab
+      if: env.UPLOAD_SCAN_SARIF == 'true'
+      uses: github/codeql-action/upload-sarif@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
+      with:
+        sarif_file: 'trivy-results.sarif'
+        category: 'trivy'
     - name: Upload build zip archive
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
@@ -175,6 +246,30 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
+    - name: Link Checker Summary
+      if: always()
+      run: |
+        echo "## Link Checker Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ -f "html-link-report.md" ]; then
+          # Extract summary stats from the report
+          ERRORS=$(grep -c "^\[ERR\]" html-link-report.md 2>/dev/null || echo "0")
+          if [ "$ERRORS" -gt 0 ]; then
+            echo ":x: **Found $ERRORS broken link(s)**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "<details>" >> $GITHUB_STEP_SUMMARY
+            echo "<summary>Broken Links</summary>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            grep "^\[ERR\]" html-link-report.md >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "</details>" >> $GITHUB_STEP_SUMMARY
+          else
+            echo ":white_check_mark: **All links valid**" >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo ":warning: No link check report found." >> $GITHUB_STEP_SUMMARY
+        fi
     - name: Upload link check report
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
@@ -182,7 +277,7 @@ jobs:
         path: html-link-report.md
         retention-days: 5
     - name: Create issue if bad links detected
-      if: ${{ !cancelled() && env.lychee_exit_code != 0 && env.INPUT_ISSUE_ON_ERROR == 'true' }}
+      if: ${{ !cancelled() && steps.linkchecker.outputs.exit_code != 0 && env.INPUT_ISSUE_ON_ERROR == 'true' }}
       uses: peter-evans/create-issue-from-file@fca9117c27cdc29c6c4db3b86c48e4115a786710
       with:
         title: Scheduled Check of Website Content Found Bad Hyperlinks
@@ -191,7 +286,7 @@ jobs:
           bug
           documentation
     - name: Fail on link check error
-      if: ${{ !cancelled() && env.lychee_exit_code != 0 && env.INPUT_FAIL_ON_ERROR == 'true' }}
+      if: ${{ !cancelled() && steps.linkchecker.outputs.exit_code != 0 && env.INPUT_FAIL_ON_ERROR == 'true' }}
       uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
       with:
         script: |

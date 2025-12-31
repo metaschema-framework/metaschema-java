@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -39,8 +38,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Defines constraint rules to be applied to an existing set of Metaschema
- * module-based models.
+ * Defines constraint rules to be applied to an existing set of Metaschema module-based models.
  */
 @MetaschemaAssembly(
     formalName = "External Module Constraints",
@@ -48,13 +46,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     name = "metaschema-module-constraints",
     moduleClass = MetaschemaModelModule.class,
     rootName = "METASCHEMA-CONSTRAINTS",
-    valueConstraints = @ValueConstraints(lets = @Let(name = "deprecated-type-map",
-        target = "map { 'base64Binary':'base64','dateTime':'date-time','dateTime-with-timezone':'date-time-with-timezone','email':'email-address','nonNegativeInteger':'non-negative-integer','positiveInteger':'positive-integer' }"),
-        expect = @Expect(id = "metaschema-deprecated-types", formalName = "Avoid Deprecated Data Type Use",
-            description = "Ensure that the data type specified is not one of the legacy Metaschema data types which have been deprecated (i.e. base64Binary, dateTime, dateTime-with-timezone, email, nonNegativeInteger, positiveInteger).",
-            level = IConstraint.Level.WARNING, target = ".//matches/@datatype|.//(define-field|define-flag)/@as-type",
-            test = "not(data(.)=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))",
-            message = "Use of the type '{ data(.) }' is deprecated. Use '{ $deprecated-type-map(data(.))}' instead.")))
+    valueConstraints = @ValueConstraints(lets = @Let(name = "deprecated-type-map", target = "map { 'base64Binary':'base64','dateTime':'date-time','dateTime-with-timezone':'date-time-with-timezone','email':'email-address','nonNegativeInteger':'non-negative-integer','positiveInteger':'positive-integer' }"), expect = @Expect(id = "metaschema-deprecated-types", formalName = "Avoid Deprecated Data Type Use", description = "Ensure that the data type specified is not one of the legacy Metaschema data types which have been deprecated (i.e. base64Binary, dateTime, dateTime-with-timezone, email, nonNegativeInteger, positiveInteger).", level = IConstraint.Level.WARNING, target = ".//matches/@datatype|.//(define-field|define-flag)/@as-type", test = "not(data(.)=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))", message = "Use of the type '{ data(.) }' is deprecated. Use '{ $deprecated-type-map(data(.))}' instead."))
+)
 public class MetaschemaModuleConstraints implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -65,66 +58,64 @@ public class MetaschemaModuleConstraints implements IBoundObject {
       description = "The name of this constraint set.",
       useName = "name",
       minOccurs = 1,
-      typeAdapter = StringAdapter.class)
+      typeAdapter = StringAdapter.class
+  )
   private String _name;
 
   /**
-   * The version of this constraint set. A version string used to distinguish
-   * between multiple revisions of the same resource.
+   * The version of this constraint set. A version string used to distinguish between multiple revisions of the same resource.
    */
   @BoundField(
       description = "The version of this constraint set. A version string used to distinguish between multiple revisions of the same resource.",
       useName = "version",
       minOccurs = 1,
-      typeAdapter = StringAdapter.class)
+      typeAdapter = StringAdapter.class
+  )
   private String _version;
 
   /**
-   * Declares a set of Metaschema constraints from an out-of-line resource to
-   * import, supporting composition of constraint sets.
+   * Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.
    */
   @BoundAssembly(
       description = "Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.",
       useName = "import",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "imports", inJson = JsonGroupAsBehavior.LIST))
+      groupAs = @GroupAs(name = "imports", inJson = JsonGroupAsBehavior.LIST)
+  )
   private List<Import> _imports;
 
   /**
-   * Assigns a Metapath namespace to a prefix for use in a Metapath expression in
-   * a lexical qualified name.
+   * Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.
    */
   @BoundAssembly(
       formalName = "Metapath Namespace Declaration",
       description = "Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.",
       useName = "namespace-binding",
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "namespace-bindings", inJson = JsonGroupAsBehavior.LIST))
+      groupAs = @GroupAs(name = "namespace-bindings", inJson = JsonGroupAsBehavior.LIST)
+  )
   private List<MetapathNamespace> _namespaceBindings;
 
   @BoundAssembly(
       useName = "scope",
       minOccurs = 1,
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "scopes", inJson = JsonGroupAsBehavior.LIST))
+      groupAs = @GroupAs(name = "scopes", inJson = JsonGroupAsBehavior.LIST)
+  )
   private List<Scope> _scopes;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints} instance with no metadata.
    */
   public MetaschemaModuleConstraints() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public MetaschemaModuleConstraints(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -155,7 +146,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
    * The name of this constraint set.
    *
    * @param value
-   *          the name value to set
+   *           the name value to set
    */
   public void setName(@NonNull String value) {
     _name = value;
@@ -165,8 +156,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
    * Get the {@code version} property.
    *
    * <p>
-   * The version of this constraint set. A version string used to distinguish
-   * between multiple revisions of the same resource.
+   * The version of this constraint set. A version string used to distinguish between multiple revisions of the same resource.
    *
    * @return the version value
    */
@@ -179,11 +169,10 @@ public class MetaschemaModuleConstraints implements IBoundObject {
    * Set the {@code version} property.
    *
    * <p>
-   * The version of this constraint set. A version string used to distinguish
-   * between multiple revisions of the same resource.
+   * The version of this constraint set. A version string used to distinguish between multiple revisions of the same resource.
    *
    * @param value
-   *          the version value to set
+   *           the version value to set
    */
   public void setVersion(@NonNull String value) {
     _version = value;
@@ -193,8 +182,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
    * Get the {@code import} property.
    *
    * <p>
-   * Declares a set of Metaschema constraints from an out-of-line resource to
-   * import, supporting composition of constraint sets.
+   * Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.
    *
    * @return the import value
    */
@@ -210,11 +198,10 @@ public class MetaschemaModuleConstraints implements IBoundObject {
    * Set the {@code import} property.
    *
    * <p>
-   * Declares a set of Metaschema constraints from an out-of-line resource to
-   * import, supporting composition of constraint sets.
+   * Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.
    *
    * @param value
-   *          the import value to set
+   *           the import value to set
    */
   public void setImports(@NonNull List<Import> value) {
     _imports = value;
@@ -222,13 +209,11 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
   /**
    * Add a new {@link Import} item to the underlying collection.
-   *
-   * @param item
-   *          the item to add
+   * @param item the item to add
    * @return {@code true}
    */
   public boolean addImport(Import item) {
-    Import value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    Import value = ObjectUtils.requireNonNull(item,"item cannot be null");
     if (_imports == null) {
       _imports = new LinkedList<>();
     }
@@ -237,13 +222,11 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
   /**
    * Remove the first matching {@link Import} item from the underlying collection.
-   *
-   * @param item
-   *          the item to remove
+   * @param item the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeImport(Import item) {
-    Import value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    Import value = ObjectUtils.requireNonNull(item,"item cannot be null");
     return _imports != null && _imports.remove(value);
   }
 
@@ -251,8 +234,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
    * Get the metapath Namespace Declaration.
    *
    * <p>
-   * Assigns a Metapath namespace to a prefix for use in a Metapath expression in
-   * a lexical qualified name.
+   * Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.
    *
    * @return the namespace-binding value
    */
@@ -268,11 +250,10 @@ public class MetaschemaModuleConstraints implements IBoundObject {
    * Set the metapath Namespace Declaration.
    *
    * <p>
-   * Assigns a Metapath namespace to a prefix for use in a Metapath expression in
-   * a lexical qualified name.
+   * Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.
    *
    * @param value
-   *          the namespace-binding value to set
+   *           the namespace-binding value to set
    */
   public void setNamespaceBindings(@NonNull List<MetapathNamespace> value) {
     _namespaceBindings = value;
@@ -280,13 +261,11 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
   /**
    * Add a new {@link MetapathNamespace} item to the underlying collection.
-   *
-   * @param item
-   *          the item to add
+   * @param item the item to add
    * @return {@code true}
    */
   public boolean addNamespaceBinding(MetapathNamespace item) {
-    MetapathNamespace value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    MetapathNamespace value = ObjectUtils.requireNonNull(item,"item cannot be null");
     if (_namespaceBindings == null) {
       _namespaceBindings = new LinkedList<>();
     }
@@ -294,15 +273,12 @@ public class MetaschemaModuleConstraints implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link MetapathNamespace} item from the underlying
-   * collection.
-   *
-   * @param item
-   *          the item to remove
+   * Remove the first matching {@link MetapathNamespace} item from the underlying collection.
+   * @param item the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeNamespaceBinding(MetapathNamespace item) {
-    MetapathNamespace value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    MetapathNamespace value = ObjectUtils.requireNonNull(item,"item cannot be null");
     return _namespaceBindings != null && _namespaceBindings.remove(value);
   }
 
@@ -323,7 +299,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
    * Set the {@code scope} property.
    *
    * @param value
-   *          the scope value to set
+   *           the scope value to set
    */
   public void setScopes(@NonNull List<Scope> value) {
     _scopes = value;
@@ -331,13 +307,11 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
   /**
    * Add a new {@link Scope} item to the underlying collection.
-   *
-   * @param item
-   *          the item to add
+   * @param item the item to add
    * @return {@code true}
    */
   public boolean addScope(Scope item) {
-    Scope value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    Scope value = ObjectUtils.requireNonNull(item,"item cannot be null");
     if (_scopes == null) {
       _scopes = new LinkedList<>();
     }
@@ -346,13 +320,11 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
   /**
    * Remove the first matching {@link Scope} item from the underlying collection.
-   *
-   * @param item
-   *          the item to remove
+   * @param item the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeScope(Scope item) {
-    Scope value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    Scope value = ObjectUtils.requireNonNull(item,"item cannot be null");
     return _scopes != null && _scopes.remove(value);
   }
 
@@ -362,43 +334,39 @@ public class MetaschemaModuleConstraints implements IBoundObject {
   }
 
   /**
-   * Declares a set of Metaschema constraints from an out-of-line resource to
-   * import, supporting composition of constraint sets.
+   * Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.
    */
   @MetaschemaAssembly(
       description = "Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.",
       name = "import",
-      moduleClass = MetaschemaModelModule.class)
+      moduleClass = MetaschemaModelModule.class
+  )
   public static class Import implements IBoundObject {
     private final IMetaschemaData __metaschemaData;
 
     /**
-     * A relative or absolute URI for retrieving an out-of-line Metaschema
-     * constraint definition.
+     * A relative or absolute URI for retrieving an out-of-line Metaschema constraint definition.
      */
     @BoundFlag(
         description = "A relative or absolute URI for retrieving an out-of-line Metaschema constraint definition.",
         name = "href",
         required = true,
-        typeAdapter = UriReferenceAdapter.class)
+        typeAdapter = UriReferenceAdapter.class
+    )
     private URI _href;
 
     /**
-     * Constructs a new
-     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Import}
-     * instance with no metadata.
+     * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Import} instance with no metadata.
      */
     public Import() {
       this(null);
     }
 
     /**
-     * Constructs a new
-     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Import}
-     * instance with the specified metadata.
+     * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Import} instance with the specified metadata.
      *
      * @param data
-     *          the metaschema data, or {@code null} if none
+     *           the metaschema data, or {@code null} if none
      */
     public Import(IMetaschemaData data) {
       this.__metaschemaData = data;
@@ -413,8 +381,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
      * Get the {@code href} property.
      *
      * <p>
-     * A relative or absolute URI for retrieving an out-of-line Metaschema
-     * constraint definition.
+     * A relative or absolute URI for retrieving an out-of-line Metaschema constraint definition.
      *
      * @return the href value
      */
@@ -427,11 +394,10 @@ public class MetaschemaModuleConstraints implements IBoundObject {
      * Set the {@code href} property.
      *
      * <p>
-     * A relative or absolute URI for retrieving an out-of-line Metaschema
-     * constraint definition.
+     * A relative or absolute URI for retrieving an out-of-line Metaschema constraint definition.
      *
      * @param value
-     *          the href value to set
+     *           the href value to set
      */
     public void setHref(@NonNull URI value) {
       _href = value;
@@ -445,20 +411,23 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
   @MetaschemaAssembly(
       name = "scope",
-      moduleClass = MetaschemaModelModule.class)
+      moduleClass = MetaschemaModelModule.class
+  )
   public static class Scope implements IBoundObject {
     private final IMetaschemaData __metaschemaData;
 
     @BoundFlag(
         name = "metaschema-namespace",
         required = true,
-        typeAdapter = UriAdapter.class)
+        typeAdapter = UriAdapter.class
+    )
     private URI _metaschemaNamespace;
 
     @BoundFlag(
         name = "metaschema-short-name",
         required = true,
-        typeAdapter = TokenAdapter.class)
+        typeAdapter = TokenAdapter.class
+    )
     private String _metaschemaShortName;
 
     @BoundChoiceGroup(
@@ -469,41 +438,39 @@ public class MetaschemaModuleConstraints implements IBoundObject {
             @BoundGroupedAssembly(useName = "assembly", binding = Assembly.class),
             @BoundGroupedAssembly(useName = "field", binding = Field.class),
             @BoundGroupedAssembly(useName = "flag", binding = Flag.class)
-        })
+        }
+    )
     private List<? extends IValueConstraintsBase> _constraints;
 
     @BoundField(
         formalName = "Constraint Condition Violation Message",
         useName = "message",
-        typeAdapter = StringAdapter.class)
+        typeAdapter = StringAdapter.class
+    )
     private String _message;
 
     /**
-     * Any explanatory or helpful information to be provided about the remarks
-     * parent.
+     * Any explanatory or helpful information to be provided about the remarks parent.
      */
     @BoundField(
         formalName = "Remarks",
         description = "Any explanatory or helpful information to be provided about the remarks parent.",
-        useName = "remarks")
+        useName = "remarks"
+    )
     private Remarks _remarks;
 
     /**
-     * Constructs a new
-     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope}
-     * instance with no metadata.
+     * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope} instance with no metadata.
      */
     public Scope() {
       this(null);
     }
 
     /**
-     * Constructs a new
-     * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope}
-     * instance with the specified metadata.
+     * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope} instance with the specified metadata.
      *
      * @param data
-     *          the metaschema data, or {@code null} if none
+     *           the metaschema data, or {@code null} if none
      */
     public Scope(IMetaschemaData data) {
       this.__metaschemaData = data;
@@ -528,7 +495,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
      * Set the {@code metaschema-namespace} property.
      *
      * @param value
-     *          the metaschema-namespace value to set
+     *           the metaschema-namespace value to set
      */
     public void setMetaschemaNamespace(@NonNull URI value) {
       _metaschemaNamespace = value;
@@ -548,7 +515,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
      * Set the {@code metaschema-short-name} property.
      *
      * @param value
-     *          the metaschema-short-name value to set
+     *           the metaschema-short-name value to set
      */
     public void setMetaschemaShortName(@NonNull String value) {
       _metaschemaShortName = value;
@@ -577,7 +544,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
      * Items in this collection must implement {@link IValueConstraintsBase}.
      *
      * @param value
-     *          the constraints items to set
+     *           the constraints items to set
      */
     public void setConstraints(@NonNull List<? extends IValueConstraintsBase> value) {
       _constraints = value;
@@ -597,7 +564,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
      * Set the constraint Condition Violation Message.
      *
      * @param value
-     *          the message value to set
+     *           the message value to set
      */
     public void setMessage(@Nullable String value) {
       _message = value;
@@ -607,8 +574,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
      * Get the remarks.
      *
      * <p>
-     * Any explanatory or helpful information to be provided about the remarks
-     * parent.
+     * Any explanatory or helpful information to be provided about the remarks parent.
      *
      * @return the remarks value, or {@code null} if not set
      */
@@ -621,11 +587,10 @@ public class MetaschemaModuleConstraints implements IBoundObject {
      * Set the remarks.
      *
      * <p>
-     * Any explanatory or helpful information to be provided about the remarks
-     * parent.
+     * Any explanatory or helpful information to be provided about the remarks parent.
      *
      * @param value
-     *          the remarks value to set
+     *           the remarks value to set
      */
     public void setRemarks(@Nullable Remarks value) {
       _remarks = value;
@@ -638,7 +603,8 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
     @MetaschemaAssembly(
         name = "assembly",
-        moduleClass = MetaschemaModelModule.class)
+        moduleClass = MetaschemaModelModule.class
+    )
     public static class Assembly implements IValueTargetedConstraintsBase {
       private final IMetaschemaData __metaschemaData;
 
@@ -646,7 +612,8 @@ public class MetaschemaModuleConstraints implements IBoundObject {
           formalName = "Constraint Target Metapath Expression",
           name = "target",
           required = true,
-          typeAdapter = StringAdapter.class)
+          typeAdapter = StringAdapter.class
+      )
       private String _target;
 
       @BoundChoiceGroup(
@@ -654,41 +621,30 @@ public class MetaschemaModuleConstraints implements IBoundObject {
           maxOccurs = -1,
           groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST),
           assemblies = {
-              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values",
-                  binding = TargetedAllowedValuesConstraint.class),
-              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect",
-                  binding = TargetedExpectConstraint.class),
-              @BoundGroupedAssembly(formalName = "Targeted Index Has Key Constraint", useName = "index-has-key",
-                  binding = TargetedIndexHasKeyConstraint.class),
-              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches",
-                  binding = TargetedMatchesConstraint.class),
-              @BoundGroupedAssembly(formalName = "Targeted Unique Constraint", useName = "is-unique",
-                  binding = TargetedIsUniqueConstraint.class),
-              @BoundGroupedAssembly(formalName = "Targeted Index Constraint", useName = "index",
-                  binding = TargetedIndexConstraint.class),
-              @BoundGroupedAssembly(formalName = "Targeted Cardinality Constraint", useName = "has-cardinality",
-                  binding = TargetedHasCardinalityConstraint.class),
-              @BoundGroupedAssembly(formalName = "Report Condition Constraint", useName = "report",
-                  binding = TargetedReportConstraint.class)
-          })
+              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values", binding = TargetedAllowedValuesConstraint.class),
+              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect", binding = TargetedExpectConstraint.class),
+              @BoundGroupedAssembly(formalName = "Targeted Index Has Key Constraint", useName = "index-has-key", binding = TargetedIndexHasKeyConstraint.class),
+              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches", binding = TargetedMatchesConstraint.class),
+              @BoundGroupedAssembly(formalName = "Targeted Unique Constraint", useName = "is-unique", binding = TargetedIsUniqueConstraint.class),
+              @BoundGroupedAssembly(formalName = "Targeted Index Constraint", useName = "index", binding = TargetedIndexConstraint.class),
+              @BoundGroupedAssembly(formalName = "Targeted Cardinality Constraint", useName = "has-cardinality", binding = TargetedHasCardinalityConstraint.class),
+              @BoundGroupedAssembly(formalName = "Report Condition Constraint", useName = "report", binding = TargetedReportConstraint.class)
+          }
+      )
       private List<? extends ITargetedConstraintBase> _rules;
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Assembly}
-       * instance with no metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Assembly} instance with no metadata.
        */
       public Assembly() {
         this(null);
       }
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Assembly}
-       * instance with the specified metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Assembly} instance with the specified metadata.
        *
        * @param data
-       *          the metaschema data, or {@code null} if none
+       *           the metaschema data, or {@code null} if none
        */
       public Assembly(IMetaschemaData data) {
         this.__metaschemaData = data;
@@ -713,7 +669,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
        * Set the constraint Target Metapath Expression.
        *
        * @param value
-       *          the target value to set
+       *           the target value to set
        */
       public void setTarget(@NonNull String value) {
         _target = value;
@@ -743,7 +699,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
        * Items in this collection must implement {@link ITargetedConstraintBase}.
        *
        * @param value
-       *          the rules items to set
+       *           the rules items to set
        */
       public void setRules(@NonNull List<? extends ITargetedConstraintBase> value) {
         _rules = value;
@@ -757,7 +713,8 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
     @MetaschemaAssembly(
         name = "field",
-        moduleClass = MetaschemaModelModule.class)
+        moduleClass = MetaschemaModelModule.class
+    )
     public static class Field implements IValueTargetedConstraintsBase {
       private final IMetaschemaData __metaschemaData;
 
@@ -765,7 +722,8 @@ public class MetaschemaModuleConstraints implements IBoundObject {
           formalName = "Constraint Target Metapath Expression",
           name = "target",
           required = true,
-          typeAdapter = StringAdapter.class)
+          typeAdapter = StringAdapter.class
+      )
       private String _target;
 
       @BoundChoiceGroup(
@@ -773,35 +731,27 @@ public class MetaschemaModuleConstraints implements IBoundObject {
           maxOccurs = -1,
           groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST),
           assemblies = {
-              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values",
-                  binding = TargetedAllowedValuesConstraint.class),
-              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect",
-                  binding = TargetedExpectConstraint.class),
-              @BoundGroupedAssembly(formalName = "Targeted Index Has Key Constraint", useName = "index-has-key",
-                  binding = TargetedIndexHasKeyConstraint.class),
-              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches",
-                  binding = TargetedMatchesConstraint.class),
-              @BoundGroupedAssembly(formalName = "Report Condition Constraint", useName = "report",
-                  binding = TargetedReportConstraint.class)
-          })
+              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values", binding = TargetedAllowedValuesConstraint.class),
+              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect", binding = TargetedExpectConstraint.class),
+              @BoundGroupedAssembly(formalName = "Targeted Index Has Key Constraint", useName = "index-has-key", binding = TargetedIndexHasKeyConstraint.class),
+              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches", binding = TargetedMatchesConstraint.class),
+              @BoundGroupedAssembly(formalName = "Report Condition Constraint", useName = "report", binding = TargetedReportConstraint.class)
+          }
+      )
       private List<? extends ITargetedConstraintBase> _rules;
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Field}
-       * instance with no metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Field} instance with no metadata.
        */
       public Field() {
         this(null);
       }
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Field}
-       * instance with the specified metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Field} instance with the specified metadata.
        *
        * @param data
-       *          the metaschema data, or {@code null} if none
+       *           the metaschema data, or {@code null} if none
        */
       public Field(IMetaschemaData data) {
         this.__metaschemaData = data;
@@ -826,7 +776,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
        * Set the constraint Target Metapath Expression.
        *
        * @param value
-       *          the target value to set
+       *           the target value to set
        */
       public void setTarget(@NonNull String value) {
         _target = value;
@@ -856,7 +806,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
        * Items in this collection must implement {@link ITargetedConstraintBase}.
        *
        * @param value
-       *          the rules items to set
+       *           the rules items to set
        */
       public void setRules(@NonNull List<? extends ITargetedConstraintBase> value) {
         _rules = value;
@@ -870,7 +820,8 @@ public class MetaschemaModuleConstraints implements IBoundObject {
 
     @MetaschemaAssembly(
         name = "flag",
-        moduleClass = MetaschemaModelModule.class)
+        moduleClass = MetaschemaModelModule.class
+    )
     public static class Flag implements IValueConstraintsBase {
       private final IMetaschemaData __metaschemaData;
 
@@ -878,7 +829,8 @@ public class MetaschemaModuleConstraints implements IBoundObject {
           formalName = "Constraint Target Metapath Expression",
           name = "target",
           required = true,
-          typeAdapter = StringAdapter.class)
+          typeAdapter = StringAdapter.class
+      )
       private String _target;
 
       @BoundChoiceGroup(
@@ -886,35 +838,27 @@ public class MetaschemaModuleConstraints implements IBoundObject {
           maxOccurs = -1,
           groupAs = @GroupAs(name = "rules", inJson = JsonGroupAsBehavior.LIST),
           assemblies = {
-              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values",
-                  binding = FlagAllowedValues.class),
-              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect",
-                  binding = FlagExpect.class),
-              @BoundGroupedAssembly(formalName = "Index Has Key Constraint", useName = "index-has-key",
-                  binding = FlagIndexHasKey.class),
-              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches",
-                  binding = FlagMatches.class),
-              @BoundGroupedAssembly(formalName = "Report Condition Constraint", useName = "report",
-                  binding = FlagReport.class)
-          })
+              @BoundGroupedAssembly(formalName = "Allowed Values Constraint", useName = "allowed-values", binding = FlagAllowedValues.class),
+              @BoundGroupedAssembly(formalName = "Expect Condition Constraint", useName = "expect", binding = FlagExpect.class),
+              @BoundGroupedAssembly(formalName = "Index Has Key Constraint", useName = "index-has-key", binding = FlagIndexHasKey.class),
+              @BoundGroupedAssembly(formalName = "Value Matches Constraint", useName = "matches", binding = FlagMatches.class),
+              @BoundGroupedAssembly(formalName = "Report Condition Constraint", useName = "report", binding = FlagReport.class)
+          }
+      )
       private List<? extends IConstraintBase> _rules;
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Flag}
-       * instance with no metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Flag} instance with no metadata.
        */
       public Flag() {
         this(null);
       }
 
       /**
-       * Constructs a new
-       * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Flag}
-       * instance with the specified metadata.
+       * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints.Scope.Flag} instance with the specified metadata.
        *
        * @param data
-       *          the metaschema data, or {@code null} if none
+       *           the metaschema data, or {@code null} if none
        */
       public Flag(IMetaschemaData data) {
         this.__metaschemaData = data;
@@ -939,7 +883,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
        * Set the constraint Target Metapath Expression.
        *
        * @param value
-       *          the target value to set
+       *           the target value to set
        */
       public void setTarget(@NonNull String value) {
         _target = value;
@@ -969,7 +913,7 @@ public class MetaschemaModuleConstraints implements IBoundObject {
        * Items in this collection must implement {@link IConstraintBase}.
        *
        * @param value
-       *          the rules items to set
+       *           the rules items to set
        */
       public void setRules(@NonNull List<? extends IConstraintBase> value) {
         _rules = value;

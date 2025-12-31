@@ -27,6 +27,8 @@
 	</properties>
 
 	<build>
+		<!-- Define source directory for pom packaging so license/formatter plugins can find generated sources -->
+		<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -78,6 +80,47 @@
 							</configs>
 							<includes>
 								<include>unit-tests.yaml</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-license-headers</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>format</goal>
+						</goals>
+						<configuration>
+							<licenseSets>
+								<licenseSet>
+									<header>cc0-dedication.txt</header>
+									<includes>
+										<include>src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/**/*.java</include>
+									</includes>
+								</licenseSet>
+							</licenseSets>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>net.revelc.code.formatter</groupId>
+				<artifactId>formatter-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>format-generated-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>format</goal>
+						</goals>
+						<configuration>
+							<includes>
+								<include>src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/**/*.java</include>
 							</includes>
 						</configuration>
 					</execution>

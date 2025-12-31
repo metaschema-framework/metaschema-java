@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../metaschema/metaschema-bindings.yaml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.databind.config.binding;
 
 import gov.nist.secauto.metaschema.core.datatype.markup.MarkupLine;
@@ -18,21 +17,19 @@ import java.util.List;
 
 /**
  * Metaschema Binding Configuration
- * <p>
- * This module defines the binding configuration format used to customize Java
- * code generation from Metaschema modules. It allows specifying package names,
- * class names, interface implementations, base classes, and collection types
- * for generated binding classes.
- * </p>
+ * <p>This module defines the binding configuration format used to customize
+ * Java code generation from Metaschema modules. It allows specifying
+ * package names, class names, interface implementations, base classes,
+ * and collection types for generated binding classes.</p>
  */
 @MetaschemaModule(
     assemblies = MetaschemaBindings.class,
     remarks = "This module defines the binding configuration format used to customize\n"
-        + "Java code generation from Metaschema modules. It allows specifying\n"
-        + "package names, class names, interface implementations, base classes,\n"
-        + "and collection types for generated binding classes.")
-public final class MetaschemaBindingsModule
-    extends AbstractBoundModule {
+            + "Java code generation from Metaschema modules. It allows specifying\n"
+            + "package names, class names, interface implementations, base classes,\n"
+            + "and collection types for generated binding classes."
+)
+public final class MetaschemaBindingsModule extends AbstractBoundModule {
   private static final MarkupLine NAME = MarkupLine.fromMarkdown("Metaschema Binding Configuration");
 
   private static final String SHORT_NAME = "metaschema-bindings";
@@ -43,19 +40,18 @@ public final class MetaschemaBindingsModule
 
   private static final URI JSON_BASE_URI = URI.create("https://csrc.nist.gov/ns/metaschema-binding/1.0");
 
-  private static final MarkupMultiline REMARKS
-      = MarkupMultiline.fromMarkdown("This module defines the binding configuration format used to customize\n"
-          + "Java code generation from Metaschema modules. It allows specifying\n"
-          + "package names, class names, interface implementations, base classes,\n"
-          + "and collection types for generated binding classes.");
+  private static final MarkupMultiline REMARKS = MarkupMultiline.fromMarkdown("This module defines the binding configuration format used to customize\n"
+      + "Java code generation from Metaschema modules. It allows specifying\n"
+      + "package names, class names, interface implementations, base classes,\n"
+      + "and collection types for generated binding classes.");
 
   /**
    * Construct a new module instance.
    *
    * @param importedModules
-   *          modules imported by this module
+   *           modules imported by this module
    * @param bindingContext
-   *          the binding context to associate with this module
+   *           the binding context to associate with this module
    */
   public MetaschemaBindingsModule(List<? extends IBoundModule> importedModules,
       IBindingContext bindingContext) {

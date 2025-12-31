@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -25,20 +24,19 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Any explanatory or helpful information to be provided about the remarks
- * parent.
+ * Any explanatory or helpful information to be provided about the remarks parent.
  */
 @MetaschemaField(
     formalName = "Remarks",
     description = "Any explanatory or helpful information to be provided about the remarks parent.",
     name = "remarks",
-    moduleClass = MetaschemaModelModule.class)
+    moduleClass = MetaschemaModelModule.class
+)
 public class Remarks implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
   /**
-   * Mark as &lsquo;XML&rsquo; for XML-only or &lsquo;JSON&rsquo; for JSON-only
-   * remarks.
+   * Mark as &lsquo;XML&rsquo; for XML-only or &lsquo;JSON&rsquo; for JSON-only remarks.
    */
   @BoundFlag(
       formalName = "Remark Class",
@@ -46,33 +44,28 @@ public class Remarks implements IBoundObject {
       name = "class",
       defaultValue = "ALL",
       typeAdapter = TokenAdapter.class,
-      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR,
-          values = { @AllowedValue(value = "XML", description = "The remark applies to only XML representations."),
-              @AllowedValue(value = "JSON", description = "The remark applies to only JSON and YAML representations."),
-              @AllowedValue(value = "ALL", description = "The remark applies to all representations.") })))
+      valueConstraints = @ValueConstraints(allowedValues = @AllowedValues(level = IConstraint.Level.ERROR, values = {@AllowedValue(value = "XML", description = "The remark applies to only XML representations."), @AllowedValue(value = "JSON", description = "The remark applies to only JSON and YAML representations."), @AllowedValue(value = "ALL", description = "The remark applies to all representations.")}))
+  )
   private String _clazz;
 
   @BoundFieldValue(
       valueKeyName = "remark",
-      typeAdapter = MarkupMultilineAdapter.class)
+      typeAdapter = MarkupMultilineAdapter.class
+  )
   private MarkupMultiline _remark;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.Remarks}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.Remarks} instance with no metadata.
    */
   public Remarks() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.Remarks}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.Remarks} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public Remarks(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -87,8 +80,7 @@ public class Remarks implements IBoundObject {
    * Get the remark Class.
    *
    * <p>
-   * Mark as &lsquo;XML&rsquo; for XML-only or &lsquo;JSON&rsquo; for JSON-only
-   * remarks.
+   * Mark as &lsquo;XML&rsquo; for XML-only or &lsquo;JSON&rsquo; for JSON-only remarks.
    *
    * @return the class value, or {@code null} if not set
    */
@@ -101,11 +93,10 @@ public class Remarks implements IBoundObject {
    * Set the remark Class.
    *
    * <p>
-   * Mark as &lsquo;XML&rsquo; for XML-only or &lsquo;JSON&rsquo; for JSON-only
-   * remarks.
+   * Mark as &lsquo;XML&rsquo; for XML-only or &lsquo;JSON&rsquo; for JSON-only remarks.
    *
    * @param value
-   *          the class value to set
+   *           the class value to set
    */
   public void setClazz(@Nullable String value) {
     _clazz = value;

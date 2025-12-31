@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../../../../../core/metaschema/schema/metaschema/metaschema-module-metaschema.xml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.databind.model.metaschema.binding;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -23,7 +22,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @MetaschemaAssembly(
     formalName = "Constraint Let Expression",
     name = "constraint-let-expression",
-    moduleClass = MetaschemaModelModule.class)
+    moduleClass = MetaschemaModelModule.class
+)
 public class ConstraintLetExpression implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -31,42 +31,40 @@ public class ConstraintLetExpression implements IBoundObject {
       formalName = "Let Variable Name",
       name = "var",
       required = true,
-      typeAdapter = TokenAdapter.class)
+      typeAdapter = TokenAdapter.class
+  )
   private String _var;
 
   @BoundFlag(
       formalName = "Let Value Metapath Expression",
       name = "expression",
       required = true,
-      typeAdapter = StringAdapter.class)
+      typeAdapter = StringAdapter.class
+  )
   private String _expression;
 
   /**
-   * Any explanatory or helpful information to be provided about the remarks
-   * parent.
+   * Any explanatory or helpful information to be provided about the remarks parent.
    */
   @BoundField(
       formalName = "Remarks",
       description = "Any explanatory or helpful information to be provided about the remarks parent.",
-      useName = "remarks")
+      useName = "remarks"
+  )
   private Remarks _remarks;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintLetExpression}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintLetExpression} instance with no metadata.
    */
   public ConstraintLetExpression() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintLetExpression}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.databind.model.metaschema.binding.ConstraintLetExpression} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public ConstraintLetExpression(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -91,7 +89,7 @@ public class ConstraintLetExpression implements IBoundObject {
    * Set the let Variable Name.
    *
    * @param value
-   *          the var value to set
+   *           the var value to set
    */
   public void setVar(@NonNull String value) {
     _var = value;
@@ -111,7 +109,7 @@ public class ConstraintLetExpression implements IBoundObject {
    * Set the let Value Metapath Expression.
    *
    * @param value
-   *          the expression value to set
+   *           the expression value to set
    */
   public void setExpression(@NonNull String value) {
     _expression = value;
@@ -121,8 +119,7 @@ public class ConstraintLetExpression implements IBoundObject {
    * Get the remarks.
    *
    * <p>
-   * Any explanatory or helpful information to be provided about the remarks
-   * parent.
+   * Any explanatory or helpful information to be provided about the remarks parent.
    *
    * @return the remarks value, or {@code null} if not set
    */
@@ -135,11 +132,10 @@ public class ConstraintLetExpression implements IBoundObject {
    * Set the remarks.
    *
    * <p>
-   * Any explanatory or helpful information to be provided about the remarks
-   * parent.
+   * Any explanatory or helpful information to be provided about the remarks parent.
    *
    * @param value
-   *          the remarks value to set
+   *           the remarks value to set
    */
   public void setRemarks(@Nullable Remarks value) {
     _remarks = value;

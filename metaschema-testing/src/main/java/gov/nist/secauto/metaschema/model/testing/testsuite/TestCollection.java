@@ -4,7 +4,6 @@
  */
 // Generated from: ../../../../../../../../metaschema/unit-tests.yaml
 // Do not edit - changes will be lost when regenerated.
-
 package gov.nist.secauto.metaschema.model.testing.testsuite;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -31,7 +30,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     formalName = "Test Collection",
     description = "A collection of test scenarios located at a specific path.",
     name = "test-collection",
-    moduleClass = MetaschemaTestSuiteModule.class)
+    moduleClass = MetaschemaTestSuiteModule.class
+)
 public class TestCollection implements IBoundObject {
   private final IMetaschemaData __metaschemaData;
 
@@ -43,7 +43,8 @@ public class TestCollection implements IBoundObject {
       description = "A URI reference to the location of this test collection.",
       name = "location",
       required = true,
-      typeAdapter = UriReferenceAdapter.class)
+      typeAdapter = UriReferenceAdapter.class
+  )
   private URI _location;
 
   /**
@@ -54,7 +55,8 @@ public class TestCollection implements IBoundObject {
       description = "The name of this test collection.",
       name = "name",
       required = true,
-      typeAdapter = StringAdapter.class)
+      typeAdapter = StringAdapter.class
+  )
   private String _name;
 
   /**
@@ -66,25 +68,22 @@ public class TestCollection implements IBoundObject {
       useName = "test-scenario",
       minOccurs = 1,
       maxOccurs = -1,
-      groupAs = @GroupAs(name = "test-scenarios", inJson = JsonGroupAsBehavior.LIST))
+      groupAs = @GroupAs(name = "test-scenarios", inJson = JsonGroupAsBehavior.LIST)
+  )
   private List<TestScenario> _testScenarios;
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestCollection}
-   * instance with no metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestCollection} instance with no metadata.
    */
   public TestCollection() {
     this(null);
   }
 
   /**
-   * Constructs a new
-   * {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestCollection}
-   * instance with the specified metadata.
+   * Constructs a new {@code gov.nist.secauto.metaschema.model.testing.testsuite.TestCollection} instance with the specified metadata.
    *
    * @param data
-   *          the metaschema data, or {@code null} if none
+   *           the metaschema data, or {@code null} if none
    */
   public TestCollection(IMetaschemaData data) {
     this.__metaschemaData = data;
@@ -115,7 +114,7 @@ public class TestCollection implements IBoundObject {
    * A URI reference to the location of this test collection.
    *
    * @param value
-   *          the location value to set
+   *           the location value to set
    */
   public void setLocation(@NonNull URI value) {
     _location = value;
@@ -141,7 +140,7 @@ public class TestCollection implements IBoundObject {
    * The name of this test collection.
    *
    * @param value
-   *          the name value to set
+   *           the name value to set
    */
   public void setName(@NonNull String value) {
     _name = value;
@@ -170,7 +169,7 @@ public class TestCollection implements IBoundObject {
    * A test scenario that validates a metaschema and its content.
    *
    * @param value
-   *          the test-scenario value to set
+   *           the test-scenario value to set
    */
   public void setTestScenarios(@NonNull List<TestScenario> value) {
     _testScenarios = value;
@@ -178,13 +177,11 @@ public class TestCollection implements IBoundObject {
 
   /**
    * Add a new {@link TestScenario} item to the underlying collection.
-   *
-   * @param item
-   *          the item to add
+   * @param item the item to add
    * @return {@code true}
    */
   public boolean addTestScenario(TestScenario item) {
-    TestScenario value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    TestScenario value = ObjectUtils.requireNonNull(item,"item cannot be null");
     if (_testScenarios == null) {
       _testScenarios = new LinkedList<>();
     }
@@ -192,15 +189,12 @@ public class TestCollection implements IBoundObject {
   }
 
   /**
-   * Remove the first matching {@link TestScenario} item from the underlying
-   * collection.
-   *
-   * @param item
-   *          the item to remove
+   * Remove the first matching {@link TestScenario} item from the underlying collection.
+   * @param item the item to remove
    * @return {@code true} if the item was removed or {@code false} otherwise
    */
   public boolean removeTestScenario(TestScenario item) {
-    TestScenario value = ObjectUtils.requireNonNull(item, "item cannot be null");
+    TestScenario value = ObjectUtils.requireNonNull(item,"item cannot be null");
     return _testScenarios != null && _testScenarios.remove(value);
   }
 
