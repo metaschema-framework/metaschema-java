@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -75,6 +77,78 @@ class CLIProcessorTest {
       ExitStatus status = processor.process("--quiet", "test-cmd");
 
       assertEquals(ExitCode.OK, status.getExitCode());
+    }
+  }
+
+  @Nested
+  @DisplayName("Version Output Tests")
+  class VersionOutputTests {
+
+    @ParameterizedTest(name = "version output contains {1}")
+    @CsvSource({
+        "test-cli, app name",
+        "1.0.0-test, version number",
+        "2025-01-01, build timestamp",
+        "test-branch, git branch",
+        "abc1234, git commit",
+        "https://example.com/test.git, git origin URL"
+    })
+    void testVersionOutputContainsExpectedElement(String expectedSubstring, String description) {
+      processor.process("--version");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertTrue(output.contains(expectedSubstring),
+          "Version output should contain " + description);
+    }
+
+    @Test
+    @DisplayName("version output contains descriptive text")
+    void testVersionOutputContainsDescriptiveText() {
+      processor.process("--version");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertAll(
+          () -> assertTrue(output.contains("built at"), "Version output should contain 'built at'"),
+          () -> assertTrue(output.contains("from branch"), "Version output should contain 'from branch'"));
+    }
+  }
+
+  @Nested
+  @DisplayName("No-Color Mode Tests")
+  class NoColorModeTests {
+
+    @Test
+    @DisplayName("--no-color option is accepted with command")
+    void testNoColorOptionAccepted() {
+      processor.addCommandHandler(new TestCommand());
+
+      ExitStatus status = processor.process("--no-color", "test-cmd");
+
+      assertEquals(ExitCode.OK, status.getExitCode());
+    }
+
+    @Test
+    @DisplayName("--no-color with --help produces output")
+    void testNoColorWithHelp() {
+      // Note: --help must come first for phase 1 parsing to recognize it
+      ExitStatus status = processor.process("--help", "--no-color");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertAll(
+          () -> assertEquals(ExitCode.OK, status.getExitCode()),
+          () -> assertTrue(output.contains("--help"), "Output should contain '--help'"));
+    }
+
+    @Test
+    @DisplayName("--no-color with --version produces output")
+    void testNoColorWithVersion() {
+      // Note: --version must come first for phase 1 parsing to recognize it
+      ExitStatus status = processor.process("--version", "--no-color");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertAll(
+          () -> assertEquals(ExitCode.OK, status.getExitCode()),
+          () -> assertTrue(output.contains("test-cli"), "Output should contain app name"));
     }
   }
 

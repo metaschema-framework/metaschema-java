@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.cli.processor;
 
-import static org.fusesource.jansi.Ansi.ansi;
+import static org.jline.jansi.Ansi.ansi;
 
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
@@ -23,8 +23,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.help.HelpFormatter;
 import org.apache.commons.cli.help.OptionFormatter;
 import org.apache.commons.cli.help.TextHelpAppendable;
-import org.fusesource.jansi.AnsiPrintStream;
-
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -399,10 +397,12 @@ public class CallingContext {
   /**
    * Callback for providing a help footer.
    *
-   * @return the footer or {@code null}
+   * @param terminalWidth
+   *          the terminal width for text wrapping
+   * @return the footer or an empty string if no subcommands
    */
   @NonNull
-  private String buildHelpFooter() {
+  private String buildHelpFooter(int terminalWidth) {
     ICommand targetCommand = getTargetCommand();
     Collection<ICommand> subCommands;
     if (targetCommand == null) {
@@ -421,16 +421,23 @@ public class CallingContext {
           .append("The following are available commands:")
           .append(System.lineSeparator());
 
-      int length = subCommands.stream()
+      int commandColWidth = subCommands.stream()
           .mapToInt(command -> command.getName().length())
           .max().orElse(0);
 
+      // Calculate description column width: terminal - 3 (leading spaces) -
+      // commandCol - 1 (space)
+      int prefixWidth = 3 + commandColWidth + 1;
+      int descWidth = Math.max(terminalWidth - prefixWidth, 20);
+      String continuationIndent = " ".repeat(prefixWidth);
+
       for (ICommand command : subCommands) {
+        String wrappedDesc = wrapText(command.getDescription(), descWidth, continuationIndent);
         builder.append(
             ansi()
-                .render(String.format("   @|bold %-" + length + "s|@ %s%n",
+                .render(String.format("   @|bold %-" + commandColWidth + "s|@ %s%n",
                     command.getName(),
-                    command.getDescription())));
+                    wrappedDesc)));
       }
       builder
           .append(System.lineSeparator())
@@ -540,6 +547,95 @@ public class CallingContext {
     return builder;
   }
 
+  private static final int DEFAULT_TERMINAL_WIDTH = 80;
+
+  /**
+   * Get the terminal width from environment or use a default.
+   * <p>
+   * This method avoids native terminal detection which triggers Java 21+
+   * restricted method warnings. Instead, it uses the COLUMNS environment variable
+   * which is set by most shells.
+   *
+   * @return the terminal width in characters
+   */
+  private static int getTerminalWidth() {
+    String columns = System.getenv("COLUMNS");
+    if (columns != null) {
+      try {
+        int width = Integer.parseInt(columns);
+        if (width > 0) {
+          return width;
+        }
+      } catch (NumberFormatException e) {
+        // Ignore and use default
+      }
+    }
+    return DEFAULT_TERMINAL_WIDTH;
+  }
+
+  /**
+   * Wrap text to fit within the specified width, with proper indentation for
+   * continuation lines.
+   *
+   * @param text
+   *          the text to wrap
+   * @param maxWidth
+   *          the maximum line width
+   * @param indent
+   *          the indentation string for continuation lines
+   * @return the wrapped text
+   * @throws IllegalArgumentException
+   *           if maxWidth is less than or equal to zero, or if the indent length
+   *           is greater than or equal to maxWidth
+   */
+  @NonNull
+  static String wrapText(@NonNull String text, int maxWidth, @NonNull String indent) {
+    if (maxWidth <= 0) {
+      throw new IllegalArgumentException("maxWidth must be positive, got: " + maxWidth);
+    }
+    if (indent.length() >= maxWidth) {
+      throw new IllegalArgumentException(
+          "indent length (" + indent.length() + ") must be less than maxWidth (" + maxWidth + ")");
+    }
+    if (text.length() <= maxWidth) {
+      return text;
+    }
+
+    StringBuilder result = new StringBuilder(text.length() + 32);
+    int lineStart = 0;
+    boolean firstLine = true;
+    int effectiveWidth = maxWidth;
+
+    while (lineStart < text.length()) {
+      if (!firstLine) {
+        result.append(System.lineSeparator()).append(indent);
+        effectiveWidth = maxWidth - indent.length();
+      }
+
+      int remaining = text.length() - lineStart;
+      if (remaining <= effectiveWidth) {
+        result.append(text.substring(lineStart));
+        break;
+      }
+
+      // Find last space within the width limit
+      int lineEnd = lineStart + effectiveWidth;
+      int lastSpace = text.lastIndexOf(' ', lineEnd);
+
+      if (lastSpace <= lineStart) {
+        // No space found, force break at width
+        result.append(text, lineStart, lineEnd);
+        lineStart = lineEnd; // Continue from break point (no space to skip)
+      } else {
+        result.append(text, lineStart, lastSpace);
+        lineStart = lastSpace + 1; // Skip the space
+      }
+      firstLine = false;
+    }
+
+    return ObjectUtils.notNull(result.toString());
+  }
+
   /**
    * Output the help text to the console.
    *
@@ -548,9 +644,9 @@ public class CallingContext {
    */
   public void showHelp() {
     PrintStream out = cliProcessor.getOutputStream();
-    int terminalWidth = (out instanceof AnsiPrintStream)
-        ? ((AnsiPrintStream) out).getTerminalWidth()
-        : 80;
+    // Get terminal width from environment variable COLUMNS, or default to 80
+    // This avoids native terminal detection which triggers Java 21+ warnings
+    int terminalWidth = getTerminalWidth();
 
     try (PrintWriter writer = new PrintWriter( // NOPMD not owned
         AutoCloser.preventClose(out),
@@ -562,19 +658,24 @@ public class CallingContext {
       HelpFormatter formatter = HelpFormatter.builder()
           .setHelpAppendable(appendable)
           .setOptionFormatBuilder(OptionFormatter.builder().setOptArgSeparator("="))
+          .setShowSince(false)
           .get();
 
       try {
+        // Print main help (syntax, header, options) through the formatter
         formatter.printHelp(
             buildHelpCliSyntax(),
             buildHelpHeader(),
             toOptions(),
-            buildHelpFooter(),
+            "", // Empty footer - we print it directly below
             false);
       } catch (IOException ex) {
         throw new UncheckedIOException("Failed to write help output", ex);
       }
 
+      // Print footer directly to bypass TextHelpAppendable's text wrapping,
+      // which doesn't account for ANSI escape sequence lengths
+      writer.print(buildHelpFooter(terminalWidth));
       writer.flush();
     }
   }

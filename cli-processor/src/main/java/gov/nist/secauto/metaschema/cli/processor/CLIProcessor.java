@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.cli.processor;
 
-import static org.fusesource.jansi.Ansi.ansi;
+import static org.jline.jansi.Ansi.ansi;
 
 import gov.nist.secauto.metaschema.cli.processor.command.CommandService;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
@@ -21,7 +21,7 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.eclipse.jdt.annotation.NotOwning;
-import org.fusesource.jansi.AnsiConsole;
+import org.jline.jansi.Ansi;
 
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -172,12 +172,9 @@ public class CLIProcessor {
       @Nullable @NotOwning PrintStream outputStream) {
     this.exec = exec;
     this.versionInfos = versionInfos;
-    if (outputStream == null) {
-      AnsiConsole.systemInstall();
-      this.outputStream = ObjectUtils.notNull(AnsiConsole.out());
-    } else {
-      this.outputStream = outputStream;
-    }
+    // Use System.out directly - modern terminals (Windows 10+, Linux, macOS)
+    // support ANSI natively without requiring native terminal detection
+    this.outputStream = outputStream != null ? outputStream : ObjectUtils.notNull(System.out);
   }
 
   /**
@@ -272,9 +269,16 @@ public class CLIProcessor {
         .collect(Collectors.toUnmodifiableMap(ICommand::getName, Function.identity())));
   }
 
+  /**
+   * Disable ANSI escape sequences in output.
+   * <p>
+   * When called, this method disables ANSI color codes, causing output to use
+   * plain text without formatting. This is useful for legacy consoles that do not
+   * support ANSI escape codes, CI/CD environments, or when redirecting output to
+   * a file.
+   */
   static void handleNoColor() {
-    System.setProperty(AnsiConsole.JANSI_MODE, AnsiConsole.JANSI_MODE_STRIP);
-    AnsiConsole.systemUninstall();
+    Ansi.setEnabled(false);
   }
 
   /**

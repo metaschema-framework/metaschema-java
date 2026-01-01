@@ -51,6 +51,19 @@ For Zsh:
 Completion provides intelligent suggestions for commands, options, file paths,
 and format arguments when you press Tab.
 
+Disabling Color Output:
+-----------------------
+
+The CLI uses ANSI escape codes for colored output, which is supported by most
+modern terminals including Windows 10+, Linux, and macOS. If you are using a
+legacy console that does not support ANSI escape codes (e.g., older Windows
+cmd.exe, certain CI/CD environments, or when redirecting output to a file),
+you may see raw escape sequences in the output.
+
+To disable colored output, use the --no-color flag:
+
+  metaschema-cli --no-color <command>
+
 Feedback:
 ---------
 

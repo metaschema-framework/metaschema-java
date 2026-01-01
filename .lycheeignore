@@ -1,4 +1,5 @@
 # broken plugin and dependency references
+https://github.com/jline/jline3/.*
 https://bytebuddy.net/byte-buddy
 https://checkstyle.org/checks/indentation/indentation.html
 https://chronicle.software/java-parent-pom/compiler
