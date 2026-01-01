@@ -44,6 +44,15 @@ class LoggingValidationHandlerTest {
     }
 
     @Test
+    @DisplayName("instance() and instance(false) return the same singleton")
+    void testInstanceAndInstanceFalseReturnSameSingleton() {
+      LoggingValidationHandler defaultInstance = LoggingValidationHandler.instance();
+      LoggingValidationHandler noExceptionInstance = LoggingValidationHandler.instance(false);
+      assertSame(defaultInstance, noExceptionInstance,
+          "instance() and instance(false) should return the same singleton");
+    }
+
+    @Test
     @DisplayName("instance(false) returns handler that does not log exceptions")
     void testInstanceWithoutExceptionLogging() {
       LoggingValidationHandler handler = LoggingValidationHandler.instance(false);

@@ -56,6 +56,8 @@ public class DomDatatypeContent
    *          the list of DOM elements representing the datatype definition
    * @param dependencies
    *          the list of datatype names that this datatype depends on
+   * @throws IllegalStateException
+   *           if the DocumentBuilder cannot be created for DOM isolation
    */
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
       justification = "Fail-fast on ParserConfigurationException is intentional; "
