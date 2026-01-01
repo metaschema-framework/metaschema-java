@@ -65,6 +65,7 @@ class LoggingValidationHandlerTest {
       LoggingValidationHandler withExceptions = LoggingValidationHandler.instance(true);
       LoggingValidationHandler withoutExceptions = LoggingValidationHandler.instance(false);
 
+      assertThat(withExceptions).isNotSameAs(withoutExceptions);
       assertThat(withExceptions.isLogExceptions()).isTrue();
       assertThat(withoutExceptions.isLogExceptions()).isFalse();
     }

@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -82,59 +84,21 @@ class CLIProcessorTest {
   @DisplayName("Version Output Tests")
   class VersionOutputTests {
 
-    @Test
-    @DisplayName("version output contains app name")
-    void testVersionOutputContainsAppName() {
+    @ParameterizedTest(name = "version output contains {1}")
+    @CsvSource({
+        "test-cli, app name",
+        "1.0.0-test, version number",
+        "2025-01-01, build timestamp",
+        "test-branch, git branch",
+        "abc1234, git commit",
+        "https://example.com/test.git, git origin URL"
+    })
+    void testVersionOutputContainsExpectedElement(String expectedSubstring, String description) {
       processor.process("--version");
 
       String output = outputCapture.toString(StandardCharsets.UTF_8);
-      assertTrue(output.contains("test-cli"), "Version output should contain app name");
-    }
-
-    @Test
-    @DisplayName("version output contains version number")
-    void testVersionOutputContainsVersion() {
-      processor.process("--version");
-
-      String output = outputCapture.toString(StandardCharsets.UTF_8);
-      assertTrue(output.contains("1.0.0-test"), "Version output should contain version number");
-    }
-
-    @Test
-    @DisplayName("version output contains build timestamp")
-    void testVersionOutputContainsBuildTimestamp() {
-      processor.process("--version");
-
-      String output = outputCapture.toString(StandardCharsets.UTF_8);
-      assertTrue(output.contains("2025-01-01"), "Version output should contain build timestamp");
-    }
-
-    @Test
-    @DisplayName("version output contains git branch")
-    void testVersionOutputContainsGitBranch() {
-      processor.process("--version");
-
-      String output = outputCapture.toString(StandardCharsets.UTF_8);
-      assertTrue(output.contains("test-branch"), "Version output should contain git branch");
-    }
-
-    @Test
-    @DisplayName("version output contains git commit")
-    void testVersionOutputContainsGitCommit() {
-      processor.process("--version");
-
-      String output = outputCapture.toString(StandardCharsets.UTF_8);
-      assertTrue(output.contains("abc1234"), "Version output should contain git commit");
-    }
-
-    @Test
-    @DisplayName("version output contains git origin URL")
-    void testVersionOutputContainsGitOriginUrl() {
-      processor.process("--version");
-
-      String output = outputCapture.toString(StandardCharsets.UTF_8);
-      assertTrue(output.contains("https://example.com/test.git"),
-          "Version output should contain git origin URL");
+      assertTrue(output.contains(expectedSubstring),
+          "Version output should contain " + description);
     }
 
     @Test
@@ -143,8 +107,9 @@ class CLIProcessorTest {
       processor.process("--version");
 
       String output = outputCapture.toString(StandardCharsets.UTF_8);
-      assertTrue(output.contains("built at"), "Version output should contain 'built at'");
-      assertTrue(output.contains("from branch"), "Version output should contain 'from branch'");
+      assertAll(
+          () -> assertTrue(output.contains("built at"), "Version output should contain 'built at'"),
+          () -> assertTrue(output.contains("from branch"), "Version output should contain 'from branch'"));
     }
   }
 
