@@ -105,6 +105,18 @@ docker pull ghcr.io/metaschema-framework/metaschema-cli:latest
 docker run -it ghcr.io/metaschema-framework/metaschema-cli:latest --version
 ```
 
+### CLI Usage Notes
+
+#### Disabling Color Output
+
+The CLI uses ANSI escape codes for colored output, which is supported by most modern terminals including Windows 10+, Linux, and macOS. If you are using a legacy console that does not support ANSI escape codes (e.g., older Windows cmd.exe, certain CI/CD environments, or when redirecting output to a file), you may see raw escape sequences in the output.
+
+To disable colored output, use the `--no-color` flag:
+
+```sh
+metaschema-cli --no-color <command>
+```
+
 ## Relationship to prior work
 
 The contents of this repository is based on work from the [Metaschema Java repository](https://github.com/usnistgov/metaschema-java/) maintained by the National Institute of Standards and Technology (NIST), the [contents of which have been dedicated in the worldwide public domain](https://github.com/usnistgov/metaschema-java/blob/1a496e4bcf905add6b00a77a762ed3cc31bf77e6/LICENSE.md) using the [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) public domain dedication. This repository builds on this prior work, maintaining the [CCO license](https://github.com/metaschema-framework/metaschema-java/blob/main/LICENSE.md) on any new works in this repository.

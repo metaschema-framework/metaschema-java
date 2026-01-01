@@ -7,13 +7,21 @@ package gov.nist.secauto.metaschema.schemagen.xml.impl;
 
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.RandomAccess;
+import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -36,6 +44,11 @@ public class DomDatatypeContent
 
   /**
    * Constructs a new DOM-backed datatype content instance.
+   * <p>
+   * The provided elements are imported into a fresh Document to ensure thread
+   * safety when schema generation runs in parallel. This prevents issues with
+   * Xerces' internal NodeList cache which is not thread-safe - each instance gets
+   * a completely independent DOM tree with its own caches.
    *
    * @param typeName
    *          the name of the datatype
@@ -44,12 +57,47 @@ public class DomDatatypeContent
    * @param dependencies
    *          the list of datatype names that this datatype depends on
    */
+  @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+      justification = "Fail-fast on ParserConfigurationException is intentional; "
+          + "partial initialization cannot occur since exception is thrown before field assignment")
   public DomDatatypeContent(
       @NonNull String typeName,
       @NonNull List<Element> content,
       @NonNull List<String> dependencies) {
     super(typeName, dependencies);
-    this.content = CollectionUtil.unmodifiableList(new ArrayList<>(content));
+    // Import elements into a fresh Document for complete thread isolation
+    this.content = CollectionUtil.unmodifiableList(importElements(content));
+  }
+
+  /**
+   * Imports elements into a fresh Document to ensure complete DOM isolation.
+   * <p>
+   * Xerces' DOM implementation uses internal caches (fNodeListCache) that are not
+   * thread-safe. By importing elements into a new Document, we ensure each
+   * DomDatatypeContent instance has its own DOM tree with independent caches.
+   *
+   * @param elements
+   *          the elements to import
+   * @return a list of elements owned by a new Document
+   */
+  @NonNull
+  private static List<Element> importElements(@NonNull List<Element> elements) {
+    if (elements.isEmpty()) {
+      return CollectionUtil.emptyList();
+    }
+
+    try {
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      factory.setNamespaceAware(true);
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      Document doc = builder.newDocument();
+
+      return elements.stream()
+          .map(e -> (Element) doc.importNode(e, true))
+          .collect(Collectors.toList());
+    } catch (ParserConfigurationException ex) {
+      throw new IllegalStateException("Failed to create DocumentBuilder for DOM isolation", ex);
+    }
   }
 
   /**
@@ -134,10 +182,9 @@ public class DomDatatypeContent
       }
     }
 
-    // Write child nodes
-    NodeList children = element.getChildNodes();
-    for (int i = 0; i < children.getLength(); i++) {
-      Node child = children.item(i);
+    // Write child nodes - use snapshot to avoid thread-safety issues with live
+    // NodeList
+    for (Node child : snapshotNodeList(element.getChildNodes())) {
       switch (child.getNodeType()) {
       case Node.ELEMENT_NODE:
         writeElement((Element) child, writer);
@@ -168,5 +215,58 @@ public class DomDatatypeContent
 
     // Write end element
     writer.writeEndElement();
+  }
+
+  /**
+   * Creates a thread-safe snapshot of a DOM NodeList.
+   * <p>
+   * DOM NodeList objects are "live" - they dynamically reflect changes to the
+   * underlying DOM tree. This causes thread-safety issues when tests run in
+   * parallel, as Xerces' internal node list cache is not synchronized. This
+   * method creates a static snapshot that can be safely iterated without
+   * concurrent modification issues.
+   *
+   * @param nodeList
+   *          the live NodeList to snapshot
+   * @return an immutable List containing the nodes at the time of the call
+   */
+  @NonNull
+  private static List<Node> snapshotNodeList(@NonNull NodeList nodeList) {
+    int length = nodeList.getLength();
+    if (length == 0) {
+      return CollectionUtil.emptyList();
+    }
+    return new NodeListSnapshot(nodeList, length);
+  }
+
+  /**
+   * An immutable, random-access list that captures a snapshot of a DOM NodeList.
+   * <p>
+   * This class captures node references at construction time, providing a
+   * thread-safe view of the NodeList contents that won't be affected by
+   * concurrent DOM modifications.
+   */
+  private static final class NodeListSnapshot
+      extends AbstractList<Node>
+      implements RandomAccess {
+
+    private final Node[] nodes;
+
+    NodeListSnapshot(@NonNull NodeList nodeList, int length) {
+      this.nodes = new Node[length];
+      for (int i = 0; i < length; i++) {
+        this.nodes[i] = nodeList.item(i);
+      }
+    }
+
+    @Override
+    public Node get(int index) {
+      return nodes[index];
+    }
+
+    @Override
+    public int size() {
+      return nodes.length;
+    }
   }
 }

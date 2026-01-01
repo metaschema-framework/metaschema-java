@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.metaschema.cli.util;
 
-import static org.fusesource.jansi.Ansi.ansi;
+import static org.jline.jansi.Ansi.ansi;
 
 import gov.nist.secauto.metaschema.core.metapath.format.IPathFormatter;
 import gov.nist.secauto.metaschema.core.model.constraint.ConstraintValidationFinding;
@@ -19,8 +19,8 @@ import gov.nist.secauto.metaschema.modules.sarif.SarifValidationHandler;
 import org.apache.logging.log4j.LogBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.Ansi.Color;
+import org.jline.jansi.Ansi;
+import org.jline.jansi.Ansi.Color;
 import org.xml.sax.SAXParseException;
 
 import java.net.URI;

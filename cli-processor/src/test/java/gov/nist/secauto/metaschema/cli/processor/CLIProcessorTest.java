@@ -79,6 +79,115 @@ class CLIProcessorTest {
   }
 
   @Nested
+  @DisplayName("Version Output Tests")
+  class VersionOutputTests {
+
+    @Test
+    @DisplayName("version output contains app name")
+    void testVersionOutputContainsAppName() {
+      processor.process("--version");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertTrue(output.contains("test-cli"), "Version output should contain app name");
+    }
+
+    @Test
+    @DisplayName("version output contains version number")
+    void testVersionOutputContainsVersion() {
+      processor.process("--version");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertTrue(output.contains("1.0.0-test"), "Version output should contain version number");
+    }
+
+    @Test
+    @DisplayName("version output contains build timestamp")
+    void testVersionOutputContainsBuildTimestamp() {
+      processor.process("--version");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertTrue(output.contains("2025-01-01"), "Version output should contain build timestamp");
+    }
+
+    @Test
+    @DisplayName("version output contains git branch")
+    void testVersionOutputContainsGitBranch() {
+      processor.process("--version");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertTrue(output.contains("test-branch"), "Version output should contain git branch");
+    }
+
+    @Test
+    @DisplayName("version output contains git commit")
+    void testVersionOutputContainsGitCommit() {
+      processor.process("--version");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertTrue(output.contains("abc1234"), "Version output should contain git commit");
+    }
+
+    @Test
+    @DisplayName("version output contains git origin URL")
+    void testVersionOutputContainsGitOriginUrl() {
+      processor.process("--version");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertTrue(output.contains("https://example.com/test.git"),
+          "Version output should contain git origin URL");
+    }
+
+    @Test
+    @DisplayName("version output contains descriptive text")
+    void testVersionOutputContainsDescriptiveText() {
+      processor.process("--version");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertTrue(output.contains("built at"), "Version output should contain 'built at'");
+      assertTrue(output.contains("from branch"), "Version output should contain 'from branch'");
+    }
+  }
+
+  @Nested
+  @DisplayName("No-Color Mode Tests")
+  class NoColorModeTests {
+
+    @Test
+    @DisplayName("--no-color option is accepted with command")
+    void testNoColorOptionAccepted() {
+      processor.addCommandHandler(new TestCommand());
+
+      ExitStatus status = processor.process("--no-color", "test-cmd");
+
+      assertEquals(ExitCode.OK, status.getExitCode());
+    }
+
+    @Test
+    @DisplayName("--no-color with --help produces output")
+    void testNoColorWithHelp() {
+      // Note: --help must come first for phase 1 parsing to recognize it
+      ExitStatus status = processor.process("--help", "--no-color");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertAll(
+          () -> assertEquals(ExitCode.OK, status.getExitCode()),
+          () -> assertTrue(output.contains("--help"), "Output should contain '--help'"));
+    }
+
+    @Test
+    @DisplayName("--no-color with --version produces output")
+    void testNoColorWithVersion() {
+      // Note: --version must come first for phase 1 parsing to recognize it
+      ExitStatus status = processor.process("--version", "--no-color");
+
+      String output = outputCapture.toString(StandardCharsets.UTF_8);
+      assertAll(
+          () -> assertEquals(ExitCode.OK, status.getExitCode()),
+          () -> assertTrue(output.contains("test-cli"), "Output should contain app name"));
+    }
+  }
+
+  @Nested
   @DisplayName("Command Execution")
   class CommandExecutionTests {
 
