@@ -584,6 +584,9 @@ public class CallingContext {
    * @param indent
    *          the indentation string for continuation lines
    * @return the wrapped text
+   * @throws IllegalArgumentException
+   *           if maxWidth is less than or equal to zero, or if the indent length
+   *           is greater than or equal to maxWidth
    */
   @NonNull
   static String wrapText(@NonNull String text, int maxWidth, @NonNull String indent) {

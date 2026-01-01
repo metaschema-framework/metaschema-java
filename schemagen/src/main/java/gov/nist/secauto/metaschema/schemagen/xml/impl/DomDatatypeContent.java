@@ -79,6 +79,8 @@ public class DomDatatypeContent
    * @param elements
    *          the elements to import
    * @return a list of elements owned by a new Document
+   * @throws IllegalStateException
+   *           if the DocumentBuilder cannot be created for DOM isolation
    */
   @NonNull
   private static List<Element> importElements(@NonNull List<Element> elements) {
