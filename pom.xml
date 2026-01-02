@@ -552,6 +552,9 @@
 						</additionalJOptions>
 						<failOnWarnings>true</failOnWarnings>
 						<failOnError>true</failOnError>
+						<!-- Disable cross-module link auto-detection to avoid JPMS named/unnamed
+						     module mismatch warnings. Aggregate javadoc provides full cross-linking. -->
+						<detectOfflineLinks>false</detectOfflineLinks>
 					</configuration>
 				</plugin>
 				<plugin>
