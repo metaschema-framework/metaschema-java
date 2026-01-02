@@ -43,7 +43,7 @@ import nl.talsmasoftware.lazy4j.Lazy;
 /**
  * This command implementation supports validation a Metaschema module.
  */
-class ValidateModuleCommand
+public class ValidateModuleCommand
     extends AbstractValidateContentCommand {
   @NonNull
   private static final String COMMAND = "validate";

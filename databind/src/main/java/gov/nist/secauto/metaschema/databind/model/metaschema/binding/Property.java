@@ -21,6 +21,9 @@ import java.net.URI;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Property.
+ */
 @MetaschemaAssembly(
     formalName = "Property",
     name = "property",

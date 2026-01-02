@@ -14,6 +14,13 @@ import java.util.Collection;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Represents a bound model instance that is named and can be addressed by that
+ * name in the Metaschema model.
+ *
+ * @param <ITEM>
+ *          the Java type of the bound item
+ */
 public interface IBoundInstanceModelNamed<ITEM>
     extends IBoundInstanceModel<ITEM>, INamedModelInstanceAbsolute {
 

@@ -41,7 +41,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * This command implementation supports generation of a diagram depicting the
  * objects and relationships within a provided Metaschema module.
  */
-class GenerateDiagramCommand
+public class GenerateDiagramCommand
     extends AbstractTerminalCommand {
   private static final Logger LOGGER = LogManager.getLogger(GenerateDiagramCommand.class);
 

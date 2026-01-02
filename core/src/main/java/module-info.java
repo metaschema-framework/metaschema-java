@@ -18,6 +18,7 @@ import gov.nist.secauto.metaschema.core.metapath.function.library.DefaultFunctio
  *       implementing
  *       {@link gov.nist.secauto.metaschema.core.metapath.function.IFunction}
  */
+@SuppressWarnings("requires-transitive-automatic")
 module gov.nist.secauto.metaschema.core {
   // requirements
   requires java.base;
@@ -42,8 +43,8 @@ module gov.nist.secauto.metaschema.core {
   requires transitive org.json;
   requires org.jsoup;
 
-  // dependencies without a module descriptor
-  requires transitive everit.json.schema; // needed for validation details
+  // dependencies without a module descriptor (automatic modules)
+  requires transitive everit.json.schema;
   requires transitive flexmark;
   requires flexmark.ext.escaped.character;
   requires flexmark.ext.gfm.strikethrough;

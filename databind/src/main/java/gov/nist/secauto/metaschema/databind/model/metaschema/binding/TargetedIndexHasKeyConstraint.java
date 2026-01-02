@@ -33,6 +33,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Targeted Index Has Key Constraint.
+ */
 @MetaschemaAssembly(
     formalName = "Targeted Index Has Key Constraint",
     name = "targeted-index-has-key-constraint",

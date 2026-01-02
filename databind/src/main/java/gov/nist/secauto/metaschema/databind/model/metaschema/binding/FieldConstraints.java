@@ -23,6 +23,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * A binding class for the {@code field-constraints} definition.
+ */
 @MetaschemaAssembly(
     name = "field-constraints",
     moduleClass = MetaschemaModelModule.class)

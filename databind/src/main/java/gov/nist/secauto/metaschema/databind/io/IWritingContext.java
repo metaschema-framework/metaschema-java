@@ -13,6 +13,12 @@ import java.io.IOException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides the context for writing bound objects to a specific output format.
+ *
+ * @param <WRITER>
+ *          the type of writer used for output
+ */
 public interface IWritingContext<WRITER> {
   /**
    * Get the writer associated with the writing context.
@@ -37,6 +43,12 @@ public interface IWritingContext<WRITER> {
       @NonNull IBoundDefinitionModelComplex definition,
       @NonNull IBoundObject targetObject) throws IOException;
 
+  /**
+   * A functional interface for writing object properties.
+   *
+   * @param <T>
+   *          the type of handler used for property writing
+   */
   @FunctionalInterface
   interface ObjectWriter<T extends IFeatureComplexItemValueHandler> {
 

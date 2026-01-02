@@ -15,6 +15,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class CommandExecutionException
     extends Exception {
+  /**
+   * The exit code indicating the type of error that occurred.
+   */
   private final ExitCode exitCode;
 
   /**

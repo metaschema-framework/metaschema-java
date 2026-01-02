@@ -14,6 +14,9 @@ import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * Associates Metaschema module classes with a package.
+ */
 @Retention(RUNTIME)
 @Target(PACKAGE)
 public @interface MetaschemaPackage {

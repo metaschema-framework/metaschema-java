@@ -270,6 +270,7 @@ public class DefaultBindingContext implements IBindingContext {
    */
   @Override
   @SuppressWarnings({
+      "deprecation",
       "PMD.EmptyFinalizer",
       "checkstyle:NoFinalizer" })
   protected final void finalize() {

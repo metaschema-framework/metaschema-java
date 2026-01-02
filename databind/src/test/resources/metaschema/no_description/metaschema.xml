@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>No Description Test Module</schema-name>
+    <schema-version>1.0.0</schema-version>
+    <short-name>no-desc-test</short-name>
+    <namespace>http://example.com/ns/no-description</namespace>
+    <json-base-uri>http://example.com/ns/no-description</json-base-uri>
+
+    <!-- Assembly without description - only formal-name -->
+    <define-assembly name="item-with-name-only">
+        <formal-name>Item With Name Only</formal-name>
+        <!-- No description element -->
+        <root-name>item-with-name-only</root-name>
+        <define-flag name="id" as-type="token" required="yes">
+            <formal-name>Identifier</formal-name>
+            <!-- No description -->
+        </define-flag>
+    </define-assembly>
+
+    <!-- Assembly without formal-name or description -->
+    <define-assembly name="item-without-docs">
+        <!-- No formal-name -->
+        <!-- No description -->
+        <root-name>item-without-docs</root-name>
+        <define-flag name="id" as-type="token" required="yes">
+            <!-- No formal-name -->
+            <!-- No description -->
+        </define-flag>
+    </define-assembly>
+</METASCHEMA>

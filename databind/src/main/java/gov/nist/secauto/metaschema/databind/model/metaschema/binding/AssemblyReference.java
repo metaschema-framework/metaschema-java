@@ -33,6 +33,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Assembly Reference.
+ */
 @MetaschemaAssembly(
     formalName = "Assembly Reference",
     name = "assembly-reference",

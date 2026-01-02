@@ -220,4 +220,47 @@ class JavadocGenerationTest
     assertTrue(nonNullSetterParam.matcher(content).find(),
         "Required flag setter should have @NonNull parameter. Content:\n" + content);
   }
+
+  /**
+   * Tests that a class-level Javadoc is generated even when the metaschema
+   * definition only has a formal-name and no description.
+   *
+   * @throws Exception
+   *           if generation fails
+   */
+  @Test
+  void testClassHasJavadocWithOnlyFormalName() throws Exception {
+    Path noDescMetaschema = ObjectUtils.notNull(
+        Paths.get("src/test/resources/metaschema/no_description/metaschema.xml"));
+    String content = generateAndReadClass(noDescMetaschema, "ItemWithNameOnly");
+
+    // The class should have a Javadoc comment derived from the formal-name
+    // Pattern: /** followed by content then */ before the class declaration
+    Pattern classJavadoc = Pattern.compile("/\\*\\*.*?\\*/\\s*@MetaschemaAssembly", Pattern.DOTALL);
+
+    assertTrue(classJavadoc.matcher(content).find(),
+        "Class with only formal-name should have class-level Javadoc. Content:\n" + content);
+  }
+
+  /**
+   * Tests that a class-level Javadoc is generated even when the metaschema
+   * definition has neither formal-name nor description.
+   *
+   * @throws Exception
+   *           if generation fails
+   */
+  @Test
+  void testClassHasJavadocWithNoDocs() throws Exception {
+    Path noDescMetaschema = ObjectUtils.notNull(
+        Paths.get("src/test/resources/metaschema/no_description/metaschema.xml"));
+    String content = generateAndReadClass(noDescMetaschema, "ItemWithoutDocs");
+
+    // The class should have a Javadoc comment even without formal-name or
+    // description
+    // It should use the definition name as a fallback
+    Pattern classJavadoc = Pattern.compile("/\\*\\*.*?\\*/\\s*@MetaschemaAssembly", Pattern.DOTALL);
+
+    assertTrue(classJavadoc.matcher(content).find(),
+        "Class without formal-name or description should still have class-level Javadoc. Content:\n" + content);
+  }
 }

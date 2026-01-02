@@ -15,6 +15,9 @@ import java.lang.annotation.Target;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Defines a name-value property for a Metaschema definition or instance.
+ */
 @Retention(RUNTIME)
 @Target(ANNOTATION_TYPE)
 public @interface Property {

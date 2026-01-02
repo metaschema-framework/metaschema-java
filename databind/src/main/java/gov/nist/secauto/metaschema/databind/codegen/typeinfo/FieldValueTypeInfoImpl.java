@@ -8,6 +8,7 @@ package gov.nist.secauto.metaschema.databind.codegen.typeinfo;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -71,5 +72,20 @@ class FieldValueTypeInfoImpl
 
     fieldBuilder.addAnnotation(fieldValue.build());
     return retval;
+  }
+
+  @Override
+  public void buildFieldJavadoc(@NonNull FieldSpec.Builder builder) {
+    builder.addJavadoc("The field value.");
+  }
+
+  @Override
+  public void buildGetterJavadoc(@NonNull MethodSpec.Builder builder) {
+    builder.addJavadoc("Get the field value.\n\n@return the value");
+  }
+
+  @Override
+  public void buildSetterJavadoc(@NonNull MethodSpec.Builder builder, @NonNull String paramName) {
+    builder.addJavadoc("Set the field value.\n\n@param $L\n          the value to set", paramName);
   }
 }

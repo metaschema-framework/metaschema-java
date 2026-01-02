@@ -312,7 +312,7 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
         writer.format(" * version %s%n", module.getVersion());
         MarkupMultiline remarks = module.getRemarks();
         if (remarks != null) {
-          writer.format(" * <p>%n");
+          // Remarks already include proper HTML formatting
           writer.format(" * %s%n", remarks.toHtml());
         }
       }
@@ -691,9 +691,19 @@ public class DefaultMetaschemaClassFactory implements IMetaschemaClassFactory {
   protected Set<IModelDefinition> buildClass(
       @NonNull IModelDefinitionTypeInfo typeInfo,
       @NonNull TypeSpec.Builder builder) {
-    MarkupLine description = typeInfo.getDefinition().getDescription();
+    IModelDefinition definition = typeInfo.getDefinition();
+    MarkupLine description = definition.getDescription();
     if (description != null) {
       builder.addJavadoc(description.toHtml());
+    } else {
+      // Fallback to formal-name or definition name when description is missing
+      String formalName = definition.getEffectiveFormalName();
+      if (formalName != null) {
+        builder.addJavadoc("$L.", formalName);
+      } else {
+        // Last resort: use the definition name
+        builder.addJavadoc("A binding class for the {@code $L} definition.", definition.getName());
+      }
     }
 
     Set<IModelDefinition> additionalChildClasses = new LinkedHashSet<>();

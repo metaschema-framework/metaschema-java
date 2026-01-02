@@ -107,12 +107,23 @@ public final class SarifValidationHandler {
 
   @NonNull
   static final String SARIF_NS = "https://docs.oasis-open.org/sarif/sarif/v2.1.0";
+  /**
+   * The property key for specifying a URL that provides help information for a
+   * constraint.
+   */
   @NonNull
   public static final IAttributable.Key SARIF_HELP_URL_KEY
       = IAttributable.key("help-url", SARIF_NS);
+  /**
+   * The property key for specifying plain text help content for a constraint.
+   */
   @NonNull
   public static final IAttributable.Key SARIF_HELP_TEXT_KEY
       = IAttributable.key("help-text", SARIF_NS);
+  /**
+   * The property key for specifying markdown-formatted help content for a
+   * constraint.
+   */
   @NonNull
   public static final IAttributable.Key SARIF_HELP_MARKDOWN_KEY
       = IAttributable.key("help-markdown", SARIF_NS);

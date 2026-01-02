@@ -46,7 +46,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * This command implementation supports validation of a content instance based
  * on a provided Metaschema module.
  */
-class ValidateContentUsingModuleCommand
+public class ValidateContentUsingModuleCommand
     extends AbstractValidateContentCommand {
   @NonNull
   private static final String COMMAND = "validate-content";

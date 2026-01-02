@@ -10,6 +10,9 @@ import java.lang.reflect.Type;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides access to a Java field that is bound to a Metaschema instance.
+ */
 @FunctionalInterface
 public interface IFeatureJavaField extends IValuedMutable {
 

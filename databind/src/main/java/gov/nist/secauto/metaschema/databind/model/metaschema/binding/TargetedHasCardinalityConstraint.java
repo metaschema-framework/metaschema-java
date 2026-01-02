@@ -36,6 +36,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Targeted Cardinality Constraint.
+ */
 @MetaschemaAssembly(
     formalName = "Targeted Cardinality Constraint",
     name = "targeted-has-cardinality-constraint",

@@ -9,6 +9,9 @@ import gov.nist.secauto.metaschema.core.model.IModelDefinition;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a generated Java class for a Metaschema definition.
+ */
 public interface IGeneratedDefinitionClass extends IGeneratedClass {
 
   /**

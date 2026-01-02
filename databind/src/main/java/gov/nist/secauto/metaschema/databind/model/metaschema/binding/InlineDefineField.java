@@ -38,6 +38,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Inline Field Definition.
+ */
 @MetaschemaAssembly(
     formalName = "Inline Field Definition",
     name = "inline-define-field",

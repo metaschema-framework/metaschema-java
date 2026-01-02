@@ -24,6 +24,9 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Utility methods for YAML parsing and conversion operations.
+ */
 public final class YamlOperations {
   /**
    * Thread-local Yaml parser to ensure thread safety. SnakeYAML's Yaml class is

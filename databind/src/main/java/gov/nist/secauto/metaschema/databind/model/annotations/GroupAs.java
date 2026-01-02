@@ -17,6 +17,9 @@ import java.lang.annotation.Target;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Defines how a collection of model instances should be grouped.
+ */
 @Documented
 @Retention(RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)

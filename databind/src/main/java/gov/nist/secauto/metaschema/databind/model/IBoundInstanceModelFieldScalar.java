@@ -16,6 +16,10 @@ import gov.nist.secauto.metaschema.databind.model.info.IItemWriteHandler;
 
 import java.io.IOException;
 
+/**
+ * Represents a bound field instance that contains scalar (simple) data, such as
+ * a string or number value.
+ */
 public interface IBoundInstanceModelFieldScalar
     extends IBoundInstanceModelField<Object>,
     IBoundDefinitionModelField<Object>, IFeatureScalarItemValueHandler,

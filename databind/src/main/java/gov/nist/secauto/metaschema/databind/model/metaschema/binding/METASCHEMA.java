@@ -1298,6 +1298,9 @@ public class METASCHEMA implements IBoundObject {
           typeAdapter = NonNegativeIntegerAdapter.class)
       private BigInteger _index;
 
+      /**
+       * The field value.
+       */
       @BoundFieldValue(
           valueKeyName = "name",
           typeAdapter = TokenAdapter.class)
@@ -1355,11 +1358,22 @@ public class METASCHEMA implements IBoundObject {
         _index = value;
       }
 
+      /**
+       * Get the field value.
+       *
+       * @return the value
+       */
       @Nullable
       public String getName() {
         return _name;
       }
 
+      /**
+       * Set the field value.
+       *
+       * @param value
+       *          the value to set
+       */
       public void setName(@Nullable String value) {
         _name = value;
       }
@@ -1371,6 +1385,9 @@ public class METASCHEMA implements IBoundObject {
     }
   }
 
+  /**
+   * Global Field Definition.
+   */
   @MetaschemaAssembly(
       formalName = "Global Field Definition",
       name = "define-field",
@@ -2056,6 +2073,9 @@ public class METASCHEMA implements IBoundObject {
     }
   }
 
+  /**
+   * Global Flag Definition.
+   */
   @MetaschemaAssembly(
       formalName = "Global Flag Definition",
       name = "define-flag",

@@ -39,6 +39,14 @@ import java.util.function.Function;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Default implementation of {@link IBindingConfiguration} that provides binding
+ * configuration for Java class generation from Metaschema modules.
+ * <p>
+ * This implementation supports loading configuration from XML files and
+ * provides namespace-to-package mappings and definition-specific binding
+ * configurations.
+ */
 public class DefaultBindingConfiguration implements IBindingConfiguration {
   private static final Logger LOGGER = LogManager.getLogger(DefaultBindingConfiguration.class);
 
@@ -659,6 +667,12 @@ public class DefaultBindingConfiguration implements IBindingConfiguration {
     return config;
   }
 
+  /**
+   * Holds binding configurations for a specific Metaschema module.
+   * <p>
+   * This class maintains mappings from definition names to their binding
+   * configurations for both assembly and field definitions.
+   */
   public static final class MetaschemaBindingConfiguration {
     private final Map<String, IDefinitionBindingConfiguration> assemblyBindingConfigs = new ConcurrentHashMap<>();
     private final Map<String, IDefinitionBindingConfiguration> fieldBindingConfigs = new ConcurrentHashMap<>();

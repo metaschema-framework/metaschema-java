@@ -63,6 +63,10 @@ public final class NullJavaTypeAdapter
     throw new UnsupportedOperationException(NOT_VALID);
   }
 
+  /**
+   * A placeholder atomic item type that throws unsupported operation exceptions
+   * for all operations.
+   */
   protected static class VoidItem implements IAnyAtomicItem {
 
     private static VoidItem cast(@SuppressWarnings("unused") @NonNull IAnyAtomicItem item) {

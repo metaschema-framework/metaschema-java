@@ -17,6 +17,9 @@ import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Flag Used as the Field Value's JSON Property Name.
+ */
 @MetaschemaAssembly(
     formalName = "Flag Used as the Field Value's JSON Property Name",
     name = "json-value-key-flag",

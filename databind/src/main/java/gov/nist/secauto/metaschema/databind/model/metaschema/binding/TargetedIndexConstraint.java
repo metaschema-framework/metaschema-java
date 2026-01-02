@@ -33,6 +33,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Targeted Index Constraint.
+ */
 @MetaschemaAssembly(
     formalName = "Targeted Index Constraint",
     name = "targeted-index-constraint",

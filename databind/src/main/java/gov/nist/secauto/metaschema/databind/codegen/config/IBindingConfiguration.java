@@ -13,6 +13,14 @@ import java.util.List;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides configuration for Java class binding generation from Metaschema
+ * modules.
+ * <p>
+ * This interface defines how Metaschema module elements are mapped to Java
+ * classes, including package names, class names, base classes, and
+ * superinterfaces.
+ */
 public interface IBindingConfiguration {
 
   /**

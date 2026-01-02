@@ -8,6 +8,13 @@ package gov.nist.secauto.metaschema.schemagen;
 import gov.nist.secauto.metaschema.core.model.IChoiceInstance;
 import gov.nist.secauto.metaschema.core.model.IDefinition;
 
+/**
+ * An inline strategy that inlines definitions unless they are contained within
+ * a choice block.
+ * <p>
+ * Definitions that are part of a choice block are not inlined to ensure proper
+ * schema generation for mutually exclusive alternatives.
+ */
 public class ChoiceNotInlineStrategy implements IInlineStrategy {
   @Override
   public boolean isInline(

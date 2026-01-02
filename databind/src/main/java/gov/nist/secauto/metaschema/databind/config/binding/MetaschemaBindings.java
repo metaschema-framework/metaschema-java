@@ -1481,6 +1481,9 @@ public class MetaschemaBindings implements IBoundObject {
               typeAdapter = BooleanAdapter.class)
           private Boolean _useWildcard;
 
+          /**
+           * The field value.
+           */
           @BoundFieldValue(
               valueKeyName = "STRVALUE",
               typeAdapter = TokenAdapter.class)
@@ -1540,11 +1543,22 @@ public class MetaschemaBindings implements IBoundObject {
             _useWildcard = value;
           }
 
+          /**
+           * Get the field value.
+           *
+           * @return the value
+           */
           @Nullable
           public String getValue() {
             return _value;
           }
 
+          /**
+           * Set the field value.
+           *
+           * @param value
+           *          the value to set
+           */
           public void setValue(@Nullable String value) {
             _value = value;
           }

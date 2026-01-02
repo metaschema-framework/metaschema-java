@@ -15,6 +15,10 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Default implementation of {@link IMutableDefinitionBindingConfiguration} that
+ * provides mutable binding configuration for a specific Metaschema definition.
+ */
 public class DefaultDefinitionBindingConfiguration implements IMutableDefinitionBindingConfiguration {
   @Nullable
   private String className;
