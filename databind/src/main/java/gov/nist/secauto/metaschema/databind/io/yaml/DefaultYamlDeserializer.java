@@ -14,6 +14,12 @@ import gov.nist.secauto.metaschema.databind.model.IBoundDefinitionModelAssembly;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Deserializes YAML content into bound Java objects.
+ *
+ * @param <CLASS>
+ *          the Java type of the bound object to deserialize
+ */
 public class DefaultYamlDeserializer<CLASS extends IBoundObject>
     extends DefaultJsonDeserializer<CLASS> {
 

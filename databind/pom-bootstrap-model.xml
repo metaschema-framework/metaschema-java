@@ -3,7 +3,7 @@
   This POM is used to regenerate the Metaschema model binding classes.
   It is NOT part of the normal build due to circular dependencies.
 
-  Usage: mvn -f databind/pom-bootstrap-model.xml generate-sources
+  Usage: mvn -f databind/pom-bootstrap-model.xml process-sources
 
   This will:
   1. Delete existing generated classes in the model/metaschema/binding package
@@ -98,7 +98,7 @@
 				<executions>
 					<execution>
 						<id>add-license-headers</id>
-						<phase>generate-sources</phase>
+						<phase>process-sources</phase>
 						<goals>
 							<goal>format</goal>
 						</goals>
@@ -121,7 +121,7 @@
 				<executions>
 					<execution>
 						<id>format-generated-sources</id>
-						<phase>generate-sources</phase>
+						<phase>process-sources</phase>
 						<goals>
 							<goal>format</goal>
 						</goals>

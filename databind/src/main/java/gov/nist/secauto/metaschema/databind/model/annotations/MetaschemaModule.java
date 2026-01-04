@@ -16,6 +16,9 @@ import java.lang.annotation.Target;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Marks a class as a Metaschema module definition.
+ */
 @Retention(RUNTIME)
 @Target(ElementType.TYPE)
 public @interface MetaschemaModule {

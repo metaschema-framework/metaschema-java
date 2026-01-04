@@ -41,9 +41,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 
 /**
- * This command implementation supports validation a Metaschema module.
+ * This command implementation supports validation of a Metaschema module.
  */
-class ValidateModuleCommand
+public class ValidateModuleCommand
     extends AbstractValidateContentCommand {
   @NonNull
   private static final String COMMAND = "validate";

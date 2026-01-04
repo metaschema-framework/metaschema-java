@@ -519,7 +519,9 @@ public interface IBindingContext {
    *          the validation configuration
    * @return the validation result
    * @throws ConstraintValidationException
+   *           if a constraint violation prevents validation from completing
    * @throws IllegalArgumentException
+   *           if the node item is not valid for validation
    */
   default IValidationResult validate(
       @NonNull IDocumentNodeItem nodeItem,
@@ -541,7 +543,9 @@ public interface IBindingContext {
    *          the validation configuration
    * @return the validation result
    * @throws ConstraintValidationException
+   *           if a constraint violation prevents validation from completing
    * @throws IllegalArgumentException
+   *           if the node item is not valid for validation
    */
   default IValidationResult validate(
       @NonNull IDefinitionNodeItem<?, ?> nodeItem,
@@ -577,6 +581,7 @@ public interface IBindingContext {
    * @throws IOException
    *           if an error occurred while reading the target
    * @throws ConstraintValidationException
+   *           if a constraint violation prevents validation from completing
    */
   default IValidationResult validate(
       @NonNull URI target,
@@ -605,6 +610,7 @@ public interface IBindingContext {
    * @throws IOException
    *           if an error occurred while parsing the target
    * @throws ConstraintValidationException
+   *           if a constraint violation prevents validation from completing
    */
   default IValidationResult validateWithConstraints(
       @NonNull URI target,

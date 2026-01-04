@@ -40,7 +40,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * This command implementation supports the conversion of a content instance
  * between supported formats based on a provided Metaschema module.
  */
-class ConvertContentUsingModuleCommand
+public class ConvertContentUsingModuleCommand
     extends AbstractConvertSubcommand {
   @NonNull
   private static final String COMMAND = "convert";

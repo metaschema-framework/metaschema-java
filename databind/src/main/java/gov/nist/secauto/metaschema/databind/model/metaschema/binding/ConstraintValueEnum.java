@@ -22,6 +22,9 @@ import gov.nist.secauto.metaschema.databind.model.metaschema.impl.AbstractAllowe
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Allowed Value Enumeration.
+ */
 @MetaschemaField(
     formalName = "Allowed Value Enumeration",
     name = "constraint-value-enum",
@@ -44,6 +47,9 @@ public class ConstraintValueEnum
       typeAdapter = StringAdapter.class)
   private String _deprecated;
 
+  /**
+   * The field value.
+   */
   @BoundFieldValue(
       valueKeyName = "remark",
       typeAdapter = MarkupLineAdapter.class)
@@ -117,12 +123,23 @@ public class ConstraintValueEnum
     _deprecated = value;
   }
 
+  /**
+   * Get the field value.
+   *
+   * @return the value
+   */
   @Nullable
   @Override
   public MarkupLine getRemark() {
     return _remark;
   }
 
+  /**
+   * Set the field value.
+   *
+   * @param value
+   *          the value to set
+   */
   public void setRemark(@Nullable MarkupLine value) {
     _remark = value;
   }

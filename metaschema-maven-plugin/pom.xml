@@ -109,6 +109,31 @@
         </resources>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <!-- Add reads to allow accessing Maven API packages from the unnamed module.
+                             This works around Maven's split package issues (maven-core and maven-artifact
+                             both export overlapping packages) that prevent full JPMS compatibility. -->
+                        <compilerArgs>
+                            <arg>--add-reads</arg>
+                            <arg>gov.nist.secauto.metaschema.maven.plugin=ALL-UNNAMED</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <configuration>
+                        <!-- Add reads to allow accessing Maven API packages from the unnamed module.
+                             This mirrors the compiler configuration for JPMS compatibility. -->
+                        <additionalJOptions>
+                            <additionalJOption>--add-reads</additionalJOption>
+                            <additionalJOption>gov.nist.secauto.metaschema.maven.plugin=ALL-UNNAMED</additionalJOption>
+                        </additionalJOptions>
+                    </configuration>
+                </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>

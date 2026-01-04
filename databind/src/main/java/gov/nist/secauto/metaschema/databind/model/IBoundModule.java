@@ -17,6 +17,10 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Represents a bound Metaschema module that provides access to its field and
+ * assembly definitions through Java class bindings.
+ */
 public interface IBoundModule
     extends IModuleExtended<
         IBoundModule,

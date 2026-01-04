@@ -443,6 +443,9 @@ public class MetaschemaModuleConstraints implements IBoundObject {
     }
   }
 
+  /**
+   * A binding class for the {@code scope} definition.
+   */
   @MetaschemaAssembly(
       name = "scope",
       moduleClass = MetaschemaModelModule.class)
@@ -636,6 +639,9 @@ public class MetaschemaModuleConstraints implements IBoundObject {
       return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
 
+    /**
+     * A binding class for the {@code assembly} definition.
+     */
     @MetaschemaAssembly(
         name = "assembly",
         moduleClass = MetaschemaModelModule.class)
@@ -755,6 +761,9 @@ public class MetaschemaModuleConstraints implements IBoundObject {
       }
     }
 
+    /**
+     * A binding class for the {@code field} definition.
+     */
     @MetaschemaAssembly(
         name = "field",
         moduleClass = MetaschemaModelModule.class)
@@ -868,6 +877,9 @@ public class MetaschemaModuleConstraints implements IBoundObject {
       }
     }
 
+    /**
+     * A binding class for the {@code flag} definition.
+     */
     @MetaschemaAssembly(
         name = "flag",
         moduleClass = MetaschemaModelModule.class)

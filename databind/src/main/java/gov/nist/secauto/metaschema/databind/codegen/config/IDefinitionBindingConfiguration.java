@@ -11,6 +11,13 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Provides binding configuration for a specific Metaschema definition.
+ * <p>
+ * This interface defines how an individual field or assembly definition is
+ * mapped to a generated Java class, including the class name, base class, and
+ * interfaces to implement.
+ */
 public interface IDefinitionBindingConfiguration {
   /**
    * Get the class name to use for the generated class associated with this

@@ -22,6 +22,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * A binding class for the {@code metapath-context} definition.
+ */
 @MetaschemaAssembly(
     name = "metapath-context",
     moduleClass = MetaschemaModelModule.class)

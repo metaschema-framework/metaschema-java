@@ -20,6 +20,9 @@ import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Constraint Let Expression.
+ */
 @MetaschemaAssembly(
     formalName = "Constraint Let Expression",
     name = "constraint-let-expression",

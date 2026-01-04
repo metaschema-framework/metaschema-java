@@ -14,6 +14,9 @@ import java.lang.annotation.Target;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Defines value-level constraints for field and flag definitions.
+ */
 @Documented
 @Retention(RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)

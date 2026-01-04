@@ -122,6 +122,18 @@ public interface IXmlGenerationState {
       @NonNull String namespaceUri) throws XMLStreamException;
 
   /**
+   * Writes a start element with the given namespace and local name.
+   *
+   * @param namespaceUri
+   *          the namespace URI for the element
+   * @param localName
+   *          the local name of the element
+   * @throws XMLStreamException
+   *           if an error occurs while writing
+   */
+  void writeStartElement(@NonNull String namespaceUri, @NonNull String localName) throws XMLStreamException;
+
+  /**
    * Writes an end element for the current element.
    *
    * @throws XMLStreamException
@@ -160,16 +172,4 @@ public interface IXmlGenerationState {
    *           if an error occurs while writing
    */
   void writeNamespace(@NonNull String prefix, @NonNull String namespaceUri) throws XMLStreamException;
-
-  /**
-   * Writes a start element with the given namespace and local name.
-   *
-   * @param namespaceUri
-   *          the namespace URI for the element
-   * @param localName
-   *          the local name of the element
-   * @throws XMLStreamException
-   *           if an error occurs while writing
-   */
-  void writeStartElement(@NonNull String namespaceUri, @NonNull String localName) throws XMLStreamException;
 }

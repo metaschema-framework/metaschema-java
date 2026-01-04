@@ -22,6 +22,9 @@ import gov.nist.secauto.metaschema.databind.model.annotations.ValueConstraints;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Group As.
+ */
 @MetaschemaAssembly(
     formalName = "Group As",
     name = "group-as",

@@ -19,6 +19,9 @@ import gov.nist.secauto.metaschema.databind.model.annotations.MetaschemaAssembly
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Key Constraint.
+ */
 @MetaschemaAssembly(
     formalName = "Key Constraint",
     name = "key-constraint-field",

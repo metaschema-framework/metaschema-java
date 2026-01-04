@@ -33,6 +33,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Targeted Unique Constraint.
+ */
 @MetaschemaAssembly(
     formalName = "Targeted Unique Constraint",
     name = "targeted-is-unique-constraint",

@@ -18,6 +18,9 @@ import javax.xml.stream.XMLStreamConstants;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides the context for parsing XML content into bound objects.
+ */
 public interface IXmlParsingContext extends IParsingContext<XMLEventReader2, IXmlProblemHandler> {
 
   /**

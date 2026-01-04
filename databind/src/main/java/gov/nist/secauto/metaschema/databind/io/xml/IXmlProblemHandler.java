@@ -22,6 +22,10 @@ import javax.xml.stream.events.StartElement;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * Handles problems encountered during XML parsing, such as unknown attributes
+ * or elements.
+ */
 @FunctionalInterface
 public interface IXmlProblemHandler extends IProblemHandler {
   /**

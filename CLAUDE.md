@@ -128,9 +128,9 @@ mvn install -DskipTests
 
 # Generate binding classes using bootstrap POM (choose the appropriate module)
 # Each bootstrap POM generates classes directly into src/main/java
-mvn -f metaschema-testing/pom-bootstrap.xml generate-sources
-mvn -f databind/pom-bootstrap-config.xml generate-sources
-mvn -f databind/pom-bootstrap-model.xml generate-sources
+mvn -f metaschema-testing/pom-bootstrap.xml process-sources
+mvn -f databind/pom-bootstrap-config.xml process-sources
+mvn -f databind/pom-bootstrap-model.xml process-sources
 ```
 
 See the README.md files in each module for detailed instructions.

@@ -22,6 +22,9 @@ import java.net.URI;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Example.
+ */
 @MetaschemaAssembly(
     formalName = "Example",
     name = "example",

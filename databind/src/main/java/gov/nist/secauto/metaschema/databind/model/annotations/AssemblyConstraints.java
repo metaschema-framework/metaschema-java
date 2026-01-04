@@ -14,6 +14,9 @@ import java.lang.annotation.Target;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Defines constraints that apply to assembly definitions.
+ */
 @Documented
 @Retention(RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)

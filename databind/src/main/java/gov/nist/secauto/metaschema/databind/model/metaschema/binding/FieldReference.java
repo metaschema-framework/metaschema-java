@@ -35,6 +35,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Field Reference.
+ */
 @MetaschemaAssembly(
     formalName = "Field Reference",
     name = "field-reference",

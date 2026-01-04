@@ -33,6 +33,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Value Matches Constraint.
+ */
 @MetaschemaAssembly(
     formalName = "Value Matches Constraint",
     name = "targeted-matches-constraint",

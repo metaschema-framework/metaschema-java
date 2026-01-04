@@ -52,6 +52,9 @@ public class Remarks implements IBoundObject {
               @AllowedValue(value = "ALL", description = "The remark applies to all representations.") })))
   private String _clazz;
 
+  /**
+   * The field value.
+   */
   @BoundFieldValue(
       valueKeyName = "remark",
       typeAdapter = MarkupMultilineAdapter.class)
@@ -111,11 +114,22 @@ public class Remarks implements IBoundObject {
     _clazz = value;
   }
 
+  /**
+   * Get the field value.
+   *
+   * @return the value
+   */
   @Nullable
   public MarkupMultiline getRemark() {
     return _remark;
   }
 
+  /**
+   * Set the field value.
+   *
+   * @param value
+   *          the value to set
+   */
   public void setRemark(@Nullable MarkupMultiline value) {
     _remark = value;
   }

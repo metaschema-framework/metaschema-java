@@ -39,7 +39,14 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 public final class ModelUtil {
   // TODO: replace NO_STRING_VALUE with NULL_VALUE where possible. URIs will not
   // allow NULL_VALUE.
+  /**
+   * A sentinel value indicating that no string value was provided in an
+   * annotation.
+   */
   public static final String NO_STRING_VALUE = "##none";
+  /**
+   * A sentinel value indicating that the default string value should be used.
+   */
   public static final String DEFAULT_STRING_VALUE = "##default";
   /**
    * A placeholder for a {@code null} value for use in annotations, which cannot

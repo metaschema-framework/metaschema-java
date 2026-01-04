@@ -14,6 +14,10 @@ import gov.nist.secauto.metaschema.databind.model.info.IItemWriteHandler;
 
 import java.io.IOException;
 
+/**
+ * Represents a bound field instance that contains complex (non-scalar) data,
+ * such as an object with flags and a value.
+ */
 public interface IBoundInstanceModelFieldComplex
     extends IBoundInstanceModelField<IBoundObject>, IFeatureComplexItemValueHandler {
 

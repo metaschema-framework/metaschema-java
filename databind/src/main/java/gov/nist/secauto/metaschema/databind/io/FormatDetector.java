@@ -119,6 +119,10 @@ public class FormatDetector {
     }
   }
 
+  /**
+   * Represents the result of format detection, providing access to the detected
+   * format and the data stream for further processing.
+   */
   public static final class Result {
     @NonNull
     private final DataFormatMatcher matcher;

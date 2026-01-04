@@ -38,6 +38,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * A binding class for the {@code assembly-model} definition.
+ */
 @MetaschemaAssembly(
     name = "assembly-model",
     moduleClass = MetaschemaModelModule.class)
@@ -140,6 +143,9 @@ public class AssemblyModel implements IBoundObject {
     return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
   }
 
+  /**
+   * Choice.
+   */
   @MetaschemaAssembly(
       formalName = "Choice",
       name = "choice",
@@ -243,6 +249,9 @@ public class AssemblyModel implements IBoundObject {
     }
   }
 
+  /**
+   * Choice Grouping.
+   */
   @MetaschemaAssembly(
       formalName = "Choice Grouping",
       name = "choice-group",
@@ -508,6 +517,9 @@ public class AssemblyModel implements IBoundObject {
       return ObjectUtils.notNull(new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString());
     }
 
+    /**
+     * Grouping Assembly Reference.
+     */
     @MetaschemaAssembly(
         formalName = "Grouping Assembly Reference",
         name = "assembly",
@@ -858,6 +870,9 @@ public class AssemblyModel implements IBoundObject {
       }
     }
 
+    /**
+     * Inline Assembly Definition.
+     */
     @MetaschemaAssembly(
         formalName = "Inline Assembly Definition",
         name = "define-assembly",
@@ -1313,6 +1328,9 @@ public class AssemblyModel implements IBoundObject {
       }
     }
 
+    /**
+     * Grouping Field Reference.
+     */
     @MetaschemaAssembly(
         formalName = "Grouping Field Reference",
         name = "field",
@@ -1723,6 +1741,9 @@ public class AssemblyModel implements IBoundObject {
       }
     }
 
+    /**
+     * Inline Field Definition.
+     */
     @MetaschemaAssembly(
         formalName = "Inline Field Definition",
         name = "define-field",

@@ -44,7 +44,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * This command implementation supports generation of schemas in a variety of
  * formats based on a provided Metaschema module.
  */
-class GenerateSchemaCommand
+public class GenerateSchemaCommand
     extends AbstractTerminalCommand {
   private static final Logger LOGGER = LogManager.getLogger(GenerateSchemaCommand.class);
 

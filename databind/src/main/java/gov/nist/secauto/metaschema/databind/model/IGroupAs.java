@@ -16,6 +16,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * A data object to record the group as selections.
  */
 public interface IGroupAs {
+  /**
+   * A singleton instance representing a group-as for non-grouped (singleton)
+   * items.
+   */
   @NonNull
   IGroupAs SINGLETON_GROUP_AS = new IGroupAs() {
     @Override

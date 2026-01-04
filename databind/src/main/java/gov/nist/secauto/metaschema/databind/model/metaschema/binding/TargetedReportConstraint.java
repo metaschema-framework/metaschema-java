@@ -33,6 +33,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Report Condition Constraint.
+ */
 @MetaschemaAssembly(
     formalName = "Report Condition Constraint",
     name = "targeted-report-constraint",

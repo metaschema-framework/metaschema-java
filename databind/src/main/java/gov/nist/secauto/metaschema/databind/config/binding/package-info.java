@@ -10,7 +10,6 @@
  * <p>
  * version 1.0.0
  * <p>
- * <p>
  * This module defines the binding configuration format used to customize Java
  * code generation from Metaschema modules. It allows specifying package names,
  * class names, interface implementations, base classes, and collection types

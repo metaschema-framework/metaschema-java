@@ -397,6 +397,9 @@ public class MetaschemaMetaConstraints implements IBoundObject {
     }
   }
 
+  /**
+   * A binding class for the {@code definition-context} definition.
+   */
   @MetaschemaAssembly(
       name = "definition-context",
       moduleClass = MetaschemaModelModule.class)

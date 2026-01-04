@@ -33,6 +33,9 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Inline Flag Definition.
+ */
 @MetaschemaAssembly(
     formalName = "Inline Flag Definition",
     name = "inline-define-flag",

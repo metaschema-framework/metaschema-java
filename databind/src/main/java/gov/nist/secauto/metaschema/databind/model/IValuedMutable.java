@@ -12,6 +12,10 @@ import java.lang.reflect.Type;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Extends {@link IValued} to provide the ability to set a value on a parent
+ * object.
+ */
 @FunctionalInterface
 public interface IValuedMutable extends IValued {
   /**
