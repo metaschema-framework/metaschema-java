@@ -23,7 +23,7 @@ This rule defines repository-specific conventions for authoring Metaschema modul
 For YAML Metaschema modules, configure IDE validation using the generated JSON schema:
 
 ```text
-databind-metaschema/target/generated-resources/schema/json/metaschema-model_schema.json
+databind-modules/target/generated-resources/schema/json/metaschema-model_schema.json
 ```
 
 Build with `mvn install` first to generate the schema.

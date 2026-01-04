@@ -72,7 +72,7 @@ metaschema-framework (parent)
 ├── core (metaschema-core) - Core API, Metapath expression language
 ├── databind (metaschema-databind) - Data binding and code generation
 ├── schemagen (metaschema-schema-generator) - XML/JSON schema generation
-├── databind-metaschema - Metaschema binding modules
+├── databind-modules - Metaschema binding modules
 ├── metaschema-maven-plugin - Maven plugin for code/schema generation
 ├── metaschema-testing - Testing utilities
 ├── cli-processor - CLI framework
@@ -139,7 +139,7 @@ See the README.md files in each module for detailed instructions.
 
 **YAML-first approach**: When creating new Metaschema modules, prefer YAML format over XML.
 - YAML modules use `.yaml` extension and are stored in `src/main/metaschema/`
-- Use the JSON schema at `databind-metaschema/target/generated-resources/schema/json/metaschema-model_schema.json` for IDE validation
+- Use the JSON schema at `databind-modules/target/generated-resources/schema/json/metaschema-model_schema.json` for IDE validation
 - Reference existing YAML modules (e.g., `databind/src/main/metaschema/metaschema-bindings.yaml`) for structure examples
 
 ### Key Interfaces

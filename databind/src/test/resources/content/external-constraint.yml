@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../../../../databind-metaschema/target/generated-resources/schema/json/metaschema-model_schema.json
+# yaml-language-server: $schema=../../../../../databind-modules/target/generated-resources/schema/json/metaschema-model_schema.json
 metaschema-meta-constraints:
   contexts:
   - metapaths:

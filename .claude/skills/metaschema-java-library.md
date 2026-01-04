@@ -19,7 +19,7 @@ metaschema-framework (parent)
 ├── core                    - Core API, Metapath engine, model interfaces
 ├── databind                - Data binding, serialization, code generation
 ├── schemagen               - XML/JSON schema generation
-├── databind-metaschema     - Metaschema binding modules
+├── databind-modules        - Metaschema binding modules
 ├── metaschema-maven-plugin - Maven plugin for code/schema generation
 ├── metaschema-testing      - Testing utilities
 ├── cli-processor           - CLI framework
