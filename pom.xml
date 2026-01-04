@@ -710,6 +710,26 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>aggregate-javadoc</id>
+						<phase>package</phase>
+						<inherited>false</inherited>
+						<goals>
+							<goal>aggregate</goal>
+						</goals>
+						<configuration>
+							<doctitle>${project.name} ${project.version} API</doctitle>
+							<windowtitle>${project.name} ${project.version} API</windowtitle>
+							<!-- Exclude maven-plugin from aggregate due to Maven API split packages -->
+							<skippedModules>metaschema-maven-plugin</skippedModules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<reporting>
