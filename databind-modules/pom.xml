@@ -22,7 +22,7 @@
 	</distributionManagement>
 
 	<scm>
-		<url>${scm.url}/tree/develop/databind-metaschema</url>
+		<url>${scm.url}/tree/develop/databind-modules</url>
 		<tag>HEAD</tag>
 	</scm>
 

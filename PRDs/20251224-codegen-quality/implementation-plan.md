@@ -116,7 +116,7 @@ This PR extends the binding configuration to support overriding default collecti
 | `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/config/DefaultBindingConfiguration.java` | Parse `<collection-class>` element |
 | `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/IPropertyTypeInfo.java` | Update `getCollectionImplementationClass()` to accept override |
 | `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/AbstractModelInstanceTypeInfo.java` | Apply collection class override from binding config |
-| `databind-metaschema/src/main/metaschema/metaschema-bindings.yaml` | Add `collection-class` field definition to binding schema |
+| `databind-modules/src/main/metaschema-bindings/metaschema-bindings.yaml` | Add `collection-class` field definition to binding schema |
 
 ### Implementation Approach
 

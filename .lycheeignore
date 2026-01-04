@@ -69,3 +69,5 @@ https://projects.eclipse.org/projects/eclipse.jdt
 http://www.gnu.org/software/classpath/license.html
 # fix later
 https://github.com/metaschema-framework/liboscal-java/
+# transient 404 during module rename PR - remove after merge
+https://github.com/metaschema-framework/metaschema-java/tree/develop/databind-modules/.*

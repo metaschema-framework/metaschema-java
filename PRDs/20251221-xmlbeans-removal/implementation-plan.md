@@ -14,7 +14,7 @@ This document details each PR for removing XMLBeans and replacing it with Metasc
 
 **Metaschema Module JSON Schema** (for YAML module authoring):
 ```text
-databind-metaschema/target/generated-resources/schema/json/metaschema-model_schema.json
+databind-modules/target/generated-resources/schema/json/metaschema-model_schema.json
 ```
 
 Use this schema for IDE validation when authoring the YAML Metaschema modules.
