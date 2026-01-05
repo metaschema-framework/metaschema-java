@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
+import dev.metaschema.cli.processor.command.ICommand;
 
 /**
  * Provides a command-line interface for Metaschema operations including schema
@@ -11,15 +11,15 @@ import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
  *
  * @provides ICommand for CLI command discovery
  */
-module gov.nist.secauto.metaschema.cli {
+module dev.metaschema.cli {
   // requirements
   requires java.base;
 
-  requires transitive gov.nist.secauto.metaschema.core;
-  requires transitive gov.nist.secauto.metaschema.databind;
-  requires transitive gov.nist.secauto.metaschema.schemagen;
-  requires transitive gov.nist.secauto.metaschema.cli.processor;
-  requires gov.nist.secauto.metaschema.databind.modules;
+  requires transitive dev.metaschema.core;
+  requires transitive dev.metaschema.databind;
+  requires transitive dev.metaschema.schemagen;
+  requires transitive dev.metaschema.cli.processor;
+  requires dev.metaschema.databind.modules;
 
   requires static org.eclipse.jdt.annotation;
   requires static com.github.spotbugs.annotations;
@@ -29,16 +29,16 @@ module gov.nist.secauto.metaschema.cli {
   requires org.apache.logging.log4j;
   requires org.apache.logging.log4j.core;
 
-  exports gov.nist.secauto.metaschema.cli;
-  exports gov.nist.secauto.metaschema.cli.commands;
-  exports gov.nist.secauto.metaschema.cli.commands.metapath;
-  exports gov.nist.secauto.metaschema.cli.util;
+  exports dev.metaschema.cli;
+  exports dev.metaschema.cli.commands;
+  exports dev.metaschema.cli.commands.metapath;
+  exports dev.metaschema.cli.util;
 
   provides ICommand with
-      gov.nist.secauto.metaschema.cli.commands.ValidateModuleCommand,
-      gov.nist.secauto.metaschema.cli.commands.GenerateSchemaCommand,
-      gov.nist.secauto.metaschema.cli.commands.GenerateDiagramCommand,
-      gov.nist.secauto.metaschema.cli.commands.ValidateContentUsingModuleCommand,
-      gov.nist.secauto.metaschema.cli.commands.ConvertContentUsingModuleCommand,
-      gov.nist.secauto.metaschema.cli.commands.metapath.MetapathCommand;
+      dev.metaschema.cli.commands.ValidateModuleCommand,
+      dev.metaschema.cli.commands.GenerateSchemaCommand,
+      dev.metaschema.cli.commands.GenerateDiagramCommand,
+      dev.metaschema.cli.commands.ValidateContentUsingModuleCommand,
+      dev.metaschema.cli.commands.ConvertContentUsingModuleCommand,
+      dev.metaschema.cli.commands.metapath.MetapathCommand;
 }

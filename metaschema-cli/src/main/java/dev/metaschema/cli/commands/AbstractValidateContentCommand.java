@@ -1,0 +1,426 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.cli.commands;
+
+import dev.metaschema.cli.processor.CLIProcessor;
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.ExitCode;
+import dev.metaschema.cli.processor.command.AbstractCommandExecutor;
+import dev.metaschema.cli.processor.command.AbstractTerminalCommand;
+import dev.metaschema.cli.processor.command.CommandExecutionException;
+import dev.metaschema.cli.processor.command.ExtraArgument;
+import dev.metaschema.cli.util.LoggingValidationHandler;
+import dev.metaschema.core.configuration.DefaultConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.metapath.MetapathException;
+import dev.metaschema.core.metapath.format.IPathFormatter;
+import dev.metaschema.core.metapath.format.PathFormatSelection;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.model.constraint.ConstraintValidationException;
+import dev.metaschema.core.model.constraint.IConstraintSet;
+import dev.metaschema.core.model.constraint.ValidationFeature;
+import dev.metaschema.core.model.validation.AggregateValidationResult;
+import dev.metaschema.core.model.validation.IValidationResult;
+import dev.metaschema.core.util.IVersionInfo;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.IBindingContext.ISchemaValidationProvider;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.IBoundLoader;
+import dev.metaschema.modules.sarif.SarifValidationHandler;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.UnknownHostException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+/**
+ * Used by implementing classes to provide a content validation command.
+ */
+public abstract class AbstractValidateContentCommand
+    extends AbstractTerminalCommand {
+  private static final Logger LOGGER = LogManager.getLogger(AbstractValidateContentCommand.class);
+  @NonNull
+  private static final String COMMAND = "validate";
+  @NonNull
+  private static final List<ExtraArgument> EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
+      ExtraArgument.newInstance("file-or-URI-to-validate", true, URI.class)));
+
+  @NonNull
+  private static final Option CONSTRAINTS_OPTION = ObjectUtils.notNull(
+      Option.builder("c")
+          .hasArgs()
+          .argName("URL")
+          .type(URI.class)
+          .desc("additional constraint definitions")
+          .get());
+  @NonNull
+  private static final Option SARIF_OUTPUT_FILE_OPTION = ObjectUtils.notNull(
+      Option.builder("o")
+          .hasArg()
+          .argName("FILE")
+          .type(File.class)
+          .desc("write SARIF results to the provided FILE")
+          .numberOfArgs(1)
+          .get());
+  @NonNull
+  private static final Option SARIF_INCLUDE_PASS_OPTION = ObjectUtils.notNull(
+      Option.builder()
+          .longOpt("sarif-include-pass")
+          .desc("include pass results in SARIF")
+          .get());
+  @NonNull
+  private static final Option NO_SCHEMA_VALIDATION_OPTION = ObjectUtils.notNull(
+      Option.builder()
+          .longOpt("disable-schema-validation")
+          .desc("do not perform schema validation")
+          .get());
+  @NonNull
+  private static final Option NO_CONSTRAINT_VALIDATION_OPTION = ObjectUtils.notNull(
+      Option.builder()
+          .longOpt("disable-constraint-validation")
+          .desc("do not perform constraint validation")
+          .get());
+  @NonNull
+  private static final Option PATH_FORMAT_OPTION = ObjectUtils.notNull(
+      Option.builder()
+          .longOpt("path-format")
+          .hasArg()
+          .argName("FORMAT")
+          .type(PathFormatSelection.class)
+          .desc("path format in validation output: auto (default, selects based on document format), "
+              + "metapath, xpath, jsonpointer")
+          .get());
+  @NonNull
+  private static final Option PARALLEL_THREADS_OPTION = ObjectUtils.notNull(
+      Option.builder()
+          .longOpt("threads")
+          .hasArg()
+          .argName("count")
+          .type(Number.class)
+          .desc("number of threads for parallel constraint validation (default: 1, experimental)")
+          .get());
+
+  @Override
+  public String getName() {
+    return COMMAND;
+  }
+
+  @SuppressWarnings("null")
+  @Override
+  public Collection<? extends Option> gatherOptions() {
+    return List.of(
+        MetaschemaCommands.AS_FORMAT_OPTION,
+        CONSTRAINTS_OPTION,
+        SARIF_OUTPUT_FILE_OPTION,
+        SARIF_INCLUDE_PASS_OPTION,
+        NO_SCHEMA_VALIDATION_OPTION,
+        NO_CONSTRAINT_VALIDATION_OPTION,
+        PATH_FORMAT_OPTION,
+        PARALLEL_THREADS_OPTION);
+  }
+
+  @Override
+  public List<ExtraArgument> getExtraArguments() {
+    return EXTRA_ARGUMENTS;
+  }
+
+  /**
+   * Drives the validation execution.
+   */
+  protected abstract class AbstractValidationCommandExecutor
+      extends AbstractCommandExecutor {
+
+    /**
+     * Construct a new command executor.
+     *
+     * @param callingContext
+     *          the context of the command execution
+     * @param commandLine
+     *          the parsed command line details
+     */
+    public AbstractValidationCommandExecutor(
+        @NonNull CallingContext callingContext,
+        @NonNull CommandLine commandLine) {
+      super(callingContext, commandLine);
+    }
+
+    /**
+     * Get the binding context to use for data processing.
+     *
+     * @param constraintSets
+     *          the constraints to configure in the resulting binding context
+     * @return the context
+     * @throws CommandExecutionException
+     *           if a error occurred while getting the binding context
+     */
+    @NonNull
+    protected abstract IBindingContext getBindingContext(@NonNull Set<IConstraintSet> constraintSets)
+        throws CommandExecutionException;
+
+    /**
+     * Get the module to use for validation.
+     * <p>
+     * This module is used to generate schemas and as a source of built-in
+     * constraints.
+     *
+     * @param commandLine
+     *          the provided command line argument information
+     * @param bindingContext
+     *          the context used to access Metaschema module information based on
+     *          Java class bindings
+     * @return the loaded Metaschema module
+     * @throws CommandExecutionException
+     *           if an error occurred while loading the module
+     */
+    @NonNull
+    protected abstract IModule getModule(
+        @NonNull CommandLine commandLine,
+        @NonNull IBindingContext bindingContext)
+        throws CommandExecutionException;
+
+    /**
+     * Get the schema validation implementation requested based on the provided
+     * command line arguments.
+     * <p>
+     * It is typical for this call to result in the dynamic generation of a schema
+     * to use for validation.
+     *
+     * @param module
+     *          the Metaschema module to generate the schema from
+     * @param commandLine
+     *          the provided command line argument information
+     * @param bindingContext
+     *          the context used to access Metaschema module information based on
+     *          Java class bindings
+     * @return the provider
+     */
+    @NonNull
+    protected abstract ISchemaValidationProvider getSchemaValidationProvider(
+        @NonNull IModule module,
+        @NonNull CommandLine commandLine,
+        @NonNull IBindingContext bindingContext);
+
+    /**
+     * Execute the validation operation.
+     */
+    @SuppressWarnings("PMD.OnlyOneReturn") // readability
+    @Override
+    public void execute() throws CommandExecutionException {
+      CommandLine cmdLine = getCommandLine();
+      @SuppressWarnings("synthetic-access")
+      URI currentWorkingDirectory = ObjectUtils.notNull(getCurrentWorkingDirectory().toUri());
+
+      Set<IConstraintSet> constraintSets = MetaschemaCommands.loadConstraintSets(
+          cmdLine,
+          CONSTRAINTS_OPTION,
+          currentWorkingDirectory);
+
+      List<String> extraArgs = cmdLine.getArgList();
+
+      URI source = MetaschemaCommands.handleSource(
+          ObjectUtils.requireNonNull(extraArgs.get(0)),
+          currentWorkingDirectory);
+
+      IBindingContext bindingContext = getBindingContext(constraintSets);
+      IBoundLoader loader = bindingContext.newBoundLoader();
+      Format asFormat = MetaschemaCommands.determineSourceFormat(
+          cmdLine,
+          MetaschemaCommands.AS_FORMAT_OPTION,
+          loader,
+          source);
+
+      IValidationResult validationResult = validate(source, asFormat, cmdLine, bindingContext);
+      handleOutput(source, validationResult, asFormat, cmdLine, bindingContext);
+
+      if (validationResult == null || validationResult.isPassing()) {
+        if (LOGGER.isInfoEnabled()) {
+          LOGGER.info("The file '{}' is valid.", source);
+        }
+      } else if (LOGGER.isErrorEnabled()) {
+        LOGGER.error("The file '{}' is invalid.", source);
+      }
+
+      if (validationResult != null && !validationResult.isPassing()) {
+        throw new CommandExecutionException(ExitCode.FAIL);
+      }
+    }
+
+    @SuppressWarnings("PMD.CyclomaticComplexity")
+    @Nullable
+    private IValidationResult validate(
+        @NonNull URI source,
+        @NonNull Format asFormat,
+        @NonNull CommandLine commandLine,
+        @NonNull IBindingContext bindingContext) throws CommandExecutionException {
+
+      if (LOGGER.isInfoEnabled()) {
+        LOGGER.info("Validating '{}' as {}.", source, asFormat.name());
+      }
+
+      IValidationResult validationResult = null;
+      try {
+        // get the module, but don't register it
+        IModule module = getModule(commandLine, bindingContext);
+        if (!commandLine.hasOption(NO_SCHEMA_VALIDATION_OPTION)) {
+          // perform schema validation
+          validationResult = getSchemaValidationProvider(module, commandLine, bindingContext)
+              .validateWithSchema(source, asFormat, bindingContext);
+        }
+
+        if (!commandLine.hasOption(NO_CONSTRAINT_VALIDATION_OPTION)) {
+          IMutableConfiguration<ValidationFeature<?>> configuration = new DefaultConfiguration<>();
+          if (commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION) && commandLine.hasOption(SARIF_INCLUDE_PASS_OPTION)) {
+            configuration.enableFeature(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS);
+          }
+
+          // Configure parallel validation if requested
+          if (commandLine.hasOption(PARALLEL_THREADS_OPTION)) {
+            String threadValue = commandLine.getOptionValue(PARALLEL_THREADS_OPTION);
+            int threadCount;
+            try {
+              threadCount = Integer.parseInt(threadValue);
+            } catch (NumberFormatException ex) {
+              throw new CommandExecutionException(
+                  ExitCode.INVALID_ARGUMENTS,
+                  String.format("Invalid thread count '%s': must be a positive integer", threadValue),
+                  ex);
+            }
+            if (threadCount < 1) {
+              throw new CommandExecutionException(
+                  ExitCode.INVALID_ARGUMENTS,
+                  String.format("Thread count must be at least 1, got: %d", threadCount));
+            }
+            if (threadCount > 1) {
+              if (LOGGER.isWarnEnabled()) {
+                LOGGER.warn("Parallel constraint validation is an experimental feature. "
+                    + "Using {} threads.", threadCount);
+              }
+              configuration.set(ValidationFeature.PARALLEL_THREADS, threadCount);
+            }
+          }
+
+          // perform constraint validation
+          bindingContext.registerModule(module); // ensure the module is registered
+          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);
+          validationResult = validationResult == null
+              ? constraintValidationResult
+              : AggregateValidationResult.aggregate(validationResult, constraintValidationResult);
+        }
+      } catch (FileNotFoundException ex) {
+        throw new CommandExecutionException(
+            ExitCode.IO_ERROR,
+            String.format("Resource not found at '%s'", source),
+            ex);
+      } catch (UnknownHostException ex) {
+        throw new CommandExecutionException(
+            ExitCode.IO_ERROR,
+            String.format("Unknown host for '%s'.", source),
+            ex);
+      } catch (IOException ex) {
+        throw new CommandExecutionException(ExitCode.IO_ERROR, ex.getLocalizedMessage(), ex);
+      } catch (MetapathException | MetaschemaException | ConstraintValidationException ex) {
+        throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex.getLocalizedMessage(), ex);
+      }
+      return validationResult;
+    }
+
+    private void handleOutput(
+        @NonNull URI source,
+        @Nullable IValidationResult validationResult,
+        @NonNull Format asFormat,
+        @NonNull CommandLine commandLine,
+        @NonNull IBindingContext bindingContext) throws CommandExecutionException {
+      if (commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION)) {
+        Path sarifFile = ObjectUtils.notNull(Paths.get(commandLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));
+
+        IVersionInfo version
+            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);
+
+        try {
+          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);
+          if (validationResult != null) {
+            sarifHandler.addFindings(validationResult.getFindings());
+          }
+          sarifHandler.write(sarifFile, bindingContext);
+        } catch (IOException ex) {
+          throw new CommandExecutionException(ExitCode.IO_ERROR, ex.getLocalizedMessage(), ex);
+        }
+      } else if (validationResult != null && !validationResult.getFindings().isEmpty()) {
+        LOGGER.info("Validation identified the following issues:");
+        IPathFormatter pathFormatter = resolvePathFormatter(commandLine, asFormat);
+        LoggingValidationHandler.withPathFormatter(pathFormatter).handleResults(validationResult);
+      }
+
+    }
+
+    /**
+     * Resolve the path formatter based on command line option and document format.
+     *
+     * @param commandLine
+     *          the parsed command line
+     * @param asFormat
+     *          the document format
+     * @return the resolved path formatter
+     */
+    @NonNull
+    private IPathFormatter resolvePathFormatter(
+        @NonNull CommandLine commandLine,
+        @NonNull Format asFormat) {
+      PathFormatSelection selection = PathFormatSelection.AUTO;
+
+      if (commandLine.hasOption(PATH_FORMAT_OPTION)) {
+        String value = commandLine.getOptionValue(PATH_FORMAT_OPTION);
+        if (value != null) {
+          selection = parsePathFormatSelection(value);
+        }
+      }
+
+      return Format.resolvePathFormatter(selection, asFormat);
+    }
+
+    /**
+     * Parse the path format selection from a string value.
+     *
+     * @param value
+     *          the string value from the command line
+     * @return the parsed selection, defaults to AUTO if unrecognized
+     */
+    @NonNull
+    private PathFormatSelection parsePathFormatSelection(@NonNull String value) {
+      switch (value.toLowerCase(Locale.ROOT)) {
+      case "auto":
+        return PathFormatSelection.AUTO;
+      case "metapath":
+        return PathFormatSelection.METAPATH;
+      case "xpath":
+        return PathFormatSelection.XPATH;
+      case "jsonpointer":
+      case "json-pointer":
+        return PathFormatSelection.JSON_POINTER;
+      default:
+        LOGGER.warn("Unrecognized path format '{}', using auto", value);
+        return PathFormatSelection.AUTO;
+      }
+    }
+  }
+}

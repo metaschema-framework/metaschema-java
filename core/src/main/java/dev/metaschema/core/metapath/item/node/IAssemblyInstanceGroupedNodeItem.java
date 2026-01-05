@@ -1,0 +1,27 @@
+
+package dev.metaschema.core.metapath.item.node;
+
+import dev.metaschema.core.metapath.format.IPathFormatter;
+
+/**
+ * Represents a Metapath assembly node item for a grouped assembly instance.
+ */
+// REFACTOR: Check if this is used, delete?
+public interface IAssemblyInstanceGroupedNodeItem
+    extends IAssemblyNodeItem {
+
+  @Override
+  default String format(IPathFormatter formatter) {
+    return formatter.formatAssembly(this);
+  }
+
+  @Override
+  default IAssemblyInstanceGroupedNodeItem getNodeItem() {
+    return this;
+  }
+
+  @Override
+  default <CONTEXT, RESULT> RESULT accept(INodeItemVisitor<CONTEXT, RESULT> visitor, CONTEXT context) {
+    return visitor.visitAssembly(this, context);
+  }
+}

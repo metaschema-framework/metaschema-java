@@ -50,15 +50,15 @@ Use this schema for IDE validation when authoring the YAML Metaschema modules.
 | File | Description |
 |------|-------------|
 | `databind/src/main/metaschema/metaschema-bindings.yaml` | Metaschema module defining binding configuration schema (YAML format) |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/config/binding/*.java` | Pre-generated binding classes (multiple files) |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/config/binding/package-info.java` | Package documentation explaining bootstrap approach |
+| `databind/src/main/java/dev/metaschema/databind/config/binding/*.java` | Pre-generated binding classes (multiple files) |
+| `databind/src/main/java/dev/metaschema/databind/config/binding/package-info.java` | Package documentation explaining bootstrap approach |
 
 #### Files to Modify
 
 | File | Changes |
 |------|---------|
 | `databind/pom.xml` | Remove XMLBeans plugin and dependency; keep build-helper if needed |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/config/DefaultBindingConfiguration.java` | Replace XMLBeans imports/usage with Metaschema binding classes |
+| `databind/src/main/java/dev/metaschema/databind/codegen/config/DefaultBindingConfiguration.java` | Replace XMLBeans imports/usage with Metaschema binding classes |
 | `databind/src/main/java/module-info.java` | Update module exports/requires (remove xmlbeans) |
 | `databind/spotbugs-exclude.xml` | Update exclusions for new package instead of xmlbeans |
 
@@ -68,7 +68,7 @@ Use this schema for IDE validation when authoring the YAML Metaschema modules.
 |------|--------|
 | `databind/src/main/xsd/metaschema-binding.xsd` | Replaced by Metaschema module |
 | `databind/src/schema/xmlconfig.xml` | XMLBeans configuration no longer needed |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/xmlbeans/package-info.java` | XMLBeans package no longer needed |
+| `databind/src/main/java/dev/metaschema/databind/codegen/xmlbeans/package-info.java` | XMLBeans package no longer needed |
 | `databind/src/main/java/org/apache/xmlbeans/metadata/system/metaschema/codegen/package-info.java` | XMLBeans metadata package no longer needed |
 
 #### Implementation Approach
@@ -138,7 +138,7 @@ Use this schema for IDE validation when authoring the YAML Metaschema modules.
 | File | Changes |
 |------|---------|
 | `metaschema-testing/pom.xml` | Remove XMLBeans plugin/dependency; add metaschema-maven-plugin |
-| `metaschema-testing/src/main/java/gov/nist/secauto/metaschema/model/testing/AbstractTestSuite.java` | Replace XMLBeans usage with Metaschema binding classes |
+| `metaschema-testing/src/main/java/dev/metaschema/model/testing/AbstractTestSuite.java` | Replace XMLBeans usage with Metaschema binding classes |
 | `pom.xml` (parent) | Remove XMLBeans from dependency management |
 
 #### Files to Delete
@@ -146,7 +146,7 @@ Use this schema for IDE validation when authoring the YAML Metaschema modules.
 | File | Reason |
 |------|--------|
 | `metaschema-testing/src/schema/xmlconfig.xml` | XMLBeans configuration no longer needed |
-| `metaschema-testing/src/main/java/gov/nist/secauto/metaschema/model/testing/xml/xmlbeans/` | Entire XMLBeans handler package |
+| `metaschema-testing/src/main/java/dev/metaschema/model/testing/xml/xmlbeans/` | Entire XMLBeans handler package |
 
 **Note**: `core/metaschema/test-suite/unit-tests.xsd` is in the metaschema specification submodule (separate repository) and was not deleted.
 

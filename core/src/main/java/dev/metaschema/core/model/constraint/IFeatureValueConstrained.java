@@ -1,0 +1,93 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.core.model.constraint;
+
+import dev.metaschema.core.qname.IEnhancedQName;
+
+import java.util.List;
+import java.util.Map;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * A marker interface for a Metaschema valued construct (i.e. flag, field) that
+ * can be constrained using Metaschema constraints.
+ */
+public interface IFeatureValueConstrained extends IValueConstrained {
+  /**
+   * Lazy initialize the instances for the constraints when the constraints are
+   * first accessed.
+   *
+   * @return the constraints instance
+   */
+  @NonNull
+  IValueConstrained getConstraintSupport();
+
+  @Override
+  default ILet addLetExpression(ILet let) {
+    return getConstraintSupport().addLetExpression(let);
+  }
+
+  @Override
+  default Map<IEnhancedQName, ILet> getLetExpressions() {
+    return getConstraintSupport().getLetExpressions();
+  }
+
+  @Override
+  default List<? extends IConstraint> getConstraints() {
+    return getConstraintSupport().getConstraints();
+  }
+
+  @Override
+  default List<? extends IAllowedValuesConstraint> getAllowedValuesConstraints() {
+    return getConstraintSupport().getAllowedValuesConstraints();
+  }
+
+  @Override
+  default List<? extends IMatchesConstraint> getMatchesConstraints() {
+    return getConstraintSupport().getMatchesConstraints();
+  }
+
+  @Override
+  default List<? extends IIndexHasKeyConstraint> getIndexHasKeyConstraints() {
+    return getConstraintSupport().getIndexHasKeyConstraints();
+  }
+
+  @Override
+  default List<? extends IExpectConstraint> getExpectConstraints() {
+    return getConstraintSupport().getExpectConstraints();
+  }
+
+  @Override
+  default List<? extends IReportConstraint> getReportConstraints() {
+    return getConstraintSupport().getReportConstraints();
+  }
+
+  @Override
+  default void addConstraint(IAllowedValuesConstraint constraint) {
+    getConstraintSupport().addConstraint(constraint);
+  }
+
+  @Override
+  default void addConstraint(IMatchesConstraint constraint) {
+    getConstraintSupport().addConstraint(constraint);
+  }
+
+  @Override
+  default void addConstraint(IIndexHasKeyConstraint constraint) {
+    getConstraintSupport().addConstraint(constraint);
+  }
+
+  @Override
+  default void addConstraint(@NonNull IExpectConstraint constraint) {
+    getConstraintSupport().addConstraint(constraint);
+  }
+
+  @Override
+  default void addConstraint(@NonNull IReportConstraint constraint) {
+    getConstraintSupport().addConstraint(constraint);
+  }
+}

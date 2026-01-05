@@ -2,7 +2,7 @@
 
 ## Overview
 
-Add an `IModuleBuilder` to the existing test builder pattern in `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/`. This enables programmatic construction of `IModule` instances for testing, reducing dependency on XMLBeans-based `ModuleLoader`.
+Add an `IModuleBuilder` to the existing test builder pattern in `core/src/test/java/dev/metaschema/core/testing/model/`. This enables programmatic construction of `IModule` instances for testing, reducing dependency on XMLBeans-based `ModuleLoader`.
 
 ## Goals
 

@@ -118,7 +118,7 @@
                              both export overlapping packages) that prevent full JPMS compatibility. -->
                         <compilerArgs>
                             <arg>--add-reads</arg>
-                            <arg>gov.nist.secauto.metaschema.maven.plugin=ALL-UNNAMED</arg>
+                            <arg>dev.metaschema.maven.plugin=ALL-UNNAMED</arg>
                         </compilerArgs>
                     </configuration>
                 </plugin>
@@ -130,7 +130,7 @@
                              This mirrors the compiler configuration for JPMS compatibility. -->
                         <additionalJOptions>
                             <additionalJOption>--add-reads</additionalJOption>
-                            <additionalJOption>gov.nist.secauto.metaschema.maven.plugin=ALL-UNNAMED</additionalJOption>
+                            <additionalJOption>dev.metaschema.maven.plugin=ALL-UNNAMED</additionalJOption>
                         </additionalJOptions>
                     </configuration>
                 </plugin>

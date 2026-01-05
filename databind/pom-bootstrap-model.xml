@@ -25,7 +25,7 @@
 	<description>Standalone POM for regenerating Metaschema model binding classes.</description>
 
 	<properties>
-		<binding.package.dir>${project.basedir}/src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/binding</binding.package.dir>
+		<binding.package.dir>${project.basedir}/src/main/java/dev/metaschema/databind/model/metaschema/binding</binding.package.dir>
 		<stale.file.dir>${project.build.directory}/metaschema</stale.file.dir>
 		<metaschema.sources.dir>${project.basedir}/../core/metaschema/schema/metaschema</metaschema.sources.dir>
 	</properties>
@@ -107,7 +107,7 @@
 								<licenseSet>
 									<header>cc0-dedication.txt</header>
 									<includes>
-										<include>src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/binding/**/*.java</include>
+										<include>src/main/java/dev/metaschema/databind/model/metaschema/binding/**/*.java</include>
 									</includes>
 								</licenseSet>
 							</licenseSets>
@@ -127,7 +127,7 @@
 						</goals>
 						<configuration>
 							<includes>
-								<include>src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/binding/**/*.java</include>
+								<include>src/main/java/dev/metaschema/databind/model/metaschema/binding/**/*.java</include>
 							</includes>
 						</configuration>
 					</execution>

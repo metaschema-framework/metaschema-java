@@ -79,7 +79,7 @@ metaschema-framework (parent)
 └── metaschema-cli - Command-line interface
 ```
 
-### Core Module Structure (gov.nist.secauto.metaschema.core)
+### Core Module Structure (dev.metaschema.core)
 
 - **model/** - Metaschema model interfaces (`IModule`, `IAssemblyDefinition`, `IFieldDefinition`, `IFlagDefinition`)
 - **metapath/** - Metapath query language implementation
@@ -182,7 +182,7 @@ mvn -pl core test -Dtest=FnCountTest#testCount
 
 - Java 11 target
 - Uses SpotBugs annotations (`@NonNull`, `@Nullable`) for null safety
-- Package structure follows `gov.nist.secauto.metaschema.*` convention
+- Package structure follows `dev.metaschema.*` convention
 
 ### Javadoc Requirements (BLOCKING)
 

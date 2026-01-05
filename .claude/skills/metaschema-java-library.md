@@ -30,15 +30,15 @@ metaschema-framework (parent)
 
 | Package | Purpose |
 |---------|---------|
-| `gov.nist.secauto.metaschema.core.model` | Model interfaces (`IModule`, `IAssemblyDefinition`, etc.) |
-| `gov.nist.secauto.metaschema.core.metapath` | Metapath expression engine |
-| `gov.nist.secauto.metaschema.core.metapath.function` | Function library |
-| `gov.nist.secauto.metaschema.core.metapath.item` | Item types (nodes, atomics) |
-| `gov.nist.secauto.metaschema.core.model.constraint` | Constraint validation |
-| `gov.nist.secauto.metaschema.databind` | Data binding context |
-| `gov.nist.secauto.metaschema.databind.io` | Serialization/deserialization |
-| `gov.nist.secauto.metaschema.databind.model.annotations` | Binding annotations (`@BoundField`, `@BoundChoice`, etc.) |
-| `gov.nist.secauto.metaschema.databind.codegen` | Code generation from Metaschema modules |
+| `dev.metaschema.core.model` | Model interfaces (`IModule`, `IAssemblyDefinition`, etc.) |
+| `dev.metaschema.core.metapath` | Metapath expression engine |
+| `dev.metaschema.core.metapath.function` | Function library |
+| `dev.metaschema.core.metapath.item` | Item types (nodes, atomics) |
+| `dev.metaschema.core.model.constraint` | Constraint validation |
+| `dev.metaschema.databind` | Data binding context |
+| `dev.metaschema.databind.io` | Serialization/deserialization |
+| `dev.metaschema.databind.model.annotations` | Binding annotations (`@BoundField`, `@BoundChoice`, etc.) |
+| `dev.metaschema.databind.codegen` | Code generation from Metaschema modules |
 
 ## Annotation-Based Binding Model
 
@@ -113,8 +113,8 @@ For annotation-based bindings, choices are optional by default (`minOccurs = 0`)
 ### Using IBindingContext
 
 ```java
-import gov.nist.secauto.metaschema.databind.IBindingContext;
-import gov.nist.secauto.metaschema.databind.model.IBoundModule;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.model.IBoundModule;
 
 // Create binding context
 IBindingContext bindingContext = IBindingContext.newInstance();
@@ -131,7 +131,7 @@ IBindingContext context = IBindingContext.builder()
 ### Loading Module Files
 
 ```java
-import gov.nist.secauto.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
 
 IBindingContext bindingContext = IBindingContext.newInstance();
 IBindingModuleLoader loader = bindingContext.newModuleLoader();
@@ -145,10 +145,10 @@ IBindingMetaschemaModule module = loader.load(moduleUri);
 ### Compiling and Evaluating Expressions
 
 ```java
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
-import gov.nist.secauto.metaschema.core.metapath.StaticContext;
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.MetapathExpression;
+import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.item.ISequence;
 
 // Compile expression with static context
 StaticContext staticContext = StaticContext.builder()
@@ -270,7 +270,7 @@ Add dependencies to the `metaschema-maven-plugin` configuration to ensure classe
 
 ```xml
 <plugin>
-  <groupId>gov.nist.secauto.metaschema</groupId>
+  <groupId>dev.metaschema</groupId>
   <artifactId>metaschema-maven-plugin</artifactId>
   <dependencies>
     <!-- Add dependency containing custom interfaces/base classes -->
@@ -298,8 +298,8 @@ Add dependencies to the `metaschema-maven-plugin` configuration to ensure classe
 ### Deserializing Content
 
 ```java
-import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
-import gov.nist.secauto.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.IBoundLoader;
+import dev.metaschema.databind.io.Format;
 
 IBindingContext bindingContext = IBindingContext.newInstance();
 IBoundLoader loader = bindingContext.newBoundLoader();
@@ -316,7 +316,7 @@ MyRootClass object = deserializer.deserialize(inputStream);
 ### Serializing Content
 
 ```java
-import gov.nist.secauto.metaschema.databind.io.ISerializer;
+import dev.metaschema.databind.io.ISerializer;
 
 ISerializer<MyRootClass> serializer = bindingContext.newSerializer(
     Format.JSON, MyRootClass.class);
@@ -368,9 +368,9 @@ MyClass obj = deserializer.deserialize(inputStream);
 ### Basic Validation
 
 ```java
-import gov.nist.secauto.metaschema.core.model.constraint.IConstraintValidator;
-import gov.nist.secauto.metaschema.core.model.constraint.DefaultConstraintValidator;
-import gov.nist.secauto.metaschema.core.model.constraint.FindingCollectingConstraintValidationHandler;
+import dev.metaschema.core.model.constraint.IConstraintValidator;
+import dev.metaschema.core.model.constraint.DefaultConstraintValidator;
+import dev.metaschema.core.model.constraint.FindingCollectingConstraintValidationHandler;
 
 // Create handler to collect findings
 FindingCollectingConstraintValidationHandler handler =
@@ -395,8 +395,8 @@ if (!result.isPassing()) {
 ### Loading External Constraints
 
 ```java
-import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
+import dev.metaschema.core.model.constraint.IConstraintSet;
+import dev.metaschema.databind.model.metaschema.BindingConstraintLoader;
 
 BindingConstraintLoader constraintLoader = new BindingConstraintLoader(bindingContext);
 IConstraintSet constraintSet = constraintLoader.load(constraintUri);
@@ -482,9 +482,9 @@ NegativeLengthArrayMetapathException
 ### Function Structure
 
 ```java
-import gov.nist.secauto.metaschema.core.metapath.function.IFunction;
-import gov.nist.secauto.metaschema.core.metapath.function.IArgument;
-import gov.nist.secauto.metaschema.core.metapath.MetapathConstants;
+import dev.metaschema.core.metapath.function.IFunction;
+import dev.metaschema.core.metapath.function.IArgument;
+import dev.metaschema.core.metapath.MetapathConstants;
 
 public final class FnMyFunction {
   private static final String NAME = "my-function";
@@ -590,7 +590,7 @@ IItem (base)
 ### Working with Sequences
 
 ```java
-import gov.nist.secauto.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.ISequence;
 
 // Create sequences
 ISequence<IStringItem> seq = ISequence.of(item1, item2);

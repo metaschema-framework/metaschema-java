@@ -1,0 +1,66 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.core.metapath.cst.path;
+
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.cst.AbstractExpression;
+import dev.metaschema.core.metapath.cst.IExpressionVisitor;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.ItemUtils;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.metapath.type.IItemType;
+import dev.metaschema.core.util.ObjectUtils;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * The CST node for a Metapath
+ * <a href="https://www.w3.org/TR/xpath-31/#dt-expanded-qname">expanded QName
+ * name test</a>.
+ */
+@SuppressWarnings("PMD.TestClassWithoutTestCases")
+public class KindNodeTest
+    extends AbstractExpression
+    implements INodeTestExpression {
+
+  @NonNull
+  private final IItemType type;
+
+  /**
+   * Construct a new kind test expression.
+   *
+   * @param text
+   *          the parsed text of the expression
+   * @param type
+   *          the expected item type to test against
+   */
+  public KindNodeTest(@NonNull String text, @NonNull IItemType type) {
+    super(text);
+    this.type = type;
+  }
+
+  @Override
+  public <RESULT, CONTEXT> RESULT accept(IExpressionVisitor<RESULT, CONTEXT> visitor, CONTEXT context) {
+    return visitor.visitKindNodeTest(this, context);
+  }
+
+  @Override
+  protected ISequence<? extends INodeItem> evaluate(DynamicContext dynamicContext, ISequence<?> focus) {
+    return ISequence.of(filterStream(ObjectUtils.notNull(focus.stream()
+        .map(item -> ItemUtils.checkItemIsNodeItem(dynamicContext, item)))));
+  }
+
+  @SuppressWarnings("null")
+  @Override
+  public String toCSTString() {
+    return String.format("%s[kind=%s]", getClass().getName(), type.toSignature());
+  }
+
+  @Override
+  public boolean match(INodeItem item) {
+    return type.isInstance(item);
+  }
+}

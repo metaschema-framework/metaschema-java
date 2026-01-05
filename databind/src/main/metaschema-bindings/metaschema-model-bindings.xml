@@ -7,7 +7,7 @@
 	xmlns="https://csrc.nist.gov/ns/metaschema-binding/1.0">
 	<model-binding namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
 		<java>
-			<use-package-name>gov.nist.secauto.metaschema.databind.model.metaschema.binding</use-package-name>
+			<use-package-name>dev.metaschema.databind.model.metaschema.binding</use-package-name>
 		</java>
 	</model-binding>
 	<metaschema-binding
@@ -25,134 +25,134 @@
 		</define-assembly-binding>
 		<define-assembly-binding name="assembly-constraints">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IModelConstraintsBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IModelConstraintsBase</implement-interface>
 			</java>
 			<choice-group-binding name="rules">
-				<item-type use-wildcard="true">gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</item-type>
+				<item-type use-wildcard="true">dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</item-type>
 			</choice-group-binding>
 		</define-assembly-binding>
 		<define-assembly-binding name="field-constraints">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IValueTargetedConstraintsBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IValueTargetedConstraintsBase</implement-interface>
 			</java>
 			<choice-group-binding name="rules">
-				<item-type use-wildcard="true">gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</item-type>
+				<item-type use-wildcard="true">dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</item-type>
 			</choice-group-binding>
 		</define-assembly-binding>
 		<define-assembly-binding name="flag-allowed-values">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="flag-constraints">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IValueConstraintsBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IValueConstraintsBase</implement-interface>
 			</java>
 			<choice-group-binding name="rules">
-				<item-type use-wildcard="true">gov.nist.secauto.metaschema.databind.model.metaschema.IConstraintBase</item-type>
+				<item-type use-wildcard="true">dev.metaschema.databind.model.metaschema.IConstraintBase</item-type>
 			</choice-group-binding>
 		</define-assembly-binding>
 		<define-assembly-binding name="flag-expect">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="flag-index-has-key">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="flag-matches">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="flag-report">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-allowed-values-constraint">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-expect-constraint">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-has-cardinality-constraint">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-index-constraint">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-index-has-key-constraint">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-is-unique-constraint">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-matches-constraint">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<define-assembly-binding name="targeted-report-constraint">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBase</implement-interface>
 			</java>
 		</define-assembly-binding>
 		<!-- Inline assembly bindings for metaschema-module-constraints/scope -->
 		<define-assembly-binding target="scope">
 			<choice-group-binding name="constraints">
-				<item-type use-wildcard="true">gov.nist.secauto.metaschema.databind.model.metaschema.IValueConstraintsBase</item-type>
+				<item-type use-wildcard="true">dev.metaschema.databind.model.metaschema.IValueConstraintsBase</item-type>
 			</choice-group-binding>
 		</define-assembly-binding>
 		<define-assembly-binding target="scope/assembly">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IValueTargetedConstraintsBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IValueTargetedConstraintsBase</implement-interface>
 			</java>
 			<choice-group-binding name="rules">
-				<item-type use-wildcard="true">gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</item-type>
+				<item-type use-wildcard="true">dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</item-type>
 			</choice-group-binding>
 		</define-assembly-binding>
 		<define-assembly-binding target="scope/field">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IValueTargetedConstraintsBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IValueTargetedConstraintsBase</implement-interface>
 			</java>
 			<choice-group-binding name="rules">
-				<item-type use-wildcard="true">gov.nist.secauto.metaschema.databind.model.metaschema.ITargetedConstraintBase</item-type>
+				<item-type use-wildcard="true">dev.metaschema.databind.model.metaschema.ITargetedConstraintBase</item-type>
 			</choice-group-binding>
 		</define-assembly-binding>
 		<define-assembly-binding target="scope/flag">
 			<java>
-				<implement-interface>gov.nist.secauto.metaschema.databind.model.metaschema.IValueConstraintsBase</implement-interface>
+				<implement-interface>dev.metaschema.databind.model.metaschema.IValueConstraintsBase</implement-interface>
 			</java>
 			<choice-group-binding name="rules">
-				<item-type use-wildcard="true">gov.nist.secauto.metaschema.databind.model.metaschema.IConstraintBase</item-type>
+				<item-type use-wildcard="true">dev.metaschema.databind.model.metaschema.IConstraintBase</item-type>
 			</choice-group-binding>
 		</define-assembly-binding>
 		<!-- All define-field-binding elements must come after assembly bindings -->
 		<define-field-binding name="constraint-value-enum">
 			<java>
-				<extend-base-class>gov.nist.secauto.metaschema.databind.model.metaschema.impl.AbstractAllowedValue</extend-base-class>
+				<extend-base-class>dev.metaschema.databind.model.metaschema.impl.AbstractAllowedValue</extend-base-class>
 			</java>
 		</define-field-binding>
 	</metaschema-binding>

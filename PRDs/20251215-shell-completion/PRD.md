@@ -42,7 +42,7 @@ This approach provides:
 ### New Interfaces and Classes
 
 ```text
-cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
+cli-processor/src/main/java/dev/metaschema/cli/processor/
 ├── command/
 │   └── ShellCompletionCommand.java
 └── completion/
@@ -609,7 +609,7 @@ compinit  # Rebuild completion cache
 ### New Files
 
 ```text
-cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
+cli-processor/src/main/java/dev/metaschema/cli/processor/
 ├── command/
 │   └── ShellCompletionCommand.java
 └── completion/
@@ -617,7 +617,7 @@ cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
     ├── CompletionTypeRegistry.java
     └── CompletionScriptGenerator.java
 
-cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/
+cli-processor/src/test/java/dev/metaschema/cli/processor/
 └── completion/
     ├── CompletionTypeRegistryTest.java
     └── CompletionScriptGeneratorTest.java
@@ -628,7 +628,7 @@ cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/
 **ExtraArgument extension (cli-processor):**
 
 ```text
-cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/
+cli-processor/src/main/java/dev/metaschema/cli/processor/command/
 ├── ExtraArgument.java               // Add getType() method and factory overload
 └── impl/
     └── DefaultExtraArgument.java    // Add type field and constructor
@@ -639,7 +639,7 @@ cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/
 Commands that define options and extra arguments should add type information:
 
 ```text
-metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/
+metaschema-cli/src/main/java/dev/metaschema/cli/commands/
 ├── MetaschemaCommands.java          // Shared options
 ├── AbstractValidateContentCommand.java
 ├── GenerateSchemaCommand.java

@@ -126,7 +126,7 @@ When modifying Metapath functions or Metaschema features, update the correspondi
 | New exception type | Add to `.claude/skills/metaschema-java-library.md` exception hierarchy |
 | New key interface | Add to `.claude/skills/metaschema-java-library.md` |
 
-**Function location:** `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/`
+**Function location:** `core/src/main/java/dev/metaschema/core/metapath/function/library/`
 
 ## Related Skills
 

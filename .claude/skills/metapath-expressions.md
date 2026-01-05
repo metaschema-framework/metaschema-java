@@ -128,7 +128,7 @@ $config/@value
 **Note on function variants:** Many functions have multiple signatures with different argument counts. Optional parameters are shown with `?`. For the authoritative list of all function signatures, see the source code in:
 
 ```text
-core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/
+core/src/main/java/dev/metaschema/core/metapath/function/library/
 ```
 
 ### String Functions

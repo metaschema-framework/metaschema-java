@@ -1,0 +1,2 @@
+dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider
+dev.metaschema.core.datatype.markup.MarkupDataTypeProvider

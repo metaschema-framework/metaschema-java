@@ -31,7 +31,7 @@ This directory contains test schemas and instances for validating the schema con
 
 ## Usage
 
-These test resources are loaded by the test classes in the `gov.nist.secauto.metaschema.core.model.validation` package:
+These test resources are loaded by the test classes in the `dev.metaschema.core.model.validation` package:
 
 - `SchemaContentValidatorTest` - Main comprehensive test suite
 - `ValidationFindingTest` - Tests for individual validation finding classes

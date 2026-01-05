@@ -28,9 +28,9 @@ This document provides a detailed analysis of warnings from the build output.
 
 | File | Line | Context |
 |------|------|---------|
-| `core/src/main/java/gov/nist/secauto/metaschema/core/model/AbstractContainerModelSupport.java` | 89 | Resource cleanup |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/DefaultBindingContext.java` | 268 | Binding context cleanup |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/impl/AbstractAbsoluteModelGenerator.java` | 223 | Generator cleanup |
+| `core/src/main/java/dev/metaschema/core/model/AbstractContainerModelSupport.java` | 89 | Resource cleanup |
+| `databind/src/main/java/dev/metaschema/databind/DefaultBindingContext.java` | 268 | Binding context cleanup |
+| `databind/src/main/java/dev/metaschema/databind/model/metaschema/impl/AbstractAbsoluteModelGenerator.java` | 223 | Generator cleanup |
 
 **Recommended Fix**: Replace with `java.lang.ref.Cleaner` API or remove if unnecessary.
 
@@ -43,7 +43,7 @@ This document provides a detailed analysis of warnings from the build output.
 
 | File | Line | Field |
 |------|------|-------|
-| `metaschema-maven-plugin/src/main/java/gov/nist/secauto/metaschema/maven/plugin/AbstractMetaschemaMojo.java` | 102 | Multiple `@Component` fields |
+| `metaschema-maven-plugin/src/main/java/dev/metaschema/maven/plugin/AbstractMetaschemaMojo.java` | 102 | Multiple `@Component` fields |
 
 **Recommended Fix**: Replace `@Component` with `@Inject` from JSR-330.
 

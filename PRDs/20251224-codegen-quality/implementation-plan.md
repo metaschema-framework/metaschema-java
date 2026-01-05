@@ -40,16 +40,16 @@ This PR fixes the code generator and regenerates metaschema-testing binding clas
 
 | File | Changes |
 |------|---------|
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/INamedInstanceTypeInfo.java` | Change `$S` to literal format to remove quotes from Javadoc |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/DefaultMetaschemaClassFactory.java` | Add Javadoc to constructor generation |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/AbstractPropertyTypeInfo.java` | Add Javadoc to getter/setter generation |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/AbstractModelDefinitionTypeInfo.java` | Add null-safety annotations to generated code |
+| `databind/src/main/java/dev/metaschema/databind/codegen/typeinfo/INamedInstanceTypeInfo.java` | Change `$S` to literal format to remove quotes from Javadoc |
+| `databind/src/main/java/dev/metaschema/databind/codegen/typeinfo/DefaultMetaschemaClassFactory.java` | Add Javadoc to constructor generation |
+| `databind/src/main/java/dev/metaschema/databind/codegen/typeinfo/AbstractPropertyTypeInfo.java` | Add Javadoc to getter/setter generation |
+| `databind/src/main/java/dev/metaschema/databind/codegen/typeinfo/AbstractModelDefinitionTypeInfo.java` | Add null-safety annotations to generated code |
 
 ### Regenerated Files
 
 | File | Changes |
 |------|---------|
-| `metaschema-testing/src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/*.java` | Regenerated binding classes with improved Javadoc |
+| `metaschema-testing/src/main/java/dev/metaschema/model/testing/testsuite/*.java` | Regenerated binding classes with improved Javadoc |
 
 ### Implementation Approach
 
@@ -112,10 +112,10 @@ This PR extends the binding configuration to support overriding default collecti
 
 | File | Changes |
 |------|---------|
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/config/IBindingConfiguration.java` | Add `getCollectionClass()` method to interface |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/config/DefaultBindingConfiguration.java` | Parse `<collection-class>` element |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/IPropertyTypeInfo.java` | Update `getCollectionImplementationClass()` to accept override |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/AbstractModelInstanceTypeInfo.java` | Apply collection class override from binding config |
+| `databind/src/main/java/dev/metaschema/databind/codegen/config/IBindingConfiguration.java` | Add `getCollectionClass()` method to interface |
+| `databind/src/main/java/dev/metaschema/databind/codegen/config/DefaultBindingConfiguration.java` | Parse `<collection-class>` element |
+| `databind/src/main/java/dev/metaschema/databind/codegen/typeinfo/IPropertyTypeInfo.java` | Update `getCollectionImplementationClass()` to accept override |
+| `databind/src/main/java/dev/metaschema/databind/codegen/typeinfo/AbstractModelInstanceTypeInfo.java` | Apply collection class override from binding config |
 | `databind-modules/src/main/metaschema-bindings/metaschema-bindings.yaml` | Add `collection-class` field definition to binding schema |
 
 ### Implementation Approach

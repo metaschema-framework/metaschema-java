@@ -18,7 +18,7 @@ This plan implements the remaining Metapath context functions: `fn:position`, `f
 ### Tasks
 
 #### 1.1 Create FocusContext Class
-- [ ] Create `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/FocusContext.java`
+- [ ] Create `core/src/main/java/dev/metaschema/core/metapath/FocusContext.java`
   - [ ] Add `sequence` field (ISequence<?>)
   - [ ] Add `position` field (int, 1-based)
   - [ ] Add `size` field (int, lazy computed from sequence)
@@ -30,7 +30,7 @@ This plan implements the remaining Metapath context functions: `fn:position`, `f
   - [ ] Add comprehensive Javadoc
 
 #### 1.2 Extend DynamicContext
-- [ ] Modify `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/DynamicContext.java`
+- [ ] Modify `core/src/main/java/dev/metaschema/core/metapath/DynamicContext.java`
   - [ ] Add `@Nullable FocusContext focusContext` as instance field (NOT in SharedState - focus is local to each scope)
   - [ ] Add `getFocusContext()` method returning `@Nullable FocusContext`
   - [ ] Add overloaded `subContext(@NonNull FocusContext)` method that creates a sub-context with new focus
@@ -39,7 +39,7 @@ This plan implements the remaining Metapath context functions: `fn:position`, `f
   - [ ] Add Javadoc for new methods
 
 #### 1.3 Write Unit Tests
-- [ ] Create `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/FocusContextTest.java`
+- [ ] Create `core/src/test/java/dev/metaschema/core/metapath/FocusContextTest.java`
   - [ ] Test factory method with item/position/size
   - [ ] Test factory method with sequence
   - [ ] Test position returns correct value
@@ -61,7 +61,7 @@ This plan implements the remaining Metapath context functions: `fn:position`, `f
 ### Tasks
 
 #### 2.1 Implement FnPosition
-- [ ] Create `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnPosition.java`
+- [ ] Create `core/src/main/java/dev/metaschema/core/metapath/function/library/FnPosition.java`
   - [ ] Define SIGNATURE with:
     - name: "position"
     - namespace: MetapathConstants.NS_METAPATH_FUNCTIONS
@@ -77,7 +77,7 @@ This plan implements the remaining Metapath context functions: `fn:position`, `f
   - [ ] Add comprehensive Javadoc with spec reference
 
 #### 2.2 Implement FnLast
-- [ ] Create `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnLast.java`
+- [ ] Create `core/src/main/java/dev/metaschema/core/metapath/function/library/FnLast.java`
   - [ ] Define SIGNATURE with:
     - name: "last"
     - namespace: MetapathConstants.NS_METAPATH_FUNCTIONS
@@ -93,20 +93,20 @@ This plan implements the remaining Metapath context functions: `fn:position`, `f
   - [ ] Add comprehensive Javadoc with spec reference
 
 #### 2.3 Register Functions
-- [ ] Modify `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/DefaultFunctionLibrary.java`
+- [ ] Modify `core/src/main/java/dev/metaschema/core/metapath/function/library/DefaultFunctionLibrary.java`
   - [ ] Add `registerFunction(FnPosition.SIGNATURE);` with spec comment
   - [ ] Add `registerFunction(FnLast.SIGNATURE);` with spec comment
   - [ ] Remove P1/P2 placeholder comments for these functions
 
 #### 2.4 Update PredicateExpression
-- [ ] Modify `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/cst/logic/PredicateExpression.java`
+- [ ] Modify `core/src/main/java/dev/metaschema/core/metapath/cst/logic/PredicateExpression.java`
   - [ ] Compute sequence size once at start of evaluation
   - [ ] For each item, create a sub-context with FocusContext set
   - [ ] Pass sub-context to predicate evaluation
   - [ ] Update imports as needed
 
 #### 2.5 Write FnPosition Tests
-- [ ] Create `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnPositionTest.java`
+- [ ] Create `core/src/test/java/dev/metaschema/core/metapath/function/library/FnPositionTest.java`
   - [ ] Test position() returns 1 for first item
   - [ ] Test position() returns correct value for middle items
   - [ ] Test position() returns size for last item
@@ -115,7 +115,7 @@ This plan implements the remaining Metapath context functions: `fn:position`, `f
   - [ ] Test position() throws XPDY0002 when context absent
 
 #### 2.6 Write FnLast Tests
-- [ ] Create `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnLastTest.java`
+- [ ] Create `core/src/test/java/dev/metaschema/core/metapath/function/library/FnLastTest.java`
   - [ ] Test last() returns correct sequence size
   - [ ] Test last() in predicate `item[position() = last()]`
   - [ ] Test last() in predicate `item[last() - 1]`
@@ -142,7 +142,7 @@ This plan implements the remaining Metapath context functions: `fn:position`, `f
 ### Tasks
 
 #### 3.1 Extend StaticContext
-- [ ] Modify `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/StaticContext.java`
+- [ ] Modify `core/src/main/java/dev/metaschema/core/metapath/StaticContext.java`
   - [ ] Add `@Nullable private final String defaultLanguage` field
   - [ ] Add `getDefaultLanguage()` method (returns "en" if null)
   - [ ] Update Builder:
@@ -153,7 +153,7 @@ This plan implements the remaining Metapath context functions: `fn:position`, `f
   - [ ] Add Javadoc for new methods
 
 #### 3.2 Implement FnDefaultLanguage
-- [ ] Create `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDefaultLanguage.java`
+- [ ] Create `core/src/main/java/dev/metaschema/core/metapath/function/library/FnDefaultLanguage.java`
   - [ ] Define SIGNATURE with:
     - name: "default-language"
     - namespace: MetapathConstants.NS_METAPATH_FUNCTIONS
@@ -168,11 +168,11 @@ This plan implements the remaining Metapath context functions: `fn:position`, `f
   - [ ] Add comprehensive Javadoc with spec reference
 
 #### 3.3 Register Function
-- [ ] Modify `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/DefaultFunctionLibrary.java`
+- [ ] Modify `core/src/main/java/dev/metaschema/core/metapath/function/library/DefaultFunctionLibrary.java`
   - [ ] Add `registerFunction(FnDefaultLanguage.SIGNATURE);` with spec comment
 
 #### 3.4 Write Tests
-- [ ] Create `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDefaultLanguageTest.java`
+- [ ] Create `core/src/test/java/dev/metaschema/core/metapath/function/library/FnDefaultLanguageTest.java`
   - [ ] Test default-language() returns "en" with default context
   - [ ] Test default-language() returns configured value
   - [ ] Test default-language() in expression comparison

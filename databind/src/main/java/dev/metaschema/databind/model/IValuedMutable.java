@@ -1,0 +1,32 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.databind.model;
+
+import dev.metaschema.core.model.IValued;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Extends {@link IValued} to provide the ability to set a value on a parent
+ * object.
+ */
+@FunctionalInterface
+public interface IValuedMutable extends IValued {
+  /**
+   * Set the provided value on the provided object. The provided object must be of
+   * the item's type associated with this instance.
+   *
+   * @param parentObject
+   *          the object
+   * @param value
+   *          a value, which may be a simple {@link Type} or a
+   *          {@link ParameterizedType} for a collection
+   */
+  void setValue(@NonNull Object parentObject, Object value);
+}

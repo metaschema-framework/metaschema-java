@@ -5,7 +5,7 @@
     xsi:schemaLocation="https://csrc.nist.gov/ns/metaschema-binding/1.0 ../xsd/metaschema-binding.xsd">
     <model-binding namespace="https://csrc.nist.gov/ns/metaschema-binding/1.0">
         <java>
-            <use-package-name>gov.nist.secauto.metaschema.databind.config.binding</use-package-name>
+            <use-package-name>dev.metaschema.databind.config.binding</use-package-name>
         </java>
     </model-binding>
 </metaschema-bindings>

@@ -22,7 +22,7 @@
 	<description>Standalone POM for regenerating test suite binding classes.</description>
 
 	<properties>
-		<testsuite.package.dir>${project.basedir}/src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite</testsuite.package.dir>
+		<testsuite.package.dir>${project.basedir}/src/main/java/dev/metaschema/model/testing/testsuite</testsuite.package.dir>
 		<stale.file.dir>${project.build.directory}/metaschema</stale.file.dir>
 	</properties>
 
@@ -100,7 +100,7 @@
 								<licenseSet>
 									<header>cc0-dedication.txt</header>
 									<includes>
-										<include>src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/**/*.java</include>
+										<include>src/main/java/dev/metaschema/model/testing/testsuite/**/*.java</include>
 									</includes>
 								</licenseSet>
 							</licenseSets>
@@ -120,7 +120,7 @@
 						</goals>
 						<configuration>
 							<includes>
-								<include>src/main/java/gov/nist/secauto/metaschema/model/testing/testsuite/**/*.java</include>
+								<include>src/main/java/dev/metaschema/model/testing/testsuite/**/*.java</include>
 							</includes>
 						</configuration>
 					</execution>

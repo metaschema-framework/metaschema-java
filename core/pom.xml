@@ -176,7 +176,7 @@
                     <configuration>
                         <excludes>
 							<!-- filter generated code -->
-                            <exclude>gov/nist/secauto/metaschema/core/metapath/antlr/*</exclude>
+                            <exclude>dev/metaschema/core/metapath/antlr/*</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
@@ -190,10 +190,10 @@
                     <arguments>
                         <argument>-package</argument>
                         <argument>
-                            gov.nist.secauto.metaschema.core.metapath.antlr</argument>
+                            dev.metaschema.core.metapath.antlr</argument>
                         <argument>-o</argument>
                         <argument>
-                            ${project.build.directory}/generated-sources/antlr4/gov/nist/secauto/metaschema/core/metapath/antlr</argument>
+                            ${project.build.directory}/generated-sources/antlr4/dev/metaschema/core/metapath/antlr</argument>
                     </arguments>
                     <visitor>true</visitor>
                     <listener>false</listener>

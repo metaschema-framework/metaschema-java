@@ -39,7 +39,7 @@ Validation results currently always use `MetapathFormatter` for paths. Users nee
 #### Path Format Selection Enum
 
 ```java
-package gov.nist.secauto.metaschema.core.metapath.format;
+package dev.metaschema.core.metapath.format;
 
 /**
  * Enumeration of path format selection options for validation output.
@@ -319,29 +319,29 @@ IPathFormatter JSON_POINTER_PATH_FORMATTER = new JsonPointerFormatter();
 ### Phase 1-3 Files (Completed)
 
 #### New Files
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/XPathFormatter.java`
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/JsonPointerFormatter.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/format/XPathFormatterTest.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/format/JsonPointerFormatterTest.java`
+- `core/src/main/java/dev/metaschema/core/metapath/format/XPathFormatter.java`
+- `core/src/main/java/dev/metaschema/core/metapath/format/JsonPointerFormatter.java`
+- `core/src/test/java/dev/metaschema/core/metapath/format/XPathFormatterTest.java`
+- `core/src/test/java/dev/metaschema/core/metapath/format/JsonPointerFormatterTest.java`
 
 #### Modified Files
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/IPathFormatter.java` - Add constants
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/package-info.java` - Update docs
+- `core/src/main/java/dev/metaschema/core/metapath/format/IPathFormatter.java` - Add constants
+- `core/src/main/java/dev/metaschema/core/metapath/format/package-info.java` - Update docs
 
 #### Deleted Files
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/JsonPathFormatter.java` - Remove commented code
+- `core/src/main/java/dev/metaschema/core/metapath/format/JsonPathFormatter.java` - Remove commented code
 
 ### Phase 4 Files (Planned)
 
 #### New Files
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/PathFormatSelection.java` - Enum for path format options
-- `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/format/PathFormatterResolverTest.java` - Tests for resolver logic
+- `core/src/main/java/dev/metaschema/core/metapath/format/PathFormatSelection.java` - Enum for path format options
+- `core/src/test/java/dev/metaschema/core/metapath/format/PathFormatterResolverTest.java` - Tests for resolver logic
 
 #### Modified Files
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/format/IPathFormatter.java` - Add `resolveFormatter()` method
-- `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/AbstractConstraintValidationHandler.java` - Add convenience method
-- `metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/AbstractValidateContentCommand.java` - Add `--path-format` option
-- `metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/processor/LoggingValidationHandler.java` - Use configured formatter
+- `core/src/main/java/dev/metaschema/core/metapath/format/IPathFormatter.java` - Add `resolveFormatter()` method
+- `core/src/main/java/dev/metaschema/core/model/constraint/AbstractConstraintValidationHandler.java` - Add convenience method
+- `metaschema-cli/src/main/java/dev/metaschema/cli/commands/AbstractValidateContentCommand.java` - Add `--path-format` option
+- `metaschema-cli/src/main/java/dev/metaschema/cli/processor/LoggingValidationHandler.java` - Use configured formatter
 
 ## Code Examples
 

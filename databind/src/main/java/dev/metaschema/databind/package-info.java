@@ -1,0 +1,24 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+/**
+ * Support for parsing Metaschema module-based data using Java class bindings.
+ * <p>
+ * Two methods are supported
+ * <ol>
+ * <li>A Java annotation based approach ({@link dev.metaschema.databind.model})
+ * using annotations ({@link dev.metaschema.databind.model.annotations}). The
+ * {@link dev.metaschema.databind.DefaultBindingContext} is used to load a bound
+ * Java class.
+ * <li>A metaschema-specific binding, based on the first method, that is capable
+ * of representing a Metaschema module
+ * ({@link dev.metaschema.databind.model.metaschema.binding}). The
+ * {@link dev.metaschema.databind.model.metaschema.BindingConstraintLoader} can
+ * be used to load any Metaschema module using this method. Once loaded, the
+ * module can be registered with the binding context.
+ * </ol>
+ */
+
+package dev.metaschema.databind;

@@ -46,8 +46,8 @@ Create a streaming XML indentation wrapper to replace Saxon XSLT post-processing
 
 | File | Change Type |
 |------|-------------|
-| `schemagen/src/test/java/gov/nist/secauto/metaschema/schemagen/xml/impl/IndentingXMLStreamWriterTest.java` | Add |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/IndentingXMLStreamWriter.java` | Add |
+| `schemagen/src/test/java/dev/metaschema/schemagen/xml/impl/IndentingXMLStreamWriterTest.java` | Add |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/IndentingXMLStreamWriter.java` | Add |
 
 #### TDD Sequence
 
@@ -109,16 +109,16 @@ Replace JDOM2 XML parsing and XPath with javax.xml APIs.
 
 | File | Change Type |
 |------|-------------|
-| `schemagen/src/test/java/gov/nist/secauto/metaschema/schemagen/xml/impl/XmlSchemaLoaderTest.java` | Add |
-| `schemagen/src/test/java/gov/nist/secauto/metaschema/schemagen/xml/impl/DomDatatypeContentTest.java` | Add |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/XmlSchemaLoader.java` | Add |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/DomDatatypeContent.java` | Add |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/JDom2XmlSchemaLoader.java` | Delete |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/JDom2DatatypeContent.java` | Delete |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/AbstractXmlDatatypeProvider.java` | Modify |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/XmlCoreDatatypeProvider.java` | Modify |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/AbstractXmlMarkupDatatypeProvider.java` | Modify |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/XmlProseBaseDatatypeProvider.java` | Modify |
+| `schemagen/src/test/java/dev/metaschema/schemagen/xml/impl/XmlSchemaLoaderTest.java` | Add |
+| `schemagen/src/test/java/dev/metaschema/schemagen/xml/impl/DomDatatypeContentTest.java` | Add |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/XmlSchemaLoader.java` | Add |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/DomDatatypeContent.java` | Add |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/JDom2XmlSchemaLoader.java` | Delete |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/JDom2DatatypeContent.java` | Delete |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/AbstractXmlDatatypeProvider.java` | Modify |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/XmlCoreDatatypeProvider.java` | Modify |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/AbstractXmlMarkupDatatypeProvider.java` | Modify |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/XmlProseBaseDatatypeProvider.java` | Modify |
 
 #### TDD Sequence (Characterization Tests First)
 
@@ -174,7 +174,7 @@ Replace Saxon XSLT transformation with IndentingXMLStreamWriter.
 
 | File | Change Type |
 |------|-------------|
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/XmlSchemaGenerator.java` | Modify |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/XmlSchemaGenerator.java` | Modify |
 | `schemagen/src/main/resources/identity.xsl` | Delete |
 
 #### TDD Sequence (Characterization Tests First)
@@ -248,7 +248,7 @@ Update any tests that depend on JDOM2 or have whitespace-sensitive assertions.
 
 | File | Change Type |
 |------|-------------|
-| `schemagen/src/test/java/gov/nist/secauto/metaschema/schemagen/XmlSuiteTest.java` | Modify |
+| `schemagen/src/test/java/dev/metaschema/schemagen/XmlSuiteTest.java` | Modify |
 
 #### Acceptance Criteria
 
@@ -278,26 +278,26 @@ Update any tests that depend on JDOM2 or have whitespace-sensitive assertions.
 
 | File | Change Type |
 |------|-------------|
-| `schemagen/src/test/java/gov/nist/secauto/metaschema/schemagen/xml/impl/IndentingXMLStreamWriterTest.java` | Add |
-| `schemagen/src/test/java/gov/nist/secauto/metaschema/schemagen/xml/impl/XmlSchemaLoaderTest.java` | Add |
-| `schemagen/src/test/java/gov/nist/secauto/metaschema/schemagen/xml/impl/DomDatatypeContentTest.java` | Add |
-| `schemagen/src/test/java/gov/nist/secauto/metaschema/schemagen/XmlSuiteTest.java` | Modify |
+| `schemagen/src/test/java/dev/metaschema/schemagen/xml/impl/IndentingXMLStreamWriterTest.java` | Add |
+| `schemagen/src/test/java/dev/metaschema/schemagen/xml/impl/XmlSchemaLoaderTest.java` | Add |
+| `schemagen/src/test/java/dev/metaschema/schemagen/xml/impl/DomDatatypeContentTest.java` | Add |
+| `schemagen/src/test/java/dev/metaschema/schemagen/XmlSuiteTest.java` | Modify |
 
 ### Implementation Files
 
 | File | Change Type |
 |------|-------------|
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/IndentingXMLStreamWriter.java` | Add |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/XmlSchemaLoader.java` | Add |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/DomDatatypeContent.java` | Add |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/JDom2XmlSchemaLoader.java` | Delete |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/JDom2DatatypeContent.java` | Delete |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/IndentingXMLStreamWriter.java` | Add |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/XmlSchemaLoader.java` | Add |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/DomDatatypeContent.java` | Add |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/JDom2XmlSchemaLoader.java` | Delete |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/JDom2DatatypeContent.java` | Delete |
 | `schemagen/src/main/resources/identity.xsl` | Delete |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/XmlSchemaGenerator.java` | Modify |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/AbstractXmlDatatypeProvider.java` | Modify |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/XmlCoreDatatypeProvider.java` | Modify |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/AbstractXmlMarkupDatatypeProvider.java` | Modify |
-| `schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/xml/impl/XmlProseBaseDatatypeProvider.java` | Modify |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/XmlSchemaGenerator.java` | Modify |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/AbstractXmlDatatypeProvider.java` | Modify |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/XmlCoreDatatypeProvider.java` | Modify |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/AbstractXmlMarkupDatatypeProvider.java` | Modify |
+| `schemagen/src/main/java/dev/metaschema/schemagen/xml/impl/XmlProseBaseDatatypeProvider.java` | Modify |
 
 ### Configuration Files
 

@@ -33,14 +33,14 @@ This ensures behavioral equivalence is verified, not assumed.
 
 #### Files Modified
 
-1. `core/src/main/java/gov/nist/secauto/metaschema/core/model/AbstractContainerModelSupport.java`
+1. `core/src/main/java/dev/metaschema/core/model/AbstractContainerModelSupport.java`
    - **Removed** empty `finalize()` method - abstract class with non-throwing constructor doesn't need finalizer attack protection
-2. `databind/src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/impl/AbstractAbsoluteModelGenerator.java`
+2. `databind/src/main/java/dev/metaschema/databind/model/metaschema/impl/AbstractAbsoluteModelGenerator.java`
    - **Removed** empty `finalize()` method and unused `@SuppressFBWarnings` import - abstract class with non-throwing constructor doesn't need finalizer attack protection
 
 #### Files NOT Modified (intentionally kept)
 
-1. `databind/src/main/java/gov/nist/secauto/metaschema/databind/DefaultBindingContext.java`
+1. `databind/src/main/java/dev/metaschema/databind/DefaultBindingContext.java`
    - **Kept** empty `finalize()` method - this is a non-final concrete class with a constructor that can throw, so the finalize() is required to prevent SEI CERT OBJ-11 finalizer attacks. Updated Javadoc to clarify this.
 
 #### Implementation Findings
@@ -75,7 +75,7 @@ The original code used empty `finalize()` methods to prevent finalizer attacks (
 
 #### Files Modified
 
-1. `metaschema-maven-plugin/src/main/java/gov/nist/secauto/metaschema/maven/plugin/AbstractMetaschemaMojo.java`
+1. `metaschema-maven-plugin/src/main/java/dev/metaschema/maven/plugin/AbstractMetaschemaMojo.java`
    - Replaced deprecated `@Component` annotation with JSR-330 `@Inject` annotation for `BuildContext` injection
    - Updated import from `org.apache.maven.plugins.annotations.Component` to `javax.inject.Inject`
 
@@ -283,7 +283,7 @@ Type requirement methods and remaining usages.
 | **Target Branch** | develop |
 
 #### Scope
-`core/src/main/java/gov/nist/secauto/metaschema/core/model/`
+`core/src/main/java/dev/metaschema/core/model/`
 
 #### Key Files
 - Interface definitions for metaschema model elements
@@ -308,7 +308,7 @@ Type requirement methods and remaining usages.
 | **Target Branch** | develop |
 
 #### Scope
-`core/src/main/java/gov/nist/secauto/metaschema/core/metapath/`
+`core/src/main/java/dev/metaschema/core/metapath/`
 
 #### Key Files
 - Expression interfaces
@@ -359,7 +359,7 @@ Type requirement methods and remaining usages.
 | **Target Branch** | develop |
 
 #### Scope
-`databind/src/main/java/gov/nist/secauto/metaschema/databind/`
+`databind/src/main/java/dev/metaschema/databind/`
 
 #### Key Files
 - `binding/AssemblyModel.java` (72 warnings - highest priority)
@@ -384,7 +384,7 @@ Type requirement methods and remaining usages.
 | **Target Branch** | develop |
 
 #### Scope
-`schemagen/src/main/java/gov/nist/secauto/metaschema/schemagen/`
+`schemagen/src/main/java/dev/metaschema/schemagen/`
 
 #### Key Files
 - `ModuleIndex.java` (23 warnings - highest priority)
