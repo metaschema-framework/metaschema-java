@@ -1,0 +1,241 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.databind.model.metaschema.impl;
+
+import dev.metaschema.core.datatype.IDataTypeAdapter;
+import dev.metaschema.core.datatype.markup.MarkupLine;
+import dev.metaschema.core.datatype.markup.MarkupMultiline;
+import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
+import dev.metaschema.core.model.AbstractInlineFieldDefinition;
+import dev.metaschema.core.model.IAttributable;
+import dev.metaschema.core.model.IContainerFlagSupport;
+import dev.metaschema.core.model.IContainerModelAbsolute;
+import dev.metaschema.core.model.IFieldDefinition;
+import dev.metaschema.core.model.IFieldInstanceAbsolute;
+import dev.metaschema.core.model.IFlagInstance;
+import dev.metaschema.core.model.IModelElementVisitor;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.model.constraint.IValueConstrained;
+import dev.metaschema.core.model.constraint.ValueConstraintSet;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
+import dev.metaschema.databind.model.IGroupAs;
+import dev.metaschema.databind.model.impl.IFeatureInstanceModelGroupAs;
+import dev.metaschema.databind.model.metaschema.IBindingDefinitionModel;
+import dev.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
+import dev.metaschema.databind.model.metaschema.IBindingInstance;
+import dev.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import dev.metaschema.databind.model.metaschema.binding.FieldConstraints;
+import dev.metaschema.databind.model.metaschema.binding.InlineDefineField;
+import dev.metaschema.databind.model.metaschema.binding.JsonKey;
+import dev.metaschema.databind.model.metaschema.binding.JsonValueKeyFlag;
+
+import java.math.BigInteger;
+import java.util.Map;
+import java.util.Set;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+import nl.talsmasoftware.lazy4j.Lazy;
+
+/**
+ * Implementation of an inline field instance from binding data.
+ * <p>
+ * This class represents a field that is defined inline within its containing
+ * assembly rather than as a reference.
+ */
+public class InstanceModelFieldInline
+    extends AbstractInlineFieldDefinition<
+        IContainerModelAbsolute,
+        IFieldDefinition,
+        IFieldInstanceAbsolute,
+        IBindingDefinitionModelAssembly,
+        IFlagInstance>
+    implements IFieldInstanceAbsolute, IBindingInstance, IBindingDefinitionModel,
+    IFeatureInstanceModelGroupAs {
+  @NonNull
+  private final InlineDefineField binding;
+  @NonNull
+  private final Map<IAttributable.Key, Set<String>> properties;
+  @NonNull
+  private final IGroupAs groupAs;
+  @NonNull
+  private final Lazy<IAssemblyNodeItem> boundNodeItem;
+  @NonNull
+  private final IDataTypeAdapter<?> javaTypeAdapter;
+  @Nullable
+  private final Object defaultValue;
+  @NonNull
+  private final Lazy<IContainerFlagSupport<IFlagInstance>> flagContainer;
+  @NonNull
+  private final Lazy<IValueConstrained> valueConstraints;
+
+  /**
+   * Construct a new inline field instance from binding data.
+   *
+   * @param binding
+   *          the underlying bound inline field definition object
+   * @param bindingInstance
+   *          the assembly instance for the underlying bound class
+   * @param position
+   *          the zero-based position of this instance relative to its bound
+   *          siblings
+   * @param parent
+   *          the parent container model containing this field
+   */
+  public InstanceModelFieldInline(
+      @NonNull InlineDefineField binding,
+      @NonNull IBoundInstanceModelGroupedAssembly bindingInstance,
+      int position,
+      @NonNull IContainerModelAbsolute parent) {
+    super(parent);
+    this.binding = binding;
+    this.properties = ModelSupport.parseProperties(ObjectUtils.requireNonNull(binding.getProps()));
+    this.groupAs = ModelSupport.groupAs(binding.getGroupAs(), parent.getOwningDefinition().getContainingModule());
+    this.boundNodeItem = ObjectUtils.notNull(
+        Lazy.of(() -> (IAssemblyNodeItem) ObjectUtils.notNull(getContainingDefinition().getSourceNodeItem())
+            .getModelItemsByName(bindingInstance.getQName())
+            .get(position)));
+
+    ISource source = parent.getOwningDefinition().getContainingModule().getSource();
+
+    this.javaTypeAdapter = ModelSupport.dataType(
+        binding.getAsType(),
+        source);
+    this.defaultValue = ModelSupport.defaultValue(binding.getDefault(), this.javaTypeAdapter);
+    this.flagContainer = ObjectUtils.notNull(Lazy.of(() -> {
+      JsonKey jsonKey = binding.getJsonKey();
+      return FlagContainerSupport.newFlagContainer(
+          binding.getFlags(),
+          bindingInstance,
+          this,
+          jsonKey == null ? null : jsonKey.getFlagRef());
+    }));
+    this.valueConstraints = ObjectUtils.notNull(Lazy.of(() -> {
+      IValueConstrained retval = new ValueConstraintSet(source);
+      FieldConstraints constraints = binding.getConstraint();
+      if (constraints != null) {
+        ConstraintBindingSupport.parse(
+            retval,
+            constraints,
+            source);
+      }
+      return retval;
+    }));
+  }
+
+  @NonNull
+  private InlineDefineField getBinding() {
+    return binding;
+  }
+
+  @Override
+  public IBindingMetaschemaModule getContainingModule() {
+    return getContainingDefinition().getContainingModule();
+  }
+
+  @Override
+  public Map<IAttributable.Key, Set<String>> getProperties() {
+    return properties;
+  }
+
+  @Override
+  public IGroupAs getGroupAs() {
+    return groupAs;
+  }
+
+  @Override
+  public IContainerFlagSupport<IFlagInstance> getFlagContainer() {
+    return ObjectUtils.notNull(flagContainer.get());
+  }
+
+  @Override
+  public IValueConstrained getConstraintSupport() {
+    return ObjectUtils.notNull(valueConstraints.get());
+  }
+
+  @Override
+  public IDataTypeAdapter<?> getJavaTypeAdapter() {
+    return javaTypeAdapter;
+  }
+
+  @Override
+  public Object getDefaultValue() {
+    return defaultValue;
+  }
+
+  @Override
+  public IAssemblyNodeItem getSourceNodeItem() {
+    return ObjectUtils.notNull(boundNodeItem.get());
+  }
+
+  @Override
+  public <CONTEXT, RESULT> RESULT accept(IModelElementVisitor<CONTEXT, RESULT> visitor, CONTEXT context) {
+    return IFieldInstanceAbsolute.super.accept(visitor, context);
+  }
+
+  // ---------------------------------------
+  // - Start binding driven code - CPD-OFF -
+  // ---------------------------------------
+
+  @Override
+  public boolean isInXmlWrapped() {
+    return ModelSupport.fieldInXml(getBinding().getInXml());
+  }
+
+  @Override
+  public String getName() {
+    return ObjectUtils.notNull(getBinding().getName());
+  }
+
+  @Override
+  public Integer getIndex() {
+    return ModelSupport.index(getBinding().getIndex());
+  }
+
+  @Override
+  public String getFormalName() {
+    return getBinding().getFormalName();
+  }
+
+  @Override
+  public MarkupLine getDescription() {
+    return getBinding().getDescription();
+  }
+
+  @Override
+  public MarkupMultiline getRemarks() {
+    return ModelSupport.remarks(getBinding().getRemarks());
+  }
+
+  @Override
+  public int getMinOccurs() {
+    BigInteger min = getBinding().getMinOccurs();
+    return min == null ? DEFAULT_GROUP_AS_MIN_OCCURS : min.intValueExact();
+  }
+
+  @Override
+  public int getMaxOccurs() {
+    String max = getBinding().getMaxOccurs();
+    return max == null ? DEFAULT_GROUP_AS_MAX_OCCURS : ModelSupport.maxOccurs(max);
+  }
+
+  @Override
+  public IFlagInstance getJsonValueKeyFlagInstance() {
+    JsonValueKeyFlag obj = getBinding().getJsonValueKeyFlag();
+    String name = obj == null ? null : obj.getFlagRef();
+    String namespace = ObjectUtils.notNull(getContainingModule().getXmlNamespace().toASCIIString());
+    return name == null ? null
+        : ObjectUtils.requireNonNull(getFlagInstanceByName(
+            IEnhancedQName.of(namespace, name).getIndexPosition()));
+  }
+
+  @Override
+  public String getJsonValueKeyName() {
+    return getBinding().getJsonValueKey();
+  }
+}

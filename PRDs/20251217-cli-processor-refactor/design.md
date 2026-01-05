@@ -31,12 +31,12 @@ The `processCommand` method in `CLIProcessor.java` has high cyclomatic and NPath
 ### File Structure
 
 ```text
-cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/
+cli-processor/src/main/java/dev/metaschema/cli/processor/
 ├── CLIProcessor.java          (simplified, delegates to CallingContext)
 ├── CallingContext.java        (NEW - extracted, package-private)
 └── ... (existing files unchanged)
 
-cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/
+cli-processor/src/test/java/dev/metaschema/cli/processor/
 ├── CLIProcessorTest.java      (NEW - integration tests)
 ├── CallingContextTest.java    (NEW - unit tests for phases)
 └── ExitCodeTest.java          (existing)
@@ -259,10 +259,10 @@ This refactoring must be based on PR #551 (shell completion). That PR introduces
 
 ```java
 // Before (PR #551)
-import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import dev.metaschema.cli.processor.CLIProcessor.CallingContext;
 
 // After (our refactor)
-import gov.nist.secauto.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.CallingContext;
 ```
 
 3. **`ExtraArgument.getType()`** - New method for completion hints. No impact on our design.

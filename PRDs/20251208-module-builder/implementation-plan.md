@@ -3,11 +3,11 @@
 ## PR 1: Core Module Builder Infrastructure
 
 **Files to create:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/IModuleBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/ModuleBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/IModuleBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/ModuleBuilder.java`
 
 **Files to modify:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/IModuleMockFactory.java` - Add `module()` method
+- `core/src/test/java/dev/metaschema/core/testing/model/IModuleMockFactory.java` - Add `module()` method
 
 **Acceptance Criteria:**
 - [ ] `IModuleBuilder` interface with metadata methods (namespace, shortName, version, source)
@@ -22,14 +22,14 @@
 ## PR 2: Definition Builder Integration
 
 **Files to modify:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/AbstractMetaschemaBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/IFlagBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/FlagBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/IFieldBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/FieldBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/IAssemblyBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/AssemblyBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/ModuleBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/AbstractMetaschemaBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/IFlagBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/FlagBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/IFieldBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/FieldBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/IAssemblyBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/AssemblyBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/ModuleBuilder.java`
 
 **Acceptance Criteria:**
 - [ ] `AbstractMetaschemaBuilder.applyDefinition(IDefinition, IModule)` sets `getContainingModule()`
@@ -48,13 +48,13 @@
 ## PR 3: Reference Support for Recursive Assemblies
 
 **Files to create:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/IModelReference.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/AssemblyReference.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/FieldReference.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/IModelReference.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/AssemblyReference.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/FieldReference.java`
 
 **Files to modify:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/IModuleBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/ModuleBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/IModuleBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/ModuleBuilder.java`
 
 **Acceptance Criteria:**
 - [ ] `IModelReference` marker interface for lazy references
@@ -72,7 +72,7 @@
 ## PR 4: Export and Root Assembly Support
 
 **Files to modify:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testing/model/ModuleBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testing/model/ModuleBuilder.java`
 
 **Acceptance Criteria:**
 - [ ] `getExportedAssemblyDefinitions()` returns all assemblies (same as local)
@@ -93,7 +93,7 @@
 ## PR 5: Migrate ExternalConstraintsModulePostProcessorTest
 
 **Files to modify:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/ExternalConstraintsModulePostProcessorTest.java`
+- `core/src/test/java/dev/metaschema/core/model/constraint/ExternalConstraintsModulePostProcessorTest.java`
 
 **Acceptance Criteria:**
 - [ ] Test uses `IModuleBuilder` instead of `ModuleLoader`
@@ -108,8 +108,8 @@
 ## PR 6: Migrate Recursion Visitor Tests
 
 **Files to modify:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/item/node/RecursionCollectingNodeItemVisitorTest.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/item/node/AbstractRecursionPreventingNodeItemVisitorTest.java`
+- `core/src/test/java/dev/metaschema/core/metapath/item/node/RecursionCollectingNodeItemVisitorTest.java`
+- `core/src/test/java/dev/metaschema/core/metapath/item/node/AbstractRecursionPreventingNodeItemVisitorTest.java`
 
 **Acceptance Criteria:**
 - [ ] Both tests use `IModuleBuilder` instead of `ModuleLoader`
@@ -124,7 +124,7 @@
 ## PR 7: Migrate MermaidErDiagramGeneratorTest
 
 **Files to modify:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/util/MermaidErDiagramGeneratorTest.java`
+- `core/src/test/java/dev/metaschema/core/util/MermaidErDiagramGeneratorTest.java`
 
 **Acceptance Criteria:**
 - [ ] Test uses `IModuleBuilder` instead of `ModuleLoader`

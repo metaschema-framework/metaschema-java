@@ -12,7 +12,7 @@ Single PR addressing all three related issues, organized into logical implementa
 
 ### Task 1.1: Create ValidationContext class
 
-**File**: `databind/src/main/java/gov/nist/secauto/metaschema/databind/io/ValidationContext.java`
+**File**: `databind/src/main/java/dev/metaschema/databind/io/ValidationContext.java`
 
 Create a new class to bundle parsing context:
 
@@ -36,7 +36,7 @@ public class ValidationContext {
 
 ### Task 1.2: Create PathTracker utility
 
-**File**: `databind/src/main/java/gov/nist/secauto/metaschema/databind/io/PathTracker.java`
+**File**: `databind/src/main/java/dev/metaschema/databind/io/PathTracker.java`
 
 Lightweight path tracking during parsing:
 
@@ -58,7 +58,7 @@ public class PathTracker {
 
 ### Task 1.3: Create IResourceLocation implementation
 
-**File**: `core/src/main/java/gov/nist/secauto/metaschema/core/model/SimpleResourceLocation.java`
+**File**: `core/src/main/java/dev/metaschema/core/model/SimpleResourceLocation.java`
 
 Simple implementation of IResourceLocation:
 
@@ -84,7 +84,7 @@ public class SimpleResourceLocation implements IResourceLocation {
 
 ### Task 2.1: Create test infrastructure
 
-**File**: `databind/src/test/java/gov/nist/secauto/metaschema/databind/io/ValidationErrorMessageTest.java`
+**File**: `databind/src/test/java/dev/metaschema/databind/io/ValidationErrorMessageTest.java`
 
 Create test class with helper methods for parsing test documents.
 
@@ -156,7 +156,7 @@ Create test class with helper methods for parsing test documents.
 
 ### Task 3.1: Update IProblemHandler interface
 
-**File**: `databind/src/main/java/gov/nist/secauto/metaschema/databind/io/IProblemHandler.java`
+**File**: `databind/src/main/java/dev/metaschema/databind/io/IProblemHandler.java`
 
 Add overloaded method with ValidationContext:
 
@@ -179,7 +179,7 @@ default void handleMissingInstances(
 
 ### Task 3.2: Update AbstractProblemHandler
 
-**File**: `databind/src/main/java/gov/nist/secauto/metaschema/databind/io/AbstractProblemHandler.java`
+**File**: `databind/src/main/java/dev/metaschema/databind/io/AbstractProblemHandler.java`
 
 Update validateRequiredFields to use ValidationContext:
 
@@ -197,7 +197,7 @@ Update validateRequiredFields to use ValidationContext:
 
 ### Task 3.3: Update MetaschemaJsonReader
 
-**File**: `databind/src/main/java/gov/nist/secauto/metaschema/databind/io/json/MetaschemaJsonReader.java`
+**File**: `databind/src/main/java/dev/metaschema/databind/io/json/MetaschemaJsonReader.java`
 
 Add path tracking and ValidationContext creation:
 
@@ -212,7 +212,7 @@ Add path tracking and ValidationContext creation:
 
 ### Task 3.4: Update MetaschemaXmlReader
 
-**File**: `databind/src/main/java/gov/nist/secauto/metaschema/databind/io/xml/MetaschemaXmlReader.java`
+**File**: `databind/src/main/java/dev/metaschema/databind/io/xml/MetaschemaXmlReader.java`
 
 Add path tracking and ValidationContext creation:
 
@@ -227,7 +227,7 @@ Add path tracking and ValidationContext creation:
 
 ### Task 3.5: Update IXmlProblemHandler interface
 
-**File**: `databind/src/main/java/gov/nist/secauto/metaschema/databind/io/xml/IXmlProblemHandler.java`
+**File**: `databind/src/main/java/dev/metaschema/databind/io/xml/IXmlProblemHandler.java`
 
 Add overloaded methods with ValidationContext for XML-specific handling.
 
@@ -239,8 +239,8 @@ Add overloaded methods with ValidationContext for XML-specific handling.
 ### Task 3.6: Handle null URI gracefully
 
 **Files**:
-- `databind/src/main/java/gov/nist/secauto/metaschema/databind/io/xml/DefaultXmlDeserializer.java`
-- `databind/src/main/java/gov/nist/secauto/metaschema/databind/io/json/DefaultJsonDeserializer.java`
+- `databind/src/main/java/dev/metaschema/databind/io/xml/DefaultXmlDeserializer.java`
+- `databind/src/main/java/dev/metaschema/databind/io/json/DefaultJsonDeserializer.java`
 
 Use synthetic URI when null is passed to prevent NPE.
 

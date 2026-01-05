@@ -10,7 +10,7 @@
     </description>
 
     <!-- Exclude generated test suite binding classes that use underscore-prefixed fields -->
-    <exclude-pattern>.*/gov/nist/secauto/metaschema/model/testing/testsuite/.*\.java</exclude-pattern>
+    <exclude-pattern>.*/dev/metaschema/model/testing/testsuite/.*\.java</exclude-pattern>
 
     <!-- Apply FieldNamingConventions to non-generated code only -->
     <rule ref="category/java/codestyle.xml/FieldNamingConventions"/>

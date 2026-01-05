@@ -1,0 +1,139 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.databind.model.info;
+
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.IMetaschemaData;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.BindingException;
+import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
+import dev.metaschema.databind.model.IBoundProperty;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+/**
+ * A feature interface for handling complex item values during binding
+ * operations.
+ * <p>
+ * Complex items are bound to Java classes and can contain flags and other
+ * nested model content.
+ */
+public interface IFeatureComplexItemValueHandler extends IItemValueHandler<IBoundObject> {
+  /**
+   * Get the Metaschema definition representing the bound complex data.
+   *
+   * @return the definition
+   */
+  @NonNull
+  IBoundDefinitionModelComplex getDefinition();
+
+  // /**
+  // * Get the name of the JSON key, if a JSON key is configured.
+  // *
+  // * @return the name of the JSON key flag if configured, or {@code null}
+  // * otherwise
+  // */
+  // @Nullable
+  // String getJsonKeyFlagName();
+
+  /**
+   * Get the mapping of JSON property names to property bindings.
+   *
+   * @return the mapping
+   */
+  // REFACTOR: move JSON-specific methods to a binding cache implementation
+  @NonNull
+  Map<String, IBoundProperty<?>> getJsonProperties();
+
+  // REFACTOR: flatten implementations?
+  @Override
+  @NonNull
+  IBoundObject deepCopyItem(
+      @NonNull IBoundObject item,
+      @Nullable IBoundObject parentInstance) throws BindingException;
+
+  /**
+   * The class this binding is to.
+   *
+   * @return the bound class
+   */
+  @NonNull
+  Class<? extends IBoundObject> getBoundClass();
+
+  /**
+   * Gets a new instance of the bound class.
+   *
+   * @param <CLASS>
+   *          the type of the bound class
+   * @param supplier
+   *          the metaschema data generator used to capture parse information
+   *          (i.e., location)
+   * @return a Java object for the class
+   * @throws RuntimeException
+   *           if the instance cannot be created due to a binding error
+   */
+  @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
+  @NonNull
+  default <CLASS extends IBoundObject> CLASS newInstance(@Nullable Supplier<IMetaschemaData> supplier) {
+    Class<?> clazz = getBoundClass();
+    try {
+      CLASS retval;
+      if (supplier != null) {
+        @SuppressWarnings("unchecked")
+        Constructor<CLASS> constructor
+            = (Constructor<CLASS>) clazz.getDeclaredConstructor(IMetaschemaData.class);
+        retval = constructor.newInstance(supplier.get());
+      } else {
+        @SuppressWarnings("unchecked")
+        Constructor<CLASS> constructor
+            = (Constructor<CLASS>) clazz.getDeclaredConstructor();
+        retval = constructor.newInstance();
+      }
+      return ObjectUtils.notNull(retval);
+    } catch (NoSuchMethodException ex) {
+      String msg = String.format("Class '%s' does not have a required no-arg constructor.", clazz.getName());
+      throw new RuntimeException(msg, ex);
+    } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  /**
+   * Invoke the before-deserialize lifecycle callback on the target object.
+   *
+   * @param targetObject
+   *          the object being deserialized
+   * @param parentObject
+   *          the parent object containing the target, or {@code null} if there is
+   *          no parent
+   * @throws BindingException
+   *           if an error occurs during the callback
+   */
+  void callBeforeDeserialize(
+      @NonNull IBoundObject targetObject,
+      @Nullable IBoundObject parentObject) throws BindingException;
+
+  /**
+   * Invoke the after-deserialize lifecycle callback on the target object.
+   *
+   * @param targetObject
+   *          the object that was deserialized
+   * @param parentObject
+   *          the parent object containing the target, or {@code null} if there is
+   *          no parent
+   * @throws BindingException
+   *           if an error occurs during the callback
+   */
+  void callAfterDeserialize(
+      @NonNull IBoundObject targetObject,
+      @Nullable IBoundObject parentObject) throws BindingException;
+}

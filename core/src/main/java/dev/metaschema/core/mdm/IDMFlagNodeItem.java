@@ -1,0 +1,39 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.core.mdm;
+
+import dev.metaschema.core.mdm.impl.DefinitionFlagNodeItem;
+import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import dev.metaschema.core.metapath.item.node.IFlagNodeItem;
+import dev.metaschema.core.model.IFlagDefinition;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Represents a Metapath flag node item that is backed by a simple Metaschema
+ * module-based data model.
+ */
+public interface IDMFlagNodeItem extends IFlagNodeItem, IDMNodeItem {
+  /**
+   * Create new flag node item that is detached from a parent node item.
+   *
+   * @param definition
+   *          the Metaschema flag definition describing the flag
+   * @param value
+   *          the flag's initial value
+   * @param staticContext
+   *          the atomic flag value
+   * @return the new flag node item
+   */
+  @NonNull
+  static IDMFlagNodeItem newInstance(
+      @NonNull IFlagDefinition definition,
+      @NonNull IAnyAtomicItem value,
+      @NonNull StaticContext staticContext) {
+    return new DefinitionFlagNodeItem(definition, value, staticContext);
+  }
+}

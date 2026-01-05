@@ -39,22 +39,22 @@ This document details the implementation for adding constraint processing suppor
 
 | File | Purpose |
 |------|---------|
-| `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/IReportConstraint.java` | Report constraint interface with `getTest()` method |
-| `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/impl/DefaultReportConstraint.java` | Default implementation with builder |
-| `core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/ReportConstraintTest.java` | Unit tests for report constraint |
+| `core/src/main/java/dev/metaschema/core/model/constraint/IReportConstraint.java` | Report constraint interface with `getTest()` method |
+| `core/src/main/java/dev/metaschema/core/model/constraint/impl/DefaultReportConstraint.java` | Default implementation with builder |
+| `core/src/test/java/dev/metaschema/core/model/constraint/ReportConstraintTest.java` | Unit tests for report constraint |
 
 #### Files to Modify
 
 | File | Changes |
 |------|---------|
-| `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/IConstraintVisitor.java` | Add `visitReportConstraint()` method |
-| `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/IValueConstrained.java` | Add `getReportConstraints()` and `addConstraint(IReportConstraint)` methods |
-| `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/IFeatureValueConstrained.java` | Add delegation for report constraints |
-| `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/ValueConstraintSet.java` | Add storage and retrieval for report constraints |
-| `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/AbstractTargetedConstraints.java` | Add `getReportConstraints()` forwarding in `applyTo()` |
-| `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidator.java` | Add `validateReport()` method and integrate into validation flow |
-| `databind/src/main/java/gov/nist/secauto/metaschema/databind/model/metaschema/impl/ConstraintBindingSupport.java` | Add `TargetedReportConstraint` handling to `parse()` methods and `newReport()` factory |
-| `databind/src/test/java/gov/nist/secauto/metaschema/databind/model/metaschema/BindingConstraintLoaderTest.java` | Add test for loading TargetedReportConstraint |
+| `core/src/main/java/dev/metaschema/core/model/constraint/IConstraintVisitor.java` | Add `visitReportConstraint()` method |
+| `core/src/main/java/dev/metaschema/core/model/constraint/IValueConstrained.java` | Add `getReportConstraints()` and `addConstraint(IReportConstraint)` methods |
+| `core/src/main/java/dev/metaschema/core/model/constraint/IFeatureValueConstrained.java` | Add delegation for report constraints |
+| `core/src/main/java/dev/metaschema/core/model/constraint/ValueConstraintSet.java` | Add storage and retrieval for report constraints |
+| `core/src/main/java/dev/metaschema/core/model/constraint/AbstractTargetedConstraints.java` | Add `getReportConstraints()` forwarding in `applyTo()` |
+| `core/src/main/java/dev/metaschema/core/model/constraint/DefaultConstraintValidator.java` | Add `validateReport()` method and integrate into validation flow |
+| `databind/src/main/java/dev/metaschema/databind/model/metaschema/impl/ConstraintBindingSupport.java` | Add `TargetedReportConstraint` handling to `parse()` methods and `newReport()` factory |
+| `databind/src/test/java/dev/metaschema/databind/model/metaschema/BindingConstraintLoaderTest.java` | Add test for loading TargetedReportConstraint |
 | `.claude/skills/metaschema-constraints-authoring.md` | Add `report` constraint type documentation |
 | `.claude/skills/metaschema-java-library.md` | Add `IReportConstraint` interface (if applicable) |
 

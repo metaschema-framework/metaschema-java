@@ -4,7 +4,7 @@
 
 ### Task 1.1: Create ICompletionType Interface
 
-**File:** `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/completion/ICompletionType.java`
+**File:** `cli-processor/src/main/java/dev/metaschema/cli/processor/completion/ICompletionType.java`
 
 ```java
 /*
@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.cli.processor.completion;
+package dev.metaschema.cli.processor.completion;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * <p>
  * Instances are registered with {@link CompletionTypeRegistry} and looked up
  * by the type class specified in {@link org.apache.commons.cli.Option#getType()}
- * or {@link gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument#getType()}.
+ * or {@link dev.metaschema.cli.processor.command.ExtraArgument#getType()}.
  */
 public interface ICompletionType {
     /**
@@ -48,7 +48,7 @@ public interface ICompletionType {
 
 ### Task 1.2: Create CompletionTypeRegistry
 
-**File:** `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/completion/CompletionTypeRegistry.java`
+**File:** `cli-processor/src/main/java/dev/metaschema/cli/processor/completion/CompletionTypeRegistry.java`
 
 ```java
 /*
@@ -56,7 +56,7 @@ public interface ICompletionType {
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.cli.processor.completion;
+package dev.metaschema.cli.processor.completion;
 
 import java.io.File;
 import java.net.URI;
@@ -187,7 +187,7 @@ public final class CompletionTypeRegistry {
 
 ### Task 1.3: Extend ExtraArgument Interface
 
-**File:** `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/ExtraArgument.java`
+**File:** `cli-processor/src/main/java/dev/metaschema/cli/processor/command/ExtraArgument.java`
 
 Add `getType()` method and new factory overload:
 
@@ -223,7 +223,7 @@ static ExtraArgument newInstance(@NonNull String name, boolean required, @Nullab
 }
 ```
 
-**File:** `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/impl/DefaultExtraArgument.java`
+**File:** `cli-processor/src/main/java/dev/metaschema/cli/processor/command/impl/DefaultExtraArgument.java`
 
 Add type field and update constructor:
 
@@ -259,7 +259,7 @@ public class DefaultExtraArgument implements ExtraArgument {
 
 ### Task 1.4: Create CompletionScriptGenerator
 
-**File:** `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/completion/CompletionScriptGenerator.java`
+**File:** `cli-processor/src/main/java/dev/metaschema/cli/processor/completion/CompletionScriptGenerator.java`
 
 Key methods:
 
@@ -347,7 +347,7 @@ Investigate existing patterns and choose the simplest approach.
 
 ### Task 2.2: Create ShellCompletionCommand
 
-**File:** `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/ShellCompletionCommand.java`
+**File:** `cli-processor/src/main/java/dev/metaschema/cli/processor/command/ShellCompletionCommand.java`
 
 ```java
 public class ShellCompletionCommand extends AbstractTerminalCommand {
@@ -406,7 +406,7 @@ Execution flow:
 
 ### Task 3.1: Unit Tests for CompletionTypeRegistry
 
-**File:** `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/completion/CompletionTypeRegistryTest.java`
+**File:** `cli-processor/src/test/java/dev/metaschema/cli/processor/completion/CompletionTypeRegistryTest.java`
 
 Test cases:
 - `testLookupFile()` - Returns `FileCompletionType` for `File.class`
@@ -427,7 +427,7 @@ Test cases:
 
 ### Task 3.2: Unit Tests for Generator
 
-**File:** `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/completion/CompletionScriptGeneratorTest.java`
+**File:** `cli-processor/src/test/java/dev/metaschema/cli/processor/completion/CompletionScriptGeneratorTest.java`
 
 Test cases:
 - `testBashSyntax()` - Generated script passes `bash -n`
@@ -445,7 +445,7 @@ Test cases:
 
 ### Task 3.3: Integration Tests
 
-**File:** `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/command/ShellCompletionCommandTest.java`
+**File:** `cli-processor/src/test/java/dev/metaschema/cli/processor/command/ShellCompletionCommandTest.java`
 
 Test cases:
 - `testBashGeneration()` - Exit OK, non-empty output
@@ -488,7 +488,7 @@ your-cli shell-completion zsh > ~/.zfunc/_your-cli
 
 Update existing option definitions in `metaschema-cli` to include `.type()` calls:
 
-**File:** `metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/MetaschemaCommands.java`
+**File:** `metaschema-cli/src/main/java/dev/metaschema/cli/commands/MetaschemaCommands.java`
 
 ```java
 // Before

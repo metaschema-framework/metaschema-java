@@ -84,7 +84,7 @@
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<configuration>
 						<excludes>
-							**/gov/nist/secauto/metaschema/metaschema/model/**/*</excludes>
+							**/dev/metaschema/metaschema/model/**/*</excludes>
 					</configuration>
 				</plugin>
 				<plugin>

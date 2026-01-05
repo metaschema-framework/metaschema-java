@@ -1,0 +1,117 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.databind.model;
+
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.databind.io.BindingException;
+import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.function.Predicate;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+/**
+ * Represents a field or assembly instance bound to Java class.
+ */
+public interface IBoundDefinitionModelComplex
+    extends IBoundDefinitionModel<IBoundObject>, IFeatureComplexItemValueHandler {
+
+  /**
+   * Get a mapping of JSON property names to their corresponding bound properties.
+   *
+   * @param flagFilter
+   *          a predicate to filter which flag instances to include, or
+   *          {@code null} to include all flags
+   * @return a map of property names to bound properties
+   */
+  @NonNull
+  Map<String, IBoundProperty<?>> getJsonProperties(@Nullable Predicate<IBoundInstanceFlag> flagFilter);
+
+  /**
+   * Get the "beforeDeserialize" method for this bound class, if one exists.
+   * <p>
+   * This method is called before data is read and applied during deserialization.
+   *
+   * @return the method, or {@code null} if no such method exists
+   */
+  @Nullable
+  Method getBeforeDeserializeMethod();
+
+  /**
+   * Calls the method named "beforeDeserialize" on each class in the object's
+   * hierarchy if the method exists on the class.
+   * <p>
+   * These methods can be used to set the initial state of the target bound object
+   * before data is read and applied during deserialization.
+   *
+   * @param targetObject
+   *          the data object target to call the method(s) on
+   * @param parentObject
+   *          the object target's parent object, which is used as the method
+   *          argument
+   * @throws BindingException
+   *           if an error occurs while calling the method
+   */
+  @Override
+  default void callBeforeDeserialize(IBoundObject targetObject, IBoundObject parentObject) throws BindingException {
+    Method beforeDeserializeMethod = getBeforeDeserializeMethod();
+    if (beforeDeserializeMethod != null) {
+      try {
+        beforeDeserializeMethod.invoke(targetObject, parentObject);
+      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        throw new BindingException(ex);
+      }
+    }
+  }
+
+  /**
+   * Get the "afterDeserialize" method for this bound class, if one exists.
+   * <p>
+   * This method is called after data is read and applied during deserialization.
+   *
+   * @return the method, or {@code null} if no such method exists
+   */
+  @Nullable
+  Method getAfterDeserializeMethod();
+
+  /**
+   * Calls the method named "afterDeserialize" on each class in the object's
+   * hierarchy if the method exists.
+   * <p>
+   * These methods can be used to modify the state of the target bound object
+   * after data is read and applied during deserialization.
+   *
+   * @param targetObject
+   *          the data object target to call the method(s) on
+   * @param parentObject
+   *          the object target's parent object, which is used as the method
+   *          argument
+   * @throws BindingException
+   *           if an error occurs while calling the method
+   */
+  @Override
+  default void callAfterDeserialize(IBoundObject targetObject, IBoundObject parentObject) throws BindingException {
+    Method afterDeserializeMethod = getAfterDeserializeMethod();
+    if (afterDeserializeMethod != null) {
+      try {
+        afterDeserializeMethod.invoke(targetObject, parentObject);
+      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        throw new BindingException(ex);
+      }
+    }
+  }
+
+  // @Override
+  // public String getJsonKeyFlagName() {
+  // // definition items never have a JSON key
+  // return null;
+  // }
+
+}

@@ -18,7 +18,7 @@ Single PR containing:
 
 Create tests that verify `isRequired()` behavior before implementing the fix.
 
-**File:** `databind/src/test/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/AbstractNamedModelInstanceTypeInfoTest.java`
+**File:** `databind/src/test/java/dev/metaschema/databind/codegen/typeinfo/AbstractNamedModelInstanceTypeInfoTest.java`
 
 **Test cases:**
 - [x] Property outside choice with minOccurs=1, maxOccurs=1 → returns `true`
@@ -31,7 +31,7 @@ Create tests that verify `isRequired()` behavior before implementing the fix.
 
 Update `isRequired()` to check for choice membership.
 
-**File:** `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/AbstractNamedModelInstanceTypeInfo.java`
+**File:** `databind/src/main/java/dev/metaschema/databind/codegen/typeinfo/AbstractNamedModelInstanceTypeInfo.java`
 
 **Change:**
 ```java
@@ -53,8 +53,8 @@ public boolean isRequired() {
 Document the choice block behavior and enhance setter Javadoc.
 
 **Files:**
-- `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/IPropertyTypeInfo.java`
-- `databind/src/main/java/gov/nist/secauto/metaschema/databind/codegen/typeinfo/INamedModelInstanceTypeInfo.java`
+- `databind/src/main/java/dev/metaschema/databind/codegen/typeinfo/IPropertyTypeInfo.java`
+- `databind/src/main/java/dev/metaschema/databind/codegen/typeinfo/INamedModelInstanceTypeInfo.java`
 
 **Changes:**
 1. Update `isRequired()` Javadoc to document choice block behavior

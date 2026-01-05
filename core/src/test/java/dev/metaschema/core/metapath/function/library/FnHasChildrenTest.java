@@ -1,0 +1,87 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.core.metapath.function.library;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import dev.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.ExpressionTestBase;
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.metapath.item.atomic.IStringItem;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import dev.metaschema.core.testsupport.mocking.MockedDocumentGenerator;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+class FnHasChildrenTest
+    extends ExpressionTestBase {
+
+  private static Stream<Arguments> provideValues() { // NOPMD - false positive
+    return Stream.of(
+        Arguments.of(
+            true,
+            "has-children()"),
+        Arguments.of(
+            true,
+            "has-children(.)"),
+        Arguments.of(
+            true,
+            "has-children(/root)"),
+        Arguments.of(
+            false,
+            "has-children(/root/assembly)"),
+        Arguments.of(
+            false,
+            "has-children(/root/assembly/@assembly-flag)"),
+        Arguments.of(
+            false,
+            "has-children(/root/field)"),
+        Arguments.of(
+            false,
+            "has-children(/root/field/@field-flag)"));
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideValues")
+  void test(boolean expected, @NonNull String metapath) {
+    DynamicContext dynamicContext = newDynamicContext();
+
+    INodeItem node = MockedDocumentGenerator.generateDocumentNodeItem();
+    Boolean result = IMetapathExpression.compile(metapath, dynamicContext.getStaticContext())
+        .evaluateAs(node, IMetapathExpression.ResultType.BOOLEAN, dynamicContext);
+    assertEquals(expected, result);
+  }
+
+  @Test
+  void testContextAbsent() {
+    DynamicContext dynamicContext = newDynamicContext();
+
+    assertThrows(ContextAbsentDynamicMetapathException.class, () -> {
+      IMetapathExpression.compile("has-children()", dynamicContext.getStaticContext())
+          .evaluateAs(null, IMetapathExpression.ResultType.ITEM, dynamicContext);
+    });
+  }
+
+  @Test
+  void testNotANode() {
+    DynamicContext dynamicContext = newDynamicContext();
+
+    assertThrows(InvalidTypeMetapathException.class, () -> {
+      IMetapathExpression.compile("has-children()", dynamicContext.getStaticContext())
+          .evaluateAs(IStringItem.valueOf("test"), IMetapathExpression.ResultType.ITEM, dynamicContext);
+    });
+  }
+}

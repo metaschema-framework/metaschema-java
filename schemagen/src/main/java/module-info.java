@@ -6,13 +6,13 @@
 /**
  * Modules used by the Metaschema schema generator.
  */
-module gov.nist.secauto.metaschema.schemagen {
+module dev.metaschema.schemagen {
   // requirements
   requires java.base;
   requires java.xml;
 
-  requires transitive gov.nist.secauto.metaschema.core;
-  requires transitive gov.nist.secauto.metaschema.databind;
+  requires transitive dev.metaschema.core;
+  requires transitive dev.metaschema.databind;
 
   requires com.ctc.wstx;
   requires com.github.spotbugs.annotations;
@@ -22,7 +22,7 @@ module gov.nist.secauto.metaschema.schemagen {
   requires org.codehaus.stax2;
   requires org.eclipse.jdt.annotation;
 
-  exports gov.nist.secauto.metaschema.schemagen;
-  exports gov.nist.secauto.metaschema.schemagen.json;
-  exports gov.nist.secauto.metaschema.schemagen.xml;
+  exports dev.metaschema.schemagen;
+  exports dev.metaschema.schemagen.json;
+  exports dev.metaschema.schemagen.xml;
 }

@@ -1,0 +1,106 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.core.model.constraint;
+
+import dev.metaschema.core.datatype.markup.MarkupMultiline;
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.model.constraint.impl.DefaultLet;
+import dev.metaschema.core.qname.IEnhancedQName;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+/**
+ * Represents a variable assignment for use in Metaschema module constraints.
+ */
+public interface ILet {
+  /**
+   * Create a new Let expression by compiling the provided Metapath expression
+   * string.
+   * <p>
+   * This method is deprecated. Callers should use
+   * {@link #of(IEnhancedQName, IMetapathExpression, ISource, MarkupMultiline)}
+   * instead.
+   *
+   * @param name
+   *          the let expression variable name
+   * @param valueExpression
+   *          a Metapath expression string representing the variable value
+   * @param source
+   *          the source descriptor for the resource containing the constraint
+   * @param remarks
+   *          remarks about the let statement
+   * @return the original let statement with the same name or {@code null}
+   */
+  @NonNull
+  @Deprecated(since = "2.2.0", forRemoval = true)
+  static ILet of(
+      @NonNull IEnhancedQName name,
+      @NonNull String valueExpression,
+      @NonNull ISource source,
+      @Nullable MarkupMultiline remarks) {
+    return of(
+        name,
+        IMetapathExpression.lazyCompile(valueExpression, source.getStaticContext()),
+        source,
+        remarks);
+  }
+
+  /**
+   * Create a new Let expression.
+   *
+   * @param name
+   *          the let expression variable name
+   * @param valueExpression
+   *          a Metapath expression representing the variable value
+   * @param source
+   *          the source descriptor for the resource containing the constraint
+   * @param remarks
+   *          remarks about the let statement
+   * @return the original let statement with the same name or {@code null}
+   */
+  @NonNull
+  static ILet of(
+      @NonNull IEnhancedQName name,
+      @NonNull IMetapathExpression valueExpression,
+      @NonNull ISource source,
+      @Nullable MarkupMultiline remarks) {
+    return new DefaultLet(name, valueExpression, source, remarks);
+  }
+
+  /**
+   * Get the name of the let variable.
+   *
+   * @return the name
+   */
+  @NonNull
+  IEnhancedQName getName();
+
+  /**
+   * Get the Metapath expression to use to query the value.
+   *
+   * @return the Metapath expression to use to query the value
+   */
+  @NonNull
+  IMetapathExpression getValueExpression();
+
+  /**
+   * Information about the source resource containing the let statement.
+   *
+   * @return the source information
+   */
+  @NonNull
+  ISource getSource();
+
+  /**
+   * Get the remarks associated with the let statement.
+   *
+   * @return the remark or {@code null} if no remarks are defined
+   */
+  @Nullable
+  MarkupMultiline getRemarks();
+}

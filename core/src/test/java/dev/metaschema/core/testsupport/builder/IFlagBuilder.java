@@ -1,0 +1,103 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.core.testsupport.builder;
+
+import dev.metaschema.core.datatype.IDataTypeAdapter;
+import dev.metaschema.core.model.IFlagDefinition;
+import dev.metaschema.core.model.IFlagInstance;
+import dev.metaschema.core.model.IModelDefinition;
+import dev.metaschema.core.model.IModule;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Represents a Metaschema module-based model builder for producing flag
+ * definitions and instances.
+ */
+public interface IFlagBuilder extends IMetaschemaBuilder<IFlagBuilder> {
+
+  /**
+   * Create a new builder using the provided mocking context.
+   *
+   * @return the new builder
+   */
+  @NonNull
+  static IFlagBuilder builder() {
+    return new FlagBuilder().reset();
+  }
+
+  /**
+   * Apply the provided required setting to built flags.
+   *
+   * @param required
+   *          {@code true} if the flag is required or {@code false} otherwise
+   * @return this builder
+   */
+  IFlagBuilder required(boolean required);
+
+  /**
+   * Apply the provided data type adapter to built flags.
+   *
+   * @param dataTypeAdapter
+   *          the data type adapter to use
+   * @return this builder
+   */
+  IFlagBuilder dataTypeAdapter(@NonNull IDataTypeAdapter<?> dataTypeAdapter);
+
+  /**
+   * Apply the provided data type adapter to built flags.
+   *
+   * @param defaultValue
+   *          the default value to use
+   * @return this builder
+   */
+  IFlagBuilder defaultValue(@NonNull Object defaultValue);
+
+  /**
+   * Build a mocked flag instance, based on a mocked definition, as a child of the
+   * provided parent.
+   *
+   * @param parent
+   *          the parent containing the new instance
+   * @return the new mocked instance
+   */
+  @NonNull
+  default IFlagInstance toInstance(@NonNull IModelDefinition parent) {
+    IFlagDefinition def = toDefinition();
+    return toInstance(parent, def);
+  }
+
+  /**
+   * Build a mocked flag instance, using the provided definition, as a child of
+   * the provided parent.
+   *
+   * @param parent
+   *          the parent containing the new instance
+   * @param definition
+   *          the definition to base the instance on
+   * @return the new mocked instance
+   */
+  @NonNull
+  IFlagInstance toInstance(@NonNull IModelDefinition parent, @NonNull IFlagDefinition definition);
+
+  /**
+   * Build a mocked flag definition.
+   *
+   * @return the new mocked definition
+   */
+  @NonNull
+  IFlagDefinition toDefinition();
+
+  /**
+   * Build a mocked flag definition associated with the given module.
+   *
+   * @param module
+   *          the containing module
+   * @return the new mocked definition
+   */
+  @NonNull
+  IFlagDefinition toDefinition(@NonNull IModule module);
+}

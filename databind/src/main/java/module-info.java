@@ -6,12 +6,12 @@
 /**
  * Identifies the modules used by the databind library.
  */
-module gov.nist.secauto.metaschema.databind {
+module dev.metaschema.databind {
   // requirements
   requires java.base;
   requires java.compiler;
 
-  requires transitive gov.nist.secauto.metaschema.core;
+  requires transitive dev.metaschema.core;
 
   requires static org.eclipse.jdt.annotation;
   requires static com.github.spotbugs.annotations;
@@ -27,21 +27,21 @@ module gov.nist.secauto.metaschema.databind {
 
   requires flexmark.util.sequence;
 
-  exports gov.nist.secauto.metaschema.databind;
-  exports gov.nist.secauto.metaschema.databind.codegen;
-  exports gov.nist.secauto.metaschema.databind.codegen.config;
-  exports gov.nist.secauto.metaschema.databind.config.binding;
-  // exports gov.nist.secauto.metaschema.databind.codegen.typeinfo;
-  exports gov.nist.secauto.metaschema.databind.io;
-  exports gov.nist.secauto.metaschema.databind.io.json;
-  exports gov.nist.secauto.metaschema.databind.io.xml;
-  exports gov.nist.secauto.metaschema.databind.io.yaml;
-  exports gov.nist.secauto.metaschema.databind.model;
-  exports gov.nist.secauto.metaschema.databind.model.info;
-  exports gov.nist.secauto.metaschema.databind.model.annotations;
-  exports gov.nist.secauto.metaschema.databind.model.metaschema;
-  exports gov.nist.secauto.metaschema.databind.model.metaschema.binding;
+  exports dev.metaschema.databind;
+  exports dev.metaschema.databind.codegen;
+  exports dev.metaschema.databind.codegen.config;
+  exports dev.metaschema.databind.config.binding;
+  // exports dev.metaschema.databind.codegen.typeinfo;
+  exports dev.metaschema.databind.io;
+  exports dev.metaschema.databind.io.json;
+  exports dev.metaschema.databind.io.xml;
+  exports dev.metaschema.databind.io.yaml;
+  exports dev.metaschema.databind.model;
+  exports dev.metaschema.databind.model.info;
+  exports dev.metaschema.databind.model.annotations;
+  exports dev.metaschema.databind.model.metaschema;
+  exports dev.metaschema.databind.model.metaschema.binding;
 
   // open binding classes for reflection
-  opens gov.nist.secauto.metaschema.databind.config.binding;
+  opens dev.metaschema.databind.config.binding;
 }

@@ -3,23 +3,23 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-import gov.nist.secauto.metaschema.core.datatype.IDataTypeProvider;
-import gov.nist.secauto.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import gov.nist.secauto.metaschema.core.datatype.markup.MarkupDataTypeProvider;
-import gov.nist.secauto.metaschema.core.metapath.function.IFunctionLibrary;
-import gov.nist.secauto.metaschema.core.metapath.function.library.DefaultFunctionLibrary;
+import dev.metaschema.core.datatype.IDataTypeProvider;
+import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import dev.metaschema.core.datatype.markup.MarkupDataTypeProvider;
+import dev.metaschema.core.metapath.function.IFunctionLibrary;
+import dev.metaschema.core.metapath.function.library.DefaultFunctionLibrary;
 
 /**
  * @provides IDataTypeProvider for core built-in data types
  * @provides IFunctionLibrary for core built-in Metapath functions
  * @uses IDataTypeProvider to discover data types implementing
- *       {@link gov.nist.secauto.metaschema.core.datatype.IDataTypeAdapter}
+ *       {@link dev.metaschema.core.datatype.IDataTypeAdapter}
  * @uses IFunctionLibrary to discover collections of Metapath functions
  *       implementing
- *       {@link gov.nist.secauto.metaschema.core.metapath.function.IFunction}
+ *       {@link dev.metaschema.core.metapath.function.IFunction}
  */
 @SuppressWarnings("requires-transitive-automatic")
-module gov.nist.secauto.metaschema.core {
+module dev.metaschema.core {
   // requirements
   requires java.base;
   requires java.xml;
@@ -63,31 +63,31 @@ module gov.nist.secauto.metaschema.core {
   requires transitive flexmark.util.sequence;
   requires flexmark.util.visitor;
 
-  exports gov.nist.secauto.metaschema.core;
-  exports gov.nist.secauto.metaschema.core.configuration;
-  exports gov.nist.secauto.metaschema.core.datatype;
-  exports gov.nist.secauto.metaschema.core.datatype.adapter;
-  exports gov.nist.secauto.metaschema.core.datatype.markup;
-  exports gov.nist.secauto.metaschema.core.datatype.object;
-  exports gov.nist.secauto.metaschema.core.metapath;
-  exports gov.nist.secauto.metaschema.core.metapath.format;
-  exports gov.nist.secauto.metaschema.core.metapath.function;
-  exports gov.nist.secauto.metaschema.core.metapath.function.library;
-  exports gov.nist.secauto.metaschema.core.metapath.function.regex;
-  exports gov.nist.secauto.metaschema.core.metapath.item;
-  exports gov.nist.secauto.metaschema.core.metapath.item.atomic;
-  exports gov.nist.secauto.metaschema.core.metapath.item.function;
-  exports gov.nist.secauto.metaschema.core.metapath.item.node;
-  exports gov.nist.secauto.metaschema.core.metapath.type;
-  exports gov.nist.secauto.metaschema.core.model;
-  exports gov.nist.secauto.metaschema.core.model.constraint;
-  exports gov.nist.secauto.metaschema.core.model.util;
-  exports gov.nist.secauto.metaschema.core.model.validation;
-  exports gov.nist.secauto.metaschema.core.qname;
-  exports gov.nist.secauto.metaschema.core.util;
+  exports dev.metaschema.core;
+  exports dev.metaschema.core.configuration;
+  exports dev.metaschema.core.datatype;
+  exports dev.metaschema.core.datatype.adapter;
+  exports dev.metaschema.core.datatype.markup;
+  exports dev.metaschema.core.datatype.object;
+  exports dev.metaschema.core.metapath;
+  exports dev.metaschema.core.metapath.format;
+  exports dev.metaschema.core.metapath.function;
+  exports dev.metaschema.core.metapath.function.library;
+  exports dev.metaschema.core.metapath.function.regex;
+  exports dev.metaschema.core.metapath.item;
+  exports dev.metaschema.core.metapath.item.atomic;
+  exports dev.metaschema.core.metapath.item.function;
+  exports dev.metaschema.core.metapath.item.node;
+  exports dev.metaschema.core.metapath.type;
+  exports dev.metaschema.core.model;
+  exports dev.metaschema.core.model.constraint;
+  exports dev.metaschema.core.model.util;
+  exports dev.metaschema.core.model.validation;
+  exports dev.metaschema.core.qname;
+  exports dev.metaschema.core.util;
 
-  exports gov.nist.secauto.metaschema.core.datatype.markup.flexmark
-      to gov.nist.secauto.metaschema.databind;
+  exports dev.metaschema.core.datatype.markup.flexmark
+      to dev.metaschema.databind;
 
   // make bundled schemas and related resources available for use
   opens schema.json;
@@ -95,7 +95,7 @@ module gov.nist.secauto.metaschema.core {
   opens schema.metaschema;
 
   // allow reflection on data types
-  opens gov.nist.secauto.metaschema.core.datatype.markup;
+  opens dev.metaschema.core.datatype.markup;
 
   // services
   uses IDataTypeProvider;

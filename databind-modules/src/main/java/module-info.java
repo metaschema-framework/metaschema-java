@@ -7,20 +7,20 @@
  * Provides Metaschema module bindings and validation handlers including SARIF
  * output support.
  */
-module gov.nist.secauto.metaschema.databind.modules {
+module dev.metaschema.databind.modules {
   // requirements
   requires java.base;
 
-  requires transitive gov.nist.secauto.metaschema.core;
-  requires transitive gov.nist.secauto.metaschema.databind;
-  requires transitive gov.nist.secauto.metaschema.schemagen;
+  requires transitive dev.metaschema.core;
+  requires transitive dev.metaschema.databind;
+  requires transitive dev.metaschema.schemagen;
 
   requires static org.eclipse.jdt.annotation;
   requires static com.github.spotbugs.annotations;
 
   requires json.schema;
 
-  exports gov.nist.secauto.metaschema.modules.sarif;
+  exports dev.metaschema.modules.sarif;
 
   // open generated binding classes for reflection
   opens org.schemastore.json.sarif.x210;

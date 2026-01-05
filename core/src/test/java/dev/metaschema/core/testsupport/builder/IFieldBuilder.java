@@ -1,0 +1,92 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.core.testsupport.builder;
+
+import dev.metaschema.core.datatype.IDataTypeAdapter;
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IFieldDefinition;
+import dev.metaschema.core.model.IFieldInstanceAbsolute;
+import dev.metaschema.core.model.IModule;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Represents a Metaschema module-based model builder for producing field
+ * definitions and instances.
+ */
+public interface IFieldBuilder extends IModelBuilder<IFieldBuilder> {
+
+  /**
+   * Create a new builder using the provided mocking context.
+   *
+   * @return the new builder
+   */
+  @NonNull
+  static IFieldBuilder builder() {
+    return new FieldBuilder().reset();
+  }
+
+  /**
+   * Apply the provided data type adapter to built fields.
+   *
+   * @param dataTypeAdapter
+   *          the data type adapter to use
+   * @return this builder
+   */
+  IFieldBuilder dataTypeAdapter(@NonNull IDataTypeAdapter<?> dataTypeAdapter);
+
+  /**
+   * Apply the provided data type adapter to built fields.
+   *
+   * @param defaultValue
+   *          the default value to use
+   * @return this builder
+   */
+  IFieldBuilder defaultValue(@NonNull Object defaultValue);
+
+  /**
+   * Build a mocked field instance, based on a mocked definition, as a child of
+   * the provided parent.
+   *
+   * @param parent
+   *          the parent containing the new instance
+   * @return the new mocked instance
+   */
+  @Override
+  @NonNull
+  IFieldInstanceAbsolute toInstance(@NonNull IAssemblyDefinition parent);
+
+  /**
+   * Build a mocked field instance, using the provided definition, as a child of
+   * the provided parent.
+   *
+   * @param parent
+   *          the parent containing the new instance
+   * @param definition
+   *          the definition to base the instance on
+   * @return the new mocked instance
+   */
+  @NonNull
+  IFieldInstanceAbsolute toInstance(@NonNull IAssemblyDefinition parent, @NonNull IFieldDefinition definition);
+
+  /**
+   * Build a mocked field definition.
+   *
+   * @return the new mocked definition
+   */
+  @NonNull
+  IFieldDefinition toDefinition();
+
+  /**
+   * Build a mocked field definition associated with the given module.
+   *
+   * @param module
+   *          the containing module
+   * @return the new mocked definition
+   */
+  @NonNull
+  IFieldDefinition toDefinition(@NonNull IModule module);
+}

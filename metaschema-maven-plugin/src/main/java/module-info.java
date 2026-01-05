@@ -9,13 +9,13 @@
  * This module uses the Maven API at runtime via the unnamed module, as Maven's
  * APIs have split package issues that prevent full JPMS compatibility.
  */
-module gov.nist.secauto.metaschema.maven.plugin {
+module dev.metaschema.maven.plugin {
   // requirements
   requires java.base;
 
-  requires transitive gov.nist.secauto.metaschema.core;
-  requires transitive gov.nist.secauto.metaschema.databind;
-  requires transitive gov.nist.secauto.metaschema.schemagen;
+  requires transitive dev.metaschema.core;
+  requires transitive dev.metaschema.databind;
+  requires transitive dev.metaschema.schemagen;
 
   requires static org.eclipse.jdt.annotation;
   requires static com.github.spotbugs.annotations;
@@ -23,5 +23,5 @@ module gov.nist.secauto.metaschema.maven.plugin {
   requires org.apache.logging.log4j;
   requires org.apache.logging.log4j.core;
 
-  exports gov.nist.secauto.metaschema.maven.plugin;
+  exports dev.metaschema.maven.plugin;
 }

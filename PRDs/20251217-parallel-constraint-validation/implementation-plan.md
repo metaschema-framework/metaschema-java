@@ -13,8 +13,8 @@
 ## Task 1: Create ParallelValidationConfig Class
 
 **Files:**
-- Create: `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/ParallelValidationConfig.java`
-- Test: `core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/ParallelValidationConfigTest.java`
+- Create: `core/src/main/java/dev/metaschema/core/model/constraint/ParallelValidationConfig.java`
+- Test: `core/src/test/java/dev/metaschema/core/model/constraint/ParallelValidationConfigTest.java`
 
 **Step 1: Write the failing tests**
 
@@ -24,7 +24,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.model.constraint;
+package dev.metaschema.core.model.constraint;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -116,7 +116,7 @@ Expected: Compilation error - class does not exist
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.model.constraint;
+package dev.metaschema.core.model.constraint;
 
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -260,8 +260,8 @@ Expected: BUILD SUCCESS
 **Step 6: Commit**
 
 ```bash
-git add core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/ParallelValidationConfig.java
-git add core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/ParallelValidationConfigTest.java
+git add core/src/main/java/dev/metaschema/core/model/constraint/ParallelValidationConfig.java
+git add core/src/test/java/dev/metaschema/core/model/constraint/ParallelValidationConfigTest.java
 git commit -m "feat(core): add ParallelValidationConfig for parallel constraint validation"
 ```
 
@@ -270,8 +270,8 @@ git commit -m "feat(core): add ParallelValidationConfig for parallel constraint 
 ## Task 2: Make DynamicContext Thread-Safe
 
 **Files:**
-- Modify: `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/DynamicContext.java`
-- Test: `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/DynamicContextTest.java`
+- Modify: `core/src/main/java/dev/metaschema/core/metapath/DynamicContext.java`
+- Test: `core/src/test/java/dev/metaschema/core/metapath/DynamicContextTest.java`
 
 **Step 1: Write failing tests for thread-safety**
 
@@ -283,7 +283,7 @@ Add to existing test file or create new:
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.metapath;
+package dev.metaschema.core.metapath;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -341,7 +341,7 @@ Expected: FAIL - subContext shares executionStack with parent
 
 **Step 3: Modify DynamicContext**
 
-In `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/DynamicContext.java`:
+In `core/src/main/java/dev/metaschema/core/metapath/DynamicContext.java`:
 
 Change 1: Move executionStack from SharedState to instance field (around line 52):
 
@@ -436,8 +436,8 @@ Expected: All tests PASS
 **Step 6: Commit**
 
 ```bash
-git add core/src/main/java/gov/nist/secauto/metaschema/core/metapath/DynamicContext.java
-git add core/src/test/java/gov/nist/secauto/metaschema/core/metapath/DynamicContextTest.java
+git add core/src/main/java/dev/metaschema/core/metapath/DynamicContext.java
+git add core/src/test/java/dev/metaschema/core/metapath/DynamicContextTest.java
 git commit -m "feat(core): make DynamicContext execution stack per-context for thread safety"
 ```
 
@@ -446,8 +446,8 @@ git commit -m "feat(core): make DynamicContext execution stack per-context for t
 ## Task 3: Make FindingCollectingConstraintValidationHandler Thread-Safe
 
 **Files:**
-- Modify: `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandler.java`
-- Test: `core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandlerTest.java`
+- Modify: `core/src/main/java/dev/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandler.java`
+- Test: `core/src/test/java/dev/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandlerTest.java`
 
 **Step 1: Write failing tests for thread-safety and sorting**
 
@@ -457,11 +457,11 @@ git commit -m "feat(core): make DynamicContext execution stack per-context for t
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.model.constraint;
+package dev.metaschema.core.model.constraint;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import gov.nist.secauto.metaschema.core.model.constraint.IConstraint.Level;
+import dev.metaschema.core.model.constraint.IConstraint.Level;
 
 import org.junit.jupiter.api.Test;
 
@@ -602,7 +602,7 @@ Expected: FAIL - race conditions or wrong ordering
 
 **Step 3: Modify FindingCollectingConstraintValidationHandler**
 
-In `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandler.java`:
+In `core/src/main/java/dev/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandler.java`:
 
 Change 1: Update imports (around line 20):
 
@@ -681,8 +681,8 @@ Expected: All tests PASS
 **Step 6: Commit**
 
 ```bash
-git add core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandler.java
-git add core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandlerTest.java
+git add core/src/main/java/dev/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandler.java
+git add core/src/test/java/dev/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandlerTest.java
 git commit -m "feat(core): make FindingCollectingConstraintValidationHandler thread-safe"
 ```
 
@@ -691,8 +691,8 @@ git commit -m "feat(core): make FindingCollectingConstraintValidationHandler thr
 ## Task 4: Make DefaultConstraintValidator Thread-Safe
 
 **Files:**
-- Modify: `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidator.java`
-- Test: `core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidatorThreadSafetyTest.java`
+- Modify: `core/src/main/java/dev/metaschema/core/model/constraint/DefaultConstraintValidator.java`
+- Test: `core/src/test/java/dev/metaschema/core/model/constraint/DefaultConstraintValidatorThreadSafetyTest.java`
 
 **Step 1: Write failing tests**
 
@@ -702,7 +702,7 @@ git commit -m "feat(core): make FindingCollectingConstraintValidationHandler thr
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.model.constraint;
+package dev.metaschema.core.model.constraint;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -792,7 +792,7 @@ Expected: FAIL or race condition errors
 
 **Step 3: Modify DefaultConstraintValidator**
 
-In `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidator.java`:
+In `core/src/main/java/dev/metaschema/core/model/constraint/DefaultConstraintValidator.java`:
 
 Change 1: Update imports (add around line 37):
 
@@ -847,8 +847,8 @@ Expected: All tests PASS
 **Step 6: Commit**
 
 ```bash
-git add core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidator.java
-git add core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidatorThreadSafetyTest.java
+git add core/src/main/java/dev/metaschema/core/model/constraint/DefaultConstraintValidator.java
+git add core/src/test/java/dev/metaschema/core/model/constraint/DefaultConstraintValidatorThreadSafetyTest.java
 git commit -m "feat(core): make DefaultConstraintValidator thread-safe"
 ```
 
@@ -857,8 +857,8 @@ git commit -m "feat(core): make DefaultConstraintValidator thread-safe"
 ## Task 5: Add Parallel Traversal to DefaultConstraintValidator
 
 **Files:**
-- Modify: `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidator.java`
-- Test: `core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/ParallelValidationTest.java`
+- Modify: `core/src/main/java/dev/metaschema/core/model/constraint/DefaultConstraintValidator.java`
+- Test: `core/src/test/java/dev/metaschema/core/model/constraint/ParallelValidationTest.java`
 
 **Step 1: Write failing tests**
 
@@ -868,11 +868,11 @@ git commit -m "feat(core): make DefaultConstraintValidator thread-safe"
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.core.model.constraint;
+package dev.metaschema.core.model.constraint;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.DynamicContext;
 
 import org.junit.jupiter.api.Test;
 
@@ -953,7 +953,7 @@ Expected: Compilation error - constructor does not exist
 
 **Step 3: Modify DefaultConstraintValidator for parallel support**
 
-In `core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidator.java`:
+In `core/src/main/java/dev/metaschema/core/model/constraint/DefaultConstraintValidator.java`:
 
 Change 1: Add imports:
 
@@ -1100,8 +1100,8 @@ Expected: All tests PASS
 **Step 6: Commit**
 
 ```bash
-git add core/src/main/java/gov/nist/secauto/metaschema/core/model/constraint/DefaultConstraintValidator.java
-git add core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/ParallelValidationTest.java
+git add core/src/main/java/dev/metaschema/core/model/constraint/DefaultConstraintValidator.java
+git add core/src/test/java/dev/metaschema/core/model/constraint/ParallelValidationTest.java
 git commit -m "feat(core): add parallel traversal support to DefaultConstraintValidator"
 ```
 
@@ -1110,8 +1110,8 @@ git commit -m "feat(core): add parallel traversal support to DefaultConstraintVa
 ## Task 6: Add --threads CLI Option
 
 **Files:**
-- Modify: `metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/AbstractValidateContentCommand.java`
-- Test: `metaschema-cli/src/test/java/gov/nist/secauto/metaschema/cli/commands/ValidateCommandParallelTest.java`
+- Modify: `metaschema-cli/src/main/java/dev/metaschema/cli/commands/AbstractValidateContentCommand.java`
+- Test: `metaschema-cli/src/test/java/dev/metaschema/cli/commands/ValidateCommandParallelTest.java`
 
 **Step 1: Write failing tests**
 
@@ -1121,7 +1121,7 @@ git commit -m "feat(core): add parallel traversal support to DefaultConstraintVa
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.cli.commands;
+package dev.metaschema.cli.commands;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -1164,12 +1164,12 @@ Expected: Tests fail or option not recognized
 
 **Step 3: Modify AbstractValidateContentCommand**
 
-In `metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/AbstractValidateContentCommand.java`:
+In `metaschema-cli/src/main/java/dev/metaschema/cli/commands/AbstractValidateContentCommand.java`:
 
 Change 1: Add import:
 
 ```java
-import gov.nist.secauto.metaschema.core.model.constraint.ParallelValidationConfig;
+import dev.metaschema.core.model.constraint.ParallelValidationConfig;
 ```
 
 Change 2: Add constant for the option (around line 65):
@@ -1276,8 +1276,8 @@ Expected: All tests PASS
 **Step 6: Commit**
 
 ```bash
-git add metaschema-cli/src/main/java/gov/nist/secauto/metaschema/cli/commands/AbstractValidateContentCommand.java
-git add metaschema-cli/src/test/java/gov/nist/secauto/metaschema/cli/commands/ValidateCommandParallelTest.java
+git add metaschema-cli/src/main/java/dev/metaschema/cli/commands/AbstractValidateContentCommand.java
+git add metaschema-cli/src/test/java/dev/metaschema/cli/commands/ValidateCommandParallelTest.java
 git commit -m "feat(cli): add --threads option for parallel constraint validation"
 ```
 
@@ -1286,7 +1286,7 @@ git commit -m "feat(cli): add --threads option for parallel constraint validatio
 ## Task 7: Integration Testing and Documentation
 
 **Files:**
-- Create: `metaschema-cli/src/test/java/gov/nist/secauto/metaschema/cli/commands/ParallelValidationIntegrationTest.java`
+- Create: `metaschema-cli/src/test/java/dev/metaschema/cli/commands/ParallelValidationIntegrationTest.java`
 - Update: PRD with completion status
 
 **Step 1: Write integration tests**
@@ -1297,7 +1297,7 @@ git commit -m "feat(cli): add --threads option for parallel constraint validatio
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.cli.commands;
+package dev.metaschema.cli.commands;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -1344,7 +1344,7 @@ Expected: BUILD SUCCESS
 **Step 4: Final commit**
 
 ```bash
-git add metaschema-cli/src/test/java/gov/nist/secauto/metaschema/cli/commands/ParallelValidationIntegrationTest.java
+git add metaschema-cli/src/test/java/dev/metaschema/cli/commands/ParallelValidationIntegrationTest.java
 git commit -m "test(cli): add integration tests for parallel constraint validation"
 ```
 

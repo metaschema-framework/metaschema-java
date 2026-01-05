@@ -1,0 +1,122 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.core.metapath.function.library;
+
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.MetapathConstants;
+import dev.metaschema.core.metapath.MetapathException;
+import dev.metaschema.core.metapath.function.DocumentFunctionException;
+import dev.metaschema.core.metapath.function.FunctionUtils;
+import dev.metaschema.core.metapath.function.IArgument;
+import dev.metaschema.core.metapath.function.IFunction;
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IAnyUriItem;
+import dev.metaschema.core.metapath.item.atomic.IStringItem;
+import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import dev.metaschema.core.util.ObjectUtils;
+
+import java.io.IOException;
+import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Implements the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-doc">fn:doc</a>
+ * function.
+ */
+public final class FnDoc {
+  private static final String NAME = "doc";
+  @NonNull
+  static final IFunction SIGNATURE = IFunction.builder()
+      .name(NAME)
+      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
+      .deterministic()
+      .contextDependent()
+      .focusIndependent()
+      .argument(IArgument.builder()
+          .name("arg1")
+          .type(IStringItem.type())
+          .zeroOrOne()
+          .build())
+      .returnType(IDocumentNodeItem.type())
+      .returnOne()
+      .functionHandler(FnDoc::execute)
+      .build();
+
+  private FnDoc() {
+    // disable construction
+  }
+
+  @SuppressWarnings("unused")
+  @NonNull
+  private static ISequence<IDocumentNodeItem> execute(@NonNull IFunction function,
+      @NonNull List<ISequence<?>> arguments, @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+    ISequence<? extends IStringItem> arg = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
+
+    IStringItem item = arg.getFirstItem(true);
+
+    return item == null ? ISequence.empty() : ISequence.of(fnDoc(item, dynamicContext));
+  }
+
+  /**
+   * Dynamically load the document associated with the URI, and return a
+   * {@link IDocumentNodeItem} containing the result.
+   * <p>
+   * Based on the XPath 3.1
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-doc">fn:doc</a>
+   * function.
+   *
+   * @param documentUri
+   *          the resource to load the data from
+   * @param context
+   *          the Metapath dynamic context
+   * @return the loaded document node item
+   */
+  public static IDocumentNodeItem fnDoc(@NonNull IStringItem documentUri, @NonNull DynamicContext context) {
+    IAnyUriItem uri;
+    try {
+      uri = IAnyUriItem.cast(documentUri);
+    } catch (MetapathException ex) {
+      throw new DocumentFunctionException(DocumentFunctionException.INVALID_ARGUMENT,
+          String.format("Invalid URI argument '%s' to fn:doc or fn:doc-available.", documentUri.asString()), ex);
+    }
+
+    return fnDoc(uri, context);
+  }
+
+  /**
+   * Dynamically load the document associated with the URI, and return a
+   * {@link IDocumentNodeItem} containing the result.
+   * <p>
+   * Based on the XPath 3.1
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-doc">fn:doc</a>
+   * function.
+   *
+   * @param documentUri
+   *          the resource to load the data from
+   * @param context
+   *          the Metapath dynamic context
+   * @return the loaded document node item
+   */
+  public static IDocumentNodeItem fnDoc(@NonNull IAnyUriItem documentUri, @NonNull DynamicContext context) {
+    // resolve if possible
+    IAnyUriItem uri = FnResolveUri.fnResolveUri(documentUri, null, context);
+    if (!uri.isAbsolute() && !uri.isOpaque()) {
+      throw new DocumentFunctionException(DocumentFunctionException.ERROR_RETRIEVING_RESOURCE, String
+          .format("No base-uri is available in the static context to resolve the URI '%s'.", documentUri.toString()));
+    }
+
+    try {
+      return context.getDocumentLoader().loadAsNodeItem(ObjectUtils.notNull(uri.asUri()));
+    } catch (IOException ex) {
+      throw new DocumentFunctionException(DocumentFunctionException.ERROR_RETRIEVING_RESOURCE, String
+          .format("Unable to retrieve the resource identified by the URI '%s'.", documentUri.asUri().toString()), ex);
+    }
+  }
+}

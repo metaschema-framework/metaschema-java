@@ -87,7 +87,7 @@
 				<configuration>
 					<programs>
 						<program>
-							<mainClass>gov.nist.secauto.metaschema.cli.CLI</mainClass>
+							<mainClass>dev.metaschema.cli.CLI</mainClass>
 							<id>metaschema-cli</id>
 						</program>
 					</programs>
@@ -129,7 +129,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>gov.nist.secauto.metaschema.cli.CLI</mainClass>
+							<mainClass>dev.metaschema.cli.CLI</mainClass>
 							<addClasspath>true</addClasspath>
 							<!-- <classpathPrefix>lib/</classpathPrefix> -->
 							<classpathLayoutType>custom</classpathLayoutType>

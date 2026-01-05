@@ -14,7 +14,7 @@ git submodule update --init --recursive
 
 ### Config Binding Classes
 
-Package: `gov.nist.secauto.metaschema.databind.config.binding`
+Package: `dev.metaschema.databind.config.binding`
 
 These classes are generated from the binding configuration schema (`src/main/metaschema/metaschema-bindings.yaml`) and are used to parse binding configuration files.
 
@@ -33,7 +33,7 @@ mvn install -PCI -Prelease
 
 ### Model Binding Classes
 
-Package: `gov.nist.secauto.metaschema.databind.model.metaschema.binding`
+Package: `dev.metaschema.databind.model.metaschema.binding`
 
 These classes are generated from the core Metaschema module (`core/metaschema/schema/metaschema/metaschema-module-metaschema.xml`) and are used for parsing Metaschema module definitions.
 
@@ -64,7 +64,7 @@ Customizes the generated config binding classes.
 
 Customizes the generated model binding classes:
 
-- Maps the Metaschema namespace to `gov.nist.secauto.metaschema.databind.model.metaschema.binding`
+- Maps the Metaschema namespace to `dev.metaschema.databind.model.metaschema.binding`
 - Renames `group-as` to `GroupingAs` (avoids Java keyword conflict)
 - Adds interface implementations to constraint classes (e.g., `IModelConstraintsBase`)
 - Adds interface implementations to inline definitions for typed collections

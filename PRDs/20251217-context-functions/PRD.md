@@ -324,10 +324,10 @@ public final class FnDefaultLanguage {
 ### PR 1: Add FocusContext Infrastructure (Foundation)
 
 **Files to create:**
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/FocusContext.java`
+- `core/src/main/java/dev/metaschema/core/metapath/FocusContext.java`
 
 **Files to modify:**
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/DynamicContext.java`
+- `core/src/main/java/dev/metaschema/core/metapath/DynamicContext.java`
 
 **Acceptance Criteria:**
 - [ ] FocusContext class created with position/size fields
@@ -340,14 +340,14 @@ public final class FnDefaultLanguage {
 ### PR 2: Implement fn:position and fn:last
 
 **Files to create:**
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnPosition.java`
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnLast.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnPositionTest.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnLastTest.java`
+- `core/src/main/java/dev/metaschema/core/metapath/function/library/FnPosition.java`
+- `core/src/main/java/dev/metaschema/core/metapath/function/library/FnLast.java`
+- `core/src/test/java/dev/metaschema/core/metapath/function/library/FnPositionTest.java`
+- `core/src/test/java/dev/metaschema/core/metapath/function/library/FnLastTest.java`
 
 **Files to modify:**
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/DefaultFunctionLibrary.java`
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/cst/logic/PredicateExpression.java`
+- `core/src/main/java/dev/metaschema/core/metapath/function/library/DefaultFunctionLibrary.java`
+- `core/src/main/java/dev/metaschema/core/metapath/cst/logic/PredicateExpression.java`
 
 **Acceptance Criteria:**
 - [ ] FnPosition implementation complete
@@ -361,12 +361,12 @@ public final class FnDefaultLanguage {
 ### PR 3: Add default-language Support
 
 **Files to create:**
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDefaultLanguage.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/metapath/function/library/FnDefaultLanguageTest.java`
+- `core/src/main/java/dev/metaschema/core/metapath/function/library/FnDefaultLanguage.java`
+- `core/src/test/java/dev/metaschema/core/metapath/function/library/FnDefaultLanguageTest.java`
 
 **Files to modify:**
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/StaticContext.java`
-- `core/src/main/java/gov/nist/secauto/metaschema/core/metapath/function/library/DefaultFunctionLibrary.java`
+- `core/src/main/java/dev/metaschema/core/metapath/StaticContext.java`
+- `core/src/main/java/dev/metaschema/core/metapath/function/library/DefaultFunctionLibrary.java`
 
 **Acceptance Criteria:**
 - [ ] StaticContext extended with defaultLanguage field

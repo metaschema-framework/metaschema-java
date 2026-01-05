@@ -42,8 +42,8 @@ Expected: BUILD SUCCESS
 ### Task 1: Create Test Fixtures
 
 **Files:**
-- Create: `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/TestVersionInfo.java`
-- Create: `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/TestCommand.java`
+- Create: `cli-processor/src/test/java/dev/metaschema/cli/processor/TestVersionInfo.java`
+- Create: `cli-processor/src/test/java/dev/metaschema/cli/processor/TestCommand.java`
 
 ### Step 1: Create TestVersionInfo
 
@@ -53,9 +53,9 @@ Expected: BUILD SUCCESS
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.cli.processor;
+package dev.metaschema.cli.processor;
 
-import gov.nist.secauto.metaschema.core.util.IVersionInfo;
+import dev.metaschema.core.util.IVersionInfo;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -116,10 +116,10 @@ class TestVersionInfo implements IVersionInfo {
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.cli.processor;
+package dev.metaschema.cli.processor;
 
-import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
-import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
+import dev.metaschema.cli.processor.command.AbstractTerminalCommand;
+import dev.metaschema.cli.processor.command.ICommandExecutor;
 
 import org.apache.commons.cli.CommandLine;
 
@@ -168,8 +168,8 @@ Expected: BUILD SUCCESS
 ### Step 4: Commit
 
 ```bash
-git add cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/TestVersionInfo.java
-git add cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/TestCommand.java
+git add cli-processor/src/test/java/dev/metaschema/cli/processor/TestVersionInfo.java
+git add cli-processor/src/test/java/dev/metaschema/cli/processor/TestCommand.java
 git commit -m "test: add test fixtures for CLIProcessor testing"
 ```
 
@@ -178,7 +178,7 @@ git commit -m "test: add test fixtures for CLIProcessor testing"
 ### Task 2: Create Integration Tests for Existing Behavior
 
 **Files:**
-- Create: `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/CLIProcessorTest.java`
+- Create: `cli-processor/src/test/java/dev/metaschema/cli/processor/CLIProcessorTest.java`
 
 ### Step 1: Write integration test class with version test
 
@@ -188,7 +188,7 @@ git commit -m "test: add test fixtures for CLIProcessor testing"
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.cli.processor;
+package dev.metaschema.cli.processor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -316,7 +316,7 @@ Expected: BUILD SUCCESS (all tests pass - these characterize existing behavior)
 ### Step 3: Commit
 
 ```bash
-git add cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/CLIProcessorTest.java
+git add cli-processor/src/test/java/dev/metaschema/cli/processor/CLIProcessorTest.java
 git commit -m "test: add integration tests for CLIProcessor existing behavior"
 ```
 
@@ -327,7 +327,7 @@ git commit -m "test: add integration tests for CLIProcessor existing behavior"
 ### Task 3: Create CallingContext Top-Level Class (Copy)
 
 **Files:**
-- Create: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
+- Create: `cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java`
 
 ### Step 1: Create new CallingContext.java file
 
@@ -339,17 +339,17 @@ Copy the inner class to a new file, adding package-private visibility and updati
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.cli.processor;
+package dev.metaschema.cli.processor;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
-import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
-import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
-import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
-import gov.nist.secauto.metaschema.core.util.AutoCloser;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import dev.metaschema.cli.processor.command.ExtraArgument;
+import dev.metaschema.cli.processor.command.ICommand;
+import dev.metaschema.cli.processor.command.ICommandExecutor;
+import dev.metaschema.cli.processor.command.CommandExecutionException;
+import dev.metaschema.core.util.AutoCloser;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -850,7 +850,7 @@ Expected: BUILD SUCCESS
 ### Step 3: Commit
 
 ```bash
-git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
+git add cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java
 git commit -m "refactor: extract CallingContext to top-level package-private class"
 ```
 
@@ -859,7 +859,7 @@ git commit -m "refactor: extract CallingContext to top-level package-private cla
 ### Task 4: Update CLIProcessor to Use Extracted CallingContext
 
 **Files:**
-- Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CLIProcessor.java`
+- Modify: `cli-processor/src/main/java/dev/metaschema/cli/processor/CLIProcessor.java`
 
 ### Step 1: Add package-private getter for outputStream
 
@@ -951,7 +951,7 @@ Expected: BUILD SUCCESS (all tests pass)
 ### Step 7: Commit
 
 ```bash
-git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CLIProcessor.java
+git add cli-processor/src/main/java/dev/metaschema/cli/processor/CLIProcessor.java
 git commit -m "refactor: update CLIProcessor to use extracted CallingContext"
 ```
 
@@ -960,18 +960,18 @@ git commit -m "refactor: update CLIProcessor to use extracted CallingContext"
 ### Task 5: Update ShellCompletionCommand Import
 
 **Files:**
-- Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/ShellCompletionCommand.java`
+- Modify: `cli-processor/src/main/java/dev/metaschema/cli/processor/command/ShellCompletionCommand.java`
 
 ### Step 1: Update import statement
 
 Change:
 ```java
-import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import dev.metaschema.cli.processor.CLIProcessor.CallingContext;
 ```
 
 To:
 ```java
-import gov.nist.secauto.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.CallingContext;
 ```
 
 ### Step 2: Run tests
@@ -985,7 +985,7 @@ Expected: BUILD SUCCESS
 ### Step 3: Commit ShellCompletionCommand update
 
 ```bash
-git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/command/ShellCompletionCommand.java
+git add cli-processor/src/main/java/dev/metaschema/cli/processor/command/ShellCompletionCommand.java
 git commit -m "refactor: update ShellCompletionCommand import for extracted CallingContext"
 ```
 
@@ -996,7 +996,7 @@ git commit -m "refactor: update ShellCompletionCommand import for extracted Call
 ### Task 6: Add Unit Tests for Phase Methods
 
 **Files:**
-- Create: `cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/CallingContextTest.java`
+- Create: `cli-processor/src/test/java/dev/metaschema/cli/processor/CallingContextTest.java`
 
 ### Step 1: Create CallingContextTest with phase tests
 
@@ -1006,7 +1006,7 @@ git commit -m "refactor: update ShellCompletionCommand import for extracted Call
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.metaschema.cli.processor;
+package dev.metaschema.cli.processor;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -1187,7 +1187,7 @@ Expected: COMPILATION ERROR (methods not found) - this is expected for TDD
 ### Step 3: Commit test file
 
 ```bash
-git add cli-processor/src/test/java/gov/nist/secauto/metaschema/cli/processor/CallingContextTest.java
+git add cli-processor/src/test/java/dev/metaschema/cli/processor/CallingContextTest.java
 git commit -m "test: add unit tests for CallingContext phase methods (TDD - red)"
 ```
 
@@ -1196,7 +1196,7 @@ git commit -m "test: add unit tests for CallingContext phase methods (TDD - red)
 ### Task 7: Extract checkHelpAndVersion Method
 
 **Files:**
-- Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
+- Modify: `cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java`
 
 ### Step 1: Add checkHelpAndVersion method
 
@@ -1252,7 +1252,7 @@ Expected: BUILD SUCCESS
 ### Step 4: Commit
 
 ```bash
-git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
+git add cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java
 git commit -m "refactor: extract checkHelpAndVersion phase method"
 ```
 
@@ -1261,7 +1261,7 @@ git commit -m "refactor: extract checkHelpAndVersion phase method"
 ### Task 8: Extract parseOptions Method
 
 **Files:**
-- Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
+- Modify: `cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java`
 
 ### Step 1: Add parseOptions method
 
@@ -1292,7 +1292,7 @@ Expected: BUILD SUCCESS
 ### Step 3: Commit parseOptions method
 
 ```bash
-git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
+git add cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java
 git commit -m "refactor: extract parseOptions phase method"
 ```
 
@@ -1301,7 +1301,7 @@ git commit -m "refactor: extract parseOptions phase method"
 ### Task 9: Extract validateExtraArguments Method
 
 **Files:**
-- Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
+- Modify: `cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java`
 
 ### Step 1: Add validateExtraArguments method
 
@@ -1343,7 +1343,7 @@ Expected: BUILD SUCCESS
 ### Step 3: Commit validateExtraArguments method
 
 ```bash
-git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
+git add cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java
 git commit -m "refactor: extract validateExtraArguments phase method"
 ```
 
@@ -1352,7 +1352,7 @@ git commit -m "refactor: extract validateExtraArguments phase method"
 ### Task 10: Extract validateCalledCommands Method
 
 **Files:**
-- Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
+- Modify: `cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java`
 
 ### Step 1: Add validateCalledCommands method
 
@@ -1391,7 +1391,7 @@ Expected: BUILD SUCCESS
 ### Step 3: Commit validateCalledCommands method
 
 ```bash
-git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
+git add cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java
 git commit -m "refactor: extract validateCalledCommands phase method"
 ```
 
@@ -1400,7 +1400,7 @@ git commit -m "refactor: extract validateCalledCommands phase method"
 ### Task 11: Extract applyGlobalOptions Method
 
 **Files:**
-- Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
+- Modify: `cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java`
 
 ### Step 1: Add applyGlobalOptions method
 
@@ -1433,7 +1433,7 @@ Expected: BUILD SUCCESS
 ### Step 3: Commit applyGlobalOptions method
 
 ```bash
-git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
+git add cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java
 git commit -m "refactor: extract applyGlobalOptions phase method"
 ```
 
@@ -1442,7 +1442,7 @@ git commit -m "refactor: extract applyGlobalOptions phase method"
 ### Task 12: Refactor processCommand to Use Phase Methods
 
 **Files:**
-- Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
+- Modify: `cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java`
 
 ### Step 1: Replace processCommand implementation
 
@@ -1516,7 +1516,7 @@ Expected: BUILD SUCCESS (no PMD violations)
 ### Step 5: Commit
 
 ```bash
-git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
+git add cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java
 git commit -m "refactor: simplify processCommand using extracted phase methods
 
 Reduces cyclomatic complexity by delegating to focused phase methods.
@@ -1530,7 +1530,7 @@ Removes PMD suppressions for complexity warnings."
 ### Task 13: Verify GodClass Warning Resolved
 
 **Files:**
-- Modify: `cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java`
+- Modify: `cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java`
 
 ### Step 1: Remove GodClass suppression
 
@@ -1559,7 +1559,7 @@ Expected: BUILD SUCCESS
 ### Step 4: Commit
 
 ```bash
-git add cli-processor/src/main/java/gov/nist/secauto/metaschema/cli/processor/CallingContext.java
+git add cli-processor/src/main/java/dev/metaschema/cli/processor/CallingContext.java
 git commit -m "refactor: remove PMD GodClass suppression from CallingContext"
 ```
 

@@ -1,0 +1,62 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.databind.model;
+
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.BindingException;
+import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;
+import dev.metaschema.databind.model.info.IItemReadHandler;
+import dev.metaschema.databind.model.info.IItemWriteHandler;
+
+import java.io.IOException;
+
+/**
+ * Represents a bound field instance that contains complex (non-scalar) data,
+ * such as an object with flags and a value.
+ */
+public interface IBoundInstanceModelFieldComplex
+    extends IBoundInstanceModelField<IBoundObject>, IFeatureComplexItemValueHandler {
+
+  @Override
+  IBoundDefinitionModelFieldComplex getDefinition();
+
+  @Override
+  default boolean isEffectiveValueWrappedInXml() {
+    // always wrapped
+    return true;
+  }
+
+  @Override
+  default IBoundObject readItem(IBoundObject parent, IItemReadHandler handler) throws IOException {
+    return handler.readItemField(ObjectUtils.requireNonNull(parent, "parent"), this);
+  }
+
+  @Override
+  default void writeItem(IBoundObject item, IItemWriteHandler handler) throws IOException {
+    handler.writeItemField(item, this);
+  }
+
+  @Override
+  default IBoundObject deepCopyItem(IBoundObject item, IBoundObject parentInstance) throws BindingException {
+    return getDefinition().deepCopyItem(item, parentInstance);
+  }
+
+  @Override
+  default Class<? extends IBoundObject> getBoundClass() {
+    return getDefinition().getBoundClass();
+  }
+
+  @Override
+  default void callBeforeDeserialize(IBoundObject targetObject, IBoundObject parentObject) throws BindingException {
+    getDefinition().callBeforeDeserialize(targetObject, parentObject);
+  }
+
+  @Override
+  default void callAfterDeserialize(IBoundObject targetObject, IBoundObject parentObject) throws BindingException {
+    getDefinition().callAfterDeserialize(targetObject, parentObject);
+  }
+}

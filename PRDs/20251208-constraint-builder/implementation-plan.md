@@ -23,10 +23,10 @@ Two PRs to keep changes focused and reviewable:
 ### Commit 1: Create constraint builder interfaces
 
 **Files to create:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IConstraintSetBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IContextBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IAllowedValuesBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IMatchesBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/builder/IConstraintSetBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/builder/IContextBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/builder/IAllowedValuesBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/builder/IMatchesBuilder.java`
 
 **Acceptance Criteria:**
 - [ ] `IConstraintSetBuilder` defines fluent API for building constraint sets
@@ -38,10 +38,10 @@ Two PRs to keep changes focused and reviewable:
 ### Commit 2: Implement constraint builders
 
 **Files to create:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/ConstraintSetBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/ContextBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/AllowedValuesBuilder.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/MatchesBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/builder/ConstraintSetBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/builder/ContextBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/builder/AllowedValuesBuilder.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/builder/MatchesBuilder.java`
 
 **Acceptance Criteria:**
 - [ ] `ConstraintSetBuilder` creates `MetaConstraintSet` instances
@@ -53,8 +53,8 @@ Two PRs to keep changes focused and reviewable:
 ### Commit 3: Integrate with IModuleMockFactory
 
 **Files to modify:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/builder/IModuleMockFactory.java`
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/MockedModelTestSupport.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/builder/IModuleMockFactory.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/MockedModelTestSupport.java`
 
 **Acceptance Criteria:**
 - [ ] `IModuleMockFactory.constraintSet()` method added
@@ -64,7 +64,7 @@ Two PRs to keep changes focused and reviewable:
 ### Commit 4: Add unit tests for constraint builders
 
 **Files to create:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/testsupport/tests/ConstraintSetBuilderTest.java`
+- `core/src/test/java/dev/metaschema/core/testsupport/tests/ConstraintSetBuilderTest.java`
 
 **Acceptance Criteria:**
 - [ ] Test basic constraint set creation
@@ -88,7 +88,7 @@ Two PRs to keep changes focused and reviewable:
 ### Commit 1: Migrate ExternalConstraintsModulePostProcessorTest
 
 **Files to modify:**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/model/constraint/ExternalConstraintsModulePostProcessorTest.java`
+- `core/src/test/java/dev/metaschema/core/model/constraint/ExternalConstraintsModulePostProcessorTest.java`
 
 **Changes:**
 - Remove `XmlMetaConstraintLoader` usage
@@ -132,7 +132,7 @@ This test uses both `XmlMetaConstraintLoader` AND `ModuleLoader` to load a modul
 **Recommended approach:** Option 1 - Keep this test XML-based as it tests the XML loading infrastructure. The goal is to reduce XMLBeans in tests, not eliminate all XML-based tests.
 
 **Files to modify (if migrating):**
-- `core/src/test/java/gov/nist/secauto/metaschema/core/model/xml/MetaConstraintLoaderTest.java`
+- `core/src/test/java/dev/metaschema/core/model/xml/MetaConstraintLoaderTest.java`
 
 **Acceptance Criteria:**
 - [ ] Decision documented on whether to migrate

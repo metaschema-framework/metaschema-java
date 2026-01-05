@@ -1,0 +1,35 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.databind.model;
+
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.IJsonNamed;
+import dev.metaschema.databind.io.BindingException;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+/**
+ * Represents a bound property on a Metaschema definition.
+ * <p>
+ * A bound property combines the model object binding with Java field access and
+ * JSON naming capabilities.
+ *
+ * @param <ITEM>
+ *          the Java type for associated bound objects
+ */
+public interface IBoundProperty<ITEM> extends IBoundModelObject<ITEM>, IFeatureJavaField, IJsonNamed {
+  /**
+   * Copy this instance from one parent object to another.
+   *
+   * @param fromInstance
+   *          the object to copy from
+   * @param toInstance
+   *          the object to copy to
+   * @throws BindingException
+   *           if an error occurred while processing the object bindings
+   */
+  void deepCopy(@NonNull IBoundObject fromInstance, @NonNull IBoundObject toInstance) throws BindingException;
+}

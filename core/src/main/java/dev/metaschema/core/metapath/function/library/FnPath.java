@@ -1,0 +1,155 @@
+/*
+ * SPDX-FileCopyrightText: none
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+package dev.metaschema.core.metapath.function.library;
+
+import dev.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.MetapathConstants;
+import dev.metaschema.core.metapath.format.IPathFormatter;
+import dev.metaschema.core.metapath.function.IArgument;
+import dev.metaschema.core.metapath.function.IFunction;
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IStringItem;
+import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import dev.metaschema.core.util.ObjectUtils;
+
+import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+/**
+ * Implements the XPath 3.1
+ * <a href= "https://www.w3.org/TR/xpath-functions-31/#func-path">fn:path</a>
+ * functions.
+ * <p>
+ * This implementation differs from the XPath specification by returning a
+ * Metapath expression instead of an XPath expression.
+ */
+public final class FnPath {
+  private static final String NAME = "path";
+  @NonNull
+  static final IFunction SIGNATURE_NO_ARG = IFunction.builder()
+      .name(NAME)
+      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
+      .deterministic()
+      .contextDependent()
+      .focusDependent()
+      .returnType(IStringItem.type())
+      .returnZeroOrOne()
+      .functionHandler(FnPath::executeNoArg)
+      .build();
+
+  @NonNull
+  static final IFunction SIGNATURE_ONE_ARG = IFunction.builder()
+      .name(NAME)
+      .namespace(MetapathConstants.NS_METAPATH_FUNCTIONS)
+      .deterministic()
+      .contextIndependent()
+      .focusIndependent()
+      .argument(IArgument.builder()
+          .name("arg1")
+          .type(INodeItem.type())
+          .zeroOrOne()
+          .build())
+      .returnType(IStringItem.type())
+      .returnZeroOrOne()
+      .functionHandler(FnPath::executeOneArg)
+      .build();
+
+  private FnPath() {
+    // disable construction
+  }
+
+  @SuppressWarnings("unused")
+  @NonNull
+  private static ISequence<IStringItem> executeNoArg(@NonNull IFunction function,
+      @NonNull List<ISequence<?>> arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+
+    ISequence<IStringItem> retval;
+    if (focus == null) {
+      // Per XPath 3.1: If the context item is absent, dynamic error [err:XPDY0002]
+      throw new ContextAbsentDynamicMetapathException(
+          "The context item is absent for fn:path()");
+    } else if (focus instanceof INodeItem) {
+      retval = ISequence.of(fnPath((INodeItem) focus));
+    } else {
+      throw new InvalidTypeMetapathException(
+          focus,
+          String.format("Expected type '%s', but the context item was type '%s'.",
+              INodeItem.class.getName(),
+              focus.getClass().getName()));
+    }
+    return retval;
+  }
+
+  @SuppressWarnings("unused")
+  @NonNull
+  private static ISequence<IStringItem> executeOneArg(@NonNull IFunction function,
+      @NonNull List<ISequence<?>> arguments,
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
+
+    return fnPath(ObjectUtils.requireNonNull(arguments.get(0)));
+  }
+
+  /**
+   * An implementation of XPath 3.1
+   * <a href="https://www.w3.org/TR/xpath-functions-31/#func-path">fn:path</a>.
+   *
+   * @param sequence
+   *          a Metapath sequence containing an item to get the Metapath for
+   * @return a sequence containing the generated Metapath
+   */
+  @NonNull
+  public static ISequence<IStringItem> fnPath(@NonNull ISequence<?> sequence) {
+    IItem item = sequence.getFirstItem(true);
+
+    ISequence<IStringItem> retval;
+    if (item == null) {
+      retval = ISequence.empty();
+    } else {
+      try {
+        retval = ISequence.of(fnPath((INodeItem) item));
+      } catch (ClassCastException ex) {
+        throw new InvalidTypeMetapathException(
+            item,
+            String.format("Expected a '%s', but received a '%s'",
+                INodeItem.class.getName(),
+                item.getClass().getName()),
+            ex);
+      }
+    }
+    return retval;
+  }
+
+  /**
+   * Generates a Metapath for the provided item.
+   *
+   * @param item
+   *          the item to get the Metapath for
+   * @return the generated Metapath
+   */
+  @Nullable
+  public static IStringItem fnPath(@Nullable INodeItem item) {
+    if (item == null) {
+      return null;
+    }
+    String path = item.toPath(IPathFormatter.METAPATH_PATH_FORMATER);
+    // Per XPath 3.1, document nodes return "/" for their path
+    // The MetapathFormatter returns empty string for document nodes
+    // (to enable proper joining), so we need to handle this case
+    if (item instanceof IDocumentNodeItem && path.isEmpty()) {
+      path = "/";
+    }
+    return IStringItem.valueOf(path);
+  }
+}

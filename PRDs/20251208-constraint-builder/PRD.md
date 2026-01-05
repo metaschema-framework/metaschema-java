@@ -53,7 +53,7 @@ Additional constraint types (for future extensibility):
 #### FR4: Integration with Test Support Infrastructure
 - Integrate with `IModuleMockFactory` interface
 - Follow the same patterns as `IModuleBuilder`
-- Place in `gov.nist.secauto.metaschema.core.testsupport.builder` package
+- Place in `dev.metaschema.core.testsupport.builder` package
 
 ### Test Migration Requirements
 
@@ -113,7 +113,7 @@ IConstraintSet constraints = mocking.constraintSet()
 
 ### Package Structure
 ```
-gov.nist.secauto.metaschema.core.testsupport.builder/
+dev.metaschema.core.testsupport.builder/
 ├── IConstraintSetBuilder.java      # Main builder interface
 ├── ConstraintSetBuilder.java       # Implementation
 ├── IContextBuilder.java            # Context builder interface

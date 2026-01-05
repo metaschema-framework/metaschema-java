@@ -11,6 +11,6 @@
 	</Match>
 	<!-- Exclude generated binding classes -->
 	<Match>
-		<Package name="gov.nist.secauto.metaschema.model.testing.testsuite" />
+		<Package name="dev.metaschema.model.testing.testsuite" />
 	</Match>
 </FindBugsFilter>
