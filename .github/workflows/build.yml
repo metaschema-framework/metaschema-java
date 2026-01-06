@@ -11,9 +11,22 @@ on:
     - develop
     - feature/**
   merge_group:
-  schedule:
-    # Nightly build at 2:00 AM UTC
-    - cron: '0 2 * * *'
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Git ref to checkout (branch, tag, or SHA)'
+        required: false
+        type: string
+      skip_code_scans:
+        description: 'Skip CodeQL and Trivy security scans'
+        required: false
+        default: false
+        type: boolean
+      skip_linkcheck:
+        description: 'Skip website link checker'
+        required: false
+        default: false
+        type: boolean
   workflow_dispatch:
     inputs:
       linkcheck_fail_on_error:
@@ -51,6 +64,7 @@ jobs:
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       with:
+        ref: ${{ inputs.ref || github.ref }}
         submodules: recursive
         filter: tree:0
     - name: Checkout maven2 branch
@@ -77,6 +91,7 @@ jobs:
         distribution: ${{ env.JAVA_DISTRO }}
         cache: 'maven'
     - name: Initialize CodeQL
+      if: ${{ !inputs.skip_code_scans }}
       uses: github/codeql-action/init@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
       with:
         languages: java
@@ -107,11 +122,13 @@ jobs:
         echo "Pushing changes"
         git push --force-with-lease
     - name: Perform CodeQL Analysis
+      if: ${{ !inputs.skip_code_scans }}
       uses: github/codeql-action/analyze@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
       with:
         upload: 'never'
         output: codeql-results
     - name: CodeQL Summary
+      if: ${{ !inputs.skip_code_scans }}
       run: |
         echo "## CodeQL Security Scan Results" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
@@ -142,6 +159,7 @@ jobs:
     # Trivy Security Scan
     # -------------------------
     - name: Run Trivy vulnerability scanner
+      if: ${{ !inputs.skip_code_scans }}
       uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8
       with:
         scan-type: 'fs'
@@ -153,6 +171,7 @@ jobs:
         # Exclude submodule (has its own security scanning) and Maven plugin IT target dirs
         skip-dirs: 'core/metaschema,metaschema-maven-plugin/target'
     - name: Trivy Summary
+      if: ${{ !inputs.skip_code_scans }}
       run: |
         echo "## Trivy Security Scan Results" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
@@ -178,13 +197,13 @@ jobs:
           echo ":information_source: Results not uploaded (branch/PR not targeting develop or release)" >> $GITHUB_STEP_SUMMARY
         fi
     - name: Upload CodeQL scan results to GitHub Security tab
-      if: env.UPLOAD_SCAN_SARIF == 'true'
+      if: ${{ !inputs.skip_code_scans && env.UPLOAD_SCAN_SARIF == 'true' }}
       uses: github/codeql-action/upload-sarif@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
       with:
         sarif_file: codeql-results/java.sarif
         category: 'codeql'
     - name: Upload Trivy scan results to GitHub Security tab
-      if: env.UPLOAD_SCAN_SARIF == 'true'
+      if: ${{ !inputs.skip_code_scans && env.UPLOAD_SCAN_SARIF == 'true' }}
       uses: github/codeql-action/upload-sarif@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
       with:
         sarif_file: 'trivy-results.sarif'
@@ -216,6 +235,7 @@ jobs:
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       with:
+        ref: ${{ inputs.ref || github.ref }}
         submodules: recursive
         filter: tree:0
     # -------------------------
@@ -254,6 +274,7 @@ jobs:
         retention-days: 5
     - id: linkchecker
       name: Link Checker
+      if: ${{ !inputs.skip_linkcheck }}
       uses: lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0
       with:
         args: --verbose --no-progress --accept 200,206,429 './target/staging/**/*.html'  --remap "https://github.com/metaschema-framework/metaschema-java/tree/main/ file://${GITHUB_WORKSPACE}/" --remap "https://metaschema-java.metaschema.dev/ file://${GITHUB_WORKSPACE}/target/staging/"
@@ -265,7 +286,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
     - name: Link Checker Summary
-      if: always()
+      if: ${{ !inputs.skip_linkcheck && always() }}
       run: |
         echo "<details>" >> $GITHUB_STEP_SUMMARY
         echo "<summary><h2>Link Checker Results</h2></summary>" >> $GITHUB_STEP_SUMMARY
@@ -291,6 +312,7 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "</details>" >> $GITHUB_STEP_SUMMARY
     - name: Upload link check report
+      if: ${{ !inputs.skip_linkcheck }}
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: html-link-report
@@ -298,7 +320,7 @@ jobs:
         retention-days: 5
     - name: Create issue if bad links detected
       # Only create issues for actual broken links (exit code 2), not timeouts (exit code 1)
-      if: ${{ !cancelled() && steps.linkchecker.outputs.exit_code == 2 && env.INPUT_ISSUE_ON_ERROR == 'true' }}
+      if: ${{ !inputs.skip_linkcheck && !cancelled() && steps.linkchecker.outputs.exit_code == 2 && env.INPUT_ISSUE_ON_ERROR == 'true' }}
       uses: peter-evans/create-issue-from-file@fca9117c27cdc29c6c4db3b86c48e4115a786710
       with:
         title: Scheduled Check of Website Content Found Bad Hyperlinks
@@ -309,7 +331,7 @@ jobs:
     - name: Fail on link check error
       # Exit codes: 0=success, 1=runtime errors/timeouts, 2=broken links found
       # Only fail on actual broken links (exit code 2), not timeouts (exit code 1)
-      if: ${{ !cancelled() && steps.linkchecker.outputs.exit_code == 2 && env.INPUT_FAIL_ON_ERROR == 'true' }}
+      if: ${{ !inputs.skip_linkcheck && !cancelled() && steps.linkchecker.outputs.exit_code == 2 && env.INPUT_FAIL_ON_ERROR == 'true' }}
       uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
       with:
         script: |
