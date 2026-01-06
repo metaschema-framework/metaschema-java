@@ -73,6 +73,10 @@
 							<ruleset>src/main/config/pmd/ruleset.xml</ruleset>
 							<ruleset>src/main/config/pmd/field-naming-ruleset.xml</ruleset>
 						</rulesets>
+						<!-- Exclude generated binding classes from PMD and CPD -->
+						<excludes>
+							<exclude>**/dev/metaschema/model/testing/testsuite/**/*.java</exclude>
+						</excludes>
 					</configuration>
 				</plugin>
 			</plugins>
