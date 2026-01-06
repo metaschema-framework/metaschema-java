@@ -49,7 +49,7 @@ public interface INamedInstanceTypeInfo extends IInstanceTypeInfo {
 
     // Use formal name if available, otherwise property name
     if (formalName != null) {
-      builder.addJavadoc("Get the $L.\n", TypeInfoUtils.toLowerFirstChar(formalName));
+      builder.addJavadoc("Get the \"{@literal $L}\".\n", formalName);
     } else {
       builder.addJavadoc("Get the {@code $L} property.\n", propertyName);
     }
@@ -87,7 +87,7 @@ public interface INamedInstanceTypeInfo extends IInstanceTypeInfo {
 
     // Use formal name if available, otherwise property name
     if (formalName != null) {
-      builder.addJavadoc("Set the $L.\n", TypeInfoUtils.toLowerFirstChar(formalName));
+      builder.addJavadoc("Set the \"{@literal $L}\".\n", formalName);
     } else {
       builder.addJavadoc("Set the {@code $L} property.\n", propertyName);
     }
