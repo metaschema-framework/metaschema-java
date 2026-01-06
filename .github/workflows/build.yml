@@ -112,11 +112,6 @@ jobs:
     # -------------------------
     # Maven Build
     # -------------------------
-    - name: Build Maven Plugin First
-      run: |
-        # Build and install the maven-plugin and its dependencies first.
-        # This ensures the local plugin is used instead of a potentially stale remote SNAPSHOT.
-        mvn -B -e -pl metaschema-maven-plugin -am install -DskipTests
     - name: Build and Test Code
       run: |
         mvn -B -e -Prelease -Psnapshots -DaltDeploymentRepository=repo-snapshot::file://${GITHUB_WORKSPACE}/maven2/ -DaltSnapshotDeploymentRepository=repo-snapshot::file://${GITHUB_WORKSPACE}/maven2/ -DrepositoryId=repo-snapshot deploy
@@ -268,11 +263,6 @@ jobs:
     # -------------------------
     # Maven Build
     # -------------------------
-    - name: Build Maven Plugin First
-      run: |
-        # Build and install the maven-plugin and its dependencies first.
-        # This ensures the local plugin is used instead of a potentially stale remote SNAPSHOT.
-        mvn -B -e -pl metaschema-maven-plugin -am install -DskipTests
     - name: Build and Test Website
       run: |
         mvn -B -e -PCI -Prelease install site site:stage -Dmaven.test.skip=true
