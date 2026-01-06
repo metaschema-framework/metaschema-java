@@ -103,6 +103,11 @@
 							<ruleset>src/main/config/pmd/ruleset.xml</ruleset>
 							<ruleset>src/main/config/pmd/field-naming-ruleset.xml</ruleset>
 						</rulesets>
+						<!-- Exclude generated binding classes from PMD and CPD -->
+						<excludes>
+							<exclude>**/dev/metaschema/databind/model/metaschema/binding/*.java</exclude>
+							<exclude>**/dev/metaschema/databind/config/binding/*.java</exclude>
+						</excludes>
 					</configuration>
 				</plugin>
 				<plugin>
