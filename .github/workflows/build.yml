@@ -29,6 +29,20 @@ on:
         type: boolean
   workflow_dispatch:
     inputs:
+      ref:
+        description: 'Git ref to checkout (branch, tag, or SHA)'
+        required: false
+        type: string
+      skip_code_scans:
+        description: 'Skip CodeQL and Trivy security scans'
+        required: false
+        default: false
+        type: boolean
+      skip_linkcheck:
+        description: 'Skip website link checker'
+        required: false
+        default: false
+        type: boolean
       linkcheck_fail_on_error:
         description: 'a boolean flag that determines if bad links found by the link checker fail fast and stop a complete build'
         required: false

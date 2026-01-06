@@ -3,6 +3,7 @@ on:
   schedule:
     # Nightly build at 2:00 AM UTC
     - cron: '0 2 * * *'
+  workflow_dispatch:
 jobs:
   nightly:
     uses: ./.github/workflows/build.yml
