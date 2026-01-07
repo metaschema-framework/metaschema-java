@@ -1,12 +1,14 @@
 on:
   push:
     branches:
+    - main
     - release/**
     - develop
     - feature/**
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
+    - main
     - release/**
     - develop
     - feature/**
@@ -27,6 +29,16 @@ on:
         required: false
         default: false
         type: boolean
+      linkcheck_fail_on_error:
+        description: 'A boolean flag that determines if bad links found by the link checker fail fast and stop a complete build'
+        required: false
+        default: true
+        type: boolean
+      linkcheck_create_issue:
+        description: 'Create new GitHub issue if broken links found'
+        required: false
+        default: false
+        type: boolean
   workflow_dispatch:
     inputs:
       ref:
@@ -44,12 +56,12 @@ on:
         default: false
         type: boolean
       linkcheck_fail_on_error:
-        description: 'a boolean flag that determines if bad links found by the link checker fail fast and stop a complete build'
+        description: 'A boolean flag that determines if bad links found by the link checker fail fast and stop a complete build'
         required: false
         default: true
         type: boolean
       linkcheck_create_issue:
-        description: 'create new GitHub issue if broken links found'
+        description: 'Create new GitHub issue if broken links found'
         required: false
         default: false
         type: boolean
@@ -58,15 +70,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 env:
-  INPUT_FAIL_ON_ERROR: ${{ github.event.inputs.linkcheck_fail_on_error || 'true' }}
-  INPUT_ISSUE_ON_ERROR: ${{ github.event.inputs.linkcheck_create_issue || 'false' }}
+  INPUT_FAIL_ON_ERROR: ${{ inputs.linkcheck_fail_on_error || 'true' }}
+  INPUT_ISSUE_ON_ERROR: ${{ inputs.linkcheck_create_issue || 'false' }}
   MAVEN_VERSION: 3.9.8
   JAVA_DISTRO: 'temurin'
   JAVA_VERSION_FILE: .java-version
   # Post Maven artifacts to the artifact repo if the branch is 'develop' or 'release/*'. This avoids publishing artifacts for pull requests
   COMMIT_MAVEN_ARTIFACTS: ${{ (github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) && github.repository_owner == 'metaschema-framework' }}
-  # Upload security scan SARIF results if the branch is 'develop' or 'release/*' or a pull request targeting these branches.
-  UPLOAD_SCAN_SARIF: ${{ (github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && (github.base_ref == 'develop' || startsWith(github.base_ref, 'release/'))) }}
+  # Upload security scan SARIF results for main, develop, release/* branches, or PRs targeting these branches.
+  UPLOAD_SCAN_SARIF: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'develop' || startsWith(github.base_ref, 'release/'))) }}
 jobs:
   build-code:
     name: Code
@@ -162,7 +174,7 @@ jobs:
         if [ "${{ env.UPLOAD_SCAN_SARIF }}" == "true" ]; then
           echo ":white_check_mark: Results uploaded to GitHub Security tab" >> $GITHUB_STEP_SUMMARY
         else
-          echo ":information_source: Results not uploaded (branch/PR not targeting develop or release)" >> $GITHUB_STEP_SUMMARY
+          echo ":information_source: Results not uploaded (branch/PR not targeting main, develop, or release)" >> $GITHUB_STEP_SUMMARY
         fi
     # -------------------------
     # Trivy Security Scan
@@ -173,7 +185,7 @@ jobs:
       with:
         scan-type: 'fs'
         scan-ref: '.'
-        scanners: 'vuln'
+        scanners: 'vuln,secret,misconfig'
         format: 'sarif'
         output: 'trivy-results.sarif'
         severity: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN'
@@ -203,7 +215,7 @@ jobs:
         if [ "${{ env.UPLOAD_SCAN_SARIF }}" == "true" ]; then
           echo ":white_check_mark: Results uploaded to GitHub Security tab" >> $GITHUB_STEP_SUMMARY
         else
-          echo ":information_source: Results not uploaded (branch/PR not targeting develop or release)" >> $GITHUB_STEP_SUMMARY
+          echo ":information_source: Results not uploaded (branch/PR not targeting main, develop, or release)" >> $GITHUB_STEP_SUMMARY
         fi
     - name: Upload CodeQL scan results to GitHub Security tab
       if: ${{ !inputs.skip_code_scans && env.UPLOAD_SCAN_SARIF == 'true' }}
@@ -281,7 +293,7 @@ jobs:
       if: ${{ !inputs.skip_linkcheck }}
       uses: lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0
       with:
-        args: --verbose --no-progress --accept 200,206,429 './target/staging/**/*.html'  --remap "https://github.com/metaschema-framework/metaschema-java/tree/main/ file://${GITHUB_WORKSPACE}/" --remap "https://metaschema-java.metaschema.dev/ file://${GITHUB_WORKSPACE}/target/staging/"
+        args: --verbose --no-progress --accept 200,206,429,503 './target/staging/**/*.html'  --remap "https://github.com/metaschema-framework/metaschema-java/tree/main/ file://${GITHUB_WORKSPACE}/" --remap "https://metaschema-java.metaschema.dev/ file://${GITHUB_WORKSPACE}/target/staging/"
         format: markdown
         output: html-link-report.md
         debug: true
@@ -297,13 +309,14 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         if [ -f "html-link-report.md" ]; then
           # Extract summary stats from the report
-          ERRORS=$(grep -c "^\[ERR\]" html-link-report.md 2>/dev/null || echo "0")
+          # Lychee uses [ERROR], [4xx], [5xx] for broken links and [TIMEOUT] for timeouts
+          ERRORS=$(grep -cE "^\[ERROR\]|^\[[45][0-9]{2}\]" html-link-report.md 2>/dev/null || echo "0")
           TIMEOUTS=$(grep -c "^\[TIMEOUT\]" html-link-report.md 2>/dev/null || echo "0")
           if [ "$ERRORS" -gt 0 ]; then
             echo ":x: **Found $ERRORS broken link(s)**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
-            grep "^\[ERR\]" html-link-report.md >> $GITHUB_STEP_SUMMARY
+            grep -E "^\[ERROR\]|^\[[45][0-9]{2}\]" html-link-report.md >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           elif [ "$TIMEOUTS" -gt 0 ]; then
             echo ":warning: **$TIMEOUTS link(s) timed out** (external sites may be slow)" >> $GITHUB_STEP_SUMMARY
