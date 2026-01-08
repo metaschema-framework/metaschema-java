@@ -151,7 +151,7 @@ Use `dev-metaschema:javadoc-style-guide` skill for full guide.
 
 ## Git Workflow
 
-- Repository: https://github.com/metaschema-framework/metaschema-java
+- Repository: <https://github.com/metaschema-framework/metaschema-java>
 - **All PRs MUST be created from a personal fork** (BLOCKING)
 - **All PRs MUST target the `develop` branch** (BLOCKING)
 - Clone with submodules: `git clone --recurse-submodules`
