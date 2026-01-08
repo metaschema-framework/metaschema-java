@@ -14,6 +14,7 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,7 +22,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -45,9 +45,9 @@ class CommandServiceTest {
     ExecutorService executor = Executors.newFixedThreadPool(threadCount);
     CountDownLatch startLatch = new CountDownLatch(1);
     CountDownLatch doneLatch = new CountDownLatch(threadCount);
-    AtomicInteger errorCount = new AtomicInteger(0);
+    List<Exception> exceptions = Collections.synchronizedList(new ArrayList<>());
     Set<Integer> commandCounts = ConcurrentHashMap.newKeySet();
-    List<List<String>> allCommandNames = new ArrayList<>();
+    List<List<String>> allCommandNames = Collections.synchronizedList(new ArrayList<>());
 
     for (int i = 0; i < threadCount; i++) {
       executor.submit(() -> {
@@ -65,12 +65,9 @@ class CommandServiceTest {
               .map(ICommand::getName)
               .collect(Collectors.toList());
 
-          synchronized (allCommandNames) {
-            allCommandNames.add(names);
-          }
+          allCommandNames.add(names);
         } catch (Exception e) {
-          errorCount.incrementAndGet();
-          e.printStackTrace();
+          exceptions.add(e);
         } finally {
           doneLatch.countDown();
         }
@@ -83,9 +80,12 @@ class CommandServiceTest {
     // Wait for all threads to complete
     assertTrue(doneLatch.await(30, TimeUnit.SECONDS), "Threads should complete within timeout");
     executor.shutdown();
+    assertTrue(executor.awaitTermination(5, TimeUnit.SECONDS),
+        "Executor should terminate within timeout");
 
     // Verify no errors occurred
-    assertEquals(0, errorCount.get(), "No exceptions should occur during concurrent access");
+    assertEquals(0, exceptions.size(),
+        "No exceptions should occur during concurrent access. Exceptions: " + exceptions);
 
     // Verify consistent command count across all calls
     assertEquals(1, commandCounts.size(),
