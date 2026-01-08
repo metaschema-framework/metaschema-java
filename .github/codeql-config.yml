@@ -1,0 +1,6 @@
+name: "CodeQL config"
+
+# Exclude submodules from analysis - they have their own security scanning in their upstream repos
+paths-ignore:
+  - core/metaschema
+  - databind-modules/modules
