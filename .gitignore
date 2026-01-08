@@ -24,6 +24,9 @@ pom.xml.versionsBackup
 release.properties
 velocity.log*
 
+# Java files
+javac.*.args
+
 # oXygen files
 /metaschema.xpr
 
