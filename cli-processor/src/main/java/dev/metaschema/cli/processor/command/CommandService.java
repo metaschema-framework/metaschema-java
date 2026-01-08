@@ -26,7 +26,7 @@ import nl.talsmasoftware.lazy4j.Lazy;
 public final class CommandService {
   private static final Lazy<CommandService> INSTANCE = Lazy.of(CommandService::new);
   @NonNull
-  private final ServiceLoader<ICommand> loader;
+  private final Lazy<List<ICommand>> cachedCommands;
 
   /**
    * Get the singleton instance of the function service.
@@ -40,35 +40,30 @@ public final class CommandService {
   /**
    * Construct a new service.
    * <p>
-   * Initializes the ServiceLoader for ICommand implementations.
+   * Initializes the ServiceLoader for ICommand implementations and caches the
+   * loaded commands for thread-safe access.
    * <p>
    * This constructor is private to enforce the singleton pattern.
    */
   private CommandService() {
-    ServiceLoader<ICommand> loader = ServiceLoader.load(ICommand.class);
-    assert loader != null;
-    this.loader = loader;
-  }
-
-  /**
-   * Get the function service loader instance.
-   *
-   * @return the service loader instance.
-   */
-  @NonNull
-  private ServiceLoader<ICommand> getLoader() {
-    return loader;
+    this.cachedCommands = Lazy.of(() -> {
+      ServiceLoader<ICommand> loader = ServiceLoader.load(ICommand.class);
+      return ObjectUtils.notNull(loader.stream()
+          .map(Provider<ICommand>::get)
+          .collect(Collectors.toUnmodifiableList()));
+    });
   }
 
   /**
    * Get the loaded commands.
+   * <p>
+   * Commands are loaded once on first access and cached for subsequent calls.
+   * This ensures thread-safe access and consistent results across calls.
    *
    * @return the list of loaded commands
    */
   @NonNull
   public List<ICommand> getCommands() {
-    return ObjectUtils.notNull(getLoader().stream()
-        .map(Provider<ICommand>::get)
-        .collect(Collectors.toUnmodifiableList()));
+    return cachedCommands.get();
   }
 }
