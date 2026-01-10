@@ -156,7 +156,7 @@ public class Catalog {
 | Metaschema | Java |
 |------------|------|
 | `min-occurs="0"` | Nullable field |
-| `min-occurs="1"` | `@NonNull` field |
+| `min-occurs="1"` | `@NonNull` on getter/setter methods |
 | `max-occurs="1"` | Single instance |
 | `max-occurs="unbounded"` | `List<T>` |
 
@@ -184,19 +184,6 @@ Metadata metadata = new Metadata();
 metadata.setTitle(MarkupLine.fromMarkdown("My Catalog"));
 metadata.setLastModified(ZonedDateTime.now());
 catalog.setMetadata(metadata);
-```
-
-### With Builder Pattern
-
-For complex objects, use builders if generated:
-
-```java
-Catalog catalog = Catalog.builder()
-    .uuid(UUID.randomUUID())
-    .metadata(Metadata.builder()
-        .title("My Catalog")
-        .build())
-    .build();
 ```
 
 ### Serialization

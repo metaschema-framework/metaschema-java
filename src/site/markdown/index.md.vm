@@ -1,6 +1,6 @@
 # Metaschema Java Tools
 
-This project provides a Java implementation of the [Metaschema](https://pages.nist.gov/metaschema/) framework, a modeling language designed to enable format-agnostic information modeling and processing.
+This project provides a Java implementation of the [Metaschema](https://framework.metaschema.dev/) framework, a modeling language designed to enable format-agnostic information modeling and processing.
 
 ## What is Metaschema?
 
@@ -125,7 +125,7 @@ This framework is part of a larger ecosystem of Metaschema and OSCAL tools:
 |:--------|:------------|
 | [liboscal-java](https://github.com/metaschema-framework/liboscal-java) | OSCAL Java library built on this framework |
 | [oscal-cli](https://github.com/metaschema-framework/oscal-cli) | Command-line tool for OSCAL operations |
-| [Metaschema Specification](https://pages.nist.gov/metaschema/) | The Metaschema modeling language specification |
+| [Metaschema Specification](https://framework.metaschema.dev/) | The Metaschema modeling language specification |
 
 ## Using with Claude Code
 

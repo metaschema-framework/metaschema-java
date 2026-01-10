@@ -171,18 +171,25 @@ for (IValidationFinding finding : result.getFindings()) {
 ## Custom Validation Handler
 
 ```java
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import dev.metaschema.core.model.constraint.IConstraint.Level;
 import dev.metaschema.core.model.constraint.IConstraintValidationHandler;
 import dev.metaschema.core.model.constraint.IFinding;
 
 public class CustomHandler implements IConstraintValidationHandler {
+    private static final Logger logger =
+        LoggerFactory.getLogger(CustomHandler.class);
     private final List<IFinding> findings = new ArrayList<>();
 
     @Override
     public void handleFinding(IFinding finding) {
         findings.add(finding);
 
-        // Immediate logging
-        if (finding.getSeverity().ordinal() >= Severity.ERROR.ordinal()) {
+        // Immediate logging for errors and above
+        if (finding.getSeverity().compareTo(Level.ERROR) >= 0) {
             logger.error("Validation: {} at {}",
                 finding.getMessage(), finding.getLocation());
         }
@@ -190,7 +197,7 @@ public class CustomHandler implements IConstraintValidationHandler {
 
     public boolean hasErrors() {
         return findings.stream()
-            .anyMatch(f -> f.getSeverity().ordinal() >= Severity.ERROR.ordinal());
+            .anyMatch(f -> f.getSeverity().compareTo(Level.ERROR) >= 0);
     }
 }
 ```

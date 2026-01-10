@@ -128,7 +128,7 @@ The CLI supports tab completion for Bash and Zsh shells, providing intelligent s
 source <(metaschema-cli shell-completion bash)
 
 # Or save to a file and source it in your ~/.bashrc for persistence
-metaschema-cli shell-completion bash --to ~/.metaschema-completion.bash
+metaschema-cli shell-completion bash > ~/.metaschema-completion.bash
 echo 'source ~/.metaschema-completion.bash' >> ~/.bashrc
 ```
 
