@@ -191,11 +191,10 @@ public abstract class AbstractModuleLoaderStrategy implements IBindingContext.IM
       retval = IBindingMatcher.of(definition);
       // always replace the existing matcher to ensure the last loaded module wins
       IBindingMatcher old = bindingMatchers.put(qname, retval);
-      if (old != null && !(definition.getContainingModule() instanceof MetaschemaModelModule)) {
-        // FIXME: find existing causes of this in unit tests
-        if (LOGGER.isDebugEnabled()) {
-          LOGGER.atDebug().log("Replacing matcher for QName: {}", qname);
-        }
+      // FIXME: find existing causes of this in unit tests
+      if (old != null && !(definition.getContainingModule() instanceof MetaschemaModelModule)
+          && LOGGER.isDebugEnabled()) {
+        LOGGER.atDebug().log("Replacing matcher for QName: {}", qname);
       }
 
       // retval = bindingMatchers.get(definition);

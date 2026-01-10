@@ -56,7 +56,7 @@ public abstract class AbstractDatatypeManager implements IDatatypeManager {
   }
 
   @NonNull
-  private final Map<IDataTypeAdapter<?>, String> datatypeToTypeMap = new ConcurrentHashMap<>(); // NOPMD - intentional
+  private final Map<IDataTypeAdapter<?>, String> datatypeToTypeMap = new ConcurrentHashMap<>();
 
   /**
    * Get the mapping of Metaschema datatype names to schema type names.

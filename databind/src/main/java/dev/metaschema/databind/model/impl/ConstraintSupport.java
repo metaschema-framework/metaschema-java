@@ -39,7 +39,7 @@ public final class ConstraintSupport {
    *          the constraint set to parse the constraints into
    */
   @SuppressWarnings("null")
-  public static void parse( // NOPMD - intentional
+  public static void parse(
       @Nullable ValueConstraints valueAnnotation,
       @NonNull ISource source,
       @NonNull IValueConstrained set) {
@@ -77,7 +77,7 @@ public final class ConstraintSupport {
    *          the constraint set to parse the constraints into
    */
   @SuppressWarnings("null")
-  public static void parse( // NOPMD - intentional
+  public static void parse(
       @Nullable AssemblyConstraints assemblyAnnotation,
       @NonNull ISource source,
       @NonNull IModelConstrained set) {

@@ -82,7 +82,7 @@ public final class FnRound {
 
     INumericItem item = sequence.getFirstItem(true);
     if (item == null) {
-      return ISequence.empty(); // NOPMD - readability
+      return ISequence.empty();
     }
 
     return ISequence.of(item.round());
@@ -100,7 +100,7 @@ public final class FnRound {
 
     INumericItem item = sequence.getFirstItem(true);
     if (item == null) {
-      return ISequence.empty(); // NOPMD - readability
+      return ISequence.empty();
     }
 
     IIntegerItem precision = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1).getFirstItem(true)));

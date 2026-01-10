@@ -123,7 +123,7 @@ public final class FnBaseUri {
   public static IAnyUriItem fnBaseUri(INodeItem nodeItem) {
     IAnyUriItem retval;
     if (nodeItem == null) {
-      retval = null; // NOPMD - intentional
+      retval = null;
     } else {
       URI baseUri = nodeItem.getBaseUri();
       retval = baseUri == null ? null : IAnyUriItem.valueOf(baseUri);

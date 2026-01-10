@@ -102,7 +102,7 @@ public final class FnTokenize {
       .build();
   // CPD-ON
 
-  @SuppressWarnings({ "PMD.UnusedFormalParameter", "unused" })
+  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IStringItem> executeOneArg(
       @NonNull IFunction function,
@@ -118,7 +118,7 @@ public final class FnTokenize {
                 .map(IStringItem::valueOf)));
   }
 
-  @SuppressWarnings({ "PMD.UnusedFormalParameter", "unused" })
+  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IStringItem> executeTwoArg(
       @NonNull IFunction function,
@@ -131,7 +131,7 @@ public final class FnTokenize {
     return execute(input, pattern, IStringItem.valueOf(""));
   }
 
-  @SuppressWarnings({ "PMD.UnusedFormalParameter", "unused" })
+  @SuppressWarnings("unused")
   @NonNull
   private static ISequence<IStringItem> executeThreeArg(
       @NonNull IFunction function,

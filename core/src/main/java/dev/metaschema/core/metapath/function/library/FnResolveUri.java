@@ -84,7 +84,7 @@ public final class FnResolveUri {
     ISequence<? extends IStringItem> relativeSequence
         = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(0)));
     if (relativeSequence.isEmpty()) {
-      return ISequence.empty(); // NOPMD - readability
+      return ISequence.empty();
     }
 
     IStringItem relativeString = relativeSequence.getFirstItem(true);
@@ -110,13 +110,12 @@ public final class FnResolveUri {
    * @return a sequence containing the resolved URI or and empty sequence if
    *         either the base or relative URI is {@code null}
    */
-  @SuppressWarnings("PMD.UnusedPrivateMethod") // used in lambda
   @NonNull
   private static ISequence<IAnyUriItem> executeTwoArg(
-      @NonNull IFunction function, // NOPMD - ok
+      @NonNull IFunction function,
       @NonNull List<ISequence<?>> arguments,
-      @NonNull DynamicContext dynamicContext, // NOPMD - ok
-      IItem focus) { // NOPMD - ok
+      @NonNull DynamicContext dynamicContext,
+      IItem focus) {
 
     /* there will always be two arguments */
     assert arguments.size() == 2;
@@ -124,7 +123,7 @@ public final class FnResolveUri {
     ISequence<? extends IStringItem> relativeSequence = FunctionUtils.asType(
         ObjectUtils.requireNonNull(arguments.get(0)));
     if (relativeSequence.isEmpty()) {
-      return ISequence.empty(); // NOPMD - readability
+      return ISequence.empty();
     }
 
     ISequence<? extends IStringItem> baseSequence = FunctionUtils.asType(ObjectUtils.requireNonNull(arguments.get(1)));

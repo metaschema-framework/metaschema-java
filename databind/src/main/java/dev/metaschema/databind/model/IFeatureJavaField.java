@@ -53,7 +53,7 @@ public interface IFeatureJavaField extends IValuedMutable {
   default Object getValue(@NonNull Object parent) {
     Field field = getField();
     // boolean accessable = field.canAccess(parent);
-    // field.setAccessible(true); // NOPMD - intentional
+    // field.setAccessible(true);
     Object retval;
     try {
       Object result = field.get(parent);
@@ -64,7 +64,7 @@ public interface IFeatureJavaField extends IValuedMutable {
               field.getDeclaringClass().getName()),
           ex);
       // } finally {
-      // field.setAccessible(accessable); // NOPMD - intentional
+      // field.setAccessible(accessable);
     }
     return retval;
   }
@@ -73,7 +73,7 @@ public interface IFeatureJavaField extends IValuedMutable {
   default void setValue(@NonNull Object parentObject, Object value) {
     Field field = getField();
     // boolean accessable = field.canAccess(parentObject);
-    // field.setAccessible(true); // NOPMD - intentional
+    // field.setAccessible(true);
     try {
       field.set(parentObject, value);
     } catch (IllegalArgumentException | IllegalAccessException ex) {
@@ -85,7 +85,7 @@ public interface IFeatureJavaField extends IValuedMutable {
               field.getDeclaringClass().getName()),
           ex);
       // } finally {
-      // field.setAccessible(accessable); // NOPMD - intentional
+      // field.setAccessible(accessable);
     }
   }
 

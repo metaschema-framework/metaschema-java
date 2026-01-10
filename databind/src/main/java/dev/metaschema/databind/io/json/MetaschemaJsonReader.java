@@ -157,7 +157,7 @@ public class MetaschemaJsonReader
   // LOGGER.info(builder.toString());
   // }
 
-  @SuppressWarnings({ "resource", "PMD.CloseResource" })
+  @SuppressWarnings("resource")
   private void push(@NonNull JsonParser parser) throws IOException {
     assert !parser.equals(parserStack.peek());
     if (parser.getCurrentToken() == null) {
@@ -487,7 +487,6 @@ public class MetaschemaJsonReader
         ? bodyHandler
         : new JsonKeyBodyHandler(jsonKey, bodyHandler);
 
-    @SuppressWarnings("PMD.CloseResource")
     JsonLocation location = getReader().currentLocation();
 
     // construct the item

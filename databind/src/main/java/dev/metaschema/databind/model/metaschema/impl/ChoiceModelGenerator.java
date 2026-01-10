@@ -59,7 +59,6 @@ public final class ChoiceModelGenerator
    *          the node item factory used to generate child nodes
    * @return the container
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   public static IContainerModelSupport<
       IModelInstanceAbsolute,
       INamedModelInstanceAbsolute,

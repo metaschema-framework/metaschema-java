@@ -541,7 +541,6 @@ public abstract class AbstractMetaschemaMojo
     }
   }
 
-  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   @Override
   public void execute() throws MojoExecutionException {
     File staleFile = getStaleFile();
@@ -594,7 +593,6 @@ public abstract class AbstractMetaschemaMojo
     }
   }
 
-  @SuppressWarnings({ "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl" })
   @NonNull
   private List<File> performGeneration(
       @NonNull IModuleLoader.IModulePostProcessor modulePostProcessor) throws MojoExecutionException {

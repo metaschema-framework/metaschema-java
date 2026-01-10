@@ -197,7 +197,7 @@ public abstract class AbstractFunction implements IFunction {
     if (IAnyAtomicItem.class.isAssignableFrom(requiredSequenceTypeClass)) {
       Stream<? extends IAnyAtomicItem> atomicStream = stream.flatMap(IItem::atomize);
 
-      // if (IUntypedAtomicItem.class.isInstance(item)) { // NOPMD
+      // if (IUntypedAtomicItem.class.isInstance(item)) {
       // // TODO: apply cast to atomic type
       // }
 
@@ -303,10 +303,10 @@ public abstract class AbstractFunction implements IFunction {
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
-      return true; // NOPMD - readability
+      return true;
     }
     if (obj == null || getClass() != obj.getClass()) {
-      return false; // NOPMD - readability
+      return false;
     }
     AbstractFunction other = (AbstractFunction) obj;
     return Objects.equals(getQName(), other.getQName())

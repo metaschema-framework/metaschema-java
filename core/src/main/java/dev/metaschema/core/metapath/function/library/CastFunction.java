@@ -86,7 +86,7 @@ public final class CastFunction<ITEM extends IAnyAtomicItem> implements IFunctio
 
     IAnyAtomicItem item = arg.getFirstItem(true);
     if (item == null) {
-      return ISequence.empty(); // NOPMD - readability
+      return ISequence.empty();
     }
 
     ITEM castItem = castExecutor.cast(item);

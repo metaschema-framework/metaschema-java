@@ -53,7 +53,7 @@ public interface IIndex {
   static boolean isAllNulls(@NonNull Iterable<String> key) {
     for (String value : key) {
       if (value != null) {
-        return false; // NOPMD readability
+        return false;
       }
     }
     return true;

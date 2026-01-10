@@ -82,7 +82,7 @@ public interface IProduction {
    *           if an error occurred while generating or compiling the classes
    */
   @NonNull
-  static IProduction of( // NOPMD - intentional
+  static IProduction of(
       @NonNull Collection<? extends IModule> modules,
       @NonNull IBindingConfiguration bindingConfiguration,
       @NonNull Path classDir) throws IOException {

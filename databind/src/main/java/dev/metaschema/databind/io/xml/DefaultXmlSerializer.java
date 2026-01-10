@@ -150,7 +150,7 @@ public class DefaultXmlSerializer<CLASS extends IBoundObject>
           throw new IOException(ex);
         }
         caughtException.addSuppressed(ex);
-        throw caughtException; // NOPMD - intentional
+        throw caughtException;
       }
     }
   }

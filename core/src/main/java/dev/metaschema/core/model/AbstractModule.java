@@ -135,7 +135,7 @@ public abstract class AbstractModule<
     return getExports().getExportedRootAssemblyDefinitionMap().get(name);
   }
 
-  @SuppressWarnings({ "unused", "PMD.UnusedPrivateMethod" }) // used by lambda
+  @SuppressWarnings("unused") // used by lambda
   private static <DEF extends IDefinition> DEF handleShadowedDefinitions(
       @NonNull IEnhancedQName key,
       @NonNull DEF oldDef,
@@ -151,7 +151,7 @@ public abstract class AbstractModule<
     return newDef;
   }
 
-  @SuppressWarnings({ "unused", "PMD.UnusedPrivateMethod" }) // used by lambda
+  @SuppressWarnings("unused") // used by lambda
   private static <DEF extends IDefinition> DEF handleShadowedDefinitions(
       @NonNull Integer key,
       @NonNull DEF oldDef,

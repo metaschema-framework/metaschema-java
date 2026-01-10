@@ -72,7 +72,7 @@ public class DateAdapter
         = String.format("%sT00:00:00%s", matcher.group(1), matcher.group(2) == null ? "" : matcher.group(2));
     try {
       TemporalAccessor accessor = DateFormats.DATE_TIME_WITH_TZ.parse(parseValue);
-      return new AmbiguousDate(ObjectUtils.notNull(ZonedDateTime.from(accessor)), true); // NOPMD - readability
+      return new AmbiguousDate(ObjectUtils.notNull(ZonedDateTime.from(accessor)), true);
     } catch (DateTimeParseException ex) {
       try {
         TemporalAccessor accessor = DateFormats.DATE_TIME_WITH_OPTIONAL_TZ.parse(parseValue);
@@ -81,7 +81,7 @@ public class DateAdapter
       } catch (DateTimeParseException ex2) {
         IllegalArgumentException newEx = new IllegalArgumentException(ex2.getLocalizedMessage(), ex2);
         newEx.addSuppressed(ex);
-        throw newEx; // NOPMD - false positive
+        throw newEx;
       }
     }
   }

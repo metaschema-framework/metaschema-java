@@ -111,13 +111,6 @@ class EvaluateMetapathCommand
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
 
-  @SuppressWarnings({
-      "PMD.OnlyOneReturn", // readability
-      "PMD.AvoidCatchingGenericException",
-      "PMD.NPathComplexity",
-      "PMD.CognitiveComplexity",
-      "PMD.CyclomaticComplexity"
-  })
   @SuppressFBWarnings(value = "REC_CATCH_EXCEPTION",
       justification = "Catching generic exception for CLI error handling")
   private void executeCommand(

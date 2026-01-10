@@ -259,7 +259,7 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
    *         {@link ISequence}
    */
   @NonNull
-  static <ITEM_TYPE extends IItem> ISequence<ITEM_TYPE> ofCollection( // NOPMD - intentional
+  static <ITEM_TYPE extends IItem> ISequence<ITEM_TYPE> ofCollection(
       @NonNull Collection<ITEM_TYPE> items) {
     ISequence<ITEM_TYPE> retval;
     if (items instanceof ISequence) {
@@ -286,7 +286,7 @@ public interface ISequence<ITEM extends IItem> extends List<ITEM>, ICollectionVa
    * @return the new sequence
    */
   @NonNull
-  static <T extends IItem> ISequence<T> of( // NOPMD - intentional
+  static <T extends IItem> ISequence<T> of(
       @Nullable T item) {
     return item == null ? empty() : new SingletonSequence<>(item);
   }

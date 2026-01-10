@@ -81,7 +81,7 @@ public abstract class AbstractArrayItem<ITEM extends ICollectionValue>
 
     IIntegerItem position = arg.getFirstItem(true);
     if (position == null) {
-      return ISequence.empty(); // NOPMD - readability
+      return ISequence.empty();
     }
 
     int index = position.toIntValueExact() - 1;

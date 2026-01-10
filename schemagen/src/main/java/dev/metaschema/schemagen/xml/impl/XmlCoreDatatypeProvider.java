@@ -58,10 +58,8 @@ public class XmlCoreDatatypeProvider
       List<String> dependencies = new ArrayList<>();
       for (int i = 0; i < nodes.getLength(); i++) {
         String value = nodes.item(i).getNodeValue();
-        if (value != null && !value.startsWith("xs:")) {
-          if (!dependencies.contains(value)) {
-            dependencies.add(value);
-          }
+        if (value != null && !value.startsWith("xs:") && !dependencies.contains(value)) {
+          dependencies.add(value);
         }
       }
       return dependencies;

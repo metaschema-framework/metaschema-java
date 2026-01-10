@@ -25,7 +25,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @param <T>
  *          the type of configuration feature this class manages
  */
-@SuppressWarnings("PMD.ReplaceVectorWithList") // false positive
 abstract class AbstractSerializationBase<T extends IConfigurationFeature<?>>
     implements IMutableConfiguration<T> {
   @NonNull

@@ -38,9 +38,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *          the Java type of the builder to use to gather the container
  *          instances
  */
-@SuppressWarnings({
-    "PMD.AbstractClassWithoutAbstractMethod",
-    "PMD.UseConcurrentHashMap" })
+@SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
 /**
  * Abstract base class for generating absolute model structures from bindings.
  * <p>

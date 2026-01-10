@@ -196,7 +196,7 @@ public final class JsonUtil {
   // JsonToken currentToken = parser.getCurrentToken();
   //
   // boolean retval;
-  // switch (startToken) { // NOPMD - intentional fall through
+  // switch (startToken) {
   // case START_OBJECT:
   // retval = JsonToken.END_OBJECT.equals(currentToken);
   // break;

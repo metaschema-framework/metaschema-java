@@ -76,12 +76,12 @@ public final class NumericFunction implements IFunctionExecutor {
     ISequence<? extends INumericItem> sequence = FunctionUtils.asType(
         ObjectUtils.requireNonNull(arguments.get(0)));
     if (sequence.isEmpty()) {
-      return ISequence.empty(); // NOPMD - readability
+      return ISequence.empty();
     }
 
     INumericItem item = sequence.getFirstItem(true);
     if (item == null) {
-      return ISequence.empty(); // NOPMD - readability
+      return ISequence.empty();
     }
 
     INumericItem result = executor.execute(item);

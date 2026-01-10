@@ -63,11 +63,6 @@ class ListFunctionsSubcommand
    *          the parsed command line details
    * @return the execution result
    */
-  @SuppressWarnings({
-      "PMD.OnlyOneReturn", // readability
-      "PMD.AvoidInstantiatingObjectsInLoops",
-      "PMD.CognitiveComplexity"
-  })
   protected ExitStatus executeCommand(
       @NonNull CallingContext callingContext,
       @NonNull CommandLine cmdLine) {

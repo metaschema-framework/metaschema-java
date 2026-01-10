@@ -454,9 +454,6 @@ public final class AnnotationGenerator {
     }
   }
 
-  @SuppressWarnings({
-      "PMD.GuardLogStatement" // guarded in outer calls
-  })
   private static void checkCardinalities(
       @NonNull IAssemblyDefinition definition,
       @NonNull ICardinalityConstraint constraint,
@@ -481,9 +478,6 @@ public final class AnnotationGenerator {
     }
   }
 
-  @SuppressWarnings({
-      "PMD.GuardLogStatement" // guarded in outer calls
-  })
   private static void checkMinOccurs(
       @NonNull IAssemblyDefinition definition,
       @NonNull ICardinalityConstraint constraint,
@@ -513,9 +507,6 @@ public final class AnnotationGenerator {
     }
   }
 
-  @SuppressWarnings({
-      "PMD.GuardLogStatement" // guarded in outer calls
-  })
   private static void checkMaxOccurs(
       @NonNull IAssemblyDefinition definition,
       @NonNull ICardinalityConstraint constraint,

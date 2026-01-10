@@ -79,9 +79,8 @@ public class BindingModule
    * @throws MetaschemaException
    *           if a processing error occurs
    */
-  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
-  public BindingModule( // NOPMD - unavoidable
+  public BindingModule(
       @NonNull URI resource,
       @NonNull IBoundDefinitionModelAssembly rootDefinition,
       @NonNull METASCHEMA binding,

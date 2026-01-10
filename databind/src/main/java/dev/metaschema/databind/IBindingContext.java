@@ -970,7 +970,6 @@ public interface IBindingContext {
      *          the assembly definition that matcher is for
      * @return the matcher
      */
-    @SuppressWarnings("PMD.ShortMethodName")
     @NonNull
     static IBindingMatcher of(IBoundDefinitionModelAssembly assembly) {
       if (!assembly.isRoot()) {

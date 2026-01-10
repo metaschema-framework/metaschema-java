@@ -60,7 +60,7 @@ public final class FnAbs {
 
     INumericItem item = sequence.getFirstItem(true);
     if (item == null) {
-      return ISequence.empty(); // NOPMD - readability
+      return ISequence.empty();
     }
 
     return ISequence.of(item.castAsType(item.abs()));

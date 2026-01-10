@@ -89,7 +89,7 @@ public abstract class AbstractMapItem<VALUE extends ICollectionValue>
 
     IAnyAtomicItem key = arg.getFirstItem(true);
     if (key == null) {
-      return ISequence.empty(); // NOPMD - readability
+      return ISequence.empty();
     }
 
     ICollectionValue result = MapGet.get(this, key);
