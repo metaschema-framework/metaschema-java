@@ -4,15 +4,23 @@ This guide explains the architecture and module structure of the Metaschema Java
 
 ## Overview
 
-The Metaschema Java Tools project provides a modular framework for:
+The Metaschema Java Tools project provides a modular framework for working with Metaschema-based data models. Understanding the architecture helps you choose the right components for your use case and understand how the pieces fit together.
 
-- Loading and processing Metaschema modules
-- Generating code and schemas
-- Data binding (serialization/deserialization)
-- Executing Metapath expressions
-- Validating constraints
+The framework is organized around five core capabilities:
 
-## Module Hierarchy
+- **Loading and processing** - Parse Metaschema module definitions and resolve imports
+- **Code generation** - Generate Java classes and XML/JSON schemas from modules
+- **Data binding** - Serialize and deserialize data in XML, JSON, and YAML formats
+- **Query execution** - Evaluate Metapath expressions against loaded data
+- **Constraint validation** - Validate data against Metaschema-defined rules
+
+## Module Structure
+
+This section describes how the project is organized into Maven modules and Java packages.
+
+### Module Hierarchy
+
+The project is divided into several Maven modules, each with a specific responsibility. This separation allows you to include only what you need:
 
 ```
 metaschema-java
@@ -24,11 +32,13 @@ metaschema-java
 └── metaschema-maven-plugin  # Maven integration
 ```
 
-## Core Modules
+### Core Modules
 
-### metaschema-core
+Each module builds on the ones above it. The following sections describe what each module provides and show typical usage patterns.
 
-Foundation layer providing:
+#### metaschema-core
+
+The foundation layer that all other modules depend on. It provides:
 
 - Metaschema model interfaces (`IModule`, `IAssemblyDefinition`, etc.)
 - Metapath expression engine
@@ -44,9 +54,9 @@ IFlagDefinition flag;
 IMetapathExpression expression;
 ```
 
-### metaschema-model
+#### metaschema-model
 
-Module loading and processing:
+Builds on `metaschema-core` to provide module loading and processing capabilities:
 
 - Metaschema XML parser
 - Module resolution and imports
@@ -57,9 +67,9 @@ MetaschemaLoader loader = new MetaschemaLoader();
 IModule module = loader.load(path);
 ```
 
-### metaschema-databind
+#### metaschema-databind
 
-Data binding framework:
+The data binding layer that most applications will use directly. This module handles:
 
 - Serialization/deserialization
 - Format support (XML, JSON, YAML)
@@ -72,7 +82,7 @@ IDeserializer<T> reader = context.newDeserializer(Format.JSON, clazz);
 ISerializer<T> writer = context.newSerializer(Format.JSON, clazz);
 ```
 
-### metaschema-schemagen
+#### metaschema-schemagen
 
 Schema generation:
 
@@ -84,7 +94,7 @@ XmlSchemaGenerator xsdGen = new XmlSchemaGenerator();
 JsonSchemaGenerator jsonGen = new JsonSchemaGenerator();
 ```
 
-### metaschema-cli
+#### metaschema-cli
 
 Command-line tools:
 
@@ -99,7 +109,7 @@ metaschema-cli generate-schema --as=xsd module.xml
 metaschema-cli metapath eval -e "//control" document.json
 ```
 
-### metaschema-maven-plugin
+#### metaschema-maven-plugin
 
 Maven integration:
 
@@ -114,21 +124,46 @@ Maven integration:
 </plugin>
 ```
 
+### Package Structure
+
+The Java packages follow a consistent naming convention that mirrors the module structure. This organization makes it easy to locate classes based on their functionality:
+
+```
+dev.metaschema
+├── core
+│   ├── model         # Core model interfaces
+│   ├── metapath      # Metapath engine
+│   └── constraint    # Constraint definitions
+├── databind
+│   ├── io            # Serialization/deserialization
+│   └── model         # Binding model
+├── schemagen
+│   ├── xml           # XSD generation
+│   └── json          # JSON Schema generation
+└── cli               # Command-line tools
+```
+
 ## Key Abstractions
+
+Understanding the core interfaces helps you navigate the codebase and work effectively with the API. This section describes the main abstractions and their relationships.
 
 ### Module System
 
+A Metaschema module represents a data model definition. The `IModule` interface provides access to all definitions within that module:
+
 ```
 IModule
-├── getName()
-├── getXmlNamespace()
-├── getAssemblyDefinitions()
-├── getFieldDefinitions()
-├── getFlagDefinitions()
-└── getImportedModules()
+├── getName()                # get the module's name
+├── getXmlNamespace()        # get the module's namespace used in XML
+├── getAssemblyDefinitions() # get referenceable assembly definitions
+├── getFieldDefinitions()    # get referenceable field definitions
+├── getFlagDefinitions()     # get referenceable flag definitions
+└── getImportedModules()     # get other module's imported by this module
 ```
 
 ### Definition Hierarchy
+
+Metaschema defines three types of model elements. Assemblies are complex structures that contain other elements. Fields hold simple values but can have attributes (flags). Flags are the simplest elements, representing single attributes or properties:
 
 ```
 IDefinition
@@ -142,6 +177,8 @@ IDefinition
 
 ### Binding Context
 
+The binding context is your main entry point for serialization operations. It knows about all registered model classes and creates serializers and deserializers on demand:
+
 ```
 IBindingContext
 ├── newDeserializer(Format, Class)
@@ -152,6 +189,8 @@ IBindingContext
 ```
 
 ### Metapath Engine
+
+Metapath expressions are compiled once and can be evaluated multiple times against different documents. The `StaticContext` provides namespace bindings and other configuration:
 
 ```
 MetapathExpression
@@ -166,14 +205,18 @@ StaticContext
 
 ## Data Flow
 
+Understanding how data flows through the system helps you debug issues and optimize performance. This section traces data through the major operations.
+
 ### Module Loading
 
+When you load a Metaschema module, the system parses the XML/JSON/YAML resource, resolves any imports, and builds an in-memory model:
+
 ```
-Metaschema XML File
+Metaschema Module XML/JSON/YAML
     ↓
 MetaschemaLoader.load()
     ↓
-XML Parsing (StAX)
+XML/JSON/YAML Module Parsing
     ↓
 IModule (in-memory model)
     ↓
@@ -183,6 +226,8 @@ Constraint Processing
 ```
 
 ### Code Generation
+
+The Maven plugin generates Java source code from your module definitions. JavaPoet handles the actual code generation, producing clean, readable Java files:
 
 ```
 IModule
@@ -200,6 +245,8 @@ Maven Compilation
 
 ### Data Binding
 
+When deserializing data, the system detects the format, parses it using the appropriate library (Jackson for JSON/YAML, StAX for XML), and maps the content to your generated model objects:
+
 ```
 JSON/XML/YAML File
     ↓
@@ -216,6 +263,8 @@ Optional Constraint Validation
 
 ### Metapath Evaluation
 
+Metapath expressions are first compiled into an abstract syntax tree, then evaluated against a document to produce a sequence of results:
+
 ```
 Expression String
     ↓
@@ -228,11 +277,17 @@ evaluate(document)
 ISequence<IItem>
 ```
 
-## Extension Points
+## Development Considerations
 
-### Custom Functions
+This section covers topics important when building applications with the framework.
 
-Register Metapath functions:
+### Extension Points
+
+The framework provides several extension points for customization. These allow you to add domain-specific functionality without modifying the core libraries.
+
+#### Custom Functions
+
+You can register custom Metapath functions to extend the expression language with domain-specific operations:
 
 ```java
 StaticContext context = StaticContext.builder()
@@ -240,57 +295,48 @@ StaticContext context = StaticContext.builder()
     .build();
 ```
 
-### Custom Constraint Handlers
+#### Custom Constraint Handlers
+
+To customize how constraint violations are reported or handled, implement a custom validation handler:
 
 ```java
 IConstraintValidationHandler handler = new MyHandler();
 deserializer.setConstraintValidationHandler(handler);
 ```
 
-### Custom Type Adapters
+#### Custom Type Adapters
+
+For data types not natively supported by Metaschema, you can create custom type adapters that handle serialization and deserialization:
 
 ```java
 // For custom data types
 IJavaTypeAdapter<MyType> adapter = new MyTypeAdapter();
 ```
 
-## Threading Model
+### Threading Model
+
+When using the library in multi-threaded applications, it's important to understand which components are thread-safe. In general, immutable objects and read-only operations are safe to share across threads, while serializers and deserializers should be created per-use:
 
 | Component | Thread Safety |
-|-----------|---------------|
+|:----------|:--------------|
 | `IBindingContext` | Thread-safe (read) |
 | `IDeserializer` | Not thread-safe (create per use) |
 | `ISerializer` | Not thread-safe (create per use) |
 | `IModule` | Immutable (thread-safe) |
 | `MetapathExpression` | Immutable (thread-safe) |
 
-## Package Structure
+### Dependencies
 
-```
-dev.metaschema
-├── core
-│   ├── model         # Core model interfaces
-│   ├── metapath      # Metapath engine
-│   └── constraint    # Constraint definitions
-├── databind
-│   ├── io            # Serialization/deserialization
-│   └── model         # Binding model
-├── schemagen
-│   ├── xml           # XSD generation
-│   └── json          # JSON Schema generation
-└── cli               # Command-line tools
-```
+The library has minimal external dependencies. At runtime, it relies on standard parsing libraries and logging infrastructure. Build-time dependencies are only needed when compiling from source or generating code.
 
-## Dependencies
-
-### Runtime Dependencies
+#### Runtime Dependencies
 
 - Jackson (JSON/YAML processing)
 - StAX (XML processing)
 - SLF4J (logging)
 - SpotBugs annotations (null safety)
 
-### Build Dependencies
+#### Build Dependencies
 
 - Maven
 - JavaPoet (code generation)
@@ -298,12 +344,14 @@ dev.metaschema
 ## Related Projects
 
 | Project | Relationship |
-|---------|--------------|
+|:--------|:-------------|
 | [liboscal-java](https://github.com/metaschema-framework/liboscal-java) | OSCAL bindings built on this |
 | [oscal-cli](https://github.com/metaschema-framework/oscal-cli) | CLI using OSCAL bindings |
 | [Metaschema](https://github.com/metaschema-framework/metaschema) | Metaschema specification |
 
 ## Next Steps
+
+Continue learning about the Metaschema Java Tools with these related guides:
 
 - [Loading Modules](loading-metaschema-modules.html) - Work with modules
 - [Generating Java Classes](generating-java-classes.html) - Code generation

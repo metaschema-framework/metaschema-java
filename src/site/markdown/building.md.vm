@@ -5,7 +5,7 @@ This guide explains how to build the Metaschema Java project from source code.
 ## Prerequisites
 
 | Requirement | Minimum Version | Notes |
-|-------------|-----------------|-------|
+|:------------|:----------------|:------|
 | Java JDK    | 17              | Required for building (output JARs are JDK 11 compatible) |
 | Maven       | 3.9.0           | Required for building |
 | Git         | 2.0             | Required for cloning |
@@ -145,6 +145,16 @@ mvn -version
 export MAVEN_OPTS="-Xmx2g"
 mvn install
 ```
+
+## Building the Site
+
+To build the project documentation site:
+
+```bash
+mvn site
+```
+
+The generated site appears in `target/site/`. For multi-module builds, each module's site is in its respective `target/site/` directory.
 
 ## Contributing
 

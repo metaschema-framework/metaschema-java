@@ -307,6 +307,8 @@ if (errors.isEmpty()) {
 
 ## Next Steps
 
+Continue learning about the Metaschema Java Tools with these related guides:
+
 - [Loading Modules](loading-metaschema-modules.html) - Load modules for generation
 - [Validating with Constraints](validating-with-constraints.html) - Beyond schema validation
 - [Architecture](architecture.html) - Schema generation internals

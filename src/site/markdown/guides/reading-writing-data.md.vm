@@ -291,6 +291,8 @@ public void convertDirectory(Path inputDir, Path outputDir,
 
 ## Next Steps
 
+Continue learning about the Metaschema Java Tools with these related guides:
+
 - [Executing Metapath](executing-metapath.html) - Query loaded data
 - [Validating with Constraints](validating-with-constraints.html) - Validate data
 - [Generating Java Classes](generating-java-classes.html) - Generate binding classes

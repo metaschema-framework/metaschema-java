@@ -110,12 +110,6 @@
 			<item name="Home" href="./" />
 			<item name="GitHub" href="${this.scm.url}" />
 		</menu>
-		<menu name="Modules" ref="modules" />
-		<menu name="Contribute" inherit="bottom">
-			<item name="Contribute" href="${this.scm.url}/CONTRIBUTING.md" />
-			<item name="Issues" href="${this.issueManagement.url}" />
-		</menu>
-		<menu name="Maven Documentation" ref="reports" inherit="bottom" />
 		<menu name="Documentation" inherit="top">
 			<item name="Installation" href="installation.html" />
 			<item name="Building" href="building.html" />
@@ -130,6 +124,12 @@
 			<item name="Generating Schemas" href="guides/generating-schemas.html" />
 			<item name="Architecture" href="guides/architecture.html" />
 		</menu>
+		<menu name="Modules" ref="modules" />
+		<menu name="Contribute" inherit="bottom">
+			<item name="Contribute" href="${this.scm.url}/CONTRIBUTING.md" />
+			<item name="Issues" href="${this.issueManagement.url}" />
+		</menu>
+		<menu name="Maven Documentation" ref="reports" inherit="bottom" />
 
 		<!-- Disable copyright footer -->
 		<footer>

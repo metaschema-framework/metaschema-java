@@ -303,6 +303,8 @@ Define constraints in separate files:
 
 ## Next Steps
 
+Continue learning about the Metaschema Java Tools with these related guides:
+
 - [Executing Metapath](executing-metapath.html) - Write constraint expressions
 - [Reading & Writing Data](reading-writing-data.html) - Load data for validation
 - [Generating Schemas](generating-schemas.html) - Generate schema validators

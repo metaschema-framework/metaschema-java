@@ -1,6 +1,28 @@
 # Metaschema Java Tools
 
-This project provides a Java implementation of the [Metaschema](https://pages.nist.gov/metaschema/) framework that supports format-agnostic information modeling and processing. A set of tools and libraries are provided that allow developers to quickly develop applications using Metaschema-based models.
+This project provides a Java implementation of the [Metaschema](https://pages.nist.gov/metaschema/) framework, a modeling language designed to enable format-agnostic information modeling and processing.
+
+## What is Metaschema?
+
+Metaschema addresses a fundamental challenge in data exchange: organizations often need to work with data in multiple formats (XML, JSON, YAML) while maintaining consistent validation and semantics across all formats. Rather than defining separate schemas for each format, Metaschema allows you to define your data model once and automatically generate:
+
+- **Format-specific schemas** (XML Schema, JSON Schema) for validation
+- **Type-safe data bindings** (Java classes) for programmatic access
+- **Documentation** that stays synchronized with the model
+
+The Metaschema framework originated from [NIST](https://www.nist.gov/) as the foundation for the [OSCAL](https://pages.nist.gov/OSCAL/) (Open Security Controls Assessment Language) project, but its approach to information modeling is applicable to any domain requiring multi-format data exchange.
+
+## Who Should Use This Library?
+
+This library is designed for Java developers who need to:
+
+- **Process OSCAL content** - If you're working with OSCAL documents, this library (via [liboscal-java](https://github.com/metaschema-framework/liboscal-java)) provides the foundation for reading, writing, and validating OSCAL in any format.
+
+- **Define custom data models** - If your organization needs a format-agnostic data model with consistent validation across XML, JSON, and YAML, Metaschema provides a robust framework for defining and implementing that model.
+
+- **Generate code from models** - The Maven plugin generates type-safe Java classes from Metaschema definitions, eliminating boilerplate serialization code and ensuring your Java objects always match your data model.
+
+- **Query and validate data** - Metapath, the XPath-like query language included in this library, provides powerful capabilities for querying and validating data regardless of its original format.
 
 ## Quick Start
 
@@ -14,7 +36,28 @@ Add the dependency to your Maven project:
 </dependency>
 ```
 
-Generate Java classes from your Metaschema module using the Maven plugin:
+Once you have the dependency, you can read and write data:
+
+```java
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.IDeserializer;
+import dev.metaschema.databind.io.ISerializer;
+import java.nio.file.Path;
+
+// Get the binding context for your generated model class
+IBindingContext context = IBindingContext.instance();
+
+// Read data from JSON (substitute MyModel with your generated class)
+IDeserializer<MyModel> deserializer = context.newDeserializer(Format.JSON, MyModel.class);
+MyModel data = deserializer.deserialize(Path.of("input.json"));
+
+// Write data to XML
+ISerializer<MyModel> serializer = context.newSerializer(Format.XML, MyModel.class);
+serializer.serialize(data, Path.of("output.xml"));
+```
+
+To generate Java classes from your own Metaschema module, configure the Maven plugin:
 
 ```xml
 <plugin>
@@ -35,15 +78,26 @@ See the [Installation](installation.html) and [Generating Java Classes](guides/g
 
 ## Key Features
 
-- **Java Class Generation** - Generate type-safe Java classes from Metaschema definitions for XML, JSON, and YAML serialization
-- **Maven Integration** - Build plugin for automated code generation during Maven builds
-- **Constraint Validation** - Enforce format-agnostic validation rules defined in Metaschema modules
-- **Metapath Queries** - XPath-like expression language for querying data regardless of format
+### Java Class Generation
+
+Generate type-safe Java classes directly from Metaschema module definitions. The generated classes handle serialization and deserialization for XML, JSON, and YAML formats automatically. This means you write your business logic against Java objects while the library handles all format-specific details.
+
+### Maven Integration
+
+The `metaschema-maven-plugin` integrates code generation into your Maven build lifecycle. Define your Metaschema modules, configure the plugin, and generated source code appears in `target/generated-sources/` ready for compilation. Changes to your Metaschema automatically regenerate the Java classes on the next build.
+
+### Constraint Validation
+
+Metaschema supports rich constraint definitions that validate data beyond basic schema requirements. Constraints can express business rules, cross-field dependencies, and complex conditions using Metapath expressions. These constraints are defined once in the Metaschema and enforced consistently regardless of whether your data is in XML, JSON, or YAML.
+
+### Metapath Query Language
+
+Metapath is an XPath-like expression language designed for querying Metaschema-based data. Unlike XPath which is specific to XML, Metapath works identically across all supported formats. Use Metapath to extract data, define constraints, and navigate complex document structures.
 
 ## Getting Started
 
 | Task | Guide |
-|------|-------|
+|:-----|:------|
 | Add to your project | [Installation](installation.html) |
 | Build from source | [Building](building.html) |
 | Generate Java classes | [Generating Java Classes](guides/generating-java-classes.html) |
@@ -65,8 +119,10 @@ See the [Installation](installation.html) and [Generating Java Classes](guides/g
 
 ## Related Projects
 
+This framework is part of a larger ecosystem of Metaschema and OSCAL tools:
+
 | Project | Description |
-|---------|-------------|
+|:--------|:------------|
 | [liboscal-java](https://github.com/metaschema-framework/liboscal-java) | OSCAL Java library built on this framework |
 | [oscal-cli](https://github.com/metaschema-framework/oscal-cli) | Command-line tool for OSCAL operations |
 | [Metaschema Specification](https://pages.nist.gov/metaschema/) | The Metaschema modeling language specification |
@@ -76,6 +132,8 @@ See the [Installation](installation.html) and [Generating Java Classes](guides/g
 This project includes plugins for [Claude Code](https://claude.ai/code) that provide AI-assisted development. See the [Claude Integration](claude-integration.html) guide for details.
 
 ## Support
+
+Have questions or found an issue? Here's how to get help:
 
 - [GitHub Issues](${project.issueManagement.url}) - Report bugs or request features
 - [GitHub Discussions](${project.scm.url}/discussions) - Ask questions and discuss ideas

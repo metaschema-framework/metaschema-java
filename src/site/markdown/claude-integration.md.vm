@@ -14,7 +14,7 @@ Claude Code plugins provide specialized skills for:
 ## Prerequisites
 
 1. [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
-2. Ensure the Metaschema plugins are available in your configuration
+2. Install the [Metaschema plugins](https://github.com/metaschema-framework/claude-plugins/tree/main)
 
 ## Available Plugins
 
@@ -23,7 +23,7 @@ Claude Code plugins provide specialized skills for:
 Skills for working with Metaschema definitions:
 
 | Skill | Description |
-|-------|-------------|
+|:------|:------------|
 | `metaschema:metaschema-basics` | Introduction to Metaschema concepts |
 | `metaschema:metaschema-module-authoring` | Creating and modifying modules |
 | `metaschema:metaschema-constraints-authoring` | Defining validation constraints |
@@ -34,7 +34,7 @@ Skills for working with Metaschema definitions:
 Skills for working with OSCAL documents:
 
 | Skill | Description |
-|-------|-------------|
+|:------|:------------|
 | `oscal:oscal-basics` | OSCAL document types and structure |
 
 ### Tool Plugins
@@ -42,7 +42,7 @@ Skills for working with OSCAL documents:
 Skills for using CLI and library tools:
 
 | Skill | Description |
-|-------|-------------|
+|:------|:------------|
 | `oscal-tools:using-oscal-cli` | Running oscal-cli commands |
 | `metaschema-tools:using-metaschema-java` | Using the Metaschema Java library |
 
@@ -51,7 +51,7 @@ Skills for using CLI and library tools:
 For contributors to the Metaschema framework:
 
 | Skill | Description |
-|-------|-------------|
+|:------|:------------|
 | `dev-metaschema:development-workflow` | TDD, debugging, testing patterns |
 | `dev-metaschema:repo-organization` | Project structure and relationships |
 | `dev-metaschema:unit-test-writing` | Writing comprehensive tests |
@@ -104,6 +104,8 @@ When working with the Metaschema Java library, Claude can help you:
 - Troubleshoot serialization and deserialization issues
 
 ## Learn More
+
+For more information about Claude Code and the technologies used in this project:
 
 - [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
 - [Metaschema Specification](https://pages.nist.gov/metaschema/specification/)

@@ -317,6 +317,8 @@ try {
 
 ## Next Steps
 
+Continue learning about the Metaschema Java Tools with these related guides:
+
 - [Validating with Constraints](validating-with-constraints.html) - Validate data
 - [Reading & Writing Data](reading-writing-data.html) - Load documents
 - [Architecture](architecture.html) - Understand Metapath internals

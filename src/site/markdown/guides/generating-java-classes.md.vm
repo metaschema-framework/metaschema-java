@@ -2,14 +2,25 @@
 
 This guide explains how to generate Java binding classes from Metaschema modules.
 
+## Why Generate Classes?
+
+When working with structured data, you have several options: parse XML/JSON manually, use generic tree structures like DOM or JsonNode, or use strongly-typed classes. Strongly-typed classes offer significant advantages:
+
+- **Compile-time safety** - The compiler catches type errors before runtime
+- **IDE support** - Code completion, refactoring, and navigation work automatically
+- **Self-documenting code** - Method names like `getCatalog().getMetadata().getTitle()` clearly express intent
+- **No boilerplate** - Serialization and deserialization are handled automatically
+
+The challenge is keeping your Java classes synchronized with your data model. If the model changes, you need to update the classes—a tedious and error-prone process. The Metaschema Maven plugin solves this by generating Java classes directly from Metaschema module definitions. When your model changes, regenerate the classes and the compiler tells you what code needs updating.
+
 ## Overview
 
-The Metaschema Maven plugin generates Java classes from Metaschema module definitions, enabling:
+The Metaschema Maven plugin integrates into your Maven build to generate Java classes from Metaschema module definitions. These generated classes provide:
 
-- Type-safe data binding
-- Automatic serialization/deserialization
-- IDE code completion
-- Compile-time validation
+- **Type-safe data binding** - Fields have proper Java types matching Metaschema definitions
+- **Automatic serialization** - Read and write XML, JSON, and YAML without manual parsing
+- **IDE integration** - Full code completion and type checking in your IDE
+- **Compile-time validation** - Catch errors at build time rather than runtime
 
 ## Maven Plugin Configuration
 
@@ -318,6 +329,8 @@ public class Catalog extends AbstractCatalog {
 5. **Don't edit generated code** - Use extension classes instead
 
 ## Next Steps
+
+Continue learning about the Metaschema Java Tools with these related guides:
 
 - [Loading Modules](loading-metaschema-modules.html) - Load modules at runtime
 - [Reading & Writing Data](reading-writing-data.html) - Use generated classes

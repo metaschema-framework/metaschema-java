@@ -226,6 +226,8 @@ public INamedModelDefinition findDefinition(IModule module, String name) {
 
 ## Next Steps
 
+Continue learning about the Metaschema Java Tools with these related guides:
+
 - [Generating Java Classes](generating-java-classes.html) - Generate code from modules
 - [Reading & Writing Data](reading-writing-data.html) - Work with module data
 - [Architecture](architecture.html) - Understand the module system
