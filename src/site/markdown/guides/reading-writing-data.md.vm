@@ -1,0 +1,296 @@
+# Reading & Writing Data
+
+This guide explains how to read, write, and convert data using Metaschema-generated classes.
+
+## Overview
+
+The Metaschema databind library provides serialization and deserialization for:
+
+- **XML** - Full XML support with namespace handling
+- **JSON** - JSON object serialization
+- **YAML** - YAML document support
+
+## Getting a Binding Context
+
+```java
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.DefaultBindingContext;
+
+// For Metaschema-generated classes
+IBindingContext context = new DefaultBindingContext();
+
+// Or use a pre-configured context (e.g., OscalBindingContext)
+```
+
+## Reading Data
+
+### From a File
+
+```java
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.IDeserializer;
+
+import java.nio.file.Path;
+
+// Create deserializer
+IDeserializer<MyModel> deserializer = context.newDeserializer(
+    Format.JSON, MyModel.class);
+
+// Read from file
+MyModel model = deserializer.deserialize(Path.of("data.json"));
+```
+
+### From Different Formats
+
+```java
+// JSON
+IDeserializer<MyModel> jsonReader = context.newDeserializer(
+    Format.JSON, MyModel.class);
+MyModel fromJson = jsonReader.deserialize(Path.of("data.json"));
+
+// XML
+IDeserializer<MyModel> xmlReader = context.newDeserializer(
+    Format.XML, MyModel.class);
+MyModel fromXml = xmlReader.deserialize(Path.of("data.xml"));
+
+// YAML
+IDeserializer<MyModel> yamlReader = context.newDeserializer(
+    Format.YAML, MyModel.class);
+MyModel fromYaml = yamlReader.deserialize(Path.of("data.yaml"));
+```
+
+### From URL
+
+```java
+import java.net.URL;
+
+URL url = new URL("https://example.com/data.json");
+MyModel model = deserializer.deserialize(url);
+```
+
+### From InputStream
+
+```java
+import java.io.InputStream;
+import java.net.URI;
+
+try (InputStream is = getClass().getResourceAsStream("/data.json")) {
+    MyModel model = deserializer.deserialize(is,
+        URI.create("classpath:/data.json"));
+}
+```
+
+### Auto-detecting Format
+
+```java
+Path file = Path.of("data.json");
+Format format = Format.valueOf(file);  // Detects from extension
+
+IDeserializer<MyModel> deserializer = context.newDeserializer(
+    format, MyModel.class);
+MyModel model = deserializer.deserialize(file);
+```
+
+## Writing Data
+
+### To a File
+
+```java
+import dev.metaschema.databind.io.ISerializer;
+
+ISerializer<MyModel> serializer = context.newSerializer(
+    Format.JSON, MyModel.class);
+serializer.serialize(model, Path.of("output.json"));
+```
+
+### To Different Formats
+
+```java
+// JSON
+ISerializer<MyModel> jsonWriter = context.newSerializer(
+    Format.JSON, MyModel.class);
+jsonWriter.serialize(model, Path.of("output.json"));
+
+// XML
+ISerializer<MyModel> xmlWriter = context.newSerializer(
+    Format.XML, MyModel.class);
+xmlWriter.serialize(model, Path.of("output.xml"));
+
+// YAML
+ISerializer<MyModel> yamlWriter = context.newSerializer(
+    Format.YAML, MyModel.class);
+yamlWriter.serialize(model, Path.of("output.yaml"));
+```
+
+### To OutputStream
+
+```java
+import java.io.OutputStream;
+import java.nio.file.Files;
+
+try (OutputStream os = Files.newOutputStream(Path.of("output.json"))) {
+    serializer.serialize(model, os);
+}
+```
+
+### To String
+
+```java
+import java.io.StringWriter;
+
+StringWriter writer = new StringWriter();
+serializer.serialize(model, writer);
+String json = writer.toString();
+```
+
+## Converting Between Formats
+
+```java
+public void convert(Path input, Path output,
+        Format inputFormat, Format outputFormat, Class<MyModel> clazz) {
+
+    IBindingContext context = new DefaultBindingContext();
+
+    // Read
+    IDeserializer<MyModel> reader = context.newDeserializer(inputFormat, clazz);
+    MyModel model = reader.deserialize(input);
+
+    // Write
+    ISerializer<MyModel> writer = context.newSerializer(outputFormat, clazz);
+    writer.serialize(model, output);
+}
+
+// Usage
+convert(
+    Path.of("data.xml"),
+    Path.of("data.json"),
+    Format.XML,
+    Format.JSON,
+    MyModel.class
+);
+```
+
+## Validation During Read
+
+### Enable Constraint Validation
+
+```java
+IDeserializer<MyModel> deserializer = context.newDeserializer(
+    Format.JSON, MyModel.class);
+
+// Enable validation
+deserializer.setConstraintValidationEnabled(true);
+
+// Read and validate
+MyModel model = deserializer.deserialize(Path.of("data.json"));
+```
+
+### Custom Validation Handler
+
+```java
+import dev.metaschema.core.model.constraint.IConstraintValidationHandler;
+
+IConstraintValidationHandler handler = new MyValidationHandler();
+deserializer.setConstraintValidationHandler(handler);
+```
+
+## Error Handling
+
+```java
+import dev.metaschema.databind.io.DeserializationException;
+import dev.metaschema.databind.io.SerializationException;
+
+// Reading
+try {
+    MyModel model = deserializer.deserialize(path);
+} catch (DeserializationException e) {
+    System.err.println("Parse error: " + e.getMessage());
+} catch (IOException e) {
+    System.err.println("IO error: " + e.getMessage());
+}
+
+// Writing
+try {
+    serializer.serialize(model, path);
+} catch (SerializationException e) {
+    System.err.println("Serialization error: " + e.getMessage());
+} catch (IOException e) {
+    System.err.println("IO error: " + e.getMessage());
+}
+```
+
+## Working with Generic Data
+
+### Using BoundLoader
+
+```java
+import dev.metaschema.databind.io.DefaultBoundLoader;
+import dev.metaschema.databind.model.IBoundObject;
+
+DefaultBoundLoader loader = new DefaultBoundLoader(context);
+
+// Load any supported document
+IBoundObject document = loader.load(Path.of("unknown-type.json"));
+
+// Determine type
+Class<?> type = document.getClass();
+System.out.println("Loaded: " + type.getSimpleName());
+```
+
+## Batch Processing
+
+```java
+public void convertDirectory(Path inputDir, Path outputDir,
+        Format inputFormat, Format outputFormat) throws IOException {
+
+    IBindingContext context = new DefaultBindingContext();
+
+    try (Stream<Path> files = Files.list(inputDir)) {
+        files.filter(p -> Format.valueOf(p) == inputFormat)
+             .forEach(inputPath -> {
+                 try {
+                     // Read
+                     IDeserializer<MyModel> reader = context.newDeserializer(
+                         inputFormat, MyModel.class);
+                     MyModel model = reader.deserialize(inputPath);
+
+                     // Write
+                     String name = inputPath.getFileName().toString();
+                     String outputName = name.replaceAll(
+                         "\\.[^.]+$", outputFormat.getDefaultExtension());
+                     Path outputPath = outputDir.resolve(outputName);
+
+                     ISerializer<MyModel> writer = context.newSerializer(
+                         outputFormat, MyModel.class);
+                     writer.serialize(model, outputPath);
+                 } catch (IOException e) {
+                     throw new UncheckedIOException(e);
+                 }
+             });
+    }
+}
+```
+
+## Best Practices
+
+1. **Reuse context** - Create once, use throughout application
+2. **Use try-with-resources** - For streams and readers
+3. **Handle errors** - Catch specific exceptions
+4. **Validate input** - Enable constraint validation for untrusted data
+5. **Detect format** - Use `Format.valueOf(Path)` when format unknown
+
+## Format Comparison
+
+| Aspect | XML | JSON | YAML |
+|--------|-----|------|------|
+| Readability | Good | Good | Excellent |
+| File size | Larger | Medium | Medium |
+| Comments | Yes | No | Yes |
+| Namespaces | Full | Via properties | Via properties |
+| Parsing speed | Medium | Fast | Slower |
+
+## Next Steps
+
+- [Executing Metapath](executing-metapath.html) - Query loaded data
+- [Validating with Constraints](validating-with-constraints.html) - Validate data
+- [Generating Java Classes](generating-java-classes.html) - Generate binding classes

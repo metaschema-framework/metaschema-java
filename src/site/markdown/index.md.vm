@@ -1,20 +1,82 @@
 # Metaschema Java Tools
 
-This project provides a Java implementation of the [Metaschema](https://framework.metaschema.dev/) framework that supports format-agnostic information modeling and processing. A set of tools and libraries are provided that allow developers to quickly develop applications using Metaschema-based models.
+This project provides a Java implementation of the [Metaschema](https://pages.nist.gov/metaschema/) framework that supports format-agnostic information modeling and processing. A set of tools and libraries are provided that allow developers to quickly develop applications using Metaschema-based models.
 
-This project supports the following features:
+## Quick Start
 
-- **Allows developers to generate Java classes from Metaschema definitions.** Using a given Metaschema module, a developer can quickly [generate Java classes](metaschema-databind/) for a Metaschema-based model, which can be used to create, parse, modify, and write XML, JSON, and YAML representations of that model using the generated bound Java objects. This allows a developer to quickly start programming business logic instead of spending hours writing parsing code. This approach is similar to the binding frameworks provided by [Jakarta XML Binding (JAXB)](https://eclipse-ee4j.github.io/jaxb-ri/), [XMLBeans](https://xmlbeans.apache.org/), [Java API for JSON Binding (JSON-B)](https://javaee.github.io/jsonb-spec/), and other class-to-object binding approaches. The [OSCAL Java Library](https://github.com/metaschema-framework/liboscal-java/) is an example of applying this approach to generate Java programming APIs for a set of Metaschema-defined models.
-- **Supports generating Metaschema-based Java code during Maven builds.** An [Apache Maven](https://maven.apache.org/) [Metaschema code generation plugin](metaschema-maven-plugin/) is provided that supports Java class generation based on a Metaschema module during Maven builds.
-- **Enables validation of data aligned with a set of Metaschema modules using constraints defined within the Metaschema definitions.** Using this framework, format-agnostic validation rules, defined in or external to a Metaschema module, can be enforced over data loaded into bound objects.
-- **Allows execution of Metapath queries against data aligned with a Metaschema-based model.** Metapath is an XPath-like expression language that can be used to query XML, JSON, or YAML data aligned with a Metaschema module. This allows data to be queried irrespective of the format it is stored in.
+Add the dependency to your Maven project:
 
-This project contains the following core sub-modules:
+```xml
+<dependency>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>metaschema-databind</artifactId>
+    <version>${project.version}</version>
+</dependency>
+```
 
-- [Metaschema Java API](metaschema-core/): Provides a [Java API](metaschema-core/apidocs/index.html) for interacting with Metaschema modules and executing Metapath expressions in Java programs. Supports loading XML-based Metaschema modules.
-- [Metaschema Java Binding](metaschema-databind/): Supports the generation and use of annotated plain old Java objects (POJOs) to create and store Metaschema module-based data. Supports code generation of POJO classes based on a Metaschema module and reading and writing Metaschema module-based data. Can read and write XML, JSON, and YAML content that is valid to the associated Metaschema model.
-- [Metaschema Module Bindings](metaschema-databind-modules/): Provides a variety of different Metaschema modules for different types of data, including support for the Static Analysis Results Interchange Format (SARIF).
-- [Metaschema Maven Plugin](metaschema-maven-plugin/): A Maven build plugin that automates generation on Java classes and XML and JSON schemas based on a Metaschema module as part of a Maven build.
-- [Metaschema Schema Generator](metaschema-schema-generator): An API for generating XML and JSON schemas based on a Metaschema module.
+Generate Java classes from your Metaschema module using the Maven plugin:
 
-Please refer to each sub-module for usage instructions.
+```xml
+<plugin>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>metaschema-maven-plugin</artifactId>
+    <version>${project.version}</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>generate-sources</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+See the [Installation](installation.html) and [Generating Java Classes](guides/generating-java-classes.html) guides for complete setup instructions.
+
+## Key Features
+
+- **Java Class Generation** - Generate type-safe Java classes from Metaschema definitions for XML, JSON, and YAML serialization
+- **Maven Integration** - Build plugin for automated code generation during Maven builds
+- **Constraint Validation** - Enforce format-agnostic validation rules defined in Metaschema modules
+- **Metapath Queries** - XPath-like expression language for querying data regardless of format
+
+## Getting Started
+
+| Task | Guide |
+|------|-------|
+| Add to your project | [Installation](installation.html) |
+| Build from source | [Building](building.html) |
+| Generate Java classes | [Generating Java Classes](guides/generating-java-classes.html) |
+| Load Metaschema modules | [Loading Modules](guides/loading-metaschema-modules.html) |
+| Read and write data | [Reading & Writing Data](guides/reading-writing-data.html) |
+| Query with Metapath | [Executing Metapath](guides/executing-metapath.html) |
+| Validate constraints | [Validating with Constraints](guides/validating-with-constraints.html) |
+| Generate schemas | [Generating Schemas](guides/generating-schemas.html) |
+
+## Core Modules
+
+| Module | Description |
+|--------|-------------|
+| [metaschema-core](metaschema-core/) | Core APIs for Metaschema modules and Metapath expressions |
+| [metaschema-databind](metaschema-databind/) | Data binding for XML, JSON, and YAML serialization |
+| [metaschema-databind-modules](metaschema-databind-modules/) | Pre-built Metaschema modules (including SARIF) |
+| [metaschema-maven-plugin](metaschema-maven-plugin/) | Maven plugin for code and schema generation |
+| [metaschema-schema-generator](metaschema-schema-generator/) | XML and JSON schema generation |
+
+## Related Projects
+
+| Project | Description |
+|---------|-------------|
+| [liboscal-java](https://github.com/metaschema-framework/liboscal-java) | OSCAL Java library built on this framework |
+| [oscal-cli](https://github.com/metaschema-framework/oscal-cli) | Command-line tool for OSCAL operations |
+| [Metaschema Specification](https://pages.nist.gov/metaschema/) | The Metaschema modeling language specification |
+
+## Using with Claude Code
+
+This project includes plugins for [Claude Code](https://claude.ai/code) that provide AI-assisted development. See the [Claude Integration](claude-integration.html) guide for details.
+
+## Support
+
+- [GitHub Issues](${project.issueManagement.url}) - Report bugs or request features
+- [GitHub Discussions](${project.scm.url}/discussions) - Ask questions and discuss ideas
+- [Contributing](${project.scm.url}/blob/develop/CONTRIBUTING.md) - Contribution guidelines

@@ -116,6 +116,20 @@
 			<item name="Issues" href="${this.issueManagement.url}" />
 		</menu>
 		<menu name="Maven Documentation" ref="reports" inherit="bottom" />
+		<menu name="Documentation" inherit="top">
+			<item name="Installation" href="installation.html" />
+			<item name="Building" href="building.html" />
+			<item name="Claude Integration" href="claude-integration.html" />
+		</menu>
+		<menu name="Guides" inherit="top">
+			<item name="Loading Modules" href="guides/loading-metaschema-modules.html" />
+			<item name="Generating Java Classes" href="guides/generating-java-classes.html" />
+			<item name="Reading &amp; Writing Data" href="guides/reading-writing-data.html" />
+			<item name="Executing Metapath" href="guides/executing-metapath.html" />
+			<item name="Validating with Constraints" href="guides/validating-with-constraints.html" />
+			<item name="Generating Schemas" href="guides/generating-schemas.html" />
+			<item name="Architecture" href="guides/architecture.html" />
+		</menu>
 
 		<!-- Disable copyright footer -->
 		<footer>

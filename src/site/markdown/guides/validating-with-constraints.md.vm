@@ -1,0 +1,308 @@
+# Validating with Constraints
+
+This guide explains how to define and validate Metaschema constraints.
+
+## Overview
+
+Metaschema constraints provide validation beyond schema structure:
+
+- **Cardinality** - Required fields, occurrence limits
+- **Allowed values** - Enumerated restrictions
+- **Patterns** - Regex-based validation
+- **Uniqueness** - Key constraints
+- **Cross-references** - Reference integrity
+- **Custom rules** - Metapath-based assertions
+
+## Constraint Types
+
+### Allowed Values
+
+Restrict values to a defined set:
+
+```xml
+<define-flag name="status">
+    <constraint>
+        <allowed-values allow-other="no">
+            <enum value="active">Active status</enum>
+            <enum value="inactive">Inactive status</enum>
+            <enum value="pending">Pending status</enum>
+        </allowed-values>
+    </constraint>
+</define-flag>
+```
+
+### Matches (Pattern)
+
+Validate against a regular expression:
+
+```xml
+<define-flag name="code">
+    <constraint>
+        <matches pattern="[A-Z]{2}-[0-9]{4}" />
+    </constraint>
+</define-flag>
+```
+
+### Cardinality
+
+Control occurrence requirements:
+
+```xml
+<define-assembly name="catalog">
+    <model>
+        <field ref="title">
+            <constraint>
+                <has-cardinality min-occurs="1" max-occurs="1" />
+            </constraint>
+        </field>
+    </model>
+</define-assembly>
+```
+
+### Index (Uniqueness)
+
+Ensure unique values within a scope:
+
+```xml
+<define-assembly name="catalog">
+    <constraint>
+        <index name="control-id-index" target="//control">
+            <key-field target="@id" />
+        </index>
+    </constraint>
+</define-assembly>
+```
+
+### Index-Has-Key (Reference Integrity)
+
+Validate references point to existing values:
+
+```xml
+<define-assembly name="profile">
+    <constraint>
+        <index-has-key name="control-reference-check"
+                       index-name="control-id-index"
+                       target="//include-controls/with-id">
+            <key-field target="." />
+        </index-has-key>
+    </constraint>
+</define-assembly>
+```
+
+### Expect (Assertion)
+
+Custom Metapath-based validation:
+
+```xml
+<define-assembly name="metadata">
+    <constraint>
+        <expect test="last-modified >= published"
+                message="Last modified must be after published date" />
+    </constraint>
+</define-assembly>
+```
+
+## Validation in Java
+
+### During Deserialization
+
+```java
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.IDeserializer;
+
+IBindingContext context = IBindingContext.instance();
+IDeserializer<MyModel> deserializer = context.newDeserializer(
+    Format.JSON, MyModel.class);
+
+// Enable constraint validation
+deserializer.setConstraintValidationEnabled(true);
+
+MyModel model = deserializer.deserialize(Path.of("data.json"));
+```
+
+### Post-load Validation
+
+```java
+import dev.metaschema.core.model.validation.IValidationResult;
+
+IValidationResult result = context.validate(model);
+
+if (!result.isPassing()) {
+    result.getFindings().forEach(finding -> {
+        System.err.println(finding.getSeverity() + ": " +
+            finding.getMessage() + " at " + finding.getLocation());
+    });
+}
+```
+
+## Working with Validation Results
+
+```java
+import dev.metaschema.core.model.validation.IValidationFinding;
+import dev.metaschema.core.model.validation.IValidationResult;
+
+IValidationResult result = context.validate(model);
+
+// Check overall status
+if (result.isPassing()) {
+    System.out.println("Validation passed");
+}
+
+// Process findings by severity
+for (IValidationFinding finding : result.getFindings()) {
+    switch (finding.getSeverity()) {
+        case CRITICAL:
+            handleCritical(finding);
+            break;
+        case ERROR:
+            handleError(finding);
+            break;
+        case WARNING:
+            handleWarning(finding);
+            break;
+        case INFORMATIONAL:
+            logInfo(finding);
+            break;
+    }
+}
+```
+
+## Custom Validation Handler
+
+```java
+import dev.metaschema.core.model.constraint.IConstraintValidationHandler;
+import dev.metaschema.core.model.constraint.IFinding;
+
+public class CustomHandler implements IConstraintValidationHandler {
+    private final List<IFinding> findings = new ArrayList<>();
+
+    @Override
+    public void handleFinding(IFinding finding) {
+        findings.add(finding);
+
+        // Immediate logging
+        if (finding.getSeverity().ordinal() >= Severity.ERROR.ordinal()) {
+            logger.error("Validation: {} at {}",
+                finding.getMessage(), finding.getLocation());
+        }
+    }
+
+    public boolean hasErrors() {
+        return findings.stream()
+            .anyMatch(f -> f.getSeverity().ordinal() >= Severity.ERROR.ordinal());
+    }
+}
+```
+
+## Constraint Levels
+
+Control validation behavior with levels:
+
+```xml
+<constraint>
+    <!-- Causes validation failure -->
+    <expect level="ERROR" test="@id" message="ID is required" />
+
+    <!-- Logged but doesn't fail -->
+    <expect level="WARNING" test="title" message="Title recommended" />
+
+    <!-- Informational only -->
+    <expect level="INFORMATIONAL" test="version" message="Consider adding version" />
+</constraint>
+```
+
+## External Constraints
+
+Define constraints in separate files:
+
+```xml
+<!-- main-module.xml -->
+<metaschema>
+    <import-constraints href="additional-constraints.xml" />
+</metaschema>
+
+<!-- additional-constraints.xml -->
+<constraints>
+    <context>
+        <metapath>/catalog//control</metapath>
+        <constraints>
+            <expect test="title" message="Controls must have titles" />
+        </constraints>
+    </context>
+</constraints>
+```
+
+## Common Constraint Patterns
+
+### Required Fields
+
+```xml
+<constraint>
+    <expect test="title" message="Title is required" />
+</constraint>
+```
+
+### Conditional Requirements
+
+```xml
+<constraint>
+    <expect test="not(@type = 'formal') or description"
+            message="Formal items require descriptions" />
+</constraint>
+```
+
+### Value Ranges
+
+```xml
+<constraint>
+    <expect test="@count >= 0 and @count <= 100"
+            message="Count must be between 0 and 100" />
+</constraint>
+```
+
+### Cross-field Validation
+
+```xml
+<constraint>
+    <expect test="end-date >= start-date"
+            message="End date must be after start date" />
+</constraint>
+```
+
+### Unique Within Parent
+
+```xml
+<constraint>
+    <is-unique target="item" name="unique-item-id">
+        <key-field target="@id" />
+    </is-unique>
+</constraint>
+```
+
+## Severity Reference
+
+| Level | Meaning | Effect |
+|-------|---------|--------|
+| `CRITICAL` | Severe error | Document unusable |
+| `ERROR` | Constraint violation | Validation fails |
+| `WARNING` | Potential issue | Logged, doesn't fail |
+| `INFORMATIONAL` | Note | Logged only |
+
+## Best Practices
+
+1. **Use appropriate levels** - Not every issue is an ERROR
+2. **Provide clear messages** - Include context and fix hints
+3. **Validate early** - Check on load, not later
+4. **Handle all severities** - Don't ignore warnings
+5. **Test constraints** - Validate with known-bad data
+
+## Constraint Validation Status
+
+> **Note:** Metaschema constraint validation is experimental in some areas. Schema-level validation (structure, types) is stable. Advanced constraint types may have limitations.
+
+## Next Steps
+
+- [Executing Metapath](executing-metapath.html) - Write constraint expressions
+- [Reading & Writing Data](reading-writing-data.html) - Load data for validation
+- [Generating Schemas](generating-schemas.html) - Generate schema validators

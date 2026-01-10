@@ -1,0 +1,110 @@
+# Using with Claude Code
+
+[Claude Code](https://claude.ai/code) is an AI-powered coding assistant that can help you work with Metaschema and OSCAL tools more effectively.
+
+## Overview
+
+Claude Code plugins provide specialized skills for:
+
+- **Metaschema authoring** - Creating and validating Metaschema modules
+- **OSCAL document creation** - Building catalogs, profiles, SSPs
+- **CLI assistance** - Running commands and interpreting output
+- **Metapath expressions** - Writing and debugging queries
+
+## Prerequisites
+
+1. [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+2. Ensure the Metaschema plugins are available in your configuration
+
+## Available Plugins
+
+### Metaschema Plugin
+
+Skills for working with Metaschema definitions:
+
+| Skill | Description |
+|-------|-------------|
+| `metaschema:metaschema-basics` | Introduction to Metaschema concepts |
+| `metaschema:metaschema-module-authoring` | Creating and modifying modules |
+| `metaschema:metaschema-constraints-authoring` | Defining validation constraints |
+| `metaschema:metapath-expressions` | Writing Metapath queries |
+
+### OSCAL Plugin
+
+Skills for working with OSCAL documents:
+
+| Skill | Description |
+|-------|-------------|
+| `oscal:oscal-basics` | OSCAL document types and structure |
+
+### Tool Plugins
+
+Skills for using CLI and library tools:
+
+| Skill | Description |
+|-------|-------------|
+| `oscal-tools:using-oscal-cli` | Running oscal-cli commands |
+| `metaschema-tools:using-metaschema-java` | Using the Metaschema Java library |
+
+### Development Plugin
+
+For contributors to the Metaschema framework:
+
+| Skill | Description |
+|-------|-------------|
+| `dev-metaschema:development-workflow` | TDD, debugging, testing patterns |
+| `dev-metaschema:repo-organization` | Project structure and relationships |
+| `dev-metaschema:unit-test-writing` | Writing comprehensive tests |
+
+## Example Workflows
+
+### Generate Java Classes from Metaschema
+
+Ask Claude:
+> "Help me set up the Maven plugin to generate Java classes from my Metaschema module"
+
+Claude will guide you through the plugin configuration and code generation process.
+
+### Write a Metapath Expression
+
+Ask Claude:
+> "Help me write a Metapath expression that finds all controls with a specific property"
+
+Claude will use the Metapath skill to construct and explain the expression.
+
+### Validate a Metaschema Module
+
+Ask Claude:
+> "Validate my Metaschema module at `src/main/metaschema/my-model.xml`"
+
+Claude will run validation and explain any errors.
+
+### Debug Constraint Errors
+
+Ask Claude:
+> "I'm getting constraint validation errors. Can you help me understand what's wrong?"
+
+Claude will analyze the errors, explain the constraint requirements, and suggest fixes.
+
+## Tips for Effective Use
+
+1. **Be specific** - Mention file paths and exact error messages
+2. **Provide context** - Share relevant portions of your Metaschema definitions
+3. **Ask for explanations** - Claude can explain why something is required by the specification
+4. **Request examples** - Ask for sample code or Metaschema snippets
+
+## Integration with This Library
+
+When working with the Metaschema Java library, Claude can help you:
+
+- Configure the Maven plugin for code generation
+- Write code using generated binding classes
+- Execute Metapath queries programmatically
+- Implement custom constraint validators
+- Troubleshoot serialization and deserialization issues
+
+## Learn More
+
+- [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
+- [Metaschema Specification](https://pages.nist.gov/metaschema/specification/)
+- [Metapath Reference](https://pages.nist.gov/metaschema/specification/metapath/)

@@ -1,0 +1,231 @@
+# Loading Metaschema Modules
+
+This guide explains how to load and work with Metaschema module definitions.
+
+## Overview
+
+Metaschema modules define the structure of data models. Loading a module allows you to:
+
+- Generate Java binding classes
+- Validate documents against the model
+- Execute Metapath expressions
+- Generate XML/JSON schemas
+
+## Loading a Module from a File
+
+```java
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaLoader;
+
+import java.nio.file.Path;
+
+// Create a loader
+MetaschemaLoader loader = new MetaschemaLoader();
+
+// Load a module
+IModule module = loader.load(Path.of("my-metaschema.xml"));
+
+// Access module information
+System.out.println("Module: " + module.getName());
+System.out.println("Namespace: " + module.getXmlNamespace());
+```
+
+## Loading from Resources
+
+```java
+import java.net.URL;
+
+URL resource = getClass().getResource("/metaschema/my-model.xml");
+IModule module = loader.load(resource);
+```
+
+## Loading from URI
+
+```java
+import java.net.URI;
+
+IModule module = loader.load(
+    URI.create("https://example.com/schemas/model.xml"));
+```
+
+## Understanding Module Structure
+
+A loaded module contains:
+
+```java
+// Get all definitions
+module.getAssemblyDefinitions().forEach(assembly -> {
+    System.out.println("Assembly: " + assembly.getName());
+});
+
+module.getFieldDefinitions().forEach(field -> {
+    System.out.println("Field: " + field.getName());
+});
+
+module.getFlagDefinitions().forEach(flag -> {
+    System.out.println("Flag: " + flag.getName());
+});
+```
+
+## Module Hierarchy
+
+Modules can import other modules:
+
+```java
+// Get imported modules
+module.getImportedModules().forEach(imported -> {
+    System.out.println("Imports: " + imported.getName());
+});
+
+// Get the complete module chain (recursive)
+module.getImportedModules();
+```
+
+## Working with Definitions
+
+### Assembly Definitions
+
+Assemblies are complex structures containing other elements:
+
+```java
+import dev.metaschema.core.model.IAssemblyDefinition;
+
+IAssemblyDefinition assembly = module.getAssemblyDefinitionByName("catalog");
+if (assembly != null) {
+    System.out.println("Root: " + assembly.isRoot());
+
+    // Get child definitions
+    assembly.getModelInstances().forEach(instance -> {
+        System.out.println("  Contains: " + instance.getName());
+    });
+}
+```
+
+### Field Definitions
+
+Fields are simple values with optional flags:
+
+```java
+import dev.metaschema.core.model.IFieldDefinition;
+
+IFieldDefinition field = module.getFieldDefinitionByName("title");
+if (field != null) {
+    System.out.println("Data type: " + field.getJavaTypeAdapter());
+}
+```
+
+### Flag Definitions
+
+Flags are attributes/properties on assemblies and fields:
+
+```java
+import dev.metaschema.core.model.IFlagDefinition;
+
+IFlagDefinition flag = module.getFlagDefinitionByName("id");
+if (flag != null) {
+    System.out.println("Required: " + flag.isRequired());
+}
+```
+
+## Accessing Constraints
+
+Modules define validation constraints:
+
+```java
+import dev.metaschema.core.model.constraint.IConstraint;
+
+// Get constraints from a definition
+assembly.getConstraints().forEach(constraint -> {
+    System.out.println("Constraint: " + constraint.getId());
+    System.out.println("Level: " + constraint.getLevel());
+});
+```
+
+## Module Caching
+
+The loader caches modules by URI to avoid reloading:
+
+```java
+// Same module, loaded once
+IModule module1 = loader.load(Path.of("model.xml"));
+IModule module2 = loader.load(Path.of("model.xml"));
+// module1 == module2 (same instance)
+```
+
+## Error Handling
+
+```java
+import dev.metaschema.core.model.MetaschemaException;
+
+try {
+    IModule module = loader.load(Path.of("invalid.xml"));
+} catch (MetaschemaException e) {
+    System.err.println("Failed to load module: " + e.getMessage());
+} catch (IOException e) {
+    System.err.println("IO error: " + e.getMessage());
+}
+```
+
+## Common Use Cases
+
+### Validate Module Structure
+
+```java
+IModule module = loader.load(path);
+
+// Check for root assembly (document root)
+boolean hasRoot = module.getAssemblyDefinitions().stream()
+    .anyMatch(IAssemblyDefinition::isRoot);
+
+if (!hasRoot) {
+    System.err.println("Module has no root assembly");
+}
+```
+
+### List All Definitions
+
+```java
+public void listDefinitions(IModule module) {
+    System.out.println("=== " + module.getName() + " ===");
+
+    System.out.println("\nAssemblies:");
+    module.getAssemblyDefinitions().forEach(a ->
+        System.out.println("  " + a.getName() +
+            (a.isRoot() ? " (root)" : "")));
+
+    System.out.println("\nFields:");
+    module.getFieldDefinitions().forEach(f ->
+        System.out.println("  " + f.getName()));
+
+    System.out.println("\nFlags:");
+    module.getFlagDefinitions().forEach(f ->
+        System.out.println("  " + f.getName()));
+}
+```
+
+### Find Definition by Name
+
+```java
+public INamedModelDefinition findDefinition(IModule module, String name) {
+    IAssemblyDefinition assembly = module.getAssemblyDefinitionByName(name);
+    if (assembly != null) return assembly;
+
+    IFieldDefinition field = module.getFieldDefinitionByName(name);
+    if (field != null) return field;
+
+    return module.getFlagDefinitionByName(name);
+}
+```
+
+## Best Practices
+
+1. **Reuse loaders** - The loader caches modules
+2. **Handle errors** - Modules may have syntax errors
+3. **Check for imports** - Modules may depend on others
+4. **Use absolute paths** - Relative paths resolved from loader location
+
+## Next Steps
+
+- [Generating Java Classes](generating-java-classes.html) - Generate code from modules
+- [Reading & Writing Data](reading-writing-data.html) - Work with module data
+- [Architecture](architecture.html) - Understand the module system

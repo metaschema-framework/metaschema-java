@@ -1,0 +1,310 @@
+# Architecture
+
+This guide explains the architecture and module structure of the Metaschema Java Tools.
+
+## Overview
+
+The Metaschema Java Tools project provides a modular framework for:
+
+- Loading and processing Metaschema modules
+- Generating code and schemas
+- Data binding (serialization/deserialization)
+- Executing Metapath expressions
+- Validating constraints
+
+## Module Hierarchy
+
+```
+metaschema-java
+├── metaschema-core          # Core Metaschema model and Metapath
+├── metaschema-model         # Module loading and processing
+├── metaschema-databind      # Data binding framework
+├── metaschema-schemagen     # Schema generation (XSD, JSON Schema)
+├── metaschema-cli           # Command-line interface
+└── metaschema-maven-plugin  # Maven integration
+```
+
+## Core Modules
+
+### metaschema-core
+
+Foundation layer providing:
+
+- Metaschema model interfaces (`IModule`, `IAssemblyDefinition`, etc.)
+- Metapath expression engine
+- Constraint definitions
+- Common utilities
+
+```java
+// Core interfaces
+IModule module;
+IAssemblyDefinition assembly;
+IFieldDefinition field;
+IFlagDefinition flag;
+IMetapathExpression expression;
+```
+
+### metaschema-model
+
+Module loading and processing:
+
+- Metaschema XML parser
+- Module resolution and imports
+- Definition lookup
+
+```java
+MetaschemaLoader loader = new MetaschemaLoader();
+IModule module = loader.load(path);
+```
+
+### metaschema-databind
+
+Data binding framework:
+
+- Serialization/deserialization
+- Format support (XML, JSON, YAML)
+- Binding context management
+- Constraint validation during binding
+
+```java
+IBindingContext context = IBindingContext.instance();
+IDeserializer<T> reader = context.newDeserializer(Format.JSON, clazz);
+ISerializer<T> writer = context.newSerializer(Format.JSON, clazz);
+```
+
+### metaschema-schemagen
+
+Schema generation:
+
+- XML Schema (XSD) generation
+- JSON Schema generation
+
+```java
+XmlSchemaGenerator xsdGen = new XmlSchemaGenerator();
+JsonSchemaGenerator jsonGen = new JsonSchemaGenerator();
+```
+
+### metaschema-cli
+
+Command-line tools:
+
+- Module validation
+- Schema generation
+- Document validation
+- Metapath evaluation
+
+```bash
+metaschema-cli validate module.xml
+metaschema-cli generate-schema --as=xsd module.xml
+metaschema-cli metapath eval -e "//control" document.json
+```
+
+### metaschema-maven-plugin
+
+Maven integration:
+
+- Java class generation
+- Schema generation
+- Build integration
+
+```xml
+<plugin>
+    <groupId>dev.metaschema.java</groupId>
+    <artifactId>metaschema-maven-plugin</artifactId>
+</plugin>
+```
+
+## Key Abstractions
+
+### Module System
+
+```
+IModule
+├── getName()
+├── getXmlNamespace()
+├── getAssemblyDefinitions()
+├── getFieldDefinitions()
+├── getFlagDefinitions()
+└── getImportedModules()
+```
+
+### Definition Hierarchy
+
+```
+IDefinition
+├── IAssemblyDefinition  # Complex structures
+│   └── getModelInstances()
+├── IFieldDefinition     # Simple values with flags
+│   └── getJavaTypeAdapter()
+└── IFlagDefinition      # Attributes/properties
+    └── isRequired()
+```
+
+### Binding Context
+
+```
+IBindingContext
+├── newDeserializer(Format, Class)
+├── newSerializer(Format, Class)
+├── validate(Object)
+├── getStaticContext()  # For Metapath
+└── registerModule(IModule)
+```
+
+### Metapath Engine
+
+```
+MetapathExpression
+├── compile(String, StaticContext)
+└── evaluate(Object) → ISequence<IItem>
+
+StaticContext
+├── builder()
+├── namespace(prefix, uri)
+└── baseUri(URI)
+```
+
+## Data Flow
+
+### Module Loading
+
+```
+Metaschema XML File
+    ↓
+MetaschemaLoader.load()
+    ↓
+XML Parsing (StAX)
+    ↓
+IModule (in-memory model)
+    ↓
+Definition Resolution
+    ↓
+Constraint Processing
+```
+
+### Code Generation
+
+```
+IModule
+    ↓
+ClassGenerator
+    ↓
+JavaPoet
+    ↓
+.java Source Files
+    ↓
+Maven Compilation
+    ↓
+.class Files
+```
+
+### Data Binding
+
+```
+JSON/XML/YAML File
+    ↓
+Format Detection
+    ↓
+Parser (Jackson/StAX)
+    ↓
+Binding Layer
+    ↓
+Generated Model Objects
+    ↓
+Optional Constraint Validation
+```
+
+### Metapath Evaluation
+
+```
+Expression String
+    ↓
+MetapathExpression.compile()
+    ↓
+Abstract Syntax Tree
+    ↓
+evaluate(document)
+    ↓
+ISequence<IItem>
+```
+
+## Extension Points
+
+### Custom Functions
+
+Register Metapath functions:
+
+```java
+StaticContext context = StaticContext.builder()
+    .function(myFunction)
+    .build();
+```
+
+### Custom Constraint Handlers
+
+```java
+IConstraintValidationHandler handler = new MyHandler();
+deserializer.setConstraintValidationHandler(handler);
+```
+
+### Custom Type Adapters
+
+```java
+// For custom data types
+IJavaTypeAdapter<MyType> adapter = new MyTypeAdapter();
+```
+
+## Threading Model
+
+| Component | Thread Safety |
+|-----------|---------------|
+| `IBindingContext` | Thread-safe (read) |
+| `IDeserializer` | Not thread-safe (create per use) |
+| `ISerializer` | Not thread-safe (create per use) |
+| `IModule` | Immutable (thread-safe) |
+| `MetapathExpression` | Immutable (thread-safe) |
+
+## Package Structure
+
+```
+dev.metaschema
+├── core
+│   ├── model         # Core model interfaces
+│   ├── metapath      # Metapath engine
+│   └── constraint    # Constraint definitions
+├── databind
+│   ├── io            # Serialization/deserialization
+│   └── model         # Binding model
+├── schemagen
+│   ├── xml           # XSD generation
+│   └── json          # JSON Schema generation
+└── cli               # Command-line tools
+```
+
+## Dependencies
+
+### Runtime Dependencies
+
+- Jackson (JSON/YAML processing)
+- StAX (XML processing)
+- SLF4J (logging)
+- SpotBugs annotations (null safety)
+
+### Build Dependencies
+
+- Maven
+- JavaPoet (code generation)
+
+## Related Projects
+
+| Project | Relationship |
+|---------|--------------|
+| [liboscal-java](https://github.com/metaschema-framework/liboscal-java) | OSCAL bindings built on this |
+| [oscal-cli](https://github.com/metaschema-framework/oscal-cli) | CLI using OSCAL bindings |
+| [Metaschema](https://github.com/metaschema-framework/metaschema) | Metaschema specification |
+
+## Next Steps
+
+- [Loading Modules](loading-metaschema-modules.html) - Work with modules
+- [Generating Java Classes](generating-java-classes.html) - Code generation
+- [Installation](../installation.html) - Add to your project

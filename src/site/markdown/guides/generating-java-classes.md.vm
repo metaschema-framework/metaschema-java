@@ -1,0 +1,324 @@
+# Generating Java Classes
+
+This guide explains how to generate Java binding classes from Metaschema modules.
+
+## Overview
+
+The Metaschema Maven plugin generates Java classes from Metaschema module definitions, enabling:
+
+- Type-safe data binding
+- Automatic serialization/deserialization
+- IDE code completion
+- Compile-time validation
+
+## Maven Plugin Configuration
+
+### Basic Configuration
+
+Add to your `pom.xml`:
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>dev.metaschema.java</groupId>
+            <artifactId>metaschema-maven-plugin</artifactId>
+            <version>${project.version}</version>
+            <executions>
+                <execution>
+                    <id>generate-sources</id>
+                    <goals>
+                        <goal>generate-sources</goal>
+                    </goals>
+                    <configuration>
+                        <metaschemaDir>src/main/metaschema</metaschemaDir>
+                        <includes>
+                            <include>my-model_metaschema.xml</include>
+                        </includes>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+```
+
+### Full Configuration Options
+
+```xml
+<configuration>
+    <!-- Source directory containing Metaschema files -->
+    <metaschemaDir>src/main/metaschema</metaschemaDir>
+
+    <!-- Which files to include -->
+    <includes>
+        <include>**/*_metaschema.xml</include>
+    </includes>
+
+    <!-- Files to exclude -->
+    <excludes>
+        <exclude>**/draft-*.xml</exclude>
+    </excludes>
+
+    <!-- Output directory for generated sources -->
+    <outputDirectory>${project.build.directory}/generated-sources/metaschema</outputDirectory>
+</configuration>
+```
+
+## Running Generation
+
+```bash
+# Generate sources
+mvn generate-sources
+
+# Or as part of full build
+mvn compile
+```
+
+Generated classes appear in `target/generated-sources/metaschema/`.
+
+## Understanding Generated Classes
+
+### From Metaschema Definition
+
+```xml
+<define-assembly name="catalog">
+    <formal-name>Catalog</formal-name>
+    <description>A collection of controls.</description>
+    <root-name>catalog</root-name>
+    <define-flag name="uuid" required="yes">
+        <formal-name>Catalog UUID</formal-name>
+    </define-flag>
+    <model>
+        <assembly ref="metadata" min-occurs="1"/>
+        <assembly ref="group" max-occurs="unbounded"/>
+    </model>
+</define-assembly>
+```
+
+### Generated Java Class
+
+```java
+@MetaschemaAssembly(
+    name = "catalog",
+    rootName = "catalog"
+)
+public class Catalog {
+    @BoundFlag(name = "uuid", required = true)
+    private UUID uuid;
+
+    @BoundAssembly(minOccurs = 1)
+    private Metadata metadata;
+
+    @BoundAssembly(maxOccurs = -1)
+    private List<Group> groups;
+
+    // Getters and setters
+    public UUID getUuid() { return uuid; }
+    public void setUuid(UUID uuid) { this.uuid = uuid; }
+
+    public Metadata getMetadata() { return metadata; }
+    public void setMetadata(Metadata metadata) { this.metadata = metadata; }
+
+    public List<Group> getGroups() { return groups; }
+    public void setGroups(List<Group> groups) { this.groups = groups; }
+}
+```
+
+## Generated Class Features
+
+### Type Mapping
+
+| Metaschema Type | Java Type |
+|-----------------|-----------|
+| `uuid` | `java.util.UUID` |
+| `date-time` | `java.time.ZonedDateTime` |
+| `string` | `String` |
+| `integer` | `java.math.BigInteger` |
+| `boolean` | `Boolean` |
+| `uri` | `java.net.URI` |
+| `markup-line` | `MarkupLine` |
+| `markup-multiline` | `MarkupMultiline` |
+
+### Cardinality Handling
+
+| Metaschema | Java |
+|------------|------|
+| `min-occurs="0"` | Nullable field |
+| `min-occurs="1"` | `@NonNull` field |
+| `max-occurs="1"` | Single instance |
+| `max-occurs="unbounded"` | `List<T>` |
+
+### Annotations
+
+Generated classes include annotations for:
+
+```java
+@MetaschemaAssembly    // Assembly definitions
+@MetaschemaField       // Field definitions
+@BoundFlag             // Flag instances
+@BoundField            // Field instances
+@BoundAssembly         // Assembly instances
+```
+
+## Using Generated Classes
+
+### Creating Instances
+
+```java
+Catalog catalog = new Catalog();
+catalog.setUuid(UUID.randomUUID());
+
+Metadata metadata = new Metadata();
+metadata.setTitle(MarkupLine.fromMarkdown("My Catalog"));
+metadata.setLastModified(ZonedDateTime.now());
+catalog.setMetadata(metadata);
+```
+
+### With Builder Pattern
+
+For complex objects, use builders if generated:
+
+```java
+Catalog catalog = Catalog.builder()
+    .uuid(UUID.randomUUID())
+    .metadata(Metadata.builder()
+        .title("My Catalog")
+        .build())
+    .build();
+```
+
+### Serialization
+
+```java
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.ISerializer;
+
+IBindingContext context = IBindingContext.instance();
+ISerializer<Catalog> serializer = context.newSerializer(Format.JSON, Catalog.class);
+serializer.serialize(catalog, Path.of("catalog.json"));
+```
+
+### Deserialization
+
+```java
+IDeserializer<Catalog> deserializer = context.newDeserializer(
+    Format.JSON, Catalog.class);
+Catalog catalog = deserializer.deserialize(Path.of("catalog.json"));
+```
+
+## Multiple Modules
+
+### Generating from Multiple Files
+
+```xml
+<configuration>
+    <includes>
+        <include>core_metaschema.xml</include>
+        <include>extension_metaschema.xml</include>
+    </includes>
+</configuration>
+```
+
+### Module Dependencies
+
+If modules import each other:
+
+```xml
+<!-- core_metaschema.xml -->
+<metaschema>
+    <define-assembly name="base">...</define-assembly>
+</metaschema>
+
+<!-- extension_metaschema.xml -->
+<metaschema>
+    <import href="core_metaschema.xml"/>
+    <define-assembly name="extended">
+        <model>
+            <assembly ref="base"/>
+        </model>
+    </define-assembly>
+</metaschema>
+```
+
+All imported modules are processed automatically.
+
+## Customizing Generation
+
+### Package Names
+
+Control package via namespace:
+
+```xml
+<metaschema xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:java="http://metaschema.dev/ns/java">
+    <schema-name>My Model</schema-name>
+    <namespace>http://example.com/ns/mymodel</namespace>
+    <!-- Package derived from namespace -->
+</metaschema>
+```
+
+### Abstract Base Classes
+
+The plugin generates abstract base classes for extension:
+
+```java
+// Generated abstract class
+public abstract class AbstractCatalog {
+    // Generated fields and methods
+}
+
+// Your extension (in src/main/java)
+public class Catalog extends AbstractCatalog {
+    // Additional methods
+}
+```
+
+## Troubleshooting
+
+### Classes Not Generated
+
+**Symptom:** No classes in `target/generated-sources/`
+
+**Fix:**
+1. Check `metaschemaDir` path is correct
+2. Verify `includes` pattern matches files
+3. Run `mvn generate-sources -X` for debug output
+
+### Compilation Errors
+
+**Symptom:** Generated classes won't compile
+
+**Fix:**
+1. Ensure all imported modules are accessible
+2. Check for circular dependencies
+3. Verify Metaschema syntax is valid
+
+### Missing Dependencies
+
+**Symptom:** Annotations not found
+
+**Fix:** Add runtime dependency:
+
+```xml
+<dependency>
+    <groupId>dev.metaschema.java</groupId>
+    <artifactId>metaschema-databind</artifactId>
+    <version>${project.version}</version>
+</dependency>
+```
+
+## Best Practices
+
+1. **Use consistent naming** - Follow `*_metaschema.xml` convention
+2. **Organize by module** - One module per domain concept
+3. **Document in Metaschema** - Descriptions become Javadoc
+4. **Version your schemas** - Track schema changes in VCS
+5. **Don't edit generated code** - Use extension classes instead
+
+## Next Steps
+
+- [Loading Modules](loading-metaschema-modules.html) - Load modules at runtime
+- [Reading & Writing Data](reading-writing-data.html) - Use generated classes
+- [Architecture](architecture.html) - Understand the generation pipeline
