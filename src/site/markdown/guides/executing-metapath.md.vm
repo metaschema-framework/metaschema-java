@@ -1,0 +1,327 @@
+# Executing Metapath
+
+This guide explains how to use Metapath expressions to query Metaschema-based data.
+
+## Overview
+
+Metapath is an expression language for querying Metaschema-based documents. It's similar to XPath but works across all serialization formats (XML, JSON, YAML).
+
+## Basic Metapath Evaluation
+
+```java
+import dev.metaschema.core.metapath.MetapathExpression;
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.IItem;
+
+// Create static context
+StaticContext staticContext = StaticContext.builder().build();
+
+// Compile expression
+IMetapathExpression expression = MetapathExpression.compile(
+    "//control", staticContext);
+
+// Evaluate against a document
+ISequence<?> results = expression.evaluate(document);
+
+// Process results
+for (IItem item : results) {
+    System.out.println("Found: " + item);
+}
+```
+
+## Path Expressions
+
+### Basic Navigation
+
+```java
+// Root element
+"/catalog"
+
+// All descendants named 'control'
+"//control"
+
+// Direct children
+"catalog/group"
+
+// Parent
+".."
+
+// Current node
+"."
+```
+
+### Predicates
+
+```java
+// By position
+"//control[1]"           // First control
+"//control[last()]"      // Last control
+"//control[position() < 5]"  // First four
+
+// By attribute/flag
+"//control[@id='ac-1']"  // Control with id='ac-1'
+
+// By child existence
+"//control[title]"       // Controls with title child
+```
+
+### Combining Paths
+
+```java
+// Union
+"//assembly | //field"
+
+// Multiple predicates
+"//control[@id='ac-1'][title]"
+```
+
+## Working with Results
+
+### Getting Atomic Values
+
+```java
+IMetapathExpression expr = MetapathExpression.compile(
+    "//control/@id", staticContext);
+ISequence<?> results = expr.evaluate(document);
+
+results.forEach(item -> {
+    String id = item.toAtomicItem().asString();
+    System.out.println("ID: " + id);
+});
+```
+
+### Getting Bound Objects
+
+```java
+import dev.metaschema.databind.model.IBoundObject;
+
+ISequence<?> results = expression.evaluate(document);
+
+for (IItem item : results) {
+    if (item instanceof IBoundObject) {
+        Object value = ((IBoundObject) item).getValue();
+        // Work with the Java object
+    }
+}
+```
+
+### Counting Results
+
+```java
+IMetapathExpression expr = MetapathExpression.compile(
+    "count(//control)", staticContext);
+ISequence<?> result = expr.evaluate(document);
+
+int count = result.getFirstItem(true)
+    .toAtomicItem()
+    .asInteger()
+    .intValue();
+```
+
+## Built-in Functions
+
+### String Functions
+
+```java
+// String length
+"string-length(//title)"
+
+// Substring
+"substring(//id, 1, 3)"
+
+// String matching
+"starts-with(@id, 'ac-')"
+"ends-with(@id, '-1')"
+"contains(title, 'Access')"
+
+// Case conversion
+"upper-case(title)"
+"lower-case(title)"
+
+// Concatenation
+"concat(title, ' - ', @id)"
+```
+
+### Numeric Functions
+
+```java
+// Count
+"count(//control)"
+
+// Sum
+"sum(//value)"
+
+// Math
+"ceiling(3.14)"
+"floor(3.14)"
+"round(3.14)"
+"abs(-5)"
+```
+
+### Boolean Functions
+
+```java
+// Existence
+"exists(//control)"
+"empty(//withdrawn)"
+
+// Logical
+"not(//control)"
+"true()"
+"false()"
+```
+
+### Sequence Functions
+
+```java
+// First/last
+"head(//control)"
+"tail(//control)"
+
+// Reverse
+"reverse(//control)"
+
+// Distinct values
+"distinct-values(//prop/@name)"
+```
+
+## Static Context Configuration
+
+### Default Configuration
+
+```java
+StaticContext staticContext = StaticContext.builder().build();
+```
+
+### With Base URI
+
+```java
+StaticContext staticContext = StaticContext.builder()
+    .baseUri(URI.create("https://example.com/"))
+    .build();
+```
+
+### With Namespace Bindings
+
+```java
+StaticContext staticContext = StaticContext.builder()
+    .namespace("oscal", "http://csrc.nist.gov/ns/oscal/1.0")
+    .build();
+```
+
+## Caching Compiled Expressions
+
+```java
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class MetapathCache {
+    private final Map<String, IMetapathExpression> cache =
+        new ConcurrentHashMap<>();
+    private final StaticContext staticContext;
+
+    public MetapathCache(StaticContext staticContext) {
+        this.staticContext = staticContext;
+    }
+
+    public IMetapathExpression get(String path) {
+        return cache.computeIfAbsent(path, p ->
+            MetapathExpression.compile(p, staticContext));
+    }
+
+    public ISequence<?> evaluate(Object document, String path) {
+        return get(path).evaluate(document);
+    }
+}
+```
+
+## Error Handling
+
+```java
+import dev.metaschema.core.metapath.MetapathException;
+
+try {
+    IMetapathExpression expr = MetapathExpression.compile(
+        "//control[invalid", staticContext);
+} catch (MetapathException e) {
+    System.err.println("Invalid expression: " + e.getMessage());
+}
+```
+
+## Common Patterns
+
+### Find by Attribute
+
+```java
+// Find element with specific ID
+"//control[@id='ac-1']"
+
+// Find elements with any value for attribute
+"//control[@id]"
+
+// Find elements without attribute
+"//control[not(@id)]"
+```
+
+### Navigate Relationships
+
+```java
+// Children
+"control/*"
+
+// Specific child
+"control/title"
+
+// All descendants
+"catalog//control"
+
+// Parent's other children (siblings)
+"../control"
+```
+
+### Filter by Content
+
+```java
+// Elements containing text
+"//control[contains(., 'security')]"
+
+// Elements with specific child value
+"//control[title = 'Access Control']"
+```
+
+### Aggregate Data
+
+```java
+// Count by type
+"count(//control[prop[@name='type'][@value='technical']])"
+
+// Get unique values
+"distinct-values(//prop/@name)"
+```
+
+## Metapath vs XPath
+
+| Feature | Metapath | XPath |
+|---------|----------|-------|
+| Format support | XML, JSON, YAML | XML only |
+| Axis support | Simplified | Full |
+| Node types | Metaschema types | XML nodes |
+| Functions | Metaschema-specific | XPath functions |
+
+## Best Practices
+
+1. **Compile once, use many** - Cache compiled expressions
+2. **Be specific** - Narrow paths are more efficient
+3. **Use predicates** - Filter in expression, not in Java
+4. **Handle empty results** - Check sequence length
+5. **Test expressions** - Validate before embedding
+
+## Next Steps
+
+Continue learning about the Metaschema Java Tools with these related guides:
+
+- [Validating with Constraints](validating-with-constraints.html) - Validate data
+- [Reading & Writing Data](reading-writing-data.html) - Load documents
+- [Architecture](architecture.html) - Understand Metapath internals

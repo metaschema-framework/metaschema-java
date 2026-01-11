@@ -1,0 +1,336 @@
+# Generating Schemas
+
+This guide explains how to generate XML Schema (XSD) and JSON Schema from Metaschema modules.
+
+## Overview
+
+The Metaschema tools can generate:
+
+- **XML Schema (XSD)** - For validating XML documents
+- **JSON Schema** - For validating JSON documents
+
+## Maven Plugin Configuration
+
+### Basic Configuration
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>dev.metaschema.java</groupId>
+            <artifactId>metaschema-maven-plugin</artifactId>
+            <version>${project.version}</version>
+            <executions>
+                <!-- Generate XML Schema -->
+                <execution>
+                    <id>generate-xsd</id>
+                    <goals>
+                        <goal>generate-xsd</goal>
+                    </goals>
+                    <configuration>
+                        <metaschemaDir>src/main/metaschema</metaschemaDir>
+                        <includes>
+                            <include>my-model_metaschema.xml</include>
+                        </includes>
+                        <outputDirectory>${project.build.directory}/schemas/xsd</outputDirectory>
+                    </configuration>
+                </execution>
+
+                <!-- Generate JSON Schema -->
+                <execution>
+                    <id>generate-json-schema</id>
+                    <goals>
+                        <goal>generate-json-schema</goal>
+                    </goals>
+                    <configuration>
+                        <metaschemaDir>src/main/metaschema</metaschemaDir>
+                        <includes>
+                            <include>my-model_metaschema.xml</include>
+                        </includes>
+                        <outputDirectory>${project.build.directory}/schemas/json</outputDirectory>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+```
+
+### Running Generation
+
+```bash
+# Generate all schemas
+mvn generate-resources
+
+# Generate only XSD
+mvn metaschema:generate-xsd
+
+# Generate only JSON Schema
+mvn metaschema:generate-json-schema
+```
+
+## Using the CLI
+
+### Generate XML Schema
+
+```bash
+metaschema-cli generate-schema --as=xsd model_metaschema.xml output.xsd
+```
+
+### Generate JSON Schema
+
+```bash
+metaschema-cli generate-schema --as=json model_metaschema.xml output.json
+```
+
+## Programmatic Generation
+
+### Generate XML Schema
+
+```java
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaLoader;
+import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
+
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+// Load module
+MetaschemaLoader loader = new MetaschemaLoader();
+IModule module = loader.load(Path.of("model_metaschema.xml"));
+
+// Generate XSD
+XmlSchemaGenerator generator = new XmlSchemaGenerator();
+try (Writer writer = Files.newBufferedWriter(Path.of("output.xsd"))) {
+    generator.generateFromModule(module, writer);
+}
+```
+
+### Generate JSON Schema
+
+```java
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaLoader;
+import dev.metaschema.schemagen.json.JsonSchemaGenerator;
+
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+// Load module
+MetaschemaLoader loader = new MetaschemaLoader();
+IModule module = loader.load(Path.of("model_metaschema.xml"));
+
+// Generate JSON Schema
+JsonSchemaGenerator generator = new JsonSchemaGenerator();
+try (Writer writer = Files.newBufferedWriter(Path.of("output.json"))) {
+    generator.generateFromModule(module, writer);
+}
+```
+
+## Schema Features
+
+### XML Schema Output
+
+Generated XSD includes:
+
+- Complex types for assemblies
+- Simple types for fields and flags
+- Element declarations
+- Namespace declarations
+- Documentation from Metaschema descriptions
+
+```xml
+<!-- Generated XSD example -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://example.com/ns/model">
+
+    <xs:element name="catalog" type="catalog-type"/>
+
+    <xs:complexType name="catalog-type">
+        <xs:annotation>
+            <xs:documentation>A collection of controls.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="metadata" minOccurs="1"/>
+            <xs:element ref="control" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="uuid" type="uuid-type" use="required"/>
+    </xs:complexType>
+
+</xs:schema>
+```
+
+### JSON Schema Output
+
+Generated JSON Schema includes:
+
+- Object definitions for assemblies
+- Property definitions for fields and flags
+- Required property arrays
+- Type constraints
+- Description annotations
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "catalog": {
+      "type": "object",
+      "description": "A collection of controls.",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "metadata": {
+          "$ref": "#/definitions/metadata"
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/control"
+          }
+        }
+      },
+      "required": ["uuid", "metadata"]
+    }
+  }
+}
+```
+
+## Validation with Generated Schemas
+
+### XML Validation
+
+```java
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
+import java.io.File;
+
+import org.xml.sax.SAXException;
+
+SchemaFactory factory = SchemaFactory.newInstance(
+    XMLConstants.W3C_XML_SCHEMA_NS_URI);
+Schema schema = factory.newSchema(new File("output.xsd"));
+Validator validator = schema.newValidator();
+
+try {
+    validator.validate(new StreamSource(new File("document.xml")));
+    System.out.println("Valid!");
+} catch (SAXException e) {
+    System.err.println("Invalid: " + e.getMessage());
+}
+```
+
+### JSON Validation
+
+Using a JSON Schema validator library (e.g., [networknt/json-schema-validator](https://github.com/networknt/json-schema-validator)):
+
+```java
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
+
+import java.io.File;
+import java.util.Set;
+
+ObjectMapper objectMapper = new ObjectMapper();
+JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
+    SpecVersion.VersionFlag.V7);
+JsonSchema schema = factory.getSchema(
+    objectMapper.readTree(new File("output.json")));
+
+JsonNode document = objectMapper.readTree(new File("document.json"));
+Set<ValidationMessage> errors = schema.validate(document);
+
+if (errors.isEmpty()) {
+    System.out.println("Valid!");
+} else {
+    errors.forEach(err -> System.err.println(err.getMessage()));
+}
+```
+
+## Customizing Output
+
+### XSD Configuration
+
+```xml
+<configuration>
+    <metaschemaDir>src/main/metaschema</metaschemaDir>
+    <includes>
+        <include>model_metaschema.xml</include>
+    </includes>
+    <outputDirectory>${project.build.directory}/schemas/xsd</outputDirectory>
+</configuration>
+```
+
+### JSON Schema Configuration
+
+```xml
+<configuration>
+    <metaschemaDir>src/main/metaschema</metaschemaDir>
+    <includes>
+        <include>model_metaschema.xml</include>
+    </includes>
+    <outputDirectory>${project.build.directory}/schemas/json</outputDirectory>
+</configuration>
+```
+
+## Schema Generation vs Constraints
+
+| Aspect | Schema Validation | Constraint Validation |
+|--------|-------------------|----------------------|
+| Format | XSD/JSON Schema | Metaschema constraints |
+| Scope | Structure, types | Business rules |
+| Cross-references | Limited | Full support |
+| Custom rules | No | Metapath expressions |
+| Standard tools | Yes | Metaschema tools |
+
+**Recommendation:** Use both for comprehensive validation:
+1. Schema for structural validation
+2. Constraints for semantic validation
+
+## Common Issues
+
+### Missing Imports
+
+**Symptom:** Generated schema references undefined types
+
+**Fix:** Ensure all imported modules are accessible
+
+### Namespace Conflicts
+
+**Symptom:** Multiple schemas with same namespace
+
+**Fix:** Use unique namespaces per module
+
+### Output Directory
+
+**Symptom:** Schemas not found after generation
+
+**Fix:** Check `outputDirectory` configuration
+
+## Best Practices
+
+1. **Generate during build** - Include in Maven lifecycle
+2. **Version schemas** - Track schema changes
+3. **Publish schemas** - Make available for consumers
+4. **Use both schema types** - Support XML and JSON users
+5. **Include in documentation** - Reference from API docs
+
+## Next Steps
+
+Continue learning about the Metaschema Java Tools with these related guides:
+
+- [Loading Modules](loading-metaschema-modules.html) - Load modules for generation
+- [Validating with Constraints](validating-with-constraints.html) - Beyond schema validation
+- [Architecture](architecture.html) - Schema generation internals

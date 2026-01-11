@@ -117,6 +117,37 @@ To disable colored output, use the `--no-color` flag:
 metaschema-cli --no-color <command>
 ```
 
+#### Shell Completion
+
+The CLI supports tab completion for Bash and Zsh shells, providing intelligent suggestions for commands, subcommands, and options.
+
+**Bash:**
+
+```bash
+# Generate and source completion (temporary, current session only)
+source <(metaschema-cli shell-completion bash)
+
+# Or save to a file and source it in your ~/.bashrc for persistence
+metaschema-cli shell-completion bash > ~/.metaschema-completion.bash
+echo 'source ~/.metaschema-completion.bash' >> ~/.bashrc
+```
+
+**Zsh:**
+
+```zsh
+# Ensure your completions directory exists
+mkdir -p ~/.zsh/completions
+
+# Generate completion script
+metaschema-cli shell-completion zsh > ~/.zsh/completions/_metaschema-cli
+
+# Add to your ~/.zshrc if not already configured
+echo 'fpath=(~/.zsh/completions $fpath)' >> ~/.zshrc
+echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
+```
+
+After setting up completion, restart your shell or source the configuration file.
+
 ## Relationship to prior work
 
 The contents of this repository is based on work from the [Metaschema Java repository](https://github.com/usnistgov/metaschema-java/) maintained by the National Institute of Standards and Technology (NIST), the [contents of which have been dedicated in the worldwide public domain](https://github.com/usnistgov/metaschema-java/blob/1a496e4bcf905add6b00a77a762ed3cc31bf77e6/LICENSE.md) using the [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) public domain dedication. This repository builds on this prior work, maintaining the [CCO license](https://github.com/metaschema-framework/metaschema-java/blob/main/LICENSE.md) on any new works in this repository.

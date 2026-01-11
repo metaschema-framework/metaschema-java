@@ -1,0 +1,165 @@
+# Installation
+
+This guide explains how to add the Metaschema Java libraries to your project.
+
+## Choosing the Right Module
+
+The Metaschema Java project consists of several modules that serve different purposes. Most projects will only need one or two:
+
+| If you want to... | Use this module |
+|:------------------|:----------------|
+| Read/write data in XML, JSON, or YAML | `metaschema-databind` |
+| Generate Java classes from Metaschema modules | `metaschema-maven-plugin` |
+| Work with Metaschema modules directly | `metaschema-core` |
+| Generate XML or JSON schemas | `metaschema-schema-generator` |
+| Work with OSCAL documents | Consider [liboscal-java](https://github.com/metaschema-framework/liboscal-java) instead |
+
+For most use cases, `metaschema-databind` provides everything you need. It includes the core Metaschema functionality plus the data binding layer for serialization. If you're specifically working with OSCAL content, [liboscal-java](https://github.com/metaschema-framework/liboscal-java) bundles this library with pre-built OSCAL model classes.
+
+## Prerequisites
+
+Before adding the library to your project, ensure your development environment meets these requirements:
+
+| Requirement | Minimum Version | Recommended |
+|:------------|:----------------|:------------|
+| Java JDK    | 11              | 17 or later |
+| Maven       | 3.9.0           | Latest      |
+| Gradle      | 7.0             | Latest      |
+
+The library targets Java 11 for broad compatibility, but building from source requires Java 17. See [Building from Source](building.html) if you need to compile the library yourself.
+
+## Maven
+
+### Release Versions
+
+Stable releases are published to Maven Central and require no additional repository configuration. Add the following dependency to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>metaschema-databind</artifactId>
+    <version>LATEST_VERSION</version>
+</dependency>
+```
+
+Replace `LATEST_VERSION` with the current release from [Maven Central](https://central.sonatype.com/artifact/dev.metaschema.java/metaschema-databind).
+
+### Snapshot Versions
+
+Snapshot versions contain the latest changes from the `develop` branch, including new features and bug fixes that haven't yet been released. These are useful for testing upcoming changes or accessing features before they're officially released, but they may be less stable than release versions.
+
+To use snapshots, add the project's snapshot repository:
+
+```xml
+<repositories>
+    <repository>
+        <id>metaschema-snapshots</id>
+        <url>https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>metaschema-databind</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+</dependencies>
+```
+
+## Gradle
+
+Gradle users can add the library using either Kotlin DSL or Groovy DSL syntax. The examples below show `metaschema-databind`, but you can substitute any module from the [choosing the right module](#choosing-the-right-module) section.
+
+### Kotlin DSL
+
+Add to your `build.gradle.kts`:
+
+```kotlin
+dependencies {
+    implementation("dev.metaschema.java:metaschema-databind:LATEST_VERSION")
+}
+```
+
+For snapshot versions, add the repository:
+
+```kotlin
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main")
+    }
+}
+```
+
+### Groovy DSL
+
+Add to your `build.gradle`:
+
+```groovy
+dependencies {
+    implementation 'dev.metaschema.java:metaschema-databind:LATEST_VERSION'
+}
+```
+
+For snapshot versions:
+
+```groovy
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main'
+    }
+}
+```
+
+## Building from Source
+
+If you need to build the library from source—for example, to contribute changes, debug issues, or access unreleased features—see the [Building](building.html) guide. Building from source requires Java 17 or later.
+
+## IDE Setup
+
+Modern Java IDEs automatically recognize Maven and Gradle projects, downloading dependencies and configuring the classpath. After adding the dependency to your build file:
+
+1. **IntelliJ IDEA**: Open the project folder or `pom.xml`/`build.gradle` file. IntelliJ will import the project and download dependencies automatically.
+
+2. **Eclipse**: Import as a Maven or Gradle project using the built-in import wizard. The [M2Eclipse](https://www.eclipse.org/m2e/) plugin handles Maven projects.
+
+3. **VS Code**: Install the [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack), then open the project folder. VS Code will detect the build system and configure accordingly.
+
+For more detailed IDE setup, refer to your IDE's documentation:
+
+- [IntelliJ IDEA - Maven Projects](https://www.jetbrains.com/help/idea/maven-support.html)
+- [Eclipse - Maven Integration](https://www.eclipse.org/m2e/)
+- [VS Code - Java Extension Pack](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)
+
+## Verifying Installation
+
+After adding the dependency, verify the installation by creating a simple test class:
+
+```java
+import dev.metaschema.core.metapath.MetapathExpression;
+
+public class VerifyInstallation {
+    public static void main(String[] args) {
+        MetapathExpression expr = MetapathExpression.compile("1 + 1");
+        System.out.println("Metaschema installed successfully!");
+        System.out.println("Metapath result: " + expr.evaluateAs(null,
+            MetapathExpression.ResultType.NUMBER));
+    }
+}
+```
+
+If this compiles and runs without errors, the library is correctly installed.
+
+## Next Steps
+
+Once installed, explore these guides to start using the library:
+
+- [Architecture](guides/architecture.html) - Understand the module structure and how components interact
+- [Loading Modules](guides/loading-metaschema-modules.html) - Load and work with Metaschema definitions
+- [Generating Java Classes](guides/generating-java-classes.html) - Use the Maven plugin to generate code
+- [Reading & Writing Data](guides/reading-writing-data.html) - Serialize and deserialize data in multiple formats
