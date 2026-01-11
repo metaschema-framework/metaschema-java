@@ -26,8 +26,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public abstract class AbstractDatatypeManager implements IDatatypeManager {
   @NonNull
-  private static final Map<String, String> DATATYPE_TRANSLATION_MAP // NOPMD - intentional
-      = new LinkedHashMap<>();
+  private static final Map<String, String> DATATYPE_TRANSLATION_MAP = new LinkedHashMap<>();
 
   static {
     DATATYPE_TRANSLATION_MAP.put("base64", "Base64Datatype");

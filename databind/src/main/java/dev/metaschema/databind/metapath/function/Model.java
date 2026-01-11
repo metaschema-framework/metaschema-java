@@ -69,7 +69,6 @@ public final class Model {
    * @return a sequence containing the model node item, or an empty sequence if
    *         not available
    */
-  @SuppressWarnings("unused")
   @NonNull
   public static ISequence<?> execute(
       @NonNull IFunction function,

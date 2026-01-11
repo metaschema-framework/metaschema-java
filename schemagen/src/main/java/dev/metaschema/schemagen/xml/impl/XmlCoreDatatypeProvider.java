@@ -15,9 +15,11 @@ import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -55,10 +57,11 @@ public class XmlCoreDatatypeProvider
       XPath xpath = XPathFactory.newInstance().newXPath();
       NodeList nodes = (NodeList) xpath.evaluate(".//@base", element, XPathConstants.NODESET);
 
+      Set<String> seen = new HashSet<>();
       List<String> dependencies = new ArrayList<>();
       for (int i = 0; i < nodes.getLength(); i++) {
         String value = nodes.item(i).getNodeValue();
-        if (value != null && !value.startsWith("xs:") && !dependencies.contains(value)) {
+        if (value != null && !value.startsWith("xs:") && seen.add(value)) {
           dependencies.add(value);
         }
       }

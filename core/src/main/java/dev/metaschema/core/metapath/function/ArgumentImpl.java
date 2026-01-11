@@ -33,7 +33,6 @@ class ArgumentImpl implements IArgument {
     return sequenceType;
   }
 
-  @SuppressWarnings("null")
   @Override
   public String toSignature() {
     StringBuilder builder = new StringBuilder();

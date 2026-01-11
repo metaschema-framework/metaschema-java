@@ -75,7 +75,6 @@ public final class JsonUtil {
    * @throws IOException
    *           if an error occurred while getting the information from the parser
    */
-  @SuppressWarnings("null")
   @NonNull
   public static String toString(
       @NonNull JsonParser parser,
@@ -96,7 +95,6 @@ public final class JsonUtil {
    *          a JSON parser location
    * @return the informational string
    */
-  @SuppressWarnings("null")
   @NonNull
   public static String toString(@NonNull JsonLocation location) {
     return new StringBuilder(8)
@@ -417,7 +415,6 @@ public final class JsonUtil {
    *          the resource being parsed
    * @return the location string
    */
-  @SuppressWarnings("null")
   @NonNull
   public static CharSequence generateLocationMessage(@NonNull JsonLocation location, @NonNull URI resource) {
     return new StringBuilder()
