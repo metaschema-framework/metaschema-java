@@ -92,6 +92,8 @@ import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.model.MetaschemaLoader;
 import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
 
+import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 // Load module
@@ -108,9 +110,16 @@ try (Writer writer = Files.newBufferedWriter(Path.of("output.xsd"))) {
 ### Generate JSON Schema
 
 ```java
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaLoader;
 import dev.metaschema.schemagen.json.JsonSchemaGenerator;
 
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 // Load module
+MetaschemaLoader loader = new MetaschemaLoader();
 IModule module = loader.load(Path.of("model_metaschema.xml"));
 
 // Generate JSON Schema
@@ -196,9 +205,15 @@ Generated JSON Schema includes:
 ### XML Validation
 
 ```java
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+
+import java.io.File;
+
+import org.xml.sax.SAXException;
 
 SchemaFactory factory = SchemaFactory.newInstance(
     XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -215,17 +230,24 @@ try {
 
 ### JSON Validation
 
-Using a JSON Schema validator library:
+Using a JSON Schema validator library (e.g., [networknt/json-schema-validator](https://github.com/networknt/json-schema-validator)):
 
 ```java
-import com.networknt.schema.JsonSchemaFactory;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
 
+import java.io.File;
+import java.util.Set;
+
+ObjectMapper objectMapper = new ObjectMapper();
 JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
-    VersionFlag.V7);
+    SpecVersion.VersionFlag.V7);
 JsonSchema schema = factory.getSchema(
-    new FileInputStream("output.json"));
+    objectMapper.readTree(new File("output.json")));
 
 JsonNode document = objectMapper.readTree(new File("document.json"));
 Set<ValidationMessage> errors = schema.validate(document);

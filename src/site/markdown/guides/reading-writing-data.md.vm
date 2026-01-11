@@ -240,10 +240,16 @@ System.out.println("Loaded: " + type.getSimpleName());
 ## Batch Processing
 
 ```java
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
+
 public void convertDirectory(Path inputDir, Path outputDir,
         Format inputFormat, Format outputFormat) throws IOException {
 
-    IBindingContext context = new DefaultBindingContext();
+    IBindingContext context = IBindingContext.newInstance();
 
     try (Stream<Path> files = Files.list(inputDir)) {
         files.filter(p -> Format.valueOf(p) == inputFormat)

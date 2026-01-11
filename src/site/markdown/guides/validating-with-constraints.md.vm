@@ -108,25 +108,33 @@ Custom Metapath-based validation:
 
 ```java
 import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.io.IDeserializer;
+import dev.metaschema.databind.io.DeserializationFeature;
+import dev.metaschema.databind.io.IBoundLoader;
 
-IBindingContext context = IBindingContext.instance();
-IDeserializer<MyModel> deserializer = context.newDeserializer(
-    Format.JSON, MyModel.class);
+import java.nio.file.Path;
 
-// Enable constraint validation
-deserializer.setConstraintValidationEnabled(true);
+IBindingContext context = IBindingContext.newInstance();
+IBoundLoader loader = context.newBoundLoader();
 
-MyModel model = deserializer.deserialize(Path.of("data.json"));
+// Enable constraint validation during loading
+loader.enableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
+
+Object model = loader.load(Path.of("data.json"));
 ```
 
 ### Post-load Validation
 
 ```java
 import dev.metaschema.core.model.validation.IValidationResult;
+import dev.metaschema.databind.IBindingContext;
 
-IValidationResult result = context.validate(model);
+import java.net.URI;
+import java.nio.file.Path;
+
+IBindingContext context = IBindingContext.newInstance();
+URI target = Path.of("data.json").toUri();
+
+IValidationResult result = context.validateWithConstraints(target, null);
 
 if (!result.isPassing()) {
     result.getFindings().forEach(finding -> {
@@ -139,10 +147,18 @@ if (!result.isPassing()) {
 ## Working with Validation Results
 
 ```java
+import dev.metaschema.core.model.constraint.IConstraint.Level;
 import dev.metaschema.core.model.validation.IValidationFinding;
 import dev.metaschema.core.model.validation.IValidationResult;
+import dev.metaschema.databind.IBindingContext;
 
-IValidationResult result = context.validate(model);
+import java.net.URI;
+import java.nio.file.Path;
+
+IBindingContext context = IBindingContext.newInstance();
+URI target = Path.of("data.json").toUri();
+
+IValidationResult result = context.validateWithConstraints(target, null);
 
 // Check overall status
 if (result.isPassing()) {
@@ -151,54 +167,44 @@ if (result.isPassing()) {
 
 // Process findings by severity
 for (IValidationFinding finding : result.getFindings()) {
-    switch (finding.getSeverity()) {
-        case CRITICAL:
-            handleCritical(finding);
-            break;
-        case ERROR:
-            handleError(finding);
-            break;
-        case WARNING:
-            handleWarning(finding);
-            break;
-        case INFORMATIONAL:
-            logInfo(finding);
-            break;
+    Level severity = finding.getSeverity();
+    if (severity == Level.CRITICAL) {
+        handleCritical(finding);
+    } else if (severity == Level.ERROR) {
+        handleError(finding);
+    } else if (severity == Level.WARNING) {
+        handleWarning(finding);
+    } else {
+        logInfo(finding);
     }
 }
 ```
 
-## Custom Validation Handler
+## Using FindingCollectingConstraintValidationHandler
+
+The framework provides `FindingCollectingConstraintValidationHandler` for collecting validation findings:
 
 ```java
-import java.util.ArrayList;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import dev.metaschema.core.model.constraint.FindingCollectingConstraintValidationHandler;
 import dev.metaschema.core.model.constraint.IConstraint.Level;
-import dev.metaschema.core.model.constraint.IConstraintValidationHandler;
-import dev.metaschema.core.model.constraint.IFinding;
+import dev.metaschema.core.model.validation.IValidationResult;
 
-public class CustomHandler implements IConstraintValidationHandler {
-    private static final Logger logger =
-        LoggerFactory.getLogger(CustomHandler.class);
-    private final List<IFinding> findings = new ArrayList<>();
+// The handler implements IValidationResult
+FindingCollectingConstraintValidationHandler handler =
+    new FindingCollectingConstraintValidationHandler();
 
-    @Override
-    public void handleFinding(IFinding finding) {
-        findings.add(finding);
+// After validation completes, check results
+if (!handler.isPassing()) {
+    handler.getFindings().forEach(finding -> {
+        System.err.println(finding.getSeverity() + ": " +
+            finding.getMessage());
+    });
+}
 
-        // Immediate logging for errors and above
-        if (finding.getSeverity().compareTo(Level.ERROR) >= 0) {
-            logger.error("Validation: {} at {}",
-                finding.getMessage(), finding.getLocation());
-        }
-    }
-
-    public boolean hasErrors() {
-        return findings.stream()
-            .anyMatch(f -> f.getSeverity().compareTo(Level.ERROR) >= 0);
-    }
+// Check highest severity level
+Level highestSeverity = handler.getHighestSeverity();
+if (highestSeverity.ordinal() >= Level.ERROR.ordinal()) {
+    System.err.println("Validation failed with errors");
 }
 ```
 

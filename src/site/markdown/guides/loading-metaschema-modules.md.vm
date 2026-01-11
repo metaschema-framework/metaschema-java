@@ -157,6 +157,9 @@ IModule module2 = loader.load(Path.of("model.xml"));
 ```java
 import dev.metaschema.core.model.MetaschemaException;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 try {
     IModule module = loader.load(Path.of("invalid.xml"));
 } catch (MetaschemaException e) {
@@ -206,6 +209,11 @@ public void listDefinitions(IModule module) {
 ### Find Definition by Name
 
 ```java
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IFieldDefinition;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.INamedModelDefinition;
+
 public INamedModelDefinition findDefinition(IModule module, String name) {
     IAssemblyDefinition assembly = module.getAssemblyDefinitionByName(name);
     if (assembly != null) return assembly;
