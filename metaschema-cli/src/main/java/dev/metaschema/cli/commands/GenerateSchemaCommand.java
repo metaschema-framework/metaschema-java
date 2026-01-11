@@ -150,7 +150,7 @@ public class GenerateSchemaCommand
         LOGGER.info("Generating {} schema for '{}'.", asFormat.name(), extraArgs.get(0));
       }
       if (destination == null) {
-        @SuppressWarnings({ "resource", "PMD.CloseResource" }) // not owned
+        @SuppressWarnings("resource") // not owned
         OutputStream os = ObjectUtils.notNull(System.out);
 
         try (OutputStream out = AutoCloser.preventClose(os)) {

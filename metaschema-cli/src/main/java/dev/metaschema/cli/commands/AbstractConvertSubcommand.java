@@ -103,10 +103,6 @@ public abstract class AbstractConvertSubcommand
     @NonNull
     protected abstract IBindingContext getBindingContext() throws CommandExecutionException, MetaschemaException;
 
-    @SuppressWarnings({
-        "PMD.OnlyOneReturn", // readability
-        "PMD.CyclomaticComplexity", "PMD.CognitiveComplexity" // reasonable
-    })
     @Override
     public void execute() throws CommandExecutionException {
       CommandLine cmdLine = getCommandLine();

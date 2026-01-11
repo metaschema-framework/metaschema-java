@@ -26,8 +26,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public abstract class AbstractDatatypeManager implements IDatatypeManager {
   @NonNull
-  private static final Map<String, String> DATATYPE_TRANSLATION_MAP // NOPMD - intentional
-      = new LinkedHashMap<>();
+  private static final Map<String, String> DATATYPE_TRANSLATION_MAP = new LinkedHashMap<>();
 
   static {
     DATATYPE_TRANSLATION_MAP.put("base64", "Base64Datatype");
@@ -56,7 +55,7 @@ public abstract class AbstractDatatypeManager implements IDatatypeManager {
   }
 
   @NonNull
-  private final Map<IDataTypeAdapter<?>, String> datatypeToTypeMap = new ConcurrentHashMap<>(); // NOPMD - intentional
+  private final Map<IDataTypeAdapter<?>, String> datatypeToTypeMap = new ConcurrentHashMap<>();
 
   /**
    * Get the mapping of Metaschema datatype names to schema type names.

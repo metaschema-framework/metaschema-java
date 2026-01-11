@@ -40,7 +40,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * This implementation make significant use of the command pattern to support a
  * delegation chain of commands based on implementations of {@link ICommand}.
  */
-@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class CLIProcessor {
   private static final Logger LOGGER = LogManager.getLogger(CLIProcessor.class);
 

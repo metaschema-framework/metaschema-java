@@ -33,7 +33,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * <p>
  * This class is not thread safe.
  */
-@SuppressWarnings("PMD.UseConcurrentHashMap")
 /**
  * Generates assembly model structures from binding data.
  * <p>
@@ -67,7 +66,6 @@ public final class AssemblyModelGenerator
    *          the node item factory used to generate child nodes
    * @return the container
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   public static IContainerModelAssemblySupport<
       IModelInstanceAbsolute,
       INamedModelInstanceAbsolute,

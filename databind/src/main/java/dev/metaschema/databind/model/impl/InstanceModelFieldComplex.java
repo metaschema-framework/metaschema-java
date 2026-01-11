@@ -89,7 +89,7 @@ public final class InstanceModelFieldComplex
       @NonNull IBoundDefinitionModelAssembly parent) {
     BoundField annotation = ModelUtil.getAnnotation(javaField, BoundField.class);
     if (!annotation.inXmlWrapped()) {
-      if (definition.hasChildren()) { // NOPMD efficiency
+      if (definition.hasChildren()) {
         throw new IllegalStateException(
             String.format("Field '%s' on class '%s' is requested to be unwrapped, but it has flags preventing this.",
                 javaField.getName(),
@@ -113,7 +113,7 @@ public final class InstanceModelFieldComplex
         throw new IllegalStateException(String.format("Field '%s' on class '%s' is missing the '%s' annotation.",
             javaField.getName(),
             javaField.getDeclaringClass().getName(),
-            GroupAs.class.getName())); // NOPMD false positive
+            GroupAs.class.getName()));
       }
     } else if (!IGroupAs.SINGLETON_GROUP_AS.equals(groupAs)) {
       // max is 1 and a groupAs is set
@@ -122,7 +122,7 @@ public final class InstanceModelFieldComplex
               "Field '%s' on class '%s' has the '%s' annotation, but maxOccurs=1. A groupAs must not be specfied.",
               javaField.getName(),
               javaField.getDeclaringClass().getName(),
-              GroupAs.class.getName())); // NOPMD false positive
+              GroupAs.class.getName()));
     }
     return new InstanceModelFieldComplex(javaField, annotation, groupAs, definition, parent);
   }

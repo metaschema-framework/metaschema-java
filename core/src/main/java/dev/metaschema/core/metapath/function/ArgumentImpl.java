@@ -33,7 +33,6 @@ class ArgumentImpl implements IArgument {
     return sequenceType;
   }
 
-  @SuppressWarnings("null")
   @Override
   public String toSignature() {
     StringBuilder builder = new StringBuilder();
@@ -54,10 +53,10 @@ class ArgumentImpl implements IArgument {
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
-      return true; // NOPMD - readability
+      return true;
     }
     if (obj == null || getClass() != obj.getClass()) {
-      return false; // NOPMD - readability
+      return false;
     }
     ArgumentImpl other = (ArgumentImpl) obj;
     return Objects.equals(name, other.name) && Objects.equals(sequenceType, other.sequenceType);

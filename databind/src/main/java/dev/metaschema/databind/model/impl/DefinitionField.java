@@ -125,7 +125,7 @@ public final class DefinitionField
       throw new IllegalArgumentException(
           String.format("Class '%s' is missing the '%s' annotation on one of its fields.",
               clazz.getName(),
-              BoundFieldValue.class.getName())); // NOPMD false positive
+              BoundFieldValue.class.getName()));
     }
     FieldSupport.bindField(field);
     this.fieldValue = new FieldValue(field, BoundFieldValue.class, bindingContext);

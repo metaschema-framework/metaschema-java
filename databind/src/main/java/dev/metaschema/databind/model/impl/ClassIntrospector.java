@@ -37,7 +37,6 @@ public final class ClassIntrospector {
    * @return an unmodifiable list of matching methods found in the class
    *         hierarchy, or an empty list if no matches are found
    */
-  @SuppressWarnings("PMD.EmptyCatchBlock")
   public static List<Method> getMatchingMethods(Class<?> clazz, String name, Class<?>... parameterTypes) {
     List<Method> retval = new LinkedList<>();
     Class<?> searchClass = clazz;
@@ -69,7 +68,6 @@ public final class ClassIntrospector {
    * @return the first matching method found in the class hierarchy, or
    *         {@code null} if no match is found
    */
-  @SuppressWarnings("PMD.EmptyCatchBlock")
   public static Method getMatchingMethod(Class<?> clazz, String name, Class<?>... parameterTypes) {
     Method retval = null;
     Class<?> searchClass = clazz;

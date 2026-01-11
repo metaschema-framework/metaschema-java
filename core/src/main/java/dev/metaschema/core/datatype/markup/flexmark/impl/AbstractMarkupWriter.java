@@ -262,10 +262,7 @@ public abstract class AbstractMarkupWriter<T, E extends Throwable> // NOPMD not 
    */
   protected abstract void writeElementEnd(@NonNull QName qname) throws E;
 
-  @SuppressWarnings({
-      "unchecked",
-      "PMD.UnusedPrivateMethod"
-  }) // while unused, keeping code for when inline HTML is supported
+  @SuppressWarnings("unchecked") // while unused, keeping code for when inline HTML is supported
   private void writeHtml(Node node) throws E {
     Document doc = Jsoup.parse(node.getChars().toString());
     try {

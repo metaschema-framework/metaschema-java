@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package dev.metaschema.schemagen.xml; // NOPMD
+package dev.metaschema.schemagen.xml;
 
 import com.ctc.wstx.stax.WstxOutputFactory;
 

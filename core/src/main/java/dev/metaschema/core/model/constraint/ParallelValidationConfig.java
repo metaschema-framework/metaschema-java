@@ -122,7 +122,6 @@ public final class ParallelValidationConfig implements AutoCloseable {
    * @throws IllegalStateException
    *           if called on SEQUENTIAL config
    */
-  @SuppressWarnings("PMD.DoubleCheckedLocking") // Correct with volatile field
   @NonNull
   public ExecutorService getExecutor() {
     if (!isParallel()) {

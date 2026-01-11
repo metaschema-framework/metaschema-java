@@ -186,7 +186,6 @@ public class ShellCompletionCommand
     }
   }
 
-  @SuppressWarnings("PMD.SystemPrintln")
   private static void writeToStdout(@NonNull String script) {
     PrintWriter writer = new PrintWriter(
         new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);

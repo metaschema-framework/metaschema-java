@@ -28,7 +28,6 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * The main entry point for the CLI application.
  */
-@SuppressWarnings("PMD.ShortClassName")
 public final class CLI {
   /**
    * The main command line entry point.

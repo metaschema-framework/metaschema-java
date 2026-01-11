@@ -48,7 +48,6 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
    *          an optional consumer to receive each flag instance as it is
    *          processed, or {@code null} if no additional processing is needed
    */
-  @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
   @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification = "Use of final fields")
   public FlagContainerSupport(
       @NonNull IBoundDefinitionModelComplex definition,
@@ -88,7 +87,6 @@ public class FlagContainerSupport implements IContainerFlagSupport<IBoundInstanc
    *          the class
    * @return an immutable collection of flag instances
    */
-  @SuppressWarnings("PMD.UseArraysAsList")
   @NonNull
   protected static Collection<Field> getFlagInstanceFields(Class<?> clazz) {
     Field[] fields = clazz.getDeclaredFields();

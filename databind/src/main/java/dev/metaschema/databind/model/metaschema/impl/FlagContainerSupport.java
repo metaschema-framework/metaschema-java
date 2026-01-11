@@ -26,7 +26,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressWarnings("PMD.OnlyOneReturn")
 /**
  * Support class for building flag containers from binding data.
  * <p>

@@ -223,7 +223,6 @@ public abstract class AbstractValidateContentCommand
     /**
      * Execute the validation operation.
      */
-    @SuppressWarnings("PMD.OnlyOneReturn") // readability
     @Override
     public void execute() throws CommandExecutionException {
       CommandLine cmdLine = getCommandLine();

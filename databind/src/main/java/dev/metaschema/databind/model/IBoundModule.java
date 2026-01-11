@@ -71,7 +71,7 @@ public interface IBoundModule
   IBindingContext getBindingContext();
 
   @Override
-  default URI getLocation() { // NOPMD - intentional
+  default URI getLocation() {
     // not known
     return null;
   }

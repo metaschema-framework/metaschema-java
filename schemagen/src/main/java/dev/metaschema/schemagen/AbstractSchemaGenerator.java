@@ -89,12 +89,12 @@ public abstract class AbstractSchemaGenerator<
       IConfiguration<SchemaGenerationFeature<?>> configuration) {
     try {
       // avoid automatically closing streams not owned by the generator
-      @SuppressWarnings({ "PMD.CloseResource", "resource" })
+      @SuppressWarnings("resource")
       T schemaWriter = newWriter(out);
       S generationState = newGenerationState(metaschema, schemaWriter, configuration);
       generateSchema(generationState);
       generationState.flushWriter();
-    } catch (SchemaGenerationException ex) { // NOPMD avoid nesting same exception
+    } catch (SchemaGenerationException ex) {
       throw ex;
     } catch (Exception ex) { // NOPMD need to catch close exception
       throw new SchemaGenerationException(ex);

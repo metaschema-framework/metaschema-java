@@ -82,7 +82,7 @@ public interface IProduction {
    *           if an error occurred while generating or compiling the classes
    */
   @NonNull
-  static IProduction of( // NOPMD - intentional
+  static IProduction of(
       @NonNull Collection<? extends IModule> modules,
       @NonNull IBindingConfiguration bindingConfiguration,
       @NonNull Path classDir) throws IOException {
@@ -97,13 +97,13 @@ public interface IProduction {
       retval.addModule(module, classFactory, classDir);
     }
 
-    Map<String, PackageMetadata> packageNameToPackageMetadataMap = new HashMap<>(); // NOPMD - no concurrency
+    Map<String, PackageMetadata> packageNameToPackageMetadataMap = new HashMap<>();
     for (IGeneratedModuleClass moduleProduction : retval.getModuleProductions()) {
       String packageName = moduleProduction.getPackageName();
 
       PackageMetadata metadata = packageNameToPackageMetadataMap.get(packageName);
       if (metadata == null) {
-        metadata = new PackageMetadata(moduleProduction); // NOPMD - intentional
+        metadata = new PackageMetadata(moduleProduction);
         packageNameToPackageMetadataMap.put(metadata.getPackageName(), metadata);
       } else {
         metadata.addModule(moduleProduction);

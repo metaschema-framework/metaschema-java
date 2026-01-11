@@ -302,10 +302,6 @@ public class CallingContext {
    *          the command line information
    * @return the result of executing the command
    */
-  @SuppressWarnings({
-      "PMD.OnlyOneReturn", // readability
-      "PMD.AvoidCatchingGenericException" // needed here
-  })
   @NonNull
   private ExitStatus invokeCommand(@NonNull CommandLine cmdLine) {
     ExitStatus retval;
@@ -648,7 +644,7 @@ public class CallingContext {
     // This avoids native terminal detection which triggers Java 21+ warnings
     int terminalWidth = getTerminalWidth();
 
-    try (PrintWriter writer = new PrintWriter( // NOPMD not owned
+    try (PrintWriter writer = new PrintWriter(
         AutoCloser.preventClose(out),
         true,
         StandardCharsets.UTF_8)) {

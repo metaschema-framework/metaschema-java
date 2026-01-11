@@ -137,7 +137,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter, AutoCloseable 
   @Override
   public void writeEndElement() throws XMLStreamException {
     depth--;
-    boolean parentHasText = hasTextStack.isEmpty() ? false : hasTextStack.pop();
+    boolean parentHasText = !hasTextStack.isEmpty() && hasTextStack.pop();
 
     if (!hasText && !lastWasStart) {
       writeIndent();

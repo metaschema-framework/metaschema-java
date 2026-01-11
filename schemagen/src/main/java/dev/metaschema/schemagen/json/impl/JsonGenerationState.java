@@ -160,7 +160,6 @@ public class JsonGenerationState
       return Objects.hash(definition, disciminatorProperty, disciminatorValue);
     }
 
-    @SuppressWarnings("PMD.OnlyOneReturn")
     @Override
     public boolean equals(Object obj) {
       if (this == obj) {

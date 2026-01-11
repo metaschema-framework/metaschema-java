@@ -45,7 +45,6 @@ public interface IModelInstanceCollectionInfo<ITEM> {
    *          the model instance to create collection info for
    * @return the new collection info instance
    */
-  @SuppressWarnings("PMD.ShortMethodName")
   @NonNull
   static <T> IModelInstanceCollectionInfo<T> of(
       @NonNull IBoundInstanceModel<T> instance) {

@@ -85,10 +85,6 @@ final class AssemblyModelGenerator {
     }
   }
 
-  @SuppressWarnings({
-      "PMD.ShortMethodName",
-      "PMD.CyclomaticComplexity" // reasonable for model building logic
-  })
   @NonNull
   public static IContainerModelAssemblySupport<
       IBoundInstanceModel<?>,

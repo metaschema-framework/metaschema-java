@@ -168,7 +168,7 @@ public class InsertAnchorExtension
           assert type != null;
           assert idReference != null;
           inlineParser.appendNode(new InsertAnchorNode(type, idReference));
-          return true; // NOPMD - readability
+          return true;
         }
       }
       return false;
@@ -256,7 +256,7 @@ public class InsertAnchorExtension
           : Collections.emptySet();
     }
 
-    private void processInsert( // NOPMD used as lambda
+    private void processInsert(
         Element node,
         @SuppressWarnings("unused") HtmlNodeConverterContext context,
         HtmlMarkdownWriter out) {

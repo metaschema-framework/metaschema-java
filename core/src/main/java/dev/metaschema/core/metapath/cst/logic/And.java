@@ -31,7 +31,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * first expression evaluates to {@code false}, otherwise it will return
  * {@code true}.
  */
-public class And // NOPMD - intentional name
+public class And
     extends AbstractNAryExpression
     implements IBooleanLogicExpression {
 

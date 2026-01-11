@@ -486,7 +486,7 @@ public abstract class AbstractTestSuite {
             try {
               contentValidator = lazyContentValidator.get();
             } catch (Exception ex) {
-              throw new JUnitException( // NOPMD - cause is relevant, exception is not
+              throw new JUnitException(
                   "failed to produce the content validator", ex);
             }
 
@@ -508,7 +508,7 @@ public abstract class AbstractTestSuite {
                   contentUri,
                   ObjectUtils.notNull(resourceGenerationPath.get()),
                   bindingContext);
-            } catch (Exception ex) { // NOPMD - intentional
+            } catch (Exception ex) {
               throw new JUnitException("failed to convert content: " + contentUri, ex);
             }
 

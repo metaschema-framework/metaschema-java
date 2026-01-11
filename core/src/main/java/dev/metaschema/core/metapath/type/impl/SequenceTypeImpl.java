@@ -122,10 +122,10 @@ public class SequenceTypeImpl implements ISequenceType {
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
-      return true; // NOPMD - readability
+      return true;
     }
     if (obj == null || getClass() != obj.getClass()) {
-      return false; // NOPMD - readability
+      return false;
     }
     ISequenceType other = (ISequenceType) obj;
     return Objects.equals(occurrence, other.getOccurrence()) && Objects.equals(type, other.getType());

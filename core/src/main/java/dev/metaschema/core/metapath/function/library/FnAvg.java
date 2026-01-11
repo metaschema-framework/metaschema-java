@@ -88,7 +88,7 @@ public final class FnAvg {
   @Nullable
   public static IAnyAtomicItem average(@NonNull Collection<? extends IAnyAtomicItem> items) {
     if (items.isEmpty()) {
-      return null; // NOPMD - readability
+      return null;
     }
 
     // tell cpd to start ignoring code - CPD-OFF
@@ -150,7 +150,7 @@ public final class FnAvg {
     return retval;
   }
 
-  @SuppressWarnings("PMD.UnnecessaryCast")
+  @SuppressWarnings("unchecked")
   @NonNull
   private static <T, R extends T> R average(
       @NonNull Collection<? extends T> items,
