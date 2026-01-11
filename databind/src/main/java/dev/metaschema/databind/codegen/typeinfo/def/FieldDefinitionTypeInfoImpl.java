@@ -5,16 +5,6 @@
 
 package dev.metaschema.databind.codegen.typeinfo.def;
 
-import dev.metaschema.core.model.IFieldDefinition;
-import dev.metaschema.core.model.IInstance;
-import dev.metaschema.core.util.CustomCollectors;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.codegen.typeinfo.IFieldValueTypeInfo;
-import dev.metaschema.databind.codegen.typeinfo.IFlagInstanceTypeInfo;
-import dev.metaschema.databind.codegen.typeinfo.IInstanceTypeInfo;
-import dev.metaschema.databind.codegen.typeinfo.IPropertyTypeInfo;
-import dev.metaschema.databind.codegen.typeinfo.ITypeResolver;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,6 +14,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.model.IFieldDefinition;
+import dev.metaschema.core.model.IInstance;
+import dev.metaschema.core.util.CustomCollectors;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.codegen.typeinfo.IFieldValueTypeInfo;
+import dev.metaschema.databind.codegen.typeinfo.IFlagInstanceTypeInfo;
+import dev.metaschema.databind.codegen.typeinfo.IInstanceTypeInfo;
+import dev.metaschema.databind.codegen.typeinfo.IPropertyTypeInfo;
+import dev.metaschema.databind.codegen.typeinfo.ITypeResolver;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

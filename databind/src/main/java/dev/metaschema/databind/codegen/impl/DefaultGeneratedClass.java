@@ -7,11 +7,10 @@ package dev.metaschema.databind.codegen.impl;
 
 import com.squareup.javapoet.ClassName;
 
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.codegen.IGeneratedClass;
-
 import java.nio.file.Path;
 
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.codegen.IGeneratedClass;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

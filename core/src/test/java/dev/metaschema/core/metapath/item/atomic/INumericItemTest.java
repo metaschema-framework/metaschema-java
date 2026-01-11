@@ -10,8 +10,6 @@ import static dev.metaschema.core.metapath.TestUtils.integer;
 import static dev.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -19,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class INumericItemTest {

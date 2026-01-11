@@ -5,15 +5,14 @@
 
 package dev.metaschema.core.metapath.impl;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import dev.metaschema.core.metapath.function.IFunction;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.type.ISequenceType;
 import dev.metaschema.core.metapath.type.Occurrence;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.EnumSet;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

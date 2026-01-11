@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath.cst.type;
 
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.InvalidTreatTypeDynamicMetapathException;
@@ -14,9 +16,6 @@ import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.type.ISequenceType;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

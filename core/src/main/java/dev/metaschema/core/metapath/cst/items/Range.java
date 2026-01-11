@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.metapath.cst.items;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.cst.AbstractBinaryExpression;
@@ -12,11 +16,6 @@ import dev.metaschema.core.metapath.cst.IExpressionVisitor;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

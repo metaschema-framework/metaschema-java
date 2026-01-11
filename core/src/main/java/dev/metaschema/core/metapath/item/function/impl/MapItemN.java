@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.metapath.item.function.impl;
 
+import java.util.Map;
+
 import dev.metaschema.core.metapath.item.ICollectionValue;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

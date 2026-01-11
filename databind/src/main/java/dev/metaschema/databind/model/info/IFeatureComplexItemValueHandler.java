@@ -5,18 +5,17 @@
 
 package dev.metaschema.databind.model.info;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IMetaschemaData;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.io.BindingException;
 import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
 import dev.metaschema.databind.model.IBoundProperty;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-import java.util.function.Supplier;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

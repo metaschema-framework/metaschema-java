@@ -7,12 +7,11 @@ package dev.metaschema.schemagen.json.impl;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.Collection;
+
 import dev.metaschema.core.model.IModelInstance;
 import dev.metaschema.core.model.IModelInstanceAbsolute;
 import dev.metaschema.core.model.JsonGroupAsBehavior;
-
-import java.util.Collection;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

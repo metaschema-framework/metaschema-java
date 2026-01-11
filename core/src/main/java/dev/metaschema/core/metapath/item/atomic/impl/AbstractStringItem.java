@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.util.regex.Pattern;
+
 import dev.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.metapath.item.function.impl.AbstractStringMapKey;
-
-import java.util.regex.Pattern;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -5,14 +5,13 @@
 
 package dev.metaschema.cli.processor.command;
 
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.core.util.UriUtils;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.core.util.UriUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath.cst.path;
 
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.cst.IExpressionVisitor;
@@ -12,9 +14,6 @@ import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.ItemUtils;
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.util.CollectionUtil;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

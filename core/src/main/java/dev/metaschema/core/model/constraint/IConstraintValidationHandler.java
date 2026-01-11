@@ -5,15 +5,14 @@
 
 package dev.metaschema.core.model.constraint;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathException;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.node.INodeItem;
-
-import java.util.List;
-import java.util.regex.Pattern;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

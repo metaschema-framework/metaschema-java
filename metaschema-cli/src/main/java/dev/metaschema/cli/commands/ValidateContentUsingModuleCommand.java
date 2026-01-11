@@ -5,23 +5,6 @@
 
 package dev.metaschema.cli.commands;
 
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.command.CommandExecutionException;
-import dev.metaschema.cli.processor.command.ICommandExecutor;
-import dev.metaschema.core.configuration.DefaultConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.constraint.IConstraintSet;
-import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
-import dev.metaschema.core.model.validation.XmlSchemaContentValidator;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.IBindingContext.ISchemaValidationProvider;
-import dev.metaschema.schemagen.ISchemaGenerator;
-import dev.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
-import dev.metaschema.schemagen.SchemaGenerationFeature;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.json.JSONObject;
@@ -40,6 +23,22 @@ import java.util.Set;
 
 import javax.xml.transform.stream.StreamSource;
 
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.command.CommandExecutionException;
+import dev.metaschema.cli.processor.command.ICommandExecutor;
+import dev.metaschema.core.configuration.DefaultConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.constraint.IConstraintSet;
+import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
+import dev.metaschema.core.model.validation.XmlSchemaContentValidator;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.IBindingContext.ISchemaValidationProvider;
+import dev.metaschema.schemagen.ISchemaGenerator;
+import dev.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
+import dev.metaschema.schemagen.SchemaGenerationFeature;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

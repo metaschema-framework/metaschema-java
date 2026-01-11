@@ -5,10 +5,9 @@
 
 package dev.metaschema.core.metapath.cst.path;
 
-import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
-
 import java.util.function.Predicate;
 
+import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

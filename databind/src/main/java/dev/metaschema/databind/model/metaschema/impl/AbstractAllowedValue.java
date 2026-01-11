@@ -7,7 +7,6 @@ package dev.metaschema.databind.model.metaschema.impl;
 
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.model.constraint.IAllowedValue;
-
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**

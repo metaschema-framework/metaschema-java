@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.mdm;
 
+import java.net.URI;
+
 import dev.metaschema.core.mdm.impl.DocumentNodeItem;
 import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import dev.metaschema.core.model.IAssemblyDefinition;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

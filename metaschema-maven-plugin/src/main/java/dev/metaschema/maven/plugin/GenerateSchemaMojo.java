@@ -5,17 +5,6 @@
 
 package dev.metaschema.maven.plugin;
 
-import dev.metaschema.core.configuration.DefaultConfiguration;
-import dev.metaschema.core.configuration.IConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.schemagen.ISchemaGenerator;
-import dev.metaschema.schemagen.SchemaGenerationFeature;
-import dev.metaschema.schemagen.json.JsonSchemaGenerator;
-import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -34,6 +23,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import dev.metaschema.core.configuration.DefaultConfiguration;
+import dev.metaschema.core.configuration.IConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.schemagen.ISchemaGenerator;
+import dev.metaschema.schemagen.SchemaGenerationFeature;
+import dev.metaschema.schemagen.json.JsonSchemaGenerator;
+import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

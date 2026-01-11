@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.metapath.type.impl;
 
+import java.util.Objects;
+
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.type.AbstractAtomicOrUnionType;
 import dev.metaschema.core.qname.IEnhancedQName;
-
-import java.util.Objects;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

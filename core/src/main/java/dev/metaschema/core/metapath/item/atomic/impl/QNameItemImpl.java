@@ -14,7 +14,6 @@ import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.metapath.item.function.IOpaqueMapKey;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

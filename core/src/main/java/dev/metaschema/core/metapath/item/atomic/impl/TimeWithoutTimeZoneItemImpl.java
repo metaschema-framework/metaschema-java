@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.time.OffsetTime;
+
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.datatype.adapter.TimeAdapter;
 import dev.metaschema.core.datatype.object.AmbiguousTime;
-
-import java.time.OffsetTime;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

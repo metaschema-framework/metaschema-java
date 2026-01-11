@@ -5,6 +5,10 @@
 
 package dev.metaschema.cli;
 
+import java.io.PrintStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import dev.metaschema.cli.commands.MetaschemaCommands;
 import dev.metaschema.cli.processor.CLIProcessor;
 import dev.metaschema.cli.processor.ExitStatus;
@@ -17,11 +21,6 @@ import dev.metaschema.core.model.MetaschemaVersion;
 import dev.metaschema.core.util.IVersionInfo;
 import dev.metaschema.databind.io.Format;
 import dev.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
-
-import java.io.PrintStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

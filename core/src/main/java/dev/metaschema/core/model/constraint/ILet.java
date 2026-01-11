@@ -10,7 +10,6 @@ import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.model.constraint.impl.DefaultLet;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

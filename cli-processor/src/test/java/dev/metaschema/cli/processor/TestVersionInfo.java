@@ -6,7 +6,6 @@
 package dev.metaschema.cli.processor;
 
 import dev.metaschema.core.util.IVersionInfo;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

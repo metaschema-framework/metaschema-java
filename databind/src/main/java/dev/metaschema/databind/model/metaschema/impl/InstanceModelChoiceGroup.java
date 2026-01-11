@@ -5,6 +5,8 @@
 
 package dev.metaschema.databind.model.metaschema.impl;
 
+import java.math.BigInteger;
+
 import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import dev.metaschema.core.metapath.item.node.INodeItemFactory;
 import dev.metaschema.core.model.AbstractChoiceGroupInstance;
@@ -22,9 +24,6 @@ import dev.metaschema.databind.model.metaschema.IBindingInstance;
 import dev.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import dev.metaschema.databind.model.metaschema.binding.AssemblyModel;
 import dev.metaschema.databind.model.metaschema.binding.JsonKey;
-
-import java.math.BigInteger;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

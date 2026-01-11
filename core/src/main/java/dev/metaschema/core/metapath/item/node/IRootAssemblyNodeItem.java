@@ -5,7 +5,6 @@ import dev.metaschema.core.metapath.format.IPathFormatter;
 import dev.metaschema.core.model.IAssemblyInstance;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

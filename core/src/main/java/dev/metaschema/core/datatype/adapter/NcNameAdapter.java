@@ -5,15 +5,14 @@
 
 package dev.metaschema.core.datatype.adapter;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.item.atomic.INcNameItem;
 import dev.metaschema.core.qname.EQNameFactory;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.regex.Pattern;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

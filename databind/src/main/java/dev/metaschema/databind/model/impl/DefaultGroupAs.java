@@ -13,7 +13,6 @@ import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.databind.model.IGroupAs;
 import dev.metaschema.databind.model.annotations.GroupAs;
 import dev.metaschema.databind.model.annotations.ModelUtil;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

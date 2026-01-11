@@ -5,8 +5,6 @@
 
 package dev.metaschema.databind.codegen;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

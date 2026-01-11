@@ -1,11 +1,10 @@
 
 package dev.metaschema.core.metapath.item.node;
 
-import dev.metaschema.core.model.IFieldDefinition;
-import dev.metaschema.core.model.IFieldInstance;
-
 import java.net.URI;
 
+import dev.metaschema.core.model.IFieldDefinition;
+import dev.metaschema.core.model.IFieldInstance;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;

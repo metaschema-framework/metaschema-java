@@ -8,6 +8,10 @@ package dev.metaschema.databind;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
+import org.junit.jupiter.api.Test;
+
+import java.nio.file.Paths;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.metapath.function.IFunction;
@@ -15,10 +19,6 @@ import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
-
-import java.nio.file.Paths;
 
 class FnDocTest {
 

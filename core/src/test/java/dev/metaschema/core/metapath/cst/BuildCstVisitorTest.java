@@ -23,6 +23,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.jmock.Mockery;
+import org.jmock.junit5.JUnit5Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.net.URI;
+import java.util.List;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.IMetapathExpression;
@@ -53,23 +69,6 @@ import dev.metaschema.core.metapath.item.node.IRootAssemblyNodeItem;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.jmock.Mockery;
-import org.jmock.junit5.JUnit5Mockery;
-import org.jmock.lib.concurrent.Synchroniser;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.net.URI;
-import java.util.List;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.TooManyStaticImports")

@@ -5,13 +5,12 @@
 
 package dev.metaschema.databind;
 
+import javax.xml.namespace.QName;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.IBindingContext.IBindingMatcher;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

@@ -7,6 +7,12 @@
 
 package dev.metaschema.databind.model.metaschema.binding;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IMetaschemaData;
 import dev.metaschema.core.model.JsonGroupAsBehavior;
@@ -17,10 +23,6 @@ import dev.metaschema.databind.model.annotations.GroupAs;
 import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A binding class for the {@code metapath-context} definition.

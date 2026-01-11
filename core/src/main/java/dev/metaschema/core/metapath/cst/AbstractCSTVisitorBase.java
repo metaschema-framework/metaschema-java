@@ -5,13 +5,6 @@
 
 package dev.metaschema.core.metapath.cst;
 
-import dev.metaschema.core.metapath.IExpression;
-import dev.metaschema.core.metapath.StaticContext;
-import dev.metaschema.core.metapath.StaticMetapathException;
-import dev.metaschema.core.metapath.antlr.AbstractAstVisitor;
-import dev.metaschema.core.metapath.antlr.Metapath10;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -26,6 +19,12 @@ import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
 
+import dev.metaschema.core.metapath.IExpression;
+import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.metapath.StaticMetapathException;
+import dev.metaschema.core.metapath.antlr.AbstractAstVisitor;
+import dev.metaschema.core.metapath.antlr.Metapath10;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

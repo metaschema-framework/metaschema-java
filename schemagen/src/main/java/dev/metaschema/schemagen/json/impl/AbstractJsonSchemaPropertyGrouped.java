@@ -7,16 +7,15 @@ package dev.metaschema.schemagen.json.impl;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.core.model.INamedModelInstanceGrouped;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

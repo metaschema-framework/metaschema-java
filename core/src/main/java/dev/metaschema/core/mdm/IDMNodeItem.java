@@ -7,7 +7,6 @@ package dev.metaschema.core.mdm;
 
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.model.IResourceLocation;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

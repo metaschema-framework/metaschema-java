@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.model.constraint;
 
+import java.util.List;
+
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IFlagDefinition;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

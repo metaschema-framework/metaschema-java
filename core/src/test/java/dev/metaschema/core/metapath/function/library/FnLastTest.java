@@ -8,14 +8,14 @@ package dev.metaschema.core.metapath.function.library;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.FocusContext;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
 
 class FnLastTest {
 

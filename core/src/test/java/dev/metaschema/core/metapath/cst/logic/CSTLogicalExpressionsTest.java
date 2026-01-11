@@ -7,14 +7,6 @@ package dev.metaschema.core.metapath.cst.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.metaschema.core.metapath.DynamicContext;
-import dev.metaschema.core.metapath.ExpressionTestBase;
-import dev.metaschema.core.metapath.IExpression;
-import dev.metaschema.core.metapath.IMetapathExpression;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +16,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.stream.Stream;
+
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.ExpressionTestBase;
+import dev.metaschema.core.metapath.IExpression;
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
+import dev.metaschema.core.util.ObjectUtils;
 
 class CSTLogicalExpressionsTest
     extends ExpressionTestBase {

@@ -5,6 +5,11 @@
 
 package dev.metaschema.core.metapath.cst.type;
 
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.Map;
+
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.metapath.antlr.Metapath10;
 import dev.metaschema.core.metapath.antlr.Metapath10Lexer;
@@ -20,12 +25,6 @@ import dev.metaschema.core.metapath.type.ISequenceType;
 import dev.metaschema.core.metapath.type.Occurrence;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

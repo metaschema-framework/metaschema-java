@@ -5,17 +5,16 @@
 
 package dev.metaschema.databind.codegen.typeinfo;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.databind.codegen.IGeneratedClass;
-import dev.metaschema.databind.codegen.IGeneratedDefinitionClass;
-import dev.metaschema.databind.codegen.IGeneratedModuleClass;
-import dev.metaschema.databind.codegen.typeinfo.def.IModelDefinitionTypeInfo;
-
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Collection;
 
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.databind.codegen.IGeneratedClass;
+import dev.metaschema.databind.codegen.IGeneratedDefinitionClass;
+import dev.metaschema.databind.codegen.IGeneratedModuleClass;
+import dev.metaschema.databind.codegen.typeinfo.def.IModelDefinitionTypeInfo;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

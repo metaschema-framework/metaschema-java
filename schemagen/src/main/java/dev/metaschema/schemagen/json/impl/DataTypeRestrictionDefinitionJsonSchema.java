@@ -9,6 +9,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Set;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.adapter.DecimalAdapter;
 import dev.metaschema.core.model.IValuedDefinition;
@@ -17,12 +22,6 @@ import dev.metaschema.core.model.constraint.IAllowedValuesConstraint;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.schemagen.AbstractGenerationState.AllowedValueCollection;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Set;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

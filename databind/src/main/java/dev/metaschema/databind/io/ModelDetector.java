@@ -11,16 +11,6 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.io.MergedStream;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import dev.metaschema.core.configuration.DefaultConfiguration;
-import dev.metaschema.core.configuration.IConfiguration;
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.model.util.JsonUtil;
-import dev.metaschema.core.model.util.XmlEventUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.json.JsonFactoryFactory;
-import dev.metaschema.databind.io.yaml.impl.YamlFactoryFactory;
-
 import org.codehaus.stax2.XMLEventReader2;
 import org.codehaus.stax2.XMLInputFactory2;
 import org.eclipse.jdt.annotation.NotOwning;
@@ -41,6 +31,15 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import dev.metaschema.core.configuration.DefaultConfiguration;
+import dev.metaschema.core.configuration.IConfiguration;
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.util.JsonUtil;
+import dev.metaschema.core.model.util.XmlEventUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.json.JsonFactoryFactory;
+import dev.metaschema.databind.io.yaml.impl.YamlFactoryFactory;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

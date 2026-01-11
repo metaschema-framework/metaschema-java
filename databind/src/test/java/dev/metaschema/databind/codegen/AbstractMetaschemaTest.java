@@ -7,18 +7,6 @@ package dev.metaschema.databind.codegen;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.model.constraint.IConstraintSet;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.codegen.config.DefaultBindingConfiguration;
-import dev.metaschema.databind.io.BindingException;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.io.IDeserializer;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,6 +18,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.model.constraint.IConstraintSet;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.codegen.config.DefaultBindingConfiguration;
+import dev.metaschema.databind.io.BindingException;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.IDeserializer;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

@@ -5,16 +5,6 @@
 
 package dev.metaschema.schemagen;
 
-import dev.metaschema.core.configuration.DefaultConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
-import dev.metaschema.schemagen.json.JsonSchemaGenerator;
-import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -25,6 +15,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+import dev.metaschema.core.configuration.DefaultConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import dev.metaschema.schemagen.json.JsonSchemaGenerator;
+import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class MetaschemaModuleTest {

@@ -5,8 +5,6 @@
 
 package dev.metaschema.core.metapath.item.function.impl;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.Collection;
@@ -21,6 +19,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

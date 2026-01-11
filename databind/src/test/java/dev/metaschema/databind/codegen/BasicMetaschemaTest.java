@@ -12,6 +12,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.platform.commons.util.ReflectionUtils;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.metapath.StaticContext;
@@ -25,18 +37,6 @@ import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.databind.io.BindingException;
 import dev.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.platform.commons.util.ReflectionUtils;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Execution(value = ExecutionMode.SAME_THREAD,
     reason = "FIXME: produces output that is not unique to each test: out.xml.")

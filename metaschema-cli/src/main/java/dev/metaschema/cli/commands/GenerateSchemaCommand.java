@@ -5,6 +5,21 @@
 
 package dev.metaschema.cli.commands;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
+
 import dev.metaschema.cli.processor.CallingContext;
 import dev.metaschema.cli.processor.ExitCode;
 import dev.metaschema.cli.processor.command.AbstractTerminalCommand;
@@ -21,22 +36,6 @@ import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.schemagen.ISchemaGenerator;
 import dev.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
 import dev.metaschema.schemagen.SchemaGenerationFeature;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.Collection;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

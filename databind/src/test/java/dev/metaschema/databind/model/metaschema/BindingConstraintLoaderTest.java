@@ -10,6 +10,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IConstraintLoader;
@@ -28,15 +37,6 @@ import dev.metaschema.databind.model.metaschema.binding.AssemblyConstraints;
 import dev.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraints;
 import dev.metaschema.databind.model.metaschema.binding.TargetedReportConstraint;
 import dev.metaschema.databind.model.metaschema.impl.ConstraintBindingSupport;
-
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 
 class BindingConstraintLoaderTest {
   private static final String NS = "http://csrc.nist.gov/ns/test/metaschema/meta-constraints";

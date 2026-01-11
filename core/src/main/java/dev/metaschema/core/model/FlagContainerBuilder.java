@@ -5,12 +5,6 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.model.impl.DefaultContainerFlagSupport;
-import dev.metaschema.core.qname.EQNameFactory;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.CustomCollectors;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +13,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.model.impl.DefaultContainerFlagSupport;
+import dev.metaschema.core.qname.EQNameFactory;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.CustomCollectors;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

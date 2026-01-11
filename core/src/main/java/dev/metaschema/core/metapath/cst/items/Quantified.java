@@ -5,17 +5,6 @@
 
 package dev.metaschema.core.metapath.cst.items;
 
-import dev.metaschema.core.metapath.DynamicContext;
-import dev.metaschema.core.metapath.IExpression;
-import dev.metaschema.core.metapath.cst.AbstractExpression;
-import dev.metaschema.core.metapath.cst.IExpressionVisitor;
-import dev.metaschema.core.metapath.function.library.FnBoolean;
-import dev.metaschema.core.metapath.item.IItem;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,6 +16,16 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.IExpression;
+import dev.metaschema.core.metapath.cst.AbstractExpression;
+import dev.metaschema.core.metapath.cst.IExpressionVisitor;
+import dev.metaschema.core.metapath.function.library.FnBoolean;
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

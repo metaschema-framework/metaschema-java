@@ -5,16 +5,15 @@
 
 package dev.metaschema.core.qname;
 
-import dev.metaschema.core.metapath.StaticContext;
-import dev.metaschema.core.metapath.StaticMetapathException;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.net.URI;
 import java.util.Optional;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
+import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.metapath.StaticMetapathException;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

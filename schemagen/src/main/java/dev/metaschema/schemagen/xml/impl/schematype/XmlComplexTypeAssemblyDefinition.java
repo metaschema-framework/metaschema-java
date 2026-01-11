@@ -5,6 +5,11 @@
 
 package dev.metaschema.schemagen.xml.impl.schematype;
 
+import java.util.Collection;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+
 import dev.metaschema.core.datatype.markup.MarkupDataTypeProvider;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IChoiceGroupInstance;
@@ -21,12 +26,6 @@ import dev.metaschema.schemagen.SchemaGenerationException;
 import dev.metaschema.schemagen.xml.impl.DocumentationGenerator;
 import dev.metaschema.schemagen.xml.impl.IXmlGenerationState;
 import dev.metaschema.schemagen.xml.impl.XmlDatatypeManager;
-
-import java.util.Collection;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

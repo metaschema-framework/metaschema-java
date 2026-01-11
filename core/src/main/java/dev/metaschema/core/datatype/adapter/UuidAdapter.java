@@ -7,17 +7,16 @@ package dev.metaschema.core.datatype.adapter;
 
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
 import dev.metaschema.core.datatype.AbstractDataTypeAdapter;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.item.atomic.IUuidItem;
 import dev.metaschema.core.qname.EQNameFactory;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

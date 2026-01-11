@@ -6,7 +6,6 @@
 package dev.metaschema.core.testsupport.builder;
 
 import dev.metaschema.core.testsupport.mocking.IMockFactory;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

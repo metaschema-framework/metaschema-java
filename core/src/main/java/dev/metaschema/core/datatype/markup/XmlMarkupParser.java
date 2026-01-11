@@ -7,10 +7,6 @@ package dev.metaschema.core.datatype.markup;
 
 import com.vladsch.flexmark.util.sequence.Escaping;
 
-import dev.metaschema.core.model.util.XmlEventUtil;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.stax2.XMLEventReader2;
@@ -26,6 +22,9 @@ import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import dev.metaschema.core.model.util.XmlEventUtil;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

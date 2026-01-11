@@ -8,11 +8,6 @@ package dev.metaschema.databind.io;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -20,6 +15,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
 
 /**
  * Tests for choice validation during deserialization.

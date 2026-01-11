@@ -18,9 +18,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dev.metaschema.core.MetaschemaConstants;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.codehaus.stax2.XMLStreamWriter2;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -60,6 +57,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import dev.metaschema.core.MetaschemaConstants;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

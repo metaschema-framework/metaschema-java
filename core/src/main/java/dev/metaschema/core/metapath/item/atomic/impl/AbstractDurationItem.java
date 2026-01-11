@@ -5,14 +5,13 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.time.temporal.TemporalAmount;
+import java.util.Comparator;
+
 import dev.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import dev.metaschema.core.metapath.item.atomic.IDurationItem;
 import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
-
-import java.time.temporal.TemporalAmount;
-import java.util.Comparator;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

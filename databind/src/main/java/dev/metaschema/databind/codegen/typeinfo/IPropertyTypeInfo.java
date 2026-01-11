@@ -9,10 +9,9 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import dev.metaschema.core.model.IModelDefinition;
-
 import java.util.Set;
 
+import dev.metaschema.core.model.IModelDefinition;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

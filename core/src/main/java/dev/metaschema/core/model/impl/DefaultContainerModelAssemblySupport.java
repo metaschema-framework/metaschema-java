@@ -5,6 +5,11 @@
 
 package dev.metaschema.core.model.impl;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import dev.metaschema.core.model.IAssemblyInstance;
 import dev.metaschema.core.model.IChoiceGroupInstance;
 import dev.metaschema.core.model.IChoiceInstance;
@@ -13,12 +18,6 @@ import dev.metaschema.core.model.IFieldInstance;
 import dev.metaschema.core.model.IModelInstance;
 import dev.metaschema.core.model.INamedModelInstance;
 import dev.metaschema.core.util.CollectionUtil;
-
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

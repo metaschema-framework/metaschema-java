@@ -9,16 +9,15 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import dev.metaschema.core.configuration.IMutableConfiguration;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.io.AbstractSerializer;
 import dev.metaschema.databind.io.SerializationFeature;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-
-import java.io.IOException;
-import java.io.Writer;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

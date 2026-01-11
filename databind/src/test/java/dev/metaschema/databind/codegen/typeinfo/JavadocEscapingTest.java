@@ -9,13 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.squareup.javapoet.MethodSpec;
 
-import dev.metaschema.core.datatype.markup.MarkupLine;
-import dev.metaschema.core.model.IFieldDefinition;
-import dev.metaschema.core.model.IFieldInstanceAbsolute;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.codegen.config.IBindingConfiguration;
-import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
-
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -24,6 +17,12 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import javax.lang.model.element.Modifier;
 
+import dev.metaschema.core.datatype.markup.MarkupLine;
+import dev.metaschema.core.model.IFieldDefinition;
+import dev.metaschema.core.model.IFieldInstanceAbsolute;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.codegen.config.IBindingConfiguration;
+import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

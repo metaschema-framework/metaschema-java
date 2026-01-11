@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.model;
 
+import java.util.Locale;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Locale;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

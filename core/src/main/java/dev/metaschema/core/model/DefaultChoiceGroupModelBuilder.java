@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.model.impl.DefaultContainerModelChoiceGroupSupport;
-import dev.metaschema.core.util.CollectionUtil;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import dev.metaschema.core.model.impl.DefaultContainerModelChoiceGroupSupport;
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

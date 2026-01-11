@@ -7,7 +7,6 @@ package dev.metaschema.core.metapath.function.regex;
 
 import dev.metaschema.core.metapath.IErrorCode;
 import dev.metaschema.core.metapath.MetapathException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

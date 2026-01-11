@@ -5,11 +5,6 @@
 
 package dev.metaschema.core.metapath;
 
-import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import dev.metaschema.core.model.IResourceResolver;
-import dev.metaschema.core.model.IUriResolver;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -17,6 +12,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 
+import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import dev.metaschema.core.model.IResourceResolver;
+import dev.metaschema.core.model.IUriResolver;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

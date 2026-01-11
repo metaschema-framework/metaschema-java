@@ -7,12 +7,6 @@ package dev.metaschema.core.datatype.markup;
 
 import com.fasterxml.jackson.core.JsonParser;
 
-import dev.metaschema.core.metapath.MetapathConstants;
-import dev.metaschema.core.metapath.item.atomic.IMarkupMultilineItem;
-import dev.metaschema.core.qname.EQNameFactory;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.codehaus.stax2.XMLEventReader2;
 
 import java.io.IOException;
@@ -21,6 +15,11 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
+import dev.metaschema.core.metapath.MetapathConstants;
+import dev.metaschema.core.metapath.item.atomic.IMarkupMultilineItem;
+import dev.metaschema.core.qname.EQNameFactory;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

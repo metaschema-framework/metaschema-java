@@ -14,14 +14,13 @@ import com.vladsch.flexmark.util.data.DataSet;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import com.vladsch.flexmark.util.misc.Extension;
 
-import dev.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;
-import dev.metaschema.core.datatype.markup.flexmark.impl.FlexmarkConfiguration;
-import dev.metaschema.core.datatype.markup.flexmark.impl.SuppressPTagExtension;
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import dev.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;
+import dev.metaschema.core.datatype.markup.flexmark.impl.FlexmarkConfiguration;
+import dev.metaschema.core.datatype.markup.flexmark.impl.SuppressPTagExtension;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

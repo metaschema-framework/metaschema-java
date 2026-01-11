@@ -7,7 +7,6 @@ package dev.metaschema.databind.codegen.typeinfo;
 
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IFlagInstanceTypeInfo extends INamedInstanceTypeInfo {

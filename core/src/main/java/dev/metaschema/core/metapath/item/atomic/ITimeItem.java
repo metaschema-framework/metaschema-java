@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.metapath.item.atomic;
 
+import java.time.LocalTime;
+import java.time.OffsetTime;
+import java.time.ZoneOffset;
+
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.datatype.object.AmbiguousTime;
 import dev.metaschema.core.metapath.MetapathConstants;
@@ -14,11 +18,6 @@ import dev.metaschema.core.metapath.item.atomic.impl.TimeWithoutTimeZoneItemImpl
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.time.LocalTime;
-import java.time.OffsetTime;
-import java.time.ZoneOffset;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

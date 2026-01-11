@@ -5,10 +5,6 @@
 
 package dev.metaschema.databind.codegen;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.databind.codegen.config.IBindingConfiguration;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,6 +13,9 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.databind.codegen.config.IBindingConfiguration;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

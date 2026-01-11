@@ -5,10 +5,6 @@
 
 package dev.metaschema.core.model.validation;
 
-import dev.metaschema.core.model.IResourceLocation;
-import dev.metaschema.core.model.constraint.IConstraint.Level;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.eclipse.jdt.annotation.Owning;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -28,6 +24,9 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import dev.metaschema.core.model.IResourceLocation;
+import dev.metaschema.core.model.constraint.IConstraint.Level;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

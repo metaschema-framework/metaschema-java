@@ -9,9 +9,6 @@ import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-import dev.metaschema.core.util.CustomCollectors;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -25,6 +22,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import dev.metaschema.core.util.CustomCollectors;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

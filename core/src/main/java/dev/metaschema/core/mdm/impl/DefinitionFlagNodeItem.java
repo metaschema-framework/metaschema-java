@@ -11,7 +11,6 @@ import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.model.IFlagDefinition;
 import dev.metaschema.core.model.IFlagInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

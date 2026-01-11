@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import dev.metaschema.core.datatype.AbstractDataTypeAdapter;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

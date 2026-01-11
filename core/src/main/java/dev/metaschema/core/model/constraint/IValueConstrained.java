@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.model.constraint;
 
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.qname.IEnhancedQName;
-
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

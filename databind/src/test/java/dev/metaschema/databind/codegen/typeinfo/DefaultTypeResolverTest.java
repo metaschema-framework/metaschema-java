@@ -10,12 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.squareup.javapoet.ClassName;
 
-import dev.metaschema.core.model.IAssemblyDefinition;
-import dev.metaschema.core.model.IChoiceGroupInstance;
-import dev.metaschema.databind.codegen.config.IBindingConfiguration;
-import dev.metaschema.databind.codegen.config.IChoiceGroupBindingConfiguration;
-import dev.metaschema.databind.codegen.config.IDefinitionBindingConfiguration;
-
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -24,6 +18,12 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IChoiceGroupInstance;
+import dev.metaschema.databind.codegen.config.IBindingConfiguration;
+import dev.metaschema.databind.codegen.config.IChoiceGroupBindingConfiguration;
+import dev.metaschema.databind.codegen.config.IDefinitionBindingConfiguration;
 
 /**
  * Unit tests for {@link DefaultTypeResolver} choice group type resolution.

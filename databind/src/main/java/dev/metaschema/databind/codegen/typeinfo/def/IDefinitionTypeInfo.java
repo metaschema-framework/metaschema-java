@@ -5,14 +5,13 @@
 
 package dev.metaschema.databind.codegen.typeinfo.def;
 
+import java.util.Collection;
+
 import dev.metaschema.core.model.IDefinition;
 import dev.metaschema.core.model.IInstance;
 import dev.metaschema.databind.codegen.typeinfo.IInstanceTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.IPropertyTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.ITypeResolver;
-
-import java.util.Collection;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

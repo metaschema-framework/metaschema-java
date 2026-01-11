@@ -5,8 +5,6 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -14,6 +12,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

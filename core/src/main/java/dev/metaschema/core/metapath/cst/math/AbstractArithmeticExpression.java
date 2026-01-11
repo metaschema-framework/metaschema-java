@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.metapath.cst.math;
 
+import java.util.List;
+
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.cst.AbstractBinaryExpression;
 import dev.metaschema.core.metapath.cst.ExpressionUtils;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

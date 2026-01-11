@@ -9,6 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IFlagDefinition;
@@ -18,10 +22,6 @@ import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.MockedModelTestSupport;
 import dev.metaschema.core.testsupport.builder.IModuleBuilder;
-
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
 
 /**
  * Unit tests for {@link IModuleBuilder}.

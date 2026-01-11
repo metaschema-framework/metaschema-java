@@ -8,6 +8,10 @@ package dev.metaschema.core.testsupport.builder;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.model.IAssemblyDefinition;
@@ -20,11 +24,6 @@ import dev.metaschema.core.model.ModelType;
 import dev.metaschema.core.model.constraint.ValueConstraintSet;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

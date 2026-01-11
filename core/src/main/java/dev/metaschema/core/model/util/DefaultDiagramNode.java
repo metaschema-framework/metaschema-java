@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.model.util;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IChoiceGroupInstance;
@@ -17,11 +21,6 @@ import dev.metaschema.core.model.INamedModelInstanceAbsolute;
 import dev.metaschema.core.model.INamedModelInstanceGrouped;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

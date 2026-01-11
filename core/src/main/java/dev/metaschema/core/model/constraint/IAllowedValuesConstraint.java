@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.model.constraint;
 
-import dev.metaschema.core.model.constraint.impl.DefaultAllowedValuesConstraint;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import dev.metaschema.core.model.constraint.impl.DefaultAllowedValuesConstraint;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

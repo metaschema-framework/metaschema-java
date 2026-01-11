@@ -1,12 +1,11 @@
 
 package dev.metaschema.core.metapath.item.node;
 
+import java.util.stream.Stream;
+
 import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.core.model.INamedModelInstance;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

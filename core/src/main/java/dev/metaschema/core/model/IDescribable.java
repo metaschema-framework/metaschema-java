@@ -6,7 +6,6 @@
 package dev.metaschema.core.model;
 
 import dev.metaschema.core.datatype.markup.MarkupLine;
-
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**

@@ -5,16 +5,15 @@
 
 package dev.metaschema.databind.model;
 
-import dev.metaschema.core.model.IModuleExtended;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 
+import dev.metaschema.core.model.IModuleExtended;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

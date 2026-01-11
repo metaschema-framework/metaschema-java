@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.metapath.cst.items;
 
-import dev.metaschema.core.metapath.cst.IExpressionVisitor;
-import dev.metaschema.core.metapath.item.atomic.IDecimalItem;
-
 import java.math.BigDecimal;
 
+import dev.metaschema.core.metapath.cst.IExpressionVisitor;
+import dev.metaschema.core.metapath.item.atomic.IDecimalItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

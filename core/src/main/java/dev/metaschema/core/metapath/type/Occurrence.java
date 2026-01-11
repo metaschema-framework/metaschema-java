@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.metapath.type;
 
-import dev.metaschema.core.metapath.item.IItem;
-import dev.metaschema.core.metapath.item.ISequence;
-
 import java.util.Objects;
 
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.ISequence;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

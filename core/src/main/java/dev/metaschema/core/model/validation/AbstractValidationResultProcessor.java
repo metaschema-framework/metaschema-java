@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.model.validation;
 
+import java.util.List;
+
 import dev.metaschema.core.model.constraint.ConstraintValidationFinding;
 import dev.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
 import dev.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

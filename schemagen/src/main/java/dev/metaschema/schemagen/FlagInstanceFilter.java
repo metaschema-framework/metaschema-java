@@ -5,13 +5,12 @@
 
 package dev.metaschema.schemagen;
 
-import dev.metaschema.core.model.IFlagInstance;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import dev.metaschema.core.model.IFlagInstance;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

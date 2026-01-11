@@ -5,14 +5,13 @@
 
 package dev.metaschema.schemagen;
 
-import dev.metaschema.core.model.IAssemblyDefinition;
-import dev.metaschema.core.model.IDefinition;
-import dev.metaschema.core.model.IModule;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Locale;
 
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IDefinition;
+import dev.metaschema.core.model.IModule;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

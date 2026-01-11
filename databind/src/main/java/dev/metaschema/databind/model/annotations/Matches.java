@@ -8,15 +8,14 @@ package dev.metaschema.databind.model.annotations;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import dev.metaschema.core.datatype.IDataTypeAdapter;
-import dev.metaschema.core.model.constraint.IConstraint;
-import dev.metaschema.core.model.constraint.IConstraint.Level;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.regex.Pattern;
 
+import dev.metaschema.core.datatype.IDataTypeAdapter;
+import dev.metaschema.core.model.constraint.IConstraint;
+import dev.metaschema.core.model.constraint.IConstraint.Level;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

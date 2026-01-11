@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.model;
 
+import java.net.URI;
+
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.model.constraint.impl.InternalModelSource;
 import dev.metaschema.core.model.constraint.impl.StaticContextSource;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

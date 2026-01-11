@@ -5,11 +5,10 @@
 
 package dev.metaschema.databind.model;
 
-import dev.metaschema.core.model.IValued;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import dev.metaschema.core.model.IValued;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

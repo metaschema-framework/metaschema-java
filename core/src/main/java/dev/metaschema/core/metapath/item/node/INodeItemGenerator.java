@@ -1,11 +1,10 @@
 
 package dev.metaschema.core.metapath.item.node;
 
-import dev.metaschema.core.metapath.item.node.IFeatureFlagContainerItem.FlagContainer;
-import dev.metaschema.core.metapath.item.node.IFeatureModelContainerItem.ModelContainer;
-
 import java.util.function.Supplier;
 
+import dev.metaschema.core.metapath.item.node.IFeatureFlagContainerItem.FlagContainer;
+import dev.metaschema.core.metapath.item.node.IFeatureModelContainerItem.ModelContainer;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

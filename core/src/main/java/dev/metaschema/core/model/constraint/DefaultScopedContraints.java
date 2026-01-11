@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.model.constraint;
 
-import dev.metaschema.core.model.IModule;
-
 import java.net.URI;
 import java.util.List;
 
+import dev.metaschema.core.model.IModule;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

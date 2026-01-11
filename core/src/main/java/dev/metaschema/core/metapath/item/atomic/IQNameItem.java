@@ -12,7 +12,6 @@ import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.qname.EQNameFactory;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

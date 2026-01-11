@@ -10,12 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ctc.wstx.stax.WstxInputFactory;
 
-import dev.metaschema.core.datatype.markup.MarkupMultiline;
-import dev.metaschema.core.datatype.markup.XmlMarkupParser;
-import dev.metaschema.core.datatype.markup.flexmark.impl.AstCollectingVisitor;
-import dev.metaschema.core.model.util.XmlEventUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.stax2.XMLEventReader2;
@@ -27,6 +21,12 @@ import java.net.URI;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+
+import dev.metaschema.core.datatype.markup.MarkupMultiline;
+import dev.metaschema.core.datatype.markup.XmlMarkupParser;
+import dev.metaschema.core.datatype.markup.flexmark.impl.AstCollectingVisitor;
+import dev.metaschema.core.model.util.XmlEventUtil;
+import dev.metaschema.core.util.ObjectUtils;
 
 class MarkupParserTest {
   private static final Logger LOGGER = LogManager.getLogger(MarkupParserTest.class);

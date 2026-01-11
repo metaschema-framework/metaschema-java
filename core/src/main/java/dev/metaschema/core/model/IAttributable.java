@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.MetaschemaConstants;
-import dev.metaschema.core.util.CollectionUtil;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import dev.metaschema.core.MetaschemaConstants;
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

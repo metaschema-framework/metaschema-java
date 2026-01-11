@@ -5,6 +5,9 @@
 
 package dev.metaschema.databind.model;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IFeatureDefinitionInstanceInlined;
 import dev.metaschema.core.model.IFlagInstance;
@@ -16,10 +19,6 @@ import dev.metaschema.databind.model.impl.InstanceFlagInline;
 import dev.metaschema.databind.model.info.IFeatureScalarItemValueHandler;
 import dev.metaschema.databind.model.info.IItemReadHandler;
 import dev.metaschema.databind.model.info.IItemWriteHandler;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

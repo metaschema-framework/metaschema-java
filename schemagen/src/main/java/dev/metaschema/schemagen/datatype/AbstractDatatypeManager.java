@@ -5,8 +5,6 @@
 
 package dev.metaschema.schemagen.datatype;
 
-import dev.metaschema.core.datatype.IDataTypeAdapter;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -14,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import dev.metaschema.core.datatype.IDataTypeAdapter;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

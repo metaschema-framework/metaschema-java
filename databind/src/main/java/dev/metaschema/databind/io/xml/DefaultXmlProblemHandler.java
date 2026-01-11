@@ -5,13 +5,6 @@
 
 package dev.metaschema.databind.io.xml;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.model.util.XmlEventUtil;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.AbstractProblemHandler;
-import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +12,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.stream.events.Attribute;
+
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.util.XmlEventUtil;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.AbstractProblemHandler;
+import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
 
 /**
  * Handles problems identified in the parsed XML.

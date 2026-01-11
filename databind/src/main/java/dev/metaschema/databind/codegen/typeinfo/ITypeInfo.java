@@ -8,7 +8,6 @@ package dev.metaschema.databind.codegen.typeinfo;
 import com.squareup.javapoet.TypeName;
 
 import dev.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

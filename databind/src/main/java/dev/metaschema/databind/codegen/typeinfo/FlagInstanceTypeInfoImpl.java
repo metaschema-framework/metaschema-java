@@ -11,6 +11,8 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import java.util.Set;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
@@ -25,9 +27,6 @@ import dev.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
 import dev.metaschema.databind.model.annotations.BoundFlag;
 import dev.metaschema.databind.model.annotations.JsonFieldValueKeyFlag;
 import dev.metaschema.databind.model.annotations.JsonKey;
-
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class FlagInstanceTypeInfoImpl

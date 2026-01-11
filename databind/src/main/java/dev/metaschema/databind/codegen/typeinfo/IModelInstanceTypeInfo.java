@@ -9,12 +9,11 @@ import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeSpec;
 
+import java.util.Set;
+
 import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.core.model.IModelInstanceAbsolute;
 import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
-
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IModelInstanceTypeInfo extends IInstanceTypeInfo {

@@ -5,6 +5,13 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.FunctionUtils;
@@ -17,14 +24,6 @@ import dev.metaschema.core.metapath.item.function.IArrayItem;
 import dev.metaschema.core.metapath.item.function.IndexOutOfBoundsArrayMetapathException;
 import dev.metaschema.core.metapath.item.function.NegativeLengthArrayMetapathException;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

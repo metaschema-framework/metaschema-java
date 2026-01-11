@@ -13,7 +13,6 @@ import dev.metaschema.core.metapath.item.ItemUtils;
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.metapath.type.IItemType;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

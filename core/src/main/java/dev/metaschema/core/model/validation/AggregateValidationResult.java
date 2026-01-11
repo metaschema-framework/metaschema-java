@@ -5,15 +5,14 @@
 
 package dev.metaschema.core.model.validation;
 
-import dev.metaschema.core.model.constraint.IConstraint.Level;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.model.constraint.IConstraint.Level;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

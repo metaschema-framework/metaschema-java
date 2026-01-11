@@ -7,6 +7,9 @@
 
 package dev.metaschema.databind.model.metaschema.binding;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import dev.metaschema.core.datatype.adapter.TokenAdapter;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.datatype.markup.MarkupMultilineAdapter;
@@ -21,8 +24,6 @@ import dev.metaschema.databind.model.annotations.BoundFlag;
 import dev.metaschema.databind.model.annotations.MetaschemaField;
 import dev.metaschema.databind.model.annotations.ValueConstraints;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Any explanatory or helpful information to be provided about the remarks

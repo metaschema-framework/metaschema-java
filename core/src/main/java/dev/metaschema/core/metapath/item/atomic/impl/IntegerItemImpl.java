@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
-import dev.metaschema.core.datatype.adapter.IntegerAdapter;
-import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-
 import java.math.BigInteger;
 
+import dev.metaschema.core.datatype.adapter.IntegerAdapter;
+import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

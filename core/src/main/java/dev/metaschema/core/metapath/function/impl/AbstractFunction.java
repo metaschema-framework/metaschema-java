@@ -5,6 +5,12 @@
 
 package dev.metaschema.core.metapath.function.impl;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathException;
@@ -22,13 +28,6 @@ import dev.metaschema.core.metapath.type.ISequenceType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.CollectionUtil;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

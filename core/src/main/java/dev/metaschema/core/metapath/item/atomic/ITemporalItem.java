@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.metapath.item.atomic;
 
-import dev.metaschema.core.metapath.function.DateTimeFunctionException;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.time.Duration;
 import java.time.ZoneOffset;
 
+import dev.metaschema.core.metapath.function.DateTimeFunctionException;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

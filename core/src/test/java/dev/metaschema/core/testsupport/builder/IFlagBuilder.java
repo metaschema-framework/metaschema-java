@@ -10,7 +10,6 @@ import dev.metaschema.core.model.IFlagDefinition;
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.core.model.IModule;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -10,7 +10,6 @@ import dev.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IIPAddressItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.metapath.item.function.IOpaqueMapKey;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.IPAddress;
 

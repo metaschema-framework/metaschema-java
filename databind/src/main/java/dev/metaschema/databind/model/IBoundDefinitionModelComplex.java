@@ -5,15 +5,14 @@
 
 package dev.metaschema.databind.model;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.databind.io.BindingException;
-import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.databind.io.BindingException;
+import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

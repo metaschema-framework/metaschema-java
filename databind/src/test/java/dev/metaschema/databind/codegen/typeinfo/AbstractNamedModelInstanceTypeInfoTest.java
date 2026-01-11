@@ -8,18 +8,17 @@ package dev.metaschema.databind.codegen.typeinfo;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.model.IFieldDefinition;
-import dev.metaschema.core.model.IFieldInstanceAbsolute;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.codegen.config.IBindingConfiguration;
-import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
-
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
 import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import dev.metaschema.core.model.IFieldDefinition;
+import dev.metaschema.core.model.IFieldInstanceAbsolute;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.codegen.config.IBindingConfiguration;
+import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

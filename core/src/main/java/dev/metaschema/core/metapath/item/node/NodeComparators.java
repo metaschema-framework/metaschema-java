@@ -1,11 +1,6 @@
 
 package dev.metaschema.core.metapath.item.node;
 
-import dev.metaschema.core.metapath.DynamicContext;
-import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,6 +8,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

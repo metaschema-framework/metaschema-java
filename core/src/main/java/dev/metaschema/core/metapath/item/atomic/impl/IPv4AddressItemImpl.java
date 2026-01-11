@@ -8,7 +8,6 @@ package dev.metaschema.core.metapath.item.atomic.impl;
 import dev.metaschema.core.datatype.adapter.IPv4AddressAdapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.metapath.item.atomic.IIPv4AddressItem;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.ipv4.IPv4Address;
 

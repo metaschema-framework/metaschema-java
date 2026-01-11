@@ -6,7 +6,6 @@
 package dev.metaschema.databind.codegen.config;
 
 import dev.metaschema.databind.config.binding.MetaschemaBindings;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

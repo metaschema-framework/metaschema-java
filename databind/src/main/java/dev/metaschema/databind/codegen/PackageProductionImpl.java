@@ -5,12 +5,11 @@
 
 package dev.metaschema.databind.codegen;
 
-import dev.metaschema.databind.codegen.typeinfo.IMetaschemaClassFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 
+import dev.metaschema.databind.codegen.typeinfo.IMetaschemaClassFactory;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

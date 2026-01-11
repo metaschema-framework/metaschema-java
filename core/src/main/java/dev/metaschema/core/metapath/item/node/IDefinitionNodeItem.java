@@ -5,7 +5,6 @@ import dev.metaschema.core.model.IDefinition;
 import dev.metaschema.core.model.INamedInstance;
 import dev.metaschema.core.model.IResourceLocation;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

@@ -5,14 +5,13 @@
 
 package dev.metaschema.core.metapath.cst.path;
 
-import dev.metaschema.core.metapath.IExpression;
-import dev.metaschema.core.metapath.item.node.INodeItem;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.IExpression;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

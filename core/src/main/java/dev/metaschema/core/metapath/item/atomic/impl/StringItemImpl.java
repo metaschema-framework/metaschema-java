@@ -7,7 +7,6 @@ package dev.metaschema.core.metapath.item.atomic.impl;
 
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.datatype.adapter.StringAdapter;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

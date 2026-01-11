@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.model.constraint.impl;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.metapath.DynamicContext;
@@ -20,11 +24,6 @@ import dev.metaschema.core.model.constraint.IConfigurableMessageConstraint;
 import dev.metaschema.core.model.constraint.IConstraint;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.core.util.StringUtils;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

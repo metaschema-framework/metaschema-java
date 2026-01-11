@@ -8,24 +8,6 @@ package dev.metaschema.schemagen;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.configuration.DefaultConfiguration;
-import dev.metaschema.core.configuration.IConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.model.MetaschemaModelConstants;
-import dev.metaschema.core.model.constraint.IConstraintSet;
-import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
-import dev.metaschema.core.model.validation.XmlSchemaContentValidator;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
-import dev.metaschema.model.testing.AbstractTestSuite;
-import dev.metaschema.schemagen.json.JsonSchemaGenerator;
-import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
-
 import org.junit.platform.commons.JUnitException;
 
 import java.io.IOException;
@@ -46,6 +28,23 @@ import java.util.function.Function;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
+import dev.metaschema.core.configuration.DefaultConfiguration;
+import dev.metaschema.core.configuration.IConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.model.MetaschemaModelConstants;
+import dev.metaschema.core.model.constraint.IConstraintSet;
+import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
+import dev.metaschema.core.model.validation.XmlSchemaContentValidator;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import dev.metaschema.model.testing.AbstractTestSuite;
+import dev.metaschema.schemagen.json.JsonSchemaGenerator;
+import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

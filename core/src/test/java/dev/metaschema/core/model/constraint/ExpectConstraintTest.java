@@ -17,11 +17,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
+import dev.metaschema.core.mdm.IDMFieldNodeItem;
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.metapath.StaticContext;
-import dev.metaschema.core.mdm.IDMFieldNodeItem;
 import dev.metaschema.core.metapath.format.IPathFormatter;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.metapath.item.node.IFlagNodeItem;
@@ -35,11 +39,6 @@ import dev.metaschema.core.testsupport.MockedModelTestSupport;
 import dev.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

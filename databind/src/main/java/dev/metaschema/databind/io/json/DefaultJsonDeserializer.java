@@ -8,6 +8,10 @@ package dev.metaschema.databind.io.json;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URI;
+
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.configuration.IMutableConfiguration;
 import dev.metaschema.core.metapath.item.node.INodeItem;
@@ -17,11 +21,6 @@ import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.io.AbstractDeserializer;
 import dev.metaschema.databind.io.DeserializationFeature;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

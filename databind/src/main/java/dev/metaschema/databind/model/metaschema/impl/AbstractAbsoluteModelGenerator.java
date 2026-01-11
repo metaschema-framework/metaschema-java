@@ -22,7 +22,6 @@ import dev.metaschema.databind.model.metaschema.binding.AssemblyReference;
 import dev.metaschema.databind.model.metaschema.binding.FieldReference;
 import dev.metaschema.databind.model.metaschema.binding.InlineDefineAssembly;
 import dev.metaschema.databind.model.metaschema.binding.InlineDefineField;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

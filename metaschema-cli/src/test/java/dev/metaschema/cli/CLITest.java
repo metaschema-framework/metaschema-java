@@ -10,9 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import dev.metaschema.cli.processor.ExitCode;
-import dev.metaschema.cli.processor.ExitStatus;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -26,6 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import dev.metaschema.cli.processor.ExitCode;
+import dev.metaschema.cli.processor.ExitStatus;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.altindag.log.LogCaptor;
 

@@ -7,6 +7,11 @@
 
 package dev.metaschema.model.testing.testsuite;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.net.URI;
+
 import dev.metaschema.core.datatype.adapter.UriReferenceAdapter;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IMetaschemaData;
@@ -14,9 +19,6 @@ import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.model.annotations.BoundFlag;
 import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import java.net.URI;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Reference to a metaschema module to load.

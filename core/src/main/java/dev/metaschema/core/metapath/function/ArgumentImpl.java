@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.metapath.function;
 
-import dev.metaschema.core.metapath.type.ISequenceType;
-import dev.metaschema.core.qname.IEnhancedQName;
-
 import java.util.Objects;
 
+import dev.metaschema.core.metapath.type.ISequenceType;
+import dev.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class ArgumentImpl implements IArgument {

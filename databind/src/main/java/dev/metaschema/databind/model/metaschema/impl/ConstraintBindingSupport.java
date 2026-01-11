@@ -5,6 +5,10 @@
 
 package dev.metaschema.databind.model.metaschema.impl;
 
+import java.math.BigInteger;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
@@ -49,11 +53,6 @@ import dev.metaschema.databind.model.metaschema.binding.TargetedIndexHasKeyConst
 import dev.metaschema.databind.model.metaschema.binding.TargetedIsUniqueConstraint;
 import dev.metaschema.databind.model.metaschema.binding.TargetedMatchesConstraint;
 import dev.metaschema.databind.model.metaschema.binding.TargetedReportConstraint;
-
-import java.math.BigInteger;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

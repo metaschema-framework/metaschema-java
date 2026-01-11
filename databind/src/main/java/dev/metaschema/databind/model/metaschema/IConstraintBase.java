@@ -5,13 +5,12 @@
 
 package dev.metaschema.databind.model.metaschema;
 
+import java.util.List;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.model.constraint.IConstraint;
 import dev.metaschema.databind.model.metaschema.binding.Property;
 import dev.metaschema.databind.model.metaschema.binding.Remarks;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**

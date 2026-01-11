@@ -7,15 +7,6 @@ package dev.metaschema.databind.codegen.impl;
 
 import com.squareup.javapoet.AnnotationSpec;
 
-import dev.metaschema.core.datatype.markup.MarkupMultiline;
-import dev.metaschema.core.metapath.IMetapathExpression;
-import dev.metaschema.core.model.IFlagDefinition;
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.model.constraint.ILet;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.model.annotations.BoundFlag;
-
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -25,6 +16,15 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+
+import dev.metaschema.core.datatype.markup.MarkupMultiline;
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.model.IFlagDefinition;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.model.constraint.ILet;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.model.annotations.BoundFlag;
 
 class AnnotationGeneratorTest {
   @RegisterExtension

@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.FunctionUtils;
@@ -17,11 +21,6 @@ import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

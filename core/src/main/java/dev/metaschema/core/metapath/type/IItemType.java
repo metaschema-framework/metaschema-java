@@ -24,7 +24,6 @@ import dev.metaschema.core.metapath.type.impl.KindFlagTestImpl;
 import dev.metaschema.core.metapath.type.impl.MapTestImpl;
 import dev.metaschema.core.metapath.type.impl.TypeConstants;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

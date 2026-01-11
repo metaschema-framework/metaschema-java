@@ -5,12 +5,6 @@
 
 package dev.metaschema.cli.processor.command;
 
-import dev.metaschema.cli.processor.CLIProcessor;
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.ExitCode;
-import dev.metaschema.cli.processor.completion.CompletionScriptGenerator;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
@@ -26,6 +20,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import dev.metaschema.cli.processor.CLIProcessor;
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.ExitCode;
+import dev.metaschema.cli.processor.completion.CompletionScriptGenerator;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

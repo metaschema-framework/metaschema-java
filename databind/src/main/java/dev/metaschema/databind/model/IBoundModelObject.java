@@ -7,7 +7,6 @@ package dev.metaschema.databind.model;
 
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.databind.model.info.IItemValueHandler;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -1,6 +1,17 @@
 
 package dev.metaschema.core.metapath.item.node;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.item.node.IFeatureFlagContainerItem.FlagContainer;
 import dev.metaschema.core.metapath.item.node.IFeatureModelContainerItem.ModelContainer;
 import dev.metaschema.core.model.IAssemblyInstanceGrouped;
@@ -13,18 +24,6 @@ import dev.metaschema.core.model.INamedModelInstanceAbsolute;
 import dev.metaschema.core.model.INamedModelInstanceGrouped;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.CouplingBetweenObjects")

@@ -5,12 +5,11 @@
 
 package dev.metaschema.databind.io;
 
+import java.net.URI;
+
 import dev.metaschema.core.model.IResourceLocation;
 import dev.metaschema.core.model.SimpleResourceLocation;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

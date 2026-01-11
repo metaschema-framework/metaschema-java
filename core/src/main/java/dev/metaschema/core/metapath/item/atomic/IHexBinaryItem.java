@@ -5,15 +5,14 @@
 
 package dev.metaschema.core.metapath.item.atomic;
 
+import java.nio.ByteBuffer;
+
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import dev.metaschema.core.metapath.item.atomic.impl.HexBinaryItem;
 import dev.metaschema.core.metapath.item.atomic.impl.IBinaryItem;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
-
-import java.nio.ByteBuffer;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

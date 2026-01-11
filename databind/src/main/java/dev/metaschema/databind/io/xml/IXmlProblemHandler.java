@@ -5,6 +5,12 @@
 
 package dev.metaschema.databind.io.xml;
 
+import java.io.IOException;
+import java.util.Collection;
+
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.StartElement;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.databind.io.IProblemHandler;
 import dev.metaschema.databind.io.ValidationContext;
@@ -12,13 +18,6 @@ import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
 import dev.metaschema.databind.model.IBoundInstanceFlag;
 import dev.metaschema.databind.model.IBoundInstanceModel;
-
-import java.io.IOException;
-import java.util.Collection;
-
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartElement;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

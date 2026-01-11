@@ -7,6 +7,19 @@ package dev.metaschema.schemagen.xml;
 
 import com.ctc.wstx.stax.WstxOutputFactory;
 
+import org.codehaus.stax2.XMLOutputFactory2;
+import org.codehaus.stax2.XMLStreamWriter2;
+import org.eclipse.jdt.annotation.Owning;
+
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.model.IAssemblyDefinition;
@@ -21,20 +34,6 @@ import dev.metaschema.schemagen.xml.impl.IndentingXMLStreamWriter2;
 import dev.metaschema.schemagen.xml.impl.XmlDatatypeManager;
 import dev.metaschema.schemagen.xml.impl.XmlGenerationState;
 import dev.metaschema.schemagen.xml.impl.schematype.IXmlType;
-
-import org.codehaus.stax2.XMLOutputFactory2;
-import org.codehaus.stax2.XMLStreamWriter2;
-import org.eclipse.jdt.annotation.Owning;
-
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

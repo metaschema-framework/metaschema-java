@@ -7,6 +7,8 @@ package dev.metaschema.databind.model.annotations;
 
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
+import java.util.List;
+
 import dev.metaschema.core.datatype.AbstractDataTypeAdapter;
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.metapath.DynamicContext;
@@ -16,9 +18,6 @@ import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.metapath.type.IItemType;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.databind.model.annotations.NullJavaTypeAdapter.VoidItem;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -9,7 +9,6 @@ import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.configuration.IMutableConfiguration;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -7,7 +7,6 @@ package dev.metaschema.core.metapath.item.atomic;
 
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.metapath.item.function.impl.AbstractStringMapKey;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

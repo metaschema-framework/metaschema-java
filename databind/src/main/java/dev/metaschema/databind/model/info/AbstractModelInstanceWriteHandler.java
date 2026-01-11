@@ -5,14 +5,13 @@
 
 package dev.metaschema.databind.model.info;
 
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.model.IBoundInstanceModel;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.model.IBoundInstanceModel;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

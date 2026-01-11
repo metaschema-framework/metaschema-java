@@ -5,16 +5,6 @@
 
 package dev.metaschema.databind.model;
 
-import dev.metaschema.core.metapath.StaticContext;
-import dev.metaschema.core.model.AbstractModule;
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.model.annotations.MetaschemaModule;
-import dev.metaschema.databind.model.annotations.NsBinding;
-
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,6 +15,15 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.model.AbstractModule;
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.model.annotations.MetaschemaModule;
+import dev.metaschema.databind.model.annotations.NsBinding;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

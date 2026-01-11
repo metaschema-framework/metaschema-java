@@ -14,7 +14,6 @@ import com.vladsch.flexmark.util.data.DataHolder;
 
 import dev.metaschema.core.datatype.markup.flexmark.impl.FixedEmphasisDelimiterProcessor;
 import dev.metaschema.core.datatype.markup.flexmark.impl.FlexmarkConfiguration;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

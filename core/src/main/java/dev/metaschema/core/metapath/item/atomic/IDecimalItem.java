@@ -5,6 +5,9 @@
 
 package dev.metaschema.core.metapath.item.atomic;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import dev.metaschema.core.datatype.adapter.DecimalAdapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.metapath.function.ArithmeticFunctionException;
@@ -14,10 +17,6 @@ import dev.metaschema.core.metapath.item.atomic.impl.DecimalItemImpl;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

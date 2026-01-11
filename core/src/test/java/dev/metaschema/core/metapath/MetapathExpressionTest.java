@@ -11,14 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
-
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
 import io.hosuaby.inject.resources.junit.jupiter.GivenTextResource;
 import io.hosuaby.inject.resources.junit.jupiter.TestWithResources;
 

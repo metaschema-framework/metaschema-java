@@ -17,7 +17,6 @@ import dev.metaschema.core.model.INamedModelInstance;
 import dev.metaschema.core.model.XmlGroupAsBehavior;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

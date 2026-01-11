@@ -5,13 +5,6 @@
 
 package dev.metaschema.maven.plugin;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.codegen.IProduction;
-import dev.metaschema.databind.codegen.JavaGenerator;
-import dev.metaschema.databind.codegen.config.DefaultBindingConfiguration;
-import dev.metaschema.databind.io.BindingException;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -25,6 +18,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.codegen.IProduction;
+import dev.metaschema.databind.codegen.JavaGenerator;
+import dev.metaschema.databind.codegen.config.DefaultBindingConfiguration;
+import dev.metaschema.databind.io.BindingException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

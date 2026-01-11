@@ -5,20 +5,6 @@
 
 package dev.metaschema.databind.codegen.config;
 
-import dev.metaschema.core.model.IAssemblyDefinition;
-import dev.metaschema.core.model.IFieldDefinition;
-import dev.metaschema.core.model.IModelDefinition;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.INamedInstance;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.codegen.ClassUtils;
-import dev.metaschema.databind.config.binding.MetaschemaBindings;
-import dev.metaschema.databind.io.BindingException;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.io.IDeserializer;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,6 +22,19 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IFieldDefinition;
+import dev.metaschema.core.model.IModelDefinition;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.INamedInstance;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.codegen.ClassUtils;
+import dev.metaschema.databind.config.binding.MetaschemaBindings;
+import dev.metaschema.databind.io.BindingException;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.IDeserializer;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

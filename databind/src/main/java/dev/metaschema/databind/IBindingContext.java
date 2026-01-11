@@ -5,6 +5,27 @@
 
 package dev.metaschema.databind;
 
+import org.eclipse.jdt.annotation.Owning;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.xml.sax.SAXException;
+
+import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
+import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Function;
+
+import javax.xml.namespace.QName;
+
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.datatype.DataTypeService;
 import dev.metaschema.core.datatype.IDataTypeAdapter;
@@ -51,28 +72,6 @@ import dev.metaschema.databind.model.metaschema.BindingConstraintLoader;
 import dev.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import dev.metaschema.databind.model.metaschema.ModuleLoadingPostProcessor;
-
-import org.eclipse.jdt.annotation.Owning;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.xml.sax.SAXException;
-
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Function;
-
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

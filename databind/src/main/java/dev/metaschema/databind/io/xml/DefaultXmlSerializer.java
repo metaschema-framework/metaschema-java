@@ -8,13 +8,6 @@ package dev.metaschema.databind.io.xml;
 import com.ctc.wstx.api.WstxOutputProperties;
 import com.ctc.wstx.stax.WstxOutputFactory;
 
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.AbstractSerializer;
-import dev.metaschema.databind.io.SerializationFeature;
-import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-
 import org.codehaus.stax2.XMLOutputFactory2;
 import org.codehaus.stax2.XMLStreamWriter2;
 
@@ -24,6 +17,12 @@ import java.io.Writer;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.AbstractSerializer;
+import dev.metaschema.databind.io.SerializationFeature;
+import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

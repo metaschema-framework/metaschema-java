@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.model.impl.DefaultContainerModelSupport;
-
 import java.util.Collection;
 import java.util.Map;
 
+import dev.metaschema.core.model.impl.DefaultContainerModelSupport;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.model.constraint;
 
+import java.util.Collection;
+
 import dev.metaschema.core.metapath.item.node.IModuleNodeItem;
 import dev.metaschema.core.model.IModelElementVisitor;
 import dev.metaschema.core.model.ISource;
-
-import java.util.Collection;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

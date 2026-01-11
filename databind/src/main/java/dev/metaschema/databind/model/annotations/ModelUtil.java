@@ -5,6 +5,15 @@
 
 package dev.metaschema.databind.model.annotations;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.datatype.markup.MarkupLine;
@@ -17,16 +26,6 @@ import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.databind.model.IGroupAs;
 import dev.metaschema.databind.model.impl.DefaultGroupAs;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

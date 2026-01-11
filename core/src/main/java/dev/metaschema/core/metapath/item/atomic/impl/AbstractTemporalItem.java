@@ -7,7 +7,6 @@ package dev.metaschema.core.metapath.item.atomic.impl;
 
 import dev.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.ITemporalItem;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

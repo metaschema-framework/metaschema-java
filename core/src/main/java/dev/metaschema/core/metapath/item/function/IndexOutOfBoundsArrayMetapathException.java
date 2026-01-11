@@ -6,7 +6,6 @@
 package dev.metaschema.core.metapath.item.function;
 
 import dev.metaschema.core.metapath.item.function.impl.ArrayMetapathException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

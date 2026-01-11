@@ -8,11 +8,11 @@ package dev.metaschema.databind.model.annotations;
 import static java.lang.annotation.ElementType.PACKAGE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.databind.model.IBoundModule;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.databind.model.IBoundModule;
 
 /**
  * Associates Metaschema module classes with a package.

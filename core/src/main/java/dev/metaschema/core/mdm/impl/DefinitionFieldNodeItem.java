@@ -11,7 +11,6 @@ import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IFieldInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

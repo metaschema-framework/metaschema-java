@@ -83,9 +83,12 @@ jobs:
     # -------------------------
     # Maven Site
     # -------------------------
+    - name: Build Code
+      run: |
+        mvn -B -e -Prelease install
     - name: Build Website
       run: |
-        mvn -B -e -Prelease package site site:stage
+        mvn -B -e -Prelease site site:stage
     - name: Run deploy script
       run: |
         touch target/staging/.nojekyll

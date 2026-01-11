@@ -9,7 +9,6 @@ import dev.metaschema.core.metapath.function.IFunction;
 import dev.metaschema.core.metapath.item.function.IArrayItem;
 import dev.metaschema.core.metapath.item.function.IMapItem;
 import dev.metaschema.core.metapath.type.IItemType;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

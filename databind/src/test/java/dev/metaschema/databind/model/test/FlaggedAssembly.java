@@ -5,13 +5,13 @@
 
 package dev.metaschema.databind.model.test;
 
+import java.math.BigInteger;
+
 import dev.metaschema.core.datatype.adapter.IntegerAdapter;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IMetaschemaData;
 import dev.metaschema.databind.model.annotations.BoundFlag;
 import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
-
-import java.math.BigInteger;
 
 // Used
 @MetaschemaAssembly(name = "flagged-assembly", rootName = "flagged-assembly", moduleClass = TestMetaschema.class)

@@ -7,6 +7,13 @@
 
 package dev.metaschema.model.testing.testsuite;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
+
 import dev.metaschema.core.datatype.adapter.StringAdapter;
 import dev.metaschema.core.datatype.adapter.UriReferenceAdapter;
 import dev.metaschema.core.model.IBoundObject;
@@ -18,11 +25,6 @@ import dev.metaschema.databind.model.annotations.BoundFlag;
 import dev.metaschema.databind.model.annotations.GroupAs;
 import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import java.net.URI;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A collection of test scenarios located at a specific path.

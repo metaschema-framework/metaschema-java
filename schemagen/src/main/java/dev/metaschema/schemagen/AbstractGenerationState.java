@@ -5,6 +5,12 @@
 
 package dev.metaschema.schemagen;
 
+import org.eclipse.jdt.annotation.NotOwning;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.model.IDefinition;
@@ -16,13 +22,6 @@ import dev.metaschema.core.model.constraint.IAllowedValuesConstraint;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.schemagen.datatype.IDatatypeManager;
-
-import org.eclipse.jdt.annotation.NotOwning;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

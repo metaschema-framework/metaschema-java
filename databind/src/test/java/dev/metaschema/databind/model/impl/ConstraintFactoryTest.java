@@ -8,13 +8,6 @@ package dev.metaschema.databind.model.impl;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.metaschema.core.datatype.markup.MarkupMultiline;
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.model.constraint.ILet;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.model.annotations.Let;
-
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -22,6 +15,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.net.URI;
+
+import dev.metaschema.core.datatype.markup.MarkupMultiline;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.model.constraint.ILet;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.model.annotations.Let;
 
 class ConstraintFactoryTest {
   @RegisterExtension

@@ -7,24 +7,6 @@ package dev.metaschema.model.testing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.model.validation.IContentValidator;
-import dev.metaschema.core.model.validation.IValidationFinding;
-import dev.metaschema.core.model.validation.IValidationResult;
-import dev.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.io.ISerializer;
-import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
-import dev.metaschema.model.testing.testsuite.GenerateSchema;
-import dev.metaschema.model.testing.testsuite.Metaschema;
-import dev.metaschema.model.testing.testsuite.TestCollection;
-import dev.metaschema.model.testing.testsuite.TestScenario;
-import dev.metaschema.model.testing.testsuite.TestSuite;
-import dev.metaschema.model.testing.testsuite.ValidationCase;
-
 import org.apache.logging.log4j.LogBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,6 +34,23 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.model.validation.IContentValidator;
+import dev.metaschema.core.model.validation.IValidationFinding;
+import dev.metaschema.core.model.validation.IValidationResult;
+import dev.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.ISerializer;
+import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import dev.metaschema.model.testing.testsuite.GenerateSchema;
+import dev.metaschema.model.testing.testsuite.Metaschema;
+import dev.metaschema.model.testing.testsuite.TestCollection;
+import dev.metaschema.model.testing.testsuite.TestScenario;
+import dev.metaschema.model.testing.testsuite.TestSuite;
+import dev.metaschema.model.testing.testsuite.ValidationCase;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;

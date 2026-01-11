@@ -11,14 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-import dev.metaschema.core.metapath.IMetapathExpression;
-import dev.metaschema.core.metapath.StaticContext;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
-import dev.metaschema.core.metapath.item.node.INodeItem;
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -28,6 +20,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

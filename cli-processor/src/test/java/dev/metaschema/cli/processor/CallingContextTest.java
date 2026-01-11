@@ -11,8 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.jdt.annotation.Owning;
@@ -29,6 +27,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

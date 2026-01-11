@@ -12,7 +12,6 @@ import dev.metaschema.core.model.util.ModuleUtils;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.io.BindingException;
 import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;
-
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**

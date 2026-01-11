@@ -1,13 +1,12 @@
 
 package dev.metaschema.core.metapath.item.node;
 
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.CollectionUtil;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

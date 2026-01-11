@@ -52,7 +52,6 @@ import dev.metaschema.core.metapath.cst.type.Cast;
 import dev.metaschema.core.metapath.cst.type.Castable;
 import dev.metaschema.core.metapath.cst.type.InstanceOf;
 import dev.metaschema.core.metapath.cst.type.Treat;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

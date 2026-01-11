@@ -8,14 +8,14 @@ package dev.metaschema.core.metapath.cst;
 import static dev.metaschema.core.metapath.TestUtils.eqname;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.metapath.IMetapathExpression.ResultType;
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.testsupport.mocking.MockedDocumentGenerator;
-
-import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for anonymous function calls in Metapath expressions.

@@ -6,7 +6,6 @@
 package dev.metaschema.core.model;
 
 import dev.metaschema.core.datatype.IDataTypeAdapter;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

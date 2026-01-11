@@ -5,10 +5,9 @@
 
 package dev.metaschema.schemagen.datatype;
 
-import dev.metaschema.core.datatype.IDataTypeAdapter;
-
 import java.util.Set;
 
+import dev.metaschema.core.datatype.IDataTypeAdapter;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

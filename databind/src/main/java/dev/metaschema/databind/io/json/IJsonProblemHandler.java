@@ -5,12 +5,11 @@
 
 package dev.metaschema.databind.io.json;
 
+import java.io.IOException;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.databind.io.IProblemHandler;
 import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
-
-import java.io.IOException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

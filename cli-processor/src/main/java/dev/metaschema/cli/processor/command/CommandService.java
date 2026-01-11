@@ -5,13 +5,12 @@
 
 package dev.metaschema.cli.processor.command;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import java.util.stream.Collectors;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

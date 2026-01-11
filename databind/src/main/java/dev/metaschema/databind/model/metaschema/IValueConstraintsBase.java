@@ -5,12 +5,11 @@
 
 package dev.metaschema.databind.model.metaschema;
 
+import java.util.List;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.databind.model.metaschema.binding.ConstraintLetExpression;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

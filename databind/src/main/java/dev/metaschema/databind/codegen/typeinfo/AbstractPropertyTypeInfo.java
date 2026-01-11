@@ -13,12 +13,6 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import dev.metaschema.core.model.IModelDefinition;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
-import dev.metaschema.databind.codegen.typeinfo.def.IModelDefinitionTypeInfo;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +22,11 @@ import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
+import dev.metaschema.core.model.IModelDefinition;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
+import dev.metaschema.databind.codegen.typeinfo.def.IModelDefinitionTypeInfo;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

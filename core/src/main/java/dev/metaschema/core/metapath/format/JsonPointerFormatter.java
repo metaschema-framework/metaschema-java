@@ -5,6 +5,11 @@
 
 package dev.metaschema.core.metapath.format;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+
 import dev.metaschema.core.metapath.item.node.IAssemblyInstanceGroupedNodeItem;
 import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
@@ -18,12 +23,6 @@ import dev.metaschema.core.model.INamedModelInstance;
 import dev.metaschema.core.model.JsonGroupAsBehavior;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

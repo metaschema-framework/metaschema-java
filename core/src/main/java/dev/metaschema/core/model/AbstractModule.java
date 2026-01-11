@@ -5,11 +5,6 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.CustomCollectors;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,6 +17,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.CustomCollectors;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;

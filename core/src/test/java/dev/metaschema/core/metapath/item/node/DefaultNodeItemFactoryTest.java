@@ -4,6 +4,12 @@ package dev.metaschema.core.metapath.item.node;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.mdm.IDMAssemblyNodeItem;
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
@@ -12,13 +18,6 @@ import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.MockedModelTestSupport;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class DefaultNodeItemFactoryTest

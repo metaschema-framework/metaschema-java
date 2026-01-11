@@ -5,6 +5,9 @@
 
 package dev.metaschema.databind.model.impl;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.model.util.ModuleUtils;
@@ -15,10 +18,6 @@ import dev.metaschema.databind.io.BindingException;
 import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
 import dev.metaschema.databind.model.IBoundInstanceFlag;
 import dev.metaschema.databind.model.IBoundModule;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;

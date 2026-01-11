@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
-import dev.metaschema.core.datatype.adapter.AbstractBinaryAdapter;
-import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-
 import java.nio.ByteBuffer;
 
+import dev.metaschema.core.datatype.adapter.AbstractBinaryAdapter;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

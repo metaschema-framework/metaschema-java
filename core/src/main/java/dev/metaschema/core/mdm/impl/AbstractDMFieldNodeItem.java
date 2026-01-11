@@ -5,6 +5,9 @@
 
 package dev.metaschema.core.mdm.impl;
 
+import java.util.Collection;
+import java.util.List;
+
 import dev.metaschema.core.mdm.IDMFieldNodeItem;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.item.node.IModelNodeItem;
@@ -12,10 +15,6 @@ import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IFieldInstance;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.CollectionUtil;
-
-import java.util.Collection;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

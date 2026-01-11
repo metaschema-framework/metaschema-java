@@ -5,16 +5,15 @@
 
 package dev.metaschema.core.model.constraint.impl;
 
-import dev.metaschema.core.metapath.StaticContext;
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

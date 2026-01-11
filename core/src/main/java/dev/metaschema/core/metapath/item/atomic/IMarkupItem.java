@@ -10,7 +10,6 @@ import dev.metaschema.core.datatype.markup.MarkupDataTypeProvider;
 import dev.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

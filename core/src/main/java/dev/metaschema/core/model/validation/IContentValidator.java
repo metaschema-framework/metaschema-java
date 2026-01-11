@@ -5,9 +5,6 @@
 
 package dev.metaschema.core.model.validation;
 
-import dev.metaschema.core.model.util.JsonUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
@@ -22,6 +19,8 @@ import java.util.List;
 
 import javax.xml.transform.Source;
 
+import dev.metaschema.core.model.util.JsonUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

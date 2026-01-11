@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.model.impl;
 
-import dev.metaschema.core.model.IContainerFlagSupport;
-import dev.metaschema.core.model.IFlagInstance;
-
 import java.util.Map;
 
+import dev.metaschema.core.model.IContainerFlagSupport;
+import dev.metaschema.core.model.IFlagInstance;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

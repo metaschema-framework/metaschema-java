@@ -5,6 +5,9 @@
 
 package dev.metaschema.databind.model.impl;
 
+import java.util.Arrays;
+import java.util.regex.Pattern;
+
 import dev.metaschema.core.datatype.DataTypeService;
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.markup.MarkupLine;
@@ -21,10 +24,10 @@ import dev.metaschema.core.model.constraint.IConstraint;
 import dev.metaschema.core.model.constraint.IExpectConstraint;
 import dev.metaschema.core.model.constraint.IIndexConstraint;
 import dev.metaschema.core.model.constraint.IIndexHasKeyConstraint;
-import dev.metaschema.core.model.constraint.IReportConstraint;
 import dev.metaschema.core.model.constraint.IKeyField;
 import dev.metaschema.core.model.constraint.ILet;
 import dev.metaschema.core.model.constraint.IMatchesConstraint;
+import dev.metaschema.core.model.constraint.IReportConstraint;
 import dev.metaschema.core.model.constraint.IUniqueConstraint;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.model.annotations.AllowedValue;
@@ -38,13 +41,9 @@ import dev.metaschema.databind.model.annotations.KeyField;
 import dev.metaschema.databind.model.annotations.Let;
 import dev.metaschema.databind.model.annotations.Matches;
 import dev.metaschema.databind.model.annotations.ModelUtil;
-import dev.metaschema.databind.model.annotations.Report;
 import dev.metaschema.databind.model.annotations.NullJavaTypeAdapter;
 import dev.metaschema.databind.model.annotations.Property;
-
-import java.util.Arrays;
-import java.util.regex.Pattern;
-
+import dev.metaschema.databind.model.annotations.Report;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

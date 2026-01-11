@@ -5,10 +5,6 @@
 
 package dev.metaschema.databind.io;
 
-import dev.metaschema.core.metapath.format.IPathFormatter;
-import dev.metaschema.core.metapath.format.PathFormatSelection;
-import dev.metaschema.core.util.CollectionUtil;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +12,9 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import dev.metaschema.core.metapath.format.IPathFormatter;
+import dev.metaschema.core.metapath.format.PathFormatSelection;
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

@@ -7,6 +7,12 @@
 
 package dev.metaschema.databind.model.metaschema.binding;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import dev.metaschema.core.datatype.adapter.StringAdapter;
 import dev.metaschema.core.datatype.adapter.TokenAdapter;
 import dev.metaschema.core.datatype.markup.MarkupLine;
@@ -28,10 +34,6 @@ import dev.metaschema.databind.model.metaschema.IConfigurableMessageConstraintBa
 import dev.metaschema.databind.model.metaschema.ITargetedConstraintBase;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Report Condition Constraint.

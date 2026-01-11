@@ -4,7 +4,6 @@ package dev.metaschema.core.metapath.item.node;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstance;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

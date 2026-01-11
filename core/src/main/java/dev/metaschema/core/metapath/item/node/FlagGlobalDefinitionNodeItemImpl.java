@@ -3,7 +3,6 @@ package dev.metaschema.core.metapath.item.node;
 
 import dev.metaschema.core.model.IFlagDefinition;
 import dev.metaschema.core.model.IFlagInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -13,16 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.ctc.wstx.stax.WstxInputFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
-import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-import dev.metaschema.databind.model.IBoundInstanceFlag;
-import dev.metaschema.databind.model.IBoundInstanceModelField;
-import dev.metaschema.databind.model.test.FlaggedAssembly;
-import dev.metaschema.databind.model.test.MultiFieldAssembly;
-
 import org.codehaus.stax2.XMLEventReader2;
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +27,15 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
+import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
+import dev.metaschema.databind.model.IBoundInstanceFlag;
+import dev.metaschema.databind.model.IBoundInstanceModelField;
+import dev.metaschema.databind.model.test.FlaggedAssembly;
+import dev.metaschema.databind.model.test.MultiFieldAssembly;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 class XmlParserTest

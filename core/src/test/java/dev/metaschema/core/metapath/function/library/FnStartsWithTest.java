@@ -8,11 +8,6 @@ package dev.metaschema.core.metapath.function.library;
 import static dev.metaschema.core.metapath.TestUtils.bool;
 import static dev.metaschema.core.metapath.TestUtils.string;
 
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
-import dev.metaschema.core.metapath.item.atomic.IStringItem;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -20,6 +15,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
+import dev.metaschema.core.metapath.item.atomic.IStringItem;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 class FnStartsWithTest

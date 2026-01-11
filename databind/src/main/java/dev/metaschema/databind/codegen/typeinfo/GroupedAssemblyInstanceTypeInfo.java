@@ -7,11 +7,10 @@ package dev.metaschema.databind.codegen.typeinfo;
 
 import com.squareup.javapoet.AnnotationSpec;
 
-import dev.metaschema.core.model.IAssemblyInstanceGrouped;
-import dev.metaschema.databind.model.annotations.BoundGroupedAssembly;
-
 import java.lang.annotation.Annotation;
 
+import dev.metaschema.core.model.IAssemblyInstanceGrouped;
+import dev.metaschema.databind.model.annotations.BoundGroupedAssembly;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class GroupedAssemblyInstanceTypeInfo

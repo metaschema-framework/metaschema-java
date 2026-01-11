@@ -8,7 +8,6 @@ package dev.metaschema.databind.codegen;
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.model.MetaschemaException;
 import dev.metaschema.databind.model.IBoundModule;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

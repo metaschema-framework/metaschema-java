@@ -7,6 +7,21 @@ package dev.metaschema.databind.codegen.typeinfo;
 
 import com.squareup.javapoet.ClassName;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstanceGrouped;
 import dev.metaschema.core.model.IChoiceGroupInstance;
@@ -25,22 +40,6 @@ import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.def.IFieldDefinitionTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.def.IModelDefinitionTypeInfo;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 @SuppressWarnings("PMD.CouplingBetweenObjects")

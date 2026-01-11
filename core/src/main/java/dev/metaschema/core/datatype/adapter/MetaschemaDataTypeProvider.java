@@ -7,7 +7,6 @@ package dev.metaschema.core.datatype.adapter;
 
 import dev.metaschema.core.datatype.AbstractDataTypeProvider;
 import dev.metaschema.core.metapath.type.impl.TypeConstants;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

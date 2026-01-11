@@ -11,7 +11,6 @@ import dev.metaschema.core.model.IAssemblyInstanceAbsolute;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import dev.metaschema.databind.model.annotations.BoundAssembly;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class AssemblyInstanceTypeInfoImpl

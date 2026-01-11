@@ -14,6 +14,14 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.WildcardTypeName;
 
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IChoiceGroupInstance;
 import dev.metaschema.core.model.IGroupable;
@@ -26,17 +34,8 @@ import dev.metaschema.databind.codegen.config.IChoiceGroupBindingConfiguration;
 import dev.metaschema.databind.codegen.config.IDefinitionBindingConfiguration;
 import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import dev.metaschema.databind.model.annotations.BoundChoiceGroup;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class ChoiceGroupTypeInfoImpl
     extends AbstractModelInstanceTypeInfo<IChoiceGroupInstance>

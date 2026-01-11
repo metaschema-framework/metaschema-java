@@ -5,21 +5,6 @@
 
 package dev.metaschema.cli.commands;
 
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.ExitCode;
-import dev.metaschema.cli.processor.command.CommandExecutionException;
-import dev.metaschema.cli.processor.command.ICommandExecutor;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.model.constraint.IConstraintSet;
-import dev.metaschema.core.model.util.JsonUtil;
-import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
-import dev.metaschema.core.model.validation.XmlSchemaContentValidator;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.IBindingContext.ISchemaValidationProvider;
-import dev.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
-
 import org.apache.commons.cli.CommandLine;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
@@ -37,6 +22,20 @@ import java.util.Set;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.ExitCode;
+import dev.metaschema.cli.processor.command.CommandExecutionException;
+import dev.metaschema.cli.processor.command.ICommandExecutor;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.model.constraint.IConstraintSet;
+import dev.metaschema.core.model.util.JsonUtil;
+import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
+import dev.metaschema.core.model.validation.XmlSchemaContentValidator;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.IBindingContext.ISchemaValidationProvider;
+import dev.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

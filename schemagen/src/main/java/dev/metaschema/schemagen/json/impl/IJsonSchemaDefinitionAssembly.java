@@ -5,11 +5,10 @@
 
 package dev.metaschema.schemagen.json.impl;
 
-import dev.metaschema.core.model.IAssemblyDefinition;
-import dev.metaschema.core.model.IChoiceInstance;
-
 import java.util.List;
 
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IChoiceInstance;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

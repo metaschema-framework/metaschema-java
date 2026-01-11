@@ -7,15 +7,6 @@ package dev.metaschema.cli.util;
 
 import static org.jline.jansi.Ansi.ansi;
 
-import dev.metaschema.core.metapath.format.IPathFormatter;
-import dev.metaschema.core.model.constraint.ConstraintValidationFinding;
-import dev.metaschema.core.model.constraint.IConstraint.Level;
-import dev.metaschema.core.model.validation.AbstractValidationResultProcessor;
-import dev.metaschema.core.model.validation.IValidationFinding;
-import dev.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
-import dev.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
-import dev.metaschema.modules.sarif.SarifValidationHandler;
-
 import org.apache.logging.log4j.LogBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +18,14 @@ import java.net.URI;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import dev.metaschema.core.metapath.format.IPathFormatter;
+import dev.metaschema.core.model.constraint.ConstraintValidationFinding;
+import dev.metaschema.core.model.constraint.IConstraint.Level;
+import dev.metaschema.core.model.validation.AbstractValidationResultProcessor;
+import dev.metaschema.core.model.validation.IValidationFinding;
+import dev.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
+import dev.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
+import dev.metaschema.modules.sarif.SarifValidationHandler;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

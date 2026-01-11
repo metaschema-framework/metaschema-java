@@ -5,10 +5,9 @@
 
 package dev.metaschema.core.datatype;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.Objects;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

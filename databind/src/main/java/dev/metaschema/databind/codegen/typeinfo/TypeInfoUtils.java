@@ -10,7 +10,6 @@ import com.squareup.javapoet.AnnotationSpec;
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.model.INamedModelInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class TypeInfoUtils {

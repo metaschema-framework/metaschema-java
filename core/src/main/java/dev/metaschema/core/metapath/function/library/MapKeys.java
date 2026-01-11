@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.FunctionUtils;
@@ -16,11 +20,6 @@ import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.item.function.IMapItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

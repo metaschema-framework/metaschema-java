@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.metapath.antlr; // NOPMD requires a large number of public methods
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 
 import java.util.function.Function;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

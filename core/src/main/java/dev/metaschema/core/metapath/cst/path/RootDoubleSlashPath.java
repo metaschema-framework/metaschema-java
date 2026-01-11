@@ -10,7 +10,6 @@ import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.cst.IExpressionVisitor;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.ItemUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

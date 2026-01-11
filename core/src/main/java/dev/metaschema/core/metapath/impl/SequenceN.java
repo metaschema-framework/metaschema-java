@@ -5,15 +5,14 @@
 
 package dev.metaschema.core.metapath.impl;
 
-import dev.metaschema.core.metapath.item.IItem;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -7,6 +7,9 @@
 
 package dev.metaschema.databind.model.metaschema.binding;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import dev.metaschema.core.datatype.adapter.StringAdapter;
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupLineAdapter;
@@ -19,8 +22,6 @@ import dev.metaschema.databind.model.annotations.MetaschemaField;
 import dev.metaschema.databind.model.metaschema.impl.AbstractAllowedValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Allowed Value Enumeration.

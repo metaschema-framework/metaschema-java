@@ -5,6 +5,16 @@
 
 package dev.metaschema.databind.io;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.model.IAssemblyInstance;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IChoiceInstance;
@@ -16,17 +26,6 @@ import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
 import dev.metaschema.databind.model.IBoundProperty;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

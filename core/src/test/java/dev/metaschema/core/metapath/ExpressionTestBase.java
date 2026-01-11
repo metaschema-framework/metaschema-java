@@ -5,10 +5,6 @@
 
 package dev.metaschema.core.metapath;
 
-import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import dev.metaschema.core.metapath.item.node.INodeItem;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.junit5.JUnit5Mockery;
@@ -19,6 +15,9 @@ import java.io.File;
 import java.net.URI;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ExpressionTestBase {

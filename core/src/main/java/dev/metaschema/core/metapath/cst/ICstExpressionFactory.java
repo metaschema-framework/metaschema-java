@@ -5,6 +5,9 @@
 
 package dev.metaschema.core.metapath.cst;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.cst.Let.VariableDeclaration;
 import dev.metaschema.core.metapath.cst.items.ArraySequenceConstructor;
@@ -16,10 +19,6 @@ import dev.metaschema.core.metapath.cst.logic.And;
 import dev.metaschema.core.metapath.cst.logic.If;
 import dev.metaschema.core.metapath.cst.math.Addition;
 import dev.metaschema.core.metapath.item.IItem;
-
-import java.math.BigDecimal;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

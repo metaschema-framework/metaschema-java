@@ -5,6 +5,11 @@
 
 package dev.metaschema.schemagen.xml.impl.schematype;
 
+import org.codehaus.stax2.XMLStreamWriter2;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.model.IValuedDefinition;
 import dev.metaschema.core.model.constraint.IAllowedValue;
@@ -13,12 +18,6 @@ import dev.metaschema.schemagen.AbstractGenerationState.AllowedValueCollection;
 import dev.metaschema.schemagen.SchemaGenerationException;
 import dev.metaschema.schemagen.xml.impl.IXmlGenerationState;
 import dev.metaschema.schemagen.xml.impl.XmlDatatypeManager;
-
-import org.codehaus.stax2.XMLStreamWriter2;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

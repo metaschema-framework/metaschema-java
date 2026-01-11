@@ -5,6 +5,16 @@
 
 package dev.metaschema.databind.model.impl;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.model.DefaultAssemblyModelBuilder;
 import dev.metaschema.core.model.IChoiceInstance;
 import dev.metaschema.core.model.IContainerModelAssemblySupport;
@@ -21,17 +31,6 @@ import dev.metaschema.databind.model.annotations.BoundChoice;
 import dev.metaschema.databind.model.annotations.BoundChoiceGroup;
 import dev.metaschema.databind.model.annotations.BoundField;
 import dev.metaschema.databind.model.annotations.Ignore;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

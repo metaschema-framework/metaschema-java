@@ -5,6 +5,10 @@
 
 package dev.metaschema.schemagen.xml.impl;
 
+import org.codehaus.stax2.XMLStreamWriter2;
+
+import javax.xml.stream.XMLStreamException;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.model.IDefinition;
 import dev.metaschema.core.model.IModelElement;
@@ -12,11 +16,6 @@ import dev.metaschema.core.model.IValuedDefinition;
 import dev.metaschema.schemagen.ModuleIndex;
 import dev.metaschema.schemagen.xml.impl.schematype.IXmlSimpleType;
 import dev.metaschema.schemagen.xml.impl.schematype.IXmlType;
-
-import org.codehaus.stax2.XMLStreamWriter2;
-
-import javax.xml.stream.XMLStreamException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

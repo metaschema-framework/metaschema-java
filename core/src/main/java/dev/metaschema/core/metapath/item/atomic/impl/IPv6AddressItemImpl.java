@@ -8,7 +8,6 @@ package dev.metaschema.core.metapath.item.atomic.impl;
 import dev.metaschema.core.datatype.adapter.IPv6AddressAdapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.metapath.item.atomic.IIPv6AddressItem;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.ipv6.IPv6Address;
 

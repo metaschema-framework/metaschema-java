@@ -5,8 +5,6 @@
 
 package dev.metaschema.databind.codegen;
 
-import dev.metaschema.core.util.CollectionUtil;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Path;
@@ -22,6 +20,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

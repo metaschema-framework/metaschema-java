@@ -20,6 +20,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.function.ArithmeticFunctionException;
 import dev.metaschema.core.metapath.function.CastFunctionException;
@@ -34,17 +44,6 @@ import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
 import dev.metaschema.core.metapath.item.atomic.INumericItem;
 import dev.metaschema.core.metapath.item.atomic.ITimeItem;
 import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

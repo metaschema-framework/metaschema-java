@@ -17,7 +17,6 @@ import dev.metaschema.core.model.IDefinition;
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IFlagDefinition;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

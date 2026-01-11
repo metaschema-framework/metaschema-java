@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.mdm.impl;
 
+import java.net.URI;
+import java.util.Collection;
+import java.util.List;
+
 import dev.metaschema.core.mdm.IDMDocumentNodeItem;
 import dev.metaschema.core.mdm.IDMRootAssemblyNodeItem;
 import dev.metaschema.core.metapath.StaticContext;
@@ -16,11 +20,6 @@ import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-import java.util.Collection;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

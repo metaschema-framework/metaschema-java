@@ -5,6 +5,23 @@
 
 package dev.metaschema.cli.commands;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.UnknownHostException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import dev.metaschema.cli.processor.CLIProcessor;
 import dev.metaschema.cli.processor.CallingContext;
 import dev.metaschema.cli.processor.ExitCode;
@@ -32,24 +49,6 @@ import dev.metaschema.databind.IBindingContext.ISchemaValidationProvider;
 import dev.metaschema.databind.io.Format;
 import dev.metaschema.databind.io.IBoundLoader;
 import dev.metaschema.modules.sarif.SarifValidationHandler;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

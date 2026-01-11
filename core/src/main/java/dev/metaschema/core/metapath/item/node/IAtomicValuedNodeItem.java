@@ -3,7 +3,6 @@ package dev.metaschema.core.metapath.item.node;
 
 import dev.metaschema.core.metapath.item.atomic.IAtomicValuedItem;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -5,16 +5,15 @@
 
 package dev.metaschema.schemagen.xml.impl.schematype;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.schemagen.SchemaGenerationException;
 import dev.metaschema.schemagen.xml.impl.DocumentationGenerator;
 import dev.metaschema.schemagen.xml.impl.IXmlGenerationState;
 import dev.metaschema.schemagen.xml.impl.XmlDatatypeManager;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

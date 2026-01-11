@@ -5,6 +5,12 @@
 
 package dev.metaschema.databind.io;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URI;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.configuration.IMutableConfiguration;
 import dev.metaschema.core.metapath.DynamicContext;
@@ -18,13 +24,6 @@ import dev.metaschema.core.model.constraint.IConstraintValidationHandler;
 import dev.metaschema.core.model.constraint.LoggingConstraintValidationHandler;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URI;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -5,9 +5,9 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.model.constraint.IConstraintSet;
-
 import java.util.List;
+
+import dev.metaschema.core.model.constraint.IConstraintSet;
 
 /**
  * Provides loading capabilities for Metaschema constraint sets.

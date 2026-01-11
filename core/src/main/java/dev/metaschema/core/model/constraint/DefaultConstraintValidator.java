@@ -5,6 +5,24 @@
 
 package dev.metaschema.core.model.constraint;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.annotation.Owning;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.configuration.DefaultConfiguration;
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.configuration.IMutableConfiguration;
@@ -30,25 +48,6 @@ import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ExceptionUtils;
 import dev.metaschema.core.util.ExceptionUtils.WrappedException;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.annotation.Owning;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

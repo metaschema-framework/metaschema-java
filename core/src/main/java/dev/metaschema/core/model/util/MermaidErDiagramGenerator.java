@@ -5,6 +5,15 @@
 
 package dev.metaschema.core.model.util;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.jdt.annotation.NotOwning;
+
+import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IFlagDefinition;
@@ -15,16 +24,6 @@ import dev.metaschema.core.model.INamedModelInstanceGrouped;
 import dev.metaschema.core.model.ModelWalker;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.eclipse.jdt.annotation.NotOwning;
-
-import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;

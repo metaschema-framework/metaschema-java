@@ -7,7 +7,6 @@ package dev.metaschema.databind.codegen.typeinfo.def;
 
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.databind.codegen.typeinfo.ITypeResolver;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

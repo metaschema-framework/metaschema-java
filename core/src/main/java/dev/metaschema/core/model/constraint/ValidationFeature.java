@@ -6,7 +6,6 @@
 package dev.metaschema.core.model.constraint;
 
 import dev.metaschema.core.configuration.AbstractConfigurationFeature;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -6,7 +6,6 @@
 package dev.metaschema.databind.codegen.typeinfo;
 
 import dev.metaschema.core.model.IInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface IInstanceTypeInfo extends IPropertyTypeInfo {

@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.metapath;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Map;
+
 import dev.metaschema.core.datatype.adapter.DecimalAdapter;
 import dev.metaschema.core.metapath.item.ICollectionValue;
 import dev.metaschema.core.metapath.item.IItem;
@@ -29,11 +33,6 @@ import dev.metaschema.core.metapath.item.function.IMapItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class TestUtils {

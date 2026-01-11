@@ -10,14 +10,6 @@ import static dev.metaschema.core.metapath.TestUtils.sequence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import dev.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
-import dev.metaschema.core.metapath.ExpressionTestBase;
-import dev.metaschema.core.metapath.IMetapathExpression;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
-import dev.metaschema.core.metapath.item.atomic.IStringItem;
-import dev.metaschema.core.util.CollectionUtil;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -25,6 +17,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
+import dev.metaschema.core.metapath.ExpressionTestBase;
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
+import dev.metaschema.core.metapath.item.atomic.IStringItem;
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class FnStringLengthTest

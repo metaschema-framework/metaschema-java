@@ -12,16 +12,15 @@ import com.fasterxml.jackson.core.format.MatchStrength;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 import dev.metaschema.core.configuration.DefaultConfiguration;
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.io.json.JsonFactoryFactory;
 import dev.metaschema.databind.io.yaml.impl.YamlFactoryFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

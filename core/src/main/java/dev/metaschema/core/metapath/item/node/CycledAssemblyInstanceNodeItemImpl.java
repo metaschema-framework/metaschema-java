@@ -1,13 +1,12 @@
 
 package dev.metaschema.core.metapath.item.node;
 
-import dev.metaschema.core.model.IAssemblyDefinition;
-import dev.metaschema.core.model.IAssemblyInstance;
-import dev.metaschema.core.qname.IEnhancedQName;
-
 import java.util.Collection;
 import java.util.List;
 
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IAssemblyInstance;
+import dev.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class CycledAssemblyInstanceNodeItemImpl

@@ -8,13 +8,12 @@ package dev.metaschema.core.datatype.adapter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
-import dev.metaschema.core.datatype.AbstractDataTypeAdapter;
-import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
-import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
-
 import java.io.IOException;
 import java.math.BigInteger;
 
+import dev.metaschema.core.datatype.AbstractDataTypeAdapter;
+import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
+import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

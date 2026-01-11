@@ -5,14 +5,6 @@
 
 package dev.metaschema.core.model.constraint;
 
-import dev.metaschema.core.datatype.IDataTypeAdapter;
-import dev.metaschema.core.metapath.DynamicContext;
-import dev.metaschema.core.metapath.MetapathException;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.node.INodeItem;
-import dev.metaschema.core.model.constraint.IConstraint.Level;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.logging.log4j.LogBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +13,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import dev.metaschema.core.datatype.IDataTypeAdapter;
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.MetapathException;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.model.constraint.IConstraint.Level;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

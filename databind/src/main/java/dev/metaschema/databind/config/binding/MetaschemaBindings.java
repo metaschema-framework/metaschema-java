@@ -7,6 +7,13 @@
 
 package dev.metaschema.databind.config.binding;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
+
 import dev.metaschema.core.datatype.adapter.BooleanAdapter;
 import dev.metaschema.core.datatype.adapter.StringAdapter;
 import dev.metaschema.core.datatype.adapter.TokenAdapter;
@@ -25,11 +32,6 @@ import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
 import dev.metaschema.databind.model.annotations.MetaschemaField;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.net.URI;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The root element for a set of metaschema binding customizations.

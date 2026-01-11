@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.metapath;
 
-import dev.metaschema.core.metapath.item.atomic.IDateItem;
-import dev.metaschema.core.metapath.item.atomic.IDateTimeItem;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import dev.metaschema.core.metapath.item.atomic.IDateItem;
+import dev.metaschema.core.metapath.item.atomic.IDateTimeItem;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.cli.processor.command.ShellCompletionCommand.Shell;
-
 import org.junit.jupiter.api.Test;
+
+import dev.metaschema.cli.processor.command.ShellCompletionCommand.Shell;
 
 /**
  * Unit tests for {@link ShellCompletionCommand}.

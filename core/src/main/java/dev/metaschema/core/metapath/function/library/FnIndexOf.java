@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.ComparisonFunctions;
@@ -17,11 +21,6 @@ import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -7,7 +7,6 @@ package dev.metaschema.cli.processor.command;
 
 import dev.metaschema.cli.processor.ExitCode;
 import dev.metaschema.cli.processor.ExitStatus;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

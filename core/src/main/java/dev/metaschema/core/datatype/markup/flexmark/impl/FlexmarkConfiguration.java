@@ -21,14 +21,13 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import com.vladsch.flexmark.util.format.options.ListBulletMarker;
 import com.vladsch.flexmark.util.misc.Extension;
 
-import dev.metaschema.core.datatype.markup.flexmark.HtmlQuoteTagExtension;
-import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import dev.metaschema.core.datatype.markup.flexmark.HtmlQuoteTagExtension;
+import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;

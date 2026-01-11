@@ -20,7 +20,6 @@ import dev.metaschema.core.model.IModelElement;
 import dev.metaschema.core.model.INamedModelElement;
 import dev.metaschema.core.model.constraint.ConstraintInitializationException;
 import dev.metaschema.core.model.constraint.ITargetedConstraints;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

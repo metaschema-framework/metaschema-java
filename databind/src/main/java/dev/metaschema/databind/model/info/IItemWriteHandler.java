@@ -5,6 +5,8 @@
 
 package dev.metaschema.databind.model.info;
 
+import java.io.IOException;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import dev.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
@@ -16,9 +18,6 @@ import dev.metaschema.databind.model.IBoundInstanceModelFieldComplex;
 import dev.metaschema.databind.model.IBoundInstanceModelFieldScalar;
 import dev.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import dev.metaschema.databind.model.IBoundInstanceModelGroupedField;
-
-import java.io.IOException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

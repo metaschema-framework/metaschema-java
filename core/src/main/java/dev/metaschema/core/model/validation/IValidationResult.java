@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.model.validation;
 
-import dev.metaschema.core.model.constraint.IConstraint.Level;
-
 import java.util.Collections;
 import java.util.List;
 
+import dev.metaschema.core.model.constraint.IConstraint.Level;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

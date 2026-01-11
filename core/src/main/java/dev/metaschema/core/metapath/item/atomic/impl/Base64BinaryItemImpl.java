@@ -5,15 +5,14 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.nio.ByteBuffer;
+
 import dev.metaschema.core.datatype.adapter.Base64Adapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.metapath.impl.AbstractMapKey;
 import dev.metaschema.core.metapath.item.atomic.IBase64BinaryItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.metapath.item.function.IOpaqueMapKey;
-
-import java.nio.ByteBuffer;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

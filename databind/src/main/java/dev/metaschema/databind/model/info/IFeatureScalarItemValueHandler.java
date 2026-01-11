@@ -9,7 +9,6 @@ import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.databind.io.BindingException;
 import dev.metaschema.databind.model.IValuedMutable;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

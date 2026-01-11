@@ -9,7 +9,6 @@ import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.cst.AbstractBinaryExpression;
 import dev.metaschema.core.metapath.function.ComparisonFunctions;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -8,12 +8,6 @@ package dev.metaschema.core.datatype.markup;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
-import dev.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapter;
-import dev.metaschema.core.metapath.item.atomic.IMarkupItem;
-import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.codehaus.stax2.XMLStreamWriter2;
 import org.codehaus.stax2.evt.XMLEventFactory2;
 
@@ -23,6 +17,11 @@ import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 
+import dev.metaschema.core.datatype.AbstractCustomJavaDataTypeAdapter;
+import dev.metaschema.core.metapath.item.atomic.IMarkupItem;
+import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

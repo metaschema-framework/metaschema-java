@@ -7,6 +7,11 @@
 
 package dev.metaschema.databind.model.metaschema.binding;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigInteger;
+
 import dev.metaschema.core.datatype.adapter.NonNegativeIntegerAdapter;
 import dev.metaschema.core.datatype.adapter.TokenAdapter;
 import dev.metaschema.core.model.IBoundObject;
@@ -16,9 +21,6 @@ import dev.metaschema.databind.model.annotations.BoundFieldValue;
 import dev.metaschema.databind.model.annotations.BoundFlag;
 import dev.metaschema.databind.model.annotations.MetaschemaField;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.math.BigInteger;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Allows the name of the definition to be overridden.

@@ -11,11 +11,6 @@ import static dev.metaschema.core.metapath.TestUtils.sequence;
 import static dev.metaschema.core.metapath.TestUtils.string;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.metaschema.core.metapath.ExpressionTestBase;
-import dev.metaschema.core.metapath.IMetapathExpression;
-import dev.metaschema.core.metapath.item.IItem;
-import dev.metaschema.core.metapath.item.ISequence;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -24,6 +19,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.ExpressionTestBase;
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.ISequence;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class FnDistinctValuesTest

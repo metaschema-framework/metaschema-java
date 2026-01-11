@@ -12,15 +12,14 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import java.util.Set;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.databind.codegen.typeinfo.def.IFieldDefinitionTypeInfo;
 import dev.metaschema.databind.model.annotations.BoundFieldValue;
-
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class FieldValueTypeInfoImpl

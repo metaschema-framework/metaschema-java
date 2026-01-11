@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.model.constraint;
 
+import java.util.regex.Pattern;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.model.constraint.impl.DefaultMatchesConstraint;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.regex.Pattern;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.util.UUID;
+
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.datatype.adapter.UuidAdapter;
 import dev.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
@@ -13,9 +15,6 @@ import dev.metaschema.core.metapath.item.atomic.IUuidItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.metapath.item.function.impl.AbstractStringMapKey;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.UUID;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

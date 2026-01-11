@@ -11,7 +11,6 @@ import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.databind.io.json.DefaultJsonDeserializer;
 import dev.metaschema.databind.io.yaml.impl.YamlFactoryFactory;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

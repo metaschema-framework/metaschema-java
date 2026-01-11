@@ -7,6 +7,15 @@ package dev.metaschema.databind.codegen.typeinfo.def;
 
 import com.squareup.javapoet.ClassName;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.core.model.IInstance;
 import dev.metaschema.core.model.IModelDefinition;
@@ -18,16 +27,6 @@ import dev.metaschema.databind.codegen.typeinfo.IInstanceTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.IPropertyTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.ITypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.ITypeResolver;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;

@@ -14,15 +14,6 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.WildcardTypeName;
 
-import dev.metaschema.core.model.IAssemblyDefinition;
-import dev.metaschema.core.model.IChoiceGroupInstance;
-import dev.metaschema.core.model.JsonGroupAsBehavior;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.codegen.config.IBindingConfiguration;
-import dev.metaschema.databind.codegen.config.IChoiceGroupBindingConfiguration;
-import dev.metaschema.databind.codegen.config.IDefinitionBindingConfiguration;
-import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
-
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -33,6 +24,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IChoiceGroupInstance;
+import dev.metaschema.core.model.JsonGroupAsBehavior;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.codegen.config.IBindingConfiguration;
+import dev.metaschema.databind.codegen.config.IChoiceGroupBindingConfiguration;
+import dev.metaschema.databind.codegen.config.IDefinitionBindingConfiguration;
+import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

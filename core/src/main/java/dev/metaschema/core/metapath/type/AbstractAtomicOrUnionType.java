@@ -7,7 +7,6 @@ package dev.metaschema.core.metapath.type;
 
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.type.impl.AbstractItemType;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

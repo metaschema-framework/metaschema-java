@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.testsupport.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.model.constraint.AbstractConstraintBuilder;
@@ -19,11 +23,6 @@ import dev.metaschema.core.model.constraint.IMatchesConstraint;
 import dev.metaschema.core.model.constraint.IModelConstrained;
 import dev.metaschema.core.model.constraint.IUniqueConstraint;
 import dev.metaschema.core.model.constraint.MetaConstraintSet;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

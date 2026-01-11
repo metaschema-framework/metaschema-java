@@ -5,25 +5,6 @@
 
 package dev.metaschema.modules.sarif;
 
-import dev.metaschema.core.datatype.markup.MarkupLine;
-import dev.metaschema.core.datatype.markup.MarkupMultiline;
-import dev.metaschema.core.model.IAttributable;
-import dev.metaschema.core.model.IResourceLocation;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.model.constraint.ConstraintValidationFinding;
-import dev.metaschema.core.model.constraint.IConstraint;
-import dev.metaschema.core.model.constraint.IConstraint.Level;
-import dev.metaschema.core.model.validation.IValidationFinding;
-import dev.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
-import dev.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.IVersionInfo;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.core.util.UriUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.io.SerializationFeature;
-
 import org.schemastore.json.sarif.x210.Artifact;
 import org.schemastore.json.sarif.x210.ArtifactLocation;
 import org.schemastore.json.sarif.x210.Location;
@@ -56,6 +37,24 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import dev.metaschema.core.datatype.markup.MarkupLine;
+import dev.metaschema.core.datatype.markup.MarkupMultiline;
+import dev.metaschema.core.model.IAttributable;
+import dev.metaschema.core.model.IResourceLocation;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.model.constraint.ConstraintValidationFinding;
+import dev.metaschema.core.model.constraint.IConstraint;
+import dev.metaschema.core.model.constraint.IConstraint.Level;
+import dev.metaschema.core.model.validation.IValidationFinding;
+import dev.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
+import dev.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.IVersionInfo;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.core.util.UriUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.SerializationFeature;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

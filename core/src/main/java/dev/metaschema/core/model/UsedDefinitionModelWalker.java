@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.util.CollectionUtil;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

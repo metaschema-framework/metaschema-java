@@ -8,6 +8,8 @@ package dev.metaschema.core.metapath.function.library;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.ExpressionTestBase;
 import dev.metaschema.core.metapath.IMetapathExpression;
@@ -16,8 +18,6 @@ import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.testsupport.mocking.MockedDocumentGenerator;
-
-import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the XPath 3.1

@@ -8,6 +8,12 @@ package dev.metaschema.core.testsupport.builder;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstance;
 import dev.metaschema.core.model.IAssemblyInstanceAbsolute;
@@ -23,13 +29,6 @@ import dev.metaschema.core.model.constraint.AssemblyConstraintSet;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

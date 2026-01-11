@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.metapath.item.function;
 
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.item.ICollectionValue;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
-
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

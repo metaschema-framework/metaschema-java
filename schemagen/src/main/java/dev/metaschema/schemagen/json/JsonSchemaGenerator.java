@@ -11,6 +11,9 @@ import com.fasterxml.jackson.core.JsonGenerator.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.util.ObjectUtils;
@@ -21,10 +24,6 @@ import dev.metaschema.schemagen.json.impl.IJsonSchema;
 import dev.metaschema.schemagen.json.impl.JsonDatatypeManager;
 import dev.metaschema.schemagen.json.impl.JsonGenerationState;
 import dev.metaschema.schemagen.json.impl.JsonSchemaModule;
-
-import java.io.IOException;
-import java.io.Writer;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

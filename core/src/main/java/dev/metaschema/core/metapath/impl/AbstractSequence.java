@@ -5,12 +5,6 @@
 
 package dev.metaschema.core.metapath.impl;
 
-import dev.metaschema.core.metapath.DynamicContext;
-import dev.metaschema.core.metapath.item.ICollectionValue;
-import dev.metaschema.core.metapath.item.IItem;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +13,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.item.ICollectionValue;
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

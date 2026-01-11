@@ -6,7 +6,6 @@
 package dev.metaschema.schemagen;
 
 import dev.metaschema.core.configuration.AbstractConfigurationFeature;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

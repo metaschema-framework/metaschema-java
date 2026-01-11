@@ -11,6 +11,20 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.jdt.annotation.NotOwning;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IResourceLocation;
 import dev.metaschema.core.model.SimpleResourceLocation;
@@ -39,21 +53,6 @@ import dev.metaschema.databind.model.info.AbstractModelInstanceReadHandler;
 import dev.metaschema.databind.model.info.IFeatureScalarItemValueHandler;
 import dev.metaschema.databind.model.info.IItemReadHandler;
 import dev.metaschema.databind.model.info.IModelInstanceCollectionInfo;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.annotation.NotOwning;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

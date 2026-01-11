@@ -7,13 +7,12 @@ package dev.metaschema.core.testsupport.mocking;
 
 import static org.mockito.Mockito.withSettings;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.mockito.Answers;
 import org.mockito.Mockito;
 
 import java.util.UUID;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

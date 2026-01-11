@@ -11,7 +11,6 @@ import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import dev.metaschema.core.metapath.item.node.IRootAssemblyNodeItem;
 import dev.metaschema.core.metapath.type.IKindTest;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

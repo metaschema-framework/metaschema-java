@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath.impl;
 
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.IMetapathExpression;
@@ -13,9 +15,6 @@ import dev.metaschema.core.metapath.cst.IExpressionVisitor;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.util.CollectionUtil;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public abstract class AbstractMetapathExpression implements IMetapathExpression {

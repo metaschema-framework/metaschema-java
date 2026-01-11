@@ -6,7 +6,6 @@
 package dev.metaschema.cli.processor.command.impl;
 
 import dev.metaschema.cli.processor.command.ExtraArgument;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

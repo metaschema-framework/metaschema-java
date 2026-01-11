@@ -5,12 +5,11 @@
 
 package dev.metaschema.databind.codegen;
 
+import java.util.Collection;
+
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.model.IBoundModule;
-
-import java.util.Collection;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

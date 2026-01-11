@@ -5,16 +5,15 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.time.Period;
+import java.util.Objects;
+
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.datatype.adapter.YearMonthAdapter;
 import dev.metaschema.core.metapath.impl.AbstractMapKey;
 import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.metapath.item.function.IOpaqueMapKey;
-
-import java.time.Period;
-import java.util.Objects;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

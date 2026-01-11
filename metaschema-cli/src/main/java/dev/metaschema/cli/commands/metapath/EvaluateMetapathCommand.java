@@ -5,6 +5,20 @@
 
 package dev.metaschema.cli.commands.metapath;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.List;
+
 import dev.metaschema.cli.commands.MetaschemaCommands;
 import dev.metaschema.cli.processor.CallingContext;
 import dev.metaschema.cli.processor.ExitCode;
@@ -26,21 +40,6 @@ import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.databind.io.IBoundLoader;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

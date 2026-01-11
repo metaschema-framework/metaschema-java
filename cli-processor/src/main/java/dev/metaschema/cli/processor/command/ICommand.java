@@ -5,10 +5,6 @@
 
 package dev.metaschema.cli.processor.command;
 
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.InvalidArgumentException;
-import dev.metaschema.core.util.CollectionUtil;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
@@ -16,6 +12,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.InvalidArgumentException;
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

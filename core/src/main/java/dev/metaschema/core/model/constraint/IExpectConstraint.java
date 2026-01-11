@@ -8,7 +8,6 @@ package dev.metaschema.core.model.constraint;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.model.constraint.impl.DefaultExpectConstraint;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.FunctionUtils;
@@ -15,11 +19,6 @@ import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.function.IArrayItem;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

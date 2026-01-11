@@ -5,6 +5,11 @@
 
 package dev.metaschema.core.metapath.item.atomic;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
+
 import dev.metaschema.core.metapath.function.ArithmeticFunctionException;
 import dev.metaschema.core.metapath.function.CastFunctionException;
 import dev.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
@@ -13,12 +18,6 @@ import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.metapath.type.impl.TypeConstants;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.MathContext;
-import java.math.RoundingMode;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

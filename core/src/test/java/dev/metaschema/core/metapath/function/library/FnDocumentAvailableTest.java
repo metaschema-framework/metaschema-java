@@ -7,10 +7,10 @@ package dev.metaschema.core.metapath.function.library;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.item.atomic.IAnyUriItem;
-
-import org.junit.jupiter.api.Test;
 
 class FnDocumentAvailableTest {
 

@@ -5,16 +5,15 @@
 
 package dev.metaschema.core.metapath.cst.items;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.cst.IExpressionVisitor;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

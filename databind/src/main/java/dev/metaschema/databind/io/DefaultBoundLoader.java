@@ -5,16 +5,6 @@
 
 package dev.metaschema.databind.io;
 
-import dev.metaschema.core.configuration.DefaultConfiguration;
-import dev.metaschema.core.configuration.IConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import dev.metaschema.core.model.AbstractResourceResolver;
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.ModelDetector.Result;
-
 import org.eclipse.jdt.annotation.NotOwning;
 import org.eclipse.jdt.annotation.Owning;
 
@@ -24,6 +14,15 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
+import dev.metaschema.core.configuration.DefaultConfiguration;
+import dev.metaschema.core.configuration.IConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import dev.metaschema.core.model.AbstractResourceResolver;
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.ModelDetector.Result;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

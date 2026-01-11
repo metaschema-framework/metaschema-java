@@ -11,7 +11,6 @@ import dev.metaschema.core.metapath.cst.IExpressionVisitor;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

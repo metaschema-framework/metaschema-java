@@ -10,10 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.json.MetaschemaJsonReader;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -21,6 +17,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.json.MetaschemaJsonReader;
 
 class DefaultAssemblyClassBindingTest
     extends AbstractBoundModelTestSupport {

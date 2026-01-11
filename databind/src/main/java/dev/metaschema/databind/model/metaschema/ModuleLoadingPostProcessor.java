@@ -7,7 +7,6 @@ package dev.metaschema.databind.model.metaschema;
 
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.databind.IBindingContext;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

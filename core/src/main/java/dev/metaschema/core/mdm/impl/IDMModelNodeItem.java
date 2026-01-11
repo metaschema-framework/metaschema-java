@@ -12,7 +12,6 @@ import dev.metaschema.core.metapath.item.node.IModelNodeItem;
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.core.model.INamedModelInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

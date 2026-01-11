@@ -5,14 +5,6 @@
 
 package dev.metaschema.databind.model.impl;
 
-import dev.metaschema.core.model.IContainerFlagSupport;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
-import dev.metaschema.databind.model.IBoundInstanceFlag;
-import dev.metaschema.databind.model.annotations.BoundFlag;
-import dev.metaschema.databind.model.annotations.Ignore;
-
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +17,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.model.IContainerFlagSupport;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
+import dev.metaschema.databind.model.IBoundInstanceFlag;
+import dev.metaschema.databind.model.annotations.BoundFlag;
+import dev.metaschema.databind.model.annotations.Ignore;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

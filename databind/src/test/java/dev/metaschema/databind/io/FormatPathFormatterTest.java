@@ -7,12 +7,12 @@ package dev.metaschema.databind.io;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import dev.metaschema.core.metapath.format.IPathFormatter;
-import dev.metaschema.core.metapath.format.PathFormatSelection;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import dev.metaschema.core.metapath.format.IPathFormatter;
+import dev.metaschema.core.metapath.format.PathFormatSelection;
 
 /**
  * Unit tests for {@link Format} path formatter methods.

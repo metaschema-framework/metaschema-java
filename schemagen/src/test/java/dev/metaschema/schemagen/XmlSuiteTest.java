@@ -7,17 +7,6 @@ package dev.metaschema.schemagen;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.configuration.DefaultConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.model.validation.IContentValidator;
-import dev.metaschema.core.model.validation.XmlSchemaContentValidator;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
-import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;
@@ -50,6 +39,17 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
+import dev.metaschema.core.configuration.DefaultConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.model.validation.IContentValidator;
+import dev.metaschema.core.model.validation.XmlSchemaContentValidator;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
 
 class XmlSuiteTest
     extends AbstractSchemaGeneratorTestSuite {

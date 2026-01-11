@@ -7,16 +7,6 @@ package dev.metaschema.modules.sarif;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.datatype.markup.MarkupLine;
-import dev.metaschema.core.metapath.item.node.INodeItem;
-import dev.metaschema.core.model.IResourceLocation;
-import dev.metaschema.core.model.constraint.ConstraintValidationFinding;
-import dev.metaschema.core.model.constraint.IConstraint;
-import dev.metaschema.core.model.validation.IValidationFinding;
-import dev.metaschema.core.util.IVersionInfo;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -40,6 +30,15 @@ import dev.harrel.jsonschema.JsonNode;
 import dev.harrel.jsonschema.Validator;
 import dev.harrel.jsonschema.ValidatorFactory;
 import dev.harrel.jsonschema.providers.OrgJsonNode;
+import dev.metaschema.core.datatype.markup.MarkupLine;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.model.IResourceLocation;
+import dev.metaschema.core.model.constraint.ConstraintValidationFinding;
+import dev.metaschema.core.model.constraint.IConstraint;
+import dev.metaschema.core.model.validation.IValidationFinding;
+import dev.metaschema.core.util.IVersionInfo;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
 
 class SarifValidationHandlerTest {
   @RegisterExtension

@@ -5,17 +5,16 @@
 
 package dev.metaschema.databind.model.info;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.BindingException;
-import dev.metaschema.databind.model.IBoundInstanceModel;
-
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.util.LinkedList;
 import java.util.List;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.BindingException;
+import dev.metaschema.databind.model.IBoundInstanceModel;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

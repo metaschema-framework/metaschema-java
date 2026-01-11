@@ -7,14 +7,13 @@ package dev.metaschema.databind.model.annotations;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import dev.metaschema.core.model.JsonGroupAsBehavior;
-import dev.metaschema.core.model.XmlGroupAsBehavior;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import dev.metaschema.core.model.JsonGroupAsBehavior;
+import dev.metaschema.core.model.XmlGroupAsBehavior;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

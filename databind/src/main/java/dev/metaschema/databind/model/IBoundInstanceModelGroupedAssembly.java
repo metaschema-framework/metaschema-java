@@ -5,6 +5,9 @@
 
 package dev.metaschema.databind.model;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+
 import dev.metaschema.core.model.IAssemblyInstanceGrouped;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.util.ObjectUtils;
@@ -13,10 +16,6 @@ import dev.metaschema.databind.model.annotations.BoundGroupedAssembly;
 import dev.metaschema.databind.model.impl.InstanceModelGroupedAssembly;
 import dev.metaschema.databind.model.info.IItemReadHandler;
 import dev.metaschema.databind.model.info.IItemWriteHandler;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

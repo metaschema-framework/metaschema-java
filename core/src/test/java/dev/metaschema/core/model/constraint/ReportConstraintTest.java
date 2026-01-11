@@ -21,6 +21,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.metapath.StaticContext;
@@ -35,11 +39,6 @@ import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

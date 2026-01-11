@@ -5,11 +5,10 @@
 
 package dev.metaschema.schemagen.xml.impl.schematype;
 
-import dev.metaschema.core.datatype.IDataTypeAdapter;
-import dev.metaschema.schemagen.xml.impl.IXmlGenerationState;
-
 import javax.xml.namespace.QName;
 
+import dev.metaschema.core.datatype.IDataTypeAdapter;
+import dev.metaschema.schemagen.xml.impl.IXmlGenerationState;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

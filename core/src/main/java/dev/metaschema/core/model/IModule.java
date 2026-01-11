@@ -5,16 +5,15 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.datatype.markup.MarkupLine;
-import dev.metaschema.core.datatype.markup.MarkupMultiline;
-import dev.metaschema.core.metapath.StaticContext;
-import dev.metaschema.core.qname.IEnhancedQName;
-
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.datatype.markup.MarkupLine;
+import dev.metaschema.core.datatype.markup.MarkupMultiline;
+import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

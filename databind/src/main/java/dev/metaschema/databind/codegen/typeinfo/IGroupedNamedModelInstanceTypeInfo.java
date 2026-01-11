@@ -8,10 +8,9 @@ package dev.metaschema.databind.codegen.typeinfo;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import dev.metaschema.core.model.IModelDefinition;
-
 import java.util.Set;
 
+import dev.metaschema.core.model.IModelDefinition;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

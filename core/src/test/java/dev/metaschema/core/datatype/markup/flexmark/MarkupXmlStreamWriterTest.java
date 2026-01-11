@@ -8,8 +8,6 @@ package dev.metaschema.core.datatype.markup.flexmark;
 import com.ctc.wstx.api.WstxOutputProperties;
 import com.ctc.wstx.stax.WstxOutputFactory;
 
-import dev.metaschema.core.datatype.markup.MarkupMultiline;
-
 import org.codehaus.stax2.XMLOutputFactory2;
 import org.codehaus.stax2.XMLStreamWriter2;
 import org.codehaus.stax2.ri.evt.MergedNsContext;
@@ -21,6 +19,8 @@ import java.util.List;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
+
+import dev.metaschema.core.datatype.markup.MarkupMultiline;
 
 class MarkupXmlStreamWriterTest {
   private static final String NAMESPACE = "http://www.w3.org/1999/xhtml";

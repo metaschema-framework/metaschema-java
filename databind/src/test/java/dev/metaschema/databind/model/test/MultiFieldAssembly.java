@@ -5,6 +5,8 @@
 
 package dev.metaschema.databind.model.test;
 
+import java.util.List;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IMetaschemaData;
 import dev.metaschema.core.model.JsonGroupAsBehavior;
@@ -15,9 +17,6 @@ import dev.metaschema.databind.model.annotations.BoundFlag;
 import dev.metaschema.databind.model.annotations.GroupAs;
 import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
 import dev.metaschema.databind.model.annotations.MetaschemaField;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // Used

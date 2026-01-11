@@ -1,12 +1,11 @@
 
 package dev.metaschema.core.metapath.item.node;
 
+import java.net.URI;
+
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.model.IDefinition;
 import dev.metaschema.core.model.INamedInstance;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

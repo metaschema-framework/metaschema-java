@@ -5,6 +5,13 @@
 
 package dev.metaschema.core.mdm.impl;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import dev.metaschema.core.mdm.IDMAssemblyNodeItem;
 import dev.metaschema.core.mdm.IDMFieldNodeItem;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
@@ -14,14 +21,6 @@ import dev.metaschema.core.model.IFieldInstance;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -5,6 +5,9 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.time.Duration;
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.FunctionUtils;
@@ -17,10 +20,6 @@ import dev.metaschema.core.metapath.item.atomic.IDecimalItem;
 import dev.metaschema.core.metapath.item.atomic.IDurationItem;
 import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
 import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
-
-import java.time.Duration;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -9,13 +9,12 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import dev.metaschema.core.model.IChoiceGroupInstance;
-import dev.metaschema.core.model.IGroupable;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import dev.metaschema.core.model.IChoiceGroupInstance;
+import dev.metaschema.core.model.IGroupable;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

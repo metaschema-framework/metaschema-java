@@ -6,7 +6,6 @@
 package dev.metaschema.core.model;
 
 import dev.metaschema.core.model.util.ModuleUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -7,6 +7,12 @@
 
 package dev.metaschema.model.testing.testsuite;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import dev.metaschema.core.datatype.adapter.StringAdapter;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IMetaschemaData;
@@ -18,10 +24,6 @@ import dev.metaschema.databind.model.annotations.GroupAs;
 import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A test scenario that validates a metaschema and its content.

@@ -11,14 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.model.IAssemblyDefinition;
-import dev.metaschema.core.model.IModelDefinition;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.INamedModelInstanceAbsolute;
-import dev.metaschema.core.model.ModelType;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.BindingException;
-
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -32,6 +24,14 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IModelDefinition;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.INamedModelInstanceAbsolute;
+import dev.metaschema.core.model.ModelType;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.BindingException;
 
 class DefaultBindingConfigurationTest {
   private static final URI METASCHEMA_LOCATION

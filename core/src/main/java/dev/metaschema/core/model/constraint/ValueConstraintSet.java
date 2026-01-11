@@ -5,10 +5,6 @@
 
 package dev.metaschema.core.model.constraint;
 
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.CollectionUtil;
-
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +13,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
