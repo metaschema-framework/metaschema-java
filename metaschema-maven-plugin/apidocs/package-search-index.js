@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"dev.metaschema.java.metaschema_maven_plugin"},{"l":"gov.nist.secauto.metaschema.maven.plugin"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"dev.metaschema.maven.plugin","l":"dev.metaschema.maven.plugin"}];updateSearchResults();

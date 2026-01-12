@@ -1,3 +1,5 @@
-gov.nist.secauto.metaschema.cli.processor
-gov.nist.secauto.metaschema.cli.processor.command
-gov.nist.secauto.metaschema.cli.processor.command.impl
+module:dev.metaschema.cli.processor
+dev.metaschema.cli.processor
+dev.metaschema.cli.processor.command
+dev.metaschema.cli.processor.command.impl
+dev.metaschema.cli.processor.completion

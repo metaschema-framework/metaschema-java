@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1765735685493">
-    <module artifactId="cli-processor" groupId="dev.metaschema.java" version="3.0.0.M1"/>
+<licensePluginReport goal="FORMAT" timestamp="1768182966886">
+    <module artifactId="cli-processor" groupId="dev.metaschema.java" version="3.0.0.M2"/>
     <files>
-        <file path="src/test/java/gov/nist/secauto/metaschema/cli/processor/ExitCodeTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/CLIProcessorTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/CallingContextTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/ExitCodeTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/TestCommand.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/TestCommandWithRequiredArg.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/TestCommandWithRequiredOption.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/TestVersionInfo.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/command/CommandServiceTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/command/ShellCompletionCommandTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/completion/CompletionScriptGeneratorTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/processor/completion/CompletionTypeRegistryTest.java" result="NOOP"/>
     </files>
 </licensePluginReport>

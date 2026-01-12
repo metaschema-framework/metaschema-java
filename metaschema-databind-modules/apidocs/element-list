@@ -1,3 +1,2 @@
-com.example.metaschema
-gov.nist.secauto.metaschema.modules.sarif
-org.schemastore.json.sarif.x210
+module:dev.metaschema.databind.modules
+dev.metaschema.modules.sarif

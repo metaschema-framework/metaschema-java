@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1765735708424">
-    <module artifactId="metaschema-cli" groupId="dev.metaschema.java" version="3.0.0.M1"/>
+<licensePluginReport goal="FORMAT" timestamp="1768182977602">
+    <module artifactId="metaschema-cli" groupId="dev.metaschema.java" version="3.0.0.M2"/>
     <files>
-        <file path="src/test/java/gov/nist/secauto/metaschema/cli/CLITest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/cli/commands/metapath/EvaluateMetapathSubCommandTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/CLITest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/commands/metapath/EvaluateMetapathSubCommandTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/cli/util/LoggingValidationHandlerTest.java" result="NOOP"/>
     </files>
 </licensePluginReport>

@@ -1,1 +1,3 @@
-gov.nist.secauto.metaschema.model.testing
+module:dev.metaschema.testing
+dev.metaschema.model.testing
+dev.metaschema.model.testing.testsuite

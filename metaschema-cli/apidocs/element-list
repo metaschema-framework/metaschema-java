@@ -1,4 +1,5 @@
-gov.nist.secauto.metaschema.cli
-gov.nist.secauto.metaschema.cli.commands
-gov.nist.secauto.metaschema.cli.commands.metapath
-gov.nist.secauto.metaschema.cli.util
+module:dev.metaschema.cli
+dev.metaschema.cli
+dev.metaschema.cli.commands
+dev.metaschema.cli.commands.metapath
+dev.metaschema.cli.util

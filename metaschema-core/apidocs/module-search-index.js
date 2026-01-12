@@ -1,1 +1,1 @@
-moduleSearchIndex = [{"l":"gov.nist.secauto.metaschema.core"}];updateSearchResults();
+moduleSearchIndex = [{"l":"dev.metaschema.core"}];updateSearchResults();

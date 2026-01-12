@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1765735582520">
-    <module artifactId="metaschema-schema-generator" groupId="dev.metaschema.java" version="3.0.0.M1"/>
+<licensePluginReport goal="FORMAT" timestamp="1768182920612">
+    <module artifactId="metaschema-schema-generator" groupId="dev.metaschema.java" version="3.0.0.M2"/>
     <files>
-        <file path="src/test/java/gov/nist/secauto/metaschema/schemagen/AbstractSchemaGeneratorTestSuite.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/schemagen/JsonSuiteTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/schemagen/MetaschemaModuleTest.java" result="NOOP"/>
-        <file path="src/test/java/gov/nist/secauto/metaschema/schemagen/XmlSuiteTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/schemagen/AbstractSchemaGeneratorTestSuite.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/schemagen/JsonSuiteTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/schemagen/MetaschemaModuleTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/schemagen/XmlSuiteTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/schemagen/xml/impl/DomDatatypeContentTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/schemagen/xml/impl/IndentingXMLStreamWriterTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/schemagen/xml/impl/XmlSchemaLoaderTest.java" result="NOOP"/>
     </files>
 </licensePluginReport>

@@ -1,2 +1,3 @@
+module:dev.metaschema.maven.plugin
 dev.metaschema.java.metaschema_maven_plugin
-gov.nist.secauto.metaschema.maven.plugin
+dev.metaschema.maven.plugin

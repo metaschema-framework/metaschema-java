@@ -1,1 +1,1 @@
-moduleSearchIndex = [];updateSearchResults();
+moduleSearchIndex = [{"l":"dev.metaschema.databind.modules"}];updateSearchResults();
