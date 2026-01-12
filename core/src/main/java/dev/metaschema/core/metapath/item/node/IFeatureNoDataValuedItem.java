@@ -2,7 +2,6 @@
 package dev.metaschema.core.metapath.item.node;
 
 import dev.metaschema.core.metapath.item.IItem;
-
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**

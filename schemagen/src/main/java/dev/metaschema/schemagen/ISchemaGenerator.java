@@ -5,11 +5,6 @@
 
 package dev.metaschema.schemagen;
 
-import dev.metaschema.core.configuration.IConfiguration;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.schemagen.json.JsonSchemaGenerator;
-import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import dev.metaschema.core.configuration.IConfiguration;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.schemagen.json.JsonSchemaGenerator;
+import dev.metaschema.schemagen.xml.XmlSchemaGenerator;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

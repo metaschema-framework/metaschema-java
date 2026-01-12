@@ -7,14 +7,13 @@ package dev.metaschema.schemagen.json.impl;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.Set;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.model.IFieldInstance;
 import dev.metaschema.core.model.IFieldInstanceAbsolute;
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.core.util.CollectionUtil;
-
-import java.util.Set;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

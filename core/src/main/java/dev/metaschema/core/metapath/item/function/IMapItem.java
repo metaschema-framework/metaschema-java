@@ -5,16 +5,6 @@
 
 package dev.metaschema.core.metapath.item.function;
 
-import dev.metaschema.core.metapath.function.IFunction;
-import dev.metaschema.core.metapath.item.ICollectionValue;
-import dev.metaschema.core.metapath.item.IItemVisitor;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import dev.metaschema.core.metapath.item.function.impl.AbstractMapItem;
-import dev.metaschema.core.metapath.item.function.impl.MapItemN;
-import dev.metaschema.core.metapath.type.IItemType;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,6 +15,15 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
+import dev.metaschema.core.metapath.function.IFunction;
+import dev.metaschema.core.metapath.item.ICollectionValue;
+import dev.metaschema.core.metapath.item.IItemVisitor;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import dev.metaschema.core.metapath.item.function.impl.AbstractMapItem;
+import dev.metaschema.core.metapath.item.function.impl.MapItemN;
+import dev.metaschema.core.metapath.type.IItemType;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

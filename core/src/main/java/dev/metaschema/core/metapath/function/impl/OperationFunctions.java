@@ -5,6 +5,14 @@
 
 package dev.metaschema.core.metapath.function.impl;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.OffsetTime;
+import java.time.Period;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
+import java.util.Set;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.function.ArithmeticFunctionException;
 import dev.metaschema.core.metapath.function.CastFunctionException;
@@ -27,15 +35,6 @@ import dev.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.OffsetTime;
-import java.time.Period;
-import java.time.ZonedDateTime;
-import java.time.temporal.Temporal;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

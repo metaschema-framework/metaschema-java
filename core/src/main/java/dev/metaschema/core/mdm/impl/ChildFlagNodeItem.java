@@ -8,7 +8,6 @@ package dev.metaschema.core.mdm.impl;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.model.IFlagDefinition;
 import dev.metaschema.core.model.IFlagInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

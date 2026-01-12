@@ -8,7 +8,6 @@ package dev.metaschema.core.model.constraint.impl;
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.model.constraint.IAllowedValue;
 import dev.metaschema.core.model.constraint.IAllowedValuesConstraint;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

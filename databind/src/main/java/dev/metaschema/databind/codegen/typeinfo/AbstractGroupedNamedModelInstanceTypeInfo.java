@@ -9,10 +9,6 @@ import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeSpec;
 
-import dev.metaschema.core.model.IModelDefinition;
-import dev.metaschema.core.model.INamedModelInstanceGrouped;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -21,6 +17,9 @@ import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
+import dev.metaschema.core.model.IModelDefinition;
+import dev.metaschema.core.model.INamedModelInstanceGrouped;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public abstract class AbstractGroupedNamedModelInstanceTypeInfo<I extends INamedModelInstanceGrouped>

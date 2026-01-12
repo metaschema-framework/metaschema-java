@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath.format;
 
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.metapath.item.node.IAssemblyInstanceGroupedNodeItem;
 import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
@@ -12,9 +14,6 @@ import dev.metaschema.core.metapath.item.node.IFieldNodeItem;
 import dev.metaschema.core.metapath.item.node.IFlagNodeItem;
 import dev.metaschema.core.metapath.item.node.IModuleNodeItem;
 import dev.metaschema.core.metapath.item.node.IRootAssemblyNodeItem;
-
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

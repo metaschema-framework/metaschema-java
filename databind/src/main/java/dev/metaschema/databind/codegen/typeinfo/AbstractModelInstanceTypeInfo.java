@@ -12,6 +12,13 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import dev.metaschema.core.model.IGroupable;
 import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.core.model.IModelInstanceAbsolute;
@@ -20,14 +27,6 @@ import dev.metaschema.core.model.XmlGroupAsBehavior;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import dev.metaschema.databind.model.annotations.GroupAs;
-
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

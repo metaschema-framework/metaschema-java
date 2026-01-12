@@ -7,15 +7,15 @@ package dev.metaschema.databind.model;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
 
 class JsonKeyTest
     extends AbstractMetaschemaTest {

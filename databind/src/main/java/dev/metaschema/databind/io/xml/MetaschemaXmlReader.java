@@ -5,6 +5,30 @@
 
 package dev.metaschema.databind.io.xml;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.stax2.XMLEventReader2;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IResourceLocation;
 import dev.metaschema.core.model.SimpleResourceLocation;
@@ -33,31 +57,6 @@ import dev.metaschema.databind.model.info.AbstractModelInstanceReadHandler;
 import dev.metaschema.databind.model.info.IFeatureScalarItemValueHandler;
 import dev.metaschema.databind.model.info.IItemReadHandler;
 import dev.metaschema.databind.model.info.IModelInstanceCollectionInfo;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.stax2.XMLEventReader2;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.Location;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

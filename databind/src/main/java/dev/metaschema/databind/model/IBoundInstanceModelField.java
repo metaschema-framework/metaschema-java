@@ -5,6 +5,8 @@
 
 package dev.metaschema.databind.model;
 
+import java.lang.reflect.Field;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IFieldInstanceAbsolute;
@@ -14,9 +16,6 @@ import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.databind.model.impl.DefinitionField;
 import dev.metaschema.databind.model.impl.InstanceModelFieldComplex;
 import dev.metaschema.databind.model.impl.InstanceModelFieldScalar;
-
-import java.lang.reflect.Field;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

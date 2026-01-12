@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.net.URI;
+
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.datatype.adapter.UriReferenceAdapter;
 import dev.metaschema.core.metapath.item.atomic.IUriReferenceItem;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

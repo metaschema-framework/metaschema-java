@@ -5,16 +5,15 @@
 
 package dev.metaschema.core.testsupport.builder;
 
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.model.constraint.IConstraintSet;
-import dev.metaschema.core.model.constraint.MetaConstraintSet;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.model.constraint.IConstraintSet;
+import dev.metaschema.core.model.constraint.MetaConstraintSet;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -7,6 +7,12 @@
 
 package dev.metaschema.model.testing.testsuite;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import dev.metaschema.core.datatype.adapter.TokenAdapter;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IMetaschemaData;
@@ -22,10 +28,6 @@ import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
 import dev.metaschema.databind.model.annotations.ValueConstraints;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Defines schema generation parameters and expected results.

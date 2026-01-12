@@ -7,12 +7,6 @@ package dev.metaschema.cli.processor;
 
 import static org.jline.jansi.Ansi.ansi;
 
-import dev.metaschema.cli.processor.command.CommandService;
-import dev.metaschema.cli.processor.command.ICommand;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.IVersionInfo;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.commons.cli.Option;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +25,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import dev.metaschema.cli.processor.command.CommandService;
+import dev.metaschema.cli.processor.command.ICommand;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.IVersionInfo;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

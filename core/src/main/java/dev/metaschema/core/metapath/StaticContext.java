@@ -5,6 +5,15 @@
 
 package dev.metaschema.core.metapath;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import javax.xml.XMLConstants;
+
 import dev.metaschema.core.datatype.DataTypeService;
 import dev.metaschema.core.metapath.function.FunctionService;
 import dev.metaschema.core.metapath.function.IFunction;
@@ -20,16 +29,6 @@ import dev.metaschema.core.qname.WellKnown;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.CustomCollectors;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
-import javax.xml.XMLConstants;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

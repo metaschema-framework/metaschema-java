@@ -5,20 +5,6 @@
 
 package dev.metaschema.core.metapath;
 
-import dev.metaschema.core.configuration.DefaultConfiguration;
-import dev.metaschema.core.configuration.IConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.metapath.function.CalledContext;
-import dev.metaschema.core.metapath.function.DateTimeFunctionException;
-import dev.metaschema.core.metapath.function.IFunction;
-import dev.metaschema.core.metapath.function.IFunction.FunctionProperty;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
-import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import dev.metaschema.core.model.IUriResolver;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URI;
@@ -35,6 +21,19 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import dev.metaschema.core.configuration.DefaultConfiguration;
+import dev.metaschema.core.configuration.IConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.metapath.function.CalledContext;
+import dev.metaschema.core.metapath.function.DateTimeFunctionException;
+import dev.metaschema.core.metapath.function.IFunction;
+import dev.metaschema.core.metapath.function.IFunction.FunctionProperty;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
+import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import dev.metaschema.core.model.IUriResolver;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

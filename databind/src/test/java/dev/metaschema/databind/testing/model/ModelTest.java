@@ -12,6 +12,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.DefaultBindingContext;
@@ -23,17 +34,6 @@ import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
 import dev.metaschema.databind.model.IBoundInstanceFlag;
 import dev.metaschema.databind.model.IBoundInstanceModelField;
 import dev.metaschema.databind.testing.model.RootAssemblyWithFields.JsonKeyField;
-
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
 
 class ModelTest
     extends ModelTestBase {

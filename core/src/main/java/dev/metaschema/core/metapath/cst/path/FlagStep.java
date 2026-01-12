@@ -5,14 +5,13 @@
 
 package dev.metaschema.core.metapath.cst.path;
 
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.cst.IExpressionVisitor;
 import dev.metaschema.core.metapath.item.node.IFlagNodeItem;
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

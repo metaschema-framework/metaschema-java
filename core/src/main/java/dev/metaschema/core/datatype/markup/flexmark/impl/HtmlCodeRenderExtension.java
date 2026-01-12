@@ -22,12 +22,11 @@ import com.vladsch.flexmark.util.sequence.Escaping;
 import com.vladsch.flexmark.util.sequence.Range;
 import com.vladsch.flexmark.util.sequence.SequenceUtils;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.Collections;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

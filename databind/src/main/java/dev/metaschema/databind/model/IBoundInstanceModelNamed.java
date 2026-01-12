@@ -5,12 +5,11 @@
 
 package dev.metaschema.databind.model;
 
+import java.util.Collection;
+
 import dev.metaschema.core.model.INamedModelInstanceAbsolute;
 import dev.metaschema.core.model.JsonGroupAsBehavior;
 import dev.metaschema.core.qname.IEnhancedQName;
-
-import java.util.Collection;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

@@ -5,6 +5,22 @@
 
 package dev.metaschema.cli.commands;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import dev.metaschema.cli.commands.metapath.MetapathCommand;
 import dev.metaschema.cli.processor.ExitCode;
 import dev.metaschema.cli.processor.OptionUtils;
@@ -25,23 +41,6 @@ import dev.metaschema.databind.io.Format;
 import dev.metaschema.databind.io.IBoundLoader;
 import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import dev.metaschema.schemagen.ISchemaGenerator.SchemaFormat;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

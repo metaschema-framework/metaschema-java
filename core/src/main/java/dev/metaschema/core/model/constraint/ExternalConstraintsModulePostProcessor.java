@@ -5,18 +5,17 @@
 
 package dev.metaschema.core.model.constraint;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.item.node.IModuleNodeItem;
 import dev.metaschema.core.metapath.item.node.INodeItemFactory;
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.model.IModuleLoader;
 import dev.metaschema.core.model.constraint.impl.ConstraintComposingVisitor;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

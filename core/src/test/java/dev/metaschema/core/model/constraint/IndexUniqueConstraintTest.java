@@ -13,6 +13,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+
 import dev.metaschema.core.mdm.IDMAssemblyNodeItem;
 import dev.metaschema.core.mdm.IDMFieldNodeItem;
 import dev.metaschema.core.metapath.DynamicContext;
@@ -26,11 +30,6 @@ import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.MockedModelTestSupport;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -8,7 +8,6 @@ package dev.metaschema.core.model.constraint;
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathException;
 import dev.metaschema.core.metapath.item.node.INodeItem;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

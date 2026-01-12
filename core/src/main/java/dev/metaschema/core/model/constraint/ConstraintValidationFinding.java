@@ -5,17 +5,16 @@
 
 package dev.metaschema.core.model.constraint;
 
+import java.net.URI;
+import java.util.Comparator;
+import java.util.List;
+
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.model.IResourceLocation;
 import dev.metaschema.core.model.constraint.IConstraint.Level;
 import dev.metaschema.core.model.validation.IValidationFinding;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-import java.util.Comparator;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

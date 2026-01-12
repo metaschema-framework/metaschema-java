@@ -7,6 +7,11 @@ package dev.metaschema.databind.io.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
+import org.eclipse.jdt.annotation.NotOwning;
+
+import java.io.IOException;
+import java.util.List;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.JsonGroupAsBehavior;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
@@ -29,12 +34,6 @@ import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;
 import dev.metaschema.databind.model.info.IFeatureScalarItemValueHandler;
 import dev.metaschema.databind.model.info.IItemWriteHandler;
 import dev.metaschema.databind.model.info.IModelInstanceCollectionInfo;
-
-import org.eclipse.jdt.annotation.NotOwning;
-
-import java.io.IOException;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

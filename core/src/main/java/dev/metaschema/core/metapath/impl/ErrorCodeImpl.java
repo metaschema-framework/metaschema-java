@@ -6,7 +6,6 @@
 package dev.metaschema.core.metapath.impl;
 
 import dev.metaschema.core.metapath.IErrorCode;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ErrorCodeImpl implements IErrorCode {

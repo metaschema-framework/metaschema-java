@@ -7,11 +7,11 @@ package dev.metaschema.core.datatype.adapter;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.datatype.DataTypeService;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.qname.IEnhancedQName;
-
-import org.junit.jupiter.api.Test;
 
 class MetaschemaDataTypeProviderTest {
 

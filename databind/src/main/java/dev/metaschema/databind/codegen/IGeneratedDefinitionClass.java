@@ -6,7 +6,6 @@
 package dev.metaschema.databind.codegen;
 
 import dev.metaschema.core.model.IModelDefinition;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

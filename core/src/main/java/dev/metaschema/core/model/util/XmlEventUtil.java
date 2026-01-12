@@ -5,8 +5,6 @@
 
 package dev.metaschema.core.model.util;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.codehaus.stax2.XMLEventReader2;
 import org.codehaus.stax2.XMLStreamReader2;
 
@@ -28,6 +26,7 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

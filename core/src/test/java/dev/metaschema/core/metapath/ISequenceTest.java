@@ -15,6 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IDecimalItem;
@@ -22,12 +28,6 @@ import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
 import dev.metaschema.core.metapath.item.atomic.INumericItem;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
-
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 class ISequenceTest {
 

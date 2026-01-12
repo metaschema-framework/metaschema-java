@@ -5,6 +5,9 @@
 
 package dev.metaschema.core.metapath.cst.math;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.cst.IExpressionVisitor;
 import dev.metaschema.core.metapath.function.impl.OperationFunctions;
@@ -17,10 +20,6 @@ import dev.metaschema.core.metapath.item.atomic.ITimeItem;
 import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

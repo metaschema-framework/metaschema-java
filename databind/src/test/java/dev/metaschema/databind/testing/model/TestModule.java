@@ -5,6 +5,10 @@
 
 package dev.metaschema.databind.testing.model;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.util.CollectionUtil;
@@ -13,11 +17,6 @@ import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.databind.model.AbstractBoundModule;
 import dev.metaschema.databind.model.IBoundModule;
 import dev.metaschema.databind.model.annotations.MetaschemaModule;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 @MetaschemaModule(

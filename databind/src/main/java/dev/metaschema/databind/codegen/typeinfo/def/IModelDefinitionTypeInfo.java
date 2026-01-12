@@ -7,16 +7,15 @@ package dev.metaschema.databind.codegen.typeinfo.def;
 
 import com.squareup.javapoet.ClassName;
 
+import java.util.Collection;
+import java.util.List;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.databind.codegen.typeinfo.IFlagInstanceTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.ITypeResolver;
-
-import java.util.Collection;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

@@ -5,11 +5,10 @@
 
 package dev.metaschema.databind.io;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

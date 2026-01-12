@@ -8,11 +8,10 @@ package dev.metaschema.databind.model.annotations;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import dev.metaschema.core.model.IAttributable;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import dev.metaschema.core.model.IAttributable;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

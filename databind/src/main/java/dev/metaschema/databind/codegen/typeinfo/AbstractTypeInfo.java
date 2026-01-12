@@ -8,7 +8,6 @@ package dev.metaschema.databind.codegen.typeinfo;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.codegen.ClassUtils;
 import dev.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

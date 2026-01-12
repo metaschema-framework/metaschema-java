@@ -31,11 +31,10 @@ import com.vladsch.flexmark.ext.typographic.TypographicQuotes;
 import com.vladsch.flexmark.ext.typographic.TypographicSmarts;
 import com.vladsch.flexmark.util.ast.Node;
 
-import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
-import dev.metaschema.core.util.CollectionUtil;
-
 import java.util.Map;
 
+import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

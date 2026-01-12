@@ -8,7 +8,6 @@ package dev.metaschema.core.metapath.type.impl;
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.metapath.item.node.IFieldNodeItem;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

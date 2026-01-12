@@ -5,15 +5,6 @@
 
 package dev.metaschema.databind;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.IModuleLoader;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.databind.IBindingContext.IBindingMatcher;
-import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
-import dev.metaschema.databind.model.IBoundModule;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,6 +13,14 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.IModuleLoader;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.databind.IBindingContext.IBindingMatcher;
+import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
+import dev.metaschema.databind.model.IBoundModule;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

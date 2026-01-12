@@ -5,10 +5,6 @@
 
 package dev.metaschema.schemagen.xml.impl;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.eclipse.jdt.annotation.Owning;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -28,6 +24,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

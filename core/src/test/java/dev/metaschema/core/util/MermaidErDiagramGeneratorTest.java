@@ -7,18 +7,18 @@ package dev.metaschema.core.util;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.model.util.MermaidErDiagramGenerator;
-import dev.metaschema.core.testsupport.MockedModelTestSupport;
-import dev.metaschema.core.testsupport.builder.IModuleBuilder;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.List;
+
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.model.util.MermaidErDiagramGenerator;
+import dev.metaschema.core.testsupport.MockedModelTestSupport;
+import dev.metaschema.core.testsupport.builder.IModuleBuilder;
 
 class MermaidErDiagramGeneratorTest {
 

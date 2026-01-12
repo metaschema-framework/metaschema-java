@@ -11,14 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import dev.metaschema.core.metapath.DynamicContext;
-import dev.metaschema.core.metapath.ExpressionTestBase;
-import dev.metaschema.core.metapath.IMetapathExpression;
-import dev.metaschema.core.metapath.StaticContext;
-import dev.metaschema.core.metapath.StaticMetapathException;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.qname.IEnhancedQName;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -26,6 +18,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.ExpressionTestBase;
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.metapath.StaticMetapathException;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class ArrowExpressionTest

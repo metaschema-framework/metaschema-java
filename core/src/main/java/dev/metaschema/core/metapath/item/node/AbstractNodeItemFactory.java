@@ -1,6 +1,9 @@
 
 package dev.metaschema.core.metapath.item.node;
 
+import java.net.URI;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstance;
 import dev.metaschema.core.model.IAssemblyInstanceAbsolute;
@@ -16,10 +19,6 @@ import dev.metaschema.core.model.INamedModelInstance;
 import dev.metaschema.core.model.INamedModelInstanceAbsolute;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

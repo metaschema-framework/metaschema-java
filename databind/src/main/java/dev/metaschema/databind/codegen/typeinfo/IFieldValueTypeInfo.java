@@ -7,7 +7,6 @@ package dev.metaschema.databind.codegen.typeinfo;
 
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.databind.codegen.typeinfo.def.IFieldDefinitionTypeInfo;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

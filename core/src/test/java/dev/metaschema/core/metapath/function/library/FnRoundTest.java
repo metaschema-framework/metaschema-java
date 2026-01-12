@@ -8,12 +8,6 @@ package dev.metaschema.core.metapath.function.library;
 import static dev.metaschema.core.metapath.TestUtils.decimal;
 import static dev.metaschema.core.metapath.TestUtils.integer;
 
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
-import dev.metaschema.core.metapath.item.atomic.INumericItem;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,6 +16,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
+import dev.metaschema.core.metapath.item.atomic.INumericItem;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class FnRoundTest

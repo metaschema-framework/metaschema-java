@@ -12,12 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.model.IAssemblyDefinition;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.ModelType;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.BindingException;
-
 import org.jmock.Expectations;
 import org.jmock.junit5.JUnit5Mockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -29,6 +23,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.ModelType;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.BindingException;
 
 /**
  * Tests for {@link DefaultChoiceGroupBindingConfiguration}.

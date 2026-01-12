@@ -5,6 +5,11 @@
 
 package dev.metaschema.core.model.constraint;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.format.IPathFormatter;
@@ -12,12 +17,6 @@ import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.util.CustomCollectors;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

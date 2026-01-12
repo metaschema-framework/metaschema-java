@@ -11,6 +11,8 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import java.util.Set;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IFieldInstance;
@@ -20,9 +22,6 @@ import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.codegen.impl.AnnotationGenerator;
 import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import dev.metaschema.databind.model.annotations.BoundField;
-
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class FieldInstanceTypeInfoImpl

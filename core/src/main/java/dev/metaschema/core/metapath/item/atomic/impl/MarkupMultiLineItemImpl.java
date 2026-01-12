@@ -9,7 +9,6 @@ import dev.metaschema.core.datatype.markup.MarkupDataTypeProvider;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.datatype.markup.MarkupMultilineAdapter;
 import dev.metaschema.core.metapath.item.atomic.IMarkupMultilineItem;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

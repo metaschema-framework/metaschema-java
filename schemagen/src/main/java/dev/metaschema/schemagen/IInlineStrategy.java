@@ -7,7 +7,6 @@ package dev.metaschema.schemagen;
 
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.model.IDefinition;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

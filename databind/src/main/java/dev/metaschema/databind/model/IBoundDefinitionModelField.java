@@ -6,7 +6,6 @@
 package dev.metaschema.databind.model;
 
 import dev.metaschema.core.model.IFieldDefinition;
-
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**

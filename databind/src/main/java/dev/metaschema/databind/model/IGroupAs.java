@@ -8,7 +8,6 @@ package dev.metaschema.databind.model;
 import dev.metaschema.core.model.JsonGroupAsBehavior;
 import dev.metaschema.core.model.XmlGroupAsBehavior;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

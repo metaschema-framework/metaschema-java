@@ -9,7 +9,6 @@ import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.databind.model.IBoundInstanceFlag;
 import dev.metaschema.databind.model.IBoundInstanceModel;
 import dev.metaschema.databind.model.IBoundInstanceModelNamed;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

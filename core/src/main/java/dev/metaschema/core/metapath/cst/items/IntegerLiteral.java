@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.metapath.cst.items;
 
-import dev.metaschema.core.metapath.cst.IExpressionVisitor;
-import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
-
 import java.math.BigInteger;
 
+import dev.metaschema.core.metapath.cst.IExpressionVisitor;
+import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

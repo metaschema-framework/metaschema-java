@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.metapath.cst;
 
-import dev.metaschema.core.metapath.IExpression;
-
 import java.util.List;
 import java.util.Objects;
 
+import dev.metaschema.core.metapath.IExpression;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

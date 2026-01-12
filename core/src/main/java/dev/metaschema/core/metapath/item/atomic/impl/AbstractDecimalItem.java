@@ -5,14 +5,13 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.math.BigDecimal;
+
 import dev.metaschema.core.metapath.impl.AbstractDecimalMapKey;
 import dev.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IDecimalItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.math.BigDecimal;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

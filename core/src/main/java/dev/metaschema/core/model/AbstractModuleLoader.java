@@ -5,8 +5,6 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -17,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

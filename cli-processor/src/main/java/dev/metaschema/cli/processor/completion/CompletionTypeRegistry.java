@@ -5,8 +5,6 @@
 
 package dev.metaschema.cli.processor.completion;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -15,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

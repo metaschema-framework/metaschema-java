@@ -5,6 +5,9 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.time.Duration;
+import java.time.ZoneOffset;
+
 import dev.metaschema.core.datatype.adapter.DayTimeAdapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.metapath.function.DateTimeFunctionException;
@@ -13,10 +16,6 @@ import dev.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.metapath.item.function.IOpaqueMapKey;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.time.Duration;
-import java.time.ZoneOffset;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -12,12 +12,12 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URI;
+
+import dev.metaschema.core.util.ObjectUtils;
 
 class BooleanAdapterTest {
   private static final String TEST_JSON = "{ \"some-boolean\" : true }";

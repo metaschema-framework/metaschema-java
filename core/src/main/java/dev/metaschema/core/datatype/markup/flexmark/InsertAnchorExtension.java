@@ -36,8 +36,6 @@ import com.vladsch.flexmark.util.data.MutableDataHolder;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 import com.vladsch.flexmark.util.sequence.CharSubSequence;
 
-import dev.metaschema.core.datatype.markup.IMarkupString;
-
 import org.jsoup.nodes.Element;
 
 import java.util.Collections;
@@ -48,6 +46,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dev.metaschema.core.datatype.markup.IMarkupString;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

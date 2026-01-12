@@ -12,7 +12,6 @@ import dev.metaschema.core.metapath.function.ComparisonFunctions;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

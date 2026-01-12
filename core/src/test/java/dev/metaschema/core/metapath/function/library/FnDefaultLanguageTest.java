@@ -7,15 +7,15 @@ package dev.metaschema.core.metapath.function.library;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
-
-import java.util.Locale;
 
 class FnDefaultLanguageTest {
 

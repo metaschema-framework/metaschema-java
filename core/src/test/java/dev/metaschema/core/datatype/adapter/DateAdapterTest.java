@@ -9,8 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import dev.metaschema.core.datatype.object.AmbiguousDate;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -20,6 +18,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.datatype.object.AmbiguousDate;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class DateAdapterTest {

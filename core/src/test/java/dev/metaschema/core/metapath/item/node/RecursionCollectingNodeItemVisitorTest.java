@@ -8,16 +8,16 @@ package dev.metaschema.core.metapath.item.node;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.testsupport.MockedModelTestSupport;
-import dev.metaschema.core.testsupport.builder.IModuleBuilder;
-
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
+
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.testsupport.MockedModelTestSupport;
+import dev.metaschema.core.testsupport.builder.IModuleBuilder;
 
 class RecursionCollectingNodeItemVisitorTest {
 

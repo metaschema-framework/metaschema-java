@@ -7,14 +7,6 @@ package dev.metaschema.databind.io;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
-import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
-import dev.metaschema.databind.model.metaschema.binding.METASCHEMA;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -23,6 +15,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
+import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import dev.metaschema.databind.model.metaschema.binding.METASCHEMA;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class MetaschemaModuleMetaschemaTest {

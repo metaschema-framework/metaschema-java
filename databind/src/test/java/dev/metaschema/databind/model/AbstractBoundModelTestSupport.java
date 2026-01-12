@@ -9,10 +9,6 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
-import dev.metaschema.databind.model.test.RootBoundAssembly;
-
 import org.jmock.junit5.JUnit5Mockery;
 import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -20,6 +16,9 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.io.IOException;
 import java.io.Reader;
 
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
+import dev.metaschema.databind.model.test.RootBoundAssembly;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

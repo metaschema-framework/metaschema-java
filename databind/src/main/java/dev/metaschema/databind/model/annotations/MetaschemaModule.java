@@ -7,13 +7,12 @@ package dev.metaschema.databind.model.annotations;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.databind.model.IBoundModule;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.databind.model.IBoundModule;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

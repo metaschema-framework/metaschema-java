@@ -5,6 +5,11 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URLConnection;
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.MetapathException;
@@ -19,12 +24,6 @@ import dev.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

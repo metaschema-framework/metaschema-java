@@ -9,7 +9,6 @@ import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import dev.metaschema.core.metapath.item.node.IModuleNodeItem;
 import dev.metaschema.core.model.IMetaschemaModule;
 import dev.metaschema.databind.model.metaschema.binding.METASCHEMA;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

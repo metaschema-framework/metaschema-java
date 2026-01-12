@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
-
-import org.junit.jupiter.api.Test;
 
 /**
  * Tests for focus context support in DynamicContext.

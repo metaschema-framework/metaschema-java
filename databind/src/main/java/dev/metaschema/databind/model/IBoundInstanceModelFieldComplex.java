@@ -5,14 +5,14 @@
 
 package dev.metaschema.databind.model;
 
+import java.io.IOException;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.io.BindingException;
 import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;
 import dev.metaschema.databind.model.info.IItemReadHandler;
 import dev.metaschema.databind.model.info.IItemWriteHandler;
-
-import java.io.IOException;
 
 /**
  * Represents a bound field instance that contains complex (non-scalar) data,

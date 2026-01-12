@@ -5,6 +5,11 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.FunctionUtils;
@@ -14,16 +19,10 @@ import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements <a href=
+ * Implements <a href=
  * "https://www.w3.org/TR/xpath-functions-31/#func-innermost">fn:innermost</a>
  * functions.
  */

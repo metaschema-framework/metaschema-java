@@ -10,9 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.util.CollectionUtil;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,6 +22,9 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.util.CollectionUtil;
 
 /**
  * Tests for the standard DOM/XPath-based XML schema loading functionality.

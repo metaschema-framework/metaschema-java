@@ -5,6 +5,16 @@
 
 package dev.metaschema.databind.model.metaschema;
 
+import java.io.IOException;
+import java.net.URI;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.model.AbstractLoader;
@@ -34,17 +44,6 @@ import dev.metaschema.databind.model.metaschema.binding.MetaschemaMetaConstraint
 import dev.metaschema.databind.model.metaschema.binding.MetaschemaMetapath;
 import dev.metaschema.databind.model.metaschema.binding.MetaschemaModuleConstraints;
 import dev.metaschema.databind.model.metaschema.impl.ConstraintBindingSupport;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

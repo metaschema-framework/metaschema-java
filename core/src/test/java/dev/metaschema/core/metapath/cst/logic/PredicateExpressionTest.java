@@ -11,6 +11,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.ExpressionTestBase;
 import dev.metaschema.core.metapath.IExpression;
@@ -19,11 +23,6 @@ import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 import dev.metaschema.core.util.CollectionUtil;
-
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")

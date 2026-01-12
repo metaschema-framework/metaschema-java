@@ -5,10 +5,9 @@
 
 package dev.metaschema.core;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.net.URI;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

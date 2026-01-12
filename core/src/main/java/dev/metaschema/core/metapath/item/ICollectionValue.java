@@ -5,17 +5,16 @@
 
 package dev.metaschema.core.metapath.item;
 
-import dev.metaschema.core.metapath.DynamicContext;
-import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import dev.metaschema.core.metapath.item.function.IArrayItem;
-import dev.metaschema.core.metapath.item.function.IMapItem;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import dev.metaschema.core.metapath.item.function.IArrayItem;
+import dev.metaschema.core.metapath.item.function.IMapItem;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

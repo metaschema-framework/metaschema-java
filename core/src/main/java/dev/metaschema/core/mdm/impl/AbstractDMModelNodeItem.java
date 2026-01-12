@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.mdm.impl;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import dev.metaschema.core.mdm.IDMFlagNodeItem;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.model.IFlagInstance;
@@ -12,11 +16,6 @@ import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.core.model.INamedModelInstance;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

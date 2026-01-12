@@ -5,6 +5,10 @@
 
 package dev.metaschema.databind.model.test;
 
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import dev.metaschema.core.datatype.adapter.UuidAdapter;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IMetaschemaData;
@@ -14,10 +18,6 @@ import dev.metaschema.databind.model.annotations.BoundField;
 import dev.metaschema.databind.model.annotations.BoundFlag;
 import dev.metaschema.databind.model.annotations.GroupAs;
 import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
-
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 @MetaschemaAssembly(name = "root", rootName = "root", moduleClass = TestMetaschema.class)
 public class RootBoundAssembly implements IBoundObject {

@@ -15,18 +15,18 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.json.MetaschemaJsonReader;
-import dev.metaschema.databind.model.test.MultiFieldAssembly;
-import dev.metaschema.databind.model.test.SimpleAssembly;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedList;
+
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.json.MetaschemaJsonReader;
+import dev.metaschema.databind.model.test.MultiFieldAssembly;
+import dev.metaschema.databind.model.test.SimpleAssembly;
 
 class DefaultFieldPropertyTest {
 

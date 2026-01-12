@@ -5,6 +5,20 @@
 
 package dev.metaschema.databind;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.model.MetaschemaException;
@@ -24,21 +38,6 @@ import dev.metaschema.databind.model.annotations.ModelUtil;
 import dev.metaschema.databind.model.impl.DefinitionAssembly;
 import dev.metaschema.databind.model.impl.DefinitionField;
 import dev.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

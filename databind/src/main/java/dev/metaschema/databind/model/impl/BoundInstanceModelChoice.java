@@ -5,6 +5,8 @@
 
 package dev.metaschema.databind.model.impl;
 
+import java.util.List;
+
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.model.AbstractChoiceInstance;
 import dev.metaschema.core.model.DefaultChoiceModelBuilder;
@@ -18,9 +20,6 @@ import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import dev.metaschema.databind.model.IBoundInstanceModelAssembly;
 import dev.metaschema.databind.model.IBoundInstanceModelField;
 import dev.metaschema.databind.model.IBoundInstanceModelNamed;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

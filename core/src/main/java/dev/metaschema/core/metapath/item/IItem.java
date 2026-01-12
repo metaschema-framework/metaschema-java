@@ -5,14 +5,13 @@
 
 package dev.metaschema.core.metapath.item;
 
+import java.util.stream.Stream;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.type.IItemType;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

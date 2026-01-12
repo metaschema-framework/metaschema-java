@@ -5,17 +5,6 @@
 
 package dev.metaschema.core.metapath.item.function;
 
-import dev.metaschema.core.metapath.function.IFunction;
-import dev.metaschema.core.metapath.item.ICollectionValue;
-import dev.metaschema.core.metapath.item.IItem;
-import dev.metaschema.core.metapath.item.IItemVisitor;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import dev.metaschema.core.metapath.item.function.impl.AbstractArrayItem;
-import dev.metaschema.core.metapath.item.function.impl.ArrayItemN;
-import dev.metaschema.core.metapath.type.IItemType;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +18,16 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.function.IFunction;
+import dev.metaschema.core.metapath.item.ICollectionValue;
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.IItemVisitor;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import dev.metaschema.core.metapath.item.function.impl.AbstractArrayItem;
+import dev.metaschema.core.metapath.item.function.impl.ArrayItemN;
+import dev.metaschema.core.metapath.type.IItemType;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

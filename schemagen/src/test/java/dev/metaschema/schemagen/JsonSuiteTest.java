@@ -5,17 +5,6 @@
 
 package dev.metaschema.schemagen;
 
-import dev.metaschema.core.configuration.DefaultConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.model.validation.IContentValidator;
-import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
-import dev.metaschema.schemagen.json.JsonSchemaGenerator;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;
@@ -34,6 +23,17 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+
+import dev.metaschema.core.configuration.DefaultConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.model.validation.IContentValidator;
+import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
+import dev.metaschema.schemagen.json.JsonSchemaGenerator;
 
 class JsonSuiteTest
     extends AbstractSchemaGeneratorTestSuite {

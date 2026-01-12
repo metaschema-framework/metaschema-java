@@ -5,6 +5,9 @@
 
 package dev.metaschema.databind.model.metaschema.impl;
 
+import java.util.Map;
+import java.util.Set;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
@@ -24,10 +27,6 @@ import dev.metaschema.databind.model.metaschema.IBindingInstance;
 import dev.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import dev.metaschema.databind.model.metaschema.binding.FlagConstraints;
 import dev.metaschema.databind.model.metaschema.binding.InlineDefineFlag;
-
-import java.util.Map;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;

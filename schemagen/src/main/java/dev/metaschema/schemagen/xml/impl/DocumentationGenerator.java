@@ -5,6 +5,11 @@
 
 package dev.metaschema.schemagen.xml.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.stream.XMLStreamException;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.model.IDefinition;
@@ -12,12 +17,6 @@ import dev.metaschema.core.model.IModelElement;
 import dev.metaschema.core.model.INamedInstance;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.schemagen.SchemaGenerationException;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.stream.XMLStreamException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

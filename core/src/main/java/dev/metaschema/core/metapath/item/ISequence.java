@@ -5,17 +5,6 @@
 
 package dev.metaschema.core.metapath.item;
 
-import dev.metaschema.core.metapath.impl.AbstractSequence;
-import dev.metaschema.core.metapath.impl.SequenceN;
-import dev.metaschema.core.metapath.impl.SingletonSequence;
-import dev.metaschema.core.metapath.impl.StreamSequence;
-import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import dev.metaschema.core.metapath.item.function.IArrayItem;
-import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import dev.metaschema.core.metapath.type.TypeMetapathException;
-import dev.metaschema.core.util.CustomCollectors;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,6 +15,16 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.impl.AbstractSequence;
+import dev.metaschema.core.metapath.impl.SequenceN;
+import dev.metaschema.core.metapath.impl.SingletonSequence;
+import dev.metaschema.core.metapath.impl.StreamSequence;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import dev.metaschema.core.metapath.item.function.IArrayItem;
+import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import dev.metaschema.core.metapath.type.TypeMetapathException;
+import dev.metaschema.core.util.CustomCollectors;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

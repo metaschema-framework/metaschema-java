@@ -9,10 +9,6 @@ import com.vladsch.flexmark.formatter.Formatter;
 import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 
-import dev.metaschema.core.datatype.ICustomJavaDataType;
-import dev.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;
-import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
-
 import org.codehaus.stax2.XMLStreamWriter2;
 import org.codehaus.stax2.evt.XMLEventFactory2;
 
@@ -24,6 +20,9 @@ import java.util.stream.Stream;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 
+import dev.metaschema.core.datatype.ICustomJavaDataType;
+import dev.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;
+import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

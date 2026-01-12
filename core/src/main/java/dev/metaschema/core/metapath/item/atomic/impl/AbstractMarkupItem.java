@@ -10,7 +10,6 @@ import dev.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IMarkupItem;
 import dev.metaschema.core.metapath.item.function.IMapKey;
 import dev.metaschema.core.metapath.item.function.impl.AbstractStringMapKey;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

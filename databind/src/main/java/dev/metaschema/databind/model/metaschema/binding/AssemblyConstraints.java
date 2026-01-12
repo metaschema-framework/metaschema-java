@@ -7,6 +7,12 @@
 
 package dev.metaschema.databind.model.metaschema.binding;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import dev.metaschema.core.model.IMetaschemaData;
 import dev.metaschema.core.model.JsonGroupAsBehavior;
 import dev.metaschema.core.util.ObjectUtils;
@@ -18,10 +24,6 @@ import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
 import dev.metaschema.databind.model.metaschema.IModelConstraintsBase;
 import dev.metaschema.databind.model.metaschema.ITargetedConstraintBase;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A binding class for the {@code assembly-constraints} definition.

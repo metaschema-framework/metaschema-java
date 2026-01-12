@@ -12,7 +12,6 @@ import dev.metaschema.core.metapath.item.atomic.IIPAddressItem;
 import dev.metaschema.core.metapath.item.atomic.INumericItem;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.qname.EQNameFactory;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

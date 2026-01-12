@@ -7,11 +7,10 @@ package dev.metaschema.schemagen.json.impl;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import dev.metaschema.core.model.IFieldDefinition;
-import dev.metaschema.core.qname.IEnhancedQName;
-
 import java.util.List;
 
+import dev.metaschema.core.model.IFieldDefinition;
+import dev.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

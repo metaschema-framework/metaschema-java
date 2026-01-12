@@ -14,7 +14,6 @@ import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.metapath.type.TypeMetapathException;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

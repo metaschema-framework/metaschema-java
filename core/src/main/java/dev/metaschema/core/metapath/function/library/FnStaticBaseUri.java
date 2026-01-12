@@ -5,6 +5,9 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.net.URI;
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.IArgument;
@@ -13,10 +16,6 @@ import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
-
-import java.net.URI;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

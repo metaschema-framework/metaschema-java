@@ -5,15 +5,14 @@
 
 package dev.metaschema.core.model.constraint.impl;
 
+import java.util.regex.Pattern;
+
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.model.constraint.IIndexConstraint;
 import dev.metaschema.core.model.constraint.IIndexHasKeyConstraint;
 import dev.metaschema.core.model.constraint.IKeyField;
 import dev.metaschema.core.model.constraint.IUniqueConstraint;
-
-import java.util.regex.Pattern;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

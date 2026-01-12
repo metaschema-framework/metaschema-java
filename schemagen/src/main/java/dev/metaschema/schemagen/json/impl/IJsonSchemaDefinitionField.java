@@ -5,10 +5,9 @@
 
 package dev.metaschema.schemagen.json.impl;
 
-import dev.metaschema.core.model.IFieldDefinition;
-
 import java.util.List;
 
+import dev.metaschema.core.model.IFieldDefinition;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

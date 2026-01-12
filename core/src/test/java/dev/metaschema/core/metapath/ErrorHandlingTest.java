@@ -12,6 +12,8 @@ import static org.assertj.core.api.Assertions.from;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.function.ArithmeticFunctionException;
 import dev.metaschema.core.metapath.function.InvalidArgumentFunctionException;
 import dev.metaschema.core.metapath.item.ISequence;
@@ -19,8 +21,6 @@ import dev.metaschema.core.metapath.item.function.IArrayItem;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.metapath.type.TypeMetapathException;
 import dev.metaschema.core.qname.IEnhancedQName;
-
-import org.junit.jupiter.api.Test;
 
 /**
  * Comprehensive tests for error handling paths in the metaschema-java

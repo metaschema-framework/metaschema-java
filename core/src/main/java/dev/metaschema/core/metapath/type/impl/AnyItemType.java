@@ -7,7 +7,6 @@ package dev.metaschema.core.metapath.type.impl;
 
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.type.IItemType;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

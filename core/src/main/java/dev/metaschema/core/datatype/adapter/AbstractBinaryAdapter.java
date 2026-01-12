@@ -7,11 +7,6 @@ package dev.metaschema.core.datatype.adapter;
 
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
-import dev.metaschema.core.datatype.AbstractDataTypeAdapter;
-import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import dev.metaschema.core.metapath.type.AbstractAtomicOrUnionType;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.DecoderException;
@@ -21,6 +16,10 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import dev.metaschema.core.datatype.AbstractDataTypeAdapter;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import dev.metaschema.core.metapath.type.AbstractAtomicOrUnionType;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

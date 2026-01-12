@@ -5,12 +5,6 @@
 
 package dev.metaschema.databind.codegen;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.codegen.config.DefaultBindingConfiguration;
-import dev.metaschema.databind.codegen.config.IBindingConfiguration;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.Owning;
@@ -29,6 +23,11 @@ import java.util.stream.Collectors;
 
 import javax.tools.DiagnosticCollector;
 
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.codegen.config.DefaultBindingConfiguration;
+import dev.metaschema.databind.codegen.config.IBindingConfiguration;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

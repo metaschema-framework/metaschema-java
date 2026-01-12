@@ -5,6 +5,9 @@
 
 package dev.metaschema.databind.model.test;
 
+import java.util.List;
+import java.util.Map;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IMetaschemaData;
 import dev.metaschema.core.model.JsonGroupAsBehavior;
@@ -12,9 +15,6 @@ import dev.metaschema.databind.model.annotations.BoundAssembly;
 import dev.metaschema.databind.model.annotations.BoundField;
 import dev.metaschema.databind.model.annotations.GroupAs;
 import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
-
-import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings("PMD")
 @MetaschemaAssembly(name = "only-model", moduleClass = TestMetaschema.class)

@@ -5,6 +5,13 @@
 
 package dev.metaschema.databind.io.json;
 
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
@@ -14,14 +21,6 @@ import dev.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
 import dev.metaschema.databind.model.IBoundFieldValue;
 import dev.metaschema.databind.model.IBoundInstanceFlag;
 import dev.metaschema.databind.model.IBoundProperty;
-
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

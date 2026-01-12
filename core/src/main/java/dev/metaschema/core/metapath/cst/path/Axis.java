@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.metapath.cst.path;
 
-import dev.metaschema.core.metapath.StaticMetapathException;
-import dev.metaschema.core.metapath.item.node.INodeItem;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.StaticMetapathException;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

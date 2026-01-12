@@ -5,16 +5,15 @@
 
 package dev.metaschema.cli.processor.completion;
 
-import dev.metaschema.cli.processor.command.ExtraArgument;
-import dev.metaschema.cli.processor.command.ICommand;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.commons.cli.Option;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dev.metaschema.cli.processor.command.ExtraArgument;
+import dev.metaschema.cli.processor.command.ICommand;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

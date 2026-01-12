@@ -5,12 +5,6 @@
 
 package dev.metaschema.databind.model;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.model.IModelInstanceAbsolute;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.BindingException;
-import dev.metaschema.databind.model.info.IModelInstanceCollectionInfo;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -18,6 +12,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.IModelInstanceAbsolute;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.BindingException;
+import dev.metaschema.databind.model.info.IModelInstanceCollectionInfo;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

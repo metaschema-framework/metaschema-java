@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.configuration;
 
-import dev.metaschema.core.util.CollectionUtil;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

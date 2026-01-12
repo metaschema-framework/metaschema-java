@@ -5,14 +5,14 @@
 
 package dev.metaschema.databind.io.json;
 
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.util.JsonUtil;
 import dev.metaschema.databind.io.AbstractProblemHandler;
 import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * This problem handler implementation handles common issues when parsing

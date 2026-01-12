@@ -9,7 +9,6 @@ import dev.metaschema.core.model.IChoiceGroupInstance;
 import dev.metaschema.core.model.IChoiceInstance;
 import dev.metaschema.core.model.INamedModelInstanceAbsolute;
 import dev.metaschema.core.model.INamedModelInstanceGrouped;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

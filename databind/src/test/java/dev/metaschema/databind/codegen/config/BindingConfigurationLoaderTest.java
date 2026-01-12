@@ -8,9 +8,6 @@ package dev.metaschema.databind.codegen.config;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.BindingException;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -18,6 +15,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.BindingException;
 
 class BindingConfigurationLoaderTest {
 

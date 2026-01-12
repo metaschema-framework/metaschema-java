@@ -7,9 +7,6 @@ package dev.metaschema.core.metapath.item.atomic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.metaschema.core.metapath.DynamicContext;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,6 +14,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class IUuidItemTest {

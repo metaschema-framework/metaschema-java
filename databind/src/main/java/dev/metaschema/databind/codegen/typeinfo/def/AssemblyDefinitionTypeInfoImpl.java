@@ -5,6 +5,15 @@
 
 package dev.metaschema.databind.codegen.typeinfo.def;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IChoiceGroupInstance;
 import dev.metaschema.core.model.IChoiceInstance;
@@ -19,16 +28,6 @@ import dev.metaschema.databind.codegen.typeinfo.IModelInstanceTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.INamedModelInstanceTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.IPropertyTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.ITypeResolver;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

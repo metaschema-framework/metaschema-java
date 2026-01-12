@@ -15,11 +15,11 @@ module dev.metaschema.cli.processor {
   requires java.base;
 
   requires transitive dev.metaschema.core;
+  requires transitive org.apache.commons.cli;
 
   requires static org.eclipse.jdt.annotation;
   requires static com.github.spotbugs.annotations;
 
-  requires org.apache.commons.cli;
   requires org.jansi.core;
   requires nl.talsmasoftware.lazy4j;
   requires org.apache.logging.log4j;

@@ -17,7 +17,6 @@ import dev.metaschema.core.model.INamedModelElement;
 import dev.metaschema.core.model.ModelType;
 import dev.metaschema.core.model.constraint.ValueConstraintSet;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

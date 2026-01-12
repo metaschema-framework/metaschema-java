@@ -5,12 +5,11 @@
 
 package dev.metaschema.cli.processor;
 
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.Arrays;
 import java.util.List;
 
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

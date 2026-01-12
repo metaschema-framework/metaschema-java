@@ -7,16 +7,16 @@ package dev.metaschema.core.metapath.item.node;
 
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.testsupport.MockedModelTestSupport;
-import dev.metaschema.core.testsupport.builder.IModuleBuilder;
-
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.time.Duration;
 import java.util.List;
+
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.testsupport.MockedModelTestSupport;
+import dev.metaschema.core.testsupport.builder.IModuleBuilder;
 
 class AbstractRecursionPreventingNodeItemVisitorTest {
 

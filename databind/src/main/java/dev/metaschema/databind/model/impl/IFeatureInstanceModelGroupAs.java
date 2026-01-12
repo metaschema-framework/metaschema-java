@@ -10,7 +10,6 @@ import dev.metaschema.core.model.JsonGroupAsBehavior;
 import dev.metaschema.core.model.XmlGroupAsBehavior;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.databind.model.IGroupAs;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

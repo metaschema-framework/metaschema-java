@@ -5,6 +5,12 @@
 
 package dev.metaschema.databind.model.metaschema;
 
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.configuration.IMutableConfiguration;
 import dev.metaschema.core.model.AbstractModuleLoader;
@@ -17,13 +23,6 @@ import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import dev.metaschema.databind.model.metaschema.binding.METASCHEMA;
 import dev.metaschema.databind.model.metaschema.binding.METASCHEMA.Import;
 import dev.metaschema.databind.model.metaschema.impl.BindingModule;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

@@ -15,7 +15,6 @@ import dev.metaschema.core.model.IAttributable;
 import dev.metaschema.core.model.IDescribable;
 import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

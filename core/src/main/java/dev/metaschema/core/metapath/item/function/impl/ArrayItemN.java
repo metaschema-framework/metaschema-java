@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.metapath.item.function.impl;
 
+import java.util.List;
+
 import dev.metaschema.core.metapath.item.ICollectionValue;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

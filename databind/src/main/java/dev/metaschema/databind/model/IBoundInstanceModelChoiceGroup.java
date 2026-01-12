@@ -5,6 +5,9 @@
 
 package dev.metaschema.databind.model;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IChoiceGroupInstance;
 import dev.metaschema.core.model.IFeatureContainerModelGrouped;
@@ -14,10 +17,6 @@ import dev.metaschema.databind.io.BindingException;
 import dev.metaschema.databind.model.impl.InstanceModelChoiceGroup;
 import dev.metaschema.databind.model.info.IItemReadHandler;
 import dev.metaschema.databind.model.info.IItemWriteHandler;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

@@ -5,6 +5,9 @@
 
 package dev.metaschema.databind.model.metaschema.impl;
 
+import java.util.Map;
+import java.util.Set;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
@@ -30,10 +33,6 @@ import dev.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import dev.metaschema.databind.model.metaschema.binding.AssemblyModel;
 import dev.metaschema.databind.model.metaschema.binding.FieldConstraints;
 import dev.metaschema.databind.model.metaschema.binding.JsonValueKeyFlag;
-
-import java.util.Map;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;

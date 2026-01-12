@@ -5,14 +5,13 @@
 
 package dev.metaschema.core.datatype.adapter;
 
+import java.util.List;
+
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.item.atomic.IEmailAddressItem;
 import dev.metaschema.core.qname.EQNameFactory;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

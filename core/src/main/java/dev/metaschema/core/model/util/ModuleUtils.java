@@ -10,7 +10,6 @@ import dev.metaschema.core.metapath.StaticMetapathException;
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.model.ModelInitializationException;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

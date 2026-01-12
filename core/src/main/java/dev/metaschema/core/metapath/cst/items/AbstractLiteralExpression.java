@@ -9,7 +9,6 @@ import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.cst.AbstractExpression;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

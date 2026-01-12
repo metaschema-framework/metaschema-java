@@ -10,7 +10,6 @@ import dev.metaschema.core.metapath.function.InvalidValueForCastFunctionExceptio
 import dev.metaschema.core.metapath.item.atomic.impl.IPv6AddressItemImpl;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.ipv6.IPv6Address;
 

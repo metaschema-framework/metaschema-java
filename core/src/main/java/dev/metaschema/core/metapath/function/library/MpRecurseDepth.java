@@ -5,6 +5,9 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.metapath.MetapathConstants;
@@ -17,10 +20,6 @@ import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

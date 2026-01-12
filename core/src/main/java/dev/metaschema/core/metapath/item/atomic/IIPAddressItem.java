@@ -9,7 +9,6 @@ import dev.metaschema.core.metapath.function.InvalidValueForCastFunctionExceptio
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.metapath.type.impl.TypeConstants;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import inet.ipaddr.IPAddress;
 

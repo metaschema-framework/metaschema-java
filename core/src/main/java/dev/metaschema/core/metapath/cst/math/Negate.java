@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath.cst.math;
 
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.cst.AbstractUnaryExpression;
@@ -15,9 +17,6 @@ import dev.metaschema.core.metapath.function.impl.OperationFunctions;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.INumericItem;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

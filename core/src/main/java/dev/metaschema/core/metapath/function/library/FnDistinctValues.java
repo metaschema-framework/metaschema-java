@@ -5,6 +5,9 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.FunctionUtils;
@@ -15,14 +18,10 @@ import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements <a href=
+ * Implements <a href=
  * "https://www.w3.org/TR/xpath-functions-31/#func-distinct-values">fn:distinct-values</a>
  * functions. This implementation does not implement the two-arg variant with
  * collation at this time.
@@ -66,7 +65,7 @@ public final class FnDistinctValues {
    * function.
    *
    * @param values
-   *          the items to get destinct values for
+   *          the items to get distinct values for
    * @param dynamicContext
    *          used to provide evaluation information, including the implicit
    *          timezone

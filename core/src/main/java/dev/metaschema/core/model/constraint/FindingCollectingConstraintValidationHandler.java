@@ -5,16 +5,6 @@
 
 package dev.metaschema.core.model.constraint;
 
-import dev.metaschema.core.datatype.IDataTypeAdapter;
-import dev.metaschema.core.metapath.DynamicContext;
-import dev.metaschema.core.metapath.MetapathException;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.node.INodeItem;
-import dev.metaschema.core.model.constraint.IConstraint.Level;
-import dev.metaschema.core.model.validation.IValidationFinding.Kind;
-import dev.metaschema.core.model.validation.IValidationResult;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,6 +16,15 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import dev.metaschema.core.datatype.IDataTypeAdapter;
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.MetapathException;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.model.constraint.IConstraint.Level;
+import dev.metaschema.core.model.validation.IValidationFinding.Kind;
+import dev.metaschema.core.model.validation.IValidationResult;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

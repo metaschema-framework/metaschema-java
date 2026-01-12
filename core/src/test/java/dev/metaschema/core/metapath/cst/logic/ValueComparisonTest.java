@@ -7,6 +7,14 @@ package dev.metaschema.core.metapath.cst.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.ExpressionTestBase;
 import dev.metaschema.core.metapath.IExpression;
@@ -15,14 +23,6 @@ import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
-
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
 
 class ValueComparisonTest
     extends ExpressionTestBase {

@@ -9,6 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.ExpressionTestBase;
 import dev.metaschema.core.metapath.IMetapathExpression;
@@ -21,10 +25,6 @@ import dev.metaschema.core.model.constraint.FindingCollectingConstraintValidatio
 import dev.metaschema.core.model.constraint.IExpectConstraint;
 import dev.metaschema.core.testsupport.mocking.MockedDocumentGenerator;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
 
 class AbstractConfigurableMessageConstraintTest
     extends ExpressionTestBase {

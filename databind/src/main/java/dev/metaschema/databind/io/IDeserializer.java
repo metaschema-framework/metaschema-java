@@ -5,13 +5,6 @@
 
 package dev.metaschema.databind.io;
 
-import dev.metaschema.core.configuration.IConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.metapath.item.node.INodeItem;
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.model.constraint.IConstraintValidationHandler;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +17,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import dev.metaschema.core.configuration.IConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.constraint.IConstraintValidationHandler;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

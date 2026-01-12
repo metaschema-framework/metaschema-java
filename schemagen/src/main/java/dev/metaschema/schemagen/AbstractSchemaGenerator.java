@@ -5,13 +5,6 @@
 
 package dev.metaschema.schemagen;
 
-import dev.metaschema.core.configuration.IConfiguration;
-import dev.metaschema.core.model.IAssemblyDefinition;
-import dev.metaschema.core.model.IDefinition;
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.schemagen.datatype.IDatatypeManager;
-
 import org.eclipse.jdt.annotation.Owning;
 
 import java.io.Writer;
@@ -19,6 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import dev.metaschema.core.configuration.IConfiguration;
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.IDefinition;
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.schemagen.datatype.IDatatypeManager;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

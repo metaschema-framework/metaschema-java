@@ -5,11 +5,10 @@
 
 package dev.metaschema.cli.processor;
 
-import dev.metaschema.cli.processor.command.AbstractTerminalCommand;
-import dev.metaschema.cli.processor.command.ICommandExecutor;
-
 import org.apache.commons.cli.CommandLine;
 
+import dev.metaschema.cli.processor.command.AbstractTerminalCommand;
+import dev.metaschema.cli.processor.command.ICommandExecutor;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

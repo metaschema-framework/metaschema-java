@@ -5,12 +5,6 @@
 
 package dev.metaschema.core.datatype.adapter;
 
-import dev.metaschema.core.metapath.MetapathConstants;
-import dev.metaschema.core.metapath.item.atomic.IHexBinaryItem;
-import dev.metaschema.core.qname.EQNameFactory;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.binary.Hex;
@@ -19,6 +13,11 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import dev.metaschema.core.metapath.MetapathConstants;
+import dev.metaschema.core.metapath.item.atomic.IHexBinaryItem;
+import dev.metaschema.core.qname.EQNameFactory;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

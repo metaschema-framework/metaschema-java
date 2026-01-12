@@ -5,19 +5,6 @@
 
 package dev.metaschema.core.model.constraint;
 
-import dev.metaschema.core.metapath.DynamicContext;
-import dev.metaschema.core.metapath.IMetapathExpression;
-import dev.metaschema.core.metapath.item.IItem;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
-import dev.metaschema.core.metapath.item.node.IModuleNodeItem;
-import dev.metaschema.core.model.IDefinition;
-import dev.metaschema.core.model.IModelElementVisitor;
-import dev.metaschema.core.model.ISource;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +18,18 @@ import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
 
+import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
+import dev.metaschema.core.metapath.item.node.IModuleNodeItem;
+import dev.metaschema.core.model.IDefinition;
+import dev.metaschema.core.model.IModelElementVisitor;
+import dev.metaschema.core.model.ISource;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

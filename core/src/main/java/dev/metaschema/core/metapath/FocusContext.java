@@ -6,7 +6,6 @@
 package dev.metaschema.core.metapath;
 
 import dev.metaschema.core.metapath.item.IItem;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

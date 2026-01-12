@@ -5,16 +5,6 @@
 
 package dev.metaschema.core.datatype;
 
-import dev.metaschema.core.metapath.item.IItem;
-import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
-import dev.metaschema.core.metapath.type.IItemType;
-import dev.metaschema.core.qname.EQNameFactory;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.CustomCollectors;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,6 +19,15 @@ import java.util.ServiceLoader.Provider;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
+import dev.metaschema.core.metapath.type.IItemType;
+import dev.metaschema.core.qname.EQNameFactory;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.CustomCollectors;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

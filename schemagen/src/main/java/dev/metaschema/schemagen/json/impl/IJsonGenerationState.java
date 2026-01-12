@@ -21,7 +21,6 @@ import dev.metaschema.core.model.INamedModelInstanceGrouped;
 import dev.metaschema.core.model.IValuedDefinition;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.schemagen.IGenerationState;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

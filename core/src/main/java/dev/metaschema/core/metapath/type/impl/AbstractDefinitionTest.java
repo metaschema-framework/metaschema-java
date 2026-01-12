@@ -11,7 +11,6 @@ import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import dev.metaschema.core.metapath.type.IKindTest;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

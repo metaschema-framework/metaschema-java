@@ -7,6 +7,12 @@ package dev.metaschema.core.model.constraint;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+import java.util.Collections;
+import java.util.List;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.model.IAssemblyDefinition;
@@ -16,12 +22,6 @@ import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.MockedModelTestSupport;
 import dev.metaschema.core.testsupport.builder.IModuleBuilder;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
 
 class ExternalConstraintsModulePostProcessorTest {
 

@@ -7,17 +7,17 @@ package dev.metaschema.databind.io.json;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+
 import dev.metaschema.core.model.MetaschemaException;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
 import dev.metaschema.databind.io.DeserializationFeature;
 import dev.metaschema.databind.io.IBoundLoader;
-
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.nio.file.Paths;
 
 class JsonParserTest
     extends AbstractMetaschemaTest {

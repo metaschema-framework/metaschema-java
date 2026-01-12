@@ -5,17 +5,16 @@
 
 package dev.metaschema.databind.io.xml;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.databind.io.IParsingContext;
-import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
-import dev.metaschema.databind.model.IBoundInstanceModel;
-
 import org.codehaus.stax2.XMLEventReader2;
 
 import java.io.IOException;
 
 import javax.xml.stream.XMLStreamConstants;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.databind.io.IParsingContext;
+import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
+import dev.metaschema.databind.model.IBoundInstanceModel;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

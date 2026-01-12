@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.testsupport.mocking;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.jmock.Mockery;
 
 import java.util.UUID;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

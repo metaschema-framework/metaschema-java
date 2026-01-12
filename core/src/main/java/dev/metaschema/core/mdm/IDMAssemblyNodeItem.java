@@ -13,7 +13,6 @@ import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstance;
 import dev.metaschema.core.model.IFieldInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

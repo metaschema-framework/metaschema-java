@@ -5,9 +5,6 @@
 
 package dev.metaschema.schemagen.xml.impl;
 
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.codehaus.stax2.XMLStreamWriter2;
 
 import java.util.ArrayList;
@@ -21,6 +18,8 @@ import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

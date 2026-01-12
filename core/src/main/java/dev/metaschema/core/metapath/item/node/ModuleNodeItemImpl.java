@@ -1,12 +1,11 @@
 
 package dev.metaschema.core.metapath.item.node;
 
+import java.net.URI;
+
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.model.IResourceLocation;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

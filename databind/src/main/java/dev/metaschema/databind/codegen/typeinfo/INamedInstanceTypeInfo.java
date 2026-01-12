@@ -10,7 +10,6 @@ import com.squareup.javapoet.MethodSpec;
 
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.model.INamedInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public interface INamedInstanceTypeInfo extends IInstanceTypeInfo {

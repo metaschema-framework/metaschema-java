@@ -7,14 +7,6 @@ package dev.metaschema.cli.processor;
 
 import static org.jline.jansi.Ansi.ansi;
 
-import dev.metaschema.cli.processor.command.CommandExecutionException;
-import dev.metaschema.cli.processor.command.ExtraArgument;
-import dev.metaschema.cli.processor.command.ICommand;
-import dev.metaschema.cli.processor.command.ICommandExecutor;
-import dev.metaschema.core.util.AutoCloser;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -23,6 +15,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.help.HelpFormatter;
 import org.apache.commons.cli.help.OptionFormatter;
 import org.apache.commons.cli.help.TextHelpAppendable;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -35,6 +28,13 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import dev.metaschema.cli.processor.command.CommandExecutionException;
+import dev.metaschema.cli.processor.command.ExtraArgument;
+import dev.metaschema.cli.processor.command.ICommand;
+import dev.metaschema.cli.processor.command.ICommandExecutor;
+import dev.metaschema.core.util.AutoCloser;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

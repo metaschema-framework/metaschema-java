@@ -5,14 +5,13 @@
 
 package dev.metaschema.core.metapath.item.atomic;
 
+import java.net.URI;
+
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import dev.metaschema.core.metapath.item.atomic.impl.UriReferenceItemImpl;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

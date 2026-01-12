@@ -5,6 +5,13 @@
 
 package dev.metaschema.databind.io.xml;
 
+import org.codehaus.stax2.XMLStreamWriter2;
+
+import java.io.IOException;
+
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.stream.XMLStreamException;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.databind.io.json.DefaultJsonProblemHandler;
@@ -27,14 +34,6 @@ import dev.metaschema.databind.model.info.AbstractModelInstanceWriteHandler;
 import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;
 import dev.metaschema.databind.model.info.IItemWriteHandler;
 import dev.metaschema.databind.model.info.IModelInstanceCollectionInfo;
-
-import org.codehaus.stax2.XMLStreamWriter2;
-
-import java.io.IOException;
-
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.stream.XMLStreamException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

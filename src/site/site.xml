@@ -98,7 +98,7 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta http-equiv="Content-Type" content="text/html; charset=${outputEncoding}" />
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous" />
-      <link rel="stylesheet" href="./css/custom.css" />
+      <link rel="stylesheet" href="${this.site.url}/css/custom.css" />
 ]]>
 		</head>
 

@@ -5,10 +5,6 @@
 
 package dev.metaschema.schemagen.xml.impl;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.eclipse.jdt.annotation.Owning;
 import org.w3c.dom.Element;
 
@@ -16,6 +12,9 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

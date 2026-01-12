@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath.item.function.impl;
 
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.function.library.ArrayGet;
@@ -20,9 +22,6 @@ import dev.metaschema.core.metapath.item.function.IMapItem;
 import dev.metaschema.core.metapath.item.function.IndexOutOfBoundsArrayMetapathException;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

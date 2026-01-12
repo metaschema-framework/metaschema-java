@@ -8,8 +8,6 @@ package dev.metaschema.core.datatype.adapter;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.metaschema.core.datatype.object.AmbiguousDateTime;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,6 +17,7 @@ import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.datatype.object.AmbiguousDateTime;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class DateTimeAdapterTest {

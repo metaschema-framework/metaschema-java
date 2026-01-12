@@ -14,17 +14,6 @@ import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.ast.TextCollectingVisitor;
 
-import dev.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;
-import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension;
-import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
-import dev.metaschema.core.datatype.markup.flexmark.impl.AstCollectingVisitor;
-import dev.metaschema.core.datatype.markup.flexmark.impl.IMarkupVisitor;
-import dev.metaschema.core.datatype.markup.flexmark.impl.IMarkupWriter;
-import dev.metaschema.core.datatype.markup.flexmark.impl.MarkupVisitor;
-import dev.metaschema.core.datatype.markup.flexmark.impl.MarkupXmlEventWriter;
-import dev.metaschema.core.datatype.markup.flexmark.impl.MarkupXmlStreamWriter;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.stax2.XMLOutputFactory2;
@@ -49,6 +38,16 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import dev.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;
+import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension;
+import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
+import dev.metaschema.core.datatype.markup.flexmark.impl.AstCollectingVisitor;
+import dev.metaschema.core.datatype.markup.flexmark.impl.IMarkupVisitor;
+import dev.metaschema.core.datatype.markup.flexmark.impl.IMarkupWriter;
+import dev.metaschema.core.datatype.markup.flexmark.impl.MarkupVisitor;
+import dev.metaschema.core.datatype.markup.flexmark.impl.MarkupXmlEventWriter;
+import dev.metaschema.core.datatype.markup.flexmark.impl.MarkupXmlStreamWriter;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

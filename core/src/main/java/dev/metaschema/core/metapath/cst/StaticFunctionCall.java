@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.metapath.cst;
 
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.StaticMetapathException;
@@ -12,11 +16,6 @@ import dev.metaschema.core.metapath.function.IFunction;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

@@ -353,9 +353,12 @@ jobs:
     # -------------------------
     # Maven Build
     # -------------------------
-    - name: Build and Test Website
+    - name: Build Code
       run: |
-        mvn -B -e -PCI -Prelease install site site:stage -Dmaven.test.skip=true
+        mvn -B -e -PCI -Prelease install -Dmaven.test.skip=true
+    - name: Build Website
+      run: |
+        mvn -B -e -PCI -Prelease site site:stage -Dmaven.test.skip=true
     - name: Zip Artifacts for Upload
       run: |
         zip ${{ runner.temp }}/website.zip -r target/staging

@@ -5,15 +5,6 @@
 
 package dev.metaschema.databind.io;
 
-import dev.metaschema.core.configuration.IConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.metapath.IDocumentLoader;
-import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.DefaultBindingContext;
-import dev.metaschema.databind.IBindingContext;
-
 import org.eclipse.jdt.annotation.Owning;
 import org.xml.sax.InputSource;
 
@@ -28,6 +19,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 
+import dev.metaschema.core.configuration.IConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.metapath.IDocumentLoader;
+import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.DefaultBindingContext;
+import dev.metaschema.databind.IBindingContext;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

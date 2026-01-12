@@ -5,11 +5,6 @@
 
 package dev.metaschema.databind.io;
 
-import dev.metaschema.core.configuration.IConfiguration;
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -21,6 +16,10 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import dev.metaschema.core.configuration.IConfiguration;
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -8,11 +8,6 @@ package dev.metaschema.cli.processor.completion;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.command.ExtraArgument;
-import dev.metaschema.cli.processor.command.ICommand;
-import dev.metaschema.cli.processor.command.ICommandExecutor;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,6 +17,11 @@ import java.io.File;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
+
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.command.ExtraArgument;
+import dev.metaschema.cli.processor.command.ICommand;
+import dev.metaschema.cli.processor.command.ICommandExecutor;
 
 /**
  * Unit tests for {@link CompletionScriptGenerator}.

@@ -5,10 +5,6 @@
 
 package dev.metaschema.core.model.validation;
 
-import dev.metaschema.core.model.IResourceLocation;
-import dev.metaschema.core.model.constraint.IConstraint;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -26,6 +22,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.model.IResourceLocation;
+import dev.metaschema.core.model.constraint.IConstraint;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

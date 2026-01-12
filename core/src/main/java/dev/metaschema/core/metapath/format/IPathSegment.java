@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.metapath.format;
 
-import dev.metaschema.core.metapath.item.node.INodeItem;
-import dev.metaschema.core.model.IMetapathQueryable;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.item.node.INodeItem;
+import dev.metaschema.core.model.IMetapathQueryable;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

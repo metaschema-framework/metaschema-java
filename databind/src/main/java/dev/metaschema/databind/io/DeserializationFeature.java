@@ -7,7 +7,6 @@ package dev.metaschema.databind.io;
 
 import dev.metaschema.core.configuration.AbstractConfigurationFeature;
 import dev.metaschema.core.model.IAssemblyDefinition;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

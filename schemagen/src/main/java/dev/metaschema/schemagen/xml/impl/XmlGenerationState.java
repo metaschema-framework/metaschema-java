@@ -5,6 +5,17 @@
 
 package dev.metaschema.schemagen.xml.impl;
 
+import org.codehaus.stax2.XMLStreamWriter2;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.model.IAssemblyDefinition;
@@ -28,18 +39,6 @@ import dev.metaschema.schemagen.xml.impl.schematype.XmlComplexTypeFieldDefinitio
 import dev.metaschema.schemagen.xml.impl.schematype.XmlSimpleTypeDataTypeReference;
 import dev.metaschema.schemagen.xml.impl.schematype.XmlSimpleTypeDataTypeRestriction;
 import dev.metaschema.schemagen.xml.impl.schematype.XmlSimpleTypeUnion;
-
-import org.codehaus.stax2.XMLStreamWriter2;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

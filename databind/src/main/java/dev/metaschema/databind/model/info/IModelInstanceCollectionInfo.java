@@ -5,11 +5,6 @@
 
 package dev.metaschema.databind.model.info;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.model.JsonGroupAsBehavior;
-import dev.metaschema.databind.io.BindingException;
-import dev.metaschema.databind.model.IBoundInstanceModel;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -18,6 +13,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.JsonGroupAsBehavior;
+import dev.metaschema.databind.io.BindingException;
+import dev.metaschema.databind.model.IBoundInstanceModel;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

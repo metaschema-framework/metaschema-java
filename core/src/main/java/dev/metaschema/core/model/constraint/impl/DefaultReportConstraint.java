@@ -5,6 +5,9 @@
 
 package dev.metaschema.core.model.constraint.impl;
 
+import java.util.Map;
+import java.util.Set;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.metapath.IMetapathExpression;
@@ -12,10 +15,6 @@ import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
 import dev.metaschema.core.model.IAttributable;
 import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.model.constraint.IReportConstraint;
-
-import java.util.Map;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

@@ -10,6 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.mdm.IDMAssemblyNodeItem;
 import dev.metaschema.core.mdm.IDMDocumentNodeItem;
 import dev.metaschema.core.mdm.IDMFieldNodeItem;
@@ -26,13 +33,6 @@ import dev.metaschema.core.testsupport.MockedModelTestSupport;
 import dev.metaschema.core.testsupport.builder.IFieldBuilder;
 import dev.metaschema.core.testsupport.builder.IModuleBuilder;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Comprehensive tests for Metapath node item traversal and navigation.

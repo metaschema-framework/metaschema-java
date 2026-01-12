@@ -7,6 +7,8 @@ package dev.metaschema.databind.codegen.typeinfo;
 
 import com.squareup.javapoet.ClassName;
 
+import java.util.List;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstanceAbsolute;
 import dev.metaschema.core.model.IChoiceGroupInstance;
@@ -22,9 +24,6 @@ import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.def.IFieldDefinitionTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.def.IModelDefinitionTypeInfo;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

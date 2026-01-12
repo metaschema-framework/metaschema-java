@@ -5,6 +5,14 @@
 
 package dev.metaschema.databind.model.metaschema.impl;
 
+import java.math.BigInteger;
+import java.net.URI;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
@@ -34,15 +42,6 @@ import dev.metaschema.databind.model.metaschema.binding.METASCHEMA.DefineAssembl
 import dev.metaschema.databind.model.metaschema.binding.Property;
 import dev.metaschema.databind.model.metaschema.binding.Remarks;
 import dev.metaschema.databind.model.metaschema.binding.UseName;
-
-import java.math.BigInteger;
-import java.net.URI;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

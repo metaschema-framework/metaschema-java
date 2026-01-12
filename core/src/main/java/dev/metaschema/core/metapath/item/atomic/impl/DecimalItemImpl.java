@@ -5,14 +5,13 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
-import dev.metaschema.core.datatype.adapter.DecimalAdapter;
-import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import dev.metaschema.core.metapath.item.atomic.IDecimalItem;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Objects;
 
+import dev.metaschema.core.datatype.adapter.DecimalAdapter;
+import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import dev.metaschema.core.metapath.item.atomic.IDecimalItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

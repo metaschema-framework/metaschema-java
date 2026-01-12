@@ -5,10 +5,6 @@
 
 package dev.metaschema.databind.codegen;
 
-import dev.metaschema.core.model.IModule;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.codegen.typeinfo.IMetaschemaClassFactory;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -19,6 +15,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.model.IModule;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.codegen.typeinfo.IMetaschemaClassFactory;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

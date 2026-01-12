@@ -7,11 +7,11 @@ package dev.metaschema.databind.codegen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import dev.metaschema.core.util.ObjectUtils;
 
 /**
  * Unit tests for {@link ClassUtils}.

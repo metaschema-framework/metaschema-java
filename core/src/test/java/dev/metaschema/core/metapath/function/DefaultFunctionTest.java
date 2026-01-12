@@ -8,13 +8,13 @@ package dev.metaschema.core.metapath.function;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
 import dev.metaschema.core.util.CollectionUtil;
-
-import org.junit.jupiter.api.Test;
 
 class DefaultFunctionTest {
 

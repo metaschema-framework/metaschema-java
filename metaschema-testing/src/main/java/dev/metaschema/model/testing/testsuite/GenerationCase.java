@@ -7,6 +7,11 @@
 
 package dev.metaschema.model.testing.testsuite;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.net.URI;
+
 import dev.metaschema.core.datatype.adapter.TokenAdapter;
 import dev.metaschema.core.datatype.adapter.UriReferenceAdapter;
 import dev.metaschema.core.model.IBoundObject;
@@ -20,9 +25,6 @@ import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
 import dev.metaschema.databind.model.annotations.ValueConstraints;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.net.URI;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A schema generation comparison test case.

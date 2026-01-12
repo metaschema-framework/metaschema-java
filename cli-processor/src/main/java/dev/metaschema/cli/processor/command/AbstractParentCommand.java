@@ -5,11 +5,6 @@
 
 package dev.metaschema.cli.processor.command;
 
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.ExitCode;
-import dev.metaschema.cli.processor.ExitStatus;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.apache.commons.cli.CommandLine;
 
 import java.util.Collection;
@@ -18,6 +13,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.ExitCode;
+import dev.metaschema.cli.processor.ExitStatus;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

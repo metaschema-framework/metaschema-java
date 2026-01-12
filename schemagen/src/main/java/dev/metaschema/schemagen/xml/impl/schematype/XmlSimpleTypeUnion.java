@@ -5,13 +5,6 @@
 
 package dev.metaschema.schemagen.xml.impl.schematype;
 
-import dev.metaschema.core.model.IValuedDefinition;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.schemagen.SchemaGenerationException;
-import dev.metaschema.schemagen.xml.impl.IXmlGenerationState;
-import dev.metaschema.schemagen.xml.impl.XmlDatatypeManager;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +12,12 @@ import java.util.stream.Collectors;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
+import dev.metaschema.core.model.IValuedDefinition;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.schemagen.SchemaGenerationException;
+import dev.metaschema.schemagen.xml.impl.IXmlGenerationState;
+import dev.metaschema.schemagen.xml.impl.XmlDatatypeManager;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

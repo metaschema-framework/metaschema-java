@@ -8,6 +8,13 @@ package dev.metaschema.databind.model.extra;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IConstraintLoader;
 import dev.metaschema.core.model.IModule;
@@ -20,13 +27,6 @@ import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
 import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import dev.metaschema.databind.model.metaschema.binding.METASCHEMA;
-
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
 
 class MetaschemaModuleExternalConstraintsTest {
 

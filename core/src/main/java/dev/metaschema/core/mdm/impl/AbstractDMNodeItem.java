@@ -8,7 +8,6 @@ package dev.metaschema.core.mdm.impl;
 import dev.metaschema.core.mdm.IDMNodeItem;
 import dev.metaschema.core.metapath.item.node.AbstractNodeItem;
 import dev.metaschema.core.model.IResourceLocation;
-
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**

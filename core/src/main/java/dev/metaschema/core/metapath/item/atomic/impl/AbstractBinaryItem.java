@@ -5,10 +5,9 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
-import dev.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
-
 import java.nio.ByteBuffer;
 
+import dev.metaschema.core.metapath.item.atomic.AbstractAnyAtomicItem;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

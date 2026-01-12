@@ -15,7 +15,6 @@ import dev.metaschema.core.model.constraint.IMatchesConstraint;
 import dev.metaschema.core.model.constraint.IReportConstraint;
 import dev.metaschema.core.model.constraint.IUniqueConstraint;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

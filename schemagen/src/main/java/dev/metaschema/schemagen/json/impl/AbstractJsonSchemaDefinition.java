@@ -7,7 +7,6 @@ package dev.metaschema.schemagen.json.impl;
 
 import dev.metaschema.core.model.IDefinition;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

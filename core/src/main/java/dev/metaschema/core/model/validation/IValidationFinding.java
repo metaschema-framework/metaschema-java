@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.model.validation;
 
-import dev.metaschema.core.model.IResourceLocation;
-import dev.metaschema.core.model.constraint.IConstraint;
-
 import java.net.URI;
 
+import dev.metaschema.core.model.IResourceLocation;
+import dev.metaschema.core.model.constraint.IConstraint;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

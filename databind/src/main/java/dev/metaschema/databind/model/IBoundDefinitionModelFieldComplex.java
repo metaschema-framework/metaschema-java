@@ -5,13 +5,6 @@
 
 package dev.metaschema.databind.model;
 
-import dev.metaschema.core.datatype.IDataTypeAdapter;
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.model.info.IItemReadHandler;
-import dev.metaschema.databind.model.info.IItemWriteHandler;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
@@ -20,6 +13,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.datatype.IDataTypeAdapter;
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.model.info.IItemReadHandler;
+import dev.metaschema.databind.model.info.IItemWriteHandler;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

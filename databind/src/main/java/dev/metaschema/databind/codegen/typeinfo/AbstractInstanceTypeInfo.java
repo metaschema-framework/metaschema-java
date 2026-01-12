@@ -7,7 +7,6 @@ package dev.metaschema.databind.codegen.typeinfo;
 
 import dev.metaschema.core.model.IInstance;
 import dev.metaschema.databind.codegen.typeinfo.def.IDefinitionTypeInfo;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 abstract class AbstractInstanceTypeInfo<INSTANCE extends IInstance, PARENT extends IDefinitionTypeInfo>

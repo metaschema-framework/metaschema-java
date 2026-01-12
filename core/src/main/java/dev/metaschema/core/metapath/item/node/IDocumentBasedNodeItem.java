@@ -1,11 +1,10 @@
 
 package dev.metaschema.core.metapath.item.node;
 
-import dev.metaschema.core.metapath.function.InvalidTypeFunctionException;
-import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-
 import java.net.URI;
 
+import dev.metaschema.core.metapath.function.InvalidTypeFunctionException;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**

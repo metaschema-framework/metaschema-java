@@ -7,14 +7,6 @@ package dev.metaschema.core.metapath;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.metaschema.core.metapath.cst.ExpressionUtils;
-import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
-import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
-import dev.metaschema.core.metapath.item.node.IFieldNodeItem;
-import dev.metaschema.core.metapath.item.node.IFlagNodeItem;
-import dev.metaschema.core.metapath.item.node.IModelNodeItem;
-import dev.metaschema.core.metapath.item.node.INodeItem;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.junit5.JUnit5Mockery;
@@ -23,6 +15,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
+
+import dev.metaschema.core.metapath.cst.ExpressionUtils;
+import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
+import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
+import dev.metaschema.core.metapath.item.node.IFieldNodeItem;
+import dev.metaschema.core.metapath.item.node.IFlagNodeItem;
+import dev.metaschema.core.metapath.item.node.IModelNodeItem;
+import dev.metaschema.core.metapath.item.node.INodeItem;
 
 class ExpressionUtilsTest {
 

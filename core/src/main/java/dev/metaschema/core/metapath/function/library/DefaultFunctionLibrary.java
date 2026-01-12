@@ -10,7 +10,6 @@ import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.FunctionLibrary;
 import dev.metaschema.core.metapath.item.atomic.INumericItem;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**

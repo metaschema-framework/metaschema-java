@@ -6,7 +6,6 @@
 package dev.metaschema.core.model.constraint;
 
 import dev.metaschema.core.model.ISource;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

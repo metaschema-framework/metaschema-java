@@ -5,6 +5,13 @@
 
 package dev.metaschema.schemagen;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstance;
 import dev.metaschema.core.model.IChoiceInstance;
@@ -19,14 +26,6 @@ import dev.metaschema.core.model.INamedModelInstance;
 import dev.metaschema.core.model.INamedModelInstanceGrouped;
 import dev.metaschema.core.model.ModelWalker;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

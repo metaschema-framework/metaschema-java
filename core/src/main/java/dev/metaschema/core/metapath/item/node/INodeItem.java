@@ -1,6 +1,11 @@
 
 package dev.metaschema.core.metapath.item.node;
 
+import java.net.URI;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.metapath.format.IPathFormatter;
 import dev.metaschema.core.metapath.format.IPathSegment;
@@ -10,12 +15,6 @@ import dev.metaschema.core.metapath.type.IItemType;
 import dev.metaschema.core.model.IResourceLocation;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

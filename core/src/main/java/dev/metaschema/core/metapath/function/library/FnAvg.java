@@ -5,6 +5,13 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.FunctionUtils;
@@ -22,14 +29,6 @@ import dev.metaschema.core.metapath.item.atomic.INumericItem;
 import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import dev.metaschema.core.util.CustomCollectors;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

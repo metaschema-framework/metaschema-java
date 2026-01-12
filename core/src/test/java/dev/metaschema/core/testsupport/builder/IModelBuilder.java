@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.testsupport.builder;
 
-import dev.metaschema.core.model.IAssemblyDefinition;
-import dev.metaschema.core.model.INamedModelInstanceAbsolute;
-
 import java.util.List;
 
+import dev.metaschema.core.model.IAssemblyDefinition;
+import dev.metaschema.core.model.INamedModelInstanceAbsolute;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

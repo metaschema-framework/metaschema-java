@@ -7,13 +7,6 @@ package dev.metaschema.core.datatype.adapter;
 
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
-import dev.metaschema.core.datatype.AbstractDataTypeAdapter;
-import dev.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
-import dev.metaschema.core.metapath.item.atomic.IDurationItem;
-import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
-import dev.metaschema.core.metapath.type.AbstractAtomicOrUnionType;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
@@ -21,6 +14,12 @@ import java.time.Period;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dev.metaschema.core.datatype.AbstractDataTypeAdapter;
+import dev.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
+import dev.metaschema.core.metapath.item.atomic.IDurationItem;
+import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
+import dev.metaschema.core.metapath.type.AbstractAtomicOrUnionType;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

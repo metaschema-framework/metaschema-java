@@ -9,15 +9,14 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 
+import org.yaml.snakeyaml.LoaderOptions;
+
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.configuration.IMutableConfiguration;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.io.DeserializationFeature;
 import dev.metaschema.databind.io.SerializationFeature;
 import dev.metaschema.databind.io.json.JsonFactoryFactory;
-
-import org.yaml.snakeyaml.LoaderOptions;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public final class YamlFactoryFactory {

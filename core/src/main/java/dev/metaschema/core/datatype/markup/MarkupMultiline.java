@@ -8,7 +8,6 @@ package dev.metaschema.core.datatype.markup;
 import com.vladsch.flexmark.util.ast.Document;
 
 import dev.metaschema.core.datatype.markup.flexmark.FlexmarkFactory;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

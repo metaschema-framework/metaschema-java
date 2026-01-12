@@ -10,7 +10,6 @@ import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.item.atomic.IMarkupItem;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.qname.EQNameFactory;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

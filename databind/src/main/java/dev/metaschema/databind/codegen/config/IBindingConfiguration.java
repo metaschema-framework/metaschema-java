@@ -5,11 +5,10 @@
 
 package dev.metaschema.databind.codegen.config;
 
-import dev.metaschema.core.model.IModelDefinition;
-import dev.metaschema.core.model.IModule;
-
 import java.util.List;
 
+import dev.metaschema.core.model.IModelDefinition;
+import dev.metaschema.core.model.IModule;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

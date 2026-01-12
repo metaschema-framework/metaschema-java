@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.time.ZoneOffset;
+
 import dev.metaschema.core.metapath.impl.AbstractMapKey;
 import dev.metaschema.core.metapath.item.atomic.IDateItem;
 import dev.metaschema.core.metapath.item.function.ICalendarMapKey;
 import dev.metaschema.core.metapath.item.function.IMapKey;
-
-import java.time.ZoneOffset;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

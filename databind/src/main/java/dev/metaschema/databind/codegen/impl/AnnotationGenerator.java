@@ -8,6 +8,15 @@ package dev.metaschema.databind.codegen.impl;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.AnnotationSpec.Builder;
 
+import org.apache.logging.log4j.LogBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
@@ -27,11 +36,11 @@ import dev.metaschema.core.model.constraint.ICardinalityConstraint;
 import dev.metaschema.core.model.constraint.IConstraint;
 import dev.metaschema.core.model.constraint.IExpectConstraint;
 import dev.metaschema.core.model.constraint.IIndexConstraint;
-import dev.metaschema.core.model.constraint.IReportConstraint;
 import dev.metaschema.core.model.constraint.IIndexHasKeyConstraint;
 import dev.metaschema.core.model.constraint.IKeyField;
 import dev.metaschema.core.model.constraint.ILet;
 import dev.metaschema.core.model.constraint.IMatchesConstraint;
+import dev.metaschema.core.model.constraint.IReportConstraint;
 import dev.metaschema.core.model.constraint.IUniqueConstraint;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
@@ -48,16 +57,6 @@ import dev.metaschema.databind.model.annotations.Let;
 import dev.metaschema.databind.model.annotations.Matches;
 import dev.metaschema.databind.model.annotations.Report;
 import dev.metaschema.databind.model.annotations.ValueConstraints;
-
-import org.apache.logging.log4j.LogBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

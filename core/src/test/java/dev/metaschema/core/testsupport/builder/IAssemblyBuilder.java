@@ -5,15 +5,14 @@
 
 package dev.metaschema.core.testsupport.builder;
 
+import java.net.URI;
+import java.util.List;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstanceAbsolute;
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

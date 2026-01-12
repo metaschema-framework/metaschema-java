@@ -9,12 +9,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import dev.metaschema.core.model.MetaschemaModelConstants;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.schemagen.SchemaGenerationException;
-import dev.metaschema.schemagen.datatype.AbstractDatatypeManager;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -26,6 +20,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.model.MetaschemaModelConstants;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.schemagen.SchemaGenerationException;
+import dev.metaschema.schemagen.datatype.AbstractDatatypeManager;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

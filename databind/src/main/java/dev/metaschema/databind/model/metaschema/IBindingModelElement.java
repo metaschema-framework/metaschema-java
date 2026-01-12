@@ -7,7 +7,6 @@ package dev.metaschema.databind.model.metaschema;
 
 import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
 import dev.metaschema.core.model.IModelElement;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

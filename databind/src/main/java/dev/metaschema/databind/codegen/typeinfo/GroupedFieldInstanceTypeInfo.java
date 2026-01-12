@@ -7,11 +7,10 @@ package dev.metaschema.databind.codegen.typeinfo;
 
 import com.squareup.javapoet.AnnotationSpec;
 
-import dev.metaschema.core.model.IFieldInstanceGrouped;
-import dev.metaschema.databind.model.annotations.BoundGroupedField;
-
 import java.lang.annotation.Annotation;
 
+import dev.metaschema.core.model.IFieldInstanceGrouped;
+import dev.metaschema.databind.model.annotations.BoundGroupedField;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class GroupedFieldInstanceTypeInfo

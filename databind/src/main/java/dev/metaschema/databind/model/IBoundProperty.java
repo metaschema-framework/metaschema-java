@@ -8,7 +8,6 @@ package dev.metaschema.databind.model;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IJsonNamed;
 import dev.metaschema.databind.io.BindingException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

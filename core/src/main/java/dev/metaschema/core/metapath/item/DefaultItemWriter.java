@@ -5,17 +5,16 @@
 
 package dev.metaschema.core.metapath.item;
 
+import org.eclipse.jdt.annotation.Owning;
+
+import java.io.PrintWriter;
+
 import dev.metaschema.core.metapath.function.IFunction;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IAtomicValuedItem;
 import dev.metaschema.core.metapath.item.function.IArrayItem;
 import dev.metaschema.core.metapath.item.function.IMapItem;
 import dev.metaschema.core.metapath.item.node.INodeItem;
-
-import org.eclipse.jdt.annotation.Owning;
-
-import java.io.PrintWriter;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

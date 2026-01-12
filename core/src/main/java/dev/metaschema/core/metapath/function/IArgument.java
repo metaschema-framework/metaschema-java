@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath.function;
 
+import java.util.Objects;
+
 import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.metapath.StaticMetapathException;
 import dev.metaschema.core.metapath.item.IItem;
@@ -14,9 +16,6 @@ import dev.metaschema.core.metapath.type.Occurrence;
 import dev.metaschema.core.qname.EQNameFactory;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Objects;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -5,6 +5,14 @@
 
 package dev.metaschema.databind.model.metaschema.impl;
 
+import java.net.URI;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.metapath.StaticContext;
@@ -27,15 +35,6 @@ import dev.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import dev.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import dev.metaschema.databind.model.metaschema.binding.METASCHEMA;
 import dev.metaschema.databind.model.metaschema.binding.MetapathNamespace;
-
-import java.net.URI;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;

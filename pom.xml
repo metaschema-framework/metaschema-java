@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dev.metaschema</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>9</version>
+		<version>10</version>
 	</parent>
 
 	<groupId>dev.metaschema.java</groupId>
@@ -710,36 +710,35 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>aggregate-javadoc</id>
-						<phase>package</phase>
-						<inherited>false</inherited>
-						<goals>
-							<goal>aggregate</goal>
-						</goals>
-						<configuration>
-							<doctitle>${project.name} ${project.version} API</doctitle>
-							<windowtitle>${project.name} ${project.version} API</windowtitle>
-							<!-- Exclude maven-plugin from aggregate due to Maven API split packages -->
-							<skippedModules>metaschema-maven-plugin</skippedModules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 	<reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<id>aggregate-javadoc</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>aggregate-no-fork</report>
+						</reports>
+						<configuration>
+							<doctitle>${project.name} ${project.version} API</doctitle>
+							<windowtitle>${project.name} ${project.version} API</windowtitle>
+							<!-- Exclude maven-plugin from aggregate due to Maven API split packages -->
+							<skippedModules>metaschema-maven-plugin</skippedModules>
+						</configuration>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
 				<reportSets>
 					<reportSet>
-            			<id>default</id>
+						<id>default</id>
 						<configuration>
 							<linkJavadoc>false</linkJavadoc>
 						</configuration>

@@ -20,7 +20,6 @@ import dev.metaschema.core.testsupport.mocking.AbstractMockitoFactory;
 import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.core.util.StringUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

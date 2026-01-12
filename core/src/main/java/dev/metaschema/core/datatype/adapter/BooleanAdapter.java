@@ -9,17 +9,16 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+
 import dev.metaschema.core.datatype.AbstractDataTypeAdapter;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
 import dev.metaschema.core.qname.EQNameFactory;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

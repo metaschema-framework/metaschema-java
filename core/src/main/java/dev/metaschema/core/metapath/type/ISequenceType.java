@@ -9,7 +9,6 @@ import dev.metaschema.core.metapath.item.ICollectionValue;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.type.impl.SequenceTypeImpl;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

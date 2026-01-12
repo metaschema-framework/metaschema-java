@@ -7,7 +7,6 @@ package dev.metaschema.core.metapath;
 
 import dev.metaschema.core.metapath.impl.ErrorCodeImpl;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

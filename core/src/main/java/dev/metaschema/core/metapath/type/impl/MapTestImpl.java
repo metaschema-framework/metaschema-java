@@ -9,7 +9,6 @@ import dev.metaschema.core.metapath.item.function.IMapItem;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.IMapTest;
 import dev.metaschema.core.metapath.type.ISequenceType;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

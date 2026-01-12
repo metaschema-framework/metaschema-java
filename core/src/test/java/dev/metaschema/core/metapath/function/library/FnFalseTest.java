@@ -5,11 +5,11 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.atomic.IBooleanItem;
 import dev.metaschema.core.util.CollectionUtil;
-
-import org.junit.jupiter.api.Test;
 
 class FnFalseTest
     extends FunctionTestBase {

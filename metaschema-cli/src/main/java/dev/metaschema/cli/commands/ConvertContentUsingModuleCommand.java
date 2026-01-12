@@ -5,6 +5,19 @@
 
 package dev.metaschema.cli.commands;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import dev.metaschema.cli.processor.CallingContext;
 import dev.metaschema.cli.processor.command.CommandExecutionException;
 import dev.metaschema.cli.processor.command.ICommandExecutor;
@@ -20,20 +33,6 @@ import dev.metaschema.databind.io.IBoundLoader;
 import dev.metaschema.databind.io.IDeserializer;
 import dev.metaschema.databind.io.ISerializer;
 import dev.metaschema.databind.io.ModelDetector;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -21,7 +21,6 @@ import dev.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
 import dev.metaschema.databind.model.metaschema.IBindingInstance;
 import dev.metaschema.databind.model.metaschema.IBindingMetaschemaModule;
 import dev.metaschema.databind.model.metaschema.binding.AssemblyModel;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

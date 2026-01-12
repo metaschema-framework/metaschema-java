@@ -5,14 +5,6 @@
 
 package dev.metaschema.core.metapath.function;
 
-import dev.metaschema.core.metapath.item.IItem;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
-import dev.metaschema.core.metapath.item.atomic.INumericItem;
-import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
-import dev.metaschema.core.metapath.type.TypeMetapathException;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +13,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.item.IItem;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
+import dev.metaschema.core.metapath.item.atomic.INumericItem;
+import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
+import dev.metaschema.core.metapath.type.TypeMetapathException;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

@@ -8,7 +8,6 @@ package dev.metaschema.schemagen.xml.impl.schematype;
 import dev.metaschema.core.model.IDefinition;
 import dev.metaschema.schemagen.ModuleIndex.DefinitionEntry;
 import dev.metaschema.schemagen.xml.impl.IXmlGenerationState;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

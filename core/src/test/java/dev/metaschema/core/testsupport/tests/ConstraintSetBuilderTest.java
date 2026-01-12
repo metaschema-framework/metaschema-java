@@ -9,6 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.metapath.IMetapathExpression;
@@ -25,10 +29,6 @@ import dev.metaschema.core.model.constraint.IMatchesConstraint;
 import dev.metaschema.core.model.constraint.IUniqueConstraint;
 import dev.metaschema.core.testsupport.MockedModelTestSupport;
 import dev.metaschema.core.testsupport.builder.IConstraintSetBuilder;
-
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
 
 /**
  * Unit tests for {@link IConstraintSetBuilder}.

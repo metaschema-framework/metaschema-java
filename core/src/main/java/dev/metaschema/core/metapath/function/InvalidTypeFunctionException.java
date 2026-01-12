@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.metapath.function;
 
+import java.util.Locale;
+
 import dev.metaschema.core.metapath.IErrorCode;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.node.INodeItem;
-
-import java.util.Locale;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

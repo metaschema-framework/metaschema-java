@@ -5,14 +5,13 @@
 
 package dev.metaschema.core.metapath.function;
 
-import dev.metaschema.core.metapath.StaticMetapathException;
-import dev.metaschema.core.qname.IEnhancedQName;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.StaticMetapathException;
+import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

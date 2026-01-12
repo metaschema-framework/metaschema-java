@@ -4,7 +4,6 @@ package dev.metaschema.core.metapath.item.node;
 import dev.metaschema.core.metapath.item.atomic.IAnyAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IAtomicValuedItem;
 import dev.metaschema.core.model.IValuedDefinition;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

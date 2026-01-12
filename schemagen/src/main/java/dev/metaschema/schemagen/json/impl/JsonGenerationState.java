@@ -9,6 +9,14 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
+
 import dev.metaschema.core.configuration.IConfiguration;
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.model.IAssemblyDefinition;
@@ -32,15 +40,6 @@ import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.schemagen.AbstractGenerationState;
 import dev.metaschema.schemagen.IGenerationState;
 import dev.metaschema.schemagen.SchemaGenerationFeature;
-
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

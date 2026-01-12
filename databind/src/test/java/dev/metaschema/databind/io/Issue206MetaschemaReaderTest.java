@@ -10,6 +10,22 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.fasterxml.jackson.core.JsonParser;
 
+import org.codehaus.stax2.XMLEventReader2;
+import org.jmock.junit5.JUnit5Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
 import dev.metaschema.core.model.IBoundObject;
@@ -27,23 +43,6 @@ import dev.metaschema.databind.model.annotations.BoundFieldValue;
 import dev.metaschema.databind.model.annotations.BoundFlag;
 import dev.metaschema.databind.model.annotations.MetaschemaField;
 import dev.metaschema.databind.model.annotations.MetaschemaModule;
-
-import org.codehaus.stax2.XMLEventReader2;
-import org.jmock.junit5.JUnit5Mockery;
-import org.jmock.lib.concurrent.Synchroniser;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class Issue206MetaschemaReaderTest {

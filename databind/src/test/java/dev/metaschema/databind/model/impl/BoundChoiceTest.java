@@ -10,6 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IChoiceInstance;
 import dev.metaschema.core.model.IMetaschemaData;
@@ -19,10 +23,6 @@ import dev.metaschema.databind.model.annotations.BoundChoice;
 import dev.metaschema.databind.model.annotations.BoundField;
 import dev.metaschema.databind.model.annotations.MetaschemaAssembly;
 import dev.metaschema.databind.testing.model.TestModule;
-
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 /**
  * Tests for the {@link BoundChoice} annotation and

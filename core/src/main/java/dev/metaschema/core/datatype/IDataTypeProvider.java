@@ -5,10 +5,9 @@
 
 package dev.metaschema.core.datatype;
 
-import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
-
 import java.util.List;
 
+import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

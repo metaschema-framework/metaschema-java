@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.FunctionUtils;
@@ -16,9 +18,6 @@ import dev.metaschema.core.metapath.item.atomic.IDayTimeDurationItem;
 import dev.metaschema.core.metapath.item.atomic.IDurationItem;
 import dev.metaschema.core.metapath.item.atomic.IIntegerItem;
 import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -62,7 +61,7 @@ public final class FnMonthsFromDuration {
         : arg instanceof IDayTimeDurationItem
             // day-time durations do not have months granularity
             ? ISequence.of(IIntegerItem.ZERO)
-            // get the hours
+            // get the months
             : ISequence.of(fnMonthsFromDuration((IYearMonthDurationItem) arg));
   }
 

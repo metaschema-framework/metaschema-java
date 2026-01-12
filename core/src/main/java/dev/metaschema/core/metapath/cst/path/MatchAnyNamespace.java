@@ -6,7 +6,6 @@
 package dev.metaschema.core.metapath.cst.path;
 
 import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

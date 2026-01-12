@@ -5,13 +5,12 @@
 
 package dev.metaschema.databind.io;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
-import dev.metaschema.databind.model.IBoundProperty;
-
 import java.io.IOException;
 import java.util.Collection;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
+import dev.metaschema.databind.model.IBoundProperty;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

@@ -5,8 +5,6 @@
 
 package dev.metaschema.schemagen.xml.impl;
 
-import dev.metaschema.core.util.CollectionUtil;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -14,7 +12,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.RandomAccess;
 import java.util.stream.Collectors;
@@ -25,6 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

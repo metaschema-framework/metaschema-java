@@ -7,7 +7,6 @@ package dev.metaschema.core.metapath.function;
 
 import dev.metaschema.core.metapath.IErrorCode;
 import dev.metaschema.core.metapath.function.library.FnResolveUri;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

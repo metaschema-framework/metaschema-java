@@ -5,6 +5,14 @@
 
 package dev.metaschema.core.metapath.function;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathException;
 import dev.metaschema.core.metapath.StaticContext;
@@ -18,15 +26,6 @@ import dev.metaschema.core.metapath.type.ISequenceType;
 import dev.metaschema.core.metapath.type.Occurrence;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

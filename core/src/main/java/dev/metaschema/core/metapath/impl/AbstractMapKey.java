@@ -6,7 +6,6 @@
 package dev.metaschema.core.metapath.impl;
 
 import dev.metaschema.core.metapath.item.function.IMapKey;
-
 import nl.talsmasoftware.lazy4j.Lazy;
 
 public abstract class AbstractMapKey implements IMapKey {

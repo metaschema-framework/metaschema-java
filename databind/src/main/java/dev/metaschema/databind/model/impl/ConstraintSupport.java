@@ -5,14 +5,13 @@
 
 package dev.metaschema.databind.model.impl;
 
+import java.util.Arrays;
+
 import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.model.constraint.IModelConstrained;
 import dev.metaschema.core.model.constraint.IValueConstrained;
 import dev.metaschema.databind.model.annotations.AssemblyConstraints;
 import dev.metaschema.databind.model.annotations.ValueConstraints;
-
-import java.util.Arrays;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

@@ -17,10 +17,6 @@ import com.vladsch.flexmark.ext.escaped.character.EscapedCharacter;
 import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.ast.Node;
 
-import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
-import dev.metaschema.core.datatype.markup.flexmark.impl.AstCollectingVisitor;
-import dev.metaschema.core.util.CollectionUtil;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.stax2.XMLOutputFactory2;
@@ -38,6 +34,9 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
+import dev.metaschema.core.datatype.markup.flexmark.InsertAnchorExtension.InsertAnchorNode;
+import dev.metaschema.core.datatype.markup.flexmark.impl.AstCollectingVisitor;
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class MarkupStringTest {

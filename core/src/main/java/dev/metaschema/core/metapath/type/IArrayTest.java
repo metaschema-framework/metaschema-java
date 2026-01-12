@@ -8,7 +8,6 @@ package dev.metaschema.core.metapath.type;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.function.IArrayItem;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -5,6 +5,12 @@
 
 package dev.metaschema.core.model.constraint.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.model.constraint.ConstraintInitializationException;
 import dev.metaschema.core.model.constraint.IIndex;
@@ -13,13 +19,6 @@ import dev.metaschema.core.model.constraint.IIndexHasKeyConstraint;
 import dev.metaschema.core.model.constraint.IKeyField;
 import dev.metaschema.core.model.constraint.IUniqueConstraint;
 import dev.metaschema.core.util.CollectionUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

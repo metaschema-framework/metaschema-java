@@ -5,10 +5,9 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.model.impl.EmptyFlagContainer;
-
 import java.util.Map;
 
+import dev.metaschema.core.model.impl.EmptyFlagContainer;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

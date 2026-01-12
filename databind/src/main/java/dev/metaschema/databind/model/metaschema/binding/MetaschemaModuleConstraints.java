@@ -7,6 +7,13 @@
 
 package dev.metaschema.databind.model.metaschema.binding;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
+
 import dev.metaschema.core.datatype.adapter.StringAdapter;
 import dev.metaschema.core.datatype.adapter.TokenAdapter;
 import dev.metaschema.core.datatype.adapter.UriAdapter;
@@ -32,11 +39,6 @@ import dev.metaschema.databind.model.metaschema.IValueConstraintsBase;
 import dev.metaschema.databind.model.metaschema.IValueTargetedConstraintsBase;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
-import java.net.URI;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Defines constraint rules to be applied to an existing set of Metaschema

@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath;
 
+import java.math.BigDecimal;
+
 import dev.metaschema.core.metapath.function.FunctionUtils;
 import dev.metaschema.core.metapath.function.library.FnBoolean;
 import dev.metaschema.core.metapath.impl.LazyCompilationMetapathExpression;
@@ -16,9 +18,6 @@ import dev.metaschema.core.metapath.item.atomic.INumericItem;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.metapath.type.TypeMetapathException;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.math.BigDecimal;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

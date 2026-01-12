@@ -11,12 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import dev.metaschema.core.metapath.ExpressionTestBase;
-import dev.metaschema.core.metapath.IMetapathExpression;
-import dev.metaschema.core.metapath.function.regex.RegularExpressionMetapathException;
-import dev.metaschema.core.metapath.item.ISequence;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -26,6 +20,11 @@ import java.util.List;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.metapath.ExpressionTestBase;
+import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.metapath.function.regex.RegularExpressionMetapathException;
+import dev.metaschema.core.metapath.item.ISequence;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class FnTokenizeTest

@@ -5,6 +5,8 @@
 
 package dev.metaschema.core.metapath.function;
 
+import java.util.Locale;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.function.impl.OperationFunctions;
 import dev.metaschema.core.metapath.function.library.FnNot;
@@ -23,9 +25,6 @@ import dev.metaschema.core.metapath.item.atomic.ITimeItem;
 import dev.metaschema.core.metapath.item.atomic.IUntypedAtomicItem;
 import dev.metaschema.core.metapath.item.atomic.IYearMonthDurationItem;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
-
-import java.util.Locale;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

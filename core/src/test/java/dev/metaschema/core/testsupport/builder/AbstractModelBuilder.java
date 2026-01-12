@@ -5,11 +5,10 @@
 
 package dev.metaschema.core.testsupport.builder;
 
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.util.List;
 
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**

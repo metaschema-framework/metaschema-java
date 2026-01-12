@@ -12,7 +12,6 @@ import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.metapath.item.ItemUtils;
 import dev.metaschema.core.util.CustomCollectors;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

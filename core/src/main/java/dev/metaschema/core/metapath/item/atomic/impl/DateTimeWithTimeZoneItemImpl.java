@@ -5,12 +5,11 @@
 
 package dev.metaschema.core.metapath.item.atomic.impl;
 
+import java.time.ZonedDateTime;
+
 import dev.metaschema.core.datatype.adapter.DateTimeWithTZAdapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.metapath.item.atomic.IDateTimeWithTimeZoneItem;
-
-import java.time.ZonedDateTime;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

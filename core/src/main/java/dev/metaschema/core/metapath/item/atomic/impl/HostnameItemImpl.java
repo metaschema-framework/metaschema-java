@@ -8,7 +8,6 @@ package dev.metaschema.core.metapath.item.atomic.impl;
 import dev.metaschema.core.datatype.adapter.HostnameAdapter;
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.metapath.item.atomic.IHostnameItem;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

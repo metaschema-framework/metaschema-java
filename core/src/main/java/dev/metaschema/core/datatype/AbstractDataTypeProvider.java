@@ -5,11 +5,6 @@
 
 package dev.metaschema.core.datatype;
 
-import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
-import dev.metaschema.core.metapath.type.DataTypeItemType;
-import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
-import dev.metaschema.core.util.CollectionUtil;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +12,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
+import dev.metaschema.core.metapath.type.DataTypeItemType;
+import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
+import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

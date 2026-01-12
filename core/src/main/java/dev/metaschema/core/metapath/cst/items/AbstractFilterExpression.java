@@ -5,15 +5,14 @@
 
 package dev.metaschema.core.metapath.cst.items;
 
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IExpression;
 import dev.metaschema.core.metapath.cst.AbstractBinaryExpression;
 import dev.metaschema.core.metapath.cst.ExpressionUtils;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

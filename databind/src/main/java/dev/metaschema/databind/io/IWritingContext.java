@@ -5,12 +5,11 @@
 
 package dev.metaschema.databind.io;
 
+import java.io.IOException;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.databind.model.IBoundDefinitionModelComplex;
 import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;
-
-import java.io.IOException;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

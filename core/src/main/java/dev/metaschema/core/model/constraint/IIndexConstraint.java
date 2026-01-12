@@ -7,7 +7,6 @@ package dev.metaschema.core.model.constraint;
 
 import dev.metaschema.core.model.constraint.impl.DefaultIndexConstraint;
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

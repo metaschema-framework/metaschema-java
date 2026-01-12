@@ -5,16 +5,6 @@
 
 package dev.metaschema.cli.commands.metapath;
 
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.ExitCode;
-import dev.metaschema.cli.processor.ExitStatus;
-import dev.metaschema.cli.processor.command.AbstractTerminalCommand;
-import dev.metaschema.cli.processor.command.ICommandExecutor;
-import dev.metaschema.core.metapath.function.FunctionService;
-import dev.metaschema.core.metapath.function.IArgument;
-import dev.metaschema.core.metapath.function.IFunction;
-import dev.metaschema.core.qname.WellKnown;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +16,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.ExitCode;
+import dev.metaschema.cli.processor.ExitStatus;
+import dev.metaschema.cli.processor.command.AbstractTerminalCommand;
+import dev.metaschema.cli.processor.command.ICommandExecutor;
+import dev.metaschema.core.metapath.function.FunctionService;
+import dev.metaschema.core.metapath.function.IArgument;
+import dev.metaschema.core.metapath.function.IFunction;
+import dev.metaschema.core.qname.WellKnown;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -9,7 +9,6 @@ import dev.metaschema.core.MetaschemaConstants;
 import dev.metaschema.core.model.constraint.IFeatureModelConstrained;
 import dev.metaschema.core.model.util.ModuleUtils;
 import dev.metaschema.core.qname.IEnhancedQName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

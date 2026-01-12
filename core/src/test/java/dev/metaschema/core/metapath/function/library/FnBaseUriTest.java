@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.ExpressionTestBase;
@@ -17,8 +19,6 @@ import dev.metaschema.core.metapath.item.atomic.IAnyUriItem;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.testsupport.mocking.MockedDocumentGenerator;
-
-import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the XPath 3.1 <a href=

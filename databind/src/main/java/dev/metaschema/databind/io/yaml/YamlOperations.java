@@ -5,8 +5,6 @@
 
 package dev.metaschema.databind.io.yaml;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.yaml.snakeyaml.DumperOptions;
@@ -22,6 +20,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

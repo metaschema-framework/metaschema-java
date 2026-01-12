@@ -10,7 +10,6 @@ import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IFieldInstanceAbsolute;
 import dev.metaschema.core.model.IModule;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

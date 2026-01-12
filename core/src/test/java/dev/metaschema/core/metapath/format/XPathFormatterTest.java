@@ -10,6 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.metapath.item.node.IAssemblyInstanceGroupedNodeItem;
 import dev.metaschema.core.metapath.item.node.IAssemblyNodeItem;
@@ -24,13 +31,6 @@ import dev.metaschema.core.model.XmlGroupAsBehavior;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 import dev.metaschema.core.util.CollectionUtil;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
 
 /**
  * Unit tests for {@link XPathFormatter}.

@@ -5,10 +5,9 @@
 
 package dev.metaschema.core.datatype.object;
 
-import dev.metaschema.core.datatype.AbstractCustomJavaDataType;
-
 import java.time.temporal.Temporal;
 
+import dev.metaschema.core.datatype.AbstractCustomJavaDataType;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

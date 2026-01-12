@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.model.constraint;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Supplier;
+
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IDefinition;
@@ -12,11 +16,6 @@ import dev.metaschema.core.model.IFieldDefinition;
 import dev.metaschema.core.model.IFlagDefinition;
 import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.function.Supplier;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

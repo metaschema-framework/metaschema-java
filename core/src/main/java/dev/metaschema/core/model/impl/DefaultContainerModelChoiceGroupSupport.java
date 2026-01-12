@@ -5,16 +5,15 @@
 
 package dev.metaschema.core.model.impl;
 
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import dev.metaschema.core.model.AbstractContainerModelSupport;
 import dev.metaschema.core.model.IAssemblyInstance;
 import dev.metaschema.core.model.IFieldInstance;
 import dev.metaschema.core.model.INamedModelInstance;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

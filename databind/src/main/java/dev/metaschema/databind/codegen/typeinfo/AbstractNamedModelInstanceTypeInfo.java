@@ -12,6 +12,13 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Set;
+
+import javax.lang.model.element.Modifier;
+
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.core.model.IGroupable;
@@ -24,14 +31,6 @@ import dev.metaschema.databind.codegen.ClassUtils;
 import dev.metaschema.databind.codegen.typeinfo.def.IAssemblyDefinitionTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.def.IModelDefinitionTypeInfo;
 import dev.metaschema.databind.model.annotations.BoundChoice;
-
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Set;
-
-import javax.lang.model.element.Modifier;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

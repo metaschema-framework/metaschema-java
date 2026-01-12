@@ -8,7 +8,6 @@ package dev.metaschema.core.mdm.impl;
 import dev.metaschema.core.mdm.IDMAssemblyNodeItem;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

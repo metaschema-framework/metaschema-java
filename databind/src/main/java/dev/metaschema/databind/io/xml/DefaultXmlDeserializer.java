@@ -7,16 +7,6 @@ package dev.metaschema.databind.io.xml;
 
 import com.ctc.wstx.stax.WstxInputFactory;
 
-import dev.metaschema.core.configuration.IMutableConfiguration;
-import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
-import dev.metaschema.core.metapath.item.node.INodeItemFactory;
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.util.AutoCloser;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.AbstractDeserializer;
-import dev.metaschema.databind.io.DeserializationFeature;
-import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-
 import org.codehaus.stax2.XMLEventReader2;
 import org.codehaus.stax2.XMLInputFactory2;
 
@@ -30,6 +20,15 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLResolver;
 import javax.xml.stream.XMLStreamException;
 
+import dev.metaschema.core.configuration.IMutableConfiguration;
+import dev.metaschema.core.metapath.item.node.IDocumentNodeItem;
+import dev.metaschema.core.metapath.item.node.INodeItemFactory;
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.util.AutoCloser;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.AbstractDeserializer;
+import dev.metaschema.databind.io.DeserializationFeature;
+import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;

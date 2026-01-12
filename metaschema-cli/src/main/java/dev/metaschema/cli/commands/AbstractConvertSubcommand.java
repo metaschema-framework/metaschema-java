@@ -5,19 +5,6 @@
 
 package dev.metaschema.cli.commands;
 
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.ExitCode;
-import dev.metaschema.cli.processor.command.AbstractCommandExecutor;
-import dev.metaschema.cli.processor.command.AbstractTerminalCommand;
-import dev.metaschema.cli.processor.command.CommandExecutionException;
-import dev.metaschema.cli.processor.command.ExtraArgument;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.util.AutoCloser;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.io.IBoundLoader;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.logging.log4j.LogManager;
@@ -36,6 +23,18 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.List;
 
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.ExitCode;
+import dev.metaschema.cli.processor.command.AbstractCommandExecutor;
+import dev.metaschema.cli.processor.command.AbstractTerminalCommand;
+import dev.metaschema.cli.processor.command.CommandExecutionException;
+import dev.metaschema.cli.processor.command.ExtraArgument;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.util.AutoCloser;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.IBoundLoader;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -5,8 +5,6 @@
 
 package dev.metaschema.core.qname;
 
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.net.URI;
 import java.util.Comparator;
 import java.util.Map;
@@ -15,6 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import nl.talsmasoftware.lazy4j.Lazy;

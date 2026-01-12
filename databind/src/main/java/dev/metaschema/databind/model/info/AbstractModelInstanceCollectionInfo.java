@@ -6,7 +6,6 @@
 package dev.metaschema.databind.model.info;
 
 import dev.metaschema.databind.model.IBoundInstanceModel;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

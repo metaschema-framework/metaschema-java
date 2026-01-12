@@ -6,16 +6,10 @@
 package dev.metaschema.databind.io;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.core.model.MetaschemaException;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
@@ -26,6 +20,12 @@ import java.io.StringReader;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.codegen.AbstractMetaschemaTest;
 
 /**
  * Tests for validation error message improvements.

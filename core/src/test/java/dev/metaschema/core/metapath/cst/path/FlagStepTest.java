@@ -7,6 +7,10 @@ package dev.metaschema.core.metapath.cst.path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.ExpressionTestBase;
 import dev.metaschema.core.metapath.item.ISequence;
@@ -15,11 +19,6 @@ import dev.metaschema.core.metapath.item.node.IModelNodeItem;
 import dev.metaschema.core.metapath.item.node.NodeItemKind;
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.core.qname.IEnhancedQName;
-
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.junit.jupiter.api.Test;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class FlagStepTest

@@ -5,10 +5,9 @@
 
 package dev.metaschema.core.model;
 
-import dev.metaschema.core.qname.IEnhancedQName;
-
 import java.util.Locale;
 
+import dev.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -7,10 +7,10 @@ package dev.metaschema.core.metapath.function.library;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import org.junit.jupiter.api.Test;
+
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.util.ObjectUtils;
-
-import org.junit.jupiter.api.Test;
 
 class FnCurrentTimeTest {
   @Test

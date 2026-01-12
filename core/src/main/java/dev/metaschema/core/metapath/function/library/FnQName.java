@@ -5,6 +5,10 @@
 
 package dev.metaschema.core.metapath.function.library;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.MetapathConstants;
 import dev.metaschema.core.metapath.function.CastFunctionException;
@@ -17,11 +21,6 @@ import dev.metaschema.core.metapath.item.atomic.IQNameItem;
 import dev.metaschema.core.metapath.item.atomic.IStringItem;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

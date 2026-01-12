@@ -5,13 +5,12 @@
 
 package dev.metaschema.core.model.util;
 
+import java.util.List;
+
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.model.IGroupable;
 import dev.metaschema.core.model.IModelDefinition;
 import dev.metaschema.core.model.IModelInstance;
-
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

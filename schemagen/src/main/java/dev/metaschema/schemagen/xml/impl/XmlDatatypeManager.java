@@ -5,9 +5,6 @@
 
 package dev.metaschema.schemagen.xml.impl;
 
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.schemagen.datatype.AbstractDatatypeManager;
-
 import org.codehaus.stax2.XMLStreamWriter2;
 
 import java.util.LinkedHashSet;
@@ -17,6 +14,8 @@ import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.schemagen.datatype.AbstractDatatypeManager;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import nl.talsmasoftware.lazy4j.Lazy;
 

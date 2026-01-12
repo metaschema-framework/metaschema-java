@@ -6,7 +6,6 @@
 package dev.metaschema.core.metapath.item.atomic;
 
 import dev.metaschema.core.util.ObjectUtils;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

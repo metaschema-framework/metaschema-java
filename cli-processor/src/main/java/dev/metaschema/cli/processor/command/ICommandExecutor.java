@@ -5,10 +5,9 @@
 
 package dev.metaschema.cli.processor.command;
 
-import dev.metaschema.cli.processor.CallingContext;
-
 import org.apache.commons.cli.CommandLine;
 
+import dev.metaschema.cli.processor.CallingContext;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

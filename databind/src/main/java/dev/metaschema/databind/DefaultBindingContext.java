@@ -5,6 +5,18 @@
 
 package dev.metaschema.databind;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.xml.namespace.QName;
+
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.MetaschemaException;
 import dev.metaschema.core.util.ObjectUtils;
@@ -27,19 +39,6 @@ import dev.metaschema.databind.model.metaschema.IBindingModuleLoader;
 import dev.metaschema.databind.model.metaschema.ModuleLoadingPostProcessor;
 import dev.metaschema.databind.model.metaschema.binding.METASCHEMA;
 import dev.metaschema.databind.model.metaschema.binding.MetaschemaModelModule;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.xml.namespace.QName;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.talsmasoftware.lazy4j.Lazy;

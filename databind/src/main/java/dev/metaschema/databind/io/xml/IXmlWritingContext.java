@@ -5,14 +5,13 @@
 
 package dev.metaschema.databind.io.xml;
 
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.databind.io.IWritingContext;
-import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-
 import org.codehaus.stax2.XMLStreamWriter2;
 
 import java.io.IOException;
 
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.databind.io.IWritingContext;
+import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

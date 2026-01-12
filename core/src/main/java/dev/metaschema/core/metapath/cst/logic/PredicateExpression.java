@@ -5,6 +5,14 @@
 
 package dev.metaschema.core.metapath.cst.logic;
 
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.FocusContext;
 import dev.metaschema.core.metapath.IExpression;
@@ -16,15 +24,6 @@ import dev.metaschema.core.metapath.function.library.FnBoolean;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.math.BigInteger;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

@@ -7,9 +7,6 @@ package dev.metaschema.core.datatype.markup.flexmark.impl;
 
 import com.vladsch.flexmark.parser.ListOptions;
 
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-
 import org.codehaus.stax2.evt.XMLEventFactory2;
 
 import java.util.List;
@@ -24,6 +21,8 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

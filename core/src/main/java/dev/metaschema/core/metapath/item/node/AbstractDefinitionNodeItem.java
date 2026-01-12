@@ -3,7 +3,6 @@ package dev.metaschema.core.metapath.item.node;
 
 import dev.metaschema.core.model.IDefinition;
 import dev.metaschema.core.model.INamedInstance;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

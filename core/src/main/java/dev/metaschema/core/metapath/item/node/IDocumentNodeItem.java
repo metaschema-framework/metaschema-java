@@ -1,14 +1,13 @@
 
 package dev.metaschema.core.metapath.item.node;
 
+import java.net.URI;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.format.IPathFormatter;
 import dev.metaschema.core.metapath.item.ICollectionValue;
 import dev.metaschema.core.metapath.type.IItemType;
 import dev.metaschema.core.metapath.type.IKindTest;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

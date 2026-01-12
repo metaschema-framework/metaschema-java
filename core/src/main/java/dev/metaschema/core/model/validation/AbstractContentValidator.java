@@ -5,14 +5,14 @@
 
 package dev.metaschema.core.model.validation;
 
-import dev.metaschema.core.model.AbstractResourceResolver;
-import dev.metaschema.core.util.ObjectUtils;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+
+import dev.metaschema.core.model.AbstractResourceResolver;
+import dev.metaschema.core.util.ObjectUtils;
 
 /**
  * Base class for a content validator.

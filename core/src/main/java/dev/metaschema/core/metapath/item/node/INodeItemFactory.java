@@ -1,6 +1,8 @@
 
 package dev.metaschema.core.metapath.item.node;
 
+import java.net.URI;
+
 import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstance;
@@ -10,9 +12,6 @@ import dev.metaschema.core.model.IFieldInstance;
 import dev.metaschema.core.model.IFlagDefinition;
 import dev.metaschema.core.model.IFlagInstance;
 import dev.metaschema.core.model.IModule;
-
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 

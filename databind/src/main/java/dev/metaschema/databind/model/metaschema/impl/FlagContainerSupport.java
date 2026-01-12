@@ -5,6 +5,9 @@
 
 package dev.metaschema.databind.model.metaschema.impl;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import dev.metaschema.core.model.IContainerFlagSupport;
 import dev.metaschema.core.model.IFlagContainerBuilder;
 import dev.metaschema.core.model.IFlagDefinition;
@@ -18,10 +21,6 @@ import dev.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import dev.metaschema.databind.model.metaschema.IBindingDefinitionModel;
 import dev.metaschema.databind.model.metaschema.binding.FlagReference;
 import dev.metaschema.databind.model.metaschema.binding.InlineDefineFlag;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

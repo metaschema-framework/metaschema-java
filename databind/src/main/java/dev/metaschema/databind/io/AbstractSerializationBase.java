@@ -5,14 +5,13 @@
 
 package dev.metaschema.databind.io;
 
+import java.util.Map;
+
 import dev.metaschema.core.configuration.DefaultConfiguration;
 import dev.metaschema.core.configuration.IConfigurationFeature;
 import dev.metaschema.core.configuration.IMutableConfiguration;
 import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
-
-import java.util.Map;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

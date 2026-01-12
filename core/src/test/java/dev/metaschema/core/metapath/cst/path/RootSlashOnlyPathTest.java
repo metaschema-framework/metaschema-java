@@ -9,6 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.ExpressionTestBase;
 import dev.metaschema.core.metapath.InvalidTreatTypeDynamicMetapathException;
@@ -18,10 +22,6 @@ import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.mocking.MockNodeItemFactory;
 import dev.metaschema.core.util.CollectionUtil;
-
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
 
 class RootSlashOnlyPathTest
     extends ExpressionTestBase {

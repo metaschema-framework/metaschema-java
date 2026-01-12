@@ -6,7 +6,6 @@
 package dev.metaschema.schemagen.json.impl;
 
 import dev.metaschema.core.model.INamedModelInstanceGrouped;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

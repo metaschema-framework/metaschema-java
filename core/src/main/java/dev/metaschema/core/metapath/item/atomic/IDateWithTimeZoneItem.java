@@ -5,16 +5,15 @@
 
 package dev.metaschema.core.metapath.item.atomic;
 
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+
 import dev.metaschema.core.datatype.adapter.MetaschemaDataTypeProvider;
 import dev.metaschema.core.metapath.function.InvalidValueForCastFunctionException;
 import dev.metaschema.core.metapath.item.atomic.impl.DateWithTimeZoneItemImpl;
 import dev.metaschema.core.metapath.type.IAtomicOrUnionType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.util.ObjectUtils;
-
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
