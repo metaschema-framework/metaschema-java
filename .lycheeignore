@@ -7,3 +7,72 @@ https://claude.ai/code
 # SLF4J website occasionally has connectivity issues in CI
 http://www.slf4j.org/
 https://www.slf4j.org/
+
+# =============================================================================
+# External dependency URLs from Maven-generated site documentation
+# These links come from third-party POMs and are not maintained by this project
+# =============================================================================
+
+# PMD documentation (restructured)
+https://pmd.github.io/latest/pmd_userdocs_cpd.html
+
+# ANTLR project pages
+https://www.antlr.org/antlr4-runtime/
+https://www.antlr.org/antlr4-maven-plugin/
+
+# GitHub project submodule URLs (don't resolve as standalone pages)
+https://github.com/vsch/flexmark-java/flexmark.*
+https://github.com/jline/jline3/.*
+https://github.com/FasterXML/jackson-.*
+https://github.com/google/guava/.*
+https://github.com/google/guice/.*
+
+# Error Prone annotations
+https://errorprone.info/error_prone_annotations
+
+# ByteBuddy project pages
+https://bytebuddy.net/byte-buddy.*
+
+# Logback project pages
+http://logback.qos.ch/.*
+
+# Objenesis project page
+http://objenesis.org/.*
+
+# Apache Velocity tools
+https://velocity.apache.org/tools/devel/.*
+
+# Apache Log4j submodule pages
+https://logging.apache.org/log4j/2.x/log4j/.*
+
+# Checkstyle documentation (restructured)
+https://checkstyle.org/checks/indentation/.*
+
+# Chronicle Software
+https://chronicle.software/.*
+
+# Thymeleaf library pages
+http://www.thymeleaf.org/thymeleaf-lib/.*
+
+# Sonatype/Nexus (timeouts and missing pages)
+http://nexus.sonatype.org/.*
+http://forge.sonatype.com/.*
+http://spice.sonatype.org/.*
+
+# Jackson Wiki (network errors)
+https://wiki.fasterxml.com/.*
+
+# Codehaus Plexus pages
+https://codehaus-plexus.github.io/plexus-pom/.*
+
+# Mojohaus plugin pages
+http://www.mojohaus.org/.*
+
+# Codehaus Animal Sniffer
+http://mojo.codehaus.org/animal-sniffer/.*
+
+# GlassFish/Java.net (timeouts)
+https://glassfish.dev.java.net/.*
+
+# Seam Framework CDI
+http://www.seamframework.org/.*
