@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>dev.metaschema.java</groupId>
 		<artifactId>metaschema-framework</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>3.0.0.M2</version>
 	</parent>
 
 	<artifactId>cli-processor</artifactId>
@@ -20,7 +20,7 @@
 
 	<scm>
 		<url>${scm.url}/tree/develop/cli-processor</url>
-	  <tag>HEAD</tag>
+	  <tag>v3.0.0.M2</tag>
   </scm>
 
 	<properties>
