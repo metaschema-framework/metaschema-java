@@ -61,7 +61,7 @@ public final class FnMonthsFromDuration {
         : arg instanceof IDayTimeDurationItem
             // day-time durations do not have months granularity
             ? ISequence.of(IIntegerItem.ZERO)
-            // get the hours
+            // get the months
             : ISequence.of(fnMonthsFromDuration((IYearMonthDurationItem) arg));
   }
 

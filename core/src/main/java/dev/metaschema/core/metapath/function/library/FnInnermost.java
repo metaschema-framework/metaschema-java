@@ -22,7 +22,7 @@ import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
- * /** Implements <a href=
+ * Implements <a href=
  * "https://www.w3.org/TR/xpath-functions-31/#func-innermost">fn:innermost</a>
  * functions.
  */
