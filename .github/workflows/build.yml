@@ -5,6 +5,8 @@ on:
     - release/**
     - develop
     - feature/**
+    tags:
+    - 'v*'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -43,6 +45,10 @@ on:
     inputs:
       ref:
         description: 'Git ref to checkout (branch, tag, or SHA)'
+        required: false
+        type: string
+      custom_tag:
+        description: 'Custom tag for container image (e.g., v3.0.0)'
         required: false
         type: string
       skip_code_scans:
@@ -325,6 +331,8 @@ jobs:
     uses: ./.github/workflows/container.yml
     with:
       push: true
+      ref: ${{ inputs.ref }}
+      custom_tag: ${{ inputs.custom_tag }}
   build-website:
     name: Website
     runs-on: ubuntu-24.04
