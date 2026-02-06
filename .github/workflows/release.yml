@@ -51,6 +51,22 @@ jobs:
         MAVEN_USERNAME: ${{ secrets.OSSRH_USER }}
         MAVEN_CENTRAL_TOKEN: ${{ secrets.OSSRH_TOKEN }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+    - name: Upload build zip archive
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: build_zip
+        path: ./metaschema-cli/target/*metaschema-cli.zip
+  build-container:
+    name: Container
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    needs: deploy-to-nexus
+    uses: ./.github/workflows/container.yml
+    with:
+      push: true
   deploy-website:
     name: Website Deployment
     runs-on: ubuntu-24.04

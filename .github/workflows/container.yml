@@ -7,6 +7,14 @@ on:
         required: false
         default: false
         type: boolean
+      ref:
+        description: 'Git ref to checkout (branch, tag, or SHA)'
+        required: false
+        type: string
+      custom_tag:
+        description: 'Custom tag for the container image (for manual builds)'
+        required: false
+        type: string
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: metaschema-framework/metaschema-cli
@@ -26,6 +34,7 @@ jobs:
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       with:
+        ref: ${{ inputs.ref || github.ref }}
         submodules: recursive
         filter: tree:0
     - name: Download build zip
@@ -59,6 +68,7 @@ jobs:
           type=ref,event=branch
           type=ref,event=tag
           type=ref,event=pr
+          type=raw,value=${{ inputs.custom_tag }},enable=${{ inputs.custom_tag != '' }}
         flavor: |
           latest=${{ github.ref == 'refs/heads/main' }}
         annotations: |
