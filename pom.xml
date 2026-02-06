@@ -74,7 +74,7 @@
 		<plugin.appassembler.version>2.1.0</plugin.appassembler.version>
 		<plugin.git-commit-id.version>9.0.2</plugin.git-commit-id.version>
 		
-		<plugin.templating.version>3.0.0</plugin.templating.version>
+		<plugin.templating.version>3.1.0</plugin.templating.version>
 
 		<argLine>-Xmx1024m</argLine>
 	</properties>
