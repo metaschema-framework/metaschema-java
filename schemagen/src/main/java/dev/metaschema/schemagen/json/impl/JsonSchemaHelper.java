@@ -436,7 +436,7 @@ public final class JsonSchemaHelper {
 
     @Override
     public void generate(ObjectNode node, IJsonGenerationState state) {
-      field.getFieldValue().generateJsonSchemaOrDefinitionRef(ObjectUtils.notNull(node.putObject(getName())), state);
+      field.getFieldValue().generateJsonSchemaOrDefinitionRef(node, state);
     }
 
     @Override
