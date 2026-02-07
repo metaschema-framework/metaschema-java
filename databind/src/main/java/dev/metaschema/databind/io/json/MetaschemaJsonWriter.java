@@ -6,12 +6,18 @@
 package dev.metaschema.databind.io.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.eclipse.jdt.annotation.NotOwning;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import dev.metaschema.core.model.IAnyContent;
+import dev.metaschema.core.model.IAnyInstance;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.JsonGroupAsBehavior;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
@@ -21,6 +27,7 @@ import dev.metaschema.databind.model.IBoundFieldValue;
 import dev.metaschema.databind.model.IBoundInstance;
 import dev.metaschema.databind.model.IBoundInstanceFlag;
 import dev.metaschema.databind.model.IBoundInstanceModel;
+import dev.metaschema.databind.model.IBoundInstanceModelAny;
 import dev.metaschema.databind.model.IBoundInstanceModelAssembly;
 import dev.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import dev.metaschema.databind.model.IBoundInstanceModelFieldComplex;
@@ -268,6 +275,48 @@ public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHand
         writeInstance(property, parent);
       } else { // IBoundFieldValue
         writeFieldValue((IBoundFieldValue) property, parent);
+      }
+    }
+
+    // Write any captured unmodeled content
+    writeAnyContent(parent, handler);
+  }
+
+  /**
+   * Write any captured unmodeled content from the parent object's
+   * {@code @BoundAny} field. If the definition has an any instance and the parent
+   * object has captured {@link JsonAnyContent}, each property is written as a
+   * top-level field in the current JSON object.
+   *
+   * @param parent
+   *          the parent bound object
+   * @param handler
+   *          the complex item value handler providing the definition
+   * @throws IOException
+   *           if an error occurred while writing
+   */
+  private void writeAnyContent(
+      @NonNull IBoundObject parent,
+      @NonNull IFeatureComplexItemValueHandler handler) throws IOException {
+    IBoundDefinitionModelComplex definition = handler.getDefinition();
+    if (definition instanceof IBoundDefinitionModelAssembly) {
+      IAnyInstance anyInstance
+          = ((IBoundDefinitionModelAssembly) definition).getModelContainer().getAnyInstance();
+      if (anyInstance instanceof IBoundInstanceModelAny) {
+        IBoundInstanceModelAny boundAny = (IBoundInstanceModelAny) anyInstance;
+        IAnyContent anyContent = boundAny.getAnyContent(parent);
+        if (anyContent instanceof JsonAnyContent) {
+          JsonAnyContent jsonAny = (JsonAnyContent) anyContent;
+          if (!jsonAny.isEmpty()) {
+            ObjectNode props = jsonAny.getProperties();
+            Iterator<Map.Entry<String, JsonNode>> fields = props.fields();
+            while (fields.hasNext()) {
+              Map.Entry<String, JsonNode> entry = fields.next();
+              generator.writeFieldName(entry.getKey());
+              generator.writeTree(entry.getValue());
+            }
+          }
+        }
       }
     }
   }

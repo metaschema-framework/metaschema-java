@@ -20,6 +20,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 @MetaschemaModule(
     assemblies = {
+        AnyAssembly.class,
+        AnyWithJsonKeyAssembly.class,
         EmptyBoundAssembly.class,
         FlaggedBoundAssembly.class,
         OnlyModelBoundAssembly.class,

@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 import dev.metaschema.core.datatype.IDataTypeAdapter;
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
+import dev.metaschema.core.model.IAnyInstance;
 import dev.metaschema.core.model.IChoiceInstance;
 import dev.metaschema.core.model.IContainerModelAbsolute;
 import dev.metaschema.core.model.IFlagInstance;
@@ -276,22 +277,23 @@ public final class JsonSchemaHelper {
   /**
    * Builds a list of model property schemas for the given container definition.
    * <p>
-   * Choice instances are excluded from the returned list as they are handled
-   * separately.
+   * Choice instances and any instances are excluded from the returned list as
+   * they are handled separately.
    *
    * @param definition
    *          the container model definition containing the model instances
    * @param state
    *          the JSON generation state
-   * @return a list of model property schemas, excluding choice instances
+   * @return a list of model property schemas, excluding choice and any instances
    */
   @NonNull
   public static List<IJsonSchemaPropertyNamed> buildModelProperties(
       @NonNull IContainerModelAbsolute definition,
       @NonNull IJsonGenerationState state) {
     return ObjectUtils.notNull(definition.getModelInstances().stream()
-        // filter out choice instances, which will be handled separately
+        // filter out choice and any instances, which will be handled separately
         .filter(instance -> !(instance instanceof IChoiceInstance))
+        .filter(instance -> !(instance instanceof IAnyInstance))
         .map(instance -> state.getJsonSchemaPropertyModel(ObjectUtils.notNull(instance)))
         .collect(Collectors.toUnmodifiableList()));
   }
@@ -393,6 +395,9 @@ public final class JsonSchemaHelper {
       @NonNull IJsonGenerationState state) {
     node.put("type", "object");
 
+    // when an any instance is present, additional properties are allowed
+    boolean hasAny = assembly.getDefinition().getAnyInstance() != null;
+
     List<JsonSchemaHelper.Choice> availableChoices = assembly.getChoices();
 
     if (availableChoices.size() == 1) {
@@ -400,7 +405,7 @@ public final class JsonSchemaHelper {
           availableChoices.iterator().next().getCombinations(),
           node,
           state);
-      node.put("additionalProperties", false);
+      node.put("additionalProperties", hasAny);
     } else if (availableChoices.size() > 1) {
       ArrayNode oneOf = node.putArray("anyOf");
       availableChoices.forEach(choice -> {
@@ -410,7 +415,7 @@ public final class JsonSchemaHelper {
             choice.getCombinations(),
             schemaNode,
             state);
-        schemaNode.put("additionalProperties", false);
+        schemaNode.put("additionalProperties", hasAny);
       });
     }
   }

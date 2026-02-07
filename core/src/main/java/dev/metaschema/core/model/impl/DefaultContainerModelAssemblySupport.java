@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.model.IAnyInstance;
 import dev.metaschema.core.model.IAssemblyInstance;
 import dev.metaschema.core.model.IChoiceGroupInstance;
 import dev.metaschema.core.model.IChoiceInstance;
@@ -19,6 +20,7 @@ import dev.metaschema.core.model.IModelInstance;
 import dev.metaschema.core.model.INamedModelInstance;
 import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Supports model instance operations on assembly model instances.
@@ -60,12 +62,15 @@ public class DefaultContainerModelAssemblySupport<
       CollectionUtil.emptyMap(),
       CollectionUtil.emptyMap(),
       CollectionUtil.emptyList(),
-      CollectionUtil.emptyMap());
+      CollectionUtil.emptyMap(),
+      null);
 
   @NonNull
   private final List<CI> choiceInstances;
   @NonNull
   private final Map<String, CGI> choiceGroupInstances;
+  @Nullable
+  private final IAnyInstance anyInstance;
 
   /**
    * Construct an empty, mutable container.
@@ -77,11 +82,12 @@ public class DefaultContainerModelAssemblySupport<
         new LinkedHashMap<>(),
         new LinkedHashMap<>(),
         new LinkedList<>(),
-        new LinkedHashMap<>());
+        new LinkedHashMap<>(),
+        null);
   }
 
   /**
-   * Construct an new container using the provided collections.
+   * Construct a new container using the provided collections.
    *
    * @param instances
    *          a collection of model instances
@@ -95,6 +101,9 @@ public class DefaultContainerModelAssemblySupport<
    *          a collection of choice instances
    * @param choiceGroupInstances
    *          a collection of choice group instances
+   * @param anyInstance
+   *          the {@code any} instance, or {@code null} if no {@code any} instance
+   *          is defined
    */
   public DefaultContainerModelAssemblySupport(
       @NonNull List<MI> instances,
@@ -102,10 +111,12 @@ public class DefaultContainerModelAssemblySupport<
       @NonNull Map<Integer, FI> fieldInstances,
       @NonNull Map<Integer, AI> assemblyInstances,
       @NonNull List<CI> choiceInstances,
-      @NonNull Map<String, CGI> choiceGroupInstances) {
+      @NonNull Map<String, CGI> choiceGroupInstances,
+      @Nullable IAnyInstance anyInstance) {
     super(instances, namedModelInstances, fieldInstances, assemblyInstances);
     this.choiceInstances = choiceInstances;
     this.choiceGroupInstances = choiceGroupInstances;
+    this.anyInstance = anyInstance;
   }
 
   @Override
@@ -116,5 +127,10 @@ public class DefaultContainerModelAssemblySupport<
   @Override
   public Map<String, CGI> getChoiceGroupInstanceMap() {
     return choiceGroupInstances;
+  }
+
+  @Override
+  public IAnyInstance getAnyInstance() {
+    return anyInstance;
   }
 }

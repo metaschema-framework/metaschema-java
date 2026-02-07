@@ -22,16 +22,19 @@ import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;
 import dev.metaschema.databind.model.IBoundInstanceModel;
+import dev.metaschema.databind.model.IBoundInstanceModelAny;
 import dev.metaschema.databind.model.IBoundInstanceModelAssembly;
 import dev.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import dev.metaschema.databind.model.IBoundInstanceModelField;
 import dev.metaschema.databind.model.IBoundInstanceModelNamed;
+import dev.metaschema.databind.model.annotations.BoundAny;
 import dev.metaschema.databind.model.annotations.BoundAssembly;
 import dev.metaschema.databind.model.annotations.BoundChoice;
 import dev.metaschema.databind.model.annotations.BoundChoiceGroup;
 import dev.metaschema.databind.model.annotations.BoundField;
 import dev.metaschema.databind.model.annotations.Ignore;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Generates assembly model containers for annotation-based bindings.
@@ -139,6 +142,13 @@ final class AssemblyModelGenerator {
     for (BoundInstanceModelChoice choice : choiceInstances.values()) {
       assert choice != null;
       builder.appendChoiceOnly(choice);
+    }
+
+    // Scan for @BoundAny field (handled separately from model instances)
+    IBoundInstanceModelAny anyInstance
+        = findBoundAnyInstance(containingDefinition, containingDefinition.getBoundClass());
+    if (anyInstance != null) {
+      builder.setAnyInstance(anyInstance);
     }
 
     return builder.buildAssembly();
@@ -278,6 +288,48 @@ final class AssemblyModelGenerator {
           return retval;
         })
         .filter(Objects::nonNull)));
+  }
+
+  /**
+   * Scans the bound class hierarchy for a field annotated with
+   * {@link BoundAny @BoundAny}.
+   *
+   * @param containingDefinition
+   *          the assembly definition containing the bound class
+   * @param clazz
+   *          the class to scan (including its superclass hierarchy)
+   * @return the bound {@code any} instance, or {@code null} if no
+   *         {@code @BoundAny} field is found
+   * @throws IllegalStateException
+   *           if more than one {@code @BoundAny} field is found in the class
+   *           hierarchy
+   */
+  @Nullable
+  private static IBoundInstanceModelAny findBoundAnyInstance(
+      @NonNull IBoundDefinitionModelAssembly containingDefinition,
+      @NonNull Class<?> clazz) {
+    IBoundInstanceModelAny result = null;
+
+    // Walk the class hierarchy (superclass first)
+    Class<?> superClass = clazz.getSuperclass();
+    if (superClass != null) {
+      result = findBoundAnyInstance(containingDefinition, superClass);
+    }
+
+    // Scan declared fields for @BoundAny
+    for (Field field : clazz.getDeclaredFields()) {
+      if (field.isAnnotationPresent(BoundAny.class)) {
+        if (result != null) {
+          throw new IllegalStateException(String.format(
+              "Multiple @BoundAny fields found in class hierarchy of '%s'."
+                  + " Only one @BoundAny field is allowed per assembly.",
+              containingDefinition.getBoundClass().getName()));
+        }
+        result = IBoundInstanceModelAny.newInstance(field, containingDefinition);
+      }
+    }
+
+    return result;
   }
 
   private AssemblyModelGenerator() {

@@ -11,6 +11,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
 import dev.metaschema.core.datatype.markup.MarkupDataTypeProvider;
+import dev.metaschema.core.model.IAnyInstance;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IChoiceGroupInstance;
 import dev.metaschema.core.model.IChoiceInstance;
@@ -58,13 +59,24 @@ public class XmlComplexTypeAssemblyDefinition
     IAssemblyDefinition definition = getDefinition();
 
     Collection<? extends IModelInstanceAbsolute> modelInstances = definition.getModelInstances();
-    if (!modelInstances.isEmpty()) {
+    IAnyInstance anyInstance = definition.getAnyInstance();
+
+    boolean hasModelContent = !modelInstances.isEmpty();
+    boolean hasAny = anyInstance != null;
+
+    if (hasModelContent || hasAny) {
       state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "sequence", XmlDatatypeManager.NS_XML_SCHEMA);
+
       for (IModelInstanceAbsolute modelInstance : modelInstances) {
         assert modelInstance != null;
         generateModelInstance(modelInstance, state);
       }
-      state.writeEndElement();
+
+      if (hasAny) {
+        generateAnyInstance(state);
+      }
+
+      state.writeEndElement(); // xs:sequence
     }
 
     Collection<? extends IFlagInstance> flagInstances = definition.getFlagInstances();
@@ -74,6 +86,28 @@ public class XmlComplexTypeAssemblyDefinition
         generateFlagInstance(flagInstance, state);
       }
     }
+  }
+
+  /**
+   * Generate an {@code xs:any} wildcard element for an any instance.
+   * <p>
+   * Emits {@code <xs:any namespace="##other" processContents="lax"
+   * minOccurs="0" maxOccurs="unbounded"/>} to allow unmodeled content from other
+   * namespaces within the assembly.
+   *
+   * @param state
+   *          the schema generation state for writing output
+   * @throws XMLStreamException
+   *           if an error occurs while writing XML
+   */
+  protected static void generateAnyInstance(
+      @NonNull IXmlGenerationState state) throws XMLStreamException {
+    state.writeStartElement(XmlDatatypeManager.PREFIX_XML_SCHEMA, "any", XmlDatatypeManager.NS_XML_SCHEMA);
+    state.writeAttribute("namespace", "##other");
+    state.writeAttribute("processContents", "lax");
+    state.writeAttribute("minOccurs", "0");
+    state.writeAttribute("maxOccurs", "unbounded");
+    state.writeEndElement(); // xs:any
   }
 
   /**

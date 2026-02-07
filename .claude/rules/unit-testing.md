@@ -24,9 +24,12 @@
 - Do not proceed with commits or pushes when tests fail
 
 **When encountering test failures:**
-1. Fix them, even if they predate your changes
-2. If truly unrelated, stash your work, fix on a separate branch, and merge
-3. The 100% pass rate policy has no exceptions
+1. Fix them, even if they predate your changes — always prefer actual fixes over `@Disabled`
+2. Never disable a test without asking the user first — explain the situation and propose options
+3. If truly unrelated, fix in the current PR or a separate branch — either way, fix before merging
+4. The 100% pass rate policy has no exceptions
+5. Always use `superpowers:systematic-debugging` skill (4-phase framework: root cause investigation, pattern analysis, hypothesis testing, implementation — see `development-workflow.md` for details) when investigating test failures
+6. The full CI build (`mvn clean install -PCI -Prelease`) is the authoritative pass/fail check
 
 ## Core Principles
 

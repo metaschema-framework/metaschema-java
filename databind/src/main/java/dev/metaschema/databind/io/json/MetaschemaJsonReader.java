@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.apache.logging.log4j.LogManager;
@@ -25,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import dev.metaschema.core.model.IAnyInstance;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IResourceLocation;
 import dev.metaschema.core.model.SimpleResourceLocation;
@@ -41,6 +43,7 @@ import dev.metaschema.databind.model.IBoundFieldValue;
 import dev.metaschema.databind.model.IBoundInstance;
 import dev.metaschema.databind.model.IBoundInstanceFlag;
 import dev.metaschema.databind.model.IBoundInstanceModel;
+import dev.metaschema.databind.model.IBoundInstanceModelAny;
 import dev.metaschema.databind.model.IBoundInstanceModelAssembly;
 import dev.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import dev.metaschema.databind.model.IBoundInstanceModelFieldComplex;
@@ -601,6 +604,98 @@ public class MetaschemaJsonReader
     }
   }
 
+  /**
+   * Capture the next JSON property value as a {@link JsonNode} tree and advance
+   * the parser past it. This method handles the parser being positioned at either
+   * a {@link JsonToken#FIELD_NAME} or a value token. After this method returns,
+   * the parser is positioned at the token immediately following the captured
+   * value.
+   *
+   * @param parser
+   *          the JSON parser
+   * @param resource
+   *          the resource being parsed
+   * @return the captured value as a {@link JsonNode}
+   * @throws IOException
+   *           if an error occurred while reading
+   */
+  @SuppressWarnings({
+      "resource", // parser not owned
+      "PMD.CyclomaticComplexity" // acceptable
+  })
+  @NonNull
+  private static JsonNode capturePropertyValue(
+      @NonNull JsonParser parser,
+      @NonNull URI resource) throws IOException {
+
+    // skip the field name if present
+    if (parser.currentToken() == JsonToken.FIELD_NAME) {
+      parser.nextToken();
+    }
+
+    JsonNode retval = buildJsonValue(parser);
+    // advance past the current value token (or past END_OBJECT/END_ARRAY
+    // for containers which are left at the closing token by buildJsonValue)
+    parser.nextToken();
+    return retval;
+  }
+
+  /**
+   * Recursively build a {@link JsonNode} from the current parser position. For
+   * scalar values, reads the current token's value. For containers (objects and
+   * arrays), recursively reads all nested content. After this method returns for
+   * a container, the parser is positioned at the container's closing token
+   * ({@code END_OBJECT} or {@code END_ARRAY}).
+   *
+   * @param parser
+   *          the parser positioned at a value token
+   * @return the value as a JsonNode
+   * @throws IOException
+   *           if an error occurred while reading
+   */
+  @SuppressWarnings("PMD.CyclomaticComplexity") // token type switch
+  @NonNull
+  private static JsonNode buildJsonValue(@NonNull JsonParser parser) throws IOException {
+    JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+    JsonToken token = parser.currentToken();
+
+    switch (token) {
+    case START_OBJECT: {
+      ObjectNode obj = nodeFactory.objectNode();
+      while (parser.nextToken() != JsonToken.END_OBJECT) {
+        String fieldName = ObjectUtils.requireNonNull(parser.currentName());
+        parser.nextToken(); // advance to value
+        obj.set(fieldName, buildJsonValue(parser));
+      }
+      // parser is now at END_OBJECT
+      return obj;
+    }
+    case START_ARRAY: {
+      com.fasterxml.jackson.databind.node.ArrayNode arr = nodeFactory.arrayNode();
+      while (parser.nextToken() != JsonToken.END_ARRAY) {
+        arr.add(buildJsonValue(parser));
+      }
+      // parser is now at END_ARRAY
+      return arr;
+    }
+    case VALUE_STRING:
+      return nodeFactory.textNode(ObjectUtils.requireNonNull(parser.getText()));
+    case VALUE_NUMBER_INT:
+      return nodeFactory.numberNode(parser.getBigIntegerValue());
+    case VALUE_NUMBER_FLOAT:
+      return nodeFactory.numberNode(parser.getDecimalValue());
+    case VALUE_TRUE:
+      return nodeFactory.booleanNode(true);
+    case VALUE_FALSE:
+      return nodeFactory.booleanNode(false);
+    case VALUE_NULL:
+      return nodeFactory.nullNode();
+    default:
+      throw new IOException(
+          String.format("Unexpected token '%s' when capturing JSON value.", token));
+    }
+  }
+
   private final class PropertyBodyHandler implements DefinitionBodyHandler<IBoundDefinitionModelComplex> {
     @NonNull
     private final Map<String, IBoundProperty<?>> jsonProperties;
@@ -628,6 +723,12 @@ public class MetaschemaJsonReader
 
         // make a copy, since we use the remaining values to initialize default values
         Map<String, IBoundProperty<?>> remainingInstances = new HashMap<>(jsonProperties); // NOPMD not concurrent
+
+        // Determine if this definition supports any content capture
+        IBoundInstanceModelAny boundAny = resolveAnyInstance(definition);
+
+        // Accumulator for unmodeled properties when any instance is present
+        ObjectNode anyAccumulator = null;
 
         // handle each property
         while (JsonToken.FIELD_NAME.equals(parser.currentToken())) {
@@ -660,16 +761,33 @@ public class MetaschemaJsonReader
               parent,
               propertyName,
               MetaschemaJsonReader.this)) {
-            if (LOGGER.isWarnEnabled()) {
-              LOGGER.warn("Skipping unhandled JSON field '{}' {}.", propertyName, JsonUtil.toString(parser, resource));
+            if (boundAny != null) {
+              // Capture the unmodeled property value into the any accumulator.
+              // Advance past the field name to the value, then skip the value
+              // using the same pattern as skipNextValue, but capture it.
+              JsonNode value = capturePropertyValue(parser, resource);
+              if (anyAccumulator == null) {
+                anyAccumulator = new ObjectNode(JsonNodeFactory.instance);
+              }
+              anyAccumulator.set(propertyName, value);
+            } else {
+              if (LOGGER.isWarnEnabled()) {
+                LOGGER.warn("Skipping unhandled JSON field '{}' {}.",
+                    propertyName, JsonUtil.toString(parser, resource));
+              }
+              JsonUtil.assertAndAdvance(parser, resource, JsonToken.FIELD_NAME);
+              JsonUtil.skipNextValue(parser, resource);
             }
-            JsonUtil.assertAndAdvance(parser, resource, JsonToken.FIELD_NAME);
-            JsonUtil.skipNextValue(parser, resource);
           }
 
           // the current token will be either the next instance field name or the end of
           // the parent object
           JsonUtil.assertCurrent(parser, resource, JsonToken.FIELD_NAME, JsonToken.END_OBJECT);
+        }
+
+        // Set any captured content on the parent object
+        if (boundAny != null && anyAccumulator != null && !anyAccumulator.isEmpty()) {
+          boundAny.setAnyContent(parent, new JsonAnyContent(anyAccumulator));
         }
 
         // Build validation context with current location and path
@@ -685,6 +803,27 @@ public class MetaschemaJsonReader
       } finally {
         pathTracker.pop();
       }
+    }
+
+    /**
+     * Resolve the bound any instance from the given definition, if available.
+     *
+     * @param definition
+     *          the complex definition to check
+     * @return the bound any instance, or {@code null} if the definition does not
+     *         support any content
+     */
+    @Nullable
+    private IBoundInstanceModelAny resolveAnyInstance(
+        @NonNull IBoundDefinitionModelComplex definition) {
+      if (definition instanceof IBoundDefinitionModelAssembly) {
+        IAnyInstance anyInstance
+            = ((IBoundDefinitionModelAssembly) definition).getModelContainer().getAnyInstance();
+        if (anyInstance instanceof IBoundInstanceModelAny) {
+          return (IBoundInstanceModelAny) anyInstance;
+        }
+      }
+      return null;
     }
   }
 

@@ -196,6 +196,7 @@ For larger initiatives, use PRDs stored in `PRDs/<YYYYMMDD>-<name>/`:
 
 | PRD | Description | Completed |
 |-----|-------------|-----------|
+| `PRDs/20260206-any-instance-support/` | Support `any` in Java binding annotations (issue #220) | 2026-02-07 |
 | `PRDs/20251229-javadoc-coverage/` | Complete Javadoc coverage for schemagen, databind, and maven-plugin modules | 2025-12-29 |
 | `PRDs/20251228-targeted-report-constraint/` | Add constraint processing support for TargetedReportConstraint (issue #592) | 2025-12-29 |
 | `PRDs/20251228-validation-errors/` | Validation error message improvements (#595, #596, #205) | 2025-12-28 |

@@ -76,6 +76,12 @@ public abstract class AbstractModelElementVisitor<CONTEXT, RESULT> implements IM
   }
 
   @Override
+  public RESULT visitAny(IAnyInstance item, CONTEXT context) {
+    // do nothing
+    return defaultResult(item, context);
+  }
+
+  @Override
   public RESULT visitFlagDefinition(IFlagDefinition item, CONTEXT context) {
     // do nothing
     return defaultResult(item, context);

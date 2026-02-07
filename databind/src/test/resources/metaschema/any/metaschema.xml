@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../../../../core/metaschema/schema/xml/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+  <schema-name>Any Test Module</schema-name>
+  <schema-version>1.0</schema-version>
+  <short-name>any-test</short-name>
+  <namespace>http://example.com/ns/any-test</namespace>
+  <json-base-uri>http://example.com/ns/any-test</json-base-uri>
+
+  <define-assembly name="root">
+    <formal-name>Root Assembly</formal-name>
+    <description>A test assembly that contains an any instance.</description>
+    <root-name>root</root-name>
+    <model>
+      <field ref="name"/>
+      <any/>
+    </model>
+  </define-assembly>
+
+  <define-field name="name">
+    <formal-name>Name</formal-name>
+    <description>A name field.</description>
+  </define-field>
+</METASCHEMA>

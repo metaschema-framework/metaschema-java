@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Provides assembly-specific container model functionality through delegation.
@@ -62,5 +63,11 @@ public interface IFeatureContainerModelAssembly<
   @Override
   default Map<String, CGI> getChoiceGroupInstances() {
     return getModelContainer().getChoiceGroupInstanceMap();
+  }
+
+  @Override
+  @Nullable
+  default IAnyInstance getAnyInstance() {
+    return getModelContainer().getAnyInstance();
   }
 }

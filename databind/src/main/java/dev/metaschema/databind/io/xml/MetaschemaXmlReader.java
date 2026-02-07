@@ -8,9 +8,11 @@ package dev.metaschema.databind.io.xml;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.stax2.XMLEventReader2;
+import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -29,6 +31,7 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import dev.metaschema.core.model.IAnyInstance;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.model.IResourceLocation;
 import dev.metaschema.core.model.SimpleResourceLocation;
@@ -46,6 +49,7 @@ import dev.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
 import dev.metaschema.databind.model.IBoundFieldValue;
 import dev.metaschema.databind.model.IBoundInstanceFlag;
 import dev.metaschema.databind.model.IBoundInstanceModel;
+import dev.metaschema.databind.model.IBoundInstanceModelAny;
 import dev.metaschema.databind.model.IBoundInstanceModelAssembly;
 import dev.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import dev.metaschema.databind.model.IBoundInstanceModelFieldComplex;
@@ -297,11 +301,25 @@ public class MetaschemaXmlReader
     XMLEventReader2 reader = getReader();
     URI resource = getSource();
 
-    // handle any
+    // handle any content
     try {
-      if (!getReader().peek().isEndElement()) {
-        // handle any
-        XmlEventUtil.skipWhitespace(reader);
+      XmlEventUtil.skipWhitespace(reader);
+
+      IAnyInstance anyInstance = targetDefinition.getModelContainer().getAnyInstance();
+
+      if (anyInstance instanceof IBoundInstanceModelAny && !reader.peek().isEndElement()) {
+        IBoundInstanceModelAny boundAny = (IBoundInstanceModelAny) anyInstance;
+        // Capture remaining child elements as DOM elements
+        List<Element> capturedElements = new ArrayList<>();
+        while (reader.peek().isStartElement()) {
+          capturedElements.add(XmlDomUtil.staxToElement(reader));
+          XmlEventUtil.skipWhitespace(reader);
+        }
+        if (!capturedElements.isEmpty()) {
+          boundAny.setAnyContent(targetObject, new XmlAnyContent(capturedElements));
+        }
+      } else if (!reader.peek().isEndElement()) {
+        // No any instance defined; fall through to existing skip behavior
         XmlEventUtil.skipElement(reader);
         XmlEventUtil.skipWhitespace(reader);
       }

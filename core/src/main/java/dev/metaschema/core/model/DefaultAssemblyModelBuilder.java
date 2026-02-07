@@ -13,6 +13,7 @@ import java.util.Map;
 import dev.metaschema.core.model.impl.DefaultContainerModelAssemblySupport;
 import dev.metaschema.core.util.CollectionUtil;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * An assembly model builder.
@@ -46,6 +47,8 @@ public class DefaultAssemblyModelBuilder<
   private final List<CI> choiceInstances = new LinkedList<>();
   @NonNull
   private final Map<String, CGI> choiceGroupInstances = new LinkedHashMap<>();
+  @Nullable
+  private IAnyInstance anyInstance;
 
   /**
    * Append the instance.
@@ -92,13 +95,33 @@ public class DefaultAssemblyModelBuilder<
   }
 
   /**
+   * Get the {@code any} instance.
+   *
+   * @return the {@code any} instance, or {@code null} if none has been set
+   */
+  @Nullable
+  public IAnyInstance getAnyInstance() {
+    return anyInstance;
+  }
+
+  /**
+   * Set the {@code any} instance for this model.
+   *
+   * @param anyInstance
+   *          the {@code any} instance, or {@code null} to clear it
+   */
+  public void setAnyInstance(@Nullable IAnyInstance anyInstance) {
+    this.anyInstance = anyInstance;
+  }
+
+  /**
    * Build an immutable assembly model container based on the appended instances.
    *
    * @return the container
    */
   @NonNull
   public IContainerModelAssemblySupport<MI, NMI, FI, AI, CI, CGI> buildAssembly() {
-    return getModelInstances().isEmpty()
+    return getModelInstances().isEmpty() && anyInstance == null
         ? IContainerModelAssemblySupport.empty()
         : new DefaultContainerModelAssemblySupport<>(
             CollectionUtil.unmodifiableList(getModelInstances()),
@@ -106,6 +129,7 @@ public class DefaultAssemblyModelBuilder<
             CollectionUtil.unmodifiableMap(getFieldInstances()),
             CollectionUtil.unmodifiableMap(getAssemblyInstances()),
             CollectionUtil.unmodifiableList(getChoiceInstances()),
-            CollectionUtil.unmodifiableMap(getChoiceGroupInstances()));
+            CollectionUtil.unmodifiableMap(getChoiceGroupInstances()),
+            anyInstance);
   }
 }

@@ -6,6 +6,7 @@
 package dev.metaschema.core.model.constraint.impl;
 
 import dev.metaschema.core.model.AbstractModelElementVisitor;
+import dev.metaschema.core.model.IAnyInstance;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IAssemblyInstanceAbsolute;
 import dev.metaschema.core.model.IAssemblyInstanceGrouped;
@@ -36,6 +37,12 @@ public class ConstraintComposingVisitor
 
   @Override
   public Void visitChoiceGroupInstance(IChoiceGroupInstance instance, ITargetedConstraints context) {
+    illegalTargetError(instance, context);
+    return null;
+  }
+
+  @Override
+  public Void visitAny(IAnyInstance instance, ITargetedConstraints context) {
     illegalTargetError(instance, context);
     return null;
   }

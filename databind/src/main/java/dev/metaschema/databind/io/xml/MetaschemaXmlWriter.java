@@ -6,12 +6,16 @@
 package dev.metaschema.databind.io.xml;
 
 import org.codehaus.stax2.XMLStreamWriter2;
+import org.w3c.dom.Element;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
 
+import dev.metaschema.core.model.IAnyContent;
+import dev.metaschema.core.model.IAnyInstance;
 import dev.metaschema.core.model.IBoundObject;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.databind.io.json.DefaultJsonProblemHandler;
@@ -22,6 +26,7 @@ import dev.metaschema.databind.model.IBoundDefinitionModelFieldComplex;
 import dev.metaschema.databind.model.IBoundFieldValue;
 import dev.metaschema.databind.model.IBoundInstanceFlag;
 import dev.metaschema.databind.model.IBoundInstanceModel;
+import dev.metaschema.databind.model.IBoundInstanceModelAny;
 import dev.metaschema.databind.model.IBoundInstanceModelAssembly;
 import dev.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import dev.metaschema.databind.model.IBoundInstanceModelFieldComplex;
@@ -206,6 +211,26 @@ public class MetaschemaXmlWriter implements IXmlWritingContext {
       for (IBoundInstanceModel<?> modelInstance : definition.getModelInstances()) {
         assert modelInstance != null;
         writeModelInstance(modelInstance, parentItem, this);
+      }
+
+      // Write any content if present
+      IAnyInstance anyInstance = definition.getModelContainer().getAnyInstance();
+      if (anyInstance instanceof IBoundInstanceModelAny) {
+        IBoundInstanceModelAny boundAny = (IBoundInstanceModelAny) anyInstance;
+        IAnyContent anyContent = boundAny.getAnyContent(parentItem);
+        if (anyContent instanceof XmlAnyContent) {
+          XmlAnyContent xmlAnyContent = (XmlAnyContent) anyContent;
+          if (!xmlAnyContent.isEmpty()) {
+            try {
+              List<Element> elements = xmlAnyContent.getElements();
+              for (Element element : elements) {
+                XmlDomUtil.elementToStax(element, writer);
+              }
+            } catch (XMLStreamException ex) {
+              throw new IOException(ex);
+            }
+          }
+        }
       }
     }
 

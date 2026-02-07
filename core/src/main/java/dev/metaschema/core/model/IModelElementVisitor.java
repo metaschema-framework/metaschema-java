@@ -99,6 +99,17 @@ public interface IModelElementVisitor<CONTEXT, RESULT> {
   RESULT visitChoiceGroupInstance(@NonNull IChoiceGroupInstance item, CONTEXT context);
 
   /**
+   * This callback is called when an {@link IAnyInstance} is visited.
+   *
+   * @param item
+   *          the visited item
+   * @param context
+   *          provides contextual information for use by the visitor
+   * @return the visitation result
+   */
+  RESULT visitAny(@NonNull IAnyInstance item, CONTEXT context);
+
+  /**
    * This callback is called when an {@link IFlagDefinition} is visited.
    *
    * @param item
