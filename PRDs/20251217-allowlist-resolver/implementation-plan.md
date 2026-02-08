@@ -1,33 +1,33 @@
 # Resource Access Policy - Implementation Plan
 
-**Goal:** Implement policy-based URI access control with glob patterns, graduated enforcement modes, and bundled defaults.
+**Goal:** Implement policy-based URI access control with glob patterns, IP-based SSRF protection, mandatory URI normalization, graduated enforcement modes, and bundled defaults.
 
 **Architecture:** All policy engine code in `core` module. CLI integration in `cli-processor`/`metaschema-cli`.
 
-**Tech Stack:** Java 11, JUnit 5, SLF4J, Metaschema databind for configuration model.
+**Tech Stack:** Java 11, JUnit 5, SLF4J, IP address library (`com.github.seancfoley:ipaddress`), Metaschema databind for configuration model.
 
 ---
 
 ## PR Breakdown
 
-Implementation is organized into 4 PRs, each building on the previous:
-
 | PR | Scope | Estimated Files | Key Deliverables |
 |----|-------|-----------------|------------------|
-| PR1 | Policy engine core | ~15 files | `GlobMatcher`, `SchemePatternSet`, `PolicyMode`, `ResourceAccessPolicy`, builder |
-| PR2 | Configuration model | ~10 files | Metaschema module, config loading, bundled defaults, layering |
-| PR3 | Loader integration | ~10 files | `IModuleLoader`/`IBoundLoader` integration, XML entity policy |
-| PR4 | CLI integration + docs | ~8 files | CLI flags, env vars, documentation |
+| PR1 | Policy engine core | ~25 files | Enums, `GlobMatcher`, `UriNormalizer`, `NetworkSecurityChecker`, `SchemePatternSet`, `FileProtections`, `ResourceAccessPolicy`, builder, diagnostics |
+| PR2 | Configuration model | ~10 files | Metaschema module, config loading, bundled defaults, layering with ratchet |
+| PR3 | Loader integration | ~10 files | `IModuleLoader`/`IBoundLoader` integration, XML entity policy, redirect re-check |
+| PR4 | CLI integration + docs | ~8 files | CLI flags, `resource-policy` command with `dump`/`check` subcommands, env vars, documentation |
 
 ---
 
 ## PR1: Policy Engine Core
 
-**Goal:** Implement the glob-based pattern matching engine, enforcement modes, and the `ResourceAccessPolicy` builder.
+**Goal:** Implement the glob-based pattern matching engine, URI normalization, IP-based network security, enforcement modes, diagnostics, and the `ResourceAccessPolicy` builder.
 
 **Module:** `core`
 
 **Package:** `dev.metaschema.core.model.policy`
+
+**New dependency:** Add `com.github.seancfoley:ipaddress` to `core/pom.xml` for CIDR block matching.
 
 ### Task 1.1: Create PolicyMode Enum
 
@@ -49,8 +49,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 class PolicyModeTest {
 
   @Test
-  void testDefaultModeIsAudit() {
-    assertEquals(PolicyMode.AUDIT, PolicyMode.defaultMode());
+  void testDefaultModeIsDisabled() {
+    assertEquals(PolicyMode.DISABLED, PolicyMode.defaultMode());
   }
 
   @ParameterizedTest
@@ -75,6 +75,24 @@ class PolicyModeTest {
   void testFromString(String input, PolicyMode expected) {
     assertEquals(expected, PolicyMode.fromString(input));
   }
+
+  @Test
+  void testRestrictionOrdering() {
+    assertTrue(PolicyMode.DISABLED.ordinal() < PolicyMode.AUDIT.ordinal());
+    assertTrue(PolicyMode.AUDIT.ordinal() < PolicyMode.ENFORCE.ordinal());
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+      "DISABLED, AUDIT, AUDIT",
+      "AUDIT, ENFORCE, ENFORCE",
+      "ENFORCE, DISABLED, ENFORCE",
+      "AUDIT, DISABLED, AUDIT",
+      "ENFORCE, AUDIT, ENFORCE"
+  })
+  void testMostRestrictive(PolicyMode a, PolicyMode b, PolicyMode expected) {
+    assertEquals(expected, PolicyMode.mostRestrictive(a, b));
+  }
 }
 ```
 
@@ -89,6 +107,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Enforcement mode for resource access policies.
+ *
+ * <p>Modes are ordered by restriction level: DISABLED &lt; AUDIT &lt; ENFORCE.
+ * The {@link #mostRestrictive(PolicyMode, PolicyMode)} method supports the
+ * ratchet principle where configuration layers can only tighten policy.
  */
 public enum PolicyMode {
   /** No policy checking; all URIs allowed silently. */
@@ -106,53 +128,102 @@ public enum PolicyMode {
     this.blockEnabled = blockEnabled;
   }
 
-  /**
-   * Whether this mode performs policy checks.
-   *
-   * @return {@code true} if policy rules are evaluated
-   */
-  public boolean isCheckEnabled() {
-    return checkEnabled;
-  }
+  /** Whether this mode performs policy checks. */
+  public boolean isCheckEnabled() { return checkEnabled; }
 
-  /**
-   * Whether this mode blocks violating requests.
-   *
-   * @return {@code true} if violations throw exceptions
-   */
-  public boolean isBlockEnabled() {
-    return blockEnabled;
-  }
+  /** Whether this mode blocks violating requests. */
+  public boolean isBlockEnabled() { return blockEnabled; }
 
-  /**
-   * Returns the default enforcement mode ({@link #AUDIT}).
-   *
-   * @return the default mode
-   */
+  /** Returns the default enforcement mode ({@link #DISABLED}). */
   @NonNull
-  public static PolicyMode defaultMode() {
-    return AUDIT;
-  }
+  public static PolicyMode defaultMode() { return DISABLED; }
 
-  /**
-   * Parses a mode from a string value (case-insensitive).
-   *
-   * @param value
-   *          the string to parse
-   * @return the matching mode
-   * @throws IllegalArgumentException
-   *           if the value does not match any mode
-   */
+  /** Parses a mode from a string value (case-insensitive). */
   @NonNull
   public static PolicyMode fromString(@NonNull String value) {
     return valueOf(value.toUpperCase(Locale.ROOT));
+  }
+
+  /** Returns the more restrictive of two modes (ratchet principle). */
+  @NonNull
+  public static PolicyMode mostRestrictive(@NonNull PolicyMode a, @NonNull PolicyMode b) {
+    return a.ordinal() >= b.ordinal() ? a : b;
   }
 }
 ```
 
 ---
 
-### Task 1.2: Create AccessViolationException
+### Task 1.2: Create SymlinkPolicy and CaseSensitivity Enums
+
+**Files:**
+- Create: `core/src/main/java/dev/metaschema/core/model/policy/SymlinkPolicy.java`
+- Create: `core/src/main/java/dev/metaschema/core/model/policy/CaseSensitivity.java`
+- Test: `core/src/test/java/dev/metaschema/core/model/policy/CaseSensitivityTest.java`
+
+**Test first:**
+
+```java
+package dev.metaschema.core.model.policy;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class CaseSensitivityTest {
+
+  @Test
+  void testSystemDefaultDetectsOs() {
+    boolean isWindows = System.getProperty("os.name")
+        .toLowerCase(java.util.Locale.ROOT).contains("win");
+    CaseSensitivity systemDefault = CaseSensitivity.SYSTEM_DEFAULT;
+
+    assertEquals(!isWindows, systemDefault.isCaseSensitive());
+  }
+
+  @Test
+  void testExplicitModes() {
+    assertTrue(CaseSensitivity.CASE_SENSITIVE.isCaseSensitive());
+    assertFalse(CaseSensitivity.CASE_INSENSITIVE.isCaseSensitive());
+  }
+}
+```
+
+**Implementation:**
+
+```java
+/** Policy for resolving symbolic links during file path checking. */
+public enum SymlinkPolicy {
+  /** Resolve symlinks via {@code Path.toRealPath()} before checking (default). */
+  FOLLOW,
+  /** Check the path as-is without symlink resolution. */
+  NOFOLLOW
+}
+
+/** Case sensitivity mode for file path matching. */
+public enum CaseSensitivity {
+  /** Auto-detect from OS: case-insensitive on Windows, case-sensitive elsewhere. */
+  SYSTEM_DEFAULT,
+  /** Always case-sensitive matching. */
+  CASE_SENSITIVE,
+  /** Always case-insensitive matching. */
+  CASE_INSENSITIVE;
+
+  /** Whether this mode uses case-sensitive matching. */
+  public boolean isCaseSensitive() {
+    return switch (this) {
+      case CASE_SENSITIVE -> true;
+      case CASE_INSENSITIVE -> false;
+      case SYSTEM_DEFAULT -> !System.getProperty("os.name")
+          .toLowerCase(java.util.Locale.ROOT).contains("win");
+    };
+  }
+}
+```
+
+---
+
+### Task 1.3: Create AccessViolationException
 
 **Files:**
 - Create: `core/src/main/java/dev/metaschema/core/model/policy/AccessViolationException.java`
@@ -172,87 +243,44 @@ import java.net.URI;
 class AccessViolationExceptionTest {
 
   @Test
-  void testExceptionContainsUriAndReason() {
+  void testExceptionContainsStructuredFields() {
     URI uri = URI.create("file:///etc/passwd");
-    String reason = "Denied by pattern: !/etc/**";
-
-    AccessViolationException ex = new AccessViolationException(uri, reason);
+    AccessViolationException ex = new AccessViolationException(
+        uri, "file-protections", "path not in allowed areas",
+        "bundled defaults",
+        "FileProtections.builder().includeDefaults().allow(\"/etc/passwd\").build()");
 
     assertEquals(uri, ex.getUri());
-    assertEquals(reason, ex.getReason());
+    assertEquals("file-protections", ex.getLayer());
+    assertEquals("path not in allowed areas", ex.getDenialReason());
+    assertEquals("bundled defaults", ex.getConfigSource());
+    assertNotNull(ex.getRemediation());
     assertTrue(ex.getMessage().contains(uri.toString()));
-    assertTrue(ex.getMessage().contains(reason));
+    assertTrue(ex.getMessage().contains("file-protections"));
   }
 
   @Test
   void testExtendsSecurityException() {
     AccessViolationException ex = new AccessViolationException(
-        URI.create("http://localhost"), "denied");
+        URI.create("http://localhost"), "network-security",
+        "loopback denied", "bundled defaults", null);
     assertInstanceOf(SecurityException.class, ex);
   }
 }
 ```
 
-**Implementation:**
+**Implementation:** Exception with fields for `uri`, `layer`, `denialReason`, `configSource`, `remediation`. Message format matches PRD:
 
-```java
-package dev.metaschema.core.model.policy;
-
-import java.net.URI;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-
-/**
- * Exception thrown when a URI access violates the resource access policy
- * in {@link PolicyMode#ENFORCE} mode.
- */
-public class AccessViolationException extends SecurityException {
-  private static final long serialVersionUID = 1L;
-
-  @NonNull
-  private final URI uri;
-  @NonNull
-  private final String reason;
-
-  /**
-   * Constructs a new access violation exception.
-   *
-   * @param uri
-   *          the URI that violated the policy
-   * @param reason
-   *          human-readable explanation of the violation
-   */
-  public AccessViolationException(@NonNull URI uri, @NonNull String reason) {
-    super(String.format("Resource access policy violation for '%s': %s", uri, reason));
-    this.uri = uri;
-    this.reason = reason;
-  }
-
-  /**
-   * Returns the URI that violated the policy.
-   *
-   * @return the violating URI
-   */
-  @NonNull
-  public URI getUri() {
-    return uri;
-  }
-
-  /**
-   * Returns the reason for the violation.
-   *
-   * @return the violation reason
-   */
-  @NonNull
-  public String getReason() {
-    return reason;
-  }
-}
+```text
+Resource access policy violation: '<uri>' was denied.
+  Denied by: <layer> (<denialReason>)
+  Source: <configSource>
+  To allow: <remediation>
 ```
 
 ---
 
-### Task 1.3: Create GlobMatcher
+### Task 1.4: Create GlobMatcher
 
 **Files:**
 - Create: `core/src/main/java/dev/metaschema/core/model/policy/GlobMatcher.java`
@@ -280,45 +308,392 @@ class GlobMatcherTest {
       "'/workspace/**', '/workspace/project/schema.xml', true",
       "'/workspace/*', '/workspace/schema.xml', true",
       "'/workspace/*', '/workspace/sub/schema.xml', false",
+      "'example.com/path/**', 'example.com/path', true",
+      "'example.com/path/**', 'example.com/path/', true",
       "'example.com/path/**', 'example.com/path/to/resource', true",
       "'example.com/path/**', 'example.com/other/resource', false",
       "'**/.ssh/**', '/home/user/.ssh/id_rsa', true",
       "'**/.ssh/**', '/home/user/projects/ssh-keys', false",
-      "'localhost/**', 'localhost:8080/api', true",
-      "'127.*/**', '127.0.0.1/secret', true",
-      "'127.*/**', '128.0.0.1/public', false",
+      "'localhost/**', 'localhost/api', true",
   })
   void testPatternMatching(String pattern, String target, boolean expected) {
-    GlobMatcher matcher = GlobMatcher.compile(pattern);
+    GlobMatcher matcher = GlobMatcher.compile(pattern, true);
     assertEquals(expected, matcher.matches(target),
         () -> String.format("Pattern '%s' vs '%s'", pattern, target));
   }
 
   @Test
+  void testCaseInsensitiveMatching() {
+    GlobMatcher matcher = GlobMatcher.compile("/Workspace/**", false);
+    assertTrue(matcher.matches("/workspace/file.xml"));
+    assertTrue(matcher.matches("/WORKSPACE/file.xml"));
+  }
+
+  @Test
+  void testCaseSensitiveMatching() {
+    GlobMatcher matcher = GlobMatcher.compile("/workspace/**", true);
+    assertTrue(matcher.matches("/workspace/file.xml"));
+    assertFalse(matcher.matches("/Workspace/file.xml"));
+  }
+
+  @Test
   void testNullSafety() {
-    GlobMatcher matcher = GlobMatcher.compile("**");
+    GlobMatcher matcher = GlobMatcher.compile("**", true);
     assertThrows(NullPointerException.class, () -> matcher.matches(null));
   }
 
   @Test
+  void testDirectoryEquivalence() {
+    // path/** must also match path itself (without trailing slash or children)
+    GlobMatcher matcher = GlobMatcher.compile("/workspace/**", true);
+    assertTrue(matcher.matches("/workspace"), "directory itself without trailing slash");
+    assertTrue(matcher.matches("/workspace/"), "directory with trailing slash");
+    assertTrue(matcher.matches("/workspace/project/schema.xml"), "child path");
+    assertFalse(matcher.matches("/workspaceX"), "must not match prefix that is not the directory");
+    assertFalse(matcher.matches("/workspac"), "must not match shorter prefix");
+
+    // Same for host-style patterns
+    GlobMatcher hostMatcher = GlobMatcher.compile("pages.nist.gov/**", true);
+    assertTrue(hostMatcher.matches("pages.nist.gov"), "host directory itself");
+    assertTrue(hostMatcher.matches("pages.nist.gov/"), "host directory with trailing slash");
+    assertTrue(hostMatcher.matches("pages.nist.gov/schemas/foo.xml"), "host child path");
+  }
+
+  @Test
   void testEmptyPattern() {
-    GlobMatcher matcher = GlobMatcher.compile("");
+    GlobMatcher matcher = GlobMatcher.compile("", true);
     assertTrue(matcher.matches(""));
     assertFalse(matcher.matches("anything"));
+  }
+
+  @Test
+  void testReDoSResistance() {
+    // Crafted pattern that would cause catastrophic backtracking with naive regex
+    String malicious = "**/**/**/**/**/**/**/**/**/**";
+    GlobMatcher matcher = GlobMatcher.compile(malicious, true);
+    String longPath = "a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z";
+    // Should complete in reasonable time (< 1 second), not hang
+    assertTimeout(java.time.Duration.ofSeconds(1),
+        () -> matcher.matches(longPath));
   }
 }
 ```
 
 **Implementation:** Compile glob patterns to `java.util.regex.Pattern`:
-- `*` → matches any characters except `/`
-- `**` → matches any characters including `/`
-- `?` → matches single character except `/`
+- `*` → `[^/]*+` (possessive quantifier to prevent backtracking)
+- `**` → `.*+` (possessive quantifier)
+- `?` → `[^/]`
 - Escape regex special characters
-- Case-insensitive matching on Windows for file paths
+- Accept `caseSensitive` parameter for `Pattern.CASE_INSENSITIVE` flag
+- Use possessive quantifiers or atomic groups to prevent ReDoS
+- Validate pattern length (max 500 chars)
+- **Directory equivalence:** When a pattern ends with `/**`, compile it to also match the directory prefix itself. For pattern `P/**`, the compiled regex matches `P`, `P/`, and `P/<anything>`. Implementation: detect trailing `/**`, strip it to get prefix `P`, compile as `P(/.*+)?` (optional `/` followed by anything). This ensures `path/**` ≡ `path` in allow lists.
 
 ---
 
-### Task 1.4: Create SchemePatternSet
+### Task 1.5: Create UriNormalizer
+
+**Files:**
+- Create: `core/src/main/java/dev/metaschema/core/model/policy/UriNormalizer.java`
+- Test: `core/src/test/java/dev/metaschema/core/model/policy/UriNormalizerTest.java`
+
+**Test first:**
+
+```java
+package dev.metaschema.core.model.policy;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import java.net.URI;
+
+class UriNormalizerTest {
+
+  // --- Path normalization ---
+
+  @ParameterizedTest
+  @CsvSource({
+      "file:///workspace/../etc/passwd, /etc/passwd",
+      "file:///workspace/./schema.xml, /workspace/schema.xml",
+      "file:///workspace/project/../../etc/passwd, /etc/passwd",
+  })
+  void testPathTraversalNormalization(String rawUri, String expectedPath) {
+    URI uri = URI.create(rawUri);
+    String normalized = UriNormalizer.normalizeFilePath(uri, SymlinkPolicy.NOFOLLOW);
+    assertEquals(expectedPath, normalized);
+  }
+
+  @Test
+  void testRejectPathWithDotsAfterNormalization() {
+    // Edge case: a path that still contains ".." after normalization
+    // (should not happen with Path.normalize() but tested for defense-in-depth)
+    URI uri = URI.create("file:///workspace/../etc/passwd");
+    String normalized = UriNormalizer.normalizeFilePath(uri, SymlinkPolicy.NOFOLLOW);
+    assertFalse(normalized.contains(".."), "Normalized path must not contain '..'");
+  }
+
+  // --- Percent-decoding ---
+
+  @ParameterizedTest
+  @CsvSource({
+      "file:///etc/p%61sswd, /etc/passwd",
+      "file:///workspace%2F..%2F..%2Fetc%2Fpasswd, /etc/passwd",
+  })
+  void testPercentDecoding(String rawUri, String expectedPath) {
+    URI uri = URI.create(rawUri);
+    String normalized = UriNormalizer.normalizeFilePath(uri, SymlinkPolicy.NOFOLLOW);
+    assertEquals(expectedPath, normalized);
+  }
+
+  // --- Scheme normalization ---
+
+  @Test
+  void testSchemeNormalization() {
+    assertEquals("file", UriNormalizer.normalizeScheme(URI.create("FILE:///path")));
+    assertEquals("https", UriNormalizer.normalizeScheme(URI.create("HTTPS://host/path")));
+  }
+
+  // --- Host normalization (http/https) ---
+
+  @ParameterizedTest
+  @CsvSource({
+      "https://EXAMPLE.COM/path, example.com/path",
+      "https://Example.Com:443/path, example.com/path",
+      "https://example.com:8443/path, example.com/path",
+      "http://LOCALHOST:8080/api, localhost/api",
+      "http://localhost:80/api, localhost/api",
+  })
+  void testHostNormalization(String rawUri, String expectedTarget) {
+    URI uri = URI.create(rawUri);
+    String target = UriNormalizer.normalizeNetworkTarget(uri);
+    assertEquals(expectedTarget, target);
+  }
+
+  // --- JAR scheme parsing ---
+
+  @Test
+  void testJarSchemeInnerUri() {
+    URI jarUri = URI.create("jar:http://evil.com/mal.jar!/schema/x.xsd");
+    URI innerUri = UriNormalizer.extractJarInnerUri(jarUri);
+    assertEquals(URI.create("http://evil.com/mal.jar"), innerUri);
+  }
+
+  @Test
+  void testJarSchemeInternalPath() {
+    URI jarUri = URI.create("jar:file:///lib.jar!/schema/x.xsd");
+    String internalPath = UriNormalizer.extractJarInternalPath(jarUri);
+    assertEquals("/schema/x.xsd", internalPath);
+  }
+
+  @Test
+  void testMalformedJarUri() {
+    URI jarUri = URI.create("jar:file:///lib.jar");
+    assertThrows(IllegalArgumentException.class,
+        () -> UriNormalizer.extractJarInternalPath(jarUri));
+  }
+}
+```
+
+**Implementation:** Static utility class with methods:
+- `normalizeScheme(URI)` → lowercase scheme string
+- `normalizeFilePath(URI, SymlinkPolicy)` → decode, normalize path, optionally resolve symlinks
+- `normalizeNetworkTarget(URI)` → lowercase host, strip default ports, return `host/path`
+- `extractJarInnerUri(URI)` → parse inner URI before `!`
+- `extractJarInternalPath(URI)` → parse path after `!`
+- Reject paths containing `..` after normalization (defense-in-depth)
+
+---
+
+### Task 1.6: Create NetworkSecurityChecker
+
+**Files:**
+- Create: `core/src/main/java/dev/metaschema/core/model/policy/NetworkSecurityChecker.java`
+- Create: `core/src/main/java/dev/metaschema/core/model/policy/NetworkSecurityConfig.java`
+- Test: `core/src/test/java/dev/metaschema/core/model/policy/NetworkSecurityCheckerTest.java`
+
+**Test first — IP CIDR boundary tests:**
+
+```java
+package dev.metaschema.core.model.policy;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+class NetworkSecurityCheckerTest {
+
+  private final NetworkSecurityChecker checker
+      = new NetworkSecurityChecker(NetworkSecurityConfig.defaults());
+
+  // --- IPv4 CIDR boundary tests ---
+
+  @ParameterizedTest
+  @CsvSource({
+      // 127.0.0.0/8 (loopback)
+      "126.255.255.255, true",
+      "127.0.0.0, false",
+      "127.0.0.1, false",
+      "127.255.255.255, false",
+      "128.0.0.0, true",
+
+      // 10.0.0.0/8 (private Class A)
+      "9.255.255.255, true",
+      "10.0.0.0, false",
+      "10.128.0.1, false",
+      "10.255.255.255, false",
+      "11.0.0.0, true",
+
+      // 172.16.0.0/12 (private Class B)
+      "172.15.255.255, true",
+      "172.16.0.0, false",
+      "172.20.0.1, false",
+      "172.31.255.255, false",
+      "172.32.0.0, true",
+
+      // 192.168.0.0/16 (private Class C)
+      "192.167.255.255, true",
+      "192.168.0.0, false",
+      "192.168.1.100, false",
+      "192.168.255.255, false",
+      "192.169.0.0, true",
+
+      // 169.254.0.0/16 (link-local / cloud metadata)
+      "169.253.255.255, true",
+      "169.254.0.0, false",
+      "169.254.169.254, false",
+      "169.254.255.255, false",
+      "169.255.0.0, true",
+
+      // 100.64.0.0/10 (CGNAT / shared address space)
+      "100.63.255.255, true",
+      "100.64.0.0, false",
+      "100.100.0.1, false",
+      "100.127.255.255, false",
+      "100.128.0.0, true",
+
+      // 0.0.0.0/8 (unspecified)
+      "0.0.0.0, false",
+      "0.255.255.255, false",
+      "1.0.0.0, true",
+
+      // Public IPs (should be allowed)
+      "8.8.8.8, true",
+      "1.1.1.1, true",
+      "93.184.216.34, true",
+  })
+  void testIpv4CidrBoundaries(String ip, boolean allowed) {
+    assertEquals(allowed, checker.isAllowed(ip),
+        () -> "IP " + ip + " should be " + (allowed ? "allowed" : "blocked"));
+  }
+
+  // --- IPv6 CIDR boundary tests ---
+
+  @ParameterizedTest
+  @CsvSource({
+      // ::1/128 (IPv6 loopback)
+      "::1, false",
+      "::2, true",
+
+      // fe80::/10 (IPv6 link-local)
+      "fe80::1, false",
+      "fe80::ffff, false",
+      "febf::1, false",
+      "fec0::1, true",
+
+      // fc00::/7 (IPv6 ULA)
+      "fc00::1, false",
+      "fd00::1, false",
+      "fdff::ffff, false",
+      "fe00::1, true",
+
+      // ::ffff:0:0/96 (IPv4-mapped IPv6 — checked after mapping)
+      "::ffff:127.0.0.1, false",
+      "::ffff:10.0.0.1, false",
+      "::ffff:192.168.1.1, false",
+      "::ffff:8.8.8.8, true",
+      "::ffff:1.1.1.1, true",
+
+      // Public IPv6 (should be allowed)
+      "2001:4860:4860::8888, true",
+  })
+  void testIpv6CidrBoundaries(String ip, boolean allowed) {
+    assertEquals(allowed, checker.isAllowed(ip),
+        () -> "IP " + ip + " should be " + (allowed ? "allowed" : "blocked"));
+  }
+
+  // --- Alternate IP encoding tests ---
+
+  @ParameterizedTest
+  @CsvSource({
+      "2130706433, false",     // decimal 127.0.0.1
+      "0x7f000001, false",     // hex 127.0.0.1
+      "0177.0.0.1, false",    // octal 127.0.0.1
+      "127.1, false",          // shorthand 127.0.0.1
+  })
+  void testAlternateIpEncodings(String host, boolean allowed) {
+    assertEquals(allowed, checker.isAllowed(host),
+        () -> "Host " + host + " should be " + (allowed ? "allowed" : "blocked"));
+  }
+
+  // --- Hostname resolution ---
+
+  @Test
+  void testLocalhostResolution() {
+    assertFalse(checker.isAllowed("localhost"));
+  }
+
+  // --- Custom config ---
+
+  @Test
+  void testAllowLoopback() {
+    NetworkSecurityChecker devChecker = new NetworkSecurityChecker(
+        NetworkSecurityConfig.builder()
+            .allowLoopback(true)
+            .build());
+
+    assertTrue(devChecker.isAllowed("127.0.0.1"));
+    assertTrue(devChecker.isAllowed("localhost"));
+    assertFalse(devChecker.isAllowed("10.0.0.1")); // still blocked
+  }
+
+  @Test
+  void testAllowSpecificCidr() {
+    NetworkSecurityChecker customChecker = new NetworkSecurityChecker(
+        NetworkSecurityConfig.builder()
+            .allowCidr("10.0.0.0/24")
+            .build());
+
+    assertTrue(customChecker.isAllowed("10.0.0.1"));
+    assertFalse(customChecker.isAllowed("10.0.1.1"));
+    assertFalse(customChecker.isAllowed("192.168.1.1"));
+  }
+
+  // --- Denial reason ---
+
+  @Test
+  void testDenialReasonIncludesCidr() {
+    String reason = checker.getDenialReason("10.0.0.1");
+    assertNotNull(reason);
+    assertTrue(reason.contains("10.0.0.0/8"));
+  }
+}
+```
+
+**Implementation:**
+- `NetworkSecurityChecker` accepts a `NetworkSecurityConfig`
+- Uses `com.github.seancfoley:ipaddress` library for CIDR matching
+- `isAllowed(String hostOrIp)` — resolves hostname to `InetAddress`, checks against blocked CIDR ranges
+- `getDenialReason(String hostOrIp)` — returns human-readable reason with the matching CIDR block
+- `NetworkSecurityConfig` — builder with `allowLoopback(boolean)`, `allowCidr(String)`, `defaults()` factory
+
+---
+
+### Task 1.7: Create SchemePatternSet
 
 **Files:**
 - Create: `core/src/main/java/dev/metaschema/core/model/policy/SchemePatternSet.java`
@@ -343,9 +718,10 @@ class SchemePatternSetTest {
   }
 
   @Test
-  void testNoPatternsAllowsAll() {
+  void testNoPatternsUsesDefaultPolicy() {
+    // enabled + no patterns should NOT allow all — uses default deny
     SchemePatternSet set = SchemePatternSet.enabled("https");
-    assertTrue(set.isAllowed("example.com/anything"));
+    assertFalse(set.isAllowed("example.com/anything"));
   }
 
   @Test
@@ -372,9 +748,9 @@ class SchemePatternSetTest {
   @Test
   void testLastMatchWins() {
     SchemePatternSet set = SchemePatternSet.builder("file")
-        .allow("**")          // allow everything
-        .deny("/etc/**")      // except /etc
-        .allow("/etc/motd")   // but re-allow /etc/motd
+        .allow("**")
+        .deny("/etc/**")
+        .allow("/etc/motd")
         .build();
 
     assertTrue(set.isAllowed("/workspace/file.xml"));
@@ -383,8 +759,7 @@ class SchemePatternSetTest {
   }
 
   @Test
-  void testNoMatchUsesDefault() {
-    // With default deny (no patterns match)
+  void testNoMatchDenies() {
     SchemePatternSet set = SchemePatternSet.builder("https")
         .allow("nist.gov/**")
         .build();
@@ -392,14 +767,75 @@ class SchemePatternSetTest {
     assertTrue(set.isAllowed("nist.gov/schemas/x.xml"));
     assertFalse(set.isAllowed("evil.com/attack"));
   }
+
+  @Test
+  void testAllowAll() {
+    SchemePatternSet set = SchemePatternSet.builder("jar")
+        .allowAll()
+        .build();
+    assertTrue(set.isAllowed("/any/path"));
+  }
+
+  @Test
+  void testDenyAll() {
+    SchemePatternSet set = SchemePatternSet.builder("http")
+        .denyAll()
+        .build();
+    assertFalse(set.isAllowed("example.com/api"));
+  }
+
+  @Test
+  void testCaseInsensitiveMatching() {
+    SchemePatternSet set = SchemePatternSet.builder("file")
+        .caseSensitive(false)
+        .allow("/Workspace/**")
+        .build();
+
+    assertTrue(set.isAllowed("/workspace/file.xml"));
+    assertTrue(set.isAllowed("/WORKSPACE/file.xml"));
+  }
 }
 ```
 
-**Implementation:** Holds an ordered list of `(GlobMatcher, boolean isAllow)` entries. Evaluates last-match-wins.
+**Implementation:** Holds an ordered list of `(GlobMatcher, boolean isAllow)` entries. Evaluates last-match-wins. `enabled: true` with no patterns returns `false` (deny, matching default-scheme-policy behavior). Accepts `caseSensitive` flag passed to `GlobMatcher.compile()`.
 
 ---
 
-### Task 1.5: Create IResourceAccessPolicy Interface
+### Task 1.8: Create PolicyDecision and EvaluationStep
+
+**Files:**
+- Create: `core/src/main/java/dev/metaschema/core/model/policy/PolicyDecision.java`
+- Create: `core/src/main/java/dev/metaschema/core/model/policy/EvaluationStep.java`
+- Test: `core/src/test/java/dev/metaschema/core/model/policy/PolicyDecisionTest.java`
+
+**Implementation:** Simple immutable data classes:
+
+```java
+/** Diagnostic result from {@link ResourceAccessPolicy#explain(URI)}. */
+public final class PolicyDecision {
+  private final boolean allowed;
+  private final String layer;
+  private final String denialReason;
+  private final String matchingPattern;
+  private final String configSource;
+  private final String remediation;
+  private final List<EvaluationStep> evaluationTrace;
+  // constructor, getters, toString
+}
+
+/** Single step in the policy evaluation trace. */
+public final class EvaluationStep {
+  private final String layer;
+  private final String description;
+  private final boolean matched;
+  private final boolean resultIfMatched;
+  // constructor, getters
+}
+```
+
+---
+
+### Task 1.9: Create IResourceAccessPolicy Interface
 
 **Files:**
 - Create: `core/src/main/java/dev/metaschema/core/model/policy/IResourceAccessPolicy.java`
@@ -415,30 +851,16 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * Policy that controls which URIs can be accessed during resource loading.
- * <p>
- * Implementations evaluate URIs against configured rules and take action
- * based on the {@link PolicyMode}: log violations (audit), block violations
- * (enforce), or skip checking entirely (disabled).
  *
  * @see ResourceAccessPolicy
  */
 public interface IResourceAccessPolicy {
 
-  /**
-   * A policy that allows all access without checking.
-   */
+  /** A policy that allows all access without checking. */
   IResourceAccessPolicy ALLOW_ALL = uri -> { /* no-op */ };
 
   /**
    * Checks whether the given URI is allowed by this policy.
-   * <p>
-   * Depending on the {@link PolicyMode}:
-   * <ul>
-   *   <li>{@code DISABLED}: No checking, always returns</li>
-   *   <li>{@code AUDIT}: Checks and logs violations, always returns</li>
-   *   <li>{@code ENFORCE}: Checks and throws
-   *       {@link AccessViolationException} on violation</li>
-   * </ul>
    *
    * @param uri
    *          the URI to check
@@ -451,169 +873,7 @@ public interface IResourceAccessPolicy {
 
 ---
 
-### Task 1.6: Create ResourceAccessPolicy and Builder
-
-**Files:**
-- Create: `core/src/main/java/dev/metaschema/core/model/policy/ResourceAccessPolicy.java`
-- Create: `core/src/main/java/dev/metaschema/core/model/policy/ResourceAccessPolicyBuilder.java`
-- Test: `core/src/test/java/dev/metaschema/core/model/policy/ResourceAccessPolicyTest.java`
-
-**Test first:**
-
-```java
-package dev.metaschema.core.model.policy;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
-
-class ResourceAccessPolicyTest {
-
-  @Test
-  void testDisabledModeAllowsEverything() {
-    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
-        .mode(PolicyMode.DISABLED)
-        .forScheme("file").denyAll()
-        .build();
-
-    // Should not throw even though file scheme is denied
-    assertDoesNotThrow(() -> policy.checkAccess(URI.create("file:///etc/passwd")));
-  }
-
-  @Test
-  void testAuditModeLogsButAllows() {
-    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
-        .mode(PolicyMode.AUDIT)
-        .forScheme("http").denyAll()
-        .defaultDeny()
-        .build();
-
-    // Should not throw even though http is denied
-    assertDoesNotThrow(() -> policy.checkAccess(URI.create("http://localhost/admin")));
-  }
-
-  @Test
-  void testEnforceModeBlocks() {
-    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
-        .mode(PolicyMode.ENFORCE)
-        .forScheme("http").denyAll()
-        .defaultDeny()
-        .build();
-
-    assertThrows(AccessViolationException.class,
-        () -> policy.checkAccess(URI.create("http://localhost/admin")));
-  }
-
-  @Test
-  void testEnforceModeAllowsMatching() {
-    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
-        .mode(PolicyMode.ENFORCE)
-        .forScheme("https")
-            .allow("nist.gov/**")
-        .forScheme("file")
-            .allow("/workspace/**")
-        .defaultDeny()
-        .build();
-
-    assertDoesNotThrow(() -> policy.checkAccess(
-        URI.create("https://nist.gov/schemas/x.xml")));
-    assertDoesNotThrow(() -> policy.checkAccess(
-        URI.create("file:///workspace/project/module.xml")));
-  }
-
-  @Test
-  void testDenyPatternExceptions() {
-    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
-        .mode(PolicyMode.ENFORCE)
-        .forScheme("file")
-            .allow("**")
-            .deny("**/.ssh/**")
-        .defaultDeny()
-        .build();
-
-    assertDoesNotThrow(() -> policy.checkAccess(
-        URI.create("file:///workspace/schema.xml")));
-    assertThrows(AccessViolationException.class,
-        () -> policy.checkAccess(
-            URI.create("file:///home/user/.ssh/id_rsa")));
-  }
-
-  @Test
-  void testDefaultDenyBlocksUnknownSchemes() {
-    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
-        .mode(PolicyMode.ENFORCE)
-        .forScheme("https").allowAll()
-        .defaultDeny()
-        .build();
-
-    assertThrows(AccessViolationException.class,
-        () -> policy.checkAccess(URI.create("ftp://evil.com/file")));
-  }
-
-  @Test
-  void testWithModeCreatesNewPolicy() {
-    ResourceAccessPolicy audit = ResourceAccessPolicy.builder()
-        .mode(PolicyMode.AUDIT)
-        .forScheme("http").denyAll()
-        .defaultDeny()
-        .build();
-
-    // Audit mode allows
-    assertDoesNotThrow(() -> audit.checkAccess(
-        URI.create("http://localhost/admin")));
-
-    // Enforce mode blocks
-    ResourceAccessPolicy enforced = audit.withMode(PolicyMode.ENFORCE);
-    assertThrows(AccessViolationException.class,
-        () -> enforced.checkAccess(URI.create("http://localhost/admin")));
-  }
-
-  @Test
-  void testUriSchemeExtraction() {
-    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
-        .mode(PolicyMode.ENFORCE)
-        .forScheme("file")
-            .allow("/workspace/**")
-        .defaultDeny()
-        .build();
-
-    // file:///workspace/x → matches file scheme, path /workspace/x
-    assertDoesNotThrow(() -> policy.checkAccess(
-        URI.create("file:///workspace/x.xml")));
-
-    // https not configured, default deny
-    assertThrows(AccessViolationException.class,
-        () -> policy.checkAccess(URI.create("https://example.com")));
-  }
-
-  @Test
-  void testJarSchemeExtraction() {
-    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
-        .mode(PolicyMode.ENFORCE)
-        .forScheme("jar")
-            .allow("/schema/**")
-        .defaultDeny()
-        .build();
-
-    // jar:file:///lib.jar!/schema/x.xsd → matches jar scheme, path /schema/x.xsd
-    assertDoesNotThrow(() -> policy.checkAccess(
-        URI.create("jar:file:///lib.jar!/schema/x.xsd")));
-  }
-}
-```
-
-**Implementation:** Main policy class that:
-1. Extracts scheme from URI
-2. Looks up `SchemePatternSet` for that scheme
-3. Extracts scheme-specific match target from URI
-4. Evaluates patterns
-5. Applies mode behavior (log/block/ignore)
-
----
-
-### Task 1.7: Create FileProtections
+### Task 1.10: Create FileProtections
 
 **Files:**
 - Create: `core/src/main/java/dev/metaschema/core/model/policy/FileProtections.java`
@@ -649,32 +909,33 @@ class FileProtectionsTest {
       "C:/Windows/System32/config/SAM",
   })
   void testDefaultDeniesPathsOutsideSafeAreas(String path) {
-    FileProtections protections = FileProtections.withDefaults(cwd);
+    FileProtections protections = FileProtections.withDefaults(cwd,
+        CaseSensitivity.CASE_SENSITIVE);
     assertFalse(protections.isAllowed(path),
         "Should deny (outside safe areas): " + path);
   }
 
   @Test
   void testDefaultAllowsCwdSubtree() {
-    FileProtections protections = FileProtections.withDefaults(cwd);
+    FileProtections protections = FileProtections.withDefaults(cwd,
+        CaseSensitivity.CASE_SENSITIVE);
     String cwdPath = cwd.resolve("project/schema.xml").toString();
-    assertTrue(protections.isAllowed(cwdPath),
-        "Should allow CWD subtree");
+    assertTrue(protections.isAllowed(cwdPath), "Should allow CWD subtree");
   }
 
   @Test
-  void testDefaultDeniesSensitiveDotDirsInHome() {
-    // Home dir subtree is allowed, but sensitive dot-dirs are excluded
+  void testDefaultDeniesDotDirsInHome() {
     Path home = Path.of(System.getProperty("user.home"));
-    FileProtections protections = FileProtections.withDefaults(cwd);
+    FileProtections protections = FileProtections.withDefaults(cwd,
+        CaseSensitivity.CASE_SENSITIVE);
 
     String sshKey = home.resolve(".ssh/id_rsa").toString();
     assertFalse(protections.isAllowed(sshKey),
-        "Should deny ~/.ssh even though home is allowed");
+        "Should deny ~/.ssh (blanket dot-dir exclusion)");
 
-    String awsCreds = home.resolve(".aws/credentials").toString();
-    assertFalse(protections.isAllowed(awsCreds),
-        "Should deny ~/.aws even though home is allowed");
+    String kubeCfg = home.resolve(".kube/config").toString();
+    assertFalse(protections.isAllowed(kubeCfg),
+        "Should deny ~/.kube (blanket dot-dir exclusion)");
 
     String normalFile = home.resolve("projects/schema.xml").toString();
     assertTrue(protections.isAllowed(normalFile),
@@ -683,48 +944,46 @@ class FileProtectionsTest {
 
   @Test
   void testBuilderIncludeDefaults() {
-    FileProtections protections = FileProtections.builder(cwd)
+    FileProtections protections = FileProtections.builder(cwd,
+        CaseSensitivity.CASE_SENSITIVE)
         .includeDefaults()
         .allow("/opt/metaschema/**")
         .build();
 
     String cwdFile = cwd.resolve("schema.xml").toString();
-    assertTrue(protections.isAllowed(cwdFile));             // from defaults
-    assertTrue(protections.isAllowed("/opt/metaschema/x")); // custom addition
-    assertFalse(protections.isAllowed("/etc/passwd"));      // not allowed
+    assertTrue(protections.isAllowed(cwdFile));
+    assertTrue(protections.isAllowed("/opt/metaschema/x"));
+    assertFalse(protections.isAllowed("/etc/passwd"));
   }
 
   @Test
   void testBuilderRemoveDefault() {
-    FileProtections protections = FileProtections.builder(cwd)
+    FileProtections protections = FileProtections.builder(cwd,
+        CaseSensitivity.CASE_SENSITIVE)
         .includeDefaults()
-        .remove("<user.home>/**")  // remove home dir access
+        .remove("<user.home>/**")
         .build();
 
     Path home = Path.of(System.getProperty("user.home"));
-    String homeFile = home.resolve("file.txt").toString();
-    assertFalse(protections.isAllowed(homeFile));  // removed
-
-    String cwdFile = cwd.resolve("file.txt").toString();
-    assertTrue(protections.isAllowed(cwdFile));     // CWD still allowed
+    assertFalse(protections.isAllowed(home.resolve("file.txt").toString()));
+    assertTrue(protections.isAllowed(cwd.resolve("file.txt").toString()));
   }
 
   @Test
   void testBuilderFullyCustom() {
-    FileProtections protections = FileProtections.builder(cwd)
+    FileProtections protections = FileProtections.builder(cwd,
+        CaseSensitivity.CASE_SENSITIVE)
         .allow("/opt/app/**")
         .build();
 
     assertTrue(protections.isAllowed("/opt/app/schema.xml"));
     assertFalse(protections.isAllowed("/etc/passwd"));
-    // CWD not included since we didn't call includeDefaults()
-    String cwdFile = cwd.resolve("file.txt").toString();
-    assertFalse(protections.isAllowed(cwdFile));
+    assertFalse(protections.isAllowed(cwd.resolve("file.txt").toString()));
   }
 
   @Test
-  void testNoneAllowsEverything() {
-    FileProtections protections = FileProtections.none();
+  void testDisabledAllowsEverythingAndLogsWarning() {
+    FileProtections protections = FileProtections.disabled();
     assertTrue(protections.isAllowed("/etc/passwd"));
     assertTrue(protections.isAllowed("/home/user/.ssh/key"));
   }
@@ -733,26 +992,344 @@ class FileProtectionsTest {
   void testDefaultPatternsAreInspectable() {
     assertFalse(FileProtections.defaultAllowPatterns().isEmpty());
   }
+
+  @Test
+  void testCaseInsensitiveOnWindows() {
+    FileProtections protections = FileProtections.withDefaults(cwd,
+        CaseSensitivity.CASE_INSENSITIVE);
+    String cwdUpper = cwd.resolve("Schema.XML").toString().toUpperCase();
+    // Should match CWD subtree case-insensitively
+    assertTrue(protections.isAllowed(
+        cwd.resolve("Schema.XML").toString()));
+  }
+
+  @Test
+  void testCwdRootWarning() {
+    // When CWD is filesystem root, should log a warning
+    Path root = Path.of("/");
+    // This should succeed but log a WARNING
+    FileProtections protections = FileProtections.withDefaults(root,
+        CaseSensitivity.CASE_SENSITIVE);
+    // Root allows everything via <cwd>/**
+    assertTrue(protections.isAllowed("/etc/passwd"));
+  }
 }
 ```
 
-**Implementation:** `FileProtections` holds an ordered list of allow/deny patterns (with `!` negation) checked against file paths. Provides:
-- `withDefaults(Path cwd)` — shipped allow patterns (CWD + home minus sensitive dot-dirs)
-- `none()` — no protections (allows everything)
-- `builder(Path cwd)` — customizable with `includeDefaults()`, `allow()`, `remove()`
-- `defaultAllowPatterns()` — static method to inspect defaults
-- `isAllowed(String path)` — check if a path is allowed
+**Implementation:**
+- `withDefaults(Path cwd, CaseSensitivity cs)` — default patterns with CWD + home minus dot-dirs
+- `disabled()` — allows everything, logs WARN, Javadoc security warning
+- `builder(Path cwd, CaseSensitivity cs)` — customizable builder
+- `defaultAllowPatterns()` — static inspection method
+- `isAllowed(String path)` — check path against patterns
+- Warn if CWD is root (`/` or drive root)
 
 ---
 
-### Task 1.8: Add package-info.java
+### Task 1.11: Create ResourceAccessPolicy and Builder
+
+**Files:**
+- Create: `core/src/main/java/dev/metaschema/core/model/policy/ResourceAccessPolicy.java`
+- Create: `core/src/main/java/dev/metaschema/core/model/policy/ResourceAccessPolicyBuilder.java`
+- Test: `core/src/test/java/dev/metaschema/core/model/policy/ResourceAccessPolicyTest.java`
+
+**Test first:**
+
+```java
+package dev.metaschema.core.model.policy;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+
+class ResourceAccessPolicyTest {
+
+  @Test
+  void testDisabledModeAllowsEverything() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.DISABLED)
+        .forScheme("file").denyAll()
+        .build();
+
+    assertDoesNotThrow(() -> policy.checkAccess(URI.create("file:///etc/passwd")));
+  }
+
+  @Test
+  void testAuditModeLogsButAllows() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.AUDIT)
+        .forScheme("http").denyAll()
+        .denyUnlistedSchemes()
+        .build();
+
+    assertDoesNotThrow(() -> policy.checkAccess(URI.create("http://localhost/admin")));
+  }
+
+  @Test
+  void testEnforceModeBlocks() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .forScheme("http").denyAll()
+        .denyUnlistedSchemes()
+        .build();
+
+    assertThrows(AccessViolationException.class,
+        () -> policy.checkAccess(URI.create("http://localhost/admin")));
+  }
+
+  @Test
+  void testEnforceModeAllowsMatching() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .forScheme("https").allow("nist.gov/**")
+        .denyUnlistedSchemes()
+        .build();
+
+    assertDoesNotThrow(() -> policy.checkAccess(
+        URI.create("https://nist.gov/schemas/x.xml")));
+  }
+
+  @Test
+  void testDenyPatternExceptions() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .forScheme("file")
+            .allow("**")
+            .deny("**/.ssh/**")
+        .fileProtections(FileProtections.disabled())
+        .denyUnlistedSchemes()
+        .build();
+
+    assertDoesNotThrow(() -> policy.checkAccess(
+        URI.create("file:///workspace/schema.xml")));
+    assertThrows(AccessViolationException.class,
+        () -> policy.checkAccess(
+            URI.create("file:///home/user/.ssh/id_rsa")));
+  }
+
+  @Test
+  void testDenyUnlistedSchemesBlocksUnknown() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .forScheme("https").allowAll()
+        .denyUnlistedSchemes()
+        .build();
+
+    assertThrows(AccessViolationException.class,
+        () -> policy.checkAccess(URI.create("ftp://evil.com/file")));
+  }
+
+  @Test
+  void testWithModeCreatesNewPolicy() {
+    ResourceAccessPolicy audit = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.AUDIT)
+        .forScheme("http").denyAll()
+        .denyUnlistedSchemes()
+        .build();
+
+    assertDoesNotThrow(() -> audit.checkAccess(
+        URI.create("http://localhost/admin")));
+
+    ResourceAccessPolicy enforced = audit.withMode(PolicyMode.ENFORCE);
+    assertThrows(AccessViolationException.class,
+        () -> enforced.checkAccess(URI.create("http://localhost/admin")));
+  }
+
+  @Test
+  void testToBuilder() {
+    ResourceAccessPolicy original = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .forScheme("https").allow("nist.gov/**")
+        .denyUnlistedSchemes()
+        .build();
+
+    ResourceAccessPolicy modified = original.toBuilder()
+        .forScheme("https").allow("github.com/**")
+        .build();
+
+    assertDoesNotThrow(() -> modified.checkAccess(
+        URI.create("https://nist.gov/x.xml")));
+    assertDoesNotThrow(() -> modified.checkAccess(
+        URI.create("https://github.com/x.xml")));
+  }
+
+  @Test
+  void testExplainReturnsDecision() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .forScheme("https").allow("nist.gov/**")
+        .denyUnlistedSchemes()
+        .build();
+
+    PolicyDecision allowed = policy.explain(URI.create("https://nist.gov/x.xml"));
+    assertTrue(allowed.isAllowed());
+
+    PolicyDecision denied = policy.explain(URI.create("https://evil.com/x.xml"));
+    assertFalse(denied.isAllowed());
+    assertNotNull(denied.getDenialReason());
+    assertNotNull(denied.getLayer());
+    assertNotNull(denied.getRemediation());
+    assertFalse(denied.getEvaluationTrace().isEmpty());
+  }
+
+  @Test
+  void testDescribeEffectiveRules() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .forScheme("https").allow("nist.gov/**")
+        .forScheme("file").allow("/workspace/**")
+        .denyUnlistedSchemes()
+        .build();
+
+    String description = policy.describeEffectiveRules();
+    assertNotNull(description);
+    assertTrue(description.contains("ENFORCE"));
+    assertTrue(description.contains("https"));
+    assertTrue(description.contains("file"));
+  }
+
+  @Test
+  void testBundledDefaultsFactory() {
+    ResourceAccessPolicy defaults = ResourceAccessPolicy.bundledDefaults();
+    assertNotNull(defaults);
+    // Bundled defaults are AUDIT mode — should not throw
+    assertDoesNotThrow(() -> defaults.checkAccess(
+        URI.create("https://example.com/test")));
+  }
+
+  @Test
+  void testDevelopmentFactory() {
+    ResourceAccessPolicy dev = ResourceAccessPolicy.development();
+    assertNotNull(dev);
+    // Dev mode should allow localhost
+    assertDoesNotThrow(() -> dev.checkAccess(
+        URI.create("http://localhost/api")));
+  }
+
+  @Test
+  void testDisabledFactory() {
+    ResourceAccessPolicy disabled = ResourceAccessPolicy.disabled();
+    assertDoesNotThrow(() -> disabled.checkAccess(
+        URI.create("file:///etc/passwd")));
+  }
+
+  @Test
+  void testJarSchemeRecursiveCheck() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .forScheme("file").allow("/lib/**")
+        .forScheme("jar").allowAll()
+        .fileProtections(FileProtections.disabled())
+        .denyUnlistedSchemes()
+        .build();
+
+    // jar: with file: inner URI pointing to allowed path
+    assertDoesNotThrow(() -> policy.checkAccess(
+        URI.create("jar:file:///lib/app.jar!/schema/x.xsd")));
+
+    // jar: with http: inner URI — http not configured, default deny
+    assertThrows(AccessViolationException.class,
+        () -> policy.checkAccess(
+            URI.create("jar:http://evil.com/mal.jar!/schema/x.xsd")));
+  }
+
+  @Test
+  void testPathNormalizationPreventsTraversal() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .forScheme("file").allow("/workspace/**")
+        .fileProtections(FileProtections.disabled())
+        .denyUnlistedSchemes()
+        .build();
+
+    // Path traversal should be caught after normalization
+    assertThrows(AccessViolationException.class,
+        () -> policy.checkAccess(
+            URI.create("file:///workspace/../etc/passwd")));
+  }
+
+  @Test
+  void testSchemeNormalization() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .forScheme("file").allow("/workspace/**")
+        .fileProtections(FileProtections.disabled())
+        .denyUnlistedSchemes()
+        .build();
+
+    // Uppercase scheme should still match
+    assertDoesNotThrow(() -> policy.checkAccess(
+        URI.create("FILE:///workspace/schema.xml")));
+  }
+
+  @Test
+  void testFileProtectionsConflictDetection() {
+    // /opt/data/ is outside CWD and home — should throw at build time
+    assertThrows(IllegalStateException.class,
+        () -> ResourceAccessPolicy.builder()
+            .mode(PolicyMode.ENFORCE)
+            .forScheme("file")
+                .allow("/opt/data/**")
+            .denyUnlistedSchemes()
+            .build());
+  }
+
+  @Test
+  void testEnabledNoPatternsUsesDeny() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.ENFORCE)
+        .denyUnlistedSchemes()
+        .build();
+
+    // No schemes configured — should use default-scheme-policy (deny)
+    assertThrows(AccessViolationException.class,
+        () -> policy.checkAccess(URI.create("https://example.com")));
+  }
+
+  @Test
+  void testImmutability() {
+    ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+        .mode(PolicyMode.AUDIT)
+        .forScheme("https").allow("nist.gov/**")
+        .build();
+
+    ResourceAccessPolicy withEnforce = policy.withMode(PolicyMode.ENFORCE);
+
+    // Original should not be affected
+    assertDoesNotThrow(() -> policy.checkAccess(
+        URI.create("https://evil.com")));
+    // New instance should enforce
+    assertThrows(AccessViolationException.class,
+        () -> withEnforce.checkAccess(URI.create("https://evil.com")));
+  }
+}
+```
+
+**Implementation:**
+- `ResourceAccessPolicy` is a **final, immutable** class
+- All internal collections are unmodifiable copies
+- `checkAccess(URI)` — full evaluation pipeline (normalize → network check → file protections → scheme patterns → mode behavior)
+- `explain(URI)` — same pipeline but returns `PolicyDecision` instead of throwing
+- `withMode(PolicyMode)` — returns new instance with different mode
+- `toBuilder()` — returns pre-populated builder
+- Factory methods: `bundledDefaults()`, `development()`, `disabled()`
+- `describeEffectiveRules()` — returns human-readable summary
+- `ResourceAccessPolicyBuilder` uses nested `SchemeConfigBuilder` pattern
+- `.forScheme()` twice for same scheme appends patterns
+- `.build()` runs conflict detection (file scheme patterns vs FileProtections)
+
+---
+
+### Task 1.12: Add package-info.java
 
 **Files:**
 - Create: `core/src/main/java/dev/metaschema/core/model/policy/package-info.java`
 
 ---
 
-### Task 1.9: Verify PR1 Build
+### Task 1.13: Verify PR1 Build
 
 ```bash
 mvn -pl core clean install
@@ -763,24 +1340,24 @@ mvn -pl core checkstyle:check
 
 ## PR2: Configuration Model and Bundled Defaults
 
-**Goal:** Define the Metaschema configuration module, implement config loading, and ship bundled restrictive defaults.
+**Goal:** Define the Metaschema configuration module, implement config loading with ratcheting, and ship bundled restrictive defaults.
 
 ### Task 2.1: Create Metaschema Configuration Module
 
 **Files:**
-- Create: `core/src/main/metaschema/resource-access-policy_metaschema.yaml`
+- Create: `core/src/main/metaschema/resource-access-policy-config_metaschema.yaml`
 
-The Metaschema module definition for the resource access policy configuration model. See PRD for full module definition.
+The Metaschema module definition for the resource access policy configuration model. See PRD for full module definition. Root assembly is `resource-access-policy-config` to avoid naming collision with the hand-written `ResourceAccessPolicy` class.
 
 ---
 
 ### Task 2.2: Configure Maven Code Generation
 
 **Files:**
-- Modify: `core/pom.xml` (if needed - verify if metaschema-maven-plugin is already configured for `src/main/metaschema`)
+- Modify: `core/pom.xml` (add dependency on `ipaddress` library, verify metaschema-maven-plugin config)
 
 Verify generated binding classes compile and contain expected fields:
-- `ResourceAccessPolicy` (root assembly)
+- `ResourceAccessPolicyConfig` (root assembly)
 - `SchemeConfig` (scheme configuration)
 - `Pattern` (access pattern field)
 
@@ -811,7 +1388,7 @@ class BundledDefaultsTest {
 
   @Test
   void testDefaultModeIsAudit() {
-    // Audit mode: should log but not throw
+    // AUDIT mode: should log but not throw
     assertDoesNotThrow(() -> defaults.checkAccess(
         URI.create("http://localhost/admin")));
   }
@@ -820,7 +1397,6 @@ class BundledDefaultsTest {
   @ValueSource(strings = {
       "https://pages.nist.gov/schemas/x.xml",
       "https://example.com/api",
-      "file:///workspace/schema.xml",
       "jar:file:///lib.jar!/schema/x.xsd",
   })
   void testDefaultAllowedInEnforceMode(String uriString) {
@@ -852,35 +1428,25 @@ class BundledDefaultsTest {
     assertThrows(AccessViolationException.class,
         () -> enforced.checkAccess(URI.create(uriString)));
   }
-
-  @ParameterizedTest
-  @ValueSource(strings = {
-      "file:///etc/passwd",
-      "file:///proc/self/environ",
-      "file:///home/user/.ssh/id_rsa",
-      "file:///home/user/.aws/credentials",
-  })
-  void testDefaultDeniedFilePathsInEnforceMode(String uriString) {
-    ResourceAccessPolicy enforced = defaults.withMode(PolicyMode.ENFORCE);
-    assertThrows(AccessViolationException.class,
-        () -> enforced.checkAccess(URI.create(uriString)));
-  }
 }
 ```
 
-**Implementation:** Load bundled YAML from classpath resource and parse into `ResourceAccessPolicy`.
-
 ---
 
-### Task 2.4: Implement Configuration Loading
+### Task 2.4: Implement Configuration Loading with Ratcheting
 
 **Files:**
 - Create: `core/src/main/java/dev/metaschema/core/model/policy/ResourceAccessPolicyLoader.java`
 - Test: `core/src/test/java/dev/metaschema/core/model/policy/ResourceAccessPolicyLoaderTest.java`
 
-**Test first:** Verify loading from YAML, JSON, and XML config files. Verify configuration layering with merge semantics.
-
-**Implementation:** Uses `IBoundLoader` to load the generated binding classes, then converts to `ResourceAccessPolicy`.
+**Test first:** Verify:
+- Loading from YAML, JSON, and XML config files
+- Configuration layering with merge semantics
+- Ratchet enforcement (can only tighten, never loosen mode)
+- `locked: true` prevents overrides
+- `inherit: true` appends patterns instead of replacing
+- Scheme name validation (warn on unrecognized schemes like "htps")
+- YAML `!` pattern validation (detect unquoted `!` patterns)
 
 ---
 
@@ -902,17 +1468,18 @@ mvn -pl core checkstyle:check
 **Files:**
 - Modify: `core/src/main/java/dev/metaschema/core/model/IModuleLoader.java`
 
-Add method to set resource access policy:
+Add method:
 
 ```java
 /**
  * Sets the resource access policy for this loader.
  * <p>
  * When set, all URIs resolved by this loader are checked against the policy
- * before loading.
+ * before loading. Use {@link ResourceAccessPolicy#bundledDefaults()} for
+ * recommended defaults.
  *
  * @param policy
- *          the policy to enforce, or {@code null} to disable
+ *          the policy to enforce, or {@code null} to disable policy checking
  */
 void setResourceAccessPolicy(@Nullable IResourceAccessPolicy policy);
 ```
@@ -925,18 +1492,9 @@ void setResourceAccessPolicy(@Nullable IResourceAccessPolicy policy);
 - Modify: `core/src/main/java/dev/metaschema/core/model/AbstractModuleLoader.java`
 - Test: `core/src/test/java/dev/metaschema/core/model/AbstractModuleLoaderPolicyTest.java`
 
-**Test first:** Verify module import URIs are checked against policy.
+**Test first:** Verify module import URIs are checked against policy. Verify relative URIs are resolved to absolute before checking.
 
-**Implementation:** Add policy field and check before URI resolution:
-
-```java
-// In resolveImport or similar method:
-URI resolvedResource = ObjectUtils.notNull(resource.resolve(importedResource));
-IResourceAccessPolicy policy = getResourceAccessPolicy();
-if (policy != null) {
-  policy.checkAccess(resolvedResource);
-}
-```
+**Implementation:** Add `volatile IResourceAccessPolicy` field. Check before URI resolution. Resolve relative URIs to absolute before calling `checkAccess()`.
 
 ---
 
@@ -966,7 +1524,7 @@ if (policy != null) {
 - Modify: `databind/src/main/java/dev/metaschema/databind/io/xml/DefaultXmlDeserializer.java`
 - Test: `databind/src/test/java/dev/metaschema/databind/io/xml/DefaultXmlDeserializerPolicyTest.java`
 
-**Test first:** Verify XML entity resolution URIs are checked against policy.
+**Test first:** Verify XML entity resolution URIs are checked against policy. Document HTTP redirect re-checking requirement.
 
 ---
 
@@ -980,34 +1538,54 @@ mvn clean install -PCI -Prelease
 
 ## PR4: CLI Integration and Documentation
 
-**Goal:** Add CLI flags for policy mode control and documentation.
+**Goal:** Add CLI flags for policy control, diagnostic commands, and documentation.
 
-### Task 4.1: Add CLI Flags
+### Task 4.1: Add Global CLI Flags
 
 **Files:**
-- Modify: `metaschema-cli/src/main/java/dev/metaschema/cli/CLI.java` (or relevant command classes)
+- Modify: `metaschema-cli/src/main/java/dev/metaschema/cli/commands/MetaschemaCommands.java` (shared options)
+- Modify: Resource-loading commands (validate, validate-content, convert, generate-schema) to accept policy flags
 
-Add flags:
-- `--resource-policy-mode=<disabled|audit|enforce>` - Override enforcement mode
-- `--resource-policy=<path>` - Load custom policy configuration file
-
----
+Add global flags available on all resource-loading commands:
+- `--resource-policy-mode=<disabled|audit|enforce>` — Override enforcement mode
+- `--resource-policy=<path>` — Load custom policy configuration file
 
 ### Task 4.2: Add Environment Variable Support
 
 Support `METASCHEMA_RESOURCE_POLICY_MODE` environment variable for mode override.
 
----
+### Task 4.3: Create ResourcePolicyCommand (Parent Command)
 
-### Task 4.3: Documentation
+**Files:**
+- Create: `metaschema-cli/src/main/java/dev/metaschema/cli/commands/resourcepolicy/ResourcePolicyCommand.java`
+- Modify: `metaschema-cli/src/main/java/dev/metaschema/cli/commands/MetaschemaCommands.java` (register command)
+
+Create a new `AbstractParentCommand` with `dump` and `check` subcommands. Follows the same pattern as `MetapathCommand`. Register in `MetaschemaCommands.COMMANDS`.
+
+### Task 4.4: Implement `resource-policy dump` Subcommand
+
+**Files:**
+- Create: `metaschema-cli/src/main/java/dev/metaschema/cli/commands/resourcepolicy/DumpSubcommand.java`
+
+`AbstractTerminalCommand` that prints the effective merged policy (after all config layers) as YAML to stdout. Uses `policy.describeEffectiveRules()`. Accepts `--resource-policy` and `--resource-policy-mode` flags.
+
+### Task 4.5: Implement `resource-policy check` Subcommand
+
+**Files:**
+- Create: `metaschema-cli/src/main/java/dev/metaschema/cli/commands/resourcepolicy/CheckSubcommand.java`
+
+`AbstractTerminalCommand` that takes a URI as a positional argument, runs it through the policy, and prints the `PolicyDecision` evaluation trace. Uses `policy.explain(URI)`. Accepts `--resource-policy` and `--resource-policy-mode` flags.
+
+### Task 4.6: Documentation
 
 **Files:**
 - Update: Website documentation with resource access policy guide
 - Update: CLI help text
+- Include: Migration guide (AUDIT → ENFORCE transition steps)
+- Include: YAML `!` quoting warning
+- Include: Explicit note that `!` means DENY (contrast with `.gitignore`)
 
----
-
-### Task 4.4: Final Verification
+### Task 4.7: Final Verification
 
 ```bash
 mvn clean install -PCI -Prelease
@@ -1018,38 +1596,59 @@ mvn clean install -PCI -Prelease
 ## Completion Checklist
 
 **Phase 1: Policy Engine Core (PR1)**
-- [ ] `PolicyMode` enum with DISABLED/AUDIT/ENFORCE
-- [ ] `AccessViolationException` for ENFORCE mode
-- [ ] `GlobMatcher` with `.gitignore`-style glob matching
-- [ ] `SchemePatternSet` with ordered pattern evaluation and `!` negation
+- [ ] `PolicyMode` enum with DISABLED/AUDIT/ENFORCE and `mostRestrictive()`
+- [ ] `SymlinkPolicy` enum with FOLLOW/NOFOLLOW
+- [ ] `CaseSensitivity` enum with SYSTEM_DEFAULT/CASE_SENSITIVE/CASE_INSENSITIVE
+- [ ] `AccessViolationException` with structured fields (layer, reason, source, remediation)
+- [ ] `GlobMatcher` with case sensitivity, possessive quantifiers, pattern length limit
+- [ ] `UriNormalizer` with path normalization, percent-decoding, symlink resolution, scheme/host normalization, JAR parsing
+- [ ] `NetworkSecurityChecker` with CIDR block matching via IP library, alternate encoding support
+- [ ] `NetworkSecurityConfig` with builder and `allowLoopback()`, `allowCidr()`
+- [ ] `SchemePatternSet` with ordered pattern evaluation, case sensitivity, updated empty-patterns semantics
+- [ ] `PolicyDecision` and `EvaluationStep` for diagnostics
 - [ ] `IResourceAccessPolicy` interface
-- [ ] `ResourceAccessPolicy` with builder
-- [ ] `FileProtections` with defaults, builder, and customization API
+- [ ] `ResourceAccessPolicy` (immutable) with builder, factory methods, `toBuilder()`, `explain()`, `describeEffectiveRules()`
+- [ ] `FileProtections` with `disabled()` (renamed from `none()`), blanket dot-dir exclusion, CWD root warning, conflict detection
 - [ ] `package-info.java`
+- [ ] IP boundary value tests for all private CIDR blocks
+- [ ] Alternate IP encoding tests (decimal, hex, octal, shorthand, IPv4-mapped IPv6)
+- [ ] Path traversal normalization tests
+- [ ] Symlink traversal tests
+- [ ] Case sensitivity tests
+- [ ] ReDoS resistance tests
+- [ ] JAR recursive checking tests
 - [ ] All tests passing
 
 **Phase 2: Configuration Model (PR2)**
-- [ ] Metaschema module definition (`resource-access-policy_metaschema.yaml`)
-- [ ] Maven code generation verified
-- [ ] Bundled default policy (restrictive, audit mode)
-- [ ] `ResourceAccessPolicyLoader` for config file loading
-- [ ] Configuration layering with merge semantics
+- [ ] Metaschema module (`resource-access-policy-config_metaschema.yaml`)
+- [ ] Maven code generation verified (no naming collision)
+- [ ] IP address library dependency added (`com.github.seancfoley:ipaddress`)
+- [ ] Bundled default policy (restrictive, AUDIT mode)
+- [ ] `ResourceAccessPolicyLoader` with ratchet enforcement, `locked` flag, `inherit` merge
+- [ ] Scheme name validation (warn on unrecognized)
+- [ ] YAML `!` pattern validation
+- [ ] Pattern complexity limits (count, length)
+- [ ] Configuration layering tests
 - [ ] All tests passing
 
 **Phase 3: Loader Integration (PR3)**
 - [ ] `IModuleLoader.setResourceAccessPolicy()` method
-- [ ] `AbstractModuleLoader` policy integration
+- [ ] `AbstractModuleLoader` policy integration (with relative URI resolution)
 - [ ] `DefaultBoundLoader` policy integration
 - [ ] `BindingConstraintLoader` policy integration
 - [ ] `DefaultXmlDeserializer` policy integration
+- [ ] HTTP redirect re-checking documented as integration requirement
 - [ ] Integration tests for each loader type
 - [ ] All tests passing
 
 **Phase 4: CLI Integration (PR4)**
 - [ ] `--resource-policy-mode` CLI flag
 - [ ] `--resource-policy` CLI flag
+- [ ] `ResourcePolicyCommand` parent command (extends `AbstractParentCommand`)
+- [ ] `resource-policy dump` subcommand
+- [ ] `resource-policy check <uri>` subcommand
 - [ ] `METASCHEMA_RESOURCE_POLICY_MODE` env var
-- [ ] Documentation
+- [ ] Documentation (migration guide, YAML warnings, `!` semantics)
 - [ ] Full CI build passing
 
 **Final Verification:**
