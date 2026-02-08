@@ -1,12 +1,12 @@
-# Allowlist URI Resolver PRD
+# Resource Access Policy PRD
 
 **Issue:** [#183 - Add new allowlist-only resolver for loading models, instances, and dynamic model generation](https://github.com/metaschema-framework/metaschema-java/issues/183)
 
-**Goal:** Provide a secure-by-default URI resolver that restricts resource access to explicitly allowed directories, domains, and URI schemes - preventing local file inclusion, SSRF, and other resource access attacks.
+**Goal:** Provide a policy-based URI resolver that controls resource access using glob patterns, with graduated enforcement modes (disabled, audit, enforce) for low-impact, backwards-compatible deployment.
 
-**Architecture:** Implement `IAllowlistUriResolver` extending `IUriResolver` with hierarchical rules (scheme → file/HTTP-specific policies). Integrate at all resolution points: module loading, document loading, constraint loading, and XML entity resolution. Defense-in-depth via user-defined allowlist plus always-enforced built-in denylist.
+**Architecture:** Implement a `ResourceAccessPolicy` in the `core` module using `.gitignore`-style glob patterns grouped by URI scheme. Integrate at loader level (`IModuleLoader`, `IBoundLoader`) with configurable enforcement modes. Default: restrictive rules in audit mode (log violations but allow all requests).
 
-**Tech Stack:** Java 11, existing Metaschema core interfaces, YAML (SnakeYAML) for configuration files, SLF4J for audit logging.
+**Tech Stack:** Java 11, existing Metaschema core interfaces, Metaschema-based configuration model, SLF4J for audit logging.
 
 ---
 
@@ -17,62 +17,291 @@ As a developer of Metaschema-based tooling deploying services, I need a resolver
 2. Restricts access to an allowlist of remote HTTP services
 3. Prevents SSRF attacks to internal services (localhost, cloud metadata endpoints)
 4. Prevents local file inclusion attacks (directory traversal, sensitive system files)
+5. Can be deployed gradually (audit first, enforce later) without breaking existing workflows
+6. Works identically in CLI and library-based deployments
 
 ### Security Threats Addressed
 
 | Threat | Attack Vector | Mitigation |
 |--------|--------------|------------|
-| Local File Inclusion | `../../../etc/passwd` in imports | File path normalization + base directory validation |
-| SSRF to Internal Services | `http://localhost:8080/admin` | Built-in denylist for localhost, private IPs |
-| Cloud Metadata Access | `http://169.254.169.254/` | Built-in denylist for link-local addresses |
-| XXE Attacks | XML entity resolution to arbitrary URLs | Route entity resolution through allowlist |
-| Scheme Injection | `file://`, `ftp://`, `gopher://` | Scheme allowlist (default: https only) |
+| Local File Inclusion | `../../../etc/passwd` in imports | Path normalization + pattern-based access control |
+| SSRF to Internal Services | `http://localhost:8080/admin` | Default-deny for `http` scheme patterns |
+| Cloud Metadata Access | `http://169.254.169.254/` | Default-deny for private/link-local patterns |
+| XXE Attacks | XML entity resolution to arbitrary URLs | Route entity resolution through policy |
+| Scheme Injection | `file://`, `ftp://`, `gopher://` | Scheme-level allow/deny with glob patterns |
 
 ---
 
 ## Design Decisions
 
-### 1. Primary Use Cases
-- **Server/API deployment**: Untrusted users submitting URIs for validation
-- **Library security**: Secure defaults for developers integrating the library
-- **CLI hardening**: Command-line tools processing user-provided files
+### 1. Glob Pattern Model (`.gitignore`-style)
 
-### 2. Configuration Model
-- **Programmatic API**: Builder pattern for library integrations
-- **File-based**: YAML configuration for deployments
-- **Hierarchical**: Global defaults with per-loader overrides
-- **Secure defaults**: Deny all schemes except https; require explicit allowlist
+Patterns use familiar `.gitignore` glob syntax with `!` negation:
 
-### 3. Rule Granularity
-- **Scheme policies**: Allow/deny by URI scheme (file, http, https, jar)
-- **File system rules**: Base directory + recursive/single-level scope
-- **HTTP rules**: Domain allowlist + optional path prefix restrictions
-- **JAR resources**: Path patterns within JAR files
+- **Allow patterns** define what resources are accessible
+- **`!` patterns** create exceptions (deny previously allowed resources)
+- Patterns are evaluated **in order**, last match wins
+- Patterns are organized **by scheme** (file, https, http, jar)
 
-### 4. Defense in Depth
-- **User allowlist**: Explicit permissions required
-- **Built-in denylist**: Always enforced, cannot be disabled
-  - Localhost and loopback addresses
-  - Private IP ranges (10.x, 172.16-31.x, 192.168.x)
-  - Link-local addresses (169.254.x.x - cloud metadata)
-  - Sensitive system paths (/etc/, /proc/, /sys/, C:\Windows\)
+This replaces the previous allowlist+denylist dual model with a single, unified pattern list per scheme. Users familiar with `.gitignore` can immediately understand and author policies.
 
-### 5. Access Denied Behavior
-- **Default**: Throw `AccessDeniedException` with clear message
-- **Configurable**: Custom handler for alternative behavior
-- **Audit logging**: Always log blocked attempts via SLF4J
+### 2. Enforcement Modes
 
-### 6. Integration Points
-All resolution paths route through the allowlist resolver:
+Three graduated enforcement levels for safe rollout:
+
+| Mode | Behavior | Use Case |
+|------|----------|----------|
+| `DISABLED` | No policy checking; all URIs allowed | Legacy behavior, maximum compatibility |
+| `AUDIT` | Check policy, **log violations**, but **allow** all requests | Migration period, discovering needed rules |
+| `ENFORCE` | Check policy, **block** violations with exception | Production hardened |
+
+**Default mode:** `AUDIT` — provides visibility into what would be blocked without breaking existing workflows.
+
+The mode is configurable via:
+- **API:** `ResourceAccessPolicy.builder().mode(PolicyMode.AUDIT)`
+- **Config file:** `mode: audit` in the policy configuration
+- **CLI flag:** `--resource-policy-mode=enforce`
+
+### 3. Scheme-Based Pattern Organization
+
+Patterns are grouped by URI scheme for clarity and to avoid ambiguity:
+
+```yaml
+resource-access-policy:
+  mode: audit
+  schemes:
+    - scheme: https
+      patterns:
+        - "pages.nist.gov/**"
+        - "raw.githubusercontent.com/metaschema-framework/**"
+        - "!*.internal/**"
+    - scheme: http
+      enabled: false
+    - scheme: file
+      patterns:
+        - "/workspace/**"
+        - "/data/schemas/**"
+        - "!**/.ssh/**"
+        - "!**/.aws/**"
+    - scheme: jar
+      patterns:
+        - "/schema/**"
+        - "/META-INF/metaschema/**"
+```
+
+Within each scheme section:
+- `enabled: false` disables the entire scheme (deny all)
+- `enabled: true` (default) enables pattern matching
+- If patterns are present, only matching URIs are allowed
+- If no patterns are present and enabled is true, all URIs for that scheme are allowed
+- `!` patterns create exceptions within the allowed set
+
+### 4. File System Protections (Defense-in-Depth)
+
+The `file` scheme ships with a **default allow-list of safe path patterns**, providing defense-in-depth against misconfiguration. File protections are checked **before** user-defined scheme patterns — a path must be allowed by file protections before scheme patterns are evaluated. This can be adjusted via the API.
+
+**Model:** File protections use an allow-list approach. Only paths matching an allow pattern are permitted; everything else is denied. This is the inverse of the scheme-level glob patterns — protections define a **floor** of safe paths.
+
+**Default allow patterns (shipped with the library):**
+
+All platforms:
+- `<cwd>/**` — current working directory subtree (resolved at policy creation time)
+- `<user.home>/**` — user's home directory subtree
+- `!<user.home>/.ssh/**` — except SSH keys
+- `!<user.home>/.aws/**` — except AWS credentials
+- `!<user.home>/.gnupg/**` — except GPG keys
+- `!**/Library/Keychains/**` — except macOS keychains
+- `!**/Library/Application Support/com.apple.TCC/**` — except macOS privacy DB
+- `!**/AppData/**` — except Windows AppData
+
+Note: `<cwd>` and `<user.home>` are resolved to absolute paths at policy creation time, not treated as literal patterns.
+
+**What the defaults block (by omission):**
+
+Since only the CWD and home directory subtrees are allowed, paths like these are denied automatically:
+- `/etc/**`, `/proc/**`, `/sys/**`, `/dev/**` — system directories
+- `/root/**` — root home (unless CWD is there)
+- `C:/Windows/**` — Windows system directory
+- Any path outside CWD and home
+
+**Behavior by mode:**
+
+| Mode | File protection behavior |
+|------|--------------------------|
+| `DISABLED` | Not checked (policy is fully off) |
+| `AUDIT` | Checked, violations logged as WARN, request **allowed** |
+| `ENFORCE` | Checked, violations **blocked** with `AccessViolationException` |
+
+**API for adjusting the protection list:**
+
+```java
+// Default behavior: CWD subtree + home (minus sensitive dot-dirs)
+// are allowed. Everything else denied.
+ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+    .mode(PolicyMode.ENFORCE)
+    .forScheme("file")
+        .allow("/workspace/**")
+    .build();
+// file:///workspace/schema.xml → ALLOWED
+// file:///etc/passwd → DENIED (not in file protections allow-list)
+
+// Inspect the default allow patterns
+List<String> defaults = FileProtections.defaultAllowPatterns();
+
+// Customize: start from defaults and allow additional paths
+ResourceAccessPolicy custom = ResourceAccessPolicy.builder()
+    .mode(PolicyMode.ENFORCE)
+    .fileProtections(FileProtections.builder()
+        .includeDefaults()              // CWD + home minus sensitive dirs
+        .allow("/opt/metaschema/**")    // add another safe area
+        .allow("/data/schemas/**")      // add another safe area
+        .build())
+    .forScheme("file")
+        .allow("/workspace/**")
+    .build();
+
+// Customize: start from defaults but narrow scope
+ResourceAccessPolicy tighter = ResourceAccessPolicy.builder()
+    .mode(PolicyMode.ENFORCE)
+    .fileProtections(FileProtections.builder()
+        .includeDefaults()
+        .remove("<user.home>/**")       // remove home dir access
+        .build())
+    .forScheme("file")
+        .allow("/workspace/**")
+    .build();
+
+// Completely replace: no defaults, fully custom safe list
+ResourceAccessPolicy fullyCustom = ResourceAccessPolicy.builder()
+    .mode(PolicyMode.ENFORCE)
+    .fileProtections(FileProtections.builder()
+        .allow("/opt/app/**")           // only this directory tree
+        .build())                       // no defaults included
+    .forScheme("file")
+        .allow("/opt/app/schemas/**")
+    .build();
+
+// Disable file protections entirely (not recommended)
+ResourceAccessPolicy noProtections = ResourceAccessPolicy.builder()
+    .mode(PolicyMode.ENFORCE)
+    .fileProtections(FileProtections.none())
+    .forScheme("file")
+        .allow("/workspace/**")
+    .build();
+```
+
+**Evaluation order:** File protections are checked **before** user-defined scheme patterns. The flow for a `file:` URI is:
+1. Check file protections allow-list (is the path in a safe area?)
+2. If denied by file protections → apply mode behavior (log/block), stop
+3. If allowed by file protections → check user's scheme patterns (last match wins)
+4. If no scheme pattern matches → use `default-scheme-policy`
+
+This means file protections act as a gate — a path must be in a safe area before user scheme patterns are even considered.
+
+### 5. Default Bundled Policy
+
+The library ships with a **restrictive default policy in audit mode**:
+
+```yaml
+resource-access-policy:
+  mode: audit
+  default-scheme-policy: deny
+  schemes:
+    - scheme: https
+      patterns:
+        - "**"
+        - "!localhost/**"
+        - "!127.*/**"
+        - "!10.*/**"
+        - "!172.16.*/**"
+        - "!172.17.*/**"
+        - "!172.18.*/**"
+        - "!172.19.*/**"
+        - "!172.2?.*/**"
+        - "!172.30.*/**"
+        - "!172.31.*/**"
+        - "!192.168.*/**"
+        - "!169.254.*/**"
+        - "![::1]/**"
+        - "!metadata.google.internal/**"
+    - scheme: http
+      enabled: false
+    - scheme: file
+      patterns:
+        - "**"
+        - "!/etc/**"
+        - "!/proc/**"
+        - "!/sys/**"
+        - "!/dev/**"
+        - "!/root/**"
+        - "!**/.ssh/**"
+        - "!**/.aws/**"
+        - "!**/.gnupg/**"
+        - "!/var/run/**"
+        - "!C:/Windows/**"
+        - "!**/AppData/**"
+    - scheme: jar
+      patterns:
+        - "**"
+```
+
+In `AUDIT` mode (the default), this logs every URI access that would fail these rules but allows the request to proceed. Users can review logs to understand their access patterns before switching to `ENFORCE`.
+
+### 6. Policy on Loader (Library API)
+
+For library users, policy is set on the loader:
+
+```java
+// Create a policy
+ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+    .mode(PolicyMode.AUDIT)
+    .forScheme("https")
+        .allow("pages.nist.gov/**")
+        .allow("raw.githubusercontent.com/metaschema-framework/**")
+    .forScheme("file")
+        .allow("/workspace/schemas/**")
+        .deny("**/.ssh/**")
+    .forScheme("jar")
+        .allowAll()
+    .defaultDeny()
+    .build();
+
+// Set on loader
+IModuleLoader loader = ...;
+loader.setResourceAccessPolicy(policy);
+
+// Or use bundled defaults
+loader.setResourceAccessPolicy(ResourceAccessPolicy.bundledDefaults());
+
+// Override mode
+loader.setResourceAccessPolicy(
+    ResourceAccessPolicy.bundledDefaults()
+        .withMode(PolicyMode.ENFORCE));
+```
+
+This keeps the API on the loader itself, making it discoverable and natural for library users. The `IUriResolver` interface remains unchanged for backwards compatibility.
+
+### 7. All in Core Module
+
+The entire policy engine lives in `core`:
+- Policy model, pattern matching, enforcement
+- Metaschema configuration model and loading
+- Default bundled policy
+
+CLI-specific concerns (CLI flags, environment variables) are handled in `cli-processor`/`metaschema-cli` but delegate to the core API.
+
+### 8. Integration Points
+
+All resolution paths check the policy:
 
 | Component | Current Behavior | Change Required |
 |-----------|-----------------|-----------------|
-| `DefaultBoundLoader` | Uses `IUriResolver` | None - already integrated |
-| `AbstractModuleLoader` | Raw `URI.resolve()` for imports | Route through `IUriResolver` |
-| `BindingConstraintLoader` | Raw `URI.resolve()` for imports | Route through `IUriResolver` |
-| `DefaultXmlDeserializer` | Custom `XMLResolver` for entities | Use `IUriResolver` |
-| `DefaultJsonDeserializer` | Reads from provided `Reader` | None - uses loader with allowlist |
-| `DefaultYamlDeserializer` | Reads from provided `Reader` | None - uses loader with allowlist |
+| `DefaultBoundLoader` | Uses `IUriResolver` | Add policy check before resolution |
+| `AbstractModuleLoader` | Raw `URI.resolve()` for imports | Add policy check |
+| `BindingConstraintLoader` | Raw `URI.resolve()` for imports | Add policy check |
+| `DefaultXmlDeserializer` | Custom `XMLResolver` for entities | Route through policy |
+| `DefaultJsonDeserializer` | Reads from provided `Reader` | None - uses loader with policy |
+| `DefaultYamlDeserializer` | Reads from provided `Reader` | None - uses loader with policy |
 
 ---
 
@@ -82,35 +311,28 @@ All resolution paths route through the allowlist resolver:
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│                    IAllowlistUriResolver                        │
-│                    (extends IUriResolver)                       │
+│                    ResourceAccessPolicy                         │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌─────────────────┐  ┌──────────────────────────────────────┐  │
-│  │  SchemePolicy   │  │        ResourceRules                 │  │
+│  │  PolicyMode     │  │      SchemePatterns                  │  │
 │  │  ─────────────  │  │  ────────────────────────────────    │  │
-│  │  file:  DENY    │  │  FileSystemRules:                    │  │
-│  │  http:  DENY    │  │    - baseDirs with scope             │  │
-│  │  https: ALLOW   │  │    - path patterns                   │  │
-│  │  jar:   ALLOW   │  │  HttpRules:                          │  │
-│  │                 │  │    - domain allowlist                │  │
-│  │                 │  │    - path prefix restrictions        │  │
-│  │                 │  │  JarRules:                           │  │
-│  │                 │  │    - allowed resource paths          │  │
+│  │  DISABLED       │  │  file:                               │  │
+│  │  AUDIT          │  │    allow: /workspace/**              │  │
+│  │  ENFORCE        │  │    deny:  **/.ssh/**                 │  │
+│  │                 │  │  https:                              │  │
+│  │                 │  │    allow: pages.nist.gov/**          │  │
+│  │                 │  │    deny:  localhost/**               │  │
+│  │                 │  │  http:                               │  │
+│  │                 │  │    (disabled)                        │  │
+│  │                 │  │  jar:                                │  │
+│  │                 │  │    allow: **                         │  │
 │  └─────────────────┘  └──────────────────────────────────────┘  │
 │  ┌───────────────────────────────────────────────────────────┐  │
-│  │              BuiltInDenylist (always enforced)            │  │
+│  │              Audit Logger (SLF4J)                         │  │
 │  │  ───────────────────────────────────────────────────────  │  │
-│  │  Network: localhost, 127.*, 10.*, 172.16-31.*, 192.168.*  │  │
-│  │           169.254.* (cloud metadata), [::1], etc.         │  │
-│  │  Filesystem: /etc/, /proc/, /sys/, /dev/, ~/.ssh/         │  │
-│  │              C:\Windows\, C:\Users\*\AppData\             │  │
-│  └───────────────────────────────────────────────────────────┘  │
-│  ┌───────────────────────────────────────────────────────────┐  │
-│  │              AccessDeniedHandler (configurable)           │  │
-│  │  ───────────────────────────────────────────────────────  │  │
-│  │  Default: throw AccessDeniedException                     │  │
-│  │  Custom: user-provided handler                            │  │
-│  │  Logging: always audit via SLF4J                          │  │
+│  │  AUDIT mode:   log WARN for violations, allow request    │  │
+│  │  ENFORCE mode: log ERROR for violations, throw exception │  │
+│  │  All modes:    log DEBUG for allowed requests (optional)  │  │
 │  └───────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -118,55 +340,46 @@ All resolution paths route through the allowlist resolver:
 ### Class Hierarchy
 
 ```text
-gov.nist.secauto.metaschema.core.model.resolver/
-├── IAllowlistUriResolver.java          # Main interface
-├── AllowlistUriResolver.java           # Default implementation
-├── AllowlistUriResolverBuilder.java    # Fluent builder
-├── AccessDeniedException.java          # Exception for blocked URIs
-├── IAccessDeniedHandler.java           # Custom handler interface
-├── config/
-│   ├── AllowlistConfiguration.java     # Configuration POJO
-│   ├── AllowlistConfigurationLoader.java  # YAML loader
-│   ├── SchemePolicy.java               # Enum: ALLOW, DENY
-│   ├── FileSystemRule.java             # File path rules
-│   ├── HttpRule.java                   # Domain/path rules
-│   └── JarRule.java                    # JAR resource rules
-└── denylist/
-    ├── BuiltInDenylist.java            # Immutable security rules
-    ├── NetworkDenylist.java            # IP/hostname patterns
-    └── FileSystemDenylist.java         # Sensitive path patterns
+dev.metaschema.core.model.policy/
+├── ResourceAccessPolicy.java          # Main policy implementation
+├── ResourceAccessPolicyBuilder.java   # Fluent builder
+├── PolicyMode.java                    # Enum: DISABLED, AUDIT, ENFORCE
+├── AccessViolationException.java      # Exception for ENFORCE mode
+├── IResourceAccessPolicy.java         # Interface for policy checking
+├── SchemePatternSet.java              # Glob patterns for one scheme
+├── GlobMatcher.java                   # .gitignore-style glob matching
+├── FileProtections.java               # Adjustable file system deny patterns (ships with defaults)
+└── package-info.java
 ```
 
 ### Integration Flow
 
 ```text
-User Request (URI)
+Loader receives URI
        │
        ▼
-┌──────────────────┐
-│  IModuleLoader   │──────┐
-│  IDocumentLoader │      │
-│  IConstraintLoader      │
-│  XMLResolver     │      │
-└──────────────────┘      │
-       │                  │
-       ▼                  ▼
-┌──────────────────────────────────────┐
-│      IAllowlistUriResolver           │
-│  ┌────────────────────────────────┐  │
-│  │ 1. Check built-in denylist    │  │
-│  │ 2. Check scheme policy        │  │
-│  │ 3. Check resource-specific    │  │
-│  │    rules (file/http/jar)      │  │
-│  │ 4. Log attempt                │  │
-│  │ 5. Return URI or throw        │  │
-│  └────────────────────────────────┘  │
-└──────────────────────────────────────┘
+┌──────────────────────────────────┐
+│  IResourceAccessPolicy.check()   │
+│  ┌────────────────────────────┐  │
+│  │ 1. If DISABLED → return    │  │
+│  │ 2. Get scheme from URI     │  │
+│  │ 3. If file: scheme, check  │  │
+│  │    FileProtections first   │  │
+│  │    (allow-list gate)       │  │
+│  │ 4. Find SchemePatternSet   │  │
+│  │ 5. Match against patterns  │  │
+│  │    (last match wins)       │  │
+│  │ 6. Apply mode behavior     │  │
+│  └────────────────────────────┘  │
+└──────────────────────────────────┘
        │
-       ▼
-   Allowed URI → Resource Access
-       or
-   AccessDeniedException → Blocked
+       ├── DISABLED → allow silently
+       │
+       ├── AUDIT + violation → log WARN, allow
+       ├── AUDIT + allowed → (optionally log DEBUG), allow
+       │
+       ├── ENFORCE + violation → log ERROR, throw AccessViolationException
+       └── ENFORCE + allowed → allow
 ```
 
 ---
@@ -176,90 +389,96 @@ User Request (URI)
 ### Programmatic Configuration (Fluent API)
 
 ```java
-// Strict server mode - HTTPS only
-AllowlistUriResolver serverResolver = AllowlistUriResolver.builder()
+// Restrictive server mode
+ResourceAccessPolicy policy = ResourceAccessPolicy.builder()
+    .mode(PolicyMode.ENFORCE)
     .forScheme("https")
-        .allowDomain("pages.nist.gov")
-        .allowDomain("raw.githubusercontent.com")
-            .restrictToPath("/metaschema-framework/")
+        .allow("pages.nist.gov/**")
+        .allow("raw.githubusercontent.com/metaschema-framework/**")
+        .deny("*.internal/**")
     .forScheme("http")
         .denyAll()
     .forScheme("file")
-        .denyAll()
+        .allow("/data/schemas/**")
+        .deny("**/.ssh/**")
+        .deny("**/.aws/**")
     .forScheme("jar")
-        .allowPath("/schema/")
-        .allowPath("/META-INF/metaschema/")
+        .allowAll()
     .defaultDeny()  // deny unlisted schemes
-    .onAccessDenied((uri, reason) -> {
-        auditLog.warn("Blocked resource access: {} - {}", uri, reason);
-        throw new AccessDeniedException(uri, reason);
-    })
     .build();
 
-// Development mode - allow local files
-AllowlistUriResolver devResolver = AllowlistUriResolver.builder()
-    .forScheme("https")
-        .allowDomain("pages.nist.gov")
-    .forScheme("file")
-        .allowDirectory("/workspace/schemas").recursive()
-        .allowDirectory("/workspace/examples").recursive()
-    .forScheme("jar")
-        .allowPath("/schema/")
+// Development mode - permissive with audit
+ResourceAccessPolicy devPolicy = ResourceAccessPolicy.builder()
+    .mode(PolicyMode.AUDIT)
+    .forScheme("https").allowAll()
+    .forScheme("http").allow("localhost/**")  // allow local dev servers
+    .forScheme("file").allowAll()
+    .forScheme("jar").allowAll()
     .defaultDeny()
     .build();
 
-// Hierarchical - inherit global with overrides
-AllowlistUriResolver.setGlobalDefaults(serverResolver);
+// Use bundled defaults
+ResourceAccessPolicy defaults = ResourceAccessPolicy.bundledDefaults();
 
-IModuleLoader loader = context.newModuleLoader();
-loader.setUriResolver(AllowlistUriResolver.builder()
-    .inheritGlobalDefaults()
-    .forScheme("file")  // Override for this loader
-        .allowDirectory(trustedSchemaPath).recursive()
-    .build());
-```
+// Override mode on bundled defaults
+ResourceAccessPolicy enforced = ResourceAccessPolicy.bundledDefaults()
+    .withMode(PolicyMode.ENFORCE);
 
-**Convenience constants (optional):**
-```java
-public final class Schemes {
-    public static final String HTTPS = "https";
-    public static final String HTTP = "http";
-    public static final String FILE = "file";
-    public static final String JAR = "jar";
-    // Users can use any string: forScheme("custom-protocol")
-}
+// Set on loader
+IModuleLoader loader = ...;
+loader.setResourceAccessPolicy(policy);
 ```
 
 ### Metaschema-Based Configuration Model
 
-The allowlist configuration uses a Metaschema-defined model, enabling:
+The policy configuration uses a Metaschema-defined model, enabling:
 - **Type-safe configuration** via generated Java classes
 - **Multi-format support** - XML, JSON, or YAML
 - **Schema validation** - configs validated against the Metaschema model
 - **Dogfooding** - using Metaschema for its own tooling
 
-**Metaschema Module Definition** (`allowlist-config_metaschema.yaml`):
+**Metaschema Module Definition** (`resource-access-policy_metaschema.yaml`):
 
 ```yaml
 metaschema:
-  schema-name: Allowlist Configuration
+  schema-name: Resource Access Policy
   schema-version: 1.0.0
-  short-name: allowlist-config
-  namespace: http://csrc.nist.gov/ns/metaschema/allowlist-config/1.0
-  json-base-uri: http://csrc.nist.gov/ns/metaschema/allowlist-config/1.0
+  short-name: resource-access-policy
+  namespace: http://csrc.nist.gov/ns/metaschema/resource-access-policy/1.0
+  json-base-uri: http://csrc.nist.gov/ns/metaschema/resource-access-policy/1.0
 
   definitions:
     - define-assembly:
-        name: allowlist-config
-        formal-name: Allowlist Configuration
-        description: Configuration for the allowlist URI resolver.
-        root-name: allowlist-config
+        name: resource-access-policy
+        formal-name: Resource Access Policy
+        description: >-
+          Policy controlling which URIs can be accessed during resource loading.
+          Uses glob patterns grouped by URI scheme.
+        root-name: resource-access-policy
         flags:
           - define-flag:
-              name: default-policy
+              name: mode
               as-type: token
-              formal-name: Default Policy
-              description: Default policy for unlisted schemes.
+              formal-name: Enforcement Mode
+              description: >-
+                How policy violations are handled.
+              constraint:
+                allowed-values:
+                  - enum:
+                      value: disabled
+                      description: No policy checking
+                  - enum:
+                      value: audit
+                      description: Log violations but allow requests
+                  - enum:
+                      value: enforce
+                      description: Block violating requests
+          - define-flag:
+              name: default-scheme-policy
+              as-type: token
+              formal-name: Default Scheme Policy
+              description: >-
+                Policy for schemes not explicitly configured.
               constraint:
                 allowed-values:
                   - enum:
@@ -274,17 +493,14 @@ metaschema:
               max-occurs: unbounded
               group-as:
                 name: schemes
-                in-json: BY_KEY
-          - assembly:
-              ref: logging-config
-              min-occurs: 0
+                in-json: ARRAY
 
     - define-assembly:
         name: scheme-config
         formal-name: Scheme Configuration
-        description: Configuration for a specific URI scheme.
-        json-key:
-          flag-ref: scheme
+        description: >-
+          Configuration for a specific URI scheme, containing glob patterns
+          that control access.
         flags:
           - define-flag:
               name: scheme
@@ -296,154 +512,81 @@ metaschema:
               name: enabled
               as-type: boolean
               formal-name: Enabled
-              description: Whether this scheme is enabled.
-        model:
-          - choice:
-              - assembly:
-                  ref: http-rule
-                  max-occurs: unbounded
-                  group-as:
-                    name: http-rules
-                    in-json: ARRAY
-              - assembly:
-                  ref: file-rule
-                  max-occurs: unbounded
-                  group-as:
-                    name: file-rules
-                    in-json: ARRAY
-              - assembly:
-                  ref: jar-rule
-                  max-occurs: unbounded
-                  group-as:
-                    name: jar-rules
-                    in-json: ARRAY
-
-    - define-assembly:
-        name: http-rule
-        formal-name: HTTP Rule
-        description: Access rule for HTTP/HTTPS URIs.
-        flags:
-          - define-flag:
-              name: domain
-              as-type: string
-              required: yes
-              formal-name: Domain
-              description: Domain pattern (e.g., "example.com", "*.nist.gov").
+              description: >-
+                Whether this scheme is enabled. When false, all URIs with this
+                scheme are denied.
         model:
           - field:
-              ref: path-prefix
+              ref: pattern
               max-occurs: unbounded
               group-as:
-                name: paths
+                name: patterns
                 in-json: ARRAY
 
-    - define-assembly:
-        name: file-rule
-        formal-name: File Rule
-        description: Access rule for file:// URIs.
-        flags:
-          - define-flag:
-              name: path
-              as-type: string
-              required: yes
-              formal-name: Path
-              description: Base directory path.
-          - define-flag:
-              name: scope
-              as-type: token
-              formal-name: Scope
-              description: Access scope for the directory.
-              constraint:
-                allowed-values:
-                  - enum:
-                      value: recursive
-                      description: Allow recursive access
-                  - enum:
-                      value: single-level
-                      description: Allow single level only
-
-    - define-assembly:
-        name: jar-rule
-        formal-name: JAR Rule
-        description: Access rule for jar: URIs.
-        flags:
-          - define-flag:
-              name: path
-              as-type: string
-              required: yes
-              formal-name: Path
-              description: Resource path pattern within JAR.
-
     - define-field:
-        name: path-prefix
+        name: pattern
         as-type: string
-        formal-name: Path Prefix
-        description: Allowed path prefix.
-
-    - define-assembly:
-        name: logging-config
-        formal-name: Logging Configuration
-        description: Audit logging settings.
-        flags:
-          - define-flag:
-              name: level
-              as-type: token
-              formal-name: Log Level
-              description: Minimum log level for access attempts.
-          - define-flag:
-              name: include-allowed
-              as-type: boolean
-              formal-name: Include Allowed
-              description: Whether to log allowed access attempts.
+        formal-name: Access Pattern
+        description: >-
+          A glob pattern controlling access. Patterns without a prefix are
+          allow patterns. Patterns starting with ! are deny patterns
+          (exceptions). Patterns are evaluated in order; last match wins.
 ```
 
-**Example Configuration Files:**
+### Example Configuration Files
 
-YAML format (`allowlist.yaml`):
+**YAML format** (`resource-access-policy.yaml`):
+
 ```yaml
-allowlist-config:
-  default-policy: deny
+resource-access-policy:
+  mode: audit
+  default-scheme-policy: deny
   schemes:
     - scheme: https
-      enabled: true
-      http-rules:
-        - domain: pages.nist.gov
-          paths: [/schemas/, /examples/]
-        - domain: raw.githubusercontent.com
-          paths: [/metaschema-framework/, /usnistgov/OSCAL/]
+      patterns:
+        - "pages.nist.gov/**"
+        - "raw.githubusercontent.com/metaschema-framework/**"
+        - "!*.internal/**"
     - scheme: http
       enabled: false
     - scheme: file
-      enabled: true
-      file-rules:
-        - path: /data/schemas
-          scope: recursive
+      patterns:
+        - "/data/schemas/**"
+        - "/workspace/**"
+        - "!**/.ssh/**"
+        - "!**/.aws/**"
     - scheme: jar
-      enabled: true
-      jar-rules:
-        - path: /schema/
-        - path: /META-INF/metaschema/
-  logging-config:
-    level: WARN
-    include-allowed: false
+      patterns:
+        - "**"
 ```
 
-JSON format (`allowlist.json`):
+**JSON format** (`resource-access-policy.json`):
+
 ```json
 {
-  "allowlist-config": {
-    "default-policy": "deny",
-    "schemes": {
-      "https": {
-        "enabled": true,
-        "http-rules": [
-          { "domain": "pages.nist.gov", "paths": ["/schemas/"] }
+  "resource-access-policy": {
+    "mode": "audit",
+    "default-scheme-policy": "deny",
+    "schemes": [
+      {
+        "scheme": "https",
+        "patterns": [
+          "pages.nist.gov/**",
+          "raw.githubusercontent.com/metaschema-framework/**"
         ]
       },
-      "file": {
+      {
+        "scheme": "http",
         "enabled": false
+      },
+      {
+        "scheme": "file",
+        "patterns": [
+          "/data/schemas/**",
+          "!**/.ssh/**"
+        ]
       }
-    }
+    ]
   }
 }
 ```
@@ -455,260 +598,78 @@ JSON format (`allowlist.json`):
 IBindingContext bindingContext = IBindingContext.instance();
 IBoundLoader loader = bindingContext.newBoundLoader();
 
-// From file (auto-detects format: XML, JSON, or YAML)
-AllowlistConfig config = loader.load(AllowlistConfig.class,
-    Path.of("/etc/metaschema-cli/allowlist.yaml"));
+// From file (auto-detects format)
+ResourceAccessPolicyConfig config = loader.load(
+    ResourceAccessPolicyConfig.class,
+    Path.of("resource-access-policy.yaml"));
 
-// Create resolver from loaded config
-AllowlistUriResolver resolver = AllowlistUriResolver.fromConfiguration(config);
+// Create policy from config
+ResourceAccessPolicy policy = ResourceAccessPolicy.fromConfiguration(config);
 
-// From classpath resource
-try (InputStream is = getClass().getResourceAsStream("/allowlist.yaml")) {
-    AllowlistConfig config = loader.load(AllowlistConfig.class, is);
-    AllowlistUriResolver.setGlobalDefaults(
-        AllowlistUriResolver.fromConfiguration(config));
-}
+// Set on module loader
+IModuleLoader moduleLoader = ...;
+moduleLoader.setResourceAccessPolicy(policy);
 ```
 
 ---
 
-## Configuration System
+## Configuration Layering
 
-The allowlist configuration uses a layered configuration system that loads and merges configs from multiple locations, providing flexibility for different deployment scenarios.
-
-### Configuration Directory Locations
-
-Configurations are loaded from the following locations in precedence order (lowest to highest):
+Configurations are loaded from multiple locations, merged with higher-precedence layers overriding lower ones:
 
 | Priority | Location | Platform | Purpose |
 |----------|----------|----------|---------|
-| 1 (lowest) | `<install-dir>/config/` | All | Shipped defaults bundled with distribution |
-| 2 | `/etc/metaschema-cli/` | Unix | System-wide administrator settings |
-| 2 | `%ProgramData%\metaschema-cli\` | Windows | System-wide administrator settings |
-| 3 | `~/.metaschema-cli/` | All | User-specific preferences |
-| 4 | `./.metaschema/` | All | Project-specific overrides |
-| 5 (highest) | `--config-dir=<path>` | All | CLI argument override |
-| 5 (highest) | `METASCHEMA_CONFIG_DIR` | All | Environment variable override |
-
-**Install Directory Structure:**
-```text
-metaschema-cli/
-├── bin/
-│   └── metaschema-cli       # launcher script
-├── lib/
-│   └── metaschema-cli.jar   # main JAR
-└── config/                  # install-level configs
-    └── allowlist.yaml
-```
-
-**Config Files:**
-Each directory can contain:
-- `allowlist.yaml` - URI resolver security rules
-- `logging.yaml` - Log level configuration (future)
-- Other feature-specific configs as needed
+| 1 (lowest) | Bundled in JAR | All | Restrictive defaults in audit mode |
+| 2 | `<install-dir>/config/` | All | Distribution-specific overrides |
+| 3 | `/etc/metaschema/` | Unix | System-wide administrator settings |
+| 3 | `%ProgramData%\metaschema\` | Windows | System-wide administrator settings |
+| 4 | `~/.metaschema/` | All | User-specific preferences |
+| 5 | `./.metaschema/` | All | Project-specific overrides |
+| 6 (highest) | CLI `--resource-policy` | All | CLI argument override |
 
 ### Merge Semantics
 
-Configurations from all discovered locations are merged using the following rules:
-
-- **Deep merge on scheme**: When multiple config files define rules for the same scheme (e.g., `https`), all domain rules are combined from all layers
-- **Shallow merge on domain**: When the same domain appears in multiple layers, the higher-precedence layer's rules completely replace the lower one
-
-**Merge Example:**
-
-```yaml
-# Install config (priority 1) - <install-dir>/config/allowlist.yaml
-default: deny
-
-schemes:
-  https:
-    enabled: true
-    rules:
-      - domain: pages.nist.gov
-        paths: [/schemas/]
-      - domain: raw.githubusercontent.com
-        paths: [/metaschema-framework/]
-  file:
-    enabled: false
-```
-
-```yaml
-# User config (priority 3) - ~/.metaschema-cli/allowlist.yaml
-schemes:
-  https:
-    rules:
-      - domain: pages.nist.gov        # Same domain - REPLACES install's rules
-        paths: [/schemas/, /docs/]
-      - domain: internal.example.com  # New domain - ADDED
-        paths: any
-  file:
-    enabled: true                     # Overrides install's file policy
-    rules:
-      - path: /home/user/schemas
-        scope: recursive
-```
-
-**Merged Result:**
-```yaml
-default: deny                         # From install (not overridden)
-
-schemes:
-  https:
-    enabled: true                     # From install
-    rules:
-      - domain: pages.nist.gov        # User's version (shallow merge on domain)
-        paths: [/schemas/, /docs/]
-      - domain: raw.githubusercontent.com  # From install (kept)
-        paths: [/metaschema-framework/]
-      - domain: internal.example.com  # From user (added)
-        paths: any
-  file:
-    enabled: true                     # User override
-    rules:
-      - path: /home/user/schemas
-        scope: recursive
-```
-
-### Configuration Service API
-
-```java
-public interface IConfigurationService {
-    /**
-     * Get the merged configuration for a specific config file.
-     *
-     * @param configName the config file name (e.g., "allowlist.yaml")
-     * @return the merged configuration, or empty if no configs found
-     */
-    Optional<Configuration> getConfiguration(String configName);
-
-    /**
-     * Get all discovered config directory paths in precedence order.
-     *
-     * @return list of paths (lowest to highest precedence)
-     */
-    List<Path> getConfigDirectories();
-
-    /**
-     * Reload all configurations from disk.
-     */
-    void reload();
-}
-```
-
-**Integration with CLI:**
-
-```java
-// In CLI.java or CLIProcessor initialization
-IConfigurationService configService = ConfigurationService.getInstance();
-
-// Get allowlist config and create resolver
-Optional<AllowlistConfiguration> allowlistConfig = configService
-    .getConfiguration("allowlist.yaml")
-    .map(AllowlistConfiguration::fromYaml);
-
-if (allowlistConfig.isPresent()) {
-    AllowlistUriResolver.setGlobalDefaults(
-        AllowlistUriResolver.fromConfiguration(allowlistConfig.get()));
-}
-```
-
-### Configuration Loading Process
-
-1. **Discovery Phase**: Scan all config locations in order, collect paths that exist
-2. **Load Phase**: Parse each discovered config file (YAML via SnakeYAML)
-3. **Merge Phase**: Apply merge rules to produce final configuration
-4. **Validation Phase**: Validate merged config against expected schema
-
-**Caching Behavior:**
-- Configs loaded once at startup
-- `reload()` available for long-running processes
-- No file watching (explicit reload only)
-
-### Performance Analysis
-
-| Operation | Expected Time | Notes |
-|-----------|---------------|-------|
-| Directory existence checks (5-6 paths) | ~1-5ms | Filesystem stat calls |
-| YAML parsing (per file, ~1-5KB) | ~5-15ms | SnakeYAML parsing |
-| Merge operation | <1ms | In-memory, small data structures |
-| **Total (typical: 1-2 configs)** | **~10-30ms** | Negligible for CLI startup |
-| **Total (worst case: all 5 locations)** | **~50-100ms** | Still acceptable |
-
-**Context:**
-- JVM startup itself takes 50-200ms
-- Current CLI startup (loading modules, initializing databind) takes 200-500ms
-- Config loading adds ~5-10% overhead in typical case
-
-**Built-in Optimizations:**
-- Short-circuit on CLI `--config-dir` override (skip other locations)
-- Lazy loading option for configs not needed by every command
-- No file watching or polling overhead
-
-**Future Optimizations (if needed):**
-- Cache merged config to temp file with checksum validation
-- Parallel directory scanning
-- Native YAML parser
+- **Mode**: Higher-precedence layer's mode wins
+- **Scheme configs**: Merged by scheme name; higher-precedence replaces entire scheme config
+- **Default scheme policy**: Higher-precedence layer's value wins
 
 ---
 
-## Built-In Denylist
+## Glob Pattern Matching
 
-These patterns are **blocked by default** but can be explicitly overridden when necessary (e.g., for local testing):
+### Syntax
 
-### Network Addresses
-```java
-// IPv4
-"127.*.*.*"           // Loopback
-"10.*.*.*"            // Private Class A
-"172.16-31.*.*"       // Private Class B
-"192.168.*.*"         // Private Class C
-"169.254.*.*"         // Link-local (AWS/GCP/Azure metadata)
-"0.0.0.0"             // All interfaces
+Patterns follow `.gitignore` glob syntax applied to the scheme-specific part of URIs:
 
-// IPv6
-"::1"                 // Loopback
-"fe80::*"             // Link-local
-"fc00::*"             // Unique local
+| Pattern | Matches | Example |
+|---------|---------|---------|
+| `**` | Everything | All URIs for the scheme |
+| `*.nist.gov/**` | Subdomain wildcard | `pages.nist.gov/schemas/foo.xml` |
+| `example.com/path/**` | Path prefix | `example.com/path/to/resource` |
+| `/workspace/**` | Directory tree (file scheme) | `/workspace/project/schema.xml` |
+| `/workspace/*` | Single level (file scheme) | `/workspace/schema.xml` but not `/workspace/sub/schema.xml` |
+| `!pattern` | Deny (exception) | Negates a previous allow |
 
-// Hostnames
-"localhost"
-"*.localhost"
-"*.local"
-"metadata.google.internal"
-"instance-data"       // EC2 metadata hostname
-```
+### Pattern Evaluation
 
-**Overriding for local testing:**
-```java
-AllowlistUriResolver.builder()
-    .forScheme("http")
-        .allowHost("localhost")    // explicitly override denylist
-        .allowHost("127.0.0.1")
-        .restrictToPort(8080)      // optional: restrict to specific port
-    .build();
-```
+For a given URI:
+1. Extract the scheme
+2. Find the matching `SchemePatternSet`
+3. If scheme is `enabled: false`, result is **deny**
+4. If no patterns defined and `enabled: true`, result is **allow**
+5. Evaluate patterns in order; **last matching pattern wins**
+6. If no pattern matches, use `default-scheme-policy` (default: deny)
 
-### File System Paths (Unix)
-```java
-"/etc/"
-"/proc/"
-"/sys/"
-"/dev/"
-"/root/"
-"/home/*/.*"          // All hidden files/directories in home
-"/var/run/"
-"/tmp/"               // Optional - may be needed for some use cases
-```
+### What Patterns Match Against
 
-### File System Paths (Windows)
-```java
-"C:\\Windows\\"
-"C:\\Users\\*\\AppData\\"
-"C:\\ProgramData\\"
-"C:\\$Recycle.Bin\\"
-"*\\.ssh\\"
-"*\\.aws\\"
-```
+For each scheme, patterns match against the scheme-specific part:
+
+| Scheme | Pattern matches against | Example URI → match target |
+|--------|------------------------|---------------------------|
+| `file` | Path component | `file:///workspace/foo.xml` → `/workspace/foo.xml` |
+| `https` | Host + path | `https://nist.gov/schemas/x.xml` → `nist.gov/schemas/x.xml` |
+| `http` | Host + path | `http://localhost:8080/api` → `localhost:8080/api` |
+| `jar` | Path within JAR | `jar:file:///lib.jar!/schema/x.xsd` → `/schema/x.xsd` |
 
 ---
 
@@ -722,57 +683,65 @@ From Issue #183:
 ### Additional Acceptance Criteria
 
 **Functional:**
-- [ ] Module loading respects allowlist for imports
-- [ ] Document loading respects allowlist
-- [ ] Constraint loading respects allowlist for imports
-- [ ] XML entity resolution respects allowlist
-- [ ] Built-in denylist blocks all defined patterns
-- [ ] Scheme policies correctly allow/deny by scheme
-- [ ] File system rules enforce directory boundaries
-- [ ] HTTP rules enforce domain and path restrictions
-- [ ] JAR rules enforce resource path restrictions
-- [ ] Hierarchical configuration (global + per-loader) works correctly
-- [ ] YAML configuration loading works correctly
+- [ ] Module loading checks policy for imports
+- [ ] Document loading checks policy
+- [ ] Constraint loading checks policy for imports
+- [ ] XML entity resolution checks policy
+- [ ] Glob pattern matching works correctly for all schemes
+- [ ] `!` negation patterns create proper exceptions
+- [ ] DISABLED mode allows all URIs without logging
+- [ ] AUDIT mode logs violations but allows all URIs
+- [ ] ENFORCE mode blocks violations with `AccessViolationException`
+- [ ] Bundled defaults are restrictive (deny localhost, private IPs, sensitive paths)
+- [ ] Configuration loading works from YAML, JSON, and XML
+- [ ] Configuration layering merges correctly
 
 **Security:**
-- [ ] Path traversal attacks are blocked (../../../etc/passwd)
-- [ ] SSRF to localhost is blocked
-- [ ] SSRF to private IP ranges is blocked
-- [ ] Cloud metadata endpoints are blocked (169.254.169.254)
-- [ ] Sensitive system paths are blocked
+- [ ] Path traversal attacks are caught (../../../etc/passwd)
+- [ ] SSRF to localhost is caught in default policy
+- [ ] SSRF to private IP ranges is caught in default policy
+- [ ] Cloud metadata endpoints are caught in default policy
+- [ ] Sensitive system paths are caught in default policy
+
+**Backwards Compatibility:**
+- [ ] Default mode (AUDIT) does not break any existing workflows
+- [ ] Existing code without policy configuration works unchanged
+- [ ] Library users can opt-in without changing their URI resolvers
+- [ ] CLI users can override mode via flags
 
 **Non-Functional:**
-- [ ] Clear error messages when access is denied
-- [ ] Audit logging for all blocked attempts
-- [ ] Minimal performance overhead for resolution
-- [ ] 80%+ test coverage for resolver code
+- [ ] Clear log messages identifying policy violations
+- [ ] Minimal performance overhead for URI resolution
+- [ ] 80%+ test coverage for policy code
 
 ---
 
 ## Testing Strategy
 
 ### Unit Tests
-- SchemePolicy allow/deny behavior
-- FileSystemRule path matching and boundary validation
-- HttpRule domain and path matching
-- JarRule resource path matching
-- BuiltInDenylist pattern matching
-- AllowlistUriResolverBuilder configuration
-- YAML configuration parsing
+
+- `GlobMatcher` - Pattern matching for all glob syntax variants
+- `SchemePatternSet` - Pattern evaluation with `!` negation and ordering
+- `ResourceAccessPolicy` - Policy checking across modes
+- `PolicyMode` - Mode behavior (disabled/audit/enforce)
+- Metaschema configuration loading and validation
 
 ### Integration Tests
-- Module loading with allowlist enabled
-- Document loading with allowlist enabled
-- Constraint loading with allowlist enabled
-- XML entity resolution with allowlist enabled
-- Hierarchical configuration inheritance
+
+- Module loading with policy in each mode
+- Document loading with policy
+- Constraint loading with policy
+- XML entity resolution with policy
+- Configuration layering from multiple sources
 
 ### Security Tests
+
 - Path traversal attack vectors
 - SSRF attack vectors (localhost, private IPs, metadata endpoints)
 - Scheme injection attacks
 - Unicode/encoding bypass attempts
 - Case sensitivity handling (Windows paths)
+- `!` pattern bypass attempts
 
 ---
 
@@ -780,11 +749,34 @@ From Issue #183:
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
-| Breaking existing applications | High | Opt-in by default; document migration path |
-| Performance overhead | Medium | Efficient pattern matching; caching |
-| Incomplete denylist | High | Research common attack vectors; allow updates |
-| Configuration complexity | Medium | Sensible defaults; clear documentation |
+| Breaking existing applications | High | AUDIT mode as default; DISABLED available |
+| Performance overhead | Medium | Efficient glob matching; pattern compilation |
+| Incomplete default policy | Medium | Community feedback during audit phase |
+| Configuration complexity | Medium | `.gitignore`-style syntax is widely known |
 | Platform-specific path issues | Medium | Test on Windows/Linux/Mac; normalize paths |
+
+---
+
+## Migration Path
+
+### Phase 1: Deployment (AUDIT mode)
+
+1. Deploy with default policy (restrictive rules, audit mode)
+2. Monitor logs for `WARN` entries showing policy violations
+3. Adjust policy patterns to match actual access needs
+4. Share policy configs across team/org
+
+### Phase 2: Enforcement
+
+1. Once policy accurately reflects needed access, switch to `ENFORCE`
+2. `ResourceAccessPolicy.bundledDefaults().withMode(PolicyMode.ENFORCE)`
+3. Or in config: `mode: enforce`
+
+### Phase 3: Customization
+
+1. Create project-specific `.metaschema/resource-access-policy.yaml`
+2. Override bundled defaults for organization-specific needs
+3. Use per-loader policies for fine-grained control
 
 ---
 
@@ -794,3 +786,4 @@ From Issue #183:
 - Rate limiting or request throttling
 - Content inspection (only URI-based filtering)
 - Certificate validation (use JVM truststore config)
+- Real-time file watching for config changes (explicit reload only)
