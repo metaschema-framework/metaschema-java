@@ -19,6 +19,7 @@ import dev.metaschema.databind.model.IBoundInstanceModelAssembly;
 import dev.metaschema.databind.model.IBoundInstanceModelChoiceGroup;
 import dev.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;
 import dev.metaschema.databind.model.metaschema.IBindingDefinitionModelAssembly;
+import dev.metaschema.databind.model.metaschema.binding.Any;
 import dev.metaschema.databind.model.metaschema.binding.AssemblyModel;
 import dev.metaschema.databind.model.metaschema.binding.AssemblyReference;
 import dev.metaschema.databind.model.metaschema.binding.FieldReference;
@@ -76,7 +77,7 @@ public final class AssemblyModelGenerator
           @NonNull IBoundInstanceModelAssembly bindingInstance,
           @NonNull IBindingDefinitionModelAssembly parent,
           @NonNull INodeItemFactory nodeItemFactory) {
-    return binding == null || binding.getInstances().isEmpty()
+    return binding == null || (binding.getInstances().isEmpty() && binding.getAny() == null)
         ? IContainerModelAssemblySupport.empty()
         : newInstance(
             binding,
@@ -124,6 +125,12 @@ public final class AssemblyModelGenerator
         throw new UnsupportedOperationException(String.format("Unknown model instance class: %s", obj.getClass()));
       }
     });
+
+    // Process the any binding if present
+    Any any = binding.getAny();
+    if (any != null) {
+      generator.getBuilder().setAnyInstance(new AnyInstanceImpl(parent));
+    }
 
     return generator.getBuilder().buildAssembly();
   }

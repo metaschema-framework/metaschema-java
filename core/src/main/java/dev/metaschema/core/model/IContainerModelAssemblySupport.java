@@ -10,6 +10,7 @@ import java.util.Map;
 
 import dev.metaschema.core.model.impl.DefaultContainerModelAssemblySupport;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
  * Common interface for model container support classes.
@@ -79,4 +80,18 @@ public interface IContainerModelAssemblySupport<
    */
   @NonNull
   Map<String, CGI> getChoiceGroupInstanceMap();
+
+  /**
+   * Get the {@code any} instance for this container, if one is defined.
+   * <p>
+   * An {@code any} instance represents unmodeled content that may appear within
+   * an assembly's model.
+   *
+   * @return the {@code any} instance, or {@code null} if no {@code any} instance
+   *         is defined
+   */
+  @Nullable
+  default IAnyInstance getAnyInstance() {
+    return null;
+  }
 }

@@ -48,4 +48,18 @@ public interface IContainerModelAssembly extends IContainerModelAbsolute {
    */
   @NonNull
   Map<String, ? extends IChoiceGroupInstance> getChoiceGroupInstances();
+
+  /**
+   * Get the {@code any} instance for this container, if one is defined.
+   * <p>
+   * An {@code any} instance represents unmodeled content that may appear within
+   * an assembly's model.
+   *
+   * @return the {@code any} instance, or {@code null} if no {@code any} instance
+   *         is defined
+   */
+  @Nullable
+  default IAnyInstance getAnyInstance() {
+    return null;
+  }
 }

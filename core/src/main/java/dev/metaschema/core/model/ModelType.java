@@ -30,7 +30,11 @@ public enum ModelType {
   /**
    * Represents a grouped choice construct.
    */
-  CHOICE_GROUP("choice-group");
+  CHOICE_GROUP("choice-group"),
+  /**
+   * Represents an any instance that allows unmodeled content.
+   */
+  ANY("any");
 
   private final String name;
 
