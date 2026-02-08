@@ -26,6 +26,7 @@ module dev.metaschema.cli {
 
   requires nl.talsmasoftware.lazy4j;
   requires org.apache.commons.cli;
+  requires org.json;
   requires org.apache.logging.log4j;
   requires org.apache.logging.log4j.core;
 

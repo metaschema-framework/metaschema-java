@@ -7,27 +7,38 @@ package dev.metaschema.modules.sarif;
 
 import org.schemastore.json.sarif.x210.Artifact;
 import org.schemastore.json.sarif.x210.ArtifactLocation;
+import org.schemastore.json.sarif.x210.Invocation;
+import org.schemastore.json.sarif.x210.LetTimingEntry;
 import org.schemastore.json.sarif.x210.Location;
 import org.schemastore.json.sarif.x210.LogicalLocation;
 import org.schemastore.json.sarif.x210.Message;
 import org.schemastore.json.sarif.x210.MultiformatMessageString;
+import org.schemastore.json.sarif.x210.Notification;
 import org.schemastore.json.sarif.x210.PhysicalLocation;
+import org.schemastore.json.sarif.x210.PropertyBag;
 import org.schemastore.json.sarif.x210.Region;
 import org.schemastore.json.sarif.x210.ReportingDescriptor;
 import org.schemastore.json.sarif.x210.Result;
 import org.schemastore.json.sarif.x210.Run;
 import org.schemastore.json.sarif.x210.Sarif;
 import org.schemastore.json.sarif.x210.SarifModule;
+import org.schemastore.json.sarif.x210.TimingData;
 import org.schemastore.json.sarif.x210.Tool;
 import org.schemastore.json.sarif.x210.ToolComponent;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -35,16 +46,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.metaschema.core.datatype.markup.MarkupLine;
 import dev.metaschema.core.datatype.markup.MarkupMultiline;
+import dev.metaschema.core.metapath.item.node.INodeItem;
 import dev.metaschema.core.model.IAttributable;
 import dev.metaschema.core.model.IResourceLocation;
 import dev.metaschema.core.model.MetaschemaException;
 import dev.metaschema.core.model.constraint.ConstraintValidationFinding;
 import dev.metaschema.core.model.constraint.IConstraint;
 import dev.metaschema.core.model.constraint.IConstraint.Level;
+import dev.metaschema.core.model.constraint.ILet;
+import dev.metaschema.core.model.constraint.TimingCollector;
+import dev.metaschema.core.model.constraint.TimingRecord;
+import dev.metaschema.core.model.constraint.ValidationEventListener;
+import dev.metaschema.core.model.constraint.ValidationPhase;
 import dev.metaschema.core.model.validation.IValidationFinding;
 import dev.metaschema.core.model.validation.JsonSchemaContentValidator.JsonValidationFinding;
 import dev.metaschema.core.model.validation.XmlSchemaContentValidator.XmlValidationFinding;
@@ -63,7 +81,7 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * document based on a set of validation findings.
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
-public final class SarifValidationHandler {
+public final class SarifValidationHandler implements ValidationEventListener {
   private enum Kind {
     NOT_APPLICABLE("notApplicable"),
     PASS("pass"),
@@ -147,6 +165,18 @@ public final class SarifValidationHandler {
   @NonNull
   private final SchemaRuleRecord schemaRule = new SchemaRuleRecord();
   private boolean schemaValid = true;
+  @Nullable
+  private TimingCollector timingCollector;
+  @NonNull
+  private final Instant constructionTimestamp = Instant.now();
+  private final ThreadLocal<Long> currentEvaluationStartNanos = new ThreadLocal<>();
+  private final ThreadLocal<List<ConstraintResult>> currentEvaluationResults = new ThreadLocal<>();
+  private final ThreadLocal<Long> currentLetStartNanos = new ThreadLocal<>();
+  @SuppressWarnings("PMD.UseConcurrentHashMap")
+  private final ThreadLocal<Map<ILet, Long>> currentLetDurations = new ThreadLocal<>();
+  @NonNull
+  private final ConcurrentHashMap<IConstraint, EvaluationTimingSnapshot> evaluationTimings
+      = new ConcurrentHashMap<>();
 
   /**
    * Construct a new validation handler.
@@ -175,6 +205,136 @@ public final class SarifValidationHandler {
 
   private IVersionInfo getToolVersion() {
     return toolVersion;
+  }
+
+  /**
+   * Set the timing collector to enrich SARIF output with performance data.
+   * <p>
+   * When set, the generated SARIF document will include:
+   * <ul>
+   * <li>An invocation element with start/end timestamps</li>
+   * <li>Phase timing as tool execution notifications</li>
+   * <li>Per-constraint timing in rule properties</li>
+   * </ul>
+   *
+   * @param collector
+   *          the timing collector containing measurement data, or {@code null} to
+   *          disable timing output
+   */
+  public void setTimingCollector(@Nullable TimingCollector collector) {
+    this.timingCollector = collector;
+  }
+
+  @Override
+  public void beforeValidation(@NonNull URI document) {
+    // No-op: always-on timing uses construction timestamp
+  }
+
+  @Override
+  public void afterValidation(@NonNull URI document) {
+    // No-op: always-on timing captures end time at SARIF generation
+  }
+
+  @Override
+  public void beforePhase(@NonNull ValidationPhase phase) {
+    // No-op: phase timing is handled by TimingCollector
+  }
+
+  @Override
+  public void afterPhase(@NonNull ValidationPhase phase) {
+    // No-op: phase timing is handled by TimingCollector
+  }
+
+  @Override
+  public void beforeConstraintEvaluation(@NonNull IConstraint constraint, @NonNull INodeItem target) {
+    currentEvaluationStartNanos.set(System.nanoTime());
+    currentEvaluationResults.set(new ArrayList<>());
+    currentLetDurations.set(new LinkedHashMap<>());
+  }
+
+  @SuppressWarnings("PMD.NullAssignment") // ThreadLocal cleanup
+  @Override
+  public void afterConstraintEvaluation(@NonNull IConstraint constraint, @NonNull INodeItem target) {
+    Long startNanos = currentEvaluationStartNanos.get();
+    List<ConstraintResult> evaluationResults = currentEvaluationResults.get();
+    Map<ILet, Long> letDurations = currentLetDurations.get();
+
+    if (startNanos != null) {
+      long durationNs = System.nanoTime() - startNanos;
+      Map<ILet, Long> snapshotLetDurations = letDurations != null && !letDurations.isEmpty()
+          ? new LinkedHashMap<>(letDurations)
+          : null;
+
+      // Set timing on inline results (added during this evaluation)
+      if (evaluationResults != null) {
+        for (ConstraintResult result : evaluationResults) {
+          result.setEvaluationDurationNs(durationNs);
+          if (snapshotLetDurations != null) {
+            result.setLetDurations(snapshotLetDurations);
+          }
+        }
+      }
+
+      // Store for deferred lookup (when findings are added after validation)
+      evaluationTimings.put(constraint,
+          new EvaluationTimingSnapshot(durationNs, snapshotLetDurations));
+    }
+
+    currentEvaluationStartNanos.remove();
+    currentEvaluationResults.remove();
+    currentLetStartNanos.remove();
+    currentLetDurations.remove();
+  }
+
+  @Override
+  public void beforeLetEvaluation(@NonNull ILet let) {
+    currentLetStartNanos.set(System.nanoTime());
+  }
+
+  @Override
+  public void afterLetEvaluation(@NonNull ILet let) {
+    Long startNanos = currentLetStartNanos.get();
+    Map<ILet, Long> letDurations = currentLetDurations.get();
+    if (startNanos != null && letDurations != null) {
+      long durationNs = System.nanoTime() - startNanos;
+      letDurations.merge(let, durationNs, Long::sum);
+    }
+    currentLetStartNanos.remove();
+  }
+
+  @NonNull
+  private static final BigDecimal NS_PER_MS = BigDecimal.valueOf(1_000_000L);
+
+  /**
+   * Convert nanoseconds to milliseconds as a BigDecimal with 3 decimal places.
+   *
+   * @param nanoseconds
+   *          the duration in nanoseconds
+   * @return the duration in milliseconds
+   */
+  @NonNull
+  private static BigDecimal nsToMs(long nanoseconds) {
+    return ObjectUtils.notNull(
+        BigDecimal.valueOf(nanoseconds).divide(NS_PER_MS, 3, RoundingMode.HALF_UP));
+  }
+
+  /**
+   * Convert a {@link TimingRecord} to a SARIF {@link TimingData} object.
+   *
+   * @param record
+   *          the timing record to convert
+   * @return the SARIF timing data
+   */
+  @NonNull
+  private static TimingData toTimingData(@NonNull TimingRecord record) {
+    TimingData data = new TimingData();
+    data.setTotalMs(nsToMs(record.getTotalTimeNs()));
+    data.setCount(BigInteger.valueOf(record.getCount()));
+    if (record.getCount() > 0) {
+      data.setMinMs(nsToMs(record.getMinTimeNs()));
+      data.setMaxMs(nsToMs(record.getMaxTimeNs()));
+    }
+    return data;
   }
 
   /**
@@ -242,7 +402,26 @@ public final class SarifValidationHandler {
   }
 
   private void addConstraintValidationFinding(@NonNull ConstraintValidationFinding finding) {
-    results.add(new ConstraintResult(finding));
+    ConstraintResult constraintResult = new ConstraintResult(finding);
+    results.add(constraintResult);
+
+    // Track for per-evaluation timing if within a constraint evaluation (inline)
+    List<ConstraintResult> evaluationResults = currentEvaluationResults.get();
+    if (evaluationResults != null) {
+      evaluationResults.add(constraintResult);
+    } else {
+      // Deferred pattern: look up timing from the most recent evaluation
+      for (IConstraint constraint : finding.getConstraints()) {
+        EvaluationTimingSnapshot snapshot = evaluationTimings.get(constraint);
+        if (snapshot != null) {
+          constraintResult.setEvaluationDurationNs(snapshot.durationNs);
+          if (snapshot.letDurations != null) {
+            constraintResult.setLetDurations(snapshot.letDurations);
+          }
+          break;
+        }
+      }
+    }
   }
 
   /**
@@ -288,7 +467,94 @@ public final class SarifValidationHandler {
       run.setTool(tool);
     }
 
+    enrichWithTiming(run);
+
     return sarif;
+  }
+
+  /**
+   * Enrich the SARIF run with timing data.
+   * <p>
+   * Always creates an invocation with start/end timestamps (always-on timing). If
+   * a timing collector is set, overrides timestamps from the collector and adds
+   * phase/let-statement timing as tool execution notifications.
+   *
+   * @param run
+   *          the SARIF run to enrich
+   */
+  @SuppressWarnings("PMD.CognitiveComplexity")
+  private void enrichWithTiming(@NonNull Run run) {
+    // Always create invocation with timestamps (always-on timing)
+    Invocation invocation = new Invocation();
+    invocation.setExecutionSuccessful(Boolean.TRUE);
+    invocation.setStartTimeUtc(ZonedDateTime.ofInstant(constructionTimestamp, ZoneOffset.UTC));
+    invocation.setEndTimeUtc(ZonedDateTime.ofInstant(Instant.now(), ZoneOffset.UTC));
+
+    TimingCollector collector = this.timingCollector;
+    if (collector != null) {
+      // Override with collector timestamps if available
+      TimingRecord validationTiming = collector.getValidationTiming();
+      if (validationTiming != null) {
+        Instant start = validationTiming.getStartTimestampUtc();
+        if (start != null) {
+          invocation.setStartTimeUtc(ZonedDateTime.ofInstant(start, ZoneOffset.UTC));
+        }
+        Instant end = validationTiming.getEndTimestampUtc();
+        if (end != null) {
+          invocation.setEndTimeUtc(ZonedDateTime.ofInstant(end, ZoneOffset.UTC));
+        }
+      }
+
+      // Add phase timing as notifications
+      for (Map.Entry<ValidationPhase, TimingRecord> entry : collector.getPhaseTimings().entrySet()) {
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+        Notification notification = new Notification();
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+        Message msg = new Message();
+        msg.setText("Phase: " + entry.getKey().name());
+        notification.setMessage(msg);
+
+        TimingRecord phaseRecord = entry.getValue();
+        Instant phaseEnd = phaseRecord.getEndTimestampUtc();
+        if (phaseEnd != null) {
+          notification.setTimeUtc(ZonedDateTime.ofInstant(phaseEnd, ZoneOffset.UTC));
+        }
+
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+        PropertyBag phaseProps = new PropertyBag();
+        phaseProps.setTiming(toTimingData(phaseRecord));
+        notification.setProperties(phaseProps);
+
+        invocation.addToolExecutionNotification(notification);
+      }
+
+      // Add let-statement timing as notifications
+      for (Map.Entry<ILet, TimingRecord> entry : collector.getLetTimings().entrySet()) {
+        ILet let = entry.getKey();
+
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+        Notification notification = new Notification();
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+        Message msg = new Message();
+        msg.setText("$" + let.getName().getLocalName() + " := " + let.getValueExpression().getPath());
+        notification.setMessage(msg);
+
+        TimingRecord letRecord = entry.getValue();
+        Instant letEnd = letRecord.getEndTimestampUtc();
+        if (letEnd != null) {
+          notification.setTimeUtc(ZonedDateTime.ofInstant(letEnd, ZoneOffset.UTC));
+        }
+
+        @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+        PropertyBag letProps = new PropertyBag();
+        letProps.setTiming(toTimingData(letRecord));
+        notification.setProperties(letProps);
+
+        invocation.addToolExecutionNotification(notification);
+      }
+    }
+
+    run.addInvocation(invocation);
   }
 
   /**
@@ -501,9 +767,21 @@ public final class SarifValidationHandler {
 
   private final class ConstraintResult
       extends AbstractResult<ConstraintValidationFinding> {
+    @Nullable
+    private Long evaluationDurationNs;
+    @Nullable
+    private Map<ILet, Long> letDurations;
 
     protected ConstraintResult(@NonNull ConstraintValidationFinding finding) {
       super(finding);
+    }
+
+    void setEvaluationDurationNs(long durationNs) {
+      this.evaluationDurationNs = durationNs;
+    }
+
+    void setLetDurations(@NonNull Map<ILet, Long> durations) {
+      this.letDurations = durations;
     }
 
     @Override
@@ -532,10 +810,47 @@ public final class SarifValidationHandler {
         result.setLevel(level.getLabel());
         message(finding, result);
         location(finding, result, output);
+        addPerResultTiming(result);
 
         retval.add(result);
       }
       return retval;
+    }
+
+    @SuppressWarnings("PMD.CognitiveComplexity")
+    private void addPerResultTiming(@NonNull Result result) {
+      Long durationNs = this.evaluationDurationNs;
+      if (durationNs == null) {
+        return;
+      }
+
+      PropertyBag props = result.getProperties();
+      if (props == null) {
+        props = new PropertyBag();
+        result.setProperties(props);
+      }
+
+      TimingData timing = new TimingData();
+      timing.setTotalMs(nsToMs(durationNs));
+      timing.setCount(BigInteger.ONE);
+      props.setTiming(timing);
+
+      Map<ILet, Long> letDurs = this.letDurations;
+      if (letDurs != null) {
+        for (Map.Entry<ILet, Long> entry : letDurs.entrySet()) {
+          @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+          LetTimingEntry letEntry = new LetTimingEntry();
+          letEntry.setName(entry.getKey().getName().getLocalName());
+
+          @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+          TimingData letTiming = new TimingData();
+          letTiming.setTotalMs(nsToMs(entry.getValue()));
+          letTiming.setCount(BigInteger.ONE);
+          letEntry.setTiming(letTiming);
+
+          props.addLetTimingEntry(letEntry);
+        }
+      }
     }
   }
 
@@ -645,6 +960,20 @@ public final class SarifValidationHandler {
         retval.setHelp(help);
       }
 
+      // Add timing data if available
+      TimingCollector collector = timingCollector;
+      if (collector != null) {
+        TimingRecord record = collector.getConstraintTiming(constraint.getInternalIdentifier());
+        if (record != null) {
+          PropertyBag props = retval.getProperties();
+          if (props == null) {
+            props = new PropertyBag();
+            retval.setProperties(props);
+          }
+          props.setTiming(toTimingData(record));
+        }
+      }
+
       return retval;
     }
 
@@ -680,6 +1009,21 @@ public final class SarifValidationHandler {
 
       location.setIndex(BigInteger.valueOf(getIndex()));
       return location;
+    }
+  }
+
+  /**
+   * Snapshot of per-evaluation timing data, stored for deferred lookup when
+   * findings are added after validation completes.
+   */
+  private static final class EvaluationTimingSnapshot {
+    final long durationNs;
+    @Nullable
+    final Map<ILet, Long> letDurations;
+
+    EvaluationTimingSnapshot(long durationNs, @Nullable Map<ILet, Long> letDurations) {
+      this.durationNs = durationNs;
+      this.letDurations = letDurations;
     }
   }
 }

@@ -20,6 +20,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  */
 @SuppressWarnings("PMD.DataClass")
 public class DefaultLet implements ILet {
+  @SuppressWarnings("PMD.AvoidUsingVolatile") // Required for thread-safe lazy init
+  @Nullable
+  private volatile String cachedIdentifier;
   @NonNull
   private final IEnhancedQName name;
   @NonNull
@@ -50,6 +53,16 @@ public class DefaultLet implements ILet {
     this.valueExpression = metapath;
     this.source = source;
     this.remarks = remarks;
+  }
+
+  @Override
+  public String getInternalIdentifier() {
+    String result = cachedIdentifier;
+    if (result == null) {
+      result = ILet.super.getInternalIdentifier();
+      cachedIdentifier = result;
+    }
+    return result;
   }
 
   @Override

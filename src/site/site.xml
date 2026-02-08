@@ -121,7 +121,9 @@
 			<item name="Reading &amp; Writing Data" href="guides/reading-writing-data.html" />
 			<item name="Executing Metapath" href="guides/executing-metapath.html" />
 			<item name="Validating with Constraints" href="guides/validating-with-constraints.html" />
+			<item name="SARIF Output" href="guides/sarif-output.html" />
 			<item name="Generating Schemas" href="guides/generating-schemas.html" />
+			<item name="Using the CLI" href="guides/using-the-cli.html" />
 			<item name="Architecture" href="guides/architecture.html" />
 		</menu>
 		<menu name="Modules" ref="modules" />

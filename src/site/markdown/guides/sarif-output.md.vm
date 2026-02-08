@@ -1,0 +1,329 @@
+# SARIF Output
+
+This guide explains the SARIF (Static Analysis Results Interchange Format) output produced by Metaschema validation tools.
+
+## Overview
+
+Metaschema validation can produce results in [SARIF 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html) format, a standardized JSON format for expressing the output of static analysis tools. SARIF output enables integration with IDEs, CI/CD pipelines, and other tools that consume SARIF.
+
+## Generating SARIF Output
+
+### From the CLI
+
+Use the `-o` flag on validation commands to write SARIF output:
+
+```bash
+# Validate a module with SARIF output
+metaschema-cli validate -o results.sarif schema/metaschema.xml
+
+# Validate content with SARIF output
+metaschema-cli validate-content -m schema/metaschema.xml \
+    -o results.sarif data/instance.xml
+
+# Include passing results
+metaschema-cli validate-content -m schema/metaschema.xml \
+    -o results.sarif --sarif-include-pass data/instance.xml
+```
+
+### From Java
+
+Use `SarifValidationHandler` to build SARIF output programmatically:
+
+```java
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.modules.sarif.SarifValidationHandler;
+
+import java.net.URI;
+import java.nio.file.Path;
+
+URI sourceUri = Path.of("data/instance.xml").toUri();
+
+SarifValidationHandler sarifHandler = new SarifValidationHandler(sourceUri);
+
+// Add findings from validation
+// (typically wired through the validation pipeline)
+sarifHandler.addFinding(finding);
+
+// Write SARIF to a file
+IBindingContext bindingContext = IBindingContext.newInstance();
+sarifHandler.write(Path.of("results.sarif"), bindingContext);
+
+// Or get SARIF as a string
+String sarifJson = sarifHandler.writeToString(bindingContext);
+```
+
+## Output Structure
+
+A SARIF document contains one or more *runs*, each representing a single invocation of an analysis tool. Metaschema validation produces a single run with the following structure:
+
+```json
+{
+  "version": "2.1.0",
+  "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Metaschema",
+          "version": "3.0.0-SNAPSHOT",
+          "rules": [ ... ]
+        }
+      },
+      "artifacts": [ ... ],
+      "results": [ ... ]
+    }
+  ]
+}
+```
+
+### Tool and Rules
+
+The `tool.driver.rules` array contains descriptors for each constraint that produced findings:
+
+```json
+{
+  "id": "allowed-values-1",
+  "guid": "a1b2c3d4-...",
+  "shortDescription": {
+    "text": "Allowed values constraint"
+  },
+  "fullDescription": {
+    "text": "...",
+    "markdown": "..."
+  }
+}
+```
+
+### Results
+
+Each validation finding maps to a `result` entry:
+
+```json
+{
+  "ruleId": "allowed-values-1",
+  "ruleIndex": 0,
+  "guid": "e5f6g7h8-...",
+  "kind": "fail",
+  "level": "error",
+  "message": {
+    "text": "Value 'unknown' is not allowed for 'status'"
+  },
+  "locations": [
+    {
+      "physicalLocation": {
+        "artifactLocation": {
+          "uri": "data/instance.xml",
+          "index": 0
+        },
+        "region": {
+          "startLine": 42,
+          "startColumn": 10
+        }
+      }
+    }
+  ]
+}
+```
+
+**Result kinds:** `notApplicable`, `pass`, `fail`, `review`, `open`, `informational`
+
+**Result levels:** `none`, `note`, `warning`, `error`
+
+### Artifacts
+
+The `artifacts` array lists the files that were analyzed:
+
+```json
+{
+  "location": {
+    "uri": "data/instance.xml",
+    "index": 0
+  }
+}
+```
+
+## Timing Data
+
+When timing instrumentation is enabled, the SARIF output is enriched with performance data at three levels: invocation (overall and per-phase), rule (per-constraint), and notifications (let-statements).
+
+### Enabling Timing
+
+From the CLI:
+
+```bash
+metaschema-cli validate-content -m schema/metaschema.xml \
+    --sarif-timing -o results.sarif data/instance.xml
+```
+
+From Java:
+
+```java
+import dev.metaschema.core.model.constraint.TimingCollector;
+import dev.metaschema.modules.sarif.SarifValidationHandler;
+
+TimingCollector timings = new TimingCollector();
+
+// Wire timing into validation (see Validating with Constraints guide)
+// ...
+
+// Set timing data on the SARIF handler
+SarifValidationHandler sarifHandler = new SarifValidationHandler(sourceUri);
+sarifHandler.setTimingCollector(timings);
+
+// SARIF output will now include timing data
+sarifHandler.write(Path.of("results.sarif"), bindingContext);
+```
+
+### Invocation Timing
+
+When timing is enabled, the run includes an `invocations` array with overall timing and per-phase notifications:
+
+```json
+{
+  "invocations": [
+    {
+      "startTimeUtc": "2026-02-08T12:00:00.000Z",
+      "endTimeUtc": "2026-02-08T12:00:01.234Z",
+      "executionSuccessful": true,
+      "toolExecutionNotifications": [
+        {
+          "message": {
+            "text": "Phase: SCHEMA_VALIDATION"
+          },
+          "timeUtc": "2026-02-08T12:00:00.100Z",
+          "properties": {
+            "timing": {
+              "totalMs": 100.123,
+              "count": 1,
+              "minMs": 100.123,
+              "maxMs": 100.123
+            }
+          }
+        },
+        {
+          "message": {
+            "text": "Phase: CONSTRAINT_VALIDATION"
+          },
+          "timeUtc": "2026-02-08T12:00:00.500Z",
+          "properties": {
+            "timing": {
+              "totalMs": 400.567,
+              "count": 1,
+              "minMs": 400.567,
+              "maxMs": 400.567
+            }
+          }
+        },
+        {
+          "message": {
+            "text": "Phase: FINALIZATION"
+          },
+          "timeUtc": "2026-02-08T12:00:01.000Z",
+          "properties": {
+            "timing": {
+              "totalMs": 234.321,
+              "count": 1,
+              "minMs": 234.321,
+              "maxMs": 234.321
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Rule Timing
+
+Per-constraint timing is added to each rule's `properties` bag:
+
+```json
+{
+  "id": "allowed-values-1",
+  "guid": "a1b2c3d4-...",
+  "shortDescription": { "text": "..." },
+  "properties": {
+    "timing": {
+      "totalMs": 250.321,
+      "count": 10,
+      "minMs": 20.123,
+      "maxMs": 35.456
+    }
+  }
+}
+```
+
+The timing fields for each entry are:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `totalMs` | decimal | Total accumulated time across all evaluations (milliseconds) |
+| `count` | integer | Number of times the constraint was evaluated |
+| `minMs` | decimal | Shortest single evaluation (milliseconds) |
+| `maxMs` | decimal | Longest single evaluation (milliseconds) |
+
+### Let-Statement Timing
+
+Let-statement evaluations appear as additional notifications:
+
+```json
+{
+  "message": {
+    "text": "Let: my-variable"
+  },
+  "timeUtc": "2026-02-08T12:00:00.600Z",
+  "properties": {
+    "timing": {
+      "totalMs": 15.789,
+      "count": 42,
+      "minMs": 0.123,
+      "maxMs": 1.456
+    }
+  }
+}
+```
+
+## Extension Mechanism
+
+Timing data uses the SARIF `properties` bag, which is the standard SARIF 2.1.0 extension mechanism for tool-specific data. The `properties` bag (`propertyBag` in the spec) supports arbitrary key-value pairs and is available on most SARIF objects.
+
+This approach is fully compliant with the SARIF 2.1.0 specification. Tools that do not understand the `timing` property will ignore it, while timing-aware tools can extract and display the data.
+
+## Interpreting Timing Results
+
+### Identifying Hotspots
+
+Sort constraints by `totalMs` descending to find the most expensive constraints. High `count` combined with high `totalMs` suggests a constraint that is evaluated many times across the document.
+
+### Phase Analysis
+
+Compare phase timings to understand where time is spent:
+
+- **SCHEMA_VALIDATION** - Time spent validating document structure
+- **CONSTRAINT_VALIDATION** - Time spent evaluating Metaschema constraints
+- **FINALIZATION** - Time spent on cross-document validation and index resolution
+
+If `CONSTRAINT_VALIDATION` dominates, use per-constraint timing to identify specific hotspots.
+
+### Parallel Validation
+
+Combine `--sarif-timing` with `--threads` to measure the impact of parallel execution:
+
+```bash
+# Measure sequential performance
+metaschema-cli validate-content -m schema/metaschema.xml \
+    --sarif-timing -o sequential.sarif data/large-instance.xml
+
+# Measure parallel performance
+metaschema-cli validate-content -m schema/metaschema.xml \
+    --threads 4 --sarif-timing -o parallel.sarif data/large-instance.xml
+```
+
+Compare the `CONSTRAINT_VALIDATION` phase timing between the two runs.
+
+## Next Steps
+
+- [Validating with Constraints](validating-with-constraints.html) - Constraint types and Java validation API
+- [Using the CLI](using-the-cli.html) - CLI command reference
+- [Architecture](architecture.html) - System architecture and threading model

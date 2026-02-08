@@ -7,6 +7,7 @@ package dev.metaschema.databind.codegen.typeinfo;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -60,6 +61,26 @@ public class AnyInstanceTypeInfoImpl
   @Override
   public TypeName getJavaFieldType() {
     return ClassName.get(IAnyContent.class);
+  }
+
+  @Override
+  public void buildFieldJavadoc(FieldSpec.Builder builder) {
+    builder.addJavadoc("Captures unmodeled content not defined by the Metaschema model.\n");
+  }
+
+  @Override
+  public void buildGetterJavadoc(MethodSpec.Builder builder) {
+    builder.addJavadoc("Get the unmodeled content.\n");
+    builder.addJavadoc("\n");
+    builder.addJavadoc("@return the unmodeled content, or {@code null} if not set\n");
+  }
+
+  @Override
+  public void buildSetterJavadoc(MethodSpec.Builder builder, String paramName) {
+    builder.addJavadoc("Set the unmodeled content.\n");
+    builder.addJavadoc("\n");
+    builder.addJavadoc("@param $L\n", paramName);
+    builder.addJavadoc("          the unmodeled content to set\n");
   }
 
   @Override

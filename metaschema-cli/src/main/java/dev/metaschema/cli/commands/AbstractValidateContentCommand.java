@@ -37,8 +37,10 @@ import dev.metaschema.core.metapath.format.IPathFormatter;
 import dev.metaschema.core.metapath.format.PathFormatSelection;
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.model.MetaschemaException;
+import dev.metaschema.core.model.constraint.CompositeValidationEventListener;
 import dev.metaschema.core.model.constraint.ConstraintValidationException;
 import dev.metaschema.core.model.constraint.IConstraintSet;
+import dev.metaschema.core.model.constraint.TimingCollector;
 import dev.metaschema.core.model.constraint.ValidationFeature;
 import dev.metaschema.core.model.validation.AggregateValidationResult;
 import dev.metaschema.core.model.validation.IValidationResult;
@@ -118,6 +120,12 @@ public abstract class AbstractValidateContentCommand
           .type(Number.class)
           .desc("number of threads for parallel constraint validation (default: 1, experimental)")
           .get());
+  @NonNull
+  private static final Option SARIF_TIMING_OPTION = ObjectUtils.notNull(
+      Option.builder()
+          .longOpt("sarif-timing")
+          .desc("include per-constraint and per-phase timing data in SARIF output (requires -o, experimental)")
+          .get());
 
   @Override
   public String getName() {
@@ -132,6 +140,7 @@ public abstract class AbstractValidateContentCommand
         CONSTRAINTS_OPTION,
         SARIF_OUTPUT_FILE_OPTION,
         SARIF_INCLUDE_PASS_OPTION,
+        SARIF_TIMING_OPTION,
         NO_SCHEMA_VALIDATION_OPTION,
         NO_CONSTRAINT_VALIDATION_OPTION,
         PATH_FORMAT_OPTION,
@@ -148,6 +157,11 @@ public abstract class AbstractValidateContentCommand
    */
   protected abstract class AbstractValidationCommandExecutor
       extends AbstractCommandExecutor {
+
+    @Nullable
+    private TimingCollector timingCollector;
+    @Nullable
+    private SarifValidationHandler sarifHandler;
 
     /**
      * Construct a new command executor.
@@ -291,6 +305,31 @@ public abstract class AbstractValidateContentCommand
             configuration.enableFeature(ValidationFeature.VALIDATE_GENERATE_PASS_FINDINGS);
           }
 
+          // Validate --sarif-timing requires -o
+          if (commandLine.hasOption(SARIF_TIMING_OPTION)
+              && !commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION)) {
+            throw new CommandExecutionException(
+                ExitCode.INVALID_ARGUMENTS,
+                "--sarif-timing requires -o <FILE> for SARIF output");
+          }
+
+          // Configure timing collection if requested
+          if (commandLine.hasOption(SARIF_TIMING_OPTION) && commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION)) {
+            TimingCollector collector = new TimingCollector();
+            this.timingCollector = collector;
+
+            // Create SARIF handler early for per-result timing event delivery
+            IVersionInfo version = getCallingContext().getCLIProcessor()
+                .getVersionInfos().get(CLIProcessor.COMMAND_VERSION);
+            SarifValidationHandler handler
+                = new SarifValidationHandler(source, version);
+            this.sarifHandler = handler;
+
+            // Register both listeners as a composite
+            configuration.set(ValidationFeature.EVENT_LISTENER,
+                new CompositeValidationEventListener(List.of(collector, handler)));
+          }
+
           // Configure parallel validation if requested
           if (commandLine.hasOption(PARALLEL_THREADS_OPTION)) {
             String threadValue = commandLine.getOptionValue(PARALLEL_THREADS_OPTION);
@@ -319,7 +358,18 @@ public abstract class AbstractValidateContentCommand
 
           // perform constraint validation
           bindingContext.registerModule(module); // ensure the module is registered
-          IValidationResult constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);
+          TimingCollector collector = this.timingCollector;
+          if (collector != null) {
+            collector.beforeValidation(source);
+          }
+          IValidationResult constraintValidationResult;
+          try {
+            constraintValidationResult = bindingContext.validateWithConstraints(source, configuration);
+          } finally {
+            if (collector != null) {
+              collector.afterValidation(source);
+            }
+          }
           validationResult = validationResult == null
               ? constraintValidationResult
               : AggregateValidationResult.aggregate(validationResult, constraintValidationResult);
@@ -351,15 +401,21 @@ public abstract class AbstractValidateContentCommand
       if (commandLine.hasOption(SARIF_OUTPUT_FILE_OPTION)) {
         Path sarifFile = ObjectUtils.notNull(Paths.get(commandLine.getOptionValue(SARIF_OUTPUT_FILE_OPTION)));
 
-        IVersionInfo version
-            = getCallingContext().getCLIProcessor().getVersionInfos().get(CLIProcessor.COMMAND_VERSION);
-
         try {
-          SarifValidationHandler sarifHandler = new SarifValidationHandler(source, version);
-          if (validationResult != null) {
-            sarifHandler.addFindings(validationResult.getFindings());
+          // Use pre-created handler (for per-result timing) or create a new one
+          SarifValidationHandler handler = this.sarifHandler;
+          if (handler == null) {
+            IVersionInfo version = getCallingContext().getCLIProcessor()
+                .getVersionInfos().get(CLIProcessor.COMMAND_VERSION);
+            handler = new SarifValidationHandler(source, version);
           }
-          sarifHandler.write(sarifFile, bindingContext);
+          if (timingCollector != null) {
+            handler.setTimingCollector(timingCollector);
+          }
+          if (validationResult != null) {
+            handler.addFindings(validationResult.getFindings());
+          }
+          handler.write(sarifFile, bindingContext);
         } catch (IOException ex) {
           throw new CommandExecutionException(ExitCode.IO_ERROR, ex.getLocalizedMessage(), ex);
         }

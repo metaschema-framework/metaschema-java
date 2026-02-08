@@ -139,6 +139,29 @@ public interface IConstraint extends IAttributable, IDescribable {
   }
 
   /**
+   * Get a stable identifier for this constraint, suitable for use in SARIF output
+   * and timing correlation.
+   * <p>
+   * Returns the author-defined {@link #getId()} if present. Otherwise, generates
+   * a deterministic fallback identifier based on the constraint type, source
+   * location, and target expression.
+   *
+   * @return a non-null identifier string
+   */
+  @NonNull
+  default String getInternalIdentifier() {
+    String id = getId();
+    if (id != null) {
+      return id;
+    }
+    // Deterministic fallback based on constraint properties
+    String source = getSource().getLocationHint();
+    String target = getTarget().getPath();
+    int hash = (source + "|" + target).hashCode();
+    return ObjectUtils.notNull(getType().getName() + "-" + String.format("%08x", hash));
+  }
+
+  /**
    * Get the constraint type.
    *
    * @return the constraint type
