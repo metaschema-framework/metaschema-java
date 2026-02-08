@@ -191,6 +191,7 @@ For larger initiatives, use PRDs stored in `PRDs/<YYYYMMDD>-<name>/`:
 | PRD | Description | Status |
 |-----|-------------|--------|
 | `PRDs/20251206-build-cleanup/` | Build warnings and deprecation removal | In Progress |
+| `PRDs/20260207-format-datetime/` | Date/time formatting functions (issue #283) | In Progress |
 
 ### Completed PRDs
 

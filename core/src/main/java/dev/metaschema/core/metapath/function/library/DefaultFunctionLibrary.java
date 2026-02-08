@@ -97,11 +97,19 @@ public class DefaultFunctionLibrary
     registerFunction(FnFalse.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-floor
     registerFunction(NumericFunction.signature(MetapathConstants.NS_METAPATH_FUNCTIONS, "floor", INumericItem::floor));
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-date
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-dateTime
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-integer
+    // https://www.w3.org/TR/xpath-functions-31/#func-format-date
+    registerFunction(FnFormatDate.SIGNATURE_TWO_ARG);
+    registerFunction(FnFormatDate.SIGNATURE_FIVE_ARG);
+    // https://www.w3.org/TR/xpath-functions-31/#func-format-dateTime
+    registerFunction(FnFormatDateTime.SIGNATURE_TWO_ARG);
+    registerFunction(FnFormatDateTime.SIGNATURE_FIVE_ARG);
+    // https://www.w3.org/TR/xpath-functions-31/#func-format-integer
+    registerFunction(FnFormatInteger.SIGNATURE_TWO_ARG);
+    registerFunction(FnFormatInteger.SIGNATURE_THREE_ARG);
     // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-number
-    // P2: https://www.w3.org/TR/xpath-functions-31/#func-format-time
+    // https://www.w3.org/TR/xpath-functions-31/#func-format-time
+    registerFunction(FnFormatTime.SIGNATURE_TWO_ARG);
+    registerFunction(FnFormatTime.SIGNATURE_FIVE_ARG);
     // https://www.w3.org/TR/xpath-functions-31/#func-function-arity
     registerFunction(FnFunctionArity.SIGNATURE);
     // https://www.w3.org/TR/xpath-functions-31/#func-function-lookup
