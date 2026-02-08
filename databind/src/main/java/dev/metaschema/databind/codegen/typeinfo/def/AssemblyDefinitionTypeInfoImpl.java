@@ -14,6 +14,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import dev.metaschema.core.model.IAnyInstance;
 import dev.metaschema.core.model.IAssemblyDefinition;
 import dev.metaschema.core.model.IChoiceGroupInstance;
 import dev.metaschema.core.model.IChoiceInstance;
@@ -23,6 +24,7 @@ import dev.metaschema.core.model.IModelInstanceAbsolute;
 import dev.metaschema.core.model.INamedModelInstanceAbsolute;
 import dev.metaschema.core.util.CustomCollectors;
 import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.codegen.typeinfo.AnyInstanceTypeInfoImpl;
 import dev.metaschema.databind.codegen.typeinfo.IInstanceTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.IModelInstanceTypeInfo;
 import dev.metaschema.databind.codegen.typeinfo.INamedModelInstanceTypeInfo;
@@ -45,19 +47,29 @@ class AssemblyDefinitionTypeInfoImpl
 
   public AssemblyDefinitionTypeInfoImpl(@NonNull IAssemblyDefinition definition, @NonNull ITypeResolver typeResolver) {
     super(definition, typeResolver);
-    this.instanceToTypeInfoMap = ObjectUtils.notNull(Lazy.of(() -> Stream.concat(
-        getFlagInstanceTypeInfos().stream(),
-        processModel(definition))
-        .collect(CustomCollectors.toMap(
-            IInstanceTypeInfo::getInstance,
-            CustomCollectors.identity(),
-            (key, v1, v2) -> {
-              if (LOGGER.isErrorEnabled()) {
-                LOGGER.error(String.format("Unexpected duplicate property name '%s'", key));
-              }
-              return ObjectUtils.notNull(v2);
-            },
-            LinkedHashMap::new))));
+    this.instanceToTypeInfoMap = ObjectUtils.notNull(Lazy.of(() -> {
+      Stream<? extends IInstanceTypeInfo> instances = Stream.concat(
+          getFlagInstanceTypeInfos().stream(),
+          processModel(definition));
+
+      // Add any instance if present on the assembly definition
+      IAnyInstance anyInstance = definition.getAnyInstance();
+      if (anyInstance != null) {
+        instances = Stream.concat(instances,
+            Stream.of(new AnyInstanceTypeInfoImpl(anyInstance, this)));
+      }
+
+      return instances.collect(CustomCollectors.toMap(
+          IInstanceTypeInfo::getInstance,
+          CustomCollectors.identity(),
+          (key, v1, v2) -> {
+            if (LOGGER.isErrorEnabled()) {
+              LOGGER.error(String.format("Unexpected duplicate property name '%s'", key));
+            }
+            return ObjectUtils.notNull(v2);
+          },
+          LinkedHashMap::new));
+    }));
     this.propertyNameToTypeInfoMap = ObjectUtils.notNull(Lazy.of(() -> getInstanceTypeInfoMap().values().stream()
         .collect(Collectors.toMap(
             IInstanceTypeInfo::getPropertyName,
