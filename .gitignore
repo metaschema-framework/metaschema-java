@@ -39,5 +39,5 @@ package-lock.json
 CLAUDE.local.md
 .claude/settings.local.json
 
-# Git worktrees
+# Worktrees
 .worktrees/

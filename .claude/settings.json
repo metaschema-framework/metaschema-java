@@ -1,4 +1,10 @@
 {
+  "enabledPlugins": {
+    "metaschema@metaschema-framework": true,
+    "metaschema-tools@metaschema-framework": true,
+    "dev-metaschema@metaschema-framework": true,
+    "superpowers@superpowers-marketplace": true
+  },
   "extraKnownMarketplaces": {
     "metaschema-framework": {
       "source": {
@@ -12,11 +18,5 @@
         "repo": "obra/superpowers"
       }
     }
-  },
-  "enabledPlugins": {
-    "metaschema@metaschema-framework": true,
-    "metaschema-tools@metaschema-framework": true,
-    "dev-metaschema@metaschema-framework": true,
-    "superpowers@superpowers-marketplace": true
   }
 }

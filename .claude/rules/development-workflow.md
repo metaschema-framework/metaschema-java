@@ -139,7 +139,7 @@ When modifying existing code:
 
 For new development work, follow this structured lifecycle:
 
-### Phase 1: PRD Development
+### Phase 1: Worktree Setup and PRD Development
 
 #### Check for Existing Work (CRITICAL - Do This First)
 
@@ -155,13 +155,16 @@ For new development work, follow this structured lifecycle:
 
 #### Creating New PRDs
 
-1. **Use `superpowers:brainstorming`** to refine requirements
-2. **Use `prd-construction` skill** for templates and methodology
-3. **Create PRD directory**: `PRDs/[date]-[name]/` (see `prd-conventions.md` for naming)
-4. **Create PRD documents** using skill templates:
+1. **Create a git worktree first** - Use `superpowers:using-git-worktrees` to create an isolated workspace before writing any PRD documents
+2. **Use `superpowers:brainstorming`** to refine requirements
+3. **Use `prd-construction` skill** for templates and methodology
+4. **Create PRD directory in the worktree**: `PRDs/[date]-[name]/` (see `prd-conventions.md` for naming)
+5. **Create PRD documents** using skill templates:
    - `PRD.md` - Problem statement, goals, requirements, success metrics
    - `implementation-plan.md` - Detailed PR breakdown with acceptance criteria
-5. **Add supporting documents** to the directory as needed (analysis, research, diagrams)
+6. **Add supporting documents** to the directory as needed (analysis, research, diagrams)
+
+**Why worktree first:** PRD documents are committed with the feature branch. Creating them in the main checkout requires moving them later, which wastes effort and risks forgetting to move them.
 
 ### PRD Directory Structure
 ```text
