@@ -21,709 +21,727 @@
 <span class="source-line-no">008</span><span id="line-8">import org.apache.logging.log4j.LogManager;</span>
 <span class="source-line-no">009</span><span id="line-9">import org.apache.logging.log4j.Logger;</span>
 <span class="source-line-no">010</span><span id="line-10">import org.codehaus.stax2.XMLEventReader2;</span>
-<span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import java.io.IOException;</span>
-<span class="source-line-no">013</span><span id="line-13">import java.net.URI;</span>
-<span class="source-line-no">014</span><span id="line-14">import java.util.Collection;</span>
-<span class="source-line-no">015</span><span id="line-15">import java.util.HashSet;</span>
-<span class="source-line-no">016</span><span id="line-16">import java.util.LinkedHashMap;</span>
-<span class="source-line-no">017</span><span id="line-17">import java.util.LinkedList;</span>
-<span class="source-line-no">018</span><span id="line-18">import java.util.List;</span>
-<span class="source-line-no">019</span><span id="line-19">import java.util.Map;</span>
-<span class="source-line-no">020</span><span id="line-20">import java.util.Set;</span>
-<span class="source-line-no">021</span><span id="line-21">import java.util.function.Function;</span>
-<span class="source-line-no">022</span><span id="line-22">import java.util.stream.Collectors;</span>
-<span class="source-line-no">023</span><span id="line-23"></span>
-<span class="source-line-no">024</span><span id="line-24">import javax.xml.namespace.QName;</span>
-<span class="source-line-no">025</span><span id="line-25">import javax.xml.stream.Location;</span>
-<span class="source-line-no">026</span><span id="line-26">import javax.xml.stream.XMLStreamConstants;</span>
-<span class="source-line-no">027</span><span id="line-27">import javax.xml.stream.XMLStreamException;</span>
-<span class="source-line-no">028</span><span id="line-28">import javax.xml.stream.events.Attribute;</span>
-<span class="source-line-no">029</span><span id="line-29">import javax.xml.stream.events.StartElement;</span>
-<span class="source-line-no">030</span><span id="line-30">import javax.xml.stream.events.XMLEvent;</span>
-<span class="source-line-no">031</span><span id="line-31"></span>
-<span class="source-line-no">032</span><span id="line-32">import dev.metaschema.core.model.IBoundObject;</span>
-<span class="source-line-no">033</span><span id="line-33">import dev.metaschema.core.model.IResourceLocation;</span>
-<span class="source-line-no">034</span><span id="line-34">import dev.metaschema.core.model.SimpleResourceLocation;</span>
-<span class="source-line-no">035</span><span id="line-35">import dev.metaschema.core.model.util.XmlEventUtil;</span>
-<span class="source-line-no">036</span><span id="line-36">import dev.metaschema.core.qname.IEnhancedQName;</span>
-<span class="source-line-no">037</span><span id="line-37">import dev.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">038</span><span id="line-38">import dev.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">039</span><span id="line-39">import dev.metaschema.databind.io.BindingException;</span>
-<span class="source-line-no">040</span><span id="line-40">import dev.metaschema.databind.io.Format;</span>
-<span class="source-line-no">041</span><span id="line-41">import dev.metaschema.databind.io.PathTracker;</span>
-<span class="source-line-no">042</span><span id="line-42">import dev.metaschema.databind.io.ValidationContext;</span>
-<span class="source-line-no">043</span><span id="line-43">import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;</span>
-<span class="source-line-no">044</span><span id="line-44">import dev.metaschema.databind.model.IBoundDefinitionModelComplex;</span>
-<span class="source-line-no">045</span><span id="line-45">import dev.metaschema.databind.model.IBoundDefinitionModelFieldComplex;</span>
-<span class="source-line-no">046</span><span id="line-46">import dev.metaschema.databind.model.IBoundFieldValue;</span>
-<span class="source-line-no">047</span><span id="line-47">import dev.metaschema.databind.model.IBoundInstanceFlag;</span>
-<span class="source-line-no">048</span><span id="line-48">import dev.metaschema.databind.model.IBoundInstanceModel;</span>
-<span class="source-line-no">049</span><span id="line-49">import dev.metaschema.databind.model.IBoundInstanceModelAssembly;</span>
-<span class="source-line-no">050</span><span id="line-50">import dev.metaschema.databind.model.IBoundInstanceModelChoiceGroup;</span>
-<span class="source-line-no">051</span><span id="line-51">import dev.metaschema.databind.model.IBoundInstanceModelFieldComplex;</span>
-<span class="source-line-no">052</span><span id="line-52">import dev.metaschema.databind.model.IBoundInstanceModelFieldScalar;</span>
-<span class="source-line-no">053</span><span id="line-53">import dev.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;</span>
-<span class="source-line-no">054</span><span id="line-54">import dev.metaschema.databind.model.IBoundInstanceModelGroupedField;</span>
-<span class="source-line-no">055</span><span id="line-55">import dev.metaschema.databind.model.IBoundInstanceModelGroupedNamed;</span>
-<span class="source-line-no">056</span><span id="line-56">import dev.metaschema.databind.model.info.AbstractModelInstanceReadHandler;</span>
-<span class="source-line-no">057</span><span id="line-57">import dev.metaschema.databind.model.info.IFeatureScalarItemValueHandler;</span>
-<span class="source-line-no">058</span><span id="line-58">import dev.metaschema.databind.model.info.IItemReadHandler;</span>
-<span class="source-line-no">059</span><span id="line-59">import dev.metaschema.databind.model.info.IModelInstanceCollectionInfo;</span>
-<span class="source-line-no">060</span><span id="line-60">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">061</span><span id="line-61">import edu.umd.cs.findbugs.annotations.Nullable;</span>
-<span class="source-line-no">062</span><span id="line-62"></span>
-<span class="source-line-no">063</span><span id="line-63">/**</span>
-<span class="source-line-no">064</span><span id="line-64"> * Supports reading XML-based Metaschema module instances.</span>
-<span class="source-line-no">065</span><span id="line-65"> */</span>
-<span class="source-line-no">066</span><span id="line-66">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
-<span class="source-line-no">067</span><span id="line-67">public class MetaschemaXmlReader</span>
-<span class="source-line-no">068</span><span id="line-68">    implements IXmlParsingContext {</span>
-<span class="source-line-no">069</span><span id="line-69">  private static final Logger LOGGER = LogManager.getLogger(MetaschemaXmlReader.class);</span>
-<span class="source-line-no">070</span><span id="line-70">  @NonNull</span>
-<span class="source-line-no">071</span><span id="line-71">  private final XMLEventReader2 reader;</span>
-<span class="source-line-no">072</span><span id="line-72">  @NonNull</span>
-<span class="source-line-no">073</span><span id="line-73">  private final URI source;</span>
+<span class="source-line-no">011</span><span id="line-11">import org.w3c.dom.Element;</span>
+<span class="source-line-no">012</span><span id="line-12"></span>
+<span class="source-line-no">013</span><span id="line-13">import java.io.IOException;</span>
+<span class="source-line-no">014</span><span id="line-14">import java.net.URI;</span>
+<span class="source-line-no">015</span><span id="line-15">import java.util.ArrayList;</span>
+<span class="source-line-no">016</span><span id="line-16">import java.util.Collection;</span>
+<span class="source-line-no">017</span><span id="line-17">import java.util.HashSet;</span>
+<span class="source-line-no">018</span><span id="line-18">import java.util.LinkedHashMap;</span>
+<span class="source-line-no">019</span><span id="line-19">import java.util.LinkedList;</span>
+<span class="source-line-no">020</span><span id="line-20">import java.util.List;</span>
+<span class="source-line-no">021</span><span id="line-21">import java.util.Map;</span>
+<span class="source-line-no">022</span><span id="line-22">import java.util.Set;</span>
+<span class="source-line-no">023</span><span id="line-23">import java.util.function.Function;</span>
+<span class="source-line-no">024</span><span id="line-24">import java.util.stream.Collectors;</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">import javax.xml.namespace.QName;</span>
+<span class="source-line-no">027</span><span id="line-27">import javax.xml.stream.Location;</span>
+<span class="source-line-no">028</span><span id="line-28">import javax.xml.stream.XMLStreamConstants;</span>
+<span class="source-line-no">029</span><span id="line-29">import javax.xml.stream.XMLStreamException;</span>
+<span class="source-line-no">030</span><span id="line-30">import javax.xml.stream.events.Attribute;</span>
+<span class="source-line-no">031</span><span id="line-31">import javax.xml.stream.events.StartElement;</span>
+<span class="source-line-no">032</span><span id="line-32">import javax.xml.stream.events.XMLEvent;</span>
+<span class="source-line-no">033</span><span id="line-33"></span>
+<span class="source-line-no">034</span><span id="line-34">import dev.metaschema.core.model.IAnyInstance;</span>
+<span class="source-line-no">035</span><span id="line-35">import dev.metaschema.core.model.IBoundObject;</span>
+<span class="source-line-no">036</span><span id="line-36">import dev.metaschema.core.model.IResourceLocation;</span>
+<span class="source-line-no">037</span><span id="line-37">import dev.metaschema.core.model.SimpleResourceLocation;</span>
+<span class="source-line-no">038</span><span id="line-38">import dev.metaschema.core.model.util.XmlEventUtil;</span>
+<span class="source-line-no">039</span><span id="line-39">import dev.metaschema.core.qname.IEnhancedQName;</span>
+<span class="source-line-no">040</span><span id="line-40">import dev.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">041</span><span id="line-41">import dev.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">042</span><span id="line-42">import dev.metaschema.databind.io.BindingException;</span>
+<span class="source-line-no">043</span><span id="line-43">import dev.metaschema.databind.io.Format;</span>
+<span class="source-line-no">044</span><span id="line-44">import dev.metaschema.databind.io.PathTracker;</span>
+<span class="source-line-no">045</span><span id="line-45">import dev.metaschema.databind.io.ValidationContext;</span>
+<span class="source-line-no">046</span><span id="line-46">import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;</span>
+<span class="source-line-no">047</span><span id="line-47">import dev.metaschema.databind.model.IBoundDefinitionModelComplex;</span>
+<span class="source-line-no">048</span><span id="line-48">import dev.metaschema.databind.model.IBoundDefinitionModelFieldComplex;</span>
+<span class="source-line-no">049</span><span id="line-49">import dev.metaschema.databind.model.IBoundFieldValue;</span>
+<span class="source-line-no">050</span><span id="line-50">import dev.metaschema.databind.model.IBoundInstanceFlag;</span>
+<span class="source-line-no">051</span><span id="line-51">import dev.metaschema.databind.model.IBoundInstanceModel;</span>
+<span class="source-line-no">052</span><span id="line-52">import dev.metaschema.databind.model.IBoundInstanceModelAny;</span>
+<span class="source-line-no">053</span><span id="line-53">import dev.metaschema.databind.model.IBoundInstanceModelAssembly;</span>
+<span class="source-line-no">054</span><span id="line-54">import dev.metaschema.databind.model.IBoundInstanceModelChoiceGroup;</span>
+<span class="source-line-no">055</span><span id="line-55">import dev.metaschema.databind.model.IBoundInstanceModelFieldComplex;</span>
+<span class="source-line-no">056</span><span id="line-56">import dev.metaschema.databind.model.IBoundInstanceModelFieldScalar;</span>
+<span class="source-line-no">057</span><span id="line-57">import dev.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;</span>
+<span class="source-line-no">058</span><span id="line-58">import dev.metaschema.databind.model.IBoundInstanceModelGroupedField;</span>
+<span class="source-line-no">059</span><span id="line-59">import dev.metaschema.databind.model.IBoundInstanceModelGroupedNamed;</span>
+<span class="source-line-no">060</span><span id="line-60">import dev.metaschema.databind.model.info.AbstractModelInstanceReadHandler;</span>
+<span class="source-line-no">061</span><span id="line-61">import dev.metaschema.databind.model.info.IFeatureScalarItemValueHandler;</span>
+<span class="source-line-no">062</span><span id="line-62">import dev.metaschema.databind.model.info.IItemReadHandler;</span>
+<span class="source-line-no">063</span><span id="line-63">import dev.metaschema.databind.model.info.IModelInstanceCollectionInfo;</span>
+<span class="source-line-no">064</span><span id="line-64">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">065</span><span id="line-65">import edu.umd.cs.findbugs.annotations.Nullable;</span>
+<span class="source-line-no">066</span><span id="line-66"></span>
+<span class="source-line-no">067</span><span id="line-67">/**</span>
+<span class="source-line-no">068</span><span id="line-68"> * Supports reading XML-based Metaschema module instances.</span>
+<span class="source-line-no">069</span><span id="line-69"> */</span>
+<span class="source-line-no">070</span><span id="line-70">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
+<span class="source-line-no">071</span><span id="line-71">public class MetaschemaXmlReader</span>
+<span class="source-line-no">072</span><span id="line-72">    implements IXmlParsingContext {</span>
+<span class="source-line-no">073</span><span id="line-73">  private static final Logger LOGGER = LogManager.getLogger(MetaschemaXmlReader.class);</span>
 <span class="source-line-no">074</span><span id="line-74">  @NonNull</span>
-<span class="source-line-no">075</span><span id="line-75">  private final IXmlProblemHandler problemHandler;</span>
-<span class="source-line-no">076</span><span id="line-76">  /**</span>
-<span class="source-line-no">077</span><span id="line-77">   * Tracks the current parsing path for context-aware error reporting.</span>
-<span class="source-line-no">078</span><span id="line-78">   */</span>
-<span class="source-line-no">079</span><span id="line-79">  @NonNull</span>
-<span class="source-line-no">080</span><span id="line-80">  private final PathTracker pathTracker = new PathTracker();</span>
-<span class="source-line-no">081</span><span id="line-81"></span>
-<span class="source-line-no">082</span><span id="line-82">  /**</span>
-<span class="source-line-no">083</span><span id="line-83">   * Construct a new Module-aware XML parser using the default problem handler.</span>
-<span class="source-line-no">084</span><span id="line-84">   *</span>
-<span class="source-line-no">085</span><span id="line-85">   * @param reader</span>
-<span class="source-line-no">086</span><span id="line-86">   *          the XML reader to parse with</span>
-<span class="source-line-no">087</span><span id="line-87">   * @param source</span>
-<span class="source-line-no">088</span><span id="line-88">   *          the resource being parsed</span>
-<span class="source-line-no">089</span><span id="line-89">   * @see DefaultXmlProblemHandler</span>
-<span class="source-line-no">090</span><span id="line-90">   */</span>
-<span class="source-line-no">091</span><span id="line-91">  public MetaschemaXmlReader(</span>
-<span class="source-line-no">092</span><span id="line-92">      @NonNull XMLEventReader2 reader,</span>
-<span class="source-line-no">093</span><span id="line-93">      @NonNull URI source) {</span>
-<span class="source-line-no">094</span><span id="line-94">    this(reader, source, new DefaultXmlProblemHandler());</span>
-<span class="source-line-no">095</span><span id="line-95">  }</span>
-<span class="source-line-no">096</span><span id="line-96"></span>
-<span class="source-line-no">097</span><span id="line-97">  /**</span>
-<span class="source-line-no">098</span><span id="line-98">   * Construct a new Module-aware parser.</span>
-<span class="source-line-no">099</span><span id="line-99">   *</span>
-<span class="source-line-no">100</span><span id="line-100">   * @param reader</span>
-<span class="source-line-no">101</span><span id="line-101">   *          the XML reader to parse with</span>
-<span class="source-line-no">102</span><span id="line-102">   * @param source</span>
-<span class="source-line-no">103</span><span id="line-103">   *          the resource being parsed</span>
-<span class="source-line-no">104</span><span id="line-104">   * @param problemHandler</span>
-<span class="source-line-no">105</span><span id="line-105">   *          the problem handler implementation to use</span>
-<span class="source-line-no">106</span><span id="line-106">   */</span>
-<span class="source-line-no">107</span><span id="line-107">  public MetaschemaXmlReader(</span>
-<span class="source-line-no">108</span><span id="line-108">      @NonNull XMLEventReader2 reader,</span>
-<span class="source-line-no">109</span><span id="line-109">      @NonNull URI source,</span>
-<span class="source-line-no">110</span><span id="line-110">      @NonNull IXmlProblemHandler problemHandler) {</span>
-<span class="source-line-no">111</span><span id="line-111">    this.reader = reader;</span>
-<span class="source-line-no">112</span><span id="line-112">    this.source = source;</span>
-<span class="source-line-no">113</span><span id="line-113">    this.problemHandler = problemHandler;</span>
-<span class="source-line-no">114</span><span id="line-114">  }</span>
-<span class="source-line-no">115</span><span id="line-115"></span>
-<span class="source-line-no">116</span><span id="line-116">  @Override</span>
-<span class="source-line-no">117</span><span id="line-117">  public XMLEventReader2 getReader() {</span>
-<span class="source-line-no">118</span><span id="line-118">    return reader;</span>
-<span class="source-line-no">119</span><span id="line-119">  }</span>
-<span class="source-line-no">120</span><span id="line-120"></span>
-<span class="source-line-no">121</span><span id="line-121">  @Override</span>
-<span class="source-line-no">122</span><span id="line-122">  public URI getSource() {</span>
-<span class="source-line-no">123</span><span id="line-123">    return source;</span>
-<span class="source-line-no">124</span><span id="line-124">  }</span>
-<span class="source-line-no">125</span><span id="line-125"></span>
-<span class="source-line-no">126</span><span id="line-126">  @Override</span>
-<span class="source-line-no">127</span><span id="line-127">  public IXmlProblemHandler getProblemHandler() {</span>
-<span class="source-line-no">128</span><span id="line-128">    return problemHandler;</span>
-<span class="source-line-no">129</span><span id="line-129">  }</span>
-<span class="source-line-no">130</span><span id="line-130"></span>
-<span class="source-line-no">131</span><span id="line-131">  /**</span>
-<span class="source-line-no">132</span><span id="line-132">   * Build a validation context from the current XML parser state.</span>
-<span class="source-line-no">133</span><span id="line-133">   *</span>
-<span class="source-line-no">134</span><span id="line-134">   * @param location</span>
-<span class="source-line-no">135</span><span id="line-135">   *          the XML location, may be null</span>
-<span class="source-line-no">136</span><span id="line-136">   * @return a new validation context with current location and path</span>
-<span class="source-line-no">137</span><span id="line-137">   */</span>
-<span class="source-line-no">138</span><span id="line-138">  @NonNull</span>
-<span class="source-line-no">139</span><span id="line-139">  private ValidationContext buildValidationContext(@Nullable Location location) {</span>
-<span class="source-line-no">140</span><span id="line-140">    IResourceLocation resourceLocation = location == null</span>
-<span class="source-line-no">141</span><span id="line-141">        ? SimpleResourceLocation.UNKNOWN</span>
-<span class="source-line-no">142</span><span id="line-142">        : SimpleResourceLocation.fromXmlLocation(location);</span>
-<span class="source-line-no">143</span><span id="line-143">    return ValidationContext.of(source, resourceLocation, pathTracker.getCurrentPath(), Format.XML);</span>
-<span class="source-line-no">144</span><span id="line-144">  }</span>
-<span class="source-line-no">145</span><span id="line-145"></span>
-<span class="source-line-no">146</span><span id="line-146">  /**</span>
-<span class="source-line-no">147</span><span id="line-147">   * Parses XML into a bound object based on the provided {@code definition}.</span>
-<span class="source-line-no">148</span><span id="line-148">   * &lt;p&gt;</span>
-<span class="source-line-no">149</span><span id="line-149">   * Parses the {@link XMLStreamConstants#START_DOCUMENT}, any processing</span>
-<span class="source-line-no">150</span><span id="line-150">   * instructions, and the element.</span>
-<span class="source-line-no">151</span><span id="line-151">   *</span>
-<span class="source-line-no">152</span><span id="line-152">   * @param &lt;CLASS&gt;</span>
-<span class="source-line-no">153</span><span id="line-153">   *          the returned object type</span>
-<span class="source-line-no">154</span><span id="line-154">   * @param definition</span>
-<span class="source-line-no">155</span><span id="line-155">   *          the definition describing the element data to read</span>
-<span class="source-line-no">156</span><span id="line-156">   * @return the parsed object</span>
-<span class="source-line-no">157</span><span id="line-157">   * @throws IOException</span>
-<span class="source-line-no">158</span><span id="line-158">   *           if an error occurred while parsing the input</span>
-<span class="source-line-no">159</span><span id="line-159">   */</span>
-<span class="source-line-no">160</span><span id="line-160">  @Override</span>
-<span class="source-line-no">161</span><span id="line-161">  @NonNull</span>
-<span class="source-line-no">162</span><span id="line-162">  public &lt;CLASS&gt; CLASS read(@NonNull IBoundDefinitionModelComplex definition) throws IOException {</span>
-<span class="source-line-no">163</span><span id="line-163">    URI resource = getSource();</span>
-<span class="source-line-no">164</span><span id="line-164">    try {</span>
-<span class="source-line-no">165</span><span id="line-165">      // we may be at the START_DOCUMENT</span>
-<span class="source-line-no">166</span><span id="line-166">      if (reader.peek().isStartDocument()) {</span>
-<span class="source-line-no">167</span><span id="line-167">        XmlEventUtil.consumeAndAssert(reader, resource, XMLStreamConstants.START_DOCUMENT);</span>
-<span class="source-line-no">168</span><span id="line-168">      }</span>
-<span class="source-line-no">169</span><span id="line-169"></span>
-<span class="source-line-no">170</span><span id="line-170">      // advance past any other info to get to next start element</span>
-<span class="source-line-no">171</span><span id="line-171">      XmlEventUtil.skipEvents(reader, XMLStreamConstants.CHARACTERS, XMLStreamConstants.PROCESSING_INSTRUCTION,</span>
-<span class="source-line-no">172</span><span id="line-172">          XMLStreamConstants.DTD);</span>
+<span class="source-line-no">075</span><span id="line-75">  private final XMLEventReader2 reader;</span>
+<span class="source-line-no">076</span><span id="line-76">  @NonNull</span>
+<span class="source-line-no">077</span><span id="line-77">  private final URI source;</span>
+<span class="source-line-no">078</span><span id="line-78">  @NonNull</span>
+<span class="source-line-no">079</span><span id="line-79">  private final IXmlProblemHandler problemHandler;</span>
+<span class="source-line-no">080</span><span id="line-80">  /**</span>
+<span class="source-line-no">081</span><span id="line-81">   * Tracks the current parsing path for context-aware error reporting.</span>
+<span class="source-line-no">082</span><span id="line-82">   */</span>
+<span class="source-line-no">083</span><span id="line-83">  @NonNull</span>
+<span class="source-line-no">084</span><span id="line-84">  private final PathTracker pathTracker = new PathTracker();</span>
+<span class="source-line-no">085</span><span id="line-85"></span>
+<span class="source-line-no">086</span><span id="line-86">  /**</span>
+<span class="source-line-no">087</span><span id="line-87">   * Construct a new Module-aware XML parser using the default problem handler.</span>
+<span class="source-line-no">088</span><span id="line-88">   *</span>
+<span class="source-line-no">089</span><span id="line-89">   * @param reader</span>
+<span class="source-line-no">090</span><span id="line-90">   *          the XML reader to parse with</span>
+<span class="source-line-no">091</span><span id="line-91">   * @param source</span>
+<span class="source-line-no">092</span><span id="line-92">   *          the resource being parsed</span>
+<span class="source-line-no">093</span><span id="line-93">   * @see DefaultXmlProblemHandler</span>
+<span class="source-line-no">094</span><span id="line-94">   */</span>
+<span class="source-line-no">095</span><span id="line-95">  public MetaschemaXmlReader(</span>
+<span class="source-line-no">096</span><span id="line-96">      @NonNull XMLEventReader2 reader,</span>
+<span class="source-line-no">097</span><span id="line-97">      @NonNull URI source) {</span>
+<span class="source-line-no">098</span><span id="line-98">    this(reader, source, new DefaultXmlProblemHandler());</span>
+<span class="source-line-no">099</span><span id="line-99">  }</span>
+<span class="source-line-no">100</span><span id="line-100"></span>
+<span class="source-line-no">101</span><span id="line-101">  /**</span>
+<span class="source-line-no">102</span><span id="line-102">   * Construct a new Module-aware parser.</span>
+<span class="source-line-no">103</span><span id="line-103">   *</span>
+<span class="source-line-no">104</span><span id="line-104">   * @param reader</span>
+<span class="source-line-no">105</span><span id="line-105">   *          the XML reader to parse with</span>
+<span class="source-line-no">106</span><span id="line-106">   * @param source</span>
+<span class="source-line-no">107</span><span id="line-107">   *          the resource being parsed</span>
+<span class="source-line-no">108</span><span id="line-108">   * @param problemHandler</span>
+<span class="source-line-no">109</span><span id="line-109">   *          the problem handler implementation to use</span>
+<span class="source-line-no">110</span><span id="line-110">   */</span>
+<span class="source-line-no">111</span><span id="line-111">  public MetaschemaXmlReader(</span>
+<span class="source-line-no">112</span><span id="line-112">      @NonNull XMLEventReader2 reader,</span>
+<span class="source-line-no">113</span><span id="line-113">      @NonNull URI source,</span>
+<span class="source-line-no">114</span><span id="line-114">      @NonNull IXmlProblemHandler problemHandler) {</span>
+<span class="source-line-no">115</span><span id="line-115">    this.reader = reader;</span>
+<span class="source-line-no">116</span><span id="line-116">    this.source = source;</span>
+<span class="source-line-no">117</span><span id="line-117">    this.problemHandler = problemHandler;</span>
+<span class="source-line-no">118</span><span id="line-118">  }</span>
+<span class="source-line-no">119</span><span id="line-119"></span>
+<span class="source-line-no">120</span><span id="line-120">  @Override</span>
+<span class="source-line-no">121</span><span id="line-121">  public XMLEventReader2 getReader() {</span>
+<span class="source-line-no">122</span><span id="line-122">    return reader;</span>
+<span class="source-line-no">123</span><span id="line-123">  }</span>
+<span class="source-line-no">124</span><span id="line-124"></span>
+<span class="source-line-no">125</span><span id="line-125">  @Override</span>
+<span class="source-line-no">126</span><span id="line-126">  public URI getSource() {</span>
+<span class="source-line-no">127</span><span id="line-127">    return source;</span>
+<span class="source-line-no">128</span><span id="line-128">  }</span>
+<span class="source-line-no">129</span><span id="line-129"></span>
+<span class="source-line-no">130</span><span id="line-130">  @Override</span>
+<span class="source-line-no">131</span><span id="line-131">  public IXmlProblemHandler getProblemHandler() {</span>
+<span class="source-line-no">132</span><span id="line-132">    return problemHandler;</span>
+<span class="source-line-no">133</span><span id="line-133">  }</span>
+<span class="source-line-no">134</span><span id="line-134"></span>
+<span class="source-line-no">135</span><span id="line-135">  /**</span>
+<span class="source-line-no">136</span><span id="line-136">   * Build a validation context from the current XML parser state.</span>
+<span class="source-line-no">137</span><span id="line-137">   *</span>
+<span class="source-line-no">138</span><span id="line-138">   * @param location</span>
+<span class="source-line-no">139</span><span id="line-139">   *          the XML location, may be null</span>
+<span class="source-line-no">140</span><span id="line-140">   * @return a new validation context with current location and path</span>
+<span class="source-line-no">141</span><span id="line-141">   */</span>
+<span class="source-line-no">142</span><span id="line-142">  @NonNull</span>
+<span class="source-line-no">143</span><span id="line-143">  private ValidationContext buildValidationContext(@Nullable Location location) {</span>
+<span class="source-line-no">144</span><span id="line-144">    IResourceLocation resourceLocation = location == null</span>
+<span class="source-line-no">145</span><span id="line-145">        ? SimpleResourceLocation.UNKNOWN</span>
+<span class="source-line-no">146</span><span id="line-146">        : SimpleResourceLocation.fromXmlLocation(location);</span>
+<span class="source-line-no">147</span><span id="line-147">    return ValidationContext.of(source, resourceLocation, pathTracker.getCurrentPath(), Format.XML);</span>
+<span class="source-line-no">148</span><span id="line-148">  }</span>
+<span class="source-line-no">149</span><span id="line-149"></span>
+<span class="source-line-no">150</span><span id="line-150">  /**</span>
+<span class="source-line-no">151</span><span id="line-151">   * Parses XML into a bound object based on the provided {@code definition}.</span>
+<span class="source-line-no">152</span><span id="line-152">   * &lt;p&gt;</span>
+<span class="source-line-no">153</span><span id="line-153">   * Parses the {@link XMLStreamConstants#START_DOCUMENT}, any processing</span>
+<span class="source-line-no">154</span><span id="line-154">   * instructions, and the element.</span>
+<span class="source-line-no">155</span><span id="line-155">   *</span>
+<span class="source-line-no">156</span><span id="line-156">   * @param &lt;CLASS&gt;</span>
+<span class="source-line-no">157</span><span id="line-157">   *          the returned object type</span>
+<span class="source-line-no">158</span><span id="line-158">   * @param definition</span>
+<span class="source-line-no">159</span><span id="line-159">   *          the definition describing the element data to read</span>
+<span class="source-line-no">160</span><span id="line-160">   * @return the parsed object</span>
+<span class="source-line-no">161</span><span id="line-161">   * @throws IOException</span>
+<span class="source-line-no">162</span><span id="line-162">   *           if an error occurred while parsing the input</span>
+<span class="source-line-no">163</span><span id="line-163">   */</span>
+<span class="source-line-no">164</span><span id="line-164">  @Override</span>
+<span class="source-line-no">165</span><span id="line-165">  @NonNull</span>
+<span class="source-line-no">166</span><span id="line-166">  public &lt;CLASS&gt; CLASS read(@NonNull IBoundDefinitionModelComplex definition) throws IOException {</span>
+<span class="source-line-no">167</span><span id="line-167">    URI resource = getSource();</span>
+<span class="source-line-no">168</span><span id="line-168">    try {</span>
+<span class="source-line-no">169</span><span id="line-169">      // we may be at the START_DOCUMENT</span>
+<span class="source-line-no">170</span><span id="line-170">      if (reader.peek().isStartDocument()) {</span>
+<span class="source-line-no">171</span><span id="line-171">        XmlEventUtil.consumeAndAssert(reader, resource, XMLStreamConstants.START_DOCUMENT);</span>
+<span class="source-line-no">172</span><span id="line-172">      }</span>
 <span class="source-line-no">173</span><span id="line-173"></span>
-<span class="source-line-no">174</span><span id="line-174">      XMLEvent event = ObjectUtils.requireNonNull(reader.peek());</span>
-<span class="source-line-no">175</span><span id="line-175">      if (!event.isStartElement()) {</span>
-<span class="source-line-no">176</span><span id="line-176">        throw new IOException(</span>
-<span class="source-line-no">177</span><span id="line-177">            String.format("The token '%s' is not an XML element%s.",</span>
-<span class="source-line-no">178</span><span id="line-178">                XmlEventUtil.toEventName(event),</span>
-<span class="source-line-no">179</span><span id="line-179">                XmlEventUtil.generateLocationMessage(event, resource)));</span>
-<span class="source-line-no">180</span><span id="line-180">      }</span>
-<span class="source-line-no">181</span><span id="line-181"></span>
-<span class="source-line-no">182</span><span id="line-182">      ItemReadHandler handler = new ItemReadHandler(ObjectUtils.notNull(event.asStartElement()));</span>
-<span class="source-line-no">183</span><span id="line-183">      Object value = definition.readItem(null, handler);</span>
-<span class="source-line-no">184</span><span id="line-184">      if (value == null) {</span>
-<span class="source-line-no">185</span><span id="line-185">        event = reader.peek();</span>
-<span class="source-line-no">186</span><span id="line-186">        throw new IOException(String.format("Unable to read data.%s",</span>
-<span class="source-line-no">187</span><span id="line-187">            event == null ? "" : XmlEventUtil.generateLocationMessage(event, resource)));</span>
-<span class="source-line-no">188</span><span id="line-188">      }</span>
-<span class="source-line-no">189</span><span id="line-189"></span>
-<span class="source-line-no">190</span><span id="line-190">      return ObjectUtils.asType(value);</span>
-<span class="source-line-no">191</span><span id="line-191">    } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">192</span><span id="line-192">      throw new IOException(ex);</span>
-<span class="source-line-no">193</span><span id="line-193">    }</span>
-<span class="source-line-no">194</span><span id="line-194">  }</span>
-<span class="source-line-no">195</span><span id="line-195"></span>
-<span class="source-line-no">196</span><span id="line-196">  /**</span>
-<span class="source-line-no">197</span><span id="line-197">   * Read the XML attribute data described by the {@code targetDefinition} and</span>
-<span class="source-line-no">198</span><span id="line-198">   * apply it to the provided {@code targetObject}.</span>
-<span class="source-line-no">199</span><span id="line-199">   *</span>
-<span class="source-line-no">200</span><span id="line-200">   * @param targetDefinition</span>
-<span class="source-line-no">201</span><span id="line-201">   *          the Module definition that describes the syntax of the data to read</span>
-<span class="source-line-no">202</span><span id="line-202">   * @param targetObject</span>
-<span class="source-line-no">203</span><span id="line-203">   *          the Java object that data parsed by this method will be stored in</span>
-<span class="source-line-no">204</span><span id="line-204">   * @param start</span>
-<span class="source-line-no">205</span><span id="line-205">   *          the containing XML element that was previously parsed</span>
-<span class="source-line-no">206</span><span id="line-206">   * @throws IOException</span>
-<span class="source-line-no">207</span><span id="line-207">   *           if an error occurred while parsing the input</span>
-<span class="source-line-no">208</span><span id="line-208">   * @throws XMLStreamException</span>
-<span class="source-line-no">209</span><span id="line-209">   *           if an error occurred while parsing XML events</span>
-<span class="source-line-no">210</span><span id="line-210">   */</span>
-<span class="source-line-no">211</span><span id="line-211">  protected void readFlagInstances(</span>
-<span class="source-line-no">212</span><span id="line-212">      @NonNull IBoundDefinitionModelComplex targetDefinition,</span>
-<span class="source-line-no">213</span><span id="line-213">      @NonNull IBoundObject targetObject,</span>
-<span class="source-line-no">214</span><span id="line-214">      @NonNull StartElement start) throws IOException, XMLStreamException {</span>
-<span class="source-line-no">215</span><span id="line-215">    URI resource = getSource();</span>
-<span class="source-line-no">216</span><span id="line-216"></span>
-<span class="source-line-no">217</span><span id="line-217">    Map&lt;IEnhancedQName, IBoundInstanceFlag&gt; flagInstanceMap = targetDefinition.getFlagInstances().stream()</span>
-<span class="source-line-no">218</span><span id="line-218">        .collect(Collectors.toMap(</span>
-<span class="source-line-no">219</span><span id="line-219">            IBoundInstanceFlag::getQName,</span>
-<span class="source-line-no">220</span><span id="line-220">            Function.identity()));</span>
-<span class="source-line-no">221</span><span id="line-221"></span>
-<span class="source-line-no">222</span><span id="line-222">    for (Attribute attribute : CollectionUtil.toIterable(ObjectUtils.notNull(start.getAttributes()))) {</span>
-<span class="source-line-no">223</span><span id="line-223">      IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.requireNonNull(attribute.getName()));</span>
-<span class="source-line-no">224</span><span id="line-224">      IBoundInstanceFlag instance = flagInstanceMap.get(qname);</span>
-<span class="source-line-no">225</span><span id="line-225">      if (instance == null) {</span>
-<span class="source-line-no">226</span><span id="line-226">        // unrecognized flag</span>
-<span class="source-line-no">227</span><span id="line-227">        if (!getProblemHandler().handleUnknownAttribute(targetDefinition, targetObject, attribute, this)) {</span>
-<span class="source-line-no">228</span><span id="line-228">          throw new IOException(</span>
-<span class="source-line-no">229</span><span id="line-229">              String.format("Unrecognized attribute '%s'%s.",</span>
-<span class="source-line-no">230</span><span id="line-230">                  qname,</span>
-<span class="source-line-no">231</span><span id="line-231">                  XmlEventUtil.generateLocationMessage(attribute, resource)));</span>
-<span class="source-line-no">232</span><span id="line-232">        }</span>
-<span class="source-line-no">233</span><span id="line-233">      } else {</span>
-<span class="source-line-no">234</span><span id="line-234">        try {</span>
-<span class="source-line-no">235</span><span id="line-235">          // get the attribute value</span>
-<span class="source-line-no">236</span><span id="line-236">          Object value = instance.getDefinition().getJavaTypeAdapter()</span>
-<span class="source-line-no">237</span><span id="line-237">              .parse(ObjectUtils.notNull(attribute.getValue()));</span>
-<span class="source-line-no">238</span><span id="line-238">          // apply the value to the parentObject</span>
-<span class="source-line-no">239</span><span id="line-239">          instance.setValue(targetObject, value);</span>
-<span class="source-line-no">240</span><span id="line-240">          flagInstanceMap.remove(qname);</span>
-<span class="source-line-no">241</span><span id="line-241">        } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">242</span><span id="line-242">          throw new IOException(</span>
-<span class="source-line-no">243</span><span id="line-243">              String.format("Malformed data '%s'%s. %s",</span>
-<span class="source-line-no">244</span><span id="line-244">                  attribute.getValue(),</span>
-<span class="source-line-no">245</span><span id="line-245">                  XmlEventUtil.generateLocationMessage(start, resource),</span>
-<span class="source-line-no">246</span><span id="line-246">                  ex.getLocalizedMessage()),</span>
-<span class="source-line-no">247</span><span id="line-247">              ex);</span>
-<span class="source-line-no">248</span><span id="line-248">        }</span>
-<span class="source-line-no">249</span><span id="line-249">      }</span>
-<span class="source-line-no">250</span><span id="line-250">    }</span>
-<span class="source-line-no">251</span><span id="line-251"></span>
-<span class="source-line-no">252</span><span id="line-252">    if (!flagInstanceMap.isEmpty()) {</span>
-<span class="source-line-no">253</span><span id="line-253">      // Build validation context with current location and path</span>
-<span class="source-line-no">254</span><span id="line-254">      ValidationContext context = buildValidationContext(start.getLocation());</span>
-<span class="source-line-no">255</span><span id="line-255">      getProblemHandler().handleMissingFlagInstances(</span>
-<span class="source-line-no">256</span><span id="line-256">          targetDefinition,</span>
-<span class="source-line-no">257</span><span id="line-257">          targetObject,</span>
-<span class="source-line-no">258</span><span id="line-258">          ObjectUtils.notNull(flagInstanceMap.values()),</span>
-<span class="source-line-no">259</span><span id="line-259">          context);</span>
-<span class="source-line-no">260</span><span id="line-260">    }</span>
-<span class="source-line-no">261</span><span id="line-261">  }</span>
-<span class="source-line-no">262</span><span id="line-262"></span>
-<span class="source-line-no">263</span><span id="line-263">  /**</span>
-<span class="source-line-no">264</span><span id="line-264">   * Read the XML element data described by the {@code targetDefinition} and apply</span>
-<span class="source-line-no">265</span><span id="line-265">   * it to the provided {@code targetObject}.</span>
-<span class="source-line-no">266</span><span id="line-266">   *</span>
-<span class="source-line-no">267</span><span id="line-267">   * @param targetDefinition</span>
-<span class="source-line-no">268</span><span id="line-268">   *          the Module definition that describes the syntax of the data to read</span>
-<span class="source-line-no">269</span><span id="line-269">   * @param targetObject</span>
-<span class="source-line-no">270</span><span id="line-270">   *          the Java object that data parsed by this method will be stored in</span>
-<span class="source-line-no">271</span><span id="line-271">   * @throws IOException</span>
-<span class="source-line-no">272</span><span id="line-272">   *           if an error occurred while parsing the input</span>
-<span class="source-line-no">273</span><span id="line-273">   */</span>
-<span class="source-line-no">274</span><span id="line-274">  protected void readModelInstances(</span>
-<span class="source-line-no">275</span><span id="line-275">      @NonNull IBoundDefinitionModelAssembly targetDefinition,</span>
-<span class="source-line-no">276</span><span id="line-276">      @NonNull IBoundObject targetObject)</span>
-<span class="source-line-no">277</span><span id="line-277">      throws IOException {</span>
-<span class="source-line-no">278</span><span id="line-278">    Collection&lt;? extends IBoundInstanceModel&lt;?&gt;&gt; instances = targetDefinition.getModelInstances();</span>
-<span class="source-line-no">279</span><span id="line-279">    Set&lt;IBoundInstanceModel&lt;?&gt;&gt; unhandledProperties = new HashSet&lt;&gt;();</span>
-<span class="source-line-no">280</span><span id="line-280">    for (IBoundInstanceModel&lt;?&gt; modelInstance : instances) {</span>
-<span class="source-line-no">281</span><span id="line-281">      assert modelInstance != null;</span>
-<span class="source-line-no">282</span><span id="line-282">      if (!readItems(modelInstance, targetObject, true)) {</span>
-<span class="source-line-no">283</span><span id="line-283">        unhandledProperties.add(modelInstance);</span>
-<span class="source-line-no">284</span><span id="line-284">      }</span>
-<span class="source-line-no">285</span><span id="line-285">    }</span>
-<span class="source-line-no">286</span><span id="line-286"></span>
-<span class="source-line-no">287</span><span id="line-287">    // process all properties that did not get a value</span>
-<span class="source-line-no">288</span><span id="line-288">    try {</span>
-<span class="source-line-no">289</span><span id="line-289">      XMLEvent event = getReader().peek();</span>
-<span class="source-line-no">290</span><span id="line-290">      Location location = event != null ? event.getLocation() : null;</span>
-<span class="source-line-no">291</span><span id="line-291">      ValidationContext context = buildValidationContext(location);</span>
-<span class="source-line-no">292</span><span id="line-292">      getProblemHandler().handleMissingModelInstances(targetDefinition, targetObject, unhandledProperties, context);</span>
-<span class="source-line-no">293</span><span id="line-293">    } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">294</span><span id="line-294">      throw new IOException(ex);</span>
-<span class="source-line-no">295</span><span id="line-295">    }</span>
-<span class="source-line-no">296</span><span id="line-296"></span>
-<span class="source-line-no">297</span><span id="line-297">    XMLEventReader2 reader = getReader();</span>
-<span class="source-line-no">298</span><span id="line-298">    URI resource = getSource();</span>
-<span class="source-line-no">299</span><span id="line-299"></span>
-<span class="source-line-no">300</span><span id="line-300">    // handle any</span>
-<span class="source-line-no">301</span><span id="line-301">    try {</span>
-<span class="source-line-no">302</span><span id="line-302">      if (!getReader().peek().isEndElement()) {</span>
-<span class="source-line-no">303</span><span id="line-303">        // handle any</span>
-<span class="source-line-no">304</span><span id="line-304">        XmlEventUtil.skipWhitespace(reader);</span>
-<span class="source-line-no">305</span><span id="line-305">        XmlEventUtil.skipElement(reader);</span>
-<span class="source-line-no">306</span><span id="line-306">        XmlEventUtil.skipWhitespace(reader);</span>
-<span class="source-line-no">307</span><span id="line-307">      }</span>
-<span class="source-line-no">308</span><span id="line-308"></span>
-<span class="source-line-no">309</span><span id="line-309">      XmlEventUtil.assertNext(reader, resource, XMLStreamConstants.END_ELEMENT);</span>
-<span class="source-line-no">310</span><span id="line-310">    } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">311</span><span id="line-311">      throw new IOException(ex);</span>
-<span class="source-line-no">312</span><span id="line-312">    }</span>
-<span class="source-line-no">313</span><span id="line-313">  }</span>
-<span class="source-line-no">314</span><span id="line-314"></span>
-<span class="source-line-no">315</span><span id="line-315">  /**</span>
-<span class="source-line-no">316</span><span id="line-316">   * Determine if the next data to read corresponds to the next model instance.</span>
-<span class="source-line-no">317</span><span id="line-317">   *</span>
-<span class="source-line-no">318</span><span id="line-318">   * @param targetInstance</span>
-<span class="source-line-no">319</span><span id="line-319">   *          the model instance that describes the syntax of the data to read</span>
-<span class="source-line-no">320</span><span id="line-320">   * @return {@code true} if the Module instance needs to be parsed, or</span>
-<span class="source-line-no">321</span><span id="line-321">   *         {@code false} otherwise</span>
-<span class="source-line-no">322</span><span id="line-322">   * @throws XMLStreamException</span>
-<span class="source-line-no">323</span><span id="line-323">   *           if an error occurred while parsing XML events</span>
-<span class="source-line-no">324</span><span id="line-324">   */</span>
-<span class="source-line-no">325</span><span id="line-325">  protected boolean isNextInstance(</span>
-<span class="source-line-no">326</span><span id="line-326">      @NonNull IBoundInstanceModel&lt;?&gt; targetInstance)</span>
-<span class="source-line-no">327</span><span id="line-327">      throws XMLStreamException {</span>
-<span class="source-line-no">328</span><span id="line-328"></span>
-<span class="source-line-no">329</span><span id="line-329">    XmlEventUtil.skipWhitespace(reader);</span>
-<span class="source-line-no">330</span><span id="line-330"></span>
-<span class="source-line-no">331</span><span id="line-331">    XMLEvent nextEvent = reader.peek();</span>
+<span class="source-line-no">174</span><span id="line-174">      // advance past any other info to get to next start element</span>
+<span class="source-line-no">175</span><span id="line-175">      XmlEventUtil.skipEvents(reader, XMLStreamConstants.CHARACTERS, XMLStreamConstants.PROCESSING_INSTRUCTION,</span>
+<span class="source-line-no">176</span><span id="line-176">          XMLStreamConstants.DTD);</span>
+<span class="source-line-no">177</span><span id="line-177"></span>
+<span class="source-line-no">178</span><span id="line-178">      XMLEvent event = ObjectUtils.requireNonNull(reader.peek());</span>
+<span class="source-line-no">179</span><span id="line-179">      if (!event.isStartElement()) {</span>
+<span class="source-line-no">180</span><span id="line-180">        throw new IOException(</span>
+<span class="source-line-no">181</span><span id="line-181">            String.format("The token '%s' is not an XML element%s.",</span>
+<span class="source-line-no">182</span><span id="line-182">                XmlEventUtil.toEventName(event),</span>
+<span class="source-line-no">183</span><span id="line-183">                XmlEventUtil.generateLocationMessage(event, resource)));</span>
+<span class="source-line-no">184</span><span id="line-184">      }</span>
+<span class="source-line-no">185</span><span id="line-185"></span>
+<span class="source-line-no">186</span><span id="line-186">      ItemReadHandler handler = new ItemReadHandler(ObjectUtils.notNull(event.asStartElement()));</span>
+<span class="source-line-no">187</span><span id="line-187">      Object value = definition.readItem(null, handler);</span>
+<span class="source-line-no">188</span><span id="line-188">      if (value == null) {</span>
+<span class="source-line-no">189</span><span id="line-189">        event = reader.peek();</span>
+<span class="source-line-no">190</span><span id="line-190">        throw new IOException(String.format("Unable to read data.%s",</span>
+<span class="source-line-no">191</span><span id="line-191">            event == null ? "" : XmlEventUtil.generateLocationMessage(event, resource)));</span>
+<span class="source-line-no">192</span><span id="line-192">      }</span>
+<span class="source-line-no">193</span><span id="line-193"></span>
+<span class="source-line-no">194</span><span id="line-194">      return ObjectUtils.asType(value);</span>
+<span class="source-line-no">195</span><span id="line-195">    } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">196</span><span id="line-196">      throw new IOException(ex);</span>
+<span class="source-line-no">197</span><span id="line-197">    }</span>
+<span class="source-line-no">198</span><span id="line-198">  }</span>
+<span class="source-line-no">199</span><span id="line-199"></span>
+<span class="source-line-no">200</span><span id="line-200">  /**</span>
+<span class="source-line-no">201</span><span id="line-201">   * Read the XML attribute data described by the {@code targetDefinition} and</span>
+<span class="source-line-no">202</span><span id="line-202">   * apply it to the provided {@code targetObject}.</span>
+<span class="source-line-no">203</span><span id="line-203">   *</span>
+<span class="source-line-no">204</span><span id="line-204">   * @param targetDefinition</span>
+<span class="source-line-no">205</span><span id="line-205">   *          the Module definition that describes the syntax of the data to read</span>
+<span class="source-line-no">206</span><span id="line-206">   * @param targetObject</span>
+<span class="source-line-no">207</span><span id="line-207">   *          the Java object that data parsed by this method will be stored in</span>
+<span class="source-line-no">208</span><span id="line-208">   * @param start</span>
+<span class="source-line-no">209</span><span id="line-209">   *          the containing XML element that was previously parsed</span>
+<span class="source-line-no">210</span><span id="line-210">   * @throws IOException</span>
+<span class="source-line-no">211</span><span id="line-211">   *           if an error occurred while parsing the input</span>
+<span class="source-line-no">212</span><span id="line-212">   * @throws XMLStreamException</span>
+<span class="source-line-no">213</span><span id="line-213">   *           if an error occurred while parsing XML events</span>
+<span class="source-line-no">214</span><span id="line-214">   */</span>
+<span class="source-line-no">215</span><span id="line-215">  protected void readFlagInstances(</span>
+<span class="source-line-no">216</span><span id="line-216">      @NonNull IBoundDefinitionModelComplex targetDefinition,</span>
+<span class="source-line-no">217</span><span id="line-217">      @NonNull IBoundObject targetObject,</span>
+<span class="source-line-no">218</span><span id="line-218">      @NonNull StartElement start) throws IOException, XMLStreamException {</span>
+<span class="source-line-no">219</span><span id="line-219">    URI resource = getSource();</span>
+<span class="source-line-no">220</span><span id="line-220"></span>
+<span class="source-line-no">221</span><span id="line-221">    Map&lt;IEnhancedQName, IBoundInstanceFlag&gt; flagInstanceMap = targetDefinition.getFlagInstances().stream()</span>
+<span class="source-line-no">222</span><span id="line-222">        .collect(Collectors.toMap(</span>
+<span class="source-line-no">223</span><span id="line-223">            IBoundInstanceFlag::getQName,</span>
+<span class="source-line-no">224</span><span id="line-224">            Function.identity()));</span>
+<span class="source-line-no">225</span><span id="line-225"></span>
+<span class="source-line-no">226</span><span id="line-226">    for (Attribute attribute : CollectionUtil.toIterable(ObjectUtils.notNull(start.getAttributes()))) {</span>
+<span class="source-line-no">227</span><span id="line-227">      IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.requireNonNull(attribute.getName()));</span>
+<span class="source-line-no">228</span><span id="line-228">      IBoundInstanceFlag instance = flagInstanceMap.get(qname);</span>
+<span class="source-line-no">229</span><span id="line-229">      if (instance == null) {</span>
+<span class="source-line-no">230</span><span id="line-230">        // unrecognized flag</span>
+<span class="source-line-no">231</span><span id="line-231">        if (!getProblemHandler().handleUnknownAttribute(targetDefinition, targetObject, attribute, this)) {</span>
+<span class="source-line-no">232</span><span id="line-232">          throw new IOException(</span>
+<span class="source-line-no">233</span><span id="line-233">              String.format("Unrecognized attribute '%s'%s.",</span>
+<span class="source-line-no">234</span><span id="line-234">                  qname,</span>
+<span class="source-line-no">235</span><span id="line-235">                  XmlEventUtil.generateLocationMessage(attribute, resource)));</span>
+<span class="source-line-no">236</span><span id="line-236">        }</span>
+<span class="source-line-no">237</span><span id="line-237">      } else {</span>
+<span class="source-line-no">238</span><span id="line-238">        try {</span>
+<span class="source-line-no">239</span><span id="line-239">          // get the attribute value</span>
+<span class="source-line-no">240</span><span id="line-240">          Object value = instance.getDefinition().getJavaTypeAdapter()</span>
+<span class="source-line-no">241</span><span id="line-241">              .parse(ObjectUtils.notNull(attribute.getValue()));</span>
+<span class="source-line-no">242</span><span id="line-242">          // apply the value to the parentObject</span>
+<span class="source-line-no">243</span><span id="line-243">          instance.setValue(targetObject, value);</span>
+<span class="source-line-no">244</span><span id="line-244">          flagInstanceMap.remove(qname);</span>
+<span class="source-line-no">245</span><span id="line-245">        } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">246</span><span id="line-246">          throw new IOException(</span>
+<span class="source-line-no">247</span><span id="line-247">              String.format("Malformed data '%s'%s. %s",</span>
+<span class="source-line-no">248</span><span id="line-248">                  attribute.getValue(),</span>
+<span class="source-line-no">249</span><span id="line-249">                  XmlEventUtil.generateLocationMessage(start, resource),</span>
+<span class="source-line-no">250</span><span id="line-250">                  ex.getLocalizedMessage()),</span>
+<span class="source-line-no">251</span><span id="line-251">              ex);</span>
+<span class="source-line-no">252</span><span id="line-252">        }</span>
+<span class="source-line-no">253</span><span id="line-253">      }</span>
+<span class="source-line-no">254</span><span id="line-254">    }</span>
+<span class="source-line-no">255</span><span id="line-255"></span>
+<span class="source-line-no">256</span><span id="line-256">    if (!flagInstanceMap.isEmpty()) {</span>
+<span class="source-line-no">257</span><span id="line-257">      // Build validation context with current location and path</span>
+<span class="source-line-no">258</span><span id="line-258">      ValidationContext context = buildValidationContext(start.getLocation());</span>
+<span class="source-line-no">259</span><span id="line-259">      getProblemHandler().handleMissingFlagInstances(</span>
+<span class="source-line-no">260</span><span id="line-260">          targetDefinition,</span>
+<span class="source-line-no">261</span><span id="line-261">          targetObject,</span>
+<span class="source-line-no">262</span><span id="line-262">          ObjectUtils.notNull(flagInstanceMap.values()),</span>
+<span class="source-line-no">263</span><span id="line-263">          context);</span>
+<span class="source-line-no">264</span><span id="line-264">    }</span>
+<span class="source-line-no">265</span><span id="line-265">  }</span>
+<span class="source-line-no">266</span><span id="line-266"></span>
+<span class="source-line-no">267</span><span id="line-267">  /**</span>
+<span class="source-line-no">268</span><span id="line-268">   * Read the XML element data described by the {@code targetDefinition} and apply</span>
+<span class="source-line-no">269</span><span id="line-269">   * it to the provided {@code targetObject}.</span>
+<span class="source-line-no">270</span><span id="line-270">   *</span>
+<span class="source-line-no">271</span><span id="line-271">   * @param targetDefinition</span>
+<span class="source-line-no">272</span><span id="line-272">   *          the Module definition that describes the syntax of the data to read</span>
+<span class="source-line-no">273</span><span id="line-273">   * @param targetObject</span>
+<span class="source-line-no">274</span><span id="line-274">   *          the Java object that data parsed by this method will be stored in</span>
+<span class="source-line-no">275</span><span id="line-275">   * @throws IOException</span>
+<span class="source-line-no">276</span><span id="line-276">   *           if an error occurred while parsing the input</span>
+<span class="source-line-no">277</span><span id="line-277">   */</span>
+<span class="source-line-no">278</span><span id="line-278">  protected void readModelInstances(</span>
+<span class="source-line-no">279</span><span id="line-279">      @NonNull IBoundDefinitionModelAssembly targetDefinition,</span>
+<span class="source-line-no">280</span><span id="line-280">      @NonNull IBoundObject targetObject)</span>
+<span class="source-line-no">281</span><span id="line-281">      throws IOException {</span>
+<span class="source-line-no">282</span><span id="line-282">    Collection&lt;? extends IBoundInstanceModel&lt;?&gt;&gt; instances = targetDefinition.getModelInstances();</span>
+<span class="source-line-no">283</span><span id="line-283">    Set&lt;IBoundInstanceModel&lt;?&gt;&gt; unhandledProperties = new HashSet&lt;&gt;();</span>
+<span class="source-line-no">284</span><span id="line-284">    for (IBoundInstanceModel&lt;?&gt; modelInstance : instances) {</span>
+<span class="source-line-no">285</span><span id="line-285">      assert modelInstance != null;</span>
+<span class="source-line-no">286</span><span id="line-286">      if (!readItems(modelInstance, targetObject, true)) {</span>
+<span class="source-line-no">287</span><span id="line-287">        unhandledProperties.add(modelInstance);</span>
+<span class="source-line-no">288</span><span id="line-288">      }</span>
+<span class="source-line-no">289</span><span id="line-289">    }</span>
+<span class="source-line-no">290</span><span id="line-290"></span>
+<span class="source-line-no">291</span><span id="line-291">    // process all properties that did not get a value</span>
+<span class="source-line-no">292</span><span id="line-292">    try {</span>
+<span class="source-line-no">293</span><span id="line-293">      XMLEvent event = getReader().peek();</span>
+<span class="source-line-no">294</span><span id="line-294">      Location location = event != null ? event.getLocation() : null;</span>
+<span class="source-line-no">295</span><span id="line-295">      ValidationContext context = buildValidationContext(location);</span>
+<span class="source-line-no">296</span><span id="line-296">      getProblemHandler().handleMissingModelInstances(targetDefinition, targetObject, unhandledProperties, context);</span>
+<span class="source-line-no">297</span><span id="line-297">    } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">298</span><span id="line-298">      throw new IOException(ex);</span>
+<span class="source-line-no">299</span><span id="line-299">    }</span>
+<span class="source-line-no">300</span><span id="line-300"></span>
+<span class="source-line-no">301</span><span id="line-301">    XMLEventReader2 reader = getReader();</span>
+<span class="source-line-no">302</span><span id="line-302">    URI resource = getSource();</span>
+<span class="source-line-no">303</span><span id="line-303"></span>
+<span class="source-line-no">304</span><span id="line-304">    // handle any content</span>
+<span class="source-line-no">305</span><span id="line-305">    try {</span>
+<span class="source-line-no">306</span><span id="line-306">      XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">307</span><span id="line-307"></span>
+<span class="source-line-no">308</span><span id="line-308">      IAnyInstance anyInstance = targetDefinition.getModelContainer().getAnyInstance();</span>
+<span class="source-line-no">309</span><span id="line-309"></span>
+<span class="source-line-no">310</span><span id="line-310">      if (anyInstance instanceof IBoundInstanceModelAny &amp;&amp; !reader.peek().isEndElement()) {</span>
+<span class="source-line-no">311</span><span id="line-311">        IBoundInstanceModelAny boundAny = (IBoundInstanceModelAny) anyInstance;</span>
+<span class="source-line-no">312</span><span id="line-312">        // Capture remaining child elements as DOM elements</span>
+<span class="source-line-no">313</span><span id="line-313">        List&lt;Element&gt; capturedElements = new ArrayList&lt;&gt;();</span>
+<span class="source-line-no">314</span><span id="line-314">        while (reader.peek().isStartElement()) {</span>
+<span class="source-line-no">315</span><span id="line-315">          capturedElements.add(XmlDomUtil.staxToElement(reader));</span>
+<span class="source-line-no">316</span><span id="line-316">          XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">317</span><span id="line-317">        }</span>
+<span class="source-line-no">318</span><span id="line-318">        if (!capturedElements.isEmpty()) {</span>
+<span class="source-line-no">319</span><span id="line-319">          boundAny.setAnyContent(targetObject, new XmlAnyContent(capturedElements));</span>
+<span class="source-line-no">320</span><span id="line-320">        }</span>
+<span class="source-line-no">321</span><span id="line-321">      } else if (!reader.peek().isEndElement()) {</span>
+<span class="source-line-no">322</span><span id="line-322">        // No any instance defined; fall through to existing skip behavior</span>
+<span class="source-line-no">323</span><span id="line-323">        XmlEventUtil.skipElement(reader);</span>
+<span class="source-line-no">324</span><span id="line-324">        XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">325</span><span id="line-325">      }</span>
+<span class="source-line-no">326</span><span id="line-326"></span>
+<span class="source-line-no">327</span><span id="line-327">      XmlEventUtil.assertNext(reader, resource, XMLStreamConstants.END_ELEMENT);</span>
+<span class="source-line-no">328</span><span id="line-328">    } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">329</span><span id="line-329">      throw new IOException(ex);</span>
+<span class="source-line-no">330</span><span id="line-330">    }</span>
+<span class="source-line-no">331</span><span id="line-331">  }</span>
 <span class="source-line-no">332</span><span id="line-332"></span>
-<span class="source-line-no">333</span><span id="line-333">    boolean retval = nextEvent.isStartElement();</span>
-<span class="source-line-no">334</span><span id="line-334">    if (retval) {</span>
-<span class="source-line-no">335</span><span id="line-335">      IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.notNull(nextEvent.asStartElement().getName()));</span>
-<span class="source-line-no">336</span><span id="line-336">      retval = qname.equals(targetInstance.getEffectiveXmlGroupAsQName()) // parse the grouping element</span>
-<span class="source-line-no">337</span><span id="line-337">          || targetInstance.canHandleXmlQName(qname); // parse the instance(s)</span>
-<span class="source-line-no">338</span><span id="line-338">    }</span>
-<span class="source-line-no">339</span><span id="line-339">    return retval;</span>
-<span class="source-line-no">340</span><span id="line-340">  }</span>
-<span class="source-line-no">341</span><span id="line-341"></span>
-<span class="source-line-no">342</span><span id="line-342">  /**</span>
-<span class="source-line-no">343</span><span id="line-343">   * Read the data associated with the {@code instance} and apply it to the</span>
-<span class="source-line-no">344</span><span id="line-344">   * provided {@code parentObject}.</span>
-<span class="source-line-no">345</span><span id="line-345">   *</span>
-<span class="source-line-no">346</span><span id="line-346">   * @param instance</span>
-<span class="source-line-no">347</span><span id="line-347">   *          the instance to parse data for</span>
-<span class="source-line-no">348</span><span id="line-348">   * @param parentObject</span>
-<span class="source-line-no">349</span><span id="line-349">   *          the Java object that data parsed by this method will be stored in</span>
-<span class="source-line-no">350</span><span id="line-350">   * @return {@code true} if the instance was parsed, or {@code false} if the data</span>
-<span class="source-line-no">351</span><span id="line-351">   *         did not contain information for this instance</span>
-<span class="source-line-no">352</span><span id="line-352">   * @throws IOException</span>
-<span class="source-line-no">353</span><span id="line-353">   *           if an error occurred while parsing the input</span>
-<span class="source-line-no">354</span><span id="line-354">   */</span>
-<span class="source-line-no">355</span><span id="line-355">  @Override</span>
-<span class="source-line-no">356</span><span id="line-356">  public &lt;T&gt; boolean readItems(</span>
-<span class="source-line-no">357</span><span id="line-357">      @NonNull IBoundInstanceModel&lt;T&gt; instance,</span>
-<span class="source-line-no">358</span><span id="line-358">      @NonNull IBoundObject parentObject,</span>
-<span class="source-line-no">359</span><span id="line-359">      boolean parseGrouping)</span>
-<span class="source-line-no">360</span><span id="line-360">      throws IOException {</span>
-<span class="source-line-no">361</span><span id="line-361">    try {</span>
-<span class="source-line-no">362</span><span id="line-362">      boolean handled = isNextInstance(instance);</span>
-<span class="source-line-no">363</span><span id="line-363">      if (handled) {</span>
-<span class="source-line-no">364</span><span id="line-364">        XMLEventReader2 reader = getReader();</span>
-<span class="source-line-no">365</span><span id="line-365">        URI resource = getSource();</span>
-<span class="source-line-no">366</span><span id="line-366"></span>
-<span class="source-line-no">367</span><span id="line-367">        // XmlEventUtil.skipWhitespace(reader);</span>
-<span class="source-line-no">368</span><span id="line-368"></span>
-<span class="source-line-no">369</span><span id="line-369">        IEnhancedQName groupEQName = parseGrouping ? instance.getEffectiveXmlGroupAsQName() : null;</span>
-<span class="source-line-no">370</span><span id="line-370">        QName groupQName = groupEQName == null ? null : groupEQName.toQName();</span>
-<span class="source-line-no">371</span><span id="line-371">        if (groupQName != null) {</span>
-<span class="source-line-no">372</span><span id="line-372">          // we need to parse the grouping element, if the next token matches</span>
-<span class="source-line-no">373</span><span id="line-373">          XmlEventUtil.requireStartElement(reader, resource, groupQName);</span>
-<span class="source-line-no">374</span><span id="line-374">        }</span>
-<span class="source-line-no">375</span><span id="line-375"></span>
-<span class="source-line-no">376</span><span id="line-376">        IModelInstanceCollectionInfo&lt;T&gt; collectionInfo = instance.getCollectionInfo();</span>
-<span class="source-line-no">377</span><span id="line-377"></span>
-<span class="source-line-no">378</span><span id="line-378">        ModelInstanceReadHandler&lt;T&gt; handler = new ModelInstanceReadHandler&lt;&gt;(instance, parentObject);</span>
-<span class="source-line-no">379</span><span id="line-379"></span>
-<span class="source-line-no">380</span><span id="line-380">        // let the property info decide how to parse the value</span>
-<span class="source-line-no">381</span><span id="line-381">        Object value = collectionInfo.readItems(handler);</span>
-<span class="source-line-no">382</span><span id="line-382">        if (value != null) {</span>
-<span class="source-line-no">383</span><span id="line-383">          instance.setValue(parentObject, value);</span>
-<span class="source-line-no">384</span><span id="line-384">        }</span>
-<span class="source-line-no">385</span><span id="line-385"></span>
-<span class="source-line-no">386</span><span id="line-386">        // consume extra whitespace between elements</span>
-<span class="source-line-no">387</span><span id="line-387">        XmlEventUtil.skipWhitespace(reader);</span>
-<span class="source-line-no">388</span><span id="line-388"></span>
+<span class="source-line-no">333</span><span id="line-333">  /**</span>
+<span class="source-line-no">334</span><span id="line-334">   * Determine if the next data to read corresponds to the next model instance.</span>
+<span class="source-line-no">335</span><span id="line-335">   *</span>
+<span class="source-line-no">336</span><span id="line-336">   * @param targetInstance</span>
+<span class="source-line-no">337</span><span id="line-337">   *          the model instance that describes the syntax of the data to read</span>
+<span class="source-line-no">338</span><span id="line-338">   * @return {@code true} if the Module instance needs to be parsed, or</span>
+<span class="source-line-no">339</span><span id="line-339">   *         {@code false} otherwise</span>
+<span class="source-line-no">340</span><span id="line-340">   * @throws XMLStreamException</span>
+<span class="source-line-no">341</span><span id="line-341">   *           if an error occurred while parsing XML events</span>
+<span class="source-line-no">342</span><span id="line-342">   */</span>
+<span class="source-line-no">343</span><span id="line-343">  protected boolean isNextInstance(</span>
+<span class="source-line-no">344</span><span id="line-344">      @NonNull IBoundInstanceModel&lt;?&gt; targetInstance)</span>
+<span class="source-line-no">345</span><span id="line-345">      throws XMLStreamException {</span>
+<span class="source-line-no">346</span><span id="line-346"></span>
+<span class="source-line-no">347</span><span id="line-347">    XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">348</span><span id="line-348"></span>
+<span class="source-line-no">349</span><span id="line-349">    XMLEvent nextEvent = reader.peek();</span>
+<span class="source-line-no">350</span><span id="line-350"></span>
+<span class="source-line-no">351</span><span id="line-351">    boolean retval = nextEvent.isStartElement();</span>
+<span class="source-line-no">352</span><span id="line-352">    if (retval) {</span>
+<span class="source-line-no">353</span><span id="line-353">      IEnhancedQName qname = IEnhancedQName.of(ObjectUtils.notNull(nextEvent.asStartElement().getName()));</span>
+<span class="source-line-no">354</span><span id="line-354">      retval = qname.equals(targetInstance.getEffectiveXmlGroupAsQName()) // parse the grouping element</span>
+<span class="source-line-no">355</span><span id="line-355">          || targetInstance.canHandleXmlQName(qname); // parse the instance(s)</span>
+<span class="source-line-no">356</span><span id="line-356">    }</span>
+<span class="source-line-no">357</span><span id="line-357">    return retval;</span>
+<span class="source-line-no">358</span><span id="line-358">  }</span>
+<span class="source-line-no">359</span><span id="line-359"></span>
+<span class="source-line-no">360</span><span id="line-360">  /**</span>
+<span class="source-line-no">361</span><span id="line-361">   * Read the data associated with the {@code instance} and apply it to the</span>
+<span class="source-line-no">362</span><span id="line-362">   * provided {@code parentObject}.</span>
+<span class="source-line-no">363</span><span id="line-363">   *</span>
+<span class="source-line-no">364</span><span id="line-364">   * @param instance</span>
+<span class="source-line-no">365</span><span id="line-365">   *          the instance to parse data for</span>
+<span class="source-line-no">366</span><span id="line-366">   * @param parentObject</span>
+<span class="source-line-no">367</span><span id="line-367">   *          the Java object that data parsed by this method will be stored in</span>
+<span class="source-line-no">368</span><span id="line-368">   * @return {@code true} if the instance was parsed, or {@code false} if the data</span>
+<span class="source-line-no">369</span><span id="line-369">   *         did not contain information for this instance</span>
+<span class="source-line-no">370</span><span id="line-370">   * @throws IOException</span>
+<span class="source-line-no">371</span><span id="line-371">   *           if an error occurred while parsing the input</span>
+<span class="source-line-no">372</span><span id="line-372">   */</span>
+<span class="source-line-no">373</span><span id="line-373">  @Override</span>
+<span class="source-line-no">374</span><span id="line-374">  public &lt;T&gt; boolean readItems(</span>
+<span class="source-line-no">375</span><span id="line-375">      @NonNull IBoundInstanceModel&lt;T&gt; instance,</span>
+<span class="source-line-no">376</span><span id="line-376">      @NonNull IBoundObject parentObject,</span>
+<span class="source-line-no">377</span><span id="line-377">      boolean parseGrouping)</span>
+<span class="source-line-no">378</span><span id="line-378">      throws IOException {</span>
+<span class="source-line-no">379</span><span id="line-379">    try {</span>
+<span class="source-line-no">380</span><span id="line-380">      boolean handled = isNextInstance(instance);</span>
+<span class="source-line-no">381</span><span id="line-381">      if (handled) {</span>
+<span class="source-line-no">382</span><span id="line-382">        XMLEventReader2 reader = getReader();</span>
+<span class="source-line-no">383</span><span id="line-383">        URI resource = getSource();</span>
+<span class="source-line-no">384</span><span id="line-384"></span>
+<span class="source-line-no">385</span><span id="line-385">        // XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">386</span><span id="line-386"></span>
+<span class="source-line-no">387</span><span id="line-387">        IEnhancedQName groupEQName = parseGrouping ? instance.getEffectiveXmlGroupAsQName() : null;</span>
+<span class="source-line-no">388</span><span id="line-388">        QName groupQName = groupEQName == null ? null : groupEQName.toQName();</span>
 <span class="source-line-no">389</span><span id="line-389">        if (groupQName != null) {</span>
-<span class="source-line-no">390</span><span id="line-390">          // consume the end of the group</span>
-<span class="source-line-no">391</span><span id="line-391">          XmlEventUtil.requireEndElement(reader, resource, groupQName);</span>
+<span class="source-line-no">390</span><span id="line-390">          // we need to parse the grouping element, if the next token matches</span>
+<span class="source-line-no">391</span><span id="line-391">          XmlEventUtil.requireStartElement(reader, resource, groupQName);</span>
 <span class="source-line-no">392</span><span id="line-392">        }</span>
-<span class="source-line-no">393</span><span id="line-393">      }</span>
-<span class="source-line-no">394</span><span id="line-394">      return handled;</span>
-<span class="source-line-no">395</span><span id="line-395">    } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">396</span><span id="line-396">      throw new IOException(ex);</span>
-<span class="source-line-no">397</span><span id="line-397">    }</span>
-<span class="source-line-no">398</span><span id="line-398">  }</span>
-<span class="source-line-no">399</span><span id="line-399"></span>
-<span class="source-line-no">400</span><span id="line-400">  private final class ModelInstanceReadHandler&lt;ITEM&gt;</span>
-<span class="source-line-no">401</span><span id="line-401">      extends AbstractModelInstanceReadHandler&lt;ITEM&gt; {</span>
-<span class="source-line-no">402</span><span id="line-402"></span>
-<span class="source-line-no">403</span><span id="line-403">    private ModelInstanceReadHandler(</span>
-<span class="source-line-no">404</span><span id="line-404">        @NonNull IBoundInstanceModel&lt;ITEM&gt; instance,</span>
-<span class="source-line-no">405</span><span id="line-405">        @NonNull IBoundObject parentObject) {</span>
-<span class="source-line-no">406</span><span id="line-406">      super(instance, parentObject);</span>
-<span class="source-line-no">407</span><span id="line-407">    }</span>
-<span class="source-line-no">408</span><span id="line-408"></span>
-<span class="source-line-no">409</span><span id="line-409">    @Override</span>
-<span class="source-line-no">410</span><span id="line-410">    public List&lt;ITEM&gt; readList() throws IOException {</span>
-<span class="source-line-no">411</span><span id="line-411">      return ObjectUtils.notNull(readCollection());</span>
-<span class="source-line-no">412</span><span id="line-412">    }</span>
-<span class="source-line-no">413</span><span id="line-413"></span>
-<span class="source-line-no">414</span><span id="line-414">    @Override</span>
-<span class="source-line-no">415</span><span id="line-415">    public Map&lt;String, ITEM&gt; readMap() throws IOException {</span>
-<span class="source-line-no">416</span><span id="line-416">      IBoundInstanceModel&lt;?&gt; instance = getCollectionInfo().getInstance();</span>
+<span class="source-line-no">393</span><span id="line-393"></span>
+<span class="source-line-no">394</span><span id="line-394">        IModelInstanceCollectionInfo&lt;T&gt; collectionInfo = instance.getCollectionInfo();</span>
+<span class="source-line-no">395</span><span id="line-395"></span>
+<span class="source-line-no">396</span><span id="line-396">        ModelInstanceReadHandler&lt;T&gt; handler = new ModelInstanceReadHandler&lt;&gt;(instance, parentObject);</span>
+<span class="source-line-no">397</span><span id="line-397"></span>
+<span class="source-line-no">398</span><span id="line-398">        // let the property info decide how to parse the value</span>
+<span class="source-line-no">399</span><span id="line-399">        Object value = collectionInfo.readItems(handler);</span>
+<span class="source-line-no">400</span><span id="line-400">        if (value != null) {</span>
+<span class="source-line-no">401</span><span id="line-401">          instance.setValue(parentObject, value);</span>
+<span class="source-line-no">402</span><span id="line-402">        }</span>
+<span class="source-line-no">403</span><span id="line-403"></span>
+<span class="source-line-no">404</span><span id="line-404">        // consume extra whitespace between elements</span>
+<span class="source-line-no">405</span><span id="line-405">        XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">406</span><span id="line-406"></span>
+<span class="source-line-no">407</span><span id="line-407">        if (groupQName != null) {</span>
+<span class="source-line-no">408</span><span id="line-408">          // consume the end of the group</span>
+<span class="source-line-no">409</span><span id="line-409">          XmlEventUtil.requireEndElement(reader, resource, groupQName);</span>
+<span class="source-line-no">410</span><span id="line-410">        }</span>
+<span class="source-line-no">411</span><span id="line-411">      }</span>
+<span class="source-line-no">412</span><span id="line-412">      return handled;</span>
+<span class="source-line-no">413</span><span id="line-413">    } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">414</span><span id="line-414">      throw new IOException(ex);</span>
+<span class="source-line-no">415</span><span id="line-415">    }</span>
+<span class="source-line-no">416</span><span id="line-416">  }</span>
 <span class="source-line-no">417</span><span id="line-417"></span>
-<span class="source-line-no">418</span><span id="line-418">      return ObjectUtils.notNull(readCollection().stream()</span>
-<span class="source-line-no">419</span><span id="line-419">          .collect(Collectors.toMap(</span>
-<span class="source-line-no">420</span><span id="line-420">              item -&gt; {</span>
-<span class="source-line-no">421</span><span id="line-421">                assert item != null;</span>
-<span class="source-line-no">422</span><span id="line-422"></span>
-<span class="source-line-no">423</span><span id="line-423">                IBoundInstanceFlag jsonKey = instance.getItemJsonKey(item);</span>
-<span class="source-line-no">424</span><span id="line-424">                assert jsonKey != null;</span>
-<span class="source-line-no">425</span><span id="line-425">                return ObjectUtils.requireNonNull(jsonKey.getValue(item)).toString();</span>
-<span class="source-line-no">426</span><span id="line-426">              },</span>
-<span class="source-line-no">427</span><span id="line-427">              Function.identity(),</span>
-<span class="source-line-no">428</span><span id="line-428">              (t, u) -&gt; u,</span>
-<span class="source-line-no">429</span><span id="line-429">              LinkedHashMap::new)));</span>
+<span class="source-line-no">418</span><span id="line-418">  private final class ModelInstanceReadHandler&lt;ITEM&gt;</span>
+<span class="source-line-no">419</span><span id="line-419">      extends AbstractModelInstanceReadHandler&lt;ITEM&gt; {</span>
+<span class="source-line-no">420</span><span id="line-420"></span>
+<span class="source-line-no">421</span><span id="line-421">    private ModelInstanceReadHandler(</span>
+<span class="source-line-no">422</span><span id="line-422">        @NonNull IBoundInstanceModel&lt;ITEM&gt; instance,</span>
+<span class="source-line-no">423</span><span id="line-423">        @NonNull IBoundObject parentObject) {</span>
+<span class="source-line-no">424</span><span id="line-424">      super(instance, parentObject);</span>
+<span class="source-line-no">425</span><span id="line-425">    }</span>
+<span class="source-line-no">426</span><span id="line-426"></span>
+<span class="source-line-no">427</span><span id="line-427">    @Override</span>
+<span class="source-line-no">428</span><span id="line-428">    public List&lt;ITEM&gt; readList() throws IOException {</span>
+<span class="source-line-no">429</span><span id="line-429">      return ObjectUtils.notNull(readCollection());</span>
 <span class="source-line-no">430</span><span id="line-430">    }</span>
 <span class="source-line-no">431</span><span id="line-431"></span>
-<span class="source-line-no">432</span><span id="line-432">    @NonNull</span>
-<span class="source-line-no">433</span><span id="line-433">    private List&lt;ITEM&gt; readCollection() throws IOException {</span>
-<span class="source-line-no">434</span><span id="line-434">      List&lt;ITEM&gt; retval = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">435</span><span id="line-435">      XMLEventReader2 reader = getReader();</span>
-<span class="source-line-no">436</span><span id="line-436">      try {</span>
-<span class="source-line-no">437</span><span id="line-437"></span>
-<span class="source-line-no">438</span><span id="line-438">        // consume extra whitespace between elements</span>
-<span class="source-line-no">439</span><span id="line-439">        XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">432</span><span id="line-432">    @Override</span>
+<span class="source-line-no">433</span><span id="line-433">    public Map&lt;String, ITEM&gt; readMap() throws IOException {</span>
+<span class="source-line-no">434</span><span id="line-434">      IBoundInstanceModel&lt;?&gt; instance = getCollectionInfo().getInstance();</span>
+<span class="source-line-no">435</span><span id="line-435"></span>
+<span class="source-line-no">436</span><span id="line-436">      return ObjectUtils.notNull(readCollection().stream()</span>
+<span class="source-line-no">437</span><span id="line-437">          .collect(Collectors.toMap(</span>
+<span class="source-line-no">438</span><span id="line-438">              item -&gt; {</span>
+<span class="source-line-no">439</span><span id="line-439">                assert item != null;</span>
 <span class="source-line-no">440</span><span id="line-440"></span>
-<span class="source-line-no">441</span><span id="line-441">        IBoundInstanceModel&lt;?&gt; instance = getCollectionInfo().getInstance();</span>
-<span class="source-line-no">442</span><span id="line-442">        XMLEvent event;</span>
-<span class="source-line-no">443</span><span id="line-443">        while ((event = reader.peek()).isStartElement()</span>
-<span class="source-line-no">444</span><span id="line-444">            &amp;&amp; instance.canHandleXmlQName(</span>
-<span class="source-line-no">445</span><span id="line-445">                IEnhancedQName.of(ObjectUtils.notNull(event.asStartElement().getName())))) {</span>
-<span class="source-line-no">446</span><span id="line-446"></span>
-<span class="source-line-no">447</span><span id="line-447">          // Consume the start element</span>
-<span class="source-line-no">448</span><span id="line-448">          ITEM value = readItem();</span>
-<span class="source-line-no">449</span><span id="line-449">          retval.add(value);</span>
-<span class="source-line-no">450</span><span id="line-450"></span>
-<span class="source-line-no">451</span><span id="line-451">          // consume extra whitespace between elements</span>
-<span class="source-line-no">452</span><span id="line-452">          XmlEventUtil.skipWhitespace(reader);</span>
-<span class="source-line-no">453</span><span id="line-453">        }</span>
-<span class="source-line-no">454</span><span id="line-454">      } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">455</span><span id="line-455">        throw new IOException(ex);</span>
-<span class="source-line-no">456</span><span id="line-456">      }</span>
-<span class="source-line-no">457</span><span id="line-457">      return retval;</span>
-<span class="source-line-no">458</span><span id="line-458">    }</span>
-<span class="source-line-no">459</span><span id="line-459"></span>
-<span class="source-line-no">460</span><span id="line-460">    @Override</span>
-<span class="source-line-no">461</span><span id="line-461">    public ITEM readItem() throws IOException {</span>
-<span class="source-line-no">462</span><span id="line-462">      try {</span>
-<span class="source-line-no">463</span><span id="line-463">        return getCollectionInfo().getInstance().readItem(</span>
-<span class="source-line-no">464</span><span id="line-464">            getParentObject(),</span>
-<span class="source-line-no">465</span><span id="line-465">            new ItemReadHandler(ObjectUtils.notNull(getReader().peek().asStartElement())));</span>
-<span class="source-line-no">466</span><span id="line-466">      } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">467</span><span id="line-467">        throw new IOException(ex);</span>
-<span class="source-line-no">468</span><span id="line-468">      }</span>
-<span class="source-line-no">469</span><span id="line-469">    }</span>
-<span class="source-line-no">470</span><span id="line-470">  }</span>
-<span class="source-line-no">471</span><span id="line-471"></span>
-<span class="source-line-no">472</span><span id="line-472">  private final class ItemReadHandler implements IItemReadHandler {</span>
-<span class="source-line-no">473</span><span id="line-473">    @NonNull</span>
-<span class="source-line-no">474</span><span id="line-474">    private final StartElement startElement;</span>
-<span class="source-line-no">475</span><span id="line-475"></span>
-<span class="source-line-no">476</span><span id="line-476">    private ItemReadHandler(@NonNull StartElement startElement) {</span>
-<span class="source-line-no">477</span><span id="line-477">      this.startElement = startElement;</span>
-<span class="source-line-no">478</span><span id="line-478">    }</span>
-<span class="source-line-no">479</span><span id="line-479"></span>
-<span class="source-line-no">480</span><span id="line-480">    /**</span>
-<span class="source-line-no">481</span><span id="line-481">     * Get the current start element.</span>
-<span class="source-line-no">482</span><span id="line-482">     *</span>
-<span class="source-line-no">483</span><span id="line-483">     * @return the startElement</span>
-<span class="source-line-no">484</span><span id="line-484">     */</span>
-<span class="source-line-no">485</span><span id="line-485">    @NonNull</span>
-<span class="source-line-no">486</span><span id="line-486">    private StartElement getStartElement() {</span>
-<span class="source-line-no">487</span><span id="line-487">      return startElement;</span>
-<span class="source-line-no">488</span><span id="line-488">    }</span>
+<span class="source-line-no">441</span><span id="line-441">                IBoundInstanceFlag jsonKey = instance.getItemJsonKey(item);</span>
+<span class="source-line-no">442</span><span id="line-442">                assert jsonKey != null;</span>
+<span class="source-line-no">443</span><span id="line-443">                return ObjectUtils.requireNonNull(jsonKey.getValue(item)).toString();</span>
+<span class="source-line-no">444</span><span id="line-444">              },</span>
+<span class="source-line-no">445</span><span id="line-445">              Function.identity(),</span>
+<span class="source-line-no">446</span><span id="line-446">              (t, u) -&gt; u,</span>
+<span class="source-line-no">447</span><span id="line-447">              LinkedHashMap::new)));</span>
+<span class="source-line-no">448</span><span id="line-448">    }</span>
+<span class="source-line-no">449</span><span id="line-449"></span>
+<span class="source-line-no">450</span><span id="line-450">    @NonNull</span>
+<span class="source-line-no">451</span><span id="line-451">    private List&lt;ITEM&gt; readCollection() throws IOException {</span>
+<span class="source-line-no">452</span><span id="line-452">      List&lt;ITEM&gt; retval = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">453</span><span id="line-453">      XMLEventReader2 reader = getReader();</span>
+<span class="source-line-no">454</span><span id="line-454">      try {</span>
+<span class="source-line-no">455</span><span id="line-455"></span>
+<span class="source-line-no">456</span><span id="line-456">        // consume extra whitespace between elements</span>
+<span class="source-line-no">457</span><span id="line-457">        XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">458</span><span id="line-458"></span>
+<span class="source-line-no">459</span><span id="line-459">        IBoundInstanceModel&lt;?&gt; instance = getCollectionInfo().getInstance();</span>
+<span class="source-line-no">460</span><span id="line-460">        XMLEvent event;</span>
+<span class="source-line-no">461</span><span id="line-461">        while ((event = reader.peek()).isStartElement()</span>
+<span class="source-line-no">462</span><span id="line-462">            &amp;&amp; instance.canHandleXmlQName(</span>
+<span class="source-line-no">463</span><span id="line-463">                IEnhancedQName.of(ObjectUtils.notNull(event.asStartElement().getName())))) {</span>
+<span class="source-line-no">464</span><span id="line-464"></span>
+<span class="source-line-no">465</span><span id="line-465">          // Consume the start element</span>
+<span class="source-line-no">466</span><span id="line-466">          ITEM value = readItem();</span>
+<span class="source-line-no">467</span><span id="line-467">          retval.add(value);</span>
+<span class="source-line-no">468</span><span id="line-468"></span>
+<span class="source-line-no">469</span><span id="line-469">          // consume extra whitespace between elements</span>
+<span class="source-line-no">470</span><span id="line-470">          XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">471</span><span id="line-471">        }</span>
+<span class="source-line-no">472</span><span id="line-472">      } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">473</span><span id="line-473">        throw new IOException(ex);</span>
+<span class="source-line-no">474</span><span id="line-474">      }</span>
+<span class="source-line-no">475</span><span id="line-475">      return retval;</span>
+<span class="source-line-no">476</span><span id="line-476">    }</span>
+<span class="source-line-no">477</span><span id="line-477"></span>
+<span class="source-line-no">478</span><span id="line-478">    @Override</span>
+<span class="source-line-no">479</span><span id="line-479">    public ITEM readItem() throws IOException {</span>
+<span class="source-line-no">480</span><span id="line-480">      try {</span>
+<span class="source-line-no">481</span><span id="line-481">        return getCollectionInfo().getInstance().readItem(</span>
+<span class="source-line-no">482</span><span id="line-482">            getParentObject(),</span>
+<span class="source-line-no">483</span><span id="line-483">            new ItemReadHandler(ObjectUtils.notNull(getReader().peek().asStartElement())));</span>
+<span class="source-line-no">484</span><span id="line-484">      } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">485</span><span id="line-485">        throw new IOException(ex);</span>
+<span class="source-line-no">486</span><span id="line-486">      }</span>
+<span class="source-line-no">487</span><span id="line-487">    }</span>
+<span class="source-line-no">488</span><span id="line-488">  }</span>
 <span class="source-line-no">489</span><span id="line-489"></span>
-<span class="source-line-no">490</span><span id="line-490">    @NonNull</span>
-<span class="source-line-no">491</span><span id="line-491">    private &lt;DEF extends IBoundDefinitionModelComplex&gt; IBoundObject readDefinitionElement(</span>
-<span class="source-line-no">492</span><span id="line-492">        @NonNull DEF definition,</span>
-<span class="source-line-no">493</span><span id="line-493">        @NonNull StartElement start,</span>
-<span class="source-line-no">494</span><span id="line-494">        @NonNull IEnhancedQName expectedEQName,</span>
-<span class="source-line-no">495</span><span id="line-495">        @Nullable IBoundObject parent,</span>
-<span class="source-line-no">496</span><span id="line-496">        @NonNull DefinitionBodyHandler&lt;DEF, IBoundObject&gt; bodyHandler) throws IOException {</span>
-<span class="source-line-no">497</span><span id="line-497">      XMLEventReader2 reader = getReader();</span>
-<span class="source-line-no">498</span><span id="line-498">      URI resource = getSource();</span>
-<span class="source-line-no">499</span><span id="line-499">      QName expectedQName = expectedEQName.toQName();</span>
-<span class="source-line-no">500</span><span id="line-500"></span>
-<span class="source-line-no">501</span><span id="line-501">      // Track path for error messages</span>
-<span class="source-line-no">502</span><span id="line-502">      pathTracker.push(definition.getEffectiveName());</span>
-<span class="source-line-no">503</span><span id="line-503"></span>
-<span class="source-line-no">504</span><span id="line-504">      try {</span>
-<span class="source-line-no">505</span><span id="line-505">        // consume the start element</span>
-<span class="source-line-no">506</span><span id="line-506">        XmlEventUtil.requireStartElement(reader, resource, expectedQName);</span>
+<span class="source-line-no">490</span><span id="line-490">  private final class ItemReadHandler implements IItemReadHandler {</span>
+<span class="source-line-no">491</span><span id="line-491">    @NonNull</span>
+<span class="source-line-no">492</span><span id="line-492">    private final StartElement startElement;</span>
+<span class="source-line-no">493</span><span id="line-493"></span>
+<span class="source-line-no">494</span><span id="line-494">    private ItemReadHandler(@NonNull StartElement startElement) {</span>
+<span class="source-line-no">495</span><span id="line-495">      this.startElement = startElement;</span>
+<span class="source-line-no">496</span><span id="line-496">    }</span>
+<span class="source-line-no">497</span><span id="line-497"></span>
+<span class="source-line-no">498</span><span id="line-498">    /**</span>
+<span class="source-line-no">499</span><span id="line-499">     * Get the current start element.</span>
+<span class="source-line-no">500</span><span id="line-500">     *</span>
+<span class="source-line-no">501</span><span id="line-501">     * @return the startElement</span>
+<span class="source-line-no">502</span><span id="line-502">     */</span>
+<span class="source-line-no">503</span><span id="line-503">    @NonNull</span>
+<span class="source-line-no">504</span><span id="line-504">    private StartElement getStartElement() {</span>
+<span class="source-line-no">505</span><span id="line-505">      return startElement;</span>
+<span class="source-line-no">506</span><span id="line-506">    }</span>
 <span class="source-line-no">507</span><span id="line-507"></span>
-<span class="source-line-no">508</span><span id="line-508">        Location location = start.getLocation();</span>
-<span class="source-line-no">509</span><span id="line-509"></span>
-<span class="source-line-no">510</span><span id="line-510">        // construct the item</span>
-<span class="source-line-no">511</span><span id="line-511">        IBoundObject item = definition.newInstance(</span>
-<span class="source-line-no">512</span><span id="line-512">            location == null ? null : () -&gt; SimpleResourceLocation.fromXmlLocation(location));</span>
-<span class="source-line-no">513</span><span id="line-513"></span>
-<span class="source-line-no">514</span><span id="line-514">        // call pre-parse initialization hook</span>
-<span class="source-line-no">515</span><span id="line-515">        definition.callBeforeDeserialize(item, parent);</span>
-<span class="source-line-no">516</span><span id="line-516"></span>
-<span class="source-line-no">517</span><span id="line-517">        // read the flags</span>
-<span class="source-line-no">518</span><span id="line-518">        readFlagInstances(definition, item, start);</span>
-<span class="source-line-no">519</span><span id="line-519"></span>
-<span class="source-line-no">520</span><span id="line-520">        // read the body</span>
-<span class="source-line-no">521</span><span id="line-521">        bodyHandler.accept(definition, item);</span>
-<span class="source-line-no">522</span><span id="line-522"></span>
-<span class="source-line-no">523</span><span id="line-523">        XmlEventUtil.skipWhitespace(reader);</span>
-<span class="source-line-no">524</span><span id="line-524"></span>
-<span class="source-line-no">525</span><span id="line-525">        // call post-parse initialization hook</span>
-<span class="source-line-no">526</span><span id="line-526">        definition.callAfterDeserialize(item, parent);</span>
+<span class="source-line-no">508</span><span id="line-508">    @NonNull</span>
+<span class="source-line-no">509</span><span id="line-509">    private &lt;DEF extends IBoundDefinitionModelComplex&gt; IBoundObject readDefinitionElement(</span>
+<span class="source-line-no">510</span><span id="line-510">        @NonNull DEF definition,</span>
+<span class="source-line-no">511</span><span id="line-511">        @NonNull StartElement start,</span>
+<span class="source-line-no">512</span><span id="line-512">        @NonNull IEnhancedQName expectedEQName,</span>
+<span class="source-line-no">513</span><span id="line-513">        @Nullable IBoundObject parent,</span>
+<span class="source-line-no">514</span><span id="line-514">        @NonNull DefinitionBodyHandler&lt;DEF, IBoundObject&gt; bodyHandler) throws IOException {</span>
+<span class="source-line-no">515</span><span id="line-515">      XMLEventReader2 reader = getReader();</span>
+<span class="source-line-no">516</span><span id="line-516">      URI resource = getSource();</span>
+<span class="source-line-no">517</span><span id="line-517">      QName expectedQName = expectedEQName.toQName();</span>
+<span class="source-line-no">518</span><span id="line-518"></span>
+<span class="source-line-no">519</span><span id="line-519">      // Track path for error messages</span>
+<span class="source-line-no">520</span><span id="line-520">      pathTracker.push(definition.getEffectiveName());</span>
+<span class="source-line-no">521</span><span id="line-521"></span>
+<span class="source-line-no">522</span><span id="line-522">      try {</span>
+<span class="source-line-no">523</span><span id="line-523">        // consume the start element</span>
+<span class="source-line-no">524</span><span id="line-524">        XmlEventUtil.requireStartElement(reader, resource, expectedQName);</span>
+<span class="source-line-no">525</span><span id="line-525"></span>
+<span class="source-line-no">526</span><span id="line-526">        Location location = start.getLocation();</span>
 <span class="source-line-no">527</span><span id="line-527"></span>
-<span class="source-line-no">528</span><span id="line-528">        // consume the end element</span>
-<span class="source-line-no">529</span><span id="line-529">        XmlEventUtil.requireEndElement(reader, resource, expectedQName);</span>
-<span class="source-line-no">530</span><span id="line-530">        return ObjectUtils.asType(item);</span>
-<span class="source-line-no">531</span><span id="line-531">      } catch (BindingException | XMLStreamException ex) {</span>
-<span class="source-line-no">532</span><span id="line-532">        throw new IOException(ex);</span>
-<span class="source-line-no">533</span><span id="line-533">      } finally {</span>
-<span class="source-line-no">534</span><span id="line-534">        pathTracker.pop();</span>
-<span class="source-line-no">535</span><span id="line-535">      }</span>
-<span class="source-line-no">536</span><span id="line-536">    }</span>
+<span class="source-line-no">528</span><span id="line-528">        // construct the item</span>
+<span class="source-line-no">529</span><span id="line-529">        IBoundObject item = definition.newInstance(</span>
+<span class="source-line-no">530</span><span id="line-530">            location == null ? null : () -&gt; SimpleResourceLocation.fromXmlLocation(location));</span>
+<span class="source-line-no">531</span><span id="line-531"></span>
+<span class="source-line-no">532</span><span id="line-532">        // call pre-parse initialization hook</span>
+<span class="source-line-no">533</span><span id="line-533">        definition.callBeforeDeserialize(item, parent);</span>
+<span class="source-line-no">534</span><span id="line-534"></span>
+<span class="source-line-no">535</span><span id="line-535">        // read the flags</span>
+<span class="source-line-no">536</span><span id="line-536">        readFlagInstances(definition, item, start);</span>
 <span class="source-line-no">537</span><span id="line-537"></span>
-<span class="source-line-no">538</span><span id="line-538">    @Override</span>
-<span class="source-line-no">539</span><span id="line-539">    public Object readItemFlag(</span>
-<span class="source-line-no">540</span><span id="line-540">        IBoundObject parent,</span>
-<span class="source-line-no">541</span><span id="line-541">        IBoundInstanceFlag flag) throws IOException {</span>
-<span class="source-line-no">542</span><span id="line-542">      // should never be called</span>
-<span class="source-line-no">543</span><span id="line-543">      throw new UnsupportedOperationException("should be handled by readFlagInstances()");</span>
-<span class="source-line-no">544</span><span id="line-544">    }</span>
+<span class="source-line-no">538</span><span id="line-538">        // read the body</span>
+<span class="source-line-no">539</span><span id="line-539">        bodyHandler.accept(definition, item);</span>
+<span class="source-line-no">540</span><span id="line-540"></span>
+<span class="source-line-no">541</span><span id="line-541">        XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">542</span><span id="line-542"></span>
+<span class="source-line-no">543</span><span id="line-543">        // call post-parse initialization hook</span>
+<span class="source-line-no">544</span><span id="line-544">        definition.callAfterDeserialize(item, parent);</span>
 <span class="source-line-no">545</span><span id="line-545"></span>
-<span class="source-line-no">546</span><span id="line-546">    private void handleFieldDefinitionBody(</span>
-<span class="source-line-no">547</span><span id="line-547">        @NonNull IBoundDefinitionModelFieldComplex definition,</span>
-<span class="source-line-no">548</span><span id="line-548">        @NonNull IBoundObject item) throws IOException {</span>
-<span class="source-line-no">549</span><span id="line-549">      IBoundFieldValue fieldValue = definition.getFieldValue();</span>
-<span class="source-line-no">550</span><span id="line-550"></span>
-<span class="source-line-no">551</span><span id="line-551">      // parse the value</span>
-<span class="source-line-no">552</span><span id="line-552">      Object value = fieldValue.readItem(item, this);</span>
-<span class="source-line-no">553</span><span id="line-553">      if (value != null) {</span>
-<span class="source-line-no">554</span><span id="line-554">        fieldValue.setValue(item, value);</span>
-<span class="source-line-no">555</span><span id="line-555">      }</span>
-<span class="source-line-no">556</span><span id="line-556">    }</span>
-<span class="source-line-no">557</span><span id="line-557"></span>
-<span class="source-line-no">558</span><span id="line-558">    @Override</span>
-<span class="source-line-no">559</span><span id="line-559">    public Object readItemField(</span>
-<span class="source-line-no">560</span><span id="line-560">        IBoundObject parent,</span>
-<span class="source-line-no">561</span><span id="line-561">        IBoundInstanceModelFieldScalar instance)</span>
-<span class="source-line-no">562</span><span id="line-562">        throws IOException {</span>
-<span class="source-line-no">563</span><span id="line-563">      XMLEventReader2 reader = getReader();</span>
-<span class="source-line-no">564</span><span id="line-564">      URI resource = getSource();</span>
-<span class="source-line-no">565</span><span id="line-565">      try {</span>
-<span class="source-line-no">566</span><span id="line-566">        QName wrapper = null;</span>
-<span class="source-line-no">567</span><span id="line-567">        if (instance.isEffectiveValueWrappedInXml()) {</span>
-<span class="source-line-no">568</span><span id="line-568">          wrapper = instance.getQName().toQName();</span>
-<span class="source-line-no">569</span><span id="line-569"></span>
-<span class="source-line-no">570</span><span id="line-570">          XmlEventUtil.skipWhitespace(reader);</span>
-<span class="source-line-no">571</span><span id="line-571">          XmlEventUtil.requireStartElement(reader, resource, wrapper);</span>
-<span class="source-line-no">572</span><span id="line-572">        }</span>
-<span class="source-line-no">573</span><span id="line-573"></span>
-<span class="source-line-no">574</span><span id="line-574">        Object retval = readScalarItem(instance);</span>
+<span class="source-line-no">546</span><span id="line-546">        // consume the end element</span>
+<span class="source-line-no">547</span><span id="line-547">        XmlEventUtil.requireEndElement(reader, resource, expectedQName);</span>
+<span class="source-line-no">548</span><span id="line-548">        return ObjectUtils.asType(item);</span>
+<span class="source-line-no">549</span><span id="line-549">      } catch (BindingException | XMLStreamException ex) {</span>
+<span class="source-line-no">550</span><span id="line-550">        throw new IOException(ex);</span>
+<span class="source-line-no">551</span><span id="line-551">      } finally {</span>
+<span class="source-line-no">552</span><span id="line-552">        pathTracker.pop();</span>
+<span class="source-line-no">553</span><span id="line-553">      }</span>
+<span class="source-line-no">554</span><span id="line-554">    }</span>
+<span class="source-line-no">555</span><span id="line-555"></span>
+<span class="source-line-no">556</span><span id="line-556">    @Override</span>
+<span class="source-line-no">557</span><span id="line-557">    public Object readItemFlag(</span>
+<span class="source-line-no">558</span><span id="line-558">        IBoundObject parent,</span>
+<span class="source-line-no">559</span><span id="line-559">        IBoundInstanceFlag flag) throws IOException {</span>
+<span class="source-line-no">560</span><span id="line-560">      // should never be called</span>
+<span class="source-line-no">561</span><span id="line-561">      throw new UnsupportedOperationException("should be handled by readFlagInstances()");</span>
+<span class="source-line-no">562</span><span id="line-562">    }</span>
+<span class="source-line-no">563</span><span id="line-563"></span>
+<span class="source-line-no">564</span><span id="line-564">    private void handleFieldDefinitionBody(</span>
+<span class="source-line-no">565</span><span id="line-565">        @NonNull IBoundDefinitionModelFieldComplex definition,</span>
+<span class="source-line-no">566</span><span id="line-566">        @NonNull IBoundObject item) throws IOException {</span>
+<span class="source-line-no">567</span><span id="line-567">      IBoundFieldValue fieldValue = definition.getFieldValue();</span>
+<span class="source-line-no">568</span><span id="line-568"></span>
+<span class="source-line-no">569</span><span id="line-569">      // parse the value</span>
+<span class="source-line-no">570</span><span id="line-570">      Object value = fieldValue.readItem(item, this);</span>
+<span class="source-line-no">571</span><span id="line-571">      if (value != null) {</span>
+<span class="source-line-no">572</span><span id="line-572">        fieldValue.setValue(item, value);</span>
+<span class="source-line-no">573</span><span id="line-573">      }</span>
+<span class="source-line-no">574</span><span id="line-574">    }</span>
 <span class="source-line-no">575</span><span id="line-575"></span>
-<span class="source-line-no">576</span><span id="line-576">        if (wrapper != null) {</span>
-<span class="source-line-no">577</span><span id="line-577">          XmlEventUtil.skipWhitespace(reader);</span>
-<span class="source-line-no">578</span><span id="line-578"></span>
-<span class="source-line-no">579</span><span id="line-579">          XmlEventUtil.requireEndElement(reader, resource, wrapper);</span>
-<span class="source-line-no">580</span><span id="line-580">        }</span>
-<span class="source-line-no">581</span><span id="line-581">        return retval;</span>
-<span class="source-line-no">582</span><span id="line-582">      } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">583</span><span id="line-583">        throw new IOException(ex);</span>
-<span class="source-line-no">584</span><span id="line-584">      }</span>
-<span class="source-line-no">585</span><span id="line-585">    }</span>
-<span class="source-line-no">586</span><span id="line-586"></span>
-<span class="source-line-no">587</span><span id="line-587">    @Override</span>
-<span class="source-line-no">588</span><span id="line-588">    public IBoundObject readItemField(</span>
-<span class="source-line-no">589</span><span id="line-589">        IBoundObject parent,</span>
-<span class="source-line-no">590</span><span id="line-590">        IBoundInstanceModelFieldComplex instance)</span>
-<span class="source-line-no">591</span><span id="line-591">        throws IOException {</span>
-<span class="source-line-no">592</span><span id="line-592">      return readDefinitionElement(</span>
-<span class="source-line-no">593</span><span id="line-593">          instance.getDefinition(),</span>
-<span class="source-line-no">594</span><span id="line-594">          getStartElement(),</span>
-<span class="source-line-no">595</span><span id="line-595">          instance.getQName(),</span>
-<span class="source-line-no">596</span><span id="line-596">          parent,</span>
-<span class="source-line-no">597</span><span id="line-597">          this::handleFieldDefinitionBody);</span>
-<span class="source-line-no">598</span><span id="line-598">    }</span>
-<span class="source-line-no">599</span><span id="line-599"></span>
-<span class="source-line-no">600</span><span id="line-600">    @Override</span>
-<span class="source-line-no">601</span><span id="line-601">    public IBoundObject readItemField(IBoundObject parent, IBoundInstanceModelGroupedField instance)</span>
-<span class="source-line-no">602</span><span id="line-602">        throws IOException {</span>
-<span class="source-line-no">603</span><span id="line-603">      return readDefinitionElement(</span>
-<span class="source-line-no">604</span><span id="line-604">          instance.getDefinition(),</span>
-<span class="source-line-no">605</span><span id="line-605">          getStartElement(),</span>
-<span class="source-line-no">606</span><span id="line-606">          instance.getQName(),</span>
-<span class="source-line-no">607</span><span id="line-607">          parent,</span>
-<span class="source-line-no">608</span><span id="line-608">          this::handleFieldDefinitionBody);</span>
-<span class="source-line-no">609</span><span id="line-609">    }</span>
-<span class="source-line-no">610</span><span id="line-610"></span>
-<span class="source-line-no">611</span><span id="line-611">    @Override</span>
-<span class="source-line-no">612</span><span id="line-612">    public IBoundObject readItemField(</span>
-<span class="source-line-no">613</span><span id="line-613">        IBoundObject parent,</span>
-<span class="source-line-no">614</span><span id="line-614">        IBoundDefinitionModelFieldComplex definition) throws IOException {</span>
-<span class="source-line-no">615</span><span id="line-615">      return readDefinitionElement(</span>
-<span class="source-line-no">616</span><span id="line-616">          definition,</span>
-<span class="source-line-no">617</span><span id="line-617">          getStartElement(),</span>
-<span class="source-line-no">618</span><span id="line-618">          definition.getQName(),</span>
-<span class="source-line-no">619</span><span id="line-619">          parent,</span>
-<span class="source-line-no">620</span><span id="line-620">          this::handleFieldDefinitionBody);</span>
-<span class="source-line-no">621</span><span id="line-621">    }</span>
-<span class="source-line-no">622</span><span id="line-622"></span>
-<span class="source-line-no">623</span><span id="line-623">    @Override</span>
-<span class="source-line-no">624</span><span id="line-624">    public Object readItemFieldValue(</span>
-<span class="source-line-no">625</span><span id="line-625">        IBoundObject parent,</span>
-<span class="source-line-no">626</span><span id="line-626">        IBoundFieldValue fieldValue) throws IOException {</span>
-<span class="source-line-no">627</span><span id="line-627">      return checkMissingFieldValue(readScalarItem(fieldValue));</span>
-<span class="source-line-no">628</span><span id="line-628">    }</span>
-<span class="source-line-no">629</span><span id="line-629"></span>
-<span class="source-line-no">630</span><span id="line-630">    @Nullable</span>
-<span class="source-line-no">631</span><span id="line-631">    private Object checkMissingFieldValue(Object value) {</span>
-<span class="source-line-no">632</span><span id="line-632">      if (value == null &amp;&amp; LOGGER.isWarnEnabled()) {</span>
-<span class="source-line-no">633</span><span id="line-633">        StartElement start = getStartElement();</span>
-<span class="source-line-no">634</span><span id="line-634">        LOGGER.atWarn().log("Missing property value{}",</span>
-<span class="source-line-no">635</span><span id="line-635">            XmlEventUtil.generateLocationMessage(start, getSource()));</span>
-<span class="source-line-no">636</span><span id="line-636">      }</span>
-<span class="source-line-no">637</span><span id="line-637">      return value;</span>
-<span class="source-line-no">638</span><span id="line-638">    }</span>
-<span class="source-line-no">639</span><span id="line-639"></span>
-<span class="source-line-no">640</span><span id="line-640">    private void handleAssemblyDefinitionBody(</span>
-<span class="source-line-no">641</span><span id="line-641">        @NonNull IBoundDefinitionModelAssembly definition,</span>
-<span class="source-line-no">642</span><span id="line-642">        @NonNull IBoundObject item) throws IOException {</span>
-<span class="source-line-no">643</span><span id="line-643">      readModelInstances(definition, item);</span>
-<span class="source-line-no">644</span><span id="line-644">    }</span>
-<span class="source-line-no">645</span><span id="line-645"></span>
-<span class="source-line-no">646</span><span id="line-646">    @Override</span>
-<span class="source-line-no">647</span><span id="line-647">    public IBoundObject readItemAssembly(</span>
-<span class="source-line-no">648</span><span id="line-648">        IBoundObject parent,</span>
-<span class="source-line-no">649</span><span id="line-649">        IBoundInstanceModelAssembly instance) throws IOException {</span>
-<span class="source-line-no">650</span><span id="line-650">      return readDefinitionElement(</span>
-<span class="source-line-no">651</span><span id="line-651">          instance.getDefinition(),</span>
-<span class="source-line-no">652</span><span id="line-652">          getStartElement(),</span>
-<span class="source-line-no">653</span><span id="line-653">          instance.getQName(),</span>
-<span class="source-line-no">654</span><span id="line-654">          parent,</span>
-<span class="source-line-no">655</span><span id="line-655">          this::handleAssemblyDefinitionBody);</span>
+<span class="source-line-no">576</span><span id="line-576">    @Override</span>
+<span class="source-line-no">577</span><span id="line-577">    public Object readItemField(</span>
+<span class="source-line-no">578</span><span id="line-578">        IBoundObject parent,</span>
+<span class="source-line-no">579</span><span id="line-579">        IBoundInstanceModelFieldScalar instance)</span>
+<span class="source-line-no">580</span><span id="line-580">        throws IOException {</span>
+<span class="source-line-no">581</span><span id="line-581">      XMLEventReader2 reader = getReader();</span>
+<span class="source-line-no">582</span><span id="line-582">      URI resource = getSource();</span>
+<span class="source-line-no">583</span><span id="line-583">      try {</span>
+<span class="source-line-no">584</span><span id="line-584">        QName wrapper = null;</span>
+<span class="source-line-no">585</span><span id="line-585">        if (instance.isEffectiveValueWrappedInXml()) {</span>
+<span class="source-line-no">586</span><span id="line-586">          wrapper = instance.getQName().toQName();</span>
+<span class="source-line-no">587</span><span id="line-587"></span>
+<span class="source-line-no">588</span><span id="line-588">          XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">589</span><span id="line-589">          XmlEventUtil.requireStartElement(reader, resource, wrapper);</span>
+<span class="source-line-no">590</span><span id="line-590">        }</span>
+<span class="source-line-no">591</span><span id="line-591"></span>
+<span class="source-line-no">592</span><span id="line-592">        Object retval = readScalarItem(instance);</span>
+<span class="source-line-no">593</span><span id="line-593"></span>
+<span class="source-line-no">594</span><span id="line-594">        if (wrapper != null) {</span>
+<span class="source-line-no">595</span><span id="line-595">          XmlEventUtil.skipWhitespace(reader);</span>
+<span class="source-line-no">596</span><span id="line-596"></span>
+<span class="source-line-no">597</span><span id="line-597">          XmlEventUtil.requireEndElement(reader, resource, wrapper);</span>
+<span class="source-line-no">598</span><span id="line-598">        }</span>
+<span class="source-line-no">599</span><span id="line-599">        return retval;</span>
+<span class="source-line-no">600</span><span id="line-600">      } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">601</span><span id="line-601">        throw new IOException(ex);</span>
+<span class="source-line-no">602</span><span id="line-602">      }</span>
+<span class="source-line-no">603</span><span id="line-603">    }</span>
+<span class="source-line-no">604</span><span id="line-604"></span>
+<span class="source-line-no">605</span><span id="line-605">    @Override</span>
+<span class="source-line-no">606</span><span id="line-606">    public IBoundObject readItemField(</span>
+<span class="source-line-no">607</span><span id="line-607">        IBoundObject parent,</span>
+<span class="source-line-no">608</span><span id="line-608">        IBoundInstanceModelFieldComplex instance)</span>
+<span class="source-line-no">609</span><span id="line-609">        throws IOException {</span>
+<span class="source-line-no">610</span><span id="line-610">      return readDefinitionElement(</span>
+<span class="source-line-no">611</span><span id="line-611">          instance.getDefinition(),</span>
+<span class="source-line-no">612</span><span id="line-612">          getStartElement(),</span>
+<span class="source-line-no">613</span><span id="line-613">          instance.getQName(),</span>
+<span class="source-line-no">614</span><span id="line-614">          parent,</span>
+<span class="source-line-no">615</span><span id="line-615">          this::handleFieldDefinitionBody);</span>
+<span class="source-line-no">616</span><span id="line-616">    }</span>
+<span class="source-line-no">617</span><span id="line-617"></span>
+<span class="source-line-no">618</span><span id="line-618">    @Override</span>
+<span class="source-line-no">619</span><span id="line-619">    public IBoundObject readItemField(IBoundObject parent, IBoundInstanceModelGroupedField instance)</span>
+<span class="source-line-no">620</span><span id="line-620">        throws IOException {</span>
+<span class="source-line-no">621</span><span id="line-621">      return readDefinitionElement(</span>
+<span class="source-line-no">622</span><span id="line-622">          instance.getDefinition(),</span>
+<span class="source-line-no">623</span><span id="line-623">          getStartElement(),</span>
+<span class="source-line-no">624</span><span id="line-624">          instance.getQName(),</span>
+<span class="source-line-no">625</span><span id="line-625">          parent,</span>
+<span class="source-line-no">626</span><span id="line-626">          this::handleFieldDefinitionBody);</span>
+<span class="source-line-no">627</span><span id="line-627">    }</span>
+<span class="source-line-no">628</span><span id="line-628"></span>
+<span class="source-line-no">629</span><span id="line-629">    @Override</span>
+<span class="source-line-no">630</span><span id="line-630">    public IBoundObject readItemField(</span>
+<span class="source-line-no">631</span><span id="line-631">        IBoundObject parent,</span>
+<span class="source-line-no">632</span><span id="line-632">        IBoundDefinitionModelFieldComplex definition) throws IOException {</span>
+<span class="source-line-no">633</span><span id="line-633">      return readDefinitionElement(</span>
+<span class="source-line-no">634</span><span id="line-634">          definition,</span>
+<span class="source-line-no">635</span><span id="line-635">          getStartElement(),</span>
+<span class="source-line-no">636</span><span id="line-636">          definition.getQName(),</span>
+<span class="source-line-no">637</span><span id="line-637">          parent,</span>
+<span class="source-line-no">638</span><span id="line-638">          this::handleFieldDefinitionBody);</span>
+<span class="source-line-no">639</span><span id="line-639">    }</span>
+<span class="source-line-no">640</span><span id="line-640"></span>
+<span class="source-line-no">641</span><span id="line-641">    @Override</span>
+<span class="source-line-no">642</span><span id="line-642">    public Object readItemFieldValue(</span>
+<span class="source-line-no">643</span><span id="line-643">        IBoundObject parent,</span>
+<span class="source-line-no">644</span><span id="line-644">        IBoundFieldValue fieldValue) throws IOException {</span>
+<span class="source-line-no">645</span><span id="line-645">      return checkMissingFieldValue(readScalarItem(fieldValue));</span>
+<span class="source-line-no">646</span><span id="line-646">    }</span>
+<span class="source-line-no">647</span><span id="line-647"></span>
+<span class="source-line-no">648</span><span id="line-648">    @Nullable</span>
+<span class="source-line-no">649</span><span id="line-649">    private Object checkMissingFieldValue(Object value) {</span>
+<span class="source-line-no">650</span><span id="line-650">      if (value == null &amp;&amp; LOGGER.isWarnEnabled()) {</span>
+<span class="source-line-no">651</span><span id="line-651">        StartElement start = getStartElement();</span>
+<span class="source-line-no">652</span><span id="line-652">        LOGGER.atWarn().log("Missing property value{}",</span>
+<span class="source-line-no">653</span><span id="line-653">            XmlEventUtil.generateLocationMessage(start, getSource()));</span>
+<span class="source-line-no">654</span><span id="line-654">      }</span>
+<span class="source-line-no">655</span><span id="line-655">      return value;</span>
 <span class="source-line-no">656</span><span id="line-656">    }</span>
 <span class="source-line-no">657</span><span id="line-657"></span>
-<span class="source-line-no">658</span><span id="line-658">    @Override</span>
-<span class="source-line-no">659</span><span id="line-659">    public IBoundObject readItemAssembly(IBoundObject parent, IBoundInstanceModelGroupedAssembly instance)</span>
-<span class="source-line-no">660</span><span id="line-660">        throws IOException {</span>
-<span class="source-line-no">661</span><span id="line-661">      return readDefinitionElement(</span>
-<span class="source-line-no">662</span><span id="line-662">          instance.getDefinition(),</span>
-<span class="source-line-no">663</span><span id="line-663">          getStartElement(),</span>
-<span class="source-line-no">664</span><span id="line-664">          instance.getQName(),</span>
-<span class="source-line-no">665</span><span id="line-665">          parent,</span>
-<span class="source-line-no">666</span><span id="line-666">          this::handleAssemblyDefinitionBody);</span>
-<span class="source-line-no">667</span><span id="line-667">    }</span>
-<span class="source-line-no">668</span><span id="line-668"></span>
-<span class="source-line-no">669</span><span id="line-669">    @Override</span>
-<span class="source-line-no">670</span><span id="line-670">    public IBoundObject readItemAssembly(</span>
-<span class="source-line-no">671</span><span id="line-671">        IBoundObject parent,</span>
-<span class="source-line-no">672</span><span id="line-672">        IBoundDefinitionModelAssembly definition) throws IOException {</span>
-<span class="source-line-no">673</span><span id="line-673">      return readDefinitionElement(</span>
-<span class="source-line-no">674</span><span id="line-674">          definition,</span>
-<span class="source-line-no">675</span><span id="line-675">          getStartElement(),</span>
-<span class="source-line-no">676</span><span id="line-676">          ObjectUtils.requireNonNull(definition.getRootQName()),</span>
-<span class="source-line-no">677</span><span id="line-677">          parent,</span>
-<span class="source-line-no">678</span><span id="line-678">          this::handleAssemblyDefinitionBody);</span>
-<span class="source-line-no">679</span><span id="line-679">    }</span>
-<span class="source-line-no">680</span><span id="line-680"></span>
-<span class="source-line-no">681</span><span id="line-681">    @Nullable</span>
-<span class="source-line-no">682</span><span id="line-682">    private Object readScalarItem(@NonNull IFeatureScalarItemValueHandler handler)</span>
-<span class="source-line-no">683</span><span id="line-683">        throws IOException {</span>
-<span class="source-line-no">684</span><span id="line-684">      return handler.getJavaTypeAdapter().parse(getReader(), getSource());</span>
+<span class="source-line-no">658</span><span id="line-658">    private void handleAssemblyDefinitionBody(</span>
+<span class="source-line-no">659</span><span id="line-659">        @NonNull IBoundDefinitionModelAssembly definition,</span>
+<span class="source-line-no">660</span><span id="line-660">        @NonNull IBoundObject item) throws IOException {</span>
+<span class="source-line-no">661</span><span id="line-661">      readModelInstances(definition, item);</span>
+<span class="source-line-no">662</span><span id="line-662">    }</span>
+<span class="source-line-no">663</span><span id="line-663"></span>
+<span class="source-line-no">664</span><span id="line-664">    @Override</span>
+<span class="source-line-no">665</span><span id="line-665">    public IBoundObject readItemAssembly(</span>
+<span class="source-line-no">666</span><span id="line-666">        IBoundObject parent,</span>
+<span class="source-line-no">667</span><span id="line-667">        IBoundInstanceModelAssembly instance) throws IOException {</span>
+<span class="source-line-no">668</span><span id="line-668">      return readDefinitionElement(</span>
+<span class="source-line-no">669</span><span id="line-669">          instance.getDefinition(),</span>
+<span class="source-line-no">670</span><span id="line-670">          getStartElement(),</span>
+<span class="source-line-no">671</span><span id="line-671">          instance.getQName(),</span>
+<span class="source-line-no">672</span><span id="line-672">          parent,</span>
+<span class="source-line-no">673</span><span id="line-673">          this::handleAssemblyDefinitionBody);</span>
+<span class="source-line-no">674</span><span id="line-674">    }</span>
+<span class="source-line-no">675</span><span id="line-675"></span>
+<span class="source-line-no">676</span><span id="line-676">    @Override</span>
+<span class="source-line-no">677</span><span id="line-677">    public IBoundObject readItemAssembly(IBoundObject parent, IBoundInstanceModelGroupedAssembly instance)</span>
+<span class="source-line-no">678</span><span id="line-678">        throws IOException {</span>
+<span class="source-line-no">679</span><span id="line-679">      return readDefinitionElement(</span>
+<span class="source-line-no">680</span><span id="line-680">          instance.getDefinition(),</span>
+<span class="source-line-no">681</span><span id="line-681">          getStartElement(),</span>
+<span class="source-line-no">682</span><span id="line-682">          instance.getQName(),</span>
+<span class="source-line-no">683</span><span id="line-683">          parent,</span>
+<span class="source-line-no">684</span><span id="line-684">          this::handleAssemblyDefinitionBody);</span>
 <span class="source-line-no">685</span><span id="line-685">    }</span>
 <span class="source-line-no">686</span><span id="line-686"></span>
 <span class="source-line-no">687</span><span id="line-687">    @Override</span>
-<span class="source-line-no">688</span><span id="line-688">    public IBoundObject readChoiceGroupItem(IBoundObject parent, IBoundInstanceModelChoiceGroup instance)</span>
-<span class="source-line-no">689</span><span id="line-689">        throws IOException {</span>
-<span class="source-line-no">690</span><span id="line-690">      try {</span>
-<span class="source-line-no">691</span><span id="line-691">        XMLEventReader2 eventReader = getReader();</span>
-<span class="source-line-no">692</span><span id="line-692">        // consume extra whitespace between elements</span>
-<span class="source-line-no">693</span><span id="line-693">        XmlEventUtil.skipWhitespace(eventReader);</span>
-<span class="source-line-no">694</span><span id="line-694"></span>
-<span class="source-line-no">695</span><span id="line-695">        XMLEvent event = eventReader.peek();</span>
-<span class="source-line-no">696</span><span id="line-696">        IEnhancedQName nextQName = IEnhancedQName.of(ObjectUtils.notNull(event.asStartElement().getName()));</span>
-<span class="source-line-no">697</span><span id="line-697">        IBoundInstanceModelGroupedNamed actualInstance = instance.getGroupedModelInstance(nextQName);</span>
-<span class="source-line-no">698</span><span id="line-698">        assert actualInstance != null;</span>
-<span class="source-line-no">699</span><span id="line-699">        return actualInstance.readItem(parent, this);</span>
-<span class="source-line-no">700</span><span id="line-700">      } catch (XMLStreamException ex) {</span>
-<span class="source-line-no">701</span><span id="line-701">        throw new IOException(ex);</span>
-<span class="source-line-no">702</span><span id="line-702">      }</span>
+<span class="source-line-no">688</span><span id="line-688">    public IBoundObject readItemAssembly(</span>
+<span class="source-line-no">689</span><span id="line-689">        IBoundObject parent,</span>
+<span class="source-line-no">690</span><span id="line-690">        IBoundDefinitionModelAssembly definition) throws IOException {</span>
+<span class="source-line-no">691</span><span id="line-691">      return readDefinitionElement(</span>
+<span class="source-line-no">692</span><span id="line-692">          definition,</span>
+<span class="source-line-no">693</span><span id="line-693">          getStartElement(),</span>
+<span class="source-line-no">694</span><span id="line-694">          ObjectUtils.requireNonNull(definition.getRootQName()),</span>
+<span class="source-line-no">695</span><span id="line-695">          parent,</span>
+<span class="source-line-no">696</span><span id="line-696">          this::handleAssemblyDefinitionBody);</span>
+<span class="source-line-no">697</span><span id="line-697">    }</span>
+<span class="source-line-no">698</span><span id="line-698"></span>
+<span class="source-line-no">699</span><span id="line-699">    @Nullable</span>
+<span class="source-line-no">700</span><span id="line-700">    private Object readScalarItem(@NonNull IFeatureScalarItemValueHandler handler)</span>
+<span class="source-line-no">701</span><span id="line-701">        throws IOException {</span>
+<span class="source-line-no">702</span><span id="line-702">      return handler.getJavaTypeAdapter().parse(getReader(), getSource());</span>
 <span class="source-line-no">703</span><span id="line-703">    }</span>
-<span class="source-line-no">704</span><span id="line-704">  }</span>
-<span class="source-line-no">705</span><span id="line-705"></span>
-<span class="source-line-no">706</span><span id="line-706">  @FunctionalInterface</span>
-<span class="source-line-no">707</span><span id="line-707">  private interface DefinitionBodyHandler&lt;DEF extends IBoundDefinitionModelComplex, ITEM&gt; {</span>
-<span class="source-line-no">708</span><span id="line-708">    void accept(</span>
-<span class="source-line-no">709</span><span id="line-709">        @NonNull DEF definition,</span>
-<span class="source-line-no">710</span><span id="line-710">        @NonNull ITEM item) throws IOException;</span>
-<span class="source-line-no">711</span><span id="line-711">  }</span>
+<span class="source-line-no">704</span><span id="line-704"></span>
+<span class="source-line-no">705</span><span id="line-705">    @Override</span>
+<span class="source-line-no">706</span><span id="line-706">    public IBoundObject readChoiceGroupItem(IBoundObject parent, IBoundInstanceModelChoiceGroup instance)</span>
+<span class="source-line-no">707</span><span id="line-707">        throws IOException {</span>
+<span class="source-line-no">708</span><span id="line-708">      try {</span>
+<span class="source-line-no">709</span><span id="line-709">        XMLEventReader2 eventReader = getReader();</span>
+<span class="source-line-no">710</span><span id="line-710">        // consume extra whitespace between elements</span>
+<span class="source-line-no">711</span><span id="line-711">        XmlEventUtil.skipWhitespace(eventReader);</span>
 <span class="source-line-no">712</span><span id="line-712"></span>
-<span class="source-line-no">713</span><span id="line-713">}</span>
+<span class="source-line-no">713</span><span id="line-713">        XMLEvent event = eventReader.peek();</span>
+<span class="source-line-no">714</span><span id="line-714">        IEnhancedQName nextQName = IEnhancedQName.of(ObjectUtils.notNull(event.asStartElement().getName()));</span>
+<span class="source-line-no">715</span><span id="line-715">        IBoundInstanceModelGroupedNamed actualInstance = instance.getGroupedModelInstance(nextQName);</span>
+<span class="source-line-no">716</span><span id="line-716">        assert actualInstance != null;</span>
+<span class="source-line-no">717</span><span id="line-717">        return actualInstance.readItem(parent, this);</span>
+<span class="source-line-no">718</span><span id="line-718">      } catch (XMLStreamException ex) {</span>
+<span class="source-line-no">719</span><span id="line-719">        throw new IOException(ex);</span>
+<span class="source-line-no">720</span><span id="line-720">      }</span>
+<span class="source-line-no">721</span><span id="line-721">    }</span>
+<span class="source-line-no">722</span><span id="line-722">  }</span>
+<span class="source-line-no">723</span><span id="line-723"></span>
+<span class="source-line-no">724</span><span id="line-724">  @FunctionalInterface</span>
+<span class="source-line-no">725</span><span id="line-725">  private interface DefinitionBodyHandler&lt;DEF extends IBoundDefinitionModelComplex, ITEM&gt; {</span>
+<span class="source-line-no">726</span><span id="line-726">    void accept(</span>
+<span class="source-line-no">727</span><span id="line-727">        @NonNull DEF definition,</span>
+<span class="source-line-no">728</span><span id="line-728">        @NonNull ITEM item) throws IOException;</span>
+<span class="source-line-no">729</span><span id="line-729">  }</span>
+<span class="source-line-no">730</span><span id="line-730"></span>
+<span class="source-line-no">731</span><span id="line-731">}</span>
 
 
 

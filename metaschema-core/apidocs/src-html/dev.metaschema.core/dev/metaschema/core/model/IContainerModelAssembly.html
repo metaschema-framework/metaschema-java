@@ -61,7 +61,21 @@
 <span class="source-line-no">048</span><span id="line-48">   */</span>
 <span class="source-line-no">049</span><span id="line-49">  @NonNull</span>
 <span class="source-line-no">050</span><span id="line-50">  Map&lt;String, ? extends IChoiceGroupInstance&gt; getChoiceGroupInstances();</span>
-<span class="source-line-no">051</span><span id="line-51">}</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">  /**</span>
+<span class="source-line-no">053</span><span id="line-53">   * Get the {@code any} instance for this container, if one is defined.</span>
+<span class="source-line-no">054</span><span id="line-54">   * &lt;p&gt;</span>
+<span class="source-line-no">055</span><span id="line-55">   * An {@code any} instance represents unmodeled content that may appear within</span>
+<span class="source-line-no">056</span><span id="line-56">   * an assembly's model.</span>
+<span class="source-line-no">057</span><span id="line-57">   *</span>
+<span class="source-line-no">058</span><span id="line-58">   * @return the {@code any} instance, or {@code null} if no {@code any} instance</span>
+<span class="source-line-no">059</span><span id="line-59">   *         is defined</span>
+<span class="source-line-no">060</span><span id="line-60">   */</span>
+<span class="source-line-no">061</span><span id="line-61">  @Nullable</span>
+<span class="source-line-no">062</span><span id="line-62">  default IAnyInstance getAnyInstance() {</span>
+<span class="source-line-no">063</span><span id="line-63">    return null;</span>
+<span class="source-line-no">064</span><span id="line-64">  }</span>
+<span class="source-line-no">065</span><span id="line-65">}</span>
 
 
 

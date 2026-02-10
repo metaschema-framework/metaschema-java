@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1768182887760">
-    <module artifactId="metaschema-databind" groupId="dev.metaschema.java" version="3.0.0.M2"/>
+<licensePluginReport goal="FORMAT" timestamp="1770743385016">
+    <module artifactId="metaschema-databind" groupId="dev.metaschema.java" version="3.0.0.M3"/>
     <files>
         <file path="src/test/java/dev/metaschema/databind/Examples.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/FnDocTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/IBindingContextTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/codegen/AbstractMetaschemaTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/databind/codegen/AnyCodegenTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/codegen/BasicMetaschemaTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/codegen/ClassUtilsTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/codegen/GenerationTest.java" result="NOOP"/>
@@ -26,7 +27,12 @@
         <file path="src/test/java/dev/metaschema/databind/io/MetaschemaModuleMetaschemaTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/io/RequiredFieldValidationTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/io/ValidationErrorMessageTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/databind/io/json/AnyJsonRoundTripTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/databind/io/json/AnyJsonValueKeyTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/databind/io/json/JsonAnyContentTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/io/json/JsonParserTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/databind/io/xml/AnyXmlRoundTripTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/databind/io/xml/XmlAnyContentTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/io/xml/XmlParserTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/model/AbstractBoundModelTestSupport.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/model/DefaultAssemblyClassBindingTest.java" result="NOOP"/>
@@ -35,8 +41,11 @@
         <file path="src/test/java/dev/metaschema/databind/model/extra/MetaschemaModuleExternalConstraintsTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/model/impl/BoundChoiceTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/model/impl/ConstraintFactoryTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/databind/model/metaschema/AnyInstanceLoadingTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/model/metaschema/BindingConstraintLoaderTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/model/metaschema/BindingModuleLoaderTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/databind/model/test/AnyAssembly.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/databind/model/test/AnyWithJsonKeyAssembly.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/model/test/DefaultValueKeyField.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/model/test/EmptyBoundAssembly.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/databind/model/test/FlaggedAssembly.java" result="NOOP"/>

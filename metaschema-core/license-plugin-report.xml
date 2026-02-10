@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1768182849105">
-    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="3.0.0.M2"/>
+<licensePluginReport goal="FORMAT" timestamp="1770743345723">
+    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="3.0.0.M3"/>
     <files>
         <file path="src/test/java/dev/metaschema/core/datatype/adapter/Base64AdapterTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/datatype/adapter/BooleanAdapterTest.java" result="NOOP"/>
@@ -48,6 +48,8 @@
         <file path="src/test/java/dev/metaschema/core/metapath/format/JsonPointerFormatterTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/format/XPathFormatterTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/DefaultFunctionTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/metapath/function/FormatDateTimeFunctionExceptionTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/metapath/function/FormatFunctionExceptionTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/FunctionServiceTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/impl/OperationFunctionsTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/ArrayAppendTest.java" result="NOOP"/>
@@ -63,6 +65,7 @@
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/ArraySubarrayTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/ArrayTailTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/CastFunctionTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/metapath/function/library/DateTimeFormatUtilTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnAbsTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnAdjustDateTimeToTimezoneTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnAdjustDateToTimezoneTest.java" result="NOOP"/>
@@ -90,6 +93,10 @@
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnExactlyOneTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnExistsTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnFalseTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnFormatDateTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnFormatDateTimeTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnFormatIntegerTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnFormatTimeTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnFunctionArityTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnFunctionLookupTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/FnFunctionNameTest.java" result="NOOP"/>
@@ -169,6 +176,7 @@
         <file path="src/test/java/dev/metaschema/core/metapath/item/function/IArrayItemTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/item/function/IMapKeyTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/item/function/LookupTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/model/ContainerModelAnyInstanceTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/CardinalityConstraintTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/DefaultConstraintValidatorTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/DefaultConstraintValidatorThreadSafetyTest.java" result="NOOP"/>

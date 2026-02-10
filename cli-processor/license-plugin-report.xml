@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1768182966886">
-    <module artifactId="cli-processor" groupId="dev.metaschema.java" version="3.0.0.M2"/>
+<licensePluginReport goal="FORMAT" timestamp="1770743463816">
+    <module artifactId="cli-processor" groupId="dev.metaschema.java" version="3.0.0.M3"/>
     <files>
         <file path="src/test/java/dev/metaschema/cli/processor/CLIProcessorTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/cli/processor/CallingContextTest.java" result="NOOP"/>

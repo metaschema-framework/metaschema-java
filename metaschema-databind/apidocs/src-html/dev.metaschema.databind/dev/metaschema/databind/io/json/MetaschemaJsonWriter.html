@@ -19,406 +19,455 @@
 <span class="source-line-no">006</span><span id="line-6">package dev.metaschema.databind.io.json;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import com.fasterxml.jackson.core.JsonGenerator;</span>
-<span class="source-line-no">009</span><span id="line-9"></span>
-<span class="source-line-no">010</span><span id="line-10">import org.eclipse.jdt.annotation.NotOwning;</span>
+<span class="source-line-no">009</span><span id="line-9">import com.fasterxml.jackson.databind.JsonNode;</span>
+<span class="source-line-no">010</span><span id="line-10">import com.fasterxml.jackson.databind.node.ObjectNode;</span>
 <span class="source-line-no">011</span><span id="line-11"></span>
-<span class="source-line-no">012</span><span id="line-12">import java.io.IOException;</span>
-<span class="source-line-no">013</span><span id="line-13">import java.util.List;</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15">import dev.metaschema.core.model.IBoundObject;</span>
-<span class="source-line-no">016</span><span id="line-16">import dev.metaschema.core.model.JsonGroupAsBehavior;</span>
-<span class="source-line-no">017</span><span id="line-17">import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;</span>
-<span class="source-line-no">018</span><span id="line-18">import dev.metaschema.databind.model.IBoundDefinitionModelComplex;</span>
-<span class="source-line-no">019</span><span id="line-19">import dev.metaschema.databind.model.IBoundDefinitionModelFieldComplex;</span>
-<span class="source-line-no">020</span><span id="line-20">import dev.metaschema.databind.model.IBoundFieldValue;</span>
-<span class="source-line-no">021</span><span id="line-21">import dev.metaschema.databind.model.IBoundInstance;</span>
-<span class="source-line-no">022</span><span id="line-22">import dev.metaschema.databind.model.IBoundInstanceFlag;</span>
-<span class="source-line-no">023</span><span id="line-23">import dev.metaschema.databind.model.IBoundInstanceModel;</span>
-<span class="source-line-no">024</span><span id="line-24">import dev.metaschema.databind.model.IBoundInstanceModelAssembly;</span>
-<span class="source-line-no">025</span><span id="line-25">import dev.metaschema.databind.model.IBoundInstanceModelChoiceGroup;</span>
-<span class="source-line-no">026</span><span id="line-26">import dev.metaschema.databind.model.IBoundInstanceModelFieldComplex;</span>
-<span class="source-line-no">027</span><span id="line-27">import dev.metaschema.databind.model.IBoundInstanceModelFieldScalar;</span>
-<span class="source-line-no">028</span><span id="line-28">import dev.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;</span>
-<span class="source-line-no">029</span><span id="line-29">import dev.metaschema.databind.model.IBoundInstanceModelGroupedField;</span>
-<span class="source-line-no">030</span><span id="line-30">import dev.metaschema.databind.model.IBoundInstanceModelGroupedNamed;</span>
-<span class="source-line-no">031</span><span id="line-31">import dev.metaschema.databind.model.IBoundProperty;</span>
-<span class="source-line-no">032</span><span id="line-32">import dev.metaschema.databind.model.info.AbstractModelInstanceWriteHandler;</span>
-<span class="source-line-no">033</span><span id="line-33">import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;</span>
-<span class="source-line-no">034</span><span id="line-34">import dev.metaschema.databind.model.info.IFeatureScalarItemValueHandler;</span>
-<span class="source-line-no">035</span><span id="line-35">import dev.metaschema.databind.model.info.IItemWriteHandler;</span>
-<span class="source-line-no">036</span><span id="line-36">import dev.metaschema.databind.model.info.IModelInstanceCollectionInfo;</span>
-<span class="source-line-no">037</span><span id="line-37">import edu.umd.cs.findbugs.annotations.NonNull;</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">/**</span>
-<span class="source-line-no">040</span><span id="line-40"> * Provides support for writing Metaschema-bound Java objects to JSON format.</span>
-<span class="source-line-no">041</span><span id="line-41"> * &lt;p&gt;</span>
-<span class="source-line-no">042</span><span id="line-42"> * This class implements the {@link IItemWriteHandler} interface to serialize</span>
-<span class="source-line-no">043</span><span id="line-43"> * bound objects to JSON using Jackson's {@link JsonGenerator}. It handles</span>
-<span class="source-line-no">044</span><span id="line-44"> * flags, fields, assemblies, and choice groups according to the Metaschema JSON</span>
-<span class="source-line-no">045</span><span id="line-45"> * serialization rules.</span>
-<span class="source-line-no">046</span><span id="line-46"> *</span>
-<span class="source-line-no">047</span><span id="line-47"> * @see IJsonWritingContext</span>
-<span class="source-line-no">048</span><span id="line-48"> * @see JsonGenerator</span>
-<span class="source-line-no">049</span><span id="line-49"> */</span>
-<span class="source-line-no">050</span><span id="line-50">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
-<span class="source-line-no">051</span><span id="line-51">public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHandler {</span>
-<span class="source-line-no">052</span><span id="line-52">  @NonNull</span>
-<span class="source-line-no">053</span><span id="line-53">  @NotOwning</span>
-<span class="source-line-no">054</span><span id="line-54">  private final JsonGenerator generator;</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56">  /**</span>
-<span class="source-line-no">057</span><span id="line-57">   * Construct a new Module-aware JSON writer.</span>
-<span class="source-line-no">058</span><span id="line-58">   *</span>
-<span class="source-line-no">059</span><span id="line-59">   * @param generator</span>
-<span class="source-line-no">060</span><span id="line-60">   *          the JSON generator to write with. The caller retains ownership of</span>
-<span class="source-line-no">061</span><span id="line-61">   *          this generator and is responsible for closing it.</span>
-<span class="source-line-no">062</span><span id="line-62">   * @see DefaultJsonProblemHandler</span>
-<span class="source-line-no">063</span><span id="line-63">   */</span>
-<span class="source-line-no">064</span><span id="line-64">  public MetaschemaJsonWriter(@NonNull @NotOwning JsonGenerator generator) {</span>
-<span class="source-line-no">065</span><span id="line-65">    this.generator = generator;</span>
-<span class="source-line-no">066</span><span id="line-66">  }</span>
-<span class="source-line-no">067</span><span id="line-67"></span>
-<span class="source-line-no">068</span><span id="line-68">  @Override</span>
-<span class="source-line-no">069</span><span id="line-69">  public JsonGenerator getWriter() {</span>
-<span class="source-line-no">070</span><span id="line-70">    return generator;</span>
-<span class="source-line-no">071</span><span id="line-71">  }</span>
-<span class="source-line-no">072</span><span id="line-72"></span>
-<span class="source-line-no">073</span><span id="line-73">  // =====================================</span>
-<span class="source-line-no">074</span><span id="line-74">  // Entry point for top-level-definitions</span>
-<span class="source-line-no">075</span><span id="line-75">  // =====================================</span>
-<span class="source-line-no">076</span><span id="line-76"></span>
-<span class="source-line-no">077</span><span id="line-77">  @Override</span>
-<span class="source-line-no">078</span><span id="line-78">  public void write(</span>
-<span class="source-line-no">079</span><span id="line-79">      @NonNull IBoundDefinitionModelComplex definition,</span>
-<span class="source-line-no">080</span><span id="line-80">      @NonNull IBoundObject item) throws IOException {</span>
-<span class="source-line-no">081</span><span id="line-81">    definition.writeItem(item, this);</span>
-<span class="source-line-no">082</span><span id="line-82">  }</span>
+<span class="source-line-no">012</span><span id="line-12">import org.eclipse.jdt.annotation.NotOwning;</span>
+<span class="source-line-no">013</span><span id="line-13"></span>
+<span class="source-line-no">014</span><span id="line-14">import java.io.IOException;</span>
+<span class="source-line-no">015</span><span id="line-15">import java.util.Iterator;</span>
+<span class="source-line-no">016</span><span id="line-16">import java.util.List;</span>
+<span class="source-line-no">017</span><span id="line-17">import java.util.Map;</span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">import dev.metaschema.core.model.IAnyContent;</span>
+<span class="source-line-no">020</span><span id="line-20">import dev.metaschema.core.model.IAnyInstance;</span>
+<span class="source-line-no">021</span><span id="line-21">import dev.metaschema.core.model.IBoundObject;</span>
+<span class="source-line-no">022</span><span id="line-22">import dev.metaschema.core.model.JsonGroupAsBehavior;</span>
+<span class="source-line-no">023</span><span id="line-23">import dev.metaschema.databind.model.IBoundDefinitionModelAssembly;</span>
+<span class="source-line-no">024</span><span id="line-24">import dev.metaschema.databind.model.IBoundDefinitionModelComplex;</span>
+<span class="source-line-no">025</span><span id="line-25">import dev.metaschema.databind.model.IBoundDefinitionModelFieldComplex;</span>
+<span class="source-line-no">026</span><span id="line-26">import dev.metaschema.databind.model.IBoundFieldValue;</span>
+<span class="source-line-no">027</span><span id="line-27">import dev.metaschema.databind.model.IBoundInstance;</span>
+<span class="source-line-no">028</span><span id="line-28">import dev.metaschema.databind.model.IBoundInstanceFlag;</span>
+<span class="source-line-no">029</span><span id="line-29">import dev.metaschema.databind.model.IBoundInstanceModel;</span>
+<span class="source-line-no">030</span><span id="line-30">import dev.metaschema.databind.model.IBoundInstanceModelAny;</span>
+<span class="source-line-no">031</span><span id="line-31">import dev.metaschema.databind.model.IBoundInstanceModelAssembly;</span>
+<span class="source-line-no">032</span><span id="line-32">import dev.metaschema.databind.model.IBoundInstanceModelChoiceGroup;</span>
+<span class="source-line-no">033</span><span id="line-33">import dev.metaschema.databind.model.IBoundInstanceModelFieldComplex;</span>
+<span class="source-line-no">034</span><span id="line-34">import dev.metaschema.databind.model.IBoundInstanceModelFieldScalar;</span>
+<span class="source-line-no">035</span><span id="line-35">import dev.metaschema.databind.model.IBoundInstanceModelGroupedAssembly;</span>
+<span class="source-line-no">036</span><span id="line-36">import dev.metaschema.databind.model.IBoundInstanceModelGroupedField;</span>
+<span class="source-line-no">037</span><span id="line-37">import dev.metaschema.databind.model.IBoundInstanceModelGroupedNamed;</span>
+<span class="source-line-no">038</span><span id="line-38">import dev.metaschema.databind.model.IBoundProperty;</span>
+<span class="source-line-no">039</span><span id="line-39">import dev.metaschema.databind.model.info.AbstractModelInstanceWriteHandler;</span>
+<span class="source-line-no">040</span><span id="line-40">import dev.metaschema.databind.model.info.IFeatureComplexItemValueHandler;</span>
+<span class="source-line-no">041</span><span id="line-41">import dev.metaschema.databind.model.info.IFeatureScalarItemValueHandler;</span>
+<span class="source-line-no">042</span><span id="line-42">import dev.metaschema.databind.model.info.IItemWriteHandler;</span>
+<span class="source-line-no">043</span><span id="line-43">import dev.metaschema.databind.model.info.IModelInstanceCollectionInfo;</span>
+<span class="source-line-no">044</span><span id="line-44">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">045</span><span id="line-45"></span>
+<span class="source-line-no">046</span><span id="line-46">/**</span>
+<span class="source-line-no">047</span><span id="line-47"> * Provides support for writing Metaschema-bound Java objects to JSON format.</span>
+<span class="source-line-no">048</span><span id="line-48"> * &lt;p&gt;</span>
+<span class="source-line-no">049</span><span id="line-49"> * This class implements the {@link IItemWriteHandler} interface to serialize</span>
+<span class="source-line-no">050</span><span id="line-50"> * bound objects to JSON using Jackson's {@link JsonGenerator}. It handles</span>
+<span class="source-line-no">051</span><span id="line-51"> * flags, fields, assemblies, and choice groups according to the Metaschema JSON</span>
+<span class="source-line-no">052</span><span id="line-52"> * serialization rules.</span>
+<span class="source-line-no">053</span><span id="line-53"> *</span>
+<span class="source-line-no">054</span><span id="line-54"> * @see IJsonWritingContext</span>
+<span class="source-line-no">055</span><span id="line-55"> * @see JsonGenerator</span>
+<span class="source-line-no">056</span><span id="line-56"> */</span>
+<span class="source-line-no">057</span><span id="line-57">@SuppressWarnings("PMD.CouplingBetweenObjects")</span>
+<span class="source-line-no">058</span><span id="line-58">public class MetaschemaJsonWriter implements IJsonWritingContext, IItemWriteHandler {</span>
+<span class="source-line-no">059</span><span id="line-59">  @NonNull</span>
+<span class="source-line-no">060</span><span id="line-60">  @NotOwning</span>
+<span class="source-line-no">061</span><span id="line-61">  private final JsonGenerator generator;</span>
+<span class="source-line-no">062</span><span id="line-62"></span>
+<span class="source-line-no">063</span><span id="line-63">  /**</span>
+<span class="source-line-no">064</span><span id="line-64">   * Construct a new Module-aware JSON writer.</span>
+<span class="source-line-no">065</span><span id="line-65">   *</span>
+<span class="source-line-no">066</span><span id="line-66">   * @param generator</span>
+<span class="source-line-no">067</span><span id="line-67">   *          the JSON generator to write with. The caller retains ownership of</span>
+<span class="source-line-no">068</span><span id="line-68">   *          this generator and is responsible for closing it.</span>
+<span class="source-line-no">069</span><span id="line-69">   * @see DefaultJsonProblemHandler</span>
+<span class="source-line-no">070</span><span id="line-70">   */</span>
+<span class="source-line-no">071</span><span id="line-71">  public MetaschemaJsonWriter(@NonNull @NotOwning JsonGenerator generator) {</span>
+<span class="source-line-no">072</span><span id="line-72">    this.generator = generator;</span>
+<span class="source-line-no">073</span><span id="line-73">  }</span>
+<span class="source-line-no">074</span><span id="line-74"></span>
+<span class="source-line-no">075</span><span id="line-75">  @Override</span>
+<span class="source-line-no">076</span><span id="line-76">  public JsonGenerator getWriter() {</span>
+<span class="source-line-no">077</span><span id="line-77">    return generator;</span>
+<span class="source-line-no">078</span><span id="line-78">  }</span>
+<span class="source-line-no">079</span><span id="line-79"></span>
+<span class="source-line-no">080</span><span id="line-80">  // =====================================</span>
+<span class="source-line-no">081</span><span id="line-81">  // Entry point for top-level-definitions</span>
+<span class="source-line-no">082</span><span id="line-82">  // =====================================</span>
 <span class="source-line-no">083</span><span id="line-83"></span>
-<span class="source-line-no">084</span><span id="line-84">  // ================</span>
-<span class="source-line-no">085</span><span id="line-85">  // Instance writers</span>
-<span class="source-line-no">086</span><span id="line-86">  // ================</span>
-<span class="source-line-no">087</span><span id="line-87"></span>
-<span class="source-line-no">088</span><span id="line-88">  private &lt;T&gt; void writeInstance(</span>
-<span class="source-line-no">089</span><span id="line-89">      @NonNull IBoundProperty&lt;T&gt; instance,</span>
-<span class="source-line-no">090</span><span id="line-90">      @NonNull IBoundObject parentItem) throws IOException {</span>
-<span class="source-line-no">091</span><span id="line-91">    @SuppressWarnings("unchecked")</span>
-<span class="source-line-no">092</span><span id="line-92">    T value = (T) instance.getValue(parentItem);</span>
-<span class="source-line-no">093</span><span id="line-93">    if (value != null &amp;&amp; !value.equals(instance.getResolvedDefaultValue())) {</span>
-<span class="source-line-no">094</span><span id="line-94">      generator.writeFieldName(instance.getJsonName());</span>
-<span class="source-line-no">095</span><span id="line-95">      instance.writeItem(value, this);</span>
-<span class="source-line-no">096</span><span id="line-96">    }</span>
-<span class="source-line-no">097</span><span id="line-97">  }</span>
-<span class="source-line-no">098</span><span id="line-98"></span>
-<span class="source-line-no">099</span><span id="line-99">  private &lt;T&gt; void writeModelInstance(</span>
-<span class="source-line-no">100</span><span id="line-100">      @NonNull IBoundInstanceModel&lt;T&gt; instance,</span>
-<span class="source-line-no">101</span><span id="line-101">      @NonNull Object parentItem) throws IOException {</span>
-<span class="source-line-no">102</span><span id="line-102">    Object value = instance.getValue(parentItem);</span>
-<span class="source-line-no">103</span><span id="line-103">    if (value != null) {</span>
-<span class="source-line-no">104</span><span id="line-104">      // this if is not strictly needed, since isEmpty will return false on a null</span>
-<span class="source-line-no">105</span><span id="line-105">      // value</span>
-<span class="source-line-no">106</span><span id="line-106">      // checking null here potentially avoids the expensive operation of instatiating</span>
-<span class="source-line-no">107</span><span id="line-107">      IModelInstanceCollectionInfo&lt;T&gt; collectionInfo = instance.getCollectionInfo();</span>
-<span class="source-line-no">108</span><span id="line-108">      if (!collectionInfo.isEmpty(value)) {</span>
-<span class="source-line-no">109</span><span id="line-109">        generator.writeFieldName(instance.getJsonName());</span>
-<span class="source-line-no">110</span><span id="line-110">        collectionInfo.writeItems(new ModelInstanceWriteHandler&lt;&gt;(instance), value);</span>
-<span class="source-line-no">111</span><span id="line-111">      }</span>
-<span class="source-line-no">112</span><span id="line-112">    }</span>
-<span class="source-line-no">113</span><span id="line-113">  }</span>
-<span class="source-line-no">114</span><span id="line-114"></span>
-<span class="source-line-no">115</span><span id="line-115">  @SuppressWarnings("PMD.NullAssignment")</span>
-<span class="source-line-no">116</span><span id="line-116">  private void writeFieldValue(@NonNull IBoundFieldValue fieldValue, @NonNull Object parentItem) throws IOException {</span>
-<span class="source-line-no">117</span><span id="line-117">    Object item = fieldValue.getValue(parentItem);</span>
-<span class="source-line-no">118</span><span id="line-118"></span>
-<span class="source-line-no">119</span><span id="line-119">    // handle json value key</span>
-<span class="source-line-no">120</span><span id="line-120">    IBoundInstanceFlag jsonValueKey = fieldValue.getParentFieldDefinition().getJsonValueKeyFlagInstance();</span>
-<span class="source-line-no">121</span><span id="line-121">    if (item == null) {</span>
-<span class="source-line-no">122</span><span id="line-122">      if (jsonValueKey != null) {</span>
-<span class="source-line-no">123</span><span id="line-123">        item = fieldValue.getDefaultValue();</span>
-<span class="source-line-no">124</span><span id="line-124">      }</span>
-<span class="source-line-no">125</span><span id="line-125">    } else if (item.equals(fieldValue.getResolvedDefaultValue())) {</span>
-<span class="source-line-no">126</span><span id="line-126">      // same as default</span>
-<span class="source-line-no">127</span><span id="line-127">      item = null;</span>
-<span class="source-line-no">128</span><span id="line-128">    }</span>
-<span class="source-line-no">129</span><span id="line-129"></span>
-<span class="source-line-no">130</span><span id="line-130">    if (item != null) {</span>
-<span class="source-line-no">131</span><span id="line-131">      // There are two modes:</span>
-<span class="source-line-no">132</span><span id="line-132">      // 1) use of a JSON value key, or</span>
-<span class="source-line-no">133</span><span id="line-133">      // 2) a simple value named "value"</span>
-<span class="source-line-no">134</span><span id="line-134"></span>
-<span class="source-line-no">135</span><span id="line-135">      String valueKeyName;</span>
-<span class="source-line-no">136</span><span id="line-136">      if (jsonValueKey != null) {</span>
-<span class="source-line-no">137</span><span id="line-137">        Object keyValue = jsonValueKey.getValue(parentItem);</span>
-<span class="source-line-no">138</span><span id="line-138">        if (keyValue == null) {</span>
-<span class="source-line-no">139</span><span id="line-139">          throw new IOException(String.format("Null value for json-value-key for definition '%s'",</span>
-<span class="source-line-no">140</span><span id="line-140">              jsonValueKey.getContainingDefinition().toCoordinates()));</span>
-<span class="source-line-no">141</span><span id="line-141">        }</span>
-<span class="source-line-no">142</span><span id="line-142">        try {</span>
-<span class="source-line-no">143</span><span id="line-143">          // this is the JSON value key case</span>
-<span class="source-line-no">144</span><span id="line-144">          valueKeyName = jsonValueKey.getJavaTypeAdapter().asString(keyValue);</span>
-<span class="source-line-no">145</span><span id="line-145">        } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">146</span><span id="line-146">          throw new IOException(</span>
-<span class="source-line-no">147</span><span id="line-147">              String.format("Invalid value '%s' for json-value-key for definition '%s'",</span>
-<span class="source-line-no">148</span><span id="line-148">                  keyValue,</span>
-<span class="source-line-no">149</span><span id="line-149">                  jsonValueKey.getContainingDefinition().toCoordinates()),</span>
-<span class="source-line-no">150</span><span id="line-150">              ex);</span>
-<span class="source-line-no">151</span><span id="line-151">        }</span>
-<span class="source-line-no">152</span><span id="line-152">      } else {</span>
-<span class="source-line-no">153</span><span id="line-153">        valueKeyName = fieldValue.getParentFieldDefinition().getEffectiveJsonValueKeyName();</span>
-<span class="source-line-no">154</span><span id="line-154">      }</span>
-<span class="source-line-no">155</span><span id="line-155">      generator.writeFieldName(valueKeyName);</span>
-<span class="source-line-no">156</span><span id="line-156">      // LOGGER.info("FIELD: {}", valueKeyName);</span>
-<span class="source-line-no">157</span><span id="line-157"></span>
-<span class="source-line-no">158</span><span id="line-158">      writeItemFieldValue(item, fieldValue);</span>
-<span class="source-line-no">159</span><span id="line-159">    }</span>
-<span class="source-line-no">160</span><span id="line-160">  }</span>
-<span class="source-line-no">161</span><span id="line-161"></span>
-<span class="source-line-no">162</span><span id="line-162">  @Override</span>
-<span class="source-line-no">163</span><span id="line-163">  public void writeItemFlag(Object item, IBoundInstanceFlag instance) throws IOException {</span>
-<span class="source-line-no">164</span><span id="line-164">    writeScalarItem(item, instance);</span>
-<span class="source-line-no">165</span><span id="line-165">  }</span>
-<span class="source-line-no">166</span><span id="line-166"></span>
-<span class="source-line-no">167</span><span id="line-167">  @Override</span>
-<span class="source-line-no">168</span><span id="line-168">  public void writeItemField(Object item, IBoundInstanceModelFieldScalar instance) throws IOException {</span>
-<span class="source-line-no">169</span><span id="line-169">    writeScalarItem(item, instance);</span>
-<span class="source-line-no">170</span><span id="line-170">  }</span>
-<span class="source-line-no">171</span><span id="line-171"></span>
-<span class="source-line-no">172</span><span id="line-172">  @Override</span>
-<span class="source-line-no">173</span><span id="line-173">  public void writeItemField(IBoundObject item, IBoundInstanceModelFieldComplex instance) throws IOException {</span>
-<span class="source-line-no">174</span><span id="line-174">    writeModelObject(</span>
-<span class="source-line-no">175</span><span id="line-175">        instance,</span>
-<span class="source-line-no">176</span><span id="line-176">        item,</span>
-<span class="source-line-no">177</span><span id="line-177">        this::writeObjectProperties);</span>
-<span class="source-line-no">178</span><span id="line-178">  }</span>
-<span class="source-line-no">179</span><span id="line-179"></span>
-<span class="source-line-no">180</span><span id="line-180">  @Override</span>
-<span class="source-line-no">181</span><span id="line-181">  public void writeItemField(IBoundObject item, IBoundInstanceModelGroupedField instance) throws IOException {</span>
-<span class="source-line-no">182</span><span id="line-182">    writeGroupedModelObject(</span>
-<span class="source-line-no">183</span><span id="line-183">        instance,</span>
-<span class="source-line-no">184</span><span id="line-184">        item,</span>
-<span class="source-line-no">185</span><span id="line-185">        (parent, handler) -&gt; {</span>
-<span class="source-line-no">186</span><span id="line-186">          writeDiscriminatorProperty(handler);</span>
-<span class="source-line-no">187</span><span id="line-187">          writeObjectProperties(parent, handler);</span>
-<span class="source-line-no">188</span><span id="line-188">        });</span>
-<span class="source-line-no">189</span><span id="line-189">  }</span>
-<span class="source-line-no">190</span><span id="line-190"></span>
-<span class="source-line-no">191</span><span id="line-191">  @Override</span>
-<span class="source-line-no">192</span><span id="line-192">  public void writeItemField(IBoundObject item, IBoundDefinitionModelFieldComplex definition) throws IOException {</span>
-<span class="source-line-no">193</span><span id="line-193">    writeDefinitionObject(</span>
-<span class="source-line-no">194</span><span id="line-194">        definition,</span>
-<span class="source-line-no">195</span><span id="line-195">        item,</span>
-<span class="source-line-no">196</span><span id="line-196">        (ObjectWriter&lt;IBoundDefinitionModelFieldComplex&gt;) this::writeObjectProperties);</span>
-<span class="source-line-no">197</span><span id="line-197">  }</span>
-<span class="source-line-no">198</span><span id="line-198"></span>
-<span class="source-line-no">199</span><span id="line-199">  @Override</span>
-<span class="source-line-no">200</span><span id="line-200">  public void writeItemFieldValue(Object item, IBoundFieldValue fieldValue) throws IOException {</span>
-<span class="source-line-no">201</span><span id="line-201">    fieldValue.getJavaTypeAdapter().writeJsonValue(item, generator);</span>
-<span class="source-line-no">202</span><span id="line-202">  }</span>
-<span class="source-line-no">203</span><span id="line-203"></span>
-<span class="source-line-no">204</span><span id="line-204">  @Override</span>
-<span class="source-line-no">205</span><span id="line-205">  public void writeItemAssembly(IBoundObject item, IBoundInstanceModelAssembly instance) throws IOException {</span>
-<span class="source-line-no">206</span><span id="line-206">    writeModelObject(instance, item, this::writeObjectProperties);</span>
-<span class="source-line-no">207</span><span id="line-207">  }</span>
-<span class="source-line-no">208</span><span id="line-208"></span>
-<span class="source-line-no">209</span><span id="line-209">  @Override</span>
-<span class="source-line-no">210</span><span id="line-210">  public void writeItemAssembly(IBoundObject item, IBoundInstanceModelGroupedAssembly instance) throws IOException {</span>
-<span class="source-line-no">211</span><span id="line-211">    writeGroupedModelObject(</span>
-<span class="source-line-no">212</span><span id="line-212">        instance,</span>
-<span class="source-line-no">213</span><span id="line-213">        item,</span>
-<span class="source-line-no">214</span><span id="line-214">        (parent, handler) -&gt; {</span>
-<span class="source-line-no">215</span><span id="line-215">          writeDiscriminatorProperty(handler);</span>
-<span class="source-line-no">216</span><span id="line-216">          writeObjectProperties(parent, handler);</span>
-<span class="source-line-no">217</span><span id="line-217">        });</span>
-<span class="source-line-no">218</span><span id="line-218">  }</span>
-<span class="source-line-no">219</span><span id="line-219"></span>
-<span class="source-line-no">220</span><span id="line-220">  @Override</span>
-<span class="source-line-no">221</span><span id="line-221">  public void writeItemAssembly(IBoundObject item, IBoundDefinitionModelAssembly definition) throws IOException {</span>
-<span class="source-line-no">222</span><span id="line-222">    writeDefinitionObject(definition, item, this::writeObjectProperties);</span>
-<span class="source-line-no">223</span><span id="line-223">  }</span>
-<span class="source-line-no">224</span><span id="line-224"></span>
-<span class="source-line-no">225</span><span id="line-225">  @Override</span>
-<span class="source-line-no">226</span><span id="line-226">  public void writeChoiceGroupItem(IBoundObject item, IBoundInstanceModelChoiceGroup instance) throws IOException {</span>
-<span class="source-line-no">227</span><span id="line-227">    IBoundInstanceModelGroupedNamed actualInstance = instance.getItemInstance(item);</span>
-<span class="source-line-no">228</span><span id="line-228">    assert actualInstance != null;</span>
-<span class="source-line-no">229</span><span id="line-229">    actualInstance.writeItem(item, this);</span>
+<span class="source-line-no">084</span><span id="line-84">  @Override</span>
+<span class="source-line-no">085</span><span id="line-85">  public void write(</span>
+<span class="source-line-no">086</span><span id="line-86">      @NonNull IBoundDefinitionModelComplex definition,</span>
+<span class="source-line-no">087</span><span id="line-87">      @NonNull IBoundObject item) throws IOException {</span>
+<span class="source-line-no">088</span><span id="line-88">    definition.writeItem(item, this);</span>
+<span class="source-line-no">089</span><span id="line-89">  }</span>
+<span class="source-line-no">090</span><span id="line-90"></span>
+<span class="source-line-no">091</span><span id="line-91">  // ================</span>
+<span class="source-line-no">092</span><span id="line-92">  // Instance writers</span>
+<span class="source-line-no">093</span><span id="line-93">  // ================</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">  private &lt;T&gt; void writeInstance(</span>
+<span class="source-line-no">096</span><span id="line-96">      @NonNull IBoundProperty&lt;T&gt; instance,</span>
+<span class="source-line-no">097</span><span id="line-97">      @NonNull IBoundObject parentItem) throws IOException {</span>
+<span class="source-line-no">098</span><span id="line-98">    @SuppressWarnings("unchecked")</span>
+<span class="source-line-no">099</span><span id="line-99">    T value = (T) instance.getValue(parentItem);</span>
+<span class="source-line-no">100</span><span id="line-100">    if (value != null &amp;&amp; !value.equals(instance.getResolvedDefaultValue())) {</span>
+<span class="source-line-no">101</span><span id="line-101">      generator.writeFieldName(instance.getJsonName());</span>
+<span class="source-line-no">102</span><span id="line-102">      instance.writeItem(value, this);</span>
+<span class="source-line-no">103</span><span id="line-103">    }</span>
+<span class="source-line-no">104</span><span id="line-104">  }</span>
+<span class="source-line-no">105</span><span id="line-105"></span>
+<span class="source-line-no">106</span><span id="line-106">  private &lt;T&gt; void writeModelInstance(</span>
+<span class="source-line-no">107</span><span id="line-107">      @NonNull IBoundInstanceModel&lt;T&gt; instance,</span>
+<span class="source-line-no">108</span><span id="line-108">      @NonNull Object parentItem) throws IOException {</span>
+<span class="source-line-no">109</span><span id="line-109">    Object value = instance.getValue(parentItem);</span>
+<span class="source-line-no">110</span><span id="line-110">    if (value != null) {</span>
+<span class="source-line-no">111</span><span id="line-111">      // this if is not strictly needed, since isEmpty will return false on a null</span>
+<span class="source-line-no">112</span><span id="line-112">      // value</span>
+<span class="source-line-no">113</span><span id="line-113">      // checking null here potentially avoids the expensive operation of instatiating</span>
+<span class="source-line-no">114</span><span id="line-114">      IModelInstanceCollectionInfo&lt;T&gt; collectionInfo = instance.getCollectionInfo();</span>
+<span class="source-line-no">115</span><span id="line-115">      if (!collectionInfo.isEmpty(value)) {</span>
+<span class="source-line-no">116</span><span id="line-116">        generator.writeFieldName(instance.getJsonName());</span>
+<span class="source-line-no">117</span><span id="line-117">        collectionInfo.writeItems(new ModelInstanceWriteHandler&lt;&gt;(instance), value);</span>
+<span class="source-line-no">118</span><span id="line-118">      }</span>
+<span class="source-line-no">119</span><span id="line-119">    }</span>
+<span class="source-line-no">120</span><span id="line-120">  }</span>
+<span class="source-line-no">121</span><span id="line-121"></span>
+<span class="source-line-no">122</span><span id="line-122">  @SuppressWarnings("PMD.NullAssignment")</span>
+<span class="source-line-no">123</span><span id="line-123">  private void writeFieldValue(@NonNull IBoundFieldValue fieldValue, @NonNull Object parentItem) throws IOException {</span>
+<span class="source-line-no">124</span><span id="line-124">    Object item = fieldValue.getValue(parentItem);</span>
+<span class="source-line-no">125</span><span id="line-125"></span>
+<span class="source-line-no">126</span><span id="line-126">    // handle json value key</span>
+<span class="source-line-no">127</span><span id="line-127">    IBoundInstanceFlag jsonValueKey = fieldValue.getParentFieldDefinition().getJsonValueKeyFlagInstance();</span>
+<span class="source-line-no">128</span><span id="line-128">    if (item == null) {</span>
+<span class="source-line-no">129</span><span id="line-129">      if (jsonValueKey != null) {</span>
+<span class="source-line-no">130</span><span id="line-130">        item = fieldValue.getDefaultValue();</span>
+<span class="source-line-no">131</span><span id="line-131">      }</span>
+<span class="source-line-no">132</span><span id="line-132">    } else if (item.equals(fieldValue.getResolvedDefaultValue())) {</span>
+<span class="source-line-no">133</span><span id="line-133">      // same as default</span>
+<span class="source-line-no">134</span><span id="line-134">      item = null;</span>
+<span class="source-line-no">135</span><span id="line-135">    }</span>
+<span class="source-line-no">136</span><span id="line-136"></span>
+<span class="source-line-no">137</span><span id="line-137">    if (item != null) {</span>
+<span class="source-line-no">138</span><span id="line-138">      // There are two modes:</span>
+<span class="source-line-no">139</span><span id="line-139">      // 1) use of a JSON value key, or</span>
+<span class="source-line-no">140</span><span id="line-140">      // 2) a simple value named "value"</span>
+<span class="source-line-no">141</span><span id="line-141"></span>
+<span class="source-line-no">142</span><span id="line-142">      String valueKeyName;</span>
+<span class="source-line-no">143</span><span id="line-143">      if (jsonValueKey != null) {</span>
+<span class="source-line-no">144</span><span id="line-144">        Object keyValue = jsonValueKey.getValue(parentItem);</span>
+<span class="source-line-no">145</span><span id="line-145">        if (keyValue == null) {</span>
+<span class="source-line-no">146</span><span id="line-146">          throw new IOException(String.format("Null value for json-value-key for definition '%s'",</span>
+<span class="source-line-no">147</span><span id="line-147">              jsonValueKey.getContainingDefinition().toCoordinates()));</span>
+<span class="source-line-no">148</span><span id="line-148">        }</span>
+<span class="source-line-no">149</span><span id="line-149">        try {</span>
+<span class="source-line-no">150</span><span id="line-150">          // this is the JSON value key case</span>
+<span class="source-line-no">151</span><span id="line-151">          valueKeyName = jsonValueKey.getJavaTypeAdapter().asString(keyValue);</span>
+<span class="source-line-no">152</span><span id="line-152">        } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">153</span><span id="line-153">          throw new IOException(</span>
+<span class="source-line-no">154</span><span id="line-154">              String.format("Invalid value '%s' for json-value-key for definition '%s'",</span>
+<span class="source-line-no">155</span><span id="line-155">                  keyValue,</span>
+<span class="source-line-no">156</span><span id="line-156">                  jsonValueKey.getContainingDefinition().toCoordinates()),</span>
+<span class="source-line-no">157</span><span id="line-157">              ex);</span>
+<span class="source-line-no">158</span><span id="line-158">        }</span>
+<span class="source-line-no">159</span><span id="line-159">      } else {</span>
+<span class="source-line-no">160</span><span id="line-160">        valueKeyName = fieldValue.getParentFieldDefinition().getEffectiveJsonValueKeyName();</span>
+<span class="source-line-no">161</span><span id="line-161">      }</span>
+<span class="source-line-no">162</span><span id="line-162">      generator.writeFieldName(valueKeyName);</span>
+<span class="source-line-no">163</span><span id="line-163">      // LOGGER.info("FIELD: {}", valueKeyName);</span>
+<span class="source-line-no">164</span><span id="line-164"></span>
+<span class="source-line-no">165</span><span id="line-165">      writeItemFieldValue(item, fieldValue);</span>
+<span class="source-line-no">166</span><span id="line-166">    }</span>
+<span class="source-line-no">167</span><span id="line-167">  }</span>
+<span class="source-line-no">168</span><span id="line-168"></span>
+<span class="source-line-no">169</span><span id="line-169">  @Override</span>
+<span class="source-line-no">170</span><span id="line-170">  public void writeItemFlag(Object item, IBoundInstanceFlag instance) throws IOException {</span>
+<span class="source-line-no">171</span><span id="line-171">    writeScalarItem(item, instance);</span>
+<span class="source-line-no">172</span><span id="line-172">  }</span>
+<span class="source-line-no">173</span><span id="line-173"></span>
+<span class="source-line-no">174</span><span id="line-174">  @Override</span>
+<span class="source-line-no">175</span><span id="line-175">  public void writeItemField(Object item, IBoundInstanceModelFieldScalar instance) throws IOException {</span>
+<span class="source-line-no">176</span><span id="line-176">    writeScalarItem(item, instance);</span>
+<span class="source-line-no">177</span><span id="line-177">  }</span>
+<span class="source-line-no">178</span><span id="line-178"></span>
+<span class="source-line-no">179</span><span id="line-179">  @Override</span>
+<span class="source-line-no">180</span><span id="line-180">  public void writeItemField(IBoundObject item, IBoundInstanceModelFieldComplex instance) throws IOException {</span>
+<span class="source-line-no">181</span><span id="line-181">    writeModelObject(</span>
+<span class="source-line-no">182</span><span id="line-182">        instance,</span>
+<span class="source-line-no">183</span><span id="line-183">        item,</span>
+<span class="source-line-no">184</span><span id="line-184">        this::writeObjectProperties);</span>
+<span class="source-line-no">185</span><span id="line-185">  }</span>
+<span class="source-line-no">186</span><span id="line-186"></span>
+<span class="source-line-no">187</span><span id="line-187">  @Override</span>
+<span class="source-line-no">188</span><span id="line-188">  public void writeItemField(IBoundObject item, IBoundInstanceModelGroupedField instance) throws IOException {</span>
+<span class="source-line-no">189</span><span id="line-189">    writeGroupedModelObject(</span>
+<span class="source-line-no">190</span><span id="line-190">        instance,</span>
+<span class="source-line-no">191</span><span id="line-191">        item,</span>
+<span class="source-line-no">192</span><span id="line-192">        (parent, handler) -&gt; {</span>
+<span class="source-line-no">193</span><span id="line-193">          writeDiscriminatorProperty(handler);</span>
+<span class="source-line-no">194</span><span id="line-194">          writeObjectProperties(parent, handler);</span>
+<span class="source-line-no">195</span><span id="line-195">        });</span>
+<span class="source-line-no">196</span><span id="line-196">  }</span>
+<span class="source-line-no">197</span><span id="line-197"></span>
+<span class="source-line-no">198</span><span id="line-198">  @Override</span>
+<span class="source-line-no">199</span><span id="line-199">  public void writeItemField(IBoundObject item, IBoundDefinitionModelFieldComplex definition) throws IOException {</span>
+<span class="source-line-no">200</span><span id="line-200">    writeDefinitionObject(</span>
+<span class="source-line-no">201</span><span id="line-201">        definition,</span>
+<span class="source-line-no">202</span><span id="line-202">        item,</span>
+<span class="source-line-no">203</span><span id="line-203">        (ObjectWriter&lt;IBoundDefinitionModelFieldComplex&gt;) this::writeObjectProperties);</span>
+<span class="source-line-no">204</span><span id="line-204">  }</span>
+<span class="source-line-no">205</span><span id="line-205"></span>
+<span class="source-line-no">206</span><span id="line-206">  @Override</span>
+<span class="source-line-no">207</span><span id="line-207">  public void writeItemFieldValue(Object item, IBoundFieldValue fieldValue) throws IOException {</span>
+<span class="source-line-no">208</span><span id="line-208">    fieldValue.getJavaTypeAdapter().writeJsonValue(item, generator);</span>
+<span class="source-line-no">209</span><span id="line-209">  }</span>
+<span class="source-line-no">210</span><span id="line-210"></span>
+<span class="source-line-no">211</span><span id="line-211">  @Override</span>
+<span class="source-line-no">212</span><span id="line-212">  public void writeItemAssembly(IBoundObject item, IBoundInstanceModelAssembly instance) throws IOException {</span>
+<span class="source-line-no">213</span><span id="line-213">    writeModelObject(instance, item, this::writeObjectProperties);</span>
+<span class="source-line-no">214</span><span id="line-214">  }</span>
+<span class="source-line-no">215</span><span id="line-215"></span>
+<span class="source-line-no">216</span><span id="line-216">  @Override</span>
+<span class="source-line-no">217</span><span id="line-217">  public void writeItemAssembly(IBoundObject item, IBoundInstanceModelGroupedAssembly instance) throws IOException {</span>
+<span class="source-line-no">218</span><span id="line-218">    writeGroupedModelObject(</span>
+<span class="source-line-no">219</span><span id="line-219">        instance,</span>
+<span class="source-line-no">220</span><span id="line-220">        item,</span>
+<span class="source-line-no">221</span><span id="line-221">        (parent, handler) -&gt; {</span>
+<span class="source-line-no">222</span><span id="line-222">          writeDiscriminatorProperty(handler);</span>
+<span class="source-line-no">223</span><span id="line-223">          writeObjectProperties(parent, handler);</span>
+<span class="source-line-no">224</span><span id="line-224">        });</span>
+<span class="source-line-no">225</span><span id="line-225">  }</span>
+<span class="source-line-no">226</span><span id="line-226"></span>
+<span class="source-line-no">227</span><span id="line-227">  @Override</span>
+<span class="source-line-no">228</span><span id="line-228">  public void writeItemAssembly(IBoundObject item, IBoundDefinitionModelAssembly definition) throws IOException {</span>
+<span class="source-line-no">229</span><span id="line-229">    writeDefinitionObject(definition, item, this::writeObjectProperties);</span>
 <span class="source-line-no">230</span><span id="line-230">  }</span>
 <span class="source-line-no">231</span><span id="line-231"></span>
-<span class="source-line-no">232</span><span id="line-232">  /**</span>
-<span class="source-line-no">233</span><span id="line-233">   * Writes a scalar item.</span>
-<span class="source-line-no">234</span><span id="line-234">   *</span>
-<span class="source-line-no">235</span><span id="line-235">   * @param item</span>
-<span class="source-line-no">236</span><span id="line-236">   *          the item to write</span>
-<span class="source-line-no">237</span><span id="line-237">   * @param handler</span>
-<span class="source-line-no">238</span><span id="line-238">   *          the value handler</span>
-<span class="source-line-no">239</span><span id="line-239">   * @throws IOException</span>
-<span class="source-line-no">240</span><span id="line-240">   *           if an error occurred while writing the scalar value</span>
-<span class="source-line-no">241</span><span id="line-241">   */</span>
-<span class="source-line-no">242</span><span id="line-242">  private void writeScalarItem(@NonNull Object item, @NonNull IFeatureScalarItemValueHandler handler)</span>
-<span class="source-line-no">243</span><span id="line-243">      throws IOException {</span>
-<span class="source-line-no">244</span><span id="line-244">    handler.getJavaTypeAdapter().writeJsonValue(item, generator);</span>
-<span class="source-line-no">245</span><span id="line-245">  }</span>
-<span class="source-line-no">246</span><span id="line-246"></span>
-<span class="source-line-no">247</span><span id="line-247">  private &lt;T extends IBoundInstanceModelGroupedNamed&gt; void writeDiscriminatorProperty(</span>
-<span class="source-line-no">248</span><span id="line-248">      @NonNull T instance) throws IOException {</span>
-<span class="source-line-no">249</span><span id="line-249"></span>
-<span class="source-line-no">250</span><span id="line-250">    IBoundInstanceModelChoiceGroup choiceGroup = instance.getParentContainer();</span>
-<span class="source-line-no">251</span><span id="line-251"></span>
-<span class="source-line-no">252</span><span id="line-252">    // write JSON object discriminator</span>
-<span class="source-line-no">253</span><span id="line-253">    String discriminatorProperty = choiceGroup.getJsonDiscriminatorProperty();</span>
-<span class="source-line-no">254</span><span id="line-254">    String discriminatorValue = instance.getEffectiveDisciminatorValue();</span>
-<span class="source-line-no">255</span><span id="line-255"></span>
-<span class="source-line-no">256</span><span id="line-256">    generator.writeStringField(discriminatorProperty, discriminatorValue);</span>
-<span class="source-line-no">257</span><span id="line-257">  }</span>
+<span class="source-line-no">232</span><span id="line-232">  @Override</span>
+<span class="source-line-no">233</span><span id="line-233">  public void writeChoiceGroupItem(IBoundObject item, IBoundInstanceModelChoiceGroup instance) throws IOException {</span>
+<span class="source-line-no">234</span><span id="line-234">    IBoundInstanceModelGroupedNamed actualInstance = instance.getItemInstance(item);</span>
+<span class="source-line-no">235</span><span id="line-235">    assert actualInstance != null;</span>
+<span class="source-line-no">236</span><span id="line-236">    actualInstance.writeItem(item, this);</span>
+<span class="source-line-no">237</span><span id="line-237">  }</span>
+<span class="source-line-no">238</span><span id="line-238"></span>
+<span class="source-line-no">239</span><span id="line-239">  /**</span>
+<span class="source-line-no">240</span><span id="line-240">   * Writes a scalar item.</span>
+<span class="source-line-no">241</span><span id="line-241">   *</span>
+<span class="source-line-no">242</span><span id="line-242">   * @param item</span>
+<span class="source-line-no">243</span><span id="line-243">   *          the item to write</span>
+<span class="source-line-no">244</span><span id="line-244">   * @param handler</span>
+<span class="source-line-no">245</span><span id="line-245">   *          the value handler</span>
+<span class="source-line-no">246</span><span id="line-246">   * @throws IOException</span>
+<span class="source-line-no">247</span><span id="line-247">   *           if an error occurred while writing the scalar value</span>
+<span class="source-line-no">248</span><span id="line-248">   */</span>
+<span class="source-line-no">249</span><span id="line-249">  private void writeScalarItem(@NonNull Object item, @NonNull IFeatureScalarItemValueHandler handler)</span>
+<span class="source-line-no">250</span><span id="line-250">      throws IOException {</span>
+<span class="source-line-no">251</span><span id="line-251">    handler.getJavaTypeAdapter().writeJsonValue(item, generator);</span>
+<span class="source-line-no">252</span><span id="line-252">  }</span>
+<span class="source-line-no">253</span><span id="line-253"></span>
+<span class="source-line-no">254</span><span id="line-254">  private &lt;T extends IBoundInstanceModelGroupedNamed&gt; void writeDiscriminatorProperty(</span>
+<span class="source-line-no">255</span><span id="line-255">      @NonNull T instance) throws IOException {</span>
+<span class="source-line-no">256</span><span id="line-256"></span>
+<span class="source-line-no">257</span><span id="line-257">    IBoundInstanceModelChoiceGroup choiceGroup = instance.getParentContainer();</span>
 <span class="source-line-no">258</span><span id="line-258"></span>
-<span class="source-line-no">259</span><span id="line-259">  private &lt;T extends IFeatureComplexItemValueHandler&gt; void writeObjectProperties(</span>
-<span class="source-line-no">260</span><span id="line-260">      @NonNull IBoundObject parent,</span>
-<span class="source-line-no">261</span><span id="line-261">      @NonNull T handler) throws IOException {</span>
-<span class="source-line-no">262</span><span id="line-262">    for (IBoundProperty&lt;?&gt; property : handler.getJsonProperties().values()) {</span>
-<span class="source-line-no">263</span><span id="line-263">      assert property != null;</span>
-<span class="source-line-no">264</span><span id="line-264"></span>
-<span class="source-line-no">265</span><span id="line-265">      if (property instanceof IBoundInstanceModel) {</span>
-<span class="source-line-no">266</span><span id="line-266">        writeModelInstance((IBoundInstanceModel&lt;?&gt;) property, parent);</span>
-<span class="source-line-no">267</span><span id="line-267">      } else if (property instanceof IBoundInstance) {</span>
-<span class="source-line-no">268</span><span id="line-268">        writeInstance(property, parent);</span>
-<span class="source-line-no">269</span><span id="line-269">      } else { // IBoundFieldValue</span>
-<span class="source-line-no">270</span><span id="line-270">        writeFieldValue((IBoundFieldValue) property, parent);</span>
-<span class="source-line-no">271</span><span id="line-271">      }</span>
-<span class="source-line-no">272</span><span id="line-272">    }</span>
-<span class="source-line-no">273</span><span id="line-273">  }</span>
-<span class="source-line-no">274</span><span id="line-274"></span>
-<span class="source-line-no">275</span><span id="line-275">  private &lt;T extends IFeatureComplexItemValueHandler&gt; void writeDefinitionObject(</span>
-<span class="source-line-no">276</span><span id="line-276">      @NonNull T handler,</span>
-<span class="source-line-no">277</span><span id="line-277">      @NonNull IBoundObject parent,</span>
-<span class="source-line-no">278</span><span id="line-278">      @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {</span>
-<span class="source-line-no">279</span><span id="line-279">    generator.writeStartObject();</span>
+<span class="source-line-no">259</span><span id="line-259">    // write JSON object discriminator</span>
+<span class="source-line-no">260</span><span id="line-260">    String discriminatorProperty = choiceGroup.getJsonDiscriminatorProperty();</span>
+<span class="source-line-no">261</span><span id="line-261">    String discriminatorValue = instance.getEffectiveDisciminatorValue();</span>
+<span class="source-line-no">262</span><span id="line-262"></span>
+<span class="source-line-no">263</span><span id="line-263">    generator.writeStringField(discriminatorProperty, discriminatorValue);</span>
+<span class="source-line-no">264</span><span id="line-264">  }</span>
+<span class="source-line-no">265</span><span id="line-265"></span>
+<span class="source-line-no">266</span><span id="line-266">  private &lt;T extends IFeatureComplexItemValueHandler&gt; void writeObjectProperties(</span>
+<span class="source-line-no">267</span><span id="line-267">      @NonNull IBoundObject parent,</span>
+<span class="source-line-no">268</span><span id="line-268">      @NonNull T handler) throws IOException {</span>
+<span class="source-line-no">269</span><span id="line-269">    for (IBoundProperty&lt;?&gt; property : handler.getJsonProperties().values()) {</span>
+<span class="source-line-no">270</span><span id="line-270">      assert property != null;</span>
+<span class="source-line-no">271</span><span id="line-271"></span>
+<span class="source-line-no">272</span><span id="line-272">      if (property instanceof IBoundInstanceModel) {</span>
+<span class="source-line-no">273</span><span id="line-273">        writeModelInstance((IBoundInstanceModel&lt;?&gt;) property, parent);</span>
+<span class="source-line-no">274</span><span id="line-274">      } else if (property instanceof IBoundInstance) {</span>
+<span class="source-line-no">275</span><span id="line-275">        writeInstance(property, parent);</span>
+<span class="source-line-no">276</span><span id="line-276">      } else { // IBoundFieldValue</span>
+<span class="source-line-no">277</span><span id="line-277">        writeFieldValue((IBoundFieldValue) property, parent);</span>
+<span class="source-line-no">278</span><span id="line-278">      }</span>
+<span class="source-line-no">279</span><span id="line-279">    }</span>
 <span class="source-line-no">280</span><span id="line-280"></span>
-<span class="source-line-no">281</span><span id="line-281">    propertyWriter.accept(parent, handler);</span>
-<span class="source-line-no">282</span><span id="line-282">    generator.writeEndObject();</span>
+<span class="source-line-no">281</span><span id="line-281">    // Write any captured unmodeled content</span>
+<span class="source-line-no">282</span><span id="line-282">    writeAnyContent(parent, handler);</span>
 <span class="source-line-no">283</span><span id="line-283">  }</span>
 <span class="source-line-no">284</span><span id="line-284"></span>
-<span class="source-line-no">285</span><span id="line-285">  private &lt;T extends IFeatureComplexItemValueHandler &amp; IBoundInstanceModel&lt;IBoundObject&gt;&gt;</span>
-<span class="source-line-no">286</span><span id="line-286">      void writeModelObject(</span>
-<span class="source-line-no">287</span><span id="line-287">          @NonNull T handler,</span>
-<span class="source-line-no">288</span><span id="line-288">          @NonNull IBoundObject parent,</span>
-<span class="source-line-no">289</span><span id="line-289">          @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {</span>
-<span class="source-line-no">290</span><span id="line-290">    generator.writeStartObject();</span>
-<span class="source-line-no">291</span><span id="line-291"></span>
-<span class="source-line-no">292</span><span id="line-292">    IBoundInstanceFlag jsonKey = handler.getItemJsonKey(parent);</span>
-<span class="source-line-no">293</span><span id="line-293">    if (jsonKey != null) {</span>
-<span class="source-line-no">294</span><span id="line-294">      Object keyValue = jsonKey.getValue(parent);</span>
-<span class="source-line-no">295</span><span id="line-295">      if (keyValue == null) {</span>
-<span class="source-line-no">296</span><span id="line-296">        throw new IOException(</span>
-<span class="source-line-no">297</span><span id="line-297">            String.format("Null value for json-key for definition '%s'",</span>
-<span class="source-line-no">298</span><span id="line-298">                jsonKey.getContainingDefinition().toCoordinates()));</span>
-<span class="source-line-no">299</span><span id="line-299">      }</span>
-<span class="source-line-no">300</span><span id="line-300"></span>
-<span class="source-line-no">301</span><span id="line-301">      // the field will be the JSON key value</span>
-<span class="source-line-no">302</span><span id="line-302">      String key;</span>
-<span class="source-line-no">303</span><span id="line-303">      try {</span>
-<span class="source-line-no">304</span><span id="line-304">        key = jsonKey.getJavaTypeAdapter().asString(keyValue);</span>
-<span class="source-line-no">305</span><span id="line-305">      } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">306</span><span id="line-306">        throw new IOException(</span>
-<span class="source-line-no">307</span><span id="line-307">            String.format("Illegal value '%s' for json-key for definition '%s'",</span>
-<span class="source-line-no">308</span><span id="line-308">                keyValue,</span>
-<span class="source-line-no">309</span><span id="line-309">                jsonKey.getContainingDefinition().toCoordinates()),</span>
-<span class="source-line-no">310</span><span id="line-310">            ex);</span>
-<span class="source-line-no">311</span><span id="line-311">      }</span>
-<span class="source-line-no">312</span><span id="line-312">      generator.writeFieldName(key);</span>
-<span class="source-line-no">313</span><span id="line-313"></span>
-<span class="source-line-no">314</span><span id="line-314">      // next the value will be a start object</span>
-<span class="source-line-no">315</span><span id="line-315">      generator.writeStartObject();</span>
-<span class="source-line-no">316</span><span id="line-316">    }</span>
-<span class="source-line-no">317</span><span id="line-317"></span>
-<span class="source-line-no">318</span><span id="line-318">    propertyWriter.accept(parent, handler);</span>
-<span class="source-line-no">319</span><span id="line-319"></span>
-<span class="source-line-no">320</span><span id="line-320">    if (jsonKey != null) {</span>
-<span class="source-line-no">321</span><span id="line-321">      // next the value will be a start object</span>
-<span class="source-line-no">322</span><span id="line-322">      generator.writeEndObject();</span>
-<span class="source-line-no">323</span><span id="line-323">    }</span>
-<span class="source-line-no">324</span><span id="line-324">    generator.writeEndObject();</span>
-<span class="source-line-no">325</span><span id="line-325">  }</span>
-<span class="source-line-no">326</span><span id="line-326"></span>
-<span class="source-line-no">327</span><span id="line-327">  private &lt;T extends IFeatureComplexItemValueHandler &amp; IBoundInstanceModelGroupedNamed&gt; void writeGroupedModelObject(</span>
-<span class="source-line-no">328</span><span id="line-328">      @NonNull T handler,</span>
-<span class="source-line-no">329</span><span id="line-329">      @NonNull IBoundObject parent,</span>
-<span class="source-line-no">330</span><span id="line-330">      @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {</span>
-<span class="source-line-no">331</span><span id="line-331">    generator.writeStartObject();</span>
-<span class="source-line-no">332</span><span id="line-332"></span>
-<span class="source-line-no">333</span><span id="line-333">    IBoundInstanceModelChoiceGroup choiceGroup = handler.getParentContainer();</span>
-<span class="source-line-no">334</span><span id="line-334">    IBoundInstanceFlag jsonKey = choiceGroup.getItemJsonKey(parent);</span>
-<span class="source-line-no">335</span><span id="line-335">    if (jsonKey != null) {</span>
-<span class="source-line-no">336</span><span id="line-336">      Object keyValue = jsonKey.getValue(parent);</span>
-<span class="source-line-no">337</span><span id="line-337">      if (keyValue == null) {</span>
-<span class="source-line-no">338</span><span id="line-338">        throw new IOException(String.format("Null value for json-key for definition '%s'",</span>
-<span class="source-line-no">339</span><span id="line-339">            jsonKey.getContainingDefinition().toCoordinates()));</span>
-<span class="source-line-no">340</span><span id="line-340">      }</span>
-<span class="source-line-no">341</span><span id="line-341"></span>
-<span class="source-line-no">342</span><span id="line-342">      // the field will be the JSON key value</span>
-<span class="source-line-no">343</span><span id="line-343">      String key;</span>
-<span class="source-line-no">344</span><span id="line-344">      try {</span>
-<span class="source-line-no">345</span><span id="line-345">        key = jsonKey.getJavaTypeAdapter().asString(keyValue);</span>
-<span class="source-line-no">346</span><span id="line-346">      } catch (IllegalArgumentException ex) {</span>
-<span class="source-line-no">347</span><span id="line-347">        throw new IOException(</span>
-<span class="source-line-no">348</span><span id="line-348">            String.format("Invalid value '%s' for json-key for definition '%s'",</span>
-<span class="source-line-no">349</span><span id="line-349">                keyValue,</span>
-<span class="source-line-no">350</span><span id="line-350">                jsonKey.getContainingDefinition().toCoordinates()),</span>
-<span class="source-line-no">351</span><span id="line-351">            ex);</span>
-<span class="source-line-no">352</span><span id="line-352">      }</span>
-<span class="source-line-no">353</span><span id="line-353">      generator.writeFieldName(key);</span>
-<span class="source-line-no">354</span><span id="line-354"></span>
-<span class="source-line-no">355</span><span id="line-355">      // next the value will be a start object</span>
-<span class="source-line-no">356</span><span id="line-356">      generator.writeStartObject();</span>
-<span class="source-line-no">357</span><span id="line-357">    }</span>
-<span class="source-line-no">358</span><span id="line-358"></span>
-<span class="source-line-no">359</span><span id="line-359">    propertyWriter.accept(parent, handler);</span>
-<span class="source-line-no">360</span><span id="line-360"></span>
-<span class="source-line-no">361</span><span id="line-361">    if (jsonKey != null) {</span>
-<span class="source-line-no">362</span><span id="line-362">      // next the value will be a start object</span>
-<span class="source-line-no">363</span><span id="line-363">      generator.writeEndObject();</span>
-<span class="source-line-no">364</span><span id="line-364">    }</span>
-<span class="source-line-no">365</span><span id="line-365">    generator.writeEndObject();</span>
-<span class="source-line-no">366</span><span id="line-366">  }</span>
-<span class="source-line-no">367</span><span id="line-367"></span>
-<span class="source-line-no">368</span><span id="line-368">  /**</span>
-<span class="source-line-no">369</span><span id="line-369">   * Supports writing items that are {@link IBoundInstanceModel}-based.</span>
-<span class="source-line-no">370</span><span id="line-370">   *</span>
-<span class="source-line-no">371</span><span id="line-371">   * @param &lt;ITEM&gt;</span>
-<span class="source-line-no">372</span><span id="line-372">   *          the Java type of the item</span>
-<span class="source-line-no">373</span><span id="line-373">   */</span>
-<span class="source-line-no">374</span><span id="line-374">  private class ModelInstanceWriteHandler&lt;ITEM&gt;</span>
-<span class="source-line-no">375</span><span id="line-375">      extends AbstractModelInstanceWriteHandler&lt;ITEM&gt; {</span>
-<span class="source-line-no">376</span><span id="line-376">    public ModelInstanceWriteHandler(</span>
-<span class="source-line-no">377</span><span id="line-377">        @NonNull IBoundInstanceModel&lt;ITEM&gt; instance) {</span>
-<span class="source-line-no">378</span><span id="line-378">      super(instance);</span>
-<span class="source-line-no">379</span><span id="line-379">    }</span>
-<span class="source-line-no">380</span><span id="line-380"></span>
-<span class="source-line-no">381</span><span id="line-381">    @Override</span>
-<span class="source-line-no">382</span><span id="line-382">    public void writeList(List&lt;ITEM&gt; items) throws IOException {</span>
-<span class="source-line-no">383</span><span id="line-383">      IBoundInstanceModel&lt;ITEM&gt; instance = getCollectionInfo().getInstance();</span>
-<span class="source-line-no">384</span><span id="line-384"></span>
-<span class="source-line-no">385</span><span id="line-385">      boolean writeArray = false;</span>
-<span class="source-line-no">386</span><span id="line-386">      if (JsonGroupAsBehavior.LIST.equals(instance.getJsonGroupAsBehavior())</span>
-<span class="source-line-no">387</span><span id="line-387">          || JsonGroupAsBehavior.SINGLETON_OR_LIST.equals(instance.getJsonGroupAsBehavior())</span>
-<span class="source-line-no">388</span><span id="line-388">              &amp;&amp; items.size() &gt; 1) {</span>
-<span class="source-line-no">389</span><span id="line-389">        // write array, then items</span>
-<span class="source-line-no">390</span><span id="line-390">        writeArray = true;</span>
-<span class="source-line-no">391</span><span id="line-391">        generator.writeStartArray();</span>
-<span class="source-line-no">392</span><span id="line-392">      } // only other option is a singleton value, write item</span>
-<span class="source-line-no">393</span><span id="line-393"></span>
-<span class="source-line-no">394</span><span id="line-394">      super.writeList(items);</span>
-<span class="source-line-no">395</span><span id="line-395"></span>
-<span class="source-line-no">396</span><span id="line-396">      if (writeArray) {</span>
-<span class="source-line-no">397</span><span id="line-397">        // write the end array</span>
-<span class="source-line-no">398</span><span id="line-398">        generator.writeEndArray();</span>
-<span class="source-line-no">399</span><span id="line-399">      }</span>
-<span class="source-line-no">400</span><span id="line-400">    }</span>
-<span class="source-line-no">401</span><span id="line-401"></span>
-<span class="source-line-no">402</span><span id="line-402">    @Override</span>
-<span class="source-line-no">403</span><span id="line-403">    public void writeItem(ITEM item) throws IOException {</span>
-<span class="source-line-no">404</span><span id="line-404">      IBoundInstanceModel&lt;ITEM&gt; instance = getInstance();</span>
-<span class="source-line-no">405</span><span id="line-405">      instance.writeItem(item, MetaschemaJsonWriter.this);</span>
+<span class="source-line-no">285</span><span id="line-285">  /**</span>
+<span class="source-line-no">286</span><span id="line-286">   * Write any captured unmodeled content from the parent object's</span>
+<span class="source-line-no">287</span><span id="line-287">   * {@code @BoundAny} field. If the definition has an any instance and the parent</span>
+<span class="source-line-no">288</span><span id="line-288">   * object has captured {@link JsonAnyContent}, each property is written as a</span>
+<span class="source-line-no">289</span><span id="line-289">   * top-level field in the current JSON object.</span>
+<span class="source-line-no">290</span><span id="line-290">   *</span>
+<span class="source-line-no">291</span><span id="line-291">   * @param parent</span>
+<span class="source-line-no">292</span><span id="line-292">   *          the parent bound object</span>
+<span class="source-line-no">293</span><span id="line-293">   * @param handler</span>
+<span class="source-line-no">294</span><span id="line-294">   *          the complex item value handler providing the definition</span>
+<span class="source-line-no">295</span><span id="line-295">   * @throws IOException</span>
+<span class="source-line-no">296</span><span id="line-296">   *           if an error occurred while writing</span>
+<span class="source-line-no">297</span><span id="line-297">   */</span>
+<span class="source-line-no">298</span><span id="line-298">  private void writeAnyContent(</span>
+<span class="source-line-no">299</span><span id="line-299">      @NonNull IBoundObject parent,</span>
+<span class="source-line-no">300</span><span id="line-300">      @NonNull IFeatureComplexItemValueHandler handler) throws IOException {</span>
+<span class="source-line-no">301</span><span id="line-301">    IBoundDefinitionModelComplex definition = handler.getDefinition();</span>
+<span class="source-line-no">302</span><span id="line-302">    if (definition instanceof IBoundDefinitionModelAssembly) {</span>
+<span class="source-line-no">303</span><span id="line-303">      IAnyInstance anyInstance</span>
+<span class="source-line-no">304</span><span id="line-304">          = ((IBoundDefinitionModelAssembly) definition).getModelContainer().getAnyInstance();</span>
+<span class="source-line-no">305</span><span id="line-305">      if (anyInstance instanceof IBoundInstanceModelAny) {</span>
+<span class="source-line-no">306</span><span id="line-306">        IBoundInstanceModelAny boundAny = (IBoundInstanceModelAny) anyInstance;</span>
+<span class="source-line-no">307</span><span id="line-307">        IAnyContent anyContent = boundAny.getAnyContent(parent);</span>
+<span class="source-line-no">308</span><span id="line-308">        if (anyContent instanceof JsonAnyContent) {</span>
+<span class="source-line-no">309</span><span id="line-309">          JsonAnyContent jsonAny = (JsonAnyContent) anyContent;</span>
+<span class="source-line-no">310</span><span id="line-310">          if (!jsonAny.isEmpty()) {</span>
+<span class="source-line-no">311</span><span id="line-311">            ObjectNode props = jsonAny.getProperties();</span>
+<span class="source-line-no">312</span><span id="line-312">            Iterator&lt;Map.Entry&lt;String, JsonNode&gt;&gt; fields = props.fields();</span>
+<span class="source-line-no">313</span><span id="line-313">            while (fields.hasNext()) {</span>
+<span class="source-line-no">314</span><span id="line-314">              Map.Entry&lt;String, JsonNode&gt; entry = fields.next();</span>
+<span class="source-line-no">315</span><span id="line-315">              generator.writeFieldName(entry.getKey());</span>
+<span class="source-line-no">316</span><span id="line-316">              generator.writeTree(entry.getValue());</span>
+<span class="source-line-no">317</span><span id="line-317">            }</span>
+<span class="source-line-no">318</span><span id="line-318">          }</span>
+<span class="source-line-no">319</span><span id="line-319">        }</span>
+<span class="source-line-no">320</span><span id="line-320">      }</span>
+<span class="source-line-no">321</span><span id="line-321">    }</span>
+<span class="source-line-no">322</span><span id="line-322">  }</span>
+<span class="source-line-no">323</span><span id="line-323"></span>
+<span class="source-line-no">324</span><span id="line-324">  private &lt;T extends IFeatureComplexItemValueHandler&gt; void writeDefinitionObject(</span>
+<span class="source-line-no">325</span><span id="line-325">      @NonNull T handler,</span>
+<span class="source-line-no">326</span><span id="line-326">      @NonNull IBoundObject parent,</span>
+<span class="source-line-no">327</span><span id="line-327">      @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {</span>
+<span class="source-line-no">328</span><span id="line-328">    generator.writeStartObject();</span>
+<span class="source-line-no">329</span><span id="line-329"></span>
+<span class="source-line-no">330</span><span id="line-330">    propertyWriter.accept(parent, handler);</span>
+<span class="source-line-no">331</span><span id="line-331">    generator.writeEndObject();</span>
+<span class="source-line-no">332</span><span id="line-332">  }</span>
+<span class="source-line-no">333</span><span id="line-333"></span>
+<span class="source-line-no">334</span><span id="line-334">  private &lt;T extends IFeatureComplexItemValueHandler &amp; IBoundInstanceModel&lt;IBoundObject&gt;&gt;</span>
+<span class="source-line-no">335</span><span id="line-335">      void writeModelObject(</span>
+<span class="source-line-no">336</span><span id="line-336">          @NonNull T handler,</span>
+<span class="source-line-no">337</span><span id="line-337">          @NonNull IBoundObject parent,</span>
+<span class="source-line-no">338</span><span id="line-338">          @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {</span>
+<span class="source-line-no">339</span><span id="line-339">    generator.writeStartObject();</span>
+<span class="source-line-no">340</span><span id="line-340"></span>
+<span class="source-line-no">341</span><span id="line-341">    IBoundInstanceFlag jsonKey = handler.getItemJsonKey(parent);</span>
+<span class="source-line-no">342</span><span id="line-342">    if (jsonKey != null) {</span>
+<span class="source-line-no">343</span><span id="line-343">      Object keyValue = jsonKey.getValue(parent);</span>
+<span class="source-line-no">344</span><span id="line-344">      if (keyValue == null) {</span>
+<span class="source-line-no">345</span><span id="line-345">        throw new IOException(</span>
+<span class="source-line-no">346</span><span id="line-346">            String.format("Null value for json-key for definition '%s'",</span>
+<span class="source-line-no">347</span><span id="line-347">                jsonKey.getContainingDefinition().toCoordinates()));</span>
+<span class="source-line-no">348</span><span id="line-348">      }</span>
+<span class="source-line-no">349</span><span id="line-349"></span>
+<span class="source-line-no">350</span><span id="line-350">      // the field will be the JSON key value</span>
+<span class="source-line-no">351</span><span id="line-351">      String key;</span>
+<span class="source-line-no">352</span><span id="line-352">      try {</span>
+<span class="source-line-no">353</span><span id="line-353">        key = jsonKey.getJavaTypeAdapter().asString(keyValue);</span>
+<span class="source-line-no">354</span><span id="line-354">      } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">355</span><span id="line-355">        throw new IOException(</span>
+<span class="source-line-no">356</span><span id="line-356">            String.format("Illegal value '%s' for json-key for definition '%s'",</span>
+<span class="source-line-no">357</span><span id="line-357">                keyValue,</span>
+<span class="source-line-no">358</span><span id="line-358">                jsonKey.getContainingDefinition().toCoordinates()),</span>
+<span class="source-line-no">359</span><span id="line-359">            ex);</span>
+<span class="source-line-no">360</span><span id="line-360">      }</span>
+<span class="source-line-no">361</span><span id="line-361">      generator.writeFieldName(key);</span>
+<span class="source-line-no">362</span><span id="line-362"></span>
+<span class="source-line-no">363</span><span id="line-363">      // next the value will be a start object</span>
+<span class="source-line-no">364</span><span id="line-364">      generator.writeStartObject();</span>
+<span class="source-line-no">365</span><span id="line-365">    }</span>
+<span class="source-line-no">366</span><span id="line-366"></span>
+<span class="source-line-no">367</span><span id="line-367">    propertyWriter.accept(parent, handler);</span>
+<span class="source-line-no">368</span><span id="line-368"></span>
+<span class="source-line-no">369</span><span id="line-369">    if (jsonKey != null) {</span>
+<span class="source-line-no">370</span><span id="line-370">      // next the value will be a start object</span>
+<span class="source-line-no">371</span><span id="line-371">      generator.writeEndObject();</span>
+<span class="source-line-no">372</span><span id="line-372">    }</span>
+<span class="source-line-no">373</span><span id="line-373">    generator.writeEndObject();</span>
+<span class="source-line-no">374</span><span id="line-374">  }</span>
+<span class="source-line-no">375</span><span id="line-375"></span>
+<span class="source-line-no">376</span><span id="line-376">  private &lt;T extends IFeatureComplexItemValueHandler &amp; IBoundInstanceModelGroupedNamed&gt; void writeGroupedModelObject(</span>
+<span class="source-line-no">377</span><span id="line-377">      @NonNull T handler,</span>
+<span class="source-line-no">378</span><span id="line-378">      @NonNull IBoundObject parent,</span>
+<span class="source-line-no">379</span><span id="line-379">      @NonNull ObjectWriter&lt;T&gt; propertyWriter) throws IOException {</span>
+<span class="source-line-no">380</span><span id="line-380">    generator.writeStartObject();</span>
+<span class="source-line-no">381</span><span id="line-381"></span>
+<span class="source-line-no">382</span><span id="line-382">    IBoundInstanceModelChoiceGroup choiceGroup = handler.getParentContainer();</span>
+<span class="source-line-no">383</span><span id="line-383">    IBoundInstanceFlag jsonKey = choiceGroup.getItemJsonKey(parent);</span>
+<span class="source-line-no">384</span><span id="line-384">    if (jsonKey != null) {</span>
+<span class="source-line-no">385</span><span id="line-385">      Object keyValue = jsonKey.getValue(parent);</span>
+<span class="source-line-no">386</span><span id="line-386">      if (keyValue == null) {</span>
+<span class="source-line-no">387</span><span id="line-387">        throw new IOException(String.format("Null value for json-key for definition '%s'",</span>
+<span class="source-line-no">388</span><span id="line-388">            jsonKey.getContainingDefinition().toCoordinates()));</span>
+<span class="source-line-no">389</span><span id="line-389">      }</span>
+<span class="source-line-no">390</span><span id="line-390"></span>
+<span class="source-line-no">391</span><span id="line-391">      // the field will be the JSON key value</span>
+<span class="source-line-no">392</span><span id="line-392">      String key;</span>
+<span class="source-line-no">393</span><span id="line-393">      try {</span>
+<span class="source-line-no">394</span><span id="line-394">        key = jsonKey.getJavaTypeAdapter().asString(keyValue);</span>
+<span class="source-line-no">395</span><span id="line-395">      } catch (IllegalArgumentException ex) {</span>
+<span class="source-line-no">396</span><span id="line-396">        throw new IOException(</span>
+<span class="source-line-no">397</span><span id="line-397">            String.format("Invalid value '%s' for json-key for definition '%s'",</span>
+<span class="source-line-no">398</span><span id="line-398">                keyValue,</span>
+<span class="source-line-no">399</span><span id="line-399">                jsonKey.getContainingDefinition().toCoordinates()),</span>
+<span class="source-line-no">400</span><span id="line-400">            ex);</span>
+<span class="source-line-no">401</span><span id="line-401">      }</span>
+<span class="source-line-no">402</span><span id="line-402">      generator.writeFieldName(key);</span>
+<span class="source-line-no">403</span><span id="line-403"></span>
+<span class="source-line-no">404</span><span id="line-404">      // next the value will be a start object</span>
+<span class="source-line-no">405</span><span id="line-405">      generator.writeStartObject();</span>
 <span class="source-line-no">406</span><span id="line-406">    }</span>
-<span class="source-line-no">407</span><span id="line-407">  }</span>
-<span class="source-line-no">408</span><span id="line-408">}</span>
+<span class="source-line-no">407</span><span id="line-407"></span>
+<span class="source-line-no">408</span><span id="line-408">    propertyWriter.accept(parent, handler);</span>
+<span class="source-line-no">409</span><span id="line-409"></span>
+<span class="source-line-no">410</span><span id="line-410">    if (jsonKey != null) {</span>
+<span class="source-line-no">411</span><span id="line-411">      // next the value will be a start object</span>
+<span class="source-line-no">412</span><span id="line-412">      generator.writeEndObject();</span>
+<span class="source-line-no">413</span><span id="line-413">    }</span>
+<span class="source-line-no">414</span><span id="line-414">    generator.writeEndObject();</span>
+<span class="source-line-no">415</span><span id="line-415">  }</span>
+<span class="source-line-no">416</span><span id="line-416"></span>
+<span class="source-line-no">417</span><span id="line-417">  /**</span>
+<span class="source-line-no">418</span><span id="line-418">   * Supports writing items that are {@link IBoundInstanceModel}-based.</span>
+<span class="source-line-no">419</span><span id="line-419">   *</span>
+<span class="source-line-no">420</span><span id="line-420">   * @param &lt;ITEM&gt;</span>
+<span class="source-line-no">421</span><span id="line-421">   *          the Java type of the item</span>
+<span class="source-line-no">422</span><span id="line-422">   */</span>
+<span class="source-line-no">423</span><span id="line-423">  private class ModelInstanceWriteHandler&lt;ITEM&gt;</span>
+<span class="source-line-no">424</span><span id="line-424">      extends AbstractModelInstanceWriteHandler&lt;ITEM&gt; {</span>
+<span class="source-line-no">425</span><span id="line-425">    public ModelInstanceWriteHandler(</span>
+<span class="source-line-no">426</span><span id="line-426">        @NonNull IBoundInstanceModel&lt;ITEM&gt; instance) {</span>
+<span class="source-line-no">427</span><span id="line-427">      super(instance);</span>
+<span class="source-line-no">428</span><span id="line-428">    }</span>
+<span class="source-line-no">429</span><span id="line-429"></span>
+<span class="source-line-no">430</span><span id="line-430">    @Override</span>
+<span class="source-line-no">431</span><span id="line-431">    public void writeList(List&lt;ITEM&gt; items) throws IOException {</span>
+<span class="source-line-no">432</span><span id="line-432">      IBoundInstanceModel&lt;ITEM&gt; instance = getCollectionInfo().getInstance();</span>
+<span class="source-line-no">433</span><span id="line-433"></span>
+<span class="source-line-no">434</span><span id="line-434">      boolean writeArray = false;</span>
+<span class="source-line-no">435</span><span id="line-435">      if (JsonGroupAsBehavior.LIST.equals(instance.getJsonGroupAsBehavior())</span>
+<span class="source-line-no">436</span><span id="line-436">          || JsonGroupAsBehavior.SINGLETON_OR_LIST.equals(instance.getJsonGroupAsBehavior())</span>
+<span class="source-line-no">437</span><span id="line-437">              &amp;&amp; items.size() &gt; 1) {</span>
+<span class="source-line-no">438</span><span id="line-438">        // write array, then items</span>
+<span class="source-line-no">439</span><span id="line-439">        writeArray = true;</span>
+<span class="source-line-no">440</span><span id="line-440">        generator.writeStartArray();</span>
+<span class="source-line-no">441</span><span id="line-441">      } // only other option is a singleton value, write item</span>
+<span class="source-line-no">442</span><span id="line-442"></span>
+<span class="source-line-no">443</span><span id="line-443">      super.writeList(items);</span>
+<span class="source-line-no">444</span><span id="line-444"></span>
+<span class="source-line-no">445</span><span id="line-445">      if (writeArray) {</span>
+<span class="source-line-no">446</span><span id="line-446">        // write the end array</span>
+<span class="source-line-no">447</span><span id="line-447">        generator.writeEndArray();</span>
+<span class="source-line-no">448</span><span id="line-448">      }</span>
+<span class="source-line-no">449</span><span id="line-449">    }</span>
+<span class="source-line-no">450</span><span id="line-450"></span>
+<span class="source-line-no">451</span><span id="line-451">    @Override</span>
+<span class="source-line-no">452</span><span id="line-452">    public void writeItem(ITEM item) throws IOException {</span>
+<span class="source-line-no">453</span><span id="line-453">      IBoundInstanceModel&lt;ITEM&gt; instance = getInstance();</span>
+<span class="source-line-no">454</span><span id="line-454">      instance.writeItem(item, MetaschemaJsonWriter.this);</span>
+<span class="source-line-no">455</span><span id="line-455">    }</span>
+<span class="source-line-no">456</span><span id="line-456">  }</span>
+<span class="source-line-no">457</span><span id="line-457">}</span>
 
 
 

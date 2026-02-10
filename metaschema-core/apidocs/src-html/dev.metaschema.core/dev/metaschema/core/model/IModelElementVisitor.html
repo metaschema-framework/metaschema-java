@@ -112,7 +112,7 @@
 <span class="source-line-no">099</span><span id="line-99">  RESULT visitChoiceGroupInstance(@NonNull IChoiceGroupInstance item, CONTEXT context);</span>
 <span class="source-line-no">100</span><span id="line-100"></span>
 <span class="source-line-no">101</span><span id="line-101">  /**</span>
-<span class="source-line-no">102</span><span id="line-102">   * This callback is called when an {@link IFlagDefinition} is visited.</span>
+<span class="source-line-no">102</span><span id="line-102">   * This callback is called when an {@link IAnyInstance} is visited.</span>
 <span class="source-line-no">103</span><span id="line-103">   *</span>
 <span class="source-line-no">104</span><span id="line-104">   * @param item</span>
 <span class="source-line-no">105</span><span id="line-105">   *          the visited item</span>
@@ -120,10 +120,10 @@
 <span class="source-line-no">107</span><span id="line-107">   *          provides contextual information for use by the visitor</span>
 <span class="source-line-no">108</span><span id="line-108">   * @return the visitation result</span>
 <span class="source-line-no">109</span><span id="line-109">   */</span>
-<span class="source-line-no">110</span><span id="line-110">  RESULT visitFlagDefinition(@NonNull IFlagDefinition item, CONTEXT context);</span>
+<span class="source-line-no">110</span><span id="line-110">  RESULT visitAny(@NonNull IAnyInstance item, CONTEXT context);</span>
 <span class="source-line-no">111</span><span id="line-111"></span>
 <span class="source-line-no">112</span><span id="line-112">  /**</span>
-<span class="source-line-no">113</span><span id="line-113">   * This callback is called when an {@link IFieldDefinition} is visited.</span>
+<span class="source-line-no">113</span><span id="line-113">   * This callback is called when an {@link IFlagDefinition} is visited.</span>
 <span class="source-line-no">114</span><span id="line-114">   *</span>
 <span class="source-line-no">115</span><span id="line-115">   * @param item</span>
 <span class="source-line-no">116</span><span id="line-116">   *          the visited item</span>
@@ -131,10 +131,10 @@
 <span class="source-line-no">118</span><span id="line-118">   *          provides contextual information for use by the visitor</span>
 <span class="source-line-no">119</span><span id="line-119">   * @return the visitation result</span>
 <span class="source-line-no">120</span><span id="line-120">   */</span>
-<span class="source-line-no">121</span><span id="line-121">  RESULT visitFieldDefinition(@NonNull IFieldDefinition item, CONTEXT context);</span>
+<span class="source-line-no">121</span><span id="line-121">  RESULT visitFlagDefinition(@NonNull IFlagDefinition item, CONTEXT context);</span>
 <span class="source-line-no">122</span><span id="line-122"></span>
 <span class="source-line-no">123</span><span id="line-123">  /**</span>
-<span class="source-line-no">124</span><span id="line-124">   * This callback is called when an {@link IAssemblyDefinition} is visited.</span>
+<span class="source-line-no">124</span><span id="line-124">   * This callback is called when an {@link IFieldDefinition} is visited.</span>
 <span class="source-line-no">125</span><span id="line-125">   *</span>
 <span class="source-line-no">126</span><span id="line-126">   * @param item</span>
 <span class="source-line-no">127</span><span id="line-127">   *          the visited item</span>
@@ -142,8 +142,19 @@
 <span class="source-line-no">129</span><span id="line-129">   *          provides contextual information for use by the visitor</span>
 <span class="source-line-no">130</span><span id="line-130">   * @return the visitation result</span>
 <span class="source-line-no">131</span><span id="line-131">   */</span>
-<span class="source-line-no">132</span><span id="line-132">  RESULT visitAssemblyDefinition(@NonNull IAssemblyDefinition item, CONTEXT context);</span>
-<span class="source-line-no">133</span><span id="line-133">}</span>
+<span class="source-line-no">132</span><span id="line-132">  RESULT visitFieldDefinition(@NonNull IFieldDefinition item, CONTEXT context);</span>
+<span class="source-line-no">133</span><span id="line-133"></span>
+<span class="source-line-no">134</span><span id="line-134">  /**</span>
+<span class="source-line-no">135</span><span id="line-135">   * This callback is called when an {@link IAssemblyDefinition} is visited.</span>
+<span class="source-line-no">136</span><span id="line-136">   *</span>
+<span class="source-line-no">137</span><span id="line-137">   * @param item</span>
+<span class="source-line-no">138</span><span id="line-138">   *          the visited item</span>
+<span class="source-line-no">139</span><span id="line-139">   * @param context</span>
+<span class="source-line-no">140</span><span id="line-140">   *          provides contextual information for use by the visitor</span>
+<span class="source-line-no">141</span><span id="line-141">   * @return the visitation result</span>
+<span class="source-line-no">142</span><span id="line-142">   */</span>
+<span class="source-line-no">143</span><span id="line-143">  RESULT visitAssemblyDefinition(@NonNull IAssemblyDefinition item, CONTEXT context);</span>
+<span class="source-line-no">144</span><span id="line-144">}</span>
 
 
 
