@@ -4,7 +4,7 @@
     <parent>
 		<groupId>dev.metaschema.java</groupId>
         <artifactId>metaschema-framework</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0.M3</version>
     </parent>
 
     <artifactId>metaschema-maven-plugin</artifactId>
@@ -25,7 +25,7 @@
 
 	<scm>
 		<url>${scm.url}/tree/develop/metaschema-maven-plugin</url>
-	  <tag>HEAD</tag>
+	  <tag>v3.0.0.M3</tag>
     </scm>
 
 	<prerequisites>
