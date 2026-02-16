@@ -348,6 +348,28 @@ public class CLITest {
   }
 
   @Test
+  void testListAllowedValuesOutput() throws Exception {
+    java.nio.file.Path outputFile = java.nio.file.Path.of("target/test-list-allowed-values.yaml");
+    String[] cliArgs = { "list-allowed-values",
+        "src/test/resources/content/schema-validation-module.xml",
+        outputFile.toString(),
+        "--overwrite",
+        "--show-stack-trace"
+    };
+    ExitStatus status = CLI.runCli(NULL_STREAM, cliArgs);
+    evaluateResult(status, ExitCode.OK, cliArgs);
+
+    String content = java.nio.file.Files.readString(outputFile);
+    assertThat(content)
+        .contains("locations:")
+        .contains("/root/optional:")
+        .contains("type: allowed-values")
+        .contains("target: optional")
+        .contains("yes")
+        .contains("allow-other: false");
+  }
+
+  @Test
   void testValidateConstraints() {
     try (LogCaptor captor = LogCaptor.forRoot()) {
       String[] cliArgs = { "validate",
