@@ -159,6 +159,13 @@ public class CLITest {
             NO_EXCEPTION_CLASS));
         add(Arguments.of(new String[] { "metapath", "eval", "--help" }, ExitCode.OK,
             NO_EXCEPTION_CLASS));
+        add(Arguments.of(new String[] { "list-allowed-values", "--help" }, ExitCode.OK,
+            NO_EXCEPTION_CLASS));
+        add(Arguments.of(
+            new String[] { "list-allowed-values",
+                "src/test/resources/content/schema-validation-module.xml"
+            },
+            ExitCode.OK, NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "validate",
                 "../databind/src/test/resources/metaschema/fields_with_flags/metaschema.xml"

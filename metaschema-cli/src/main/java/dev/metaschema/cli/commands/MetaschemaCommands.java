@@ -63,6 +63,7 @@ public final class MetaschemaCommands {
       new ValidateModuleCommand(),
       new GenerateSchemaCommand(),
       new GenerateDiagramCommand(),
+      new ListAllowedValuesCommand(),
       new ValidateContentUsingModuleCommand(),
       new ConvertContentUsingModuleCommand(),
       new MetapathCommand()));

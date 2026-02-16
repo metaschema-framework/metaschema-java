@@ -26,6 +26,7 @@ module dev.metaschema.cli {
 
   requires nl.talsmasoftware.lazy4j;
   requires org.apache.commons.cli;
+  requires com.fasterxml.jackson.dataformat.yaml;
   requires org.json;
   requires org.apache.logging.log4j;
   requires org.apache.logging.log4j.core;
@@ -39,6 +40,7 @@ module dev.metaschema.cli {
       dev.metaschema.cli.commands.ValidateModuleCommand,
       dev.metaschema.cli.commands.GenerateSchemaCommand,
       dev.metaschema.cli.commands.GenerateDiagramCommand,
+      dev.metaschema.cli.commands.ListAllowedValuesCommand,
       dev.metaschema.cli.commands.ValidateContentUsingModuleCommand,
       dev.metaschema.cli.commands.ConvertContentUsingModuleCommand,
       dev.metaschema.cli.commands.metapath.MetapathCommand;
