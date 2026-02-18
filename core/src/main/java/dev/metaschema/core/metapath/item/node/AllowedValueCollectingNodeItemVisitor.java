@@ -6,6 +6,7 @@
 package dev.metaschema.core.metapath.item.node;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -192,7 +193,7 @@ public class AllowedValueCollectingNodeItemVisitor
      */
     @NonNull
     public List<AllowedValuesRecord> getAllowedValues() {
-      return allowedValues;
+      return Collections.unmodifiableList(allowedValues);
     }
 
     /**
