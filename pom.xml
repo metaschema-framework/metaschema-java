@@ -51,7 +51,7 @@
 		<dependency.freemarker.version>2.3.34</dependency.freemarker.version>
 		<dependency.inject-resources-junit-jupiter.version>1.0.0</dependency.inject-resources-junit-jupiter.version>
 		<dependency.jackson.version>2.21.0</dependency.jackson.version>
-		<dependency.jline.version>3.30.6</dependency.jline.version>
+		<dependency.jline.version>4.0.0</dependency.jline.version>
 		<dependency.jaxb.version>4.0.0</dependency.jaxb.version>
 		<dependency.jmock-junit5.version>2.13.1</dependency.jmock-junit5.version>
 		<dependency.json.version>20251224</dependency.json.version>
