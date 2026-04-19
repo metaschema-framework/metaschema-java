@@ -1,0 +1,322 @@
+# Using the CLI
+
+This guide covers the Metaschema command-line interface (CLI) for validating content, generating schemas, converting between formats, and evaluating Metapath expressions.
+
+## Installation
+
+Build the CLI from source:
+
+```bash
+mvn install -DskipTests
+```
+
+The CLI is packaged as an executable jar with dependencies in `metaschema-cli/target/`. You can run it with:
+
+```bash
+java -jar metaschema-cli/target/metaschema-cli-*-metaschema-cli.jar [command] [options]
+```
+
+For convenience, the examples below use `metaschema-cli` as a shorthand for this command.
+
+## Commands
+
+### validate
+
+Validate that a Metaschema module is well-formed and valid.
+
+```bash
+metaschema-cli validate [options] <metaschema-module>
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `metaschema-module` | The Metaschema module file or URL to validate |
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `-c, --constraint <URL>` | Additional constraint definitions (repeatable) |
+| `-o, --output <FILE>` | Write SARIF results to the specified file |
+| `--sarif-include-pass` | Include passing results in SARIF output |
+| `--sarif-timing` | Include per-constraint timing data in SARIF output (requires `-o`) |
+| `--disable-schema-validation` | Skip schema validation |
+| `--disable-constraint-validation` | Skip constraint validation |
+| `--path-format <FORMAT>` | Path format in output: `auto`, `metapath`, `xpath`, `jsonpointer` (default: `auto`) |
+| `--threads <N>` | Number of threads for parallel constraint validation (default: 1) |
+
+**Examples:**
+
+```bash
+# Validate a Metaschema module
+metaschema-cli validate schema/metaschema.xml
+
+# Validate with SARIF output
+metaschema-cli validate schema/metaschema.xml -o results.sarif
+
+# Validate with timing data in SARIF output
+metaschema-cli validate schema/metaschema.xml -o results.sarif --sarif-timing
+```
+
+### validate-content
+
+Validate a content instance against a Metaschema module.
+
+```bash
+metaschema-cli validate-content [options] <content-file>
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `content-file` | The content instance file or URL to validate |
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `-m, --metaschema <FILE_OR_URL>` | **(Required)** The Metaschema module defining the content |
+| `--as <FORMAT>` | Source format: `XML`, `JSON`, or `YAML` (auto-detected if omitted) |
+| `-c, --constraint <URL>` | Additional constraint definitions (repeatable) |
+| `-o, --output <FILE>` | Write SARIF results to the specified file |
+| `--sarif-include-pass` | Include passing results in SARIF output |
+| `--sarif-timing` | Include per-constraint timing data in SARIF output (requires `-o`) |
+| `--disable-schema-validation` | Skip schema validation |
+| `--disable-constraint-validation` | Skip constraint validation |
+| `--path-format <FORMAT>` | Path format in output: `auto`, `metapath`, `xpath`, `jsonpointer` (default: `auto`) |
+| `--threads <N>` | Number of threads for parallel constraint validation (default: 1) |
+
+**Examples:**
+
+```bash
+# Validate XML content
+metaschema-cli validate-content -m schema/metaschema.xml data/instance.xml
+
+# Validate JSON content with explicit format
+metaschema-cli validate-content -m schema/metaschema.xml --as JSON data/instance.json
+
+# Validate with parallel constraint processing and SARIF timing output
+metaschema-cli validate-content -m schema/metaschema.xml \
+    --threads 4 --sarif-timing -o results.sarif data/instance.xml
+
+# Validate with additional constraints
+metaschema-cli validate-content -m schema/metaschema.xml \
+    -c extra-constraints.xml data/instance.xml
+```
+
+### convert
+
+Convert a content instance from one format to another.
+
+```bash
+metaschema-cli convert [options] <source-file> [destination-file]
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `source-file` | The content instance file or URL to convert |
+| `destination-file` | Output file (writes to stdout if omitted) |
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `-m, --metaschema <FILE_OR_URL>` | **(Required)** The Metaschema module defining the content |
+| `--to <FORMAT>` | **(Required)** Target format: `XML`, `JSON`, or `YAML` |
+| `--overwrite` | Overwrite the destination file if it exists |
+
+**Examples:**
+
+```bash
+# Convert XML to JSON (output to stdout)
+metaschema-cli convert -m schema/metaschema.xml --to JSON data/instance.xml
+
+# Convert XML to JSON (output to file)
+metaschema-cli convert -m schema/metaschema.xml --to JSON \
+    data/instance.xml output.json --overwrite
+
+# Convert YAML to XML
+metaschema-cli convert -m schema/metaschema.yaml --to XML data/instance.yaml
+```
+
+### generate-schema
+
+Generate an XML Schema (XSD) or JSON Schema from a Metaschema module.
+
+```bash
+metaschema-cli generate-schema [options] <metaschema-module> [destination-file]
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `metaschema-module` | The Metaschema module file or URL |
+| `destination-file` | Output file (writes to stdout if omitted) |
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--as <FORMAT>` | **(Required)** Schema format: `XML` (XSD) or `JSON` |
+| `--inline-types` | Generate inline type definitions instead of named types |
+| `--overwrite` | Overwrite the destination file if it exists |
+
+**Examples:**
+
+```bash
+# Generate JSON Schema (output to stdout)
+metaschema-cli generate-schema --as JSON schema/metaschema.xml
+
+# Generate XML Schema to file
+metaschema-cli generate-schema --as XML schema/metaschema.xml schema.xsd --overwrite
+
+# Generate JSON Schema with inline types
+metaschema-cli generate-schema --as JSON --inline-types schema/metaschema.yaml schema.json
+```
+
+### generate-diagram
+
+Generate a Mermaid entity-relationship diagram from a Metaschema module.
+
+```bash
+metaschema-cli generate-diagram [options] <metaschema-module> [destination-file]
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `metaschema-module` | The Metaschema module file or URL |
+| `destination-file` | Output file (writes to stdout if omitted) |
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--overwrite` | Overwrite the destination file if it exists |
+
+**Examples:**
+
+```bash
+# Generate diagram to stdout
+metaschema-cli generate-diagram schema/metaschema.xml
+
+# Generate diagram to file
+metaschema-cli generate-diagram schema/metaschema.yaml diagram.mmd --overwrite
+```
+
+### metapath eval
+
+Evaluate a Metapath expression.
+
+```bash
+metaschema-cli metapath eval [options]
+```
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `-e, --expression <EXPR>` | **(Required)** Metapath expression to evaluate |
+| `-m, --metaschema <FILE_OR_URL>` | Metaschema module for context |
+| `-i <FILE_OR_URL>` | Content instance to evaluate against |
+
+The command supports three evaluation modes:
+
+1. **With module and content** - Evaluates the expression against parsed content
+2. **With module only** - Evaluates against the Metaschema module itself
+3. **Without module** - Limited to expressions that don't require content context
+
+**Examples:**
+
+```bash
+# Evaluate a standalone expression
+metaschema-cli metapath eval -e 'string-length("hello")'
+
+# Query a content instance
+metaschema-cli metapath eval -m schema/metaschema.xml \
+    -i data/instance.json -e '//title'
+
+# Query a Metaschema module
+metaschema-cli metapath eval -m schema/metaschema.xml -e '//define-assembly/@name'
+```
+
+### metapath list-functions
+
+List all available Metapath functions.
+
+```bash
+metaschema-cli metapath list-functions
+```
+
+Functions are grouped by namespace (`fn:`, `math:`, `array:`, `map:`) and displayed with their signatures.
+
+## Validation Options
+
+### Parallel Constraint Processing
+
+Use `--threads` to enable parallel constraint evaluation for large documents:
+
+```bash
+metaschema-cli validate-content -m schema/metaschema.xml \
+    --threads 4 data/large-instance.xml
+```
+
+Setting `--threads` to the number of available CPU cores typically provides the best performance for documents with many constraints.
+
+### SARIF Output
+
+Use `-o` to write validation results in [SARIF 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html) format:
+
+```bash
+metaschema-cli validate-content -m schema/metaschema.xml \
+    -o results.sarif data/instance.xml
+```
+
+SARIF output includes tool information, validation findings with locations, and rule descriptors. See the [SARIF Output](sarif-output.html) guide for details on the output format.
+
+### SARIF Timing
+
+Add `--sarif-timing` to include performance instrumentation in SARIF output:
+
+```bash
+metaschema-cli validate-content -m schema/metaschema.xml \
+    --sarif-timing -o results.sarif data/instance.xml
+```
+
+This adds per-constraint, per-phase, and overall timing data to the SARIF output. See the [SARIF Output](sarif-output.html) guide for the timing data format.
+
+### Path Format
+
+Control how locations are displayed in validation output:
+
+| Format | Description | Example |
+|--------|-------------|---------|
+| `auto` | Auto-detect based on content format (default) | Varies |
+| `metapath` | Metapath expressions | `/catalog/metadata/title` |
+| `xpath` | XPath for XML content | `/catalog/metadata/title` |
+| `jsonpointer` | JSON Pointer (RFC 6901) | `/catalog/metadata/title` |
+
+### Additional Constraints
+
+Load external constraint definitions alongside the module's built-in constraints:
+
+```bash
+metaschema-cli validate-content -m schema/metaschema.xml \
+    -c organization-rules.xml -c project-rules.xml data/instance.xml
+```
+
+The `-c` option can be specified multiple times to load multiple constraint files.
+
+## Next Steps
+
+- [Validating with Constraints](validating-with-constraints.html) - Java API for constraint validation
+- [SARIF Output](sarif-output.html) - Understanding SARIF validation results
+- [Executing Metapath](executing-metapath.html) - Metapath expression syntax
+- [Generating Schemas](generating-schemas.html) - Schema generation details

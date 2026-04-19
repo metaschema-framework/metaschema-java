@@ -8,8 +8,13 @@ package dev.metaschema.cli;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -17,12 +22,24 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Stream;
 
+import dev.harrel.jsonschema.Dialects;
+import dev.harrel.jsonschema.JsonNode;
+import dev.harrel.jsonschema.Validator;
+import dev.harrel.jsonschema.ValidatorFactory;
+import dev.harrel.jsonschema.providers.OrgJsonNode;
 import dev.metaschema.cli.processor.ExitCode;
 import dev.metaschema.cli.processor.ExitStatus;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -267,6 +284,16 @@ public class CLITest {
                 "--as=json"
             },
             ExitCode.OK, NO_EXCEPTION_CLASS));
+        // Test --sarif-timing without -o produces an error
+        add(Arguments.of(
+            new String[] { "validate-content",
+                "-m",
+                "../databind/src/test/resources/metaschema/simple/metaschema.xml",
+                "../databind/src/test/resources/metaschema/simple/example.json",
+                "--as=json",
+                "--sarif-timing"
+            },
+            ExitCode.INVALID_ARGUMENTS, NO_EXCEPTION_CLASS));
       }
     };
     return values.stream();
@@ -326,5 +353,148 @@ public class CLITest {
       assertThat(captor.getErrorLogs().toString())
           .contains("This constraint SHOULD be violated if test passes.");
     }
+  }
+
+  @Test
+  void testSarifTimingOutput() throws IOException {
+    Path sarifOutput = Paths.get("target/test-sarif-timing.sarif");
+
+    // Use a module with inline let statements and constraints, plus external
+    // constraints with additional let statements to exercise all timing features
+    String[] cliArgs = {
+        "validate-content",
+        "-m",
+        "src/test/resources/content/timing-test-module.xml",
+        "src/test/resources/content/timing-test-content.json",
+        "--as=json",
+        "-c", "src/test/resources/content/timing-test-constraints.xml",
+        "-o", sarifOutput.toString(),
+        "--sarif-timing",
+        "--sarif-include-pass",
+        "--show-stack-trace"
+    };
+
+    ExitStatus status = CLI.runCli(NULL_STREAM, cliArgs);
+    evaluateResult(status, ExitCode.OK, cliArgs);
+
+    // Verify SARIF output file was created and contains timing data
+    assertTrue(Files.exists(sarifOutput), "SARIF output file should exist");
+
+    String sarifContent = new String(Files.readAllBytes(sarifOutput), StandardCharsets.UTF_8);
+    JSONObject sarif = new JSONObject(sarifContent);
+
+    JSONArray runs = sarif.getJSONArray("runs");
+    JSONObject run = runs.getJSONObject(0);
+
+    // Verify invocations with timing are present
+    assertTrue(run.has("invocations"), "Run should have invocations when --sarif-timing is enabled");
+    JSONArray invocations = run.getJSONArray("invocations");
+    assertEquals(1, invocations.length(), "Should have exactly one invocation");
+
+    JSONObject invocation = invocations.getJSONObject(0);
+    assertTrue(invocation.has("startTimeUtc"), "Invocation should have startTimeUtc");
+    assertTrue(invocation.has("endTimeUtc"), "Invocation should have endTimeUtc");
+    assertTrue(invocation.getBoolean("executionSuccessful"), "executionSuccessful should be true");
+    assertTrue(invocation.has("toolExecutionNotifications"),
+        "Invocation should have toolExecutionNotifications for phase timing");
+
+    // Verify phase timing notifications exist
+    JSONArray notifications = invocation.getJSONArray("toolExecutionNotifications");
+    assertTrue(notifications.length() > 0, "Should have at least one phase timing notification");
+
+    // Verify let-statement timing is captured (module has 2 inline lets +
+    // constraints has 2 external lets)
+    boolean foundLetTiming = false;
+    for (int idx = 0; idx < notifications.length(); idx++) {
+      JSONObject notification = notifications.getJSONObject(idx);
+      String text = notification.getJSONObject("message").getString("text");
+      if (text.startsWith("$") && text.contains(" := ")) {
+        foundLetTiming = true;
+        break;
+      }
+    }
+    assertTrue(foundLetTiming, "Should have let-statement timing notifications");
+
+    // Verify per-result timing on at least one result (using --sarif-include-pass
+    // since test content passes all constraints)
+    JSONArray results = run.getJSONArray("results");
+    boolean foundPerResultTiming = false;
+    for (int idx = 0; idx < results.length(); idx++) {
+      JSONObject result = results.getJSONObject(idx);
+      if (result.has("properties")) {
+        JSONObject props = result.getJSONObject("properties");
+        if (props.has("timing")) {
+          foundPerResultTiming = true;
+          JSONObject timing = props.getJSONObject("timing");
+          assertTrue(timing.has("totalMs"), "Per-result timing should have totalMs");
+          break;
+        }
+      }
+    }
+    assertTrue(foundPerResultTiming,
+        "At least one result should have per-result timing when --sarif-timing is used");
+
+    // Validate against official SARIF 2.1.0 schema
+    Path sarifSchema = Paths.get("../databind-modules/modules/sarif/sarif-schema-2.1.0.json");
+
+    try (Reader schemaReader = Files.newBufferedReader(sarifSchema, StandardCharsets.UTF_8)) {
+      JsonNode schemaNode = new OrgJsonNode(new JSONObject(new JSONTokener(schemaReader)));
+      JsonNode instanceNode = new OrgJsonNode(new JSONObject(sarifContent));
+
+      Validator.Result result = new ValidatorFactory()
+          .withJsonNodeFactory(new OrgJsonNode.Factory())
+          .withDialect(new Dialects.Draft2020Dialect())
+          .validate(schemaNode, instanceNode);
+      StringJoiner sj = new StringJoiner("\n");
+      for (dev.harrel.jsonschema.Error finding : result.getErrors()) {
+        sj.add(String.format("[%s]%s %s for schema '%s'",
+            finding.getInstanceLocation(),
+            finding.getKeyword() == null ? "" : " " + finding.getKeyword() + ":",
+            finding.getError(),
+            finding.getSchemaLocation()));
+      }
+      assertTrue(result.isValid(),
+          () -> "SARIF timing output failed schema validation. Errors:\n" + sj.toString());
+    }
+  }
+
+  @Test
+  void testSarifAlwaysOnInvocations() throws IOException {
+    Path sarifOutput = Paths.get("target/test-sarif-always-on.sarif");
+
+    // Run CLI with SARIF output but WITHOUT --sarif-timing
+    String[] cliArgs = {
+        "validate-content",
+        "-m",
+        "src/test/resources/content/timing-test-module.xml",
+        "src/test/resources/content/timing-test-content.json",
+        "--as=json",
+        "-o", sarifOutput.toString(),
+        "--show-stack-trace"
+    };
+
+    ExitStatus status = CLI.runCli(NULL_STREAM, cliArgs);
+    evaluateResult(status, ExitCode.OK, cliArgs);
+
+    assertTrue(Files.exists(sarifOutput), "SARIF output file should exist");
+
+    String sarifContent = new String(Files.readAllBytes(sarifOutput), StandardCharsets.UTF_8);
+    JSONObject sarif = new JSONObject(sarifContent);
+
+    JSONObject run = sarif.getJSONArray("runs").getJSONObject(0);
+
+    // Always-on: invocations should always be present
+    assertTrue(run.has("invocations"), "Run should always have invocations (always-on timing)");
+    JSONArray invocations = run.getJSONArray("invocations");
+    assertEquals(1, invocations.length());
+
+    JSONObject invocation = invocations.getJSONObject(0);
+    assertTrue(invocation.has("startTimeUtc"), "Invocation should always have startTimeUtc");
+    assertTrue(invocation.has("endTimeUtc"), "Invocation should always have endTimeUtc");
+    assertTrue(invocation.getBoolean("executionSuccessful"));
+
+    // Without --sarif-timing, should NOT have timing notifications
+    assertFalse(invocation.has("toolExecutionNotifications"),
+        "Invocation should not have timing notifications without --sarif-timing");
   }
 }

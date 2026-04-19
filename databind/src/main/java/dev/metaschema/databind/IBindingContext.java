@@ -45,7 +45,9 @@ import dev.metaschema.core.model.constraint.FindingCollectingConstraintValidatio
 import dev.metaschema.core.model.constraint.IConstraintSet;
 import dev.metaschema.core.model.constraint.IConstraintValidationHandler;
 import dev.metaschema.core.model.constraint.IConstraintValidator;
-import dev.metaschema.core.model.constraint.ParallelValidationConfig;
+import dev.metaschema.core.model.constraint.NoOpValidationEventListener;
+import dev.metaschema.core.model.constraint.ValidationConfig;
+import dev.metaschema.core.model.constraint.ValidationEventListener;
 import dev.metaschema.core.model.constraint.ValidationFeature;
 import dev.metaschema.core.model.validation.AggregateValidationResult;
 import dev.metaschema.core.model.validation.IValidationResult;
@@ -495,11 +497,19 @@ public interface IBindingContext {
     int threadCount = config != null
         ? config.get(ValidationFeature.PARALLEL_THREADS)
         : ValidationFeature.PARALLEL_THREADS.getDefault();
-    ParallelValidationConfig parallelConfig = threadCount > 1
-        ? ParallelValidationConfig.withThreads(threadCount)
-        : ParallelValidationConfig.SEQUENTIAL;
+    ValidationConfig validationConfig = threadCount > 1
+        ? ValidationConfig.withThreads(threadCount)
+        : ValidationConfig.SEQUENTIAL;
 
-    DefaultConstraintValidator retval = new DefaultConstraintValidator(handler, parallelConfig);
+    // Apply event listener if configured
+    ValidationEventListener listener = config != null
+        ? config.get(ValidationFeature.EVENT_LISTENER)
+        : null;
+    if (listener != null && listener != NoOpValidationEventListener.INSTANCE) {
+      validationConfig = validationConfig.withListener(listener);
+    }
+
+    DefaultConstraintValidator retval = new DefaultConstraintValidator(handler, validationConfig);
     if (config != null) {
       retval.applyConfiguration(config);
     }

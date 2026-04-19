@@ -44,14 +44,14 @@ class DefaultConstraintValidatorThreadSafetyTest {
     // Run validation with sequential config
     FindingCollectingConstraintValidationHandler sequentialHandler = new FindingCollectingConstraintValidationHandler();
     try (DefaultConstraintValidator sequentialValidator
-        = new DefaultConstraintValidator(sequentialHandler, ParallelValidationConfig.SEQUENTIAL)) {
+        = new DefaultConstraintValidator(sequentialHandler, ValidationConfig.SEQUENTIAL)) {
       runValidationOperations(sequentialValidator);
     }
     int sequentialFindingCount = sequentialHandler.getFindings().size();
 
     // Run validation with parallel config
     FindingCollectingConstraintValidationHandler parallelHandler = new FindingCollectingConstraintValidationHandler();
-    try (ParallelValidationConfig config = ParallelValidationConfig.withThreads(4)) {
+    try (ValidationConfig config = ValidationConfig.withThreads(4)) {
       assertTrue(config.isParallel(), "Config should be parallel with 4 threads");
 
       try (DefaultConstraintValidator parallelValidator = new DefaultConstraintValidator(parallelHandler, config)) {
@@ -116,7 +116,7 @@ class DefaultConstraintValidatorThreadSafetyTest {
 
     // New constructor with SEQUENTIAL config should also work
     try (DefaultConstraintValidator validator
-        = new DefaultConstraintValidator(handler, ParallelValidationConfig.SEQUENTIAL)) {
+        = new DefaultConstraintValidator(handler, ValidationConfig.SEQUENTIAL)) {
       assertNotNull(validator, "New constructor with SEQUENTIAL should work");
     }
   }

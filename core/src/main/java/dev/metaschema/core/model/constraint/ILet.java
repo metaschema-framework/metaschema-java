@@ -10,6 +10,7 @@ import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.model.constraint.impl.DefaultLet;
 import dev.metaschema.core.qname.IEnhancedQName;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -69,6 +70,24 @@ public interface ILet {
       @NonNull ISource source,
       @Nullable MarkupMultiline remarks) {
     return new DefaultLet(name, valueExpression, source, remarks);
+  }
+
+  /**
+   * Get a stable identifier for this let statement, suitable for use in SARIF
+   * output and timing correlation.
+   * <p>
+   * Generates a deterministic identifier based on the variable name, source
+   * location, and value expression.
+   *
+   * @return a non-null identifier string
+   */
+  @NonNull
+  default String getInternalIdentifier() {
+    String localName = getName().getLocalName();
+    String source = getSource().getLocationHint();
+    String expression = getValueExpression().getPath();
+    int hash = (source + "|" + expression).hashCode();
+    return ObjectUtils.notNull("let-" + localName + "-" + String.format("%08x", hash));
   }
 
   /**

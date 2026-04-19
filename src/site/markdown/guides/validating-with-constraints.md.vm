@@ -208,6 +208,210 @@ if (highestSeverity.ordinal() >= Level.ERROR.ordinal()) {
 }
 ```
 
+## Parallel Validation
+
+Constraint validation can be parallelized using `ValidationConfig`. This is useful for large documents with many constraints.
+
+### Sequential Execution (Default)
+
+By default, constraints are evaluated sequentially:
+
+```java
+import dev.metaschema.core.model.constraint.DefaultConstraintValidator;
+import dev.metaschema.core.model.constraint.ValidationConfig;
+
+// Sequential is the default - no configuration needed
+DefaultConstraintValidator validator =
+    new DefaultConstraintValidator(handler);
+
+// Or explicitly use the SEQUENTIAL constant
+DefaultConstraintValidator validator =
+    new DefaultConstraintValidator(handler, ValidationConfig.SEQUENTIAL);
+```
+
+### Multi-threaded Execution
+
+Create a configuration with an internal thread pool:
+
+```java
+import dev.metaschema.core.model.constraint.DefaultConstraintValidator;
+import dev.metaschema.core.model.constraint.ValidationConfig;
+
+// Use try-with-resources to ensure thread pool cleanup
+try (ValidationConfig config = ValidationConfig.withThreads(4)) {
+    DefaultConstraintValidator validator =
+        new DefaultConstraintValidator(handler, config);
+
+    validator.validate(rootItem, dynamicContext);
+    validator.finalizeValidation(dynamicContext);
+}
+```
+
+### Using an External Executor
+
+If your application already manages a thread pool, you can provide it directly:
+
+```java
+import dev.metaschema.core.model.constraint.ValidationConfig;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
+
+ExecutorService myPool = new ForkJoinPool(8);
+
+// The config does NOT shut down your executor on close
+try (ValidationConfig config = ValidationConfig.withExecutor(myPool)) {
+    DefaultConstraintValidator validator =
+        new DefaultConstraintValidator(handler, config);
+    validator.validate(rootItem, dynamicContext);
+    validator.finalizeValidation(dynamicContext);
+}
+
+// Your pool is still running - shut it down when you're done
+myPool.shutdown();
+```
+
+## Performance Instrumentation
+
+The validation pipeline supports event-based instrumentation through the `ValidationEventListener` interface. This allows you to measure the performance of individual constraints, let-statements, and validation phases.
+
+### Collecting Timing Data
+
+The `TimingCollector` class implements `ValidationEventListener` and records hierarchical timing data:
+
+```java
+import dev.metaschema.core.model.constraint.DefaultConstraintValidator;
+import dev.metaschema.core.model.constraint.TimingCollector;
+import dev.metaschema.core.model.constraint.TimingRecord;
+import dev.metaschema.core.model.constraint.ValidationConfig;
+import dev.metaschema.core.model.constraint.ValidationPhase;
+
+import java.util.Map;
+
+// Create a timing collector
+TimingCollector timings = new TimingCollector();
+
+// Wire it into the validation configuration
+try (ValidationConfig config = ValidationConfig.withThreads(4)
+        .withListener(timings)) {
+    DefaultConstraintValidator validator =
+        new DefaultConstraintValidator(handler, config);
+
+    validator.validate(rootItem, dynamicContext);
+    validator.finalizeValidation(dynamicContext);
+}
+
+// Query overall validation timing
+TimingRecord overall = timings.getValidationTiming();
+if (overall != null) {
+    System.out.printf("Total validation: %.3f ms (%d invocations)%n",
+        overall.getTotalTimeNs() / 1_000_000.0,
+        overall.getCount());
+}
+
+// Query per-phase timing
+for (Map.Entry<ValidationPhase, TimingRecord> entry
+        : timings.getPhaseTimings().entrySet()) {
+    TimingRecord record = entry.getValue();
+    System.out.printf("  %s: %.3f ms%n",
+        entry.getKey(),
+        record.getTotalTimeNs() / 1_000_000.0);
+}
+
+// Find the slowest constraints
+timings.getConstraintTimings().entrySet().stream()
+    .sorted((a, b) -> Long.compare(
+        b.getValue().getTotalTimeNs(),
+        a.getValue().getTotalTimeNs()))
+    .limit(10)
+    .forEach(entry -> {
+        TimingRecord record = entry.getValue();
+        System.out.printf("  %s: %.3f ms (%d evals, min=%.3f, max=%.3f)%n",
+            entry.getKey(),
+            record.getTotalTimeNs() / 1_000_000.0,
+            record.getCount(),
+            record.getMinTimeNs() / 1_000_000.0,
+            record.getMaxTimeNs() / 1_000_000.0);
+    });
+```
+
+### Validation Phases
+
+The `ValidationPhase` enum identifies three distinct phases:
+
+| Phase | Description |
+|-------|-------------|
+| `SCHEMA_VALIDATION` | Schema validation against XML Schema or JSON Schema |
+| `CONSTRAINT_VALIDATION` | Evaluation of Metaschema constraints |
+| `FINALIZATION` | Post-validation finalization (cross-document constraints, index resolution) |
+
+### Custom Event Listeners
+
+Implement `ValidationEventListener` to create custom instrumentation:
+
+```java
+import dev.metaschema.core.model.constraint.ValidationEventListener;
+import dev.metaschema.core.model.constraint.ValidationPhase;
+import dev.metaschema.core.model.constraint.IConstraint;
+import dev.metaschema.core.model.constraint.ILet;
+import dev.metaschema.core.metapath.item.node.INodeItem;
+
+import java.net.URI;
+
+public class LoggingEventListener implements ValidationEventListener {
+
+    @Override
+    public void beforeValidation(URI document) {
+        System.out.println("Starting validation of " + document);
+    }
+
+    @Override
+    public void afterValidation(URI document) {
+        System.out.println("Finished validation of " + document);
+    }
+
+    @Override
+    public void beforePhase(ValidationPhase phase) {
+        System.out.println("  Entering phase: " + phase);
+    }
+
+    @Override
+    public void afterPhase(ValidationPhase phase) {
+        System.out.println("  Completed phase: " + phase);
+    }
+
+    @Override
+    public void beforeConstraintEvaluation(IConstraint constraint,
+            INodeItem target) {
+        // Called for each constraint evaluation
+    }
+
+    @Override
+    public void afterConstraintEvaluation(IConstraint constraint,
+            INodeItem target) {
+        // Called after each constraint evaluation
+    }
+
+    @Override
+    public void beforeLetEvaluation(ILet let) {
+        // Called before each let-statement binding
+    }
+
+    @Override
+    public void afterLetEvaluation(ILet let) {
+        // Called after each let-statement binding
+    }
+}
+```
+
+### Zero Overhead When Disabled
+
+When no listener is configured, `ValidationConfig` uses `NoOpValidationEventListener`, which provides empty implementations for all callbacks. This ensures zero overhead from instrumentation when timing is not needed.
+
+### SARIF Timing Output
+
+Timing data can be included in SARIF output using the `--sarif-timing` CLI flag or by programmatically setting a `TimingCollector` on `SarifValidationHandler`. See the [SARIF Output](sarif-output.html) guide for details.
+
 ## Constraint Levels
 
 Control validation behavior with levels:
@@ -310,10 +514,6 @@ Define constraints in separate files:
 4. **Handle all severities** - Don't ignore warnings
 5. **Test constraints** - Validate with known-bad data
 
-## Constraint Validation Status
-
-> **Note:** Metaschema constraint validation is experimental in some areas. Schema-level validation (structure, types) is stable. Advanced constraint types may have limitations.
-
 ## Next Steps
 
 Continue learning about the Metaschema Java Tools with these related guides:
@@ -321,3 +521,5 @@ Continue learning about the Metaschema Java Tools with these related guides:
 - [Executing Metapath](executing-metapath.html) - Write constraint expressions
 - [Reading & Writing Data](reading-writing-data.html) - Load data for validation
 - [Generating Schemas](generating-schemas.html) - Generate schema validators
+- [SARIF Output](sarif-output.html) - Machine-readable validation results with timing
+- [Using the CLI](using-the-cli.html) - Command-line validation

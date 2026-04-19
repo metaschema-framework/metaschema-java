@@ -77,7 +77,7 @@ public class DefaultConstraintValidator
   private final IMutableConfiguration<ValidationFeature<?>> configuration;
   @NonNull
   @Owning
-  private final ParallelValidationConfig parallelConfig;
+  private final ValidationConfig validationConfig;
 
   /**
    * Construct a new constraint validation instance with sequential execution.
@@ -87,23 +87,25 @@ public class DefaultConstraintValidator
    */
   public DefaultConstraintValidator(
       @NonNull IConstraintValidationHandler handler) {
-    this(handler, ParallelValidationConfig.SEQUENTIAL);
+    this(handler, ValidationConfig.SEQUENTIAL);
   }
 
   /**
-   * Construct a new constraint validation instance with configurable parallelism.
+   * Construct a new constraint validation instance with the provided
+   * configuration.
    *
    * @param handler
    *          the validation handler to use for handling constraint violations
-   * @param parallelConfig
-   *          the parallel execution configuration
+   * @param validationConfig
+   *          the validation configuration controlling parallelism and event
+   *          instrumentation
    */
   public DefaultConstraintValidator(
       @NonNull IConstraintValidationHandler handler,
-      @NonNull ParallelValidationConfig parallelConfig) {
+      @NonNull ValidationConfig validationConfig) {
     this.handler = handler;
     this.configuration = new DefaultConfiguration<>();
-    this.parallelConfig = parallelConfig;
+    this.validationConfig = validationConfig;
   }
 
   /**
@@ -163,9 +165,19 @@ public class DefaultConstraintValidator
     return handler;
   }
 
+  /**
+   * Get the validation event listener from the configuration.
+   *
+   * @return the listener
+   */
+  @NonNull
+  private ValidationEventListener getListener() {
+    return validationConfig.getListener();
+  }
+
   @Override
   public void close() {
-    parallelConfig.close();
+    validationConfig.close();
   }
 
   @Override
@@ -283,13 +295,17 @@ public class DefaultConstraintValidator
       @NonNull List<? extends ICardinalityConstraint> constraints,
       @NonNull IAssemblyNodeItem item,
       @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    ValidationEventListener listener = getListener();
     for (ICardinalityConstraint constraint : constraints) {
       assert constraint != null;
+      listener.beforeConstraintEvaluation(constraint, item);
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateHasCardinality(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
+      } finally {
+        listener.afterConstraintEvaluation(constraint, item);
       }
     }
   }
@@ -354,14 +370,17 @@ public class DefaultConstraintValidator
       @NonNull List<? extends IIndexConstraint> constraints,
       @NonNull IAssemblyNodeItem item,
       @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    ValidationEventListener listener = getListener();
     for (IIndexConstraint constraint : constraints) {
       assert constraint != null;
-
+      listener.beforeConstraintEvaluation(constraint, item);
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateIndex(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
+      } finally {
+        listener.afterConstraintEvaluation(constraint, item);
       }
     }
   }
@@ -498,14 +517,17 @@ public class DefaultConstraintValidator
       @NonNull List<? extends IUniqueConstraint> constraints,
       @NonNull IAssemblyNodeItem item,
       @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    ValidationEventListener listener = getListener();
     for (IUniqueConstraint constraint : constraints) {
       assert constraint != null;
-
+      listener.beforeConstraintEvaluation(constraint, item);
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateUnique(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
+      } finally {
+        listener.afterConstraintEvaluation(constraint, item);
       }
     }
   }
@@ -580,14 +602,17 @@ public class DefaultConstraintValidator
       @NonNull IDefinitionNodeItem<?, ?> item,
       @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
 
+    ValidationEventListener listener = getListener();
     for (IMatchesConstraint constraint : constraints) {
       assert constraint != null;
-
+      listener.beforeConstraintEvaluation(constraint, item);
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateMatches(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
+      } finally {
+        listener.afterConstraintEvaluation(constraint, item);
       }
     }
   }
@@ -670,14 +695,17 @@ public class DefaultConstraintValidator
       @NonNull IDefinitionNodeItem<?, ?> item,
       @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
 
+    ValidationEventListener listener = getListener();
     for (IIndexHasKeyConstraint constraint : constraints) {
       assert constraint != null;
-
+      listener.beforeConstraintEvaluation(constraint, item);
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateIndexHasKey(constraint, item, targets);
       } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
+      } finally {
+        listener.afterConstraintEvaluation(constraint, item);
       }
     }
   }
@@ -728,14 +756,17 @@ public class DefaultConstraintValidator
       @NonNull List<? extends IExpectConstraint> constraints,
       @NonNull IDefinitionNodeItem<?, ?> item,
       @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    ValidationEventListener listener = getListener();
     for (IExpectConstraint constraint : constraints) {
       assert constraint != null;
-
+      listener.beforeConstraintEvaluation(constraint, item);
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateExpect(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
+      } finally {
+        listener.afterConstraintEvaluation(constraint, item);
       }
     }
   }
@@ -804,14 +835,17 @@ public class DefaultConstraintValidator
       @NonNull List<? extends IReportConstraint> constraints,
       @NonNull IDefinitionNodeItem<?, ?> item,
       @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    ValidationEventListener listener = getListener();
     for (IReportConstraint constraint : constraints) {
       assert constraint != null;
-
+      listener.beforeConstraintEvaluation(constraint, item);
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateReport(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
+      } finally {
+        listener.afterConstraintEvaluation(constraint, item);
       }
     }
   }
@@ -881,13 +915,17 @@ public class DefaultConstraintValidator
       @NonNull List<? extends IAllowedValuesConstraint> constraints,
       @NonNull IDefinitionNodeItem<?, ?> item,
       @NonNull DynamicContext dynamicContext) throws ConstraintValidationException {
+    ValidationEventListener listener = getListener();
     for (IAllowedValuesConstraint constraint : constraints) {
       assert constraint != null;
+      listener.beforeConstraintEvaluation(constraint, item);
       try {
         ISequence<? extends IDefinitionNodeItem<?, ?>> targets = constraint.matchTargets(item, dynamicContext);
         validateAllowedValues(constraint, item, targets, dynamicContext);
       } catch (MetapathException ex) {
         handleError(constraint, item, ex, dynamicContext);
+      } finally {
+        listener.afterConstraintEvaluation(constraint, item);
       }
     }
   }
@@ -1163,14 +1201,20 @@ public class DefaultConstraintValidator
         retval = dynamicContext;
       } else {
         final DynamicContext subContext = dynamicContext.subContext();
+        ValidationEventListener listener = getListener();
 
         for (ILet let : lets) {
           IEnhancedQName name = let.getName();
-          ISequence<?> result = let.getValueExpression().evaluate(focus, subContext);
-          subContext.bindVariableValue(
-              name,
-              // ensure the sequence is list backed
-              result.reusable());
+          listener.beforeLetEvaluation(let);
+          try {
+            ISequence<?> result = let.getValueExpression().evaluate(focus, subContext);
+            subContext.bindVariableValue(
+                name,
+                // ensure the sequence is list backed
+                result.reusable());
+          } finally {
+            listener.afterLetEvaluation(let);
+          }
         }
         retval = subContext;
       }
@@ -1217,7 +1261,7 @@ public class DefaultConstraintValidator
       }
 
       // Parallel or sequential child traversal
-      if (parallelConfig.isParallel() && shouldParallelize(item)) {
+      if (validationConfig.isParallel() && shouldParallelize(item)) {
         visitFlags(item, effectiveContext);
         visitChildrenParallel(item, effectiveContext);
       } else {
@@ -1250,7 +1294,7 @@ public class DefaultConstraintValidator
         @NonNull IAssemblyNodeItem item,
         @NonNull DynamicContext context) {
 
-      ExecutorService executor = parallelConfig.getExecutor();
+      ExecutorService executor = validationConfig.getExecutor();
       List<? extends IModelNodeItem<?, ?>> children = item.modelItems()
           .collect(Collectors.toList());
 

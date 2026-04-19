@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metaschema-meta-constraints xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 https://raw.githubusercontent.com/metaschema-framework/metaschema/0441e6d4c9bce5b6c40b4647148019e4f47bed08/schema/xml/metaschema-meta-constraints.xsd">
+ 	<context>
+        <metapath target="/timing-root"/>
+        <constraints>
+            <let var="total-score" expression="sum(item/score)"/>
+            <let var="avg-score" expression="$total-score div count(item)"/>
+            <expect id="ext-avg-score-positive" target="." test="$avg-score > 0" level="WARNING">
+                <message>Average score should be positive, was { $avg-score }.</message>
+            </expect>
+            <expect id="ext-has-title" target="title" test="string-length(.) > 0" level="ERROR"/>
+        </constraints>
+    </context>
+</metaschema-meta-constraints>

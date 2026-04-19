@@ -49,7 +49,6 @@
 		<dependency>
 			<groupId>dev.harrel</groupId>
 			<artifactId>json-schema</artifactId>
-			<version>1.9.1</version>
 		</dependency>
 	</dependencies>
 

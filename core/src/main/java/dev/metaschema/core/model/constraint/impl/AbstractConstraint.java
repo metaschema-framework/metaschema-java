@@ -27,6 +27,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
  * The base class for all constraint implementations.
  */
 public abstract class AbstractConstraint implements IConstraint { // NOPMD - intentional data class
+  @SuppressWarnings("PMD.AvoidUsingVolatile") // Required for thread-safe lazy init
+  @Nullable
+  private volatile String cachedIdentifier;
   @Nullable
   private final String id;
   @Nullable
@@ -88,6 +91,16 @@ public abstract class AbstractConstraint implements IConstraint { // NOPMD - int
   @Override
   public final String getId() {
     return id;
+  }
+
+  @Override
+  public String getInternalIdentifier() {
+    String result = cachedIdentifier;
+    if (result == null) {
+      result = IConstraint.super.getInternalIdentifier();
+      cachedIdentifier = result;
+    }
+    return result;
   }
 
   @Override

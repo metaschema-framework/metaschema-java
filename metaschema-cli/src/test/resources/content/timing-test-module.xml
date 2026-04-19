@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 https://raw.githubusercontent.com/metaschema-framework/metaschema/0441e6d4c9bce5b6c40b4647148019e4f47bed08/schema/xml/metaschema.xsd">
+ <schema-name>Timing Integration Test Module</schema-name>
+ <schema-version>0.1.0</schema-version>
+ <short-name>timing-test</short-name>
+ <namespace>https://github.com/metaschema-framework/metaschema-java/test/timing</namespace>
+ <json-base-uri>https://github.com/metaschema-framework/metaschema-java/test/timing</json-base-uri>
+ <define-assembly name="root">
+ 	<root-name>timing-root</root-name>
+ 	<model>
+ 		<define-field name="title" min-occurs="1"/>
+ 		<define-field name="value" as-type="integer" min-occurs="1"/>
+ 		<define-assembly name="item" min-occurs="0" max-occurs="unbounded">
+ 			<group-as name="items" in-json="ARRAY"/>
+ 			<define-flag name="id" as-type="string" required="yes"/>
+ 			<model>
+ 				<define-field name="name" min-occurs="1"/>
+ 				<define-field name="score" as-type="integer" min-occurs="1"/>
+ 			</model>
+ 		</define-assembly>
+ 	</model>
+ 	<constraint>
+ 		<let var="item-count" expression="count(item)"/>
+ 		<let var="title-upper" expression="upper-case(title)"/>
+ 		<expect id="has-items" target="." test="$item-count > 0" level="ERROR">
+ 			<message>Expected at least one item, found { $item-count }.</message>
+ 		</expect>
+ 		<expect id="title-not-empty" target="title" test="string-length(.) > 0" level="WARNING"/>
+ 		<expect id="value-positive" target="value" test=". > 0" level="ERROR"/>
+ 		<is-unique id="unique-item-ids" target="item" level="ERROR">
+ 			<key-field target="@id"/>
+ 		</is-unique>
+ 	</constraint>
+ </define-assembly>
+</METASCHEMA>

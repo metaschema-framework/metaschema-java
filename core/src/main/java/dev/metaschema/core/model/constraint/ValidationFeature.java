@@ -41,6 +41,20 @@ public final class ValidationFeature<V>
   @NonNull
   public static final ValidationFeature<Integer> PARALLEL_THREADS
       = new ValidationFeature<>("parallel-threads", Integer.class, 1);
+  /**
+   * An optional event listener to receive callbacks during constraint validation.
+   * <p>
+   * This allows external instrumentation (e.g., timing collection) to observe
+   * validation events without modifying the validator itself. The default is a
+   * no-op listener with zero overhead.
+   *
+   * @see TimingCollector
+   * @see ValidationEventListener
+   */
+  @NonNull
+  public static final ValidationFeature<ValidationEventListener> EVENT_LISTENER
+      = new ValidationFeature<>("event-listener", ValidationEventListener.class,
+          NoOpValidationEventListener.INSTANCE);
 
   private ValidationFeature(
       @NonNull String name,

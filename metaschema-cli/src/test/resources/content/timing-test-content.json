@@ -1,0 +1,23 @@
+{
+  "timing-root": {
+    "title": "Timing Integration Test",
+    "value": 42,
+    "items": [
+      {
+        "id": "item-1",
+        "name": "First Item",
+        "score": 85
+      },
+      {
+        "id": "item-2",
+        "name": "Second Item",
+        "score": 92
+      },
+      {
+        "id": "item-3",
+        "name": "Third Item",
+        "score": 78
+      }
+    ]
+  }
+}
