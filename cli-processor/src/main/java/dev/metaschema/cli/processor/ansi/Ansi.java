@@ -5,6 +5,8 @@
 
 package dev.metaschema.cli.processor.ansi;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -24,7 +26,7 @@ public final class Ansi {
   private static final String BOLD_SEQ = ESC + "1m";
   private static final String BOLD_OFF_SEQ = ESC + "22m";
 
-  private static volatile boolean enabled = true;
+  private static final AtomicBoolean ENABLED = new AtomicBoolean(true);
 
   @NonNull
   private final StringBuilder buffer = new StringBuilder();
@@ -54,7 +56,7 @@ public final class Ansi {
    *          them
    */
   public static void setEnabled(boolean enable) {
-    enabled = enable;
+    ENABLED.set(enable);
   }
 
   /**
@@ -63,12 +65,12 @@ public final class Ansi {
    * @return {@code true} if enabled
    */
   public static boolean isEnabled() {
-    return enabled;
+    return ENABLED.get();
   }
 
   @NonNull
   private Ansi emit(@NonNull String sequence) {
-    if (enabled) {
+    if (ENABLED.get()) {
       buffer.append(sequence);
     }
     return this;
