@@ -5,7 +5,7 @@
 
 package dev.metaschema.cli.processor;
 
-import static org.jline.jansi.Ansi.ansi;
+import static dev.metaschema.cli.processor.ansi.Ansi.ansi;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -431,9 +431,14 @@ public class CallingContext {
         String wrappedDesc = wrapText(command.getDescription(), descWidth, continuationIndent);
         builder.append(
             ansi()
-                .render(String.format("   @|bold %-" + commandColWidth + "s|@ %s%n",
-                    command.getName(),
-                    wrappedDesc)));
+                .a("   ")
+                .bold()
+                .format("%-" + commandColWidth + "s", command.getName())
+                .boldOff()
+                .a(' ')
+                .a(wrappedDesc)
+                .a(System.lineSeparator())
+                .toString());
       }
       builder
           .append(System.lineSeparator())

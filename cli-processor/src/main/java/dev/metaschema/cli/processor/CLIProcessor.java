@@ -5,7 +5,7 @@
 
 package dev.metaschema.cli.processor;
 
-import static org.jline.jansi.Ansi.ansi;
+import static dev.metaschema.cli.processor.ansi.Ansi.ansi;
 
 import org.apache.commons.cli.Option;
 import org.apache.logging.log4j.Level;
@@ -15,7 +15,6 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.eclipse.jdt.annotation.NotOwning;
-import org.jline.jansi.Ansi;
 
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -25,6 +24,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import dev.metaschema.cli.processor.ansi.Ansi;
 import dev.metaschema.cli.processor.command.CommandService;
 import dev.metaschema.cli.processor.command.ICommand;
 import dev.metaschema.core.util.CollectionUtil;
