@@ -213,6 +213,10 @@ jobs:
         severity: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN'
         # Exclude submodules (have their own security scanning) and Maven plugin IT target dirs
         skip-dirs: 'core/metaschema,databind-modules/modules,metaschema-maven-plugin/target'
+        # Pin Trivy binary version. The default (auto-detected latest) currently
+        # resolves to v0.69.1, which has no published Linux-64bit binary, causing
+        # the install to fail silently with exit code 1.
+        version: 'v0.70.0'
     - name: Trivy Summary
       if: ${{ !inputs.skip_code_scans }}
       run: |
