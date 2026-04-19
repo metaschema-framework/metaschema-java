@@ -19,8 +19,11 @@ class FnDocumentAvailableTest {
    */
   @Test
   void issue208Test() {
+    // URL pinned to a release tag of this project so the resource remains
+    // available long-term. The previously-referenced fedramp-automation
+    // content was removed upstream, causing this test to fail with HTTP 404.
     IAnyUriItem uri = IAnyUriItem.valueOf(
-        "https://raw.githubusercontent.com/GSA/fedramp-automation/8301e380c88532ebbb22aca55521701750eb0b83/src/content/awesome-cloud/xml/AwesomeCloudSSP1.xml");
+        "https://raw.githubusercontent.com/metaschema-framework/metaschema-java/v3.0.0.M3/README.md");
 
     assertTrue(FnDocumentAvailable.fnDocAvailable(uri, new DynamicContext()).toBoolean());
   }
