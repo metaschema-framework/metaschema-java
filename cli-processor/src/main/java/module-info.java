@@ -20,13 +20,13 @@ module dev.metaschema.cli.processor {
   requires static org.eclipse.jdt.annotation;
   requires static com.github.spotbugs.annotations;
 
-  requires org.jansi.core;
   requires nl.talsmasoftware.lazy4j;
   requires org.apache.logging.log4j;
   requires org.apache.logging.log4j.core;
   requires org.apache.logging.log4j.jul;
 
   exports dev.metaschema.cli.processor;
+  exports dev.metaschema.cli.processor.ansi;
   exports dev.metaschema.cli.processor.command;
   exports dev.metaschema.cli.processor.command.impl;
   exports dev.metaschema.cli.processor.completion;

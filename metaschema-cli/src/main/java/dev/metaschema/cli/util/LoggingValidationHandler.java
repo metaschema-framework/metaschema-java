@@ -5,19 +5,19 @@
 
 package dev.metaschema.cli.util;
 
-import static org.jline.jansi.Ansi.ansi;
+import static dev.metaschema.cli.processor.ansi.Ansi.ansi;
 
 import org.apache.logging.log4j.LogBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jline.jansi.Ansi;
-import org.jline.jansi.Ansi.Color;
 import org.xml.sax.SAXParseException;
 
 import java.net.URI;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import dev.metaschema.cli.processor.ansi.Ansi;
+import dev.metaschema.cli.processor.ansi.Ansi.Color;
 import dev.metaschema.core.metapath.format.IPathFormatter;
 import dev.metaschema.core.model.constraint.ConstraintValidationFinding;
 import dev.metaschema.core.model.constraint.IConstraint.Level;
