@@ -18,7 +18,7 @@ module dev.metaschema.databind.modules {
   requires static org.eclipse.jdt.annotation;
   requires static com.github.spotbugs.annotations;
 
-  requires json.schema;
+  requires dev.harrel.jsonschema;
 
   exports dev.metaschema.modules.sarif;
 

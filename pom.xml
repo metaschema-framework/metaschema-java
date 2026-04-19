@@ -9,7 +9,7 @@
 
 	<groupId>dev.metaschema.java</groupId>
 	<artifactId>metaschema-framework</artifactId>
-	<version>3.0.0.M3</version>
+	<version>3.0.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 	<name>Metaschema Framework Parent</name>
@@ -50,7 +50,7 @@
 		<dependency.flexmark.version>0.64.8</dependency.flexmark.version>
 		<dependency.freemarker.version>2.3.34</dependency.freemarker.version>
 		<dependency.inject-resources-junit-jupiter.version>1.0.0</dependency.inject-resources-junit-jupiter.version>
-		<dependency.jackson.version>2.21.0</dependency.jackson.version>
+		<dependency.jackson.version>2.21.1</dependency.jackson.version>
 		<dependency.jline.version>3.30.6</dependency.jline.version>
 		<dependency.jaxb.version>4.0.0</dependency.jaxb.version>
 		<dependency.jmock-junit5.version>2.13.1</dependency.jmock-junit5.version>
@@ -58,7 +58,7 @@
 		<dependency.lazy4j.version>2.0.3</dependency.lazy4j.version>
 		<dependency.log4j2.version>2.25.3</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.12.2</dependency.logcaptor.version>
-		<dependency.mokito.version>5.21.0</dependency.mokito.version>
+		<dependency.mokito.version>5.22.0</dependency.mokito.version>
 		<dependency.moxy.version>4.0.9</dependency.moxy.version>
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
 		<dependency.plexus-utils.version>4.0.2</dependency.plexus-utils.version>
@@ -85,7 +85,7 @@
 		<url>${scm.url}/tree/develop</url>
 		<connection>scm:git:git@github.com/metaschema-framework/metaschema-java.git</connection>
 		<developerConnection>scm:git:git@github.com:metaschema-framework/metaschema-java.git</developerConnection>
-	  <tag>v3.0.0.M3</tag>
+	  <tag>HEAD</tag>
   </scm>
 	<distributionManagement>
 		<repository>

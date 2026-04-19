@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dev.metaschema.java</groupId>
 		<artifactId>metaschema-framework</artifactId>
-		<version>3.0.0.M3</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>metaschema-schema-generator</artifactId>
 	<name>Metaschema XML and JSON Schema Generator</name>
@@ -20,7 +20,7 @@
 
 	<scm>
 		<url>${scm.url}/tree/develop/schemagen</url>
-	  <tag>v3.0.0.M3</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<dependencies>
