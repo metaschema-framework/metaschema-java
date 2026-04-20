@@ -166,6 +166,11 @@ public class CLITest {
                 "src/test/resources/content/schema-validation-module.xml"
             },
             ExitCode.OK, NO_EXCEPTION_CLASS));
+        // list-allowed-values with no module argument should fail fast with
+        // INVALID_ARGUMENTS (missing required positional arg)
+        add(Arguments.of(
+            new String[] { "list-allowed-values" },
+            ExitCode.INVALID_ARGUMENTS, NO_EXCEPTION_CLASS));
         add(Arguments.of(
             new String[] { "validate",
                 "../databind/src/test/resources/metaschema/fields_with_flags/metaschema.xml"
@@ -367,6 +372,113 @@ public class CLITest {
         .contains("target: optional")
         .contains("yes")
         .contains("allow-other: false");
+  }
+
+  @Test
+  void testListAllowedValuesIncludesIdentifierWhenPresent() throws Exception {
+    Path outputFile = Paths.get("target/test-list-allowed-values-identifier.yaml");
+    Files.deleteIfExists(outputFile);
+    String[] cliArgs = { "list-allowed-values",
+        "src/test/resources/content/list-allowed-values-module.xml",
+        outputFile.toString(),
+        "--show-stack-trace"
+    };
+    evaluateResult(CLI.runCli(NULL_STREAM, cliArgs), ExitCode.OK, cliArgs);
+
+    String content = Files.readString(outputFile);
+    // Field-level allowed-values constraint (with id) on 'color'
+    assertThat(content)
+        .as("Field-level constraint with identifier should be emitted")
+        .contains("/root/color:")
+        .contains("identifier: color-values")
+        .contains("red")
+        .contains("green")
+        .contains("blue");
+    // Flag-level constraint carries its identifier, allow-other preserved from XML
+    assertThat(content)
+        .as("Flag-targeted constraint identifier and allow-other should be preserved")
+        .contains("identifier: status-phase")
+        .contains("allow-other: true");
+  }
+
+  @Test
+  void testListAllowedValuesGroupsMultipleConstraintsUnderSameTarget() throws Exception {
+    Path outputFile = Paths.get("target/test-list-allowed-values-grouping.yaml");
+    Files.deleteIfExists(outputFile);
+    String[] cliArgs = { "list-allowed-values",
+        "src/test/resources/content/list-allowed-values-module.xml",
+        outputFile.toString(),
+        "--show-stack-trace"
+    };
+    evaluateResult(CLI.runCli(NULL_STREAM, cliArgs), ExitCode.OK, cliArgs);
+
+    String content = Files.readString(outputFile);
+    // Two allowed-values constraints target @status; both should appear under the
+    // same
+    // location key rather than producing two separate /root/@status entries.
+    long statusKeyCount = content.lines()
+        .filter(line -> line.trim().equals("/root/@status:"))
+        .count();
+    assertEquals(1, statusKeyCount,
+        "Constraints sharing a target must group under a single location key");
+    // Values from both constraints ('init', 'run' from first; 'done' from second)
+    // should
+    // all surface in the combined output for that target.
+    assertThat(content)
+        .contains("init")
+        .contains("run")
+        .contains("done");
+  }
+
+  @Test
+  void testListAllowedValuesOverwriteRequiredForExistingFile() throws Exception {
+    Path outputFile = Paths.get("target/test-list-allowed-values-overwrite.yaml");
+    // Pre-create the destination so the first run lands on an existing file
+    Files.writeString(outputFile, "pre-existing content\n");
+
+    String[] argsWithoutOverwrite = { "list-allowed-values",
+        "src/test/resources/content/schema-validation-module.xml",
+        outputFile.toString(),
+        "--show-stack-trace"
+    };
+    ExitStatus withoutOverwrite = CLI.runCli(NULL_STREAM, argsWithoutOverwrite);
+    assertEquals(ExitCode.INVALID_ARGUMENTS, withoutOverwrite.getExitCode(),
+        "Writing to an existing file without --overwrite must fail with INVALID_ARGUMENTS");
+    // Pre-existing content must not have been mutated by the failed run
+    assertEquals("pre-existing content\n", Files.readString(outputFile),
+        "Failed run must not have modified the destination file");
+
+    String[] argsWithOverwrite = { "list-allowed-values",
+        "src/test/resources/content/schema-validation-module.xml",
+        outputFile.toString(),
+        "--overwrite",
+        "--show-stack-trace"
+    };
+    evaluateResult(CLI.runCli(NULL_STREAM, argsWithOverwrite), ExitCode.OK, argsWithOverwrite);
+    // With --overwrite the file should now contain YAML rather than the
+    // pre-existing text
+    assertThat(Files.readString(outputFile))
+        .doesNotContain("pre-existing content")
+        .contains("locations:");
+  }
+
+  @Test
+  void testListAllowedValuesConsoleOutputYaml() {
+    try (LogCaptor captor = LogCaptor.forClass(
+        dev.metaschema.cli.commands.ListAllowedValuesCommand.class)) {
+      String[] cliArgs = { "list-allowed-values",
+          "src/test/resources/content/schema-validation-module.xml",
+          "--show-stack-trace"
+      };
+      evaluateResult(CLI.runCli(NULL_STREAM, cliArgs), ExitCode.OK, cliArgs);
+
+      // When no destination file is given, YAML output goes to the logger at INFO
+      // level
+      assertThat(captor.getInfoLogs().toString())
+          .contains("locations:")
+          .contains("/root/optional:")
+          .contains("type: allowed-values");
+    }
   }
 
   @Test

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../../core/metaschema/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>List-allowed-values test module</schema-name>
+    <schema-version>0</schema-version>
+    <short-name>list-av-test</short-name>
+    <namespace>http://metaschema.dev/ns/metaschema/test/list-allowed-values</namespace>
+    <json-base-uri>http://metaschema.dev/ns/metaschema/test/list-allowed-values</json-base-uri>
+    <define-assembly name="root">
+        <formal-name>Root Assembly</formal-name>
+        <description>Root assembly that exercises identifier, grouping, and field-level constraint paths in list-allowed-values output.</description>
+        <root-name>root</root-name>
+        <define-flag name="status" as-type="string"/>
+        <model>
+            <define-field name="color" min-occurs="1" max-occurs="1">
+                <constraint>
+                    <allowed-values id="color-values" target=".">
+                        <enum value="red">Red</enum>
+                        <enum value="green">Green</enum>
+                        <enum value="blue">Blue</enum>
+                    </allowed-values>
+                </constraint>
+            </define-field>
+        </model>
+        <constraint>
+            <!-- Two allowed-values constraints on the same target (the status flag)
+                 exercises the grouping path that collapses them under one key. -->
+            <allowed-values id="status-phase" target="@status" allow-other="yes">
+                <enum value="init">Initialization phase</enum>
+                <enum value="run">Run phase</enum>
+            </allowed-values>
+            <allowed-values target="@status">
+                <enum value="done">Done phase</enum>
+            </allowed-values>
+        </constraint>
+    </define-assembly>
+</METASCHEMA>
