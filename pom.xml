@@ -59,7 +59,7 @@
 		<dependency.log4j2.version>2.25.3</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.12.6</dependency.logcaptor.version>
 		<dependency.mokito.version>5.22.0</dependency.mokito.version>
-		<dependency.moxy.version>4.0.9</dependency.moxy.version>
+		<dependency.moxy.version>5.0.0</dependency.moxy.version>
 		<dependency.oss-maven.version>${project.parent.version}</dependency.oss-maven.version>
 		<dependency.plexus-utils.version>4.0.3</dependency.plexus-utils.version>
 		<dependency.plexus-build-api.version>1.2.0</dependency.plexus-build-api.version>
