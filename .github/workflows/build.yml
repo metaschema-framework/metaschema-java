@@ -203,7 +203,7 @@ jobs:
     # -------------------------
     - name: Run Trivy security scanner
       if: ${{ !inputs.skip_code_scans }}
-      uses: aquasecurity/trivy-action@e368e328979b113139d6f9068e03accaed98a518
+      uses: aquasecurity/trivy-action@876cf04c63f65e9799bcf1043b584e72469c7143
       with:
         scan-type: 'fs'
         scan-ref: '.'
