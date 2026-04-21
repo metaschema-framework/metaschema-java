@@ -56,7 +56,7 @@
 		<dependency.json.version>20251224</dependency.json.version>
 		<dependency.json-schema.version>1.9.1</dependency.json-schema.version>
 		<dependency.lazy4j.version>2.0.4</dependency.lazy4j.version>
-		<dependency.log4j2.version>2.25.3</dependency.log4j2.version>
+		<dependency.log4j2.version>2.25.4</dependency.log4j2.version>
 		<dependency.logcaptor.version>2.12.6</dependency.logcaptor.version>
 		<dependency.mokito.version>5.23.0</dependency.mokito.version>
 		<dependency.moxy.version>5.0.0</dependency.moxy.version>
