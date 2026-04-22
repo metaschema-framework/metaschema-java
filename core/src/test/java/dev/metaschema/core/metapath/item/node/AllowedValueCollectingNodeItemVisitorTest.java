@@ -5,6 +5,7 @@
 
 package dev.metaschema.core.metapath.item.node;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,7 +28,9 @@ import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.model.ISource;
 import dev.metaschema.core.model.constraint.IAllowedValue;
 import dev.metaschema.core.model.constraint.IAllowedValuesConstraint;
+import dev.metaschema.core.model.constraint.ILet;
 import dev.metaschema.core.model.constraint.IValueConstrained;
+import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.MockedModelTestSupport;
 import dev.metaschema.core.testsupport.builder.IModuleBuilder;
 
@@ -332,5 +335,48 @@ class AllowedValueCollectingNodeItemVisitorTest {
         "Allowed value keys should be preserved");
     assertTrue(record.getAllowedValues().getAllowedValues().containsKey("done"),
         "Allowed value keys should be preserved");
+  }
+
+  @Test
+  void testVisitorSkipsLetExpressionThatCannotBeEvaluatedAtDefinition() {
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    IModule module = IModuleBuilder.builder()
+        .namespace(TEST_NAMESPACE)
+        .shortName("let-eval-test")
+        .version("1.0.0")
+        .source(source)
+        .assembly(mocking.assembly()
+            .name("root")
+            .rootName("root")
+            .flags(List.of(mocking.flag().name("href"))))
+        .toModule();
+
+    IAssemblyDefinition rootDef = module.getAssemblyDefinitions().iterator().next();
+    // A let whose value expression atomizes a flag node item. At definition-walk
+    // time the flag has no typed value, so this evaluation would raise
+    // InvalidTypeFunctionException (FOTY). The visitor must tolerate this and
+    // continue collecting allowed-values constraints.
+    rootDef.getConstraintSupport().addLetExpression(
+        ILet.of(
+            IEnhancedQName.of("resolved"),
+            IMetapathExpression.compile("@href + 1"),
+            source,
+            null));
+    rootDef.getConstraintSupport().addConstraint(
+        IAllowedValuesConstraint.builder()
+            .source(source)
+            .target(IMetapathExpression.compile("@href"))
+            .allowedValue(IAllowedValue.of("http://example.com/a", MarkupLine.fromMarkdown("A"), null))
+            .build());
+
+    AllowedValueCollectingNodeItemVisitor visitor = new AllowedValueCollectingNodeItemVisitor();
+    assertDoesNotThrow(() -> visitor.visit(module),
+        "Visitor must not abort when a let expression cannot be evaluated on a definition node");
+
+    Collection<NodeItemRecord> locations = visitor.getAllowedValueLocations();
+    assertEquals(1, locations.size(),
+        "The allowed-values constraint that does not reference the failing let must still be collected");
   }
 }
