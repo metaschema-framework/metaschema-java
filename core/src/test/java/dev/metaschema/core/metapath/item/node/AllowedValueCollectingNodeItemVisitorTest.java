@@ -379,4 +379,59 @@ class AllowedValueCollectingNodeItemVisitorTest {
     assertEquals(1, locations.size(),
         "The allowed-values constraint that does not reference the failing let must still be collected");
   }
+
+  @Test
+  void testVisitorSkipsAllowedValuesTargetThatReferencesUnboundLetVariable() {
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    IModule module = IModuleBuilder.builder()
+        .namespace(TEST_NAMESPACE)
+        .shortName("target-eval-test")
+        .version("1.0.0")
+        .source(source)
+        .assembly(mocking.assembly()
+            .name("root")
+            .rootName("root")
+            .flags(List.of(
+                mocking.flag().name("href"),
+                mocking.flag().name("status"))))
+        .toModule();
+
+    IAssemblyDefinition rootDef = module.getAssemblyDefinitions().iterator().next();
+    // The let's value expression atomizes a flag with no typed value, so the
+    // variable will never be bound.
+    rootDef.getConstraintSupport().addLetExpression(
+        ILet.of(
+            IEnhancedQName.of("resolved"),
+            IMetapathExpression.compile("@href + 1"),
+            source,
+            null));
+    // This constraint's target references the (unbound) $resolved variable. The
+    // visitor must catch the resulting evaluation error and move on instead of
+    // aborting the walk.
+    rootDef.getConstraintSupport().addConstraint(
+        IAllowedValuesConstraint.builder()
+            .source(source)
+            .target(IMetapathExpression.compile("$resolved"))
+            .allowedValue(IAllowedValue.of("skipped", MarkupLine.fromMarkdown("Skipped"), null))
+            .build());
+    // An independent constraint with a simple target should still be collected.
+    rootDef.getConstraintSupport().addConstraint(
+        IAllowedValuesConstraint.builder()
+            .source(source)
+            .target(IMetapathExpression.compile("@status"))
+            .allowedValue(IAllowedValue.of("active", MarkupLine.fromMarkdown("Active"), null))
+            .build());
+
+    AllowedValueCollectingNodeItemVisitor visitor = new AllowedValueCollectingNodeItemVisitor();
+    assertDoesNotThrow(() -> visitor.visit(module),
+        "Visitor must not abort when an allowed-values target references an unbound let variable");
+
+    Collection<NodeItemRecord> locations = visitor.getAllowedValueLocations();
+    assertEquals(1, locations.size(),
+        "Only the independent allowed-values constraint should be collected");
+    assertEquals("status", locations.iterator().next().getItem().getDefinition().getName(),
+        "The surviving constraint should be the one targeting @status");
+  }
 }
