@@ -28,7 +28,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import dev.metaschema.core.datatype.markup.MarkupLine;
+import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.IMetapathExpression;
+import dev.metaschema.core.metapath.StaticContext;
 import dev.metaschema.core.metapath.item.node.AllowedValueCollectingNodeItemVisitor.AllowedValuesRecord;
 import dev.metaschema.core.metapath.item.node.AllowedValueCollectingNodeItemVisitor.NodeItemRecord;
 import dev.metaschema.core.model.IAssemblyDefinition;
@@ -514,6 +516,60 @@ class AllowedValueCollectingNodeItemVisitorTest {
             + " METAPATH_ATOMIZE_NO_DATA_AS_EMPTY");
     assertEquals(1, visitor.getAllowedValueLocations().size(),
         "The allowed-values constraint targeting @href must still be collected");
+  }
+
+  @Test
+  void testTwoArgVisitOverloadEnablesModuleWalkFeaturesOnCallerContext() {
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    IModule module = IModuleBuilder.builder()
+        .namespace(TEST_NAMESPACE)
+        .shortName("two-arg-overload-test")
+        .version("1.0.0")
+        .source(source)
+        .assembly(mocking.assembly()
+            .name("root")
+            .rootName("root")
+            .flags(List.of(mocking.flag().name("href"))))
+        .toModule();
+
+    IAssemblyDefinition rootDef = module.getAssemblyDefinitions().iterator().next();
+    rootDef.getConstraintSupport().addLetExpression(
+        ILet.of(
+            IEnhancedQName.of("resolved"),
+            IMetapathExpression.compile("upper-case(@href)"),
+            source,
+            null));
+    rootDef.getConstraintSupport().addConstraint(
+        IAllowedValuesConstraint.builder()
+            .source(source)
+            .target(IMetapathExpression.compile("@href"))
+            .allowedValue(IAllowedValue.of("http://example.com/a", MarkupLine.fromMarkdown("A"), null))
+            .build());
+
+    // Callers of the two-arg overload (including the existing oscal-cli and
+    // metaschema-cli list-allowed-values commands) supply their own
+    // DynamicContext. The visitor must enable the module-walk features on
+    // that context itself so callers do not need to remember to do it, and
+    // do not observe FOTY warnings on OSCAL-style lets.
+    DynamicContext callerContext = new DynamicContext(
+        StaticContext.builder()
+            .defaultModelNamespace(module.getXmlNamespace())
+            .build());
+
+    AllowedValueCollectingNodeItemVisitor visitor = new AllowedValueCollectingNodeItemVisitor();
+    visitor.visit(INodeItemFactory.instance().newModuleNodeItem(module), callerContext);
+
+    assertFalse(capturedAnyMessageContaining("Skipping let expression"),
+        "The two-arg visit overload must enable METAPATH_ATOMIZE_NO_DATA_AS_EMPTY"
+            + " on the caller-supplied context so no FOTY warning is produced");
+    assertTrue(callerContext.getConfiguration()
+        .isFeatureEnabled(dev.metaschema.core.metapath.MetapathEvaluationFeature.METAPATH_ATOMIZE_NO_DATA_AS_EMPTY),
+        "The two-arg visit overload must enable METAPATH_ATOMIZE_NO_DATA_AS_EMPTY on the caller-supplied context");
+    assertFalse(callerContext.getConfiguration()
+        .isFeatureEnabled(dev.metaschema.core.metapath.MetapathEvaluationFeature.METAPATH_EVALUATE_PREDICATES),
+        "The two-arg visit overload must disable METAPATH_EVALUATE_PREDICATES on the caller-supplied context");
   }
 
   private static final class CapturingAppender
