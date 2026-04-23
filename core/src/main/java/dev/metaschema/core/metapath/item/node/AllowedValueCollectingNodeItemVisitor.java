@@ -64,11 +64,7 @@ public class AllowedValueCollectingNodeItemVisitor
    * constraints.
    * <p>
    * This method creates a new {@link DynamicContext} configured with the module's
-   * default namespace, with predicate evaluation disabled, and with no-data
-   * atomization treated as empty so that expressions that reach instance-only
-   * functions (for example, {@code fn:doc} via
-   * {@code oscal:resolve-reference(@href)}) degrade to empty sequences rather
-   * than raising {@code InvalidTypeFunctionException} while walking a module.
+   * default namespace.
    *
    * @param module
    *          the Metaschema module to visit
@@ -78,8 +74,6 @@ public class AllowedValueCollectingNodeItemVisitor
         StaticContext.builder()
             .defaultModelNamespace(module.getXmlNamespace())
             .build());
-    context.disablePredicateEvaluation();
-    context.enableAtomizeNoDataAsEmpty();
 
     visit(INodeItemFactory.instance().newModuleNodeItem(module), context);
   }
@@ -87,6 +81,15 @@ public class AllowedValueCollectingNodeItemVisitor
   /**
    * Visit all definitions in the provided module node item using the given
    * dynamic context.
+   * <p>
+   * The provided context is configured for module-definition walking: predicate
+   * evaluation is disabled and no-data atomization is treated as empty. These
+   * settings are applied regardless of their state on the incoming context so
+   * that expressions which reach instance-only functions (for example,
+   * {@code fn:doc} via {@code oscal:resolve-reference(@href)}) degrade to empty
+   * sequences rather than raising {@code InvalidTypeFunctionException} and
+   * predicates on definitional targets do not attempt evaluation that requires
+   * instance data.
    *
    * @param module
    *          the module node item to visit
@@ -94,6 +97,8 @@ public class AllowedValueCollectingNodeItemVisitor
    *          the dynamic context to use for constraint evaluation
    */
   public void visit(@NonNull IModuleNodeItem module, @NonNull DynamicContext context) {
+    context.disablePredicateEvaluation();
+    context.enableAtomizeNoDataAsEmpty();
     visitMetaschema(module, context);
   }
 
