@@ -341,6 +341,37 @@ public class DynamicContext {
   }
 
   /**
+   * Used to make atomization of node items that have no associated typed value
+   * yield a {@code null} atomic value instead of raising
+   * {@link dev.metaschema.core.metapath.function.InvalidTypeFunctionException}.
+   * <p>
+   * Intended for callers that traverse an
+   * {@link dev.metaschema.core.metapath.item.node.IModuleNodeItem} graph and want
+   * downstream function calls to degrade gracefully when they receive a no-data
+   * flag rather than an instance value.
+   *
+   * @return this dynamic context
+   */
+  @NonNull
+  public DynamicContext enableAtomizeNoDataAsEmpty() {
+    this.sharedState.configuration.enableFeature(MetapathEvaluationFeature.METAPATH_ATOMIZE_NO_DATA_AS_EMPTY);
+    return this;
+  }
+
+  /**
+   * Used to restore the default behavior of raising
+   * {@link dev.metaschema.core.metapath.function.InvalidTypeFunctionException}
+   * when a node item that has no typed value is atomized.
+   *
+   * @return this dynamic context
+   */
+  @NonNull
+  public DynamicContext disableAtomizeNoDataAsEmpty() {
+    this.sharedState.configuration.disableFeature(MetapathEvaluationFeature.METAPATH_ATOMIZE_NO_DATA_AS_EMPTY);
+    return this;
+  }
+
+  /**
    * Get the Metapath evaluation configuration.
    *
    * @return the configuration

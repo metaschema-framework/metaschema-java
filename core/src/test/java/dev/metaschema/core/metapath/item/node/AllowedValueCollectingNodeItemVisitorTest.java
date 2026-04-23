@@ -12,10 +12,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import dev.metaschema.core.datatype.markup.MarkupLine;
@@ -34,9 +43,34 @@ import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.MockedModelTestSupport;
 import dev.metaschema.core.testsupport.builder.IModuleBuilder;
 
+@Execution(value = ExecutionMode.SAME_THREAD, reason = "Log capturing needs to be single threaded")
 class AllowedValueCollectingNodeItemVisitorTest {
 
   private static final String TEST_NAMESPACE = "http://example.com/ns/allowed-values-test";
+
+  private CapturingAppender capturingAppender;
+  private Logger visitorLogger;
+
+  @BeforeEach
+  void attachLogCapture() {
+    capturingAppender = new CapturingAppender();
+    capturingAppender.start();
+    visitorLogger = (Logger) LogManager.getLogger(AllowedValueCollectingNodeItemVisitor.class);
+    visitorLogger.addAppender(capturingAppender);
+  }
+
+  @AfterEach
+  void detachLogCapture() {
+    if (visitorLogger != null && capturingAppender != null) {
+      visitorLogger.removeAppender(capturingAppender);
+      capturingAppender.stop();
+    }
+  }
+
+  private boolean capturedAnyMessageContaining(String substring) {
+    return capturingAppender.getEvents().stream()
+        .anyMatch(event -> event.getMessage().getFormattedMessage().contains(substring));
+  }
 
   @Test
   void testVisitorFindsAllowedValuesConstraints() {
@@ -433,5 +467,72 @@ class AllowedValueCollectingNodeItemVisitorTest {
         "Only the independent allowed-values constraint should be collected");
     assertEquals("status", locations.iterator().next().getItem().getDefinition().getName(),
         "The surviving constraint should be the one targeting @status");
+  }
+
+  @Test
+  void testVisitorToleratesNoDataAtomizationInFunctionArgument() {
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    IModule module = IModuleBuilder.builder()
+        .namespace(TEST_NAMESPACE)
+        .shortName("no-data-func-test")
+        .version("1.0.0")
+        .source(source)
+        .assembly(mocking.assembly()
+            .name("root")
+            .rootName("root")
+            .flags(List.of(mocking.flag().name("href"))))
+        .toModule();
+
+    IAssemblyDefinition rootDef = module.getAssemblyDefinitions().iterator().next();
+    // Mirrors the shape of the OSCAL external constraint lets that pass a
+    // no-data flag node through a function expecting an atomic type. With
+    // METAPATH_ATOMIZE_NO_DATA_AS_EMPTY enabled by the visitor, argument
+    // atomization yields an empty sequence instead of raising FOTY, so the
+    // chain collapses to an empty result and the let binds to an empty
+    // sequence without warning.
+    rootDef.getConstraintSupport().addLetExpression(
+        ILet.of(
+            IEnhancedQName.of("resolved"),
+            IMetapathExpression.compile("upper-case(@href)"),
+            source,
+            null));
+    rootDef.getConstraintSupport().addConstraint(
+        IAllowedValuesConstraint.builder()
+            .source(source)
+            .target(IMetapathExpression.compile("@href"))
+            .allowedValue(IAllowedValue.of("http://example.com/a", MarkupLine.fromMarkdown("A"), null))
+            .build());
+
+    AllowedValueCollectingNodeItemVisitor visitor = new AllowedValueCollectingNodeItemVisitor();
+    visitor.visit(module);
+
+    assertFalse(capturedAnyMessageContaining("Skipping let expression"),
+        "A let whose function-argument atomization would raise FOTY on a no-data flag"
+            + " must not produce a warning when the visitor enables"
+            + " METAPATH_ATOMIZE_NO_DATA_AS_EMPTY");
+    assertEquals(1, visitor.getAllowedValueLocations().size(),
+        "The allowed-values constraint targeting @href must still be collected");
+  }
+
+  private static final class CapturingAppender
+      extends AbstractAppender {
+    private final List<LogEvent> events = new LinkedList<>();
+
+    CapturingAppender() {
+      super("AvVisitorLogCapture", null, null, false, null);
+    }
+
+    List<LogEvent> getEvents() {
+      return events;
+    }
+
+    @Override
+    public void append(LogEvent event) {
+      synchronized (this) {
+        events.add(event.toImmutable());
+      }
+    }
   }
 }
