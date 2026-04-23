@@ -557,6 +557,11 @@ class AllowedValueCollectingNodeItemVisitorTest {
         StaticContext.builder()
             .defaultModelNamespace(module.getXmlNamespace())
             .build());
+    // Explicitly set the feature flags to the opposite of their expected
+    // post-visit state. This proves that the two-arg overload actually flips
+    // them rather than relying on DynamicContext construction defaults.
+    callerContext.enablePredicateEvaluation();
+    callerContext.disableAtomizeNoDataAsEmpty();
 
     AllowedValueCollectingNodeItemVisitor visitor = new AllowedValueCollectingNodeItemVisitor();
     visitor.visit(INodeItemFactory.instance().newModuleNodeItem(module), callerContext);
