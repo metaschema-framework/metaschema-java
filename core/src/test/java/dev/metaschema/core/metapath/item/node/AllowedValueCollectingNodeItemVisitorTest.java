@@ -12,10 +12,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import dev.metaschema.core.datatype.markup.MarkupLine;
@@ -34,9 +43,34 @@ import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.testsupport.MockedModelTestSupport;
 import dev.metaschema.core.testsupport.builder.IModuleBuilder;
 
+@Execution(value = ExecutionMode.SAME_THREAD, reason = "Log capturing needs to be single threaded")
 class AllowedValueCollectingNodeItemVisitorTest {
 
   private static final String TEST_NAMESPACE = "http://example.com/ns/allowed-values-test";
+
+  private CapturingAppender capturingAppender;
+  private Logger visitorLogger;
+
+  @BeforeEach
+  void attachLogCapture() {
+    capturingAppender = new CapturingAppender();
+    capturingAppender.start();
+    visitorLogger = (Logger) LogManager.getLogger(AllowedValueCollectingNodeItemVisitor.class);
+    visitorLogger.addAppender(capturingAppender);
+  }
+
+  @AfterEach
+  void detachLogCapture() {
+    if (visitorLogger != null && capturingAppender != null) {
+      visitorLogger.removeAppender(capturingAppender);
+      capturingAppender.stop();
+    }
+  }
+
+  private boolean capturedAnyMessageContaining(String substring) {
+    return capturingAppender.getEvents().stream()
+        .anyMatch(event -> event.getMessage().getFormattedMessage().contains(substring));
+  }
 
   @Test
   void testVisitorFindsAllowedValuesConstraints() {
@@ -378,6 +412,113 @@ class AllowedValueCollectingNodeItemVisitorTest {
     Collection<NodeItemRecord> locations = visitor.getAllowedValueLocations();
     assertEquals(1, locations.size(),
         "The allowed-values constraint that does not reference the failing let must still be collected");
+  }
+
+  @Test
+  void testVisitorDoesNotEvaluateLetNotReferencedByAnyAllowedValues() {
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    IModule module = IModuleBuilder.builder()
+        .namespace(TEST_NAMESPACE)
+        .shortName("lazy-let-test")
+        .version("1.0.0")
+        .source(source)
+        .assembly(mocking.assembly()
+            .name("root")
+            .rootName("root")
+            .flags(List.of(mocking.flag().name("href"))))
+        .toModule();
+
+    IAssemblyDefinition rootDef = module.getAssemblyDefinitions().iterator().next();
+    // This let's value expression would raise InvalidTypeFunctionException at
+    // definition walk because it atomizes a no-data flag. The let's variable
+    // ($unused) is not referenced by any allowed-values target or value, so the
+    // visitor must not attempt to evaluate it, and must not emit any
+    // "Skipping let expression" warning for it.
+    rootDef.getConstraintSupport().addLetExpression(
+        ILet.of(
+            IEnhancedQName.of("unused"),
+            IMetapathExpression.compile("@href + 1"),
+            source,
+            null));
+    rootDef.getConstraintSupport().addConstraint(
+        IAllowedValuesConstraint.builder()
+            .source(source)
+            .target(IMetapathExpression.compile("@href"))
+            .allowedValue(IAllowedValue.of("http://example.com/a", MarkupLine.fromMarkdown("A"), null))
+            .build());
+
+    AllowedValueCollectingNodeItemVisitor visitor = new AllowedValueCollectingNodeItemVisitor();
+    visitor.visit(module);
+
+    assertFalse(capturedAnyMessageContaining("Skipping let expression"),
+        "No let-evaluation warning must be emitted when the let's variable is not referenced"
+            + " by any allowed-values constraint");
+    assertEquals(1, visitor.getAllowedValueLocations().size(),
+        "The independent allowed-values constraint must still be collected");
+  }
+
+  @Test
+  void testVisitorEvaluatesLetReferencedByAllowedValuesTarget() {
+    MockedModelTestSupport mocking = new MockedModelTestSupport();
+    ISource source = ISource.externalSource(URI.create(TEST_NAMESPACE));
+
+    IModule module = IModuleBuilder.builder()
+        .namespace(TEST_NAMESPACE)
+        .shortName("referenced-let-test")
+        .version("1.0.0")
+        .source(source)
+        .assembly(mocking.assembly()
+            .name("root")
+            .rootName("root")
+            .flags(List.of(mocking.flag().name("href"))))
+        .toModule();
+
+    IAssemblyDefinition rootDef = module.getAssemblyDefinitions().iterator().next();
+    // The let's value expression would fail at definition walk. Because an
+    // allowed-values target references $resolved, the visitor MUST still
+    // attempt to evaluate the let and surface the evaluation warning so
+    // authors see that their referenced let is broken.
+    rootDef.getConstraintSupport().addLetExpression(
+        ILet.of(
+            IEnhancedQName.of("resolved"),
+            IMetapathExpression.compile("@href + 1"),
+            source,
+            null));
+    rootDef.getConstraintSupport().addConstraint(
+        IAllowedValuesConstraint.builder()
+            .source(source)
+            .target(IMetapathExpression.compile("$resolved"))
+            .allowedValue(IAllowedValue.of("anything", MarkupLine.fromMarkdown("Anything"), null))
+            .build());
+
+    AllowedValueCollectingNodeItemVisitor visitor = new AllowedValueCollectingNodeItemVisitor();
+    visitor.visit(module);
+
+    assertTrue(capturedAnyMessageContaining("Skipping let expression"),
+        "A let-evaluation warning must still be emitted when the let's variable is referenced"
+            + " by an allowed-values constraint that relies on it");
+  }
+
+  private static final class CapturingAppender
+      extends AbstractAppender {
+    private final List<LogEvent> events = new LinkedList<>();
+
+    CapturingAppender() {
+      super("LetEvalCapture", null, null, false, null);
+    }
+
+    List<LogEvent> getEvents() {
+      return events;
+    }
+
+    @Override
+    public void append(LogEvent event) {
+      synchronized (this) {
+        events.add(event.toImmutable());
+      }
+    }
   }
 
   @Test

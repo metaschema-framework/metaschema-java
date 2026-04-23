@@ -10,18 +10,26 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.IExpression;
+import dev.metaschema.core.metapath.IMetapathExpression;
 import dev.metaschema.core.metapath.MetapathException;
 import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.metapath.cst.AbstractExpressionVisitor;
+import dev.metaschema.core.metapath.cst.VariableReference;
 import dev.metaschema.core.metapath.item.ISequence;
 import dev.metaschema.core.model.IModule;
 import dev.metaschema.core.model.constraint.IAllowedValuesConstraint;
 import dev.metaschema.core.model.constraint.ILet;
+import dev.metaschema.core.qname.IEnhancedQName;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
@@ -46,6 +54,18 @@ public class AllowedValueCollectingNodeItemVisitor
 
   @NonNull
   private final Map<IDefinitionNodeItem<?, ?>, NodeItemRecord> nodeItemAnalysis = new LinkedHashMap<>();
+
+  /**
+   * The set of let variable names that are referenced, transitively, by any
+   * allowed-values constraint target expression in the walked module. A let is
+   * only evaluated at walk time if its name appears in this set. Lets that are
+   * never read by an allowed-values constraint are skipped entirely to avoid
+   * evaluating expressions that inherently require instance-level data (for
+   * example, those calling {@code fn:doc} or {@code oscal:resolve-reference} on a
+   * flag whose typed value only exists in an instance document).
+   */
+  @NonNull
+  private Set<IEnhancedQName> referencedVariables = Collections.emptySet();
 
   /**
    * Get the collected allowed-values constraint locations found during
@@ -89,7 +109,89 @@ public class AllowedValueCollectingNodeItemVisitor
    *          the dynamic context to use for constraint evaluation
    */
   public void visit(@NonNull IModuleNodeItem module, @NonNull DynamicContext context) {
+    this.referencedVariables = computeReferencedVariables(module);
     visitMetaschema(module, context);
+  }
+
+  /**
+   * Walk the module graph once to determine which let variable names are needed
+   * by an allowed-values constraint target expression. The set is expanded
+   * transitively so that, if a let's value expression references another let,
+   * both are considered needed.
+   *
+   * @param module
+   *          the module graph to scan
+   * @return the set of needed variable names
+   */
+  @NonNull
+  private static Set<IEnhancedQName> computeReferencedVariables(@NonNull IModuleNodeItem module) {
+    Set<IEnhancedQName> needed = new HashSet<>();
+    Map<IEnhancedQName, IMetapathExpression> allLets = new HashMap<>();
+
+    ReferenceCollectingVisitor scanner = new ReferenceCollectingVisitor(needed, allLets);
+    scanner.visitMetaschema(module, null);
+
+    // Transitive closure: if a needed let's value expression references another
+    // variable, that variable is also needed.
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      Set<IEnhancedQName> toAdd = new HashSet<>();
+      for (IEnhancedQName name : needed) {
+        IMetapathExpression expr = allLets.get(name);
+        if (expr != null) {
+          Set<IEnhancedQName> found = new HashSet<>();
+          collectVariableReferences(expr, found);
+          for (IEnhancedQName ref : found) {
+            if (!needed.contains(ref)) {
+              toAdd.add(ref);
+            }
+          }
+        }
+      }
+      if (!toAdd.isEmpty()) {
+        needed.addAll(toAdd);
+        changed = true;
+      }
+    }
+    return needed;
+  }
+
+  /**
+   * Walk the AST of the provided compiled Metapath expression and append every
+   * variable reference name into {@code sink}. Expressions that cannot be
+   * compiled on demand (for lazy expressions) are treated as referencing no
+   * variables, which conservatively lets them fail at evaluation time with the
+   * existing diagnostic path instead of silently skipping the constraint.
+   */
+  private static void collectVariableReferences(
+      @NonNull IMetapathExpression expression,
+      @NonNull Set<IEnhancedQName> sink) {
+    try {
+      ((IExpression) expression).accept(
+          new AbstractExpressionVisitor<Void, Set<IEnhancedQName>>() {
+            @Override
+            protected Void aggregateResult(Void existing, Void next, Set<IEnhancedQName> ctx) {
+              return null;
+            }
+
+            @Override
+            protected Void defaultResult() {
+              return null;
+            }
+
+            @Override
+            public Void visitVariableReference(VariableReference expr, Set<IEnhancedQName> ctx) {
+              ctx.add(expr.getName());
+              return null;
+            }
+          },
+          sink);
+    } catch (MetapathException ex) {
+      // Compilation failed. Leave the variable set unchanged; the downstream
+      // evaluation code path will surface the underlying problem with a
+      // standard diagnostic.
+    }
   }
 
   @SuppressWarnings("PMD.AvoidCatchingGenericException")
@@ -156,6 +258,15 @@ public class AllowedValueCollectingNodeItemVisitor
     assert context != null;
     DynamicContext subContext = context;
     for (ILet let : item.getDefinition().getLetExpressions().values()) {
+      if (!referencedVariables.contains(let.getName())) {
+        // No allowed-values constraint (direct or transitive through another
+        // let) references this variable. Skip binding so expressions that
+        // cannot be evaluated against a module definition -- for example those
+        // calling fn:doc, oscal:resolve-reference, or oscal:resolve-profile --
+        // do not raise diagnostics when they would have no effect on the
+        // collected allowed-values anyway.
+        continue;
+      }
       try {
         ISequence<?> result = let.getValueExpression().evaluate(item,
             subContext).reusable();
@@ -172,6 +283,64 @@ public class AllowedValueCollectingNodeItemVisitor
       }
     }
     return subContext;
+  }
+
+  /**
+   * A node-item visitor used as a one-time pre-pass to populate the set of let
+   * variable names that are referenced by any allowed-values constraint target
+   * expression in the module, along with the full table of let value expressions
+   * for later transitive expansion.
+   */
+  private static final class ReferenceCollectingVisitor
+      extends AbstractRecursionPreventingNodeItemVisitor<Void, Void> {
+    @NonNull
+    private final Set<IEnhancedQName> referenced;
+    @NonNull
+    private final Map<IEnhancedQName, IMetapathExpression> letExpressions;
+
+    ReferenceCollectingVisitor(
+        @NonNull Set<IEnhancedQName> referenced,
+        @NonNull Map<IEnhancedQName, IMetapathExpression> letExpressions) {
+      this.referenced = referenced;
+      this.letExpressions = letExpressions;
+    }
+
+    private void collectFromDefinition(@NonNull IDefinitionNodeItem<?, ?> item) {
+      for (ILet let : item.getDefinition().getLetExpressions().values()) {
+        letExpressions.putIfAbsent(let.getName(), let.getValueExpression());
+      }
+      for (IAllowedValuesConstraint constraint : item.getDefinition().getAllowedValuesConstraints()) {
+        collectVariableReferences(constraint.getTarget(), referenced);
+      }
+    }
+
+    @Override
+    public Void visitFlag(IFlagNodeItem item, Void context) {
+      collectFromDefinition(item);
+      return super.visitFlag(item, context);
+    }
+
+    @Override
+    public Void visitField(IFieldNodeItem item, Void context) {
+      collectFromDefinition(item);
+      return super.visitField(item, context);
+    }
+
+    @Override
+    public Void visitAssembly(IAssemblyNodeItem item, Void context) {
+      collectFromDefinition(item);
+      return super.visitAssembly(item, context);
+    }
+
+    @Override
+    public Void visitAssembly(IAssemblyInstanceGroupedNodeItem item, Void context) {
+      return visitAssembly((IAssemblyNodeItem) item, context);
+    }
+
+    @Override
+    protected Void defaultResult() {
+      return null;
+    }
   }
 
   @Override
