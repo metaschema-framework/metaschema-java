@@ -64,7 +64,11 @@ public class AllowedValueCollectingNodeItemVisitor
    * constraints.
    * <p>
    * This method creates a new {@link DynamicContext} configured with the module's
-   * default namespace and with predicate evaluation disabled.
+   * default namespace, with predicate evaluation disabled, and with no-data
+   * atomization treated as empty so that expressions that reach instance-only
+   * functions (for example, {@code fn:doc} via
+   * {@code oscal:resolve-reference(@href)}) degrade to empty sequences rather
+   * than raising {@code InvalidTypeFunctionException} while walking a module.
    *
    * @param module
    *          the Metaschema module to visit
@@ -75,6 +79,7 @@ public class AllowedValueCollectingNodeItemVisitor
             .defaultModelNamespace(module.getXmlNamespace())
             .build());
     context.disablePredicateEvaluation();
+    context.enableAtomizeNoDataAsEmpty();
 
     visit(INodeItemFactory.instance().newModuleNodeItem(module), context);
   }

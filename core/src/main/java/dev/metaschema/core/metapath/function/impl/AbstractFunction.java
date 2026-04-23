@@ -13,10 +13,12 @@ import java.util.stream.Stream;
 
 import dev.metaschema.core.metapath.ContextAbsentDynamicMetapathException;
 import dev.metaschema.core.metapath.DynamicContext;
+import dev.metaschema.core.metapath.MetapathEvaluationFeature;
 import dev.metaschema.core.metapath.MetapathException;
 import dev.metaschema.core.metapath.function.CalledContext;
 import dev.metaschema.core.metapath.function.IArgument;
 import dev.metaschema.core.metapath.function.IFunction;
+import dev.metaschema.core.metapath.function.InvalidTypeFunctionException;
 import dev.metaschema.core.metapath.item.IItem;
 import dev.metaschema.core.metapath.item.IItemVisitor;
 import dev.metaschema.core.metapath.item.ISequence;
@@ -28,6 +30,7 @@ import dev.metaschema.core.metapath.type.ISequenceType;
 import dev.metaschema.core.metapath.type.InvalidTypeMetapathException;
 import dev.metaschema.core.qname.IEnhancedQName;
 import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -194,7 +197,11 @@ public abstract class AbstractFunction implements IFunction {
     Stream<? extends IItem> stream = sequence.safeStream();
 
     if (IAnyAtomicItem.class.isAssignableFrom(requiredSequenceTypeClass)) {
-      Stream<? extends IAnyAtomicItem> atomicStream = stream.flatMap(IItem::atomize);
+      boolean tolerateNoData = dynamicContext.getConfiguration()
+          .isFeatureEnabled(MetapathEvaluationFeature.METAPATH_ATOMIZE_NO_DATA_AS_EMPTY);
+      Stream<? extends IAnyAtomicItem> atomicStream = tolerateNoData
+          ? stream.flatMap(AbstractFunction::atomizeTolerantOfNoData)
+          : stream.flatMap(IItem::atomize);
 
       // if (IUntypedAtomicItem.class.isInstance(item)) {
       // // TODO: apply cast to atomic type
@@ -220,6 +227,29 @@ public abstract class AbstractFunction implements IFunction {
     assert stream != null;
 
     return ISequence.of(stream);
+  }
+
+  /**
+   * Atomize the provided item, translating a
+   * {@link InvalidTypeFunctionException#NODE_HAS_NO_TYPED_VALUE} or
+   * {@link InvalidTypeFunctionException#DATA_ITEM_IS_FUNCTION} into an empty
+   * stream. Used at function argument conversion when the
+   * {@link MetapathEvaluationFeature#METAPATH_ATOMIZE_NO_DATA_AS_EMPTY} feature
+   * is enabled so that definition-walk evaluations degrade gracefully instead of
+   * aborting.
+   */
+  @NonNull
+  private static Stream<? extends IAnyAtomicItem> atomizeTolerantOfNoData(@NonNull IItem item) {
+    try {
+      return item.atomize();
+    } catch (InvalidTypeFunctionException ex) {
+      int code = ex.getErrorCode().getCode();
+      if (code == InvalidTypeFunctionException.NODE_HAS_NO_TYPED_VALUE
+          || code == InvalidTypeFunctionException.DATA_ITEM_IS_FUNCTION) {
+        return ObjectUtils.notNull(Stream.empty());
+      }
+      throw ex;
+    }
   }
 
   @Nullable
