@@ -8,8 +8,10 @@ package dev.metaschema.core.metapath.item.node;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -131,27 +133,23 @@ public class AllowedValueCollectingNodeItemVisitor
     ReferenceCollectingVisitor scanner = new ReferenceCollectingVisitor(needed, allLets);
     scanner.visitMetaschema(module, null);
 
-    // Transitive closure: if a needed let's value expression references another
-    // variable, that variable is also needed.
-    boolean changed = true;
-    while (changed) {
-      changed = false;
-      Set<IEnhancedQName> toAdd = new HashSet<>();
-      for (IEnhancedQName name : needed) {
-        IMetapathExpression expr = allLets.get(name);
-        if (expr != null) {
-          Set<IEnhancedQName> found = new HashSet<>();
-          collectVariableReferences(expr, found);
-          for (IEnhancedQName ref : found) {
-            if (!needed.contains(ref)) {
-              toAdd.add(ref);
-            }
-          }
-        }
+    // Transitive closure via a worklist. Each variable name whose let value
+    // expression still needs to be scanned is queued once. When scanning
+    // reveals new variable references, only those not already in the needed
+    // set are enqueued. This visits each let value expression at most once.
+    Deque<IEnhancedQName> worklist = new ArrayDeque<>(needed);
+    while (!worklist.isEmpty()) {
+      IEnhancedQName name = worklist.poll();
+      IMetapathExpression expr = allLets.get(name);
+      if (expr == null) {
+        continue;
       }
-      if (!toAdd.isEmpty()) {
-        needed.addAll(toAdd);
-        changed = true;
+      Set<IEnhancedQName> found = new HashSet<>();
+      collectVariableReferences(expr, found);
+      for (IEnhancedQName ref : found) {
+        if (needed.add(ref)) {
+          worklist.add(ref);
+        }
       }
     }
     return needed;
