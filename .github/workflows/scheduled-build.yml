@@ -4,6 +4,22 @@ on:
     # Nightly build at 2:00 AM UTC
     - cron: '0 2 * * *'
   workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git ref to checkout (branch, tag, or SHA)'
+        required: false
+        default: 'develop'
+        type: string
+      skip_code_scans:
+        description: 'Skip CodeQL and Trivy security scans'
+        required: false
+        default: true
+        type: boolean
+      skip_linkcheck:
+        description: 'Skip website link checker'
+        required: false
+        default: true
+        type: boolean
 jobs:
   nightly:
     permissions:
@@ -15,7 +31,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/build.yml
     with:
-      ref: develop
-      skip_code_scans: true
-      skip_linkcheck: true
+      ref: ${{ inputs.ref || 'develop' }}
+      skip_code_scans: ${{ github.event_name == 'schedule' || inputs.skip_code_scans }}
+      skip_linkcheck: ${{ github.event_name == 'schedule' || inputs.skip_linkcheck }}
     secrets: inherit
