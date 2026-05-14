@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1770743345723">
-    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="3.0.0.M3"/>
+<licensePluginReport goal="FORMAT" timestamp="1778775056623">
+    <module artifactId="metaschema-core" groupId="dev.metaschema.java" version="3.0.0.M4"/>
     <files>
         <file path="src/test/java/dev/metaschema/core/datatype/adapter/Base64AdapterTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/datatype/adapter/BooleanAdapterTest.java" result="NOOP"/>
@@ -51,6 +51,7 @@
         <file path="src/test/java/dev/metaschema/core/metapath/function/FormatDateTimeFunctionExceptionTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/FormatFunctionExceptionTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/FunctionServiceTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/metapath/function/impl/AtomizeNoDataAsEmptyTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/impl/OperationFunctionsTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/ArrayAppendTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/metapath/function/library/ArrayFlattenTest.java" result="NOOP"/>
@@ -178,6 +179,8 @@
         <file path="src/test/java/dev/metaschema/core/metapath/item/function/LookupTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/ContainerModelAnyInstanceTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/CardinalityConstraintTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/model/constraint/CompositeValidationEventListenerTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/model/constraint/ConstraintIdentifierTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/DefaultConstraintValidatorTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/DefaultConstraintValidatorThreadSafetyTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/ExpectConstraintTest.java" result="NOOP"/>
@@ -185,8 +188,9 @@
         <file path="src/test/java/dev/metaschema/core/model/constraint/FindingCollectingConstraintValidationHandlerTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/IndexUniqueConstraintTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/MatchesConstraintTest.java" result="NOOP"/>
-        <file path="src/test/java/dev/metaschema/core/model/constraint/ParallelValidationConfigTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/ReportConstraintTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/model/constraint/TimingCollectorTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/core/model/constraint/ValidationConfigTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/constraint/impl/AbstractConfigurableMessageConstraintTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/model/validation/SchemaContentValidatorTest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/core/qname/QNameCacheTest.java" result="NOOP"/>

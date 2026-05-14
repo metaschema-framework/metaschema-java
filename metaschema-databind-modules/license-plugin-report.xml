@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1770743456100">
-    <module artifactId="metaschema-databind-modules" groupId="dev.metaschema.java" version="3.0.0.M3"/>
+<licensePluginReport goal="FORMAT" timestamp="1778775159352">
+    <module artifactId="metaschema-databind-modules" groupId="dev.metaschema.java" version="3.0.0.M4"/>
     <files>
         <file path="src/test/java/dev/metaschema/modules/sarif/SarifValidationHandlerTest.java" result="NOOP"/>
+        <file path="src/test/java/dev/metaschema/modules/sarif/SarifValidationHandlerTimingTest.java" result="NOOP"/>
     </files>
 </licensePluginReport>

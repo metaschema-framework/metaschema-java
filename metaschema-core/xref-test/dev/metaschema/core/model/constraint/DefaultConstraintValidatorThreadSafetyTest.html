@@ -52,14 +52,14 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      <em class="jxr_comment">// Run validation with sequential config</em>
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      FindingCollectingConstraintValidationHandler sequentialHandler = <strong class="jxr_keyword">new</strong> FindingCollectingConstraintValidationHandler();
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">try</strong> (DefaultConstraintValidator sequentialValidator
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>          = <strong class="jxr_keyword">new</strong> DefaultConstraintValidator(sequentialHandler, ParallelValidationConfig.SEQUENTIAL)) {
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          = <strong class="jxr_keyword">new</strong> DefaultConstraintValidator(sequentialHandler, ValidationConfig.SEQUENTIAL)) {
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>        runValidationOperations(sequentialValidator);
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      }
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">int</strong> sequentialFindingCount = sequentialHandler.getFindings().size();
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      <em class="jxr_comment">// Run validation with parallel config</em>
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      FindingCollectingConstraintValidationHandler parallelHandler = <strong class="jxr_keyword">new</strong> FindingCollectingConstraintValidationHandler();
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">try</strong> (ParallelValidationConfig config = ParallelValidationConfig.withThreads(4)) {
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">try</strong> (ValidationConfig config = ValidationConfig.withThreads(4)) {
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>        assertTrue(config.isParallel(), <span class="jxr_string">"Config should be parallel with 4 threads"</span>);
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>        <strong class="jxr_keyword">try</strong> (DefaultConstraintValidator parallelValidator = <strong class="jxr_keyword">new</strong> DefaultConstraintValidator(parallelHandler, config)) {
@@ -124,7 +124,7 @@
 <a class="jxr_linenumber" name="L116" href="#L116">116</a> 
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>     <em class="jxr_comment">// New constructor with SEQUENTIAL config should also work</em>
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>     <strong class="jxr_keyword">try</strong> (DefaultConstraintValidator validator
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>         = <strong class="jxr_keyword">new</strong> DefaultConstraintValidator(handler, ParallelValidationConfig.SEQUENTIAL)) {
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>         = <strong class="jxr_keyword">new</strong> DefaultConstraintValidator(handler, ValidationConfig.SEQUENTIAL)) {
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>       assertNotNull(validator, <span class="jxr_string">"New constructor with SEQUENTIAL should work"</span>);
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     }
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>   }

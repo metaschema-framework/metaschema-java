@@ -18,7 +18,7 @@
 <span class="source-line-no">005</span><span id="line-5"></span>
 <span class="source-line-no">006</span><span id="line-6">package dev.metaschema.cli.processor;</span>
 <span class="source-line-no">007</span><span id="line-7"></span>
-<span class="source-line-no">008</span><span id="line-8">import static org.jline.jansi.Ansi.ansi;</span>
+<span class="source-line-no">008</span><span id="line-8">import static dev.metaschema.cli.processor.ansi.Ansi.ansi;</span>
 <span class="source-line-no">009</span><span id="line-9"></span>
 <span class="source-line-no">010</span><span id="line-10">import org.apache.commons.cli.CommandLine;</span>
 <span class="source-line-no">011</span><span id="line-11">import org.apache.commons.cli.DefaultParser;</span>
@@ -444,251 +444,256 @@
 <span class="source-line-no">431</span><span id="line-431">        String wrappedDesc = wrapText(command.getDescription(), descWidth, continuationIndent);</span>
 <span class="source-line-no">432</span><span id="line-432">        builder.append(</span>
 <span class="source-line-no">433</span><span id="line-433">            ansi()</span>
-<span class="source-line-no">434</span><span id="line-434">                .render(String.format("   @|bold %-" + commandColWidth + "s|@ %s%n",</span>
-<span class="source-line-no">435</span><span id="line-435">                    command.getName(),</span>
-<span class="source-line-no">436</span><span id="line-436">                    wrappedDesc)));</span>
-<span class="source-line-no">437</span><span id="line-437">      }</span>
-<span class="source-line-no">438</span><span id="line-438">      builder</span>
-<span class="source-line-no">439</span><span id="line-439">          .append(System.lineSeparator())</span>
-<span class="source-line-no">440</span><span id="line-440">          .append('\'')</span>
-<span class="source-line-no">441</span><span id="line-441">          .append(cliProcessor.getExec())</span>
-<span class="source-line-no">442</span><span id="line-442">          .append(" &lt;command&gt; --help' will show help on that specific command.")</span>
-<span class="source-line-no">443</span><span id="line-443">          .append(System.lineSeparator());</span>
-<span class="source-line-no">444</span><span id="line-444">      retval = builder.toString();</span>
-<span class="source-line-no">445</span><span id="line-445">      assert retval != null;</span>
-<span class="source-line-no">446</span><span id="line-446">    }</span>
-<span class="source-line-no">447</span><span id="line-447">    return retval;</span>
-<span class="source-line-no">448</span><span id="line-448">  }</span>
-<span class="source-line-no">449</span><span id="line-449"></span>
-<span class="source-line-no">450</span><span id="line-450">  /**</span>
-<span class="source-line-no">451</span><span id="line-451">   * Get the CLI syntax.</span>
-<span class="source-line-no">452</span><span id="line-452">   *</span>
-<span class="source-line-no">453</span><span id="line-453">   * @return the CLI syntax to display in help output</span>
-<span class="source-line-no">454</span><span id="line-454">   */</span>
-<span class="source-line-no">455</span><span id="line-455">  private String buildHelpCliSyntax() {</span>
-<span class="source-line-no">456</span><span id="line-456">    StringBuilder builder = new StringBuilder(64);</span>
-<span class="source-line-no">457</span><span id="line-457">    builder.append(cliProcessor.getExec());</span>
-<span class="source-line-no">458</span><span id="line-458"></span>
-<span class="source-line-no">459</span><span id="line-459">    List&lt;ICommand&gt; calledCommands = getCalledCommands();</span>
-<span class="source-line-no">460</span><span id="line-460">    if (!calledCommands.isEmpty()) {</span>
-<span class="source-line-no">461</span><span id="line-461">      builder.append(calledCommands.stream()</span>
-<span class="source-line-no">462</span><span id="line-462">          .map(ICommand::getName)</span>
-<span class="source-line-no">463</span><span id="line-463">          .collect(Collectors.joining(" ", " ", "")));</span>
-<span class="source-line-no">464</span><span id="line-464">    }</span>
-<span class="source-line-no">465</span><span id="line-465"></span>
-<span class="source-line-no">466</span><span id="line-466">    // output calling commands</span>
-<span class="source-line-no">467</span><span id="line-467">    ICommand targetCommand = getTargetCommand();</span>
-<span class="source-line-no">468</span><span id="line-468">    if (targetCommand == null) {</span>
-<span class="source-line-no">469</span><span id="line-469">      builder.append(" &lt;command&gt;");</span>
-<span class="source-line-no">470</span><span id="line-470">    } else {</span>
-<span class="source-line-no">471</span><span id="line-471">      builder.append(getSubCommands(targetCommand));</span>
-<span class="source-line-no">472</span><span id="line-472">    }</span>
-<span class="source-line-no">473</span><span id="line-473"></span>
-<span class="source-line-no">474</span><span id="line-474">    // output required options</span>
-<span class="source-line-no">475</span><span id="line-475">    getOptionsList().stream()</span>
-<span class="source-line-no">476</span><span id="line-476">        .filter(Option::isRequired)</span>
-<span class="source-line-no">477</span><span id="line-477">        .forEach(option -&gt; {</span>
-<span class="source-line-no">478</span><span id="line-478">          builder</span>
-<span class="source-line-no">479</span><span id="line-479">              .append(' ')</span>
-<span class="source-line-no">480</span><span id="line-480">              .append(OptionUtils.toArgument(ObjectUtils.notNull(option)));</span>
-<span class="source-line-no">481</span><span id="line-481">          if (option.hasArg()) {</span>
-<span class="source-line-no">482</span><span id="line-482">            builder</span>
-<span class="source-line-no">483</span><span id="line-483">                .append('=')</span>
-<span class="source-line-no">484</span><span id="line-484">                .append(option.getArgName());</span>
-<span class="source-line-no">485</span><span id="line-485">          }</span>
-<span class="source-line-no">486</span><span id="line-486">        });</span>
-<span class="source-line-no">487</span><span id="line-487"></span>
-<span class="source-line-no">488</span><span id="line-488">    // output non-required option placeholder</span>
-<span class="source-line-no">489</span><span id="line-489">    builder.append(" [&lt;options&gt;]");</span>
-<span class="source-line-no">490</span><span id="line-490"></span>
-<span class="source-line-no">491</span><span id="line-491">    // output extra arguments</span>
-<span class="source-line-no">492</span><span id="line-492">    if (targetCommand != null) {</span>
-<span class="source-line-no">493</span><span id="line-493">      // handle extra arguments</span>
-<span class="source-line-no">494</span><span id="line-494">      builder.append(getExtraArguments(targetCommand));</span>
-<span class="source-line-no">495</span><span id="line-495">    }</span>
-<span class="source-line-no">496</span><span id="line-496"></span>
-<span class="source-line-no">497</span><span id="line-497">    String retval = builder.toString();</span>
-<span class="source-line-no">498</span><span id="line-498">    assert retval != null;</span>
-<span class="source-line-no">499</span><span id="line-499">    return retval;</span>
-<span class="source-line-no">500</span><span id="line-500">  }</span>
+<span class="source-line-no">434</span><span id="line-434">                .a("   ")</span>
+<span class="source-line-no">435</span><span id="line-435">                .bold()</span>
+<span class="source-line-no">436</span><span id="line-436">                .format("%-" + commandColWidth + "s", command.getName())</span>
+<span class="source-line-no">437</span><span id="line-437">                .boldOff()</span>
+<span class="source-line-no">438</span><span id="line-438">                .a(' ')</span>
+<span class="source-line-no">439</span><span id="line-439">                .a(wrappedDesc)</span>
+<span class="source-line-no">440</span><span id="line-440">                .a(System.lineSeparator())</span>
+<span class="source-line-no">441</span><span id="line-441">                .toString());</span>
+<span class="source-line-no">442</span><span id="line-442">      }</span>
+<span class="source-line-no">443</span><span id="line-443">      builder</span>
+<span class="source-line-no">444</span><span id="line-444">          .append(System.lineSeparator())</span>
+<span class="source-line-no">445</span><span id="line-445">          .append('\'')</span>
+<span class="source-line-no">446</span><span id="line-446">          .append(cliProcessor.getExec())</span>
+<span class="source-line-no">447</span><span id="line-447">          .append(" &lt;command&gt; --help' will show help on that specific command.")</span>
+<span class="source-line-no">448</span><span id="line-448">          .append(System.lineSeparator());</span>
+<span class="source-line-no">449</span><span id="line-449">      retval = builder.toString();</span>
+<span class="source-line-no">450</span><span id="line-450">      assert retval != null;</span>
+<span class="source-line-no">451</span><span id="line-451">    }</span>
+<span class="source-line-no">452</span><span id="line-452">    return retval;</span>
+<span class="source-line-no">453</span><span id="line-453">  }</span>
+<span class="source-line-no">454</span><span id="line-454"></span>
+<span class="source-line-no">455</span><span id="line-455">  /**</span>
+<span class="source-line-no">456</span><span id="line-456">   * Get the CLI syntax.</span>
+<span class="source-line-no">457</span><span id="line-457">   *</span>
+<span class="source-line-no">458</span><span id="line-458">   * @return the CLI syntax to display in help output</span>
+<span class="source-line-no">459</span><span id="line-459">   */</span>
+<span class="source-line-no">460</span><span id="line-460">  private String buildHelpCliSyntax() {</span>
+<span class="source-line-no">461</span><span id="line-461">    StringBuilder builder = new StringBuilder(64);</span>
+<span class="source-line-no">462</span><span id="line-462">    builder.append(cliProcessor.getExec());</span>
+<span class="source-line-no">463</span><span id="line-463"></span>
+<span class="source-line-no">464</span><span id="line-464">    List&lt;ICommand&gt; calledCommands = getCalledCommands();</span>
+<span class="source-line-no">465</span><span id="line-465">    if (!calledCommands.isEmpty()) {</span>
+<span class="source-line-no">466</span><span id="line-466">      builder.append(calledCommands.stream()</span>
+<span class="source-line-no">467</span><span id="line-467">          .map(ICommand::getName)</span>
+<span class="source-line-no">468</span><span id="line-468">          .collect(Collectors.joining(" ", " ", "")));</span>
+<span class="source-line-no">469</span><span id="line-469">    }</span>
+<span class="source-line-no">470</span><span id="line-470"></span>
+<span class="source-line-no">471</span><span id="line-471">    // output calling commands</span>
+<span class="source-line-no">472</span><span id="line-472">    ICommand targetCommand = getTargetCommand();</span>
+<span class="source-line-no">473</span><span id="line-473">    if (targetCommand == null) {</span>
+<span class="source-line-no">474</span><span id="line-474">      builder.append(" &lt;command&gt;");</span>
+<span class="source-line-no">475</span><span id="line-475">    } else {</span>
+<span class="source-line-no">476</span><span id="line-476">      builder.append(getSubCommands(targetCommand));</span>
+<span class="source-line-no">477</span><span id="line-477">    }</span>
+<span class="source-line-no">478</span><span id="line-478"></span>
+<span class="source-line-no">479</span><span id="line-479">    // output required options</span>
+<span class="source-line-no">480</span><span id="line-480">    getOptionsList().stream()</span>
+<span class="source-line-no">481</span><span id="line-481">        .filter(Option::isRequired)</span>
+<span class="source-line-no">482</span><span id="line-482">        .forEach(option -&gt; {</span>
+<span class="source-line-no">483</span><span id="line-483">          builder</span>
+<span class="source-line-no">484</span><span id="line-484">              .append(' ')</span>
+<span class="source-line-no">485</span><span id="line-485">              .append(OptionUtils.toArgument(ObjectUtils.notNull(option)));</span>
+<span class="source-line-no">486</span><span id="line-486">          if (option.hasArg()) {</span>
+<span class="source-line-no">487</span><span id="line-487">            builder</span>
+<span class="source-line-no">488</span><span id="line-488">                .append('=')</span>
+<span class="source-line-no">489</span><span id="line-489">                .append(option.getArgName());</span>
+<span class="source-line-no">490</span><span id="line-490">          }</span>
+<span class="source-line-no">491</span><span id="line-491">        });</span>
+<span class="source-line-no">492</span><span id="line-492"></span>
+<span class="source-line-no">493</span><span id="line-493">    // output non-required option placeholder</span>
+<span class="source-line-no">494</span><span id="line-494">    builder.append(" [&lt;options&gt;]");</span>
+<span class="source-line-no">495</span><span id="line-495"></span>
+<span class="source-line-no">496</span><span id="line-496">    // output extra arguments</span>
+<span class="source-line-no">497</span><span id="line-497">    if (targetCommand != null) {</span>
+<span class="source-line-no">498</span><span id="line-498">      // handle extra arguments</span>
+<span class="source-line-no">499</span><span id="line-499">      builder.append(getExtraArguments(targetCommand));</span>
+<span class="source-line-no">500</span><span id="line-500">    }</span>
 <span class="source-line-no">501</span><span id="line-501"></span>
-<span class="source-line-no">502</span><span id="line-502">  @NonNull</span>
-<span class="source-line-no">503</span><span id="line-503">  private static CharSequence getSubCommands(@NonNull ICommand targetCommand) {</span>
-<span class="source-line-no">504</span><span id="line-504">    Collection&lt;ICommand&gt; subCommands = targetCommand.getSubCommands();</span>
-<span class="source-line-no">505</span><span id="line-505"></span>
-<span class="source-line-no">506</span><span id="line-506">    StringBuilder builder = new StringBuilder();</span>
-<span class="source-line-no">507</span><span id="line-507">    if (!subCommands.isEmpty()) {</span>
-<span class="source-line-no">508</span><span id="line-508">      builder.append(' ');</span>
-<span class="source-line-no">509</span><span id="line-509">      if (!targetCommand.isSubCommandRequired()) {</span>
-<span class="source-line-no">510</span><span id="line-510">        builder.append('[');</span>
-<span class="source-line-no">511</span><span id="line-511">      }</span>
-<span class="source-line-no">512</span><span id="line-512"></span>
-<span class="source-line-no">513</span><span id="line-513">      builder.append("&lt;command&gt;");</span>
-<span class="source-line-no">514</span><span id="line-514"></span>
-<span class="source-line-no">515</span><span id="line-515">      if (!targetCommand.isSubCommandRequired()) {</span>
-<span class="source-line-no">516</span><span id="line-516">        builder.append(']');</span>
-<span class="source-line-no">517</span><span id="line-517">      }</span>
-<span class="source-line-no">518</span><span id="line-518">    }</span>
-<span class="source-line-no">519</span><span id="line-519">    return builder;</span>
-<span class="source-line-no">520</span><span id="line-520">  }</span>
-<span class="source-line-no">521</span><span id="line-521"></span>
-<span class="source-line-no">522</span><span id="line-522">  @NonNull</span>
-<span class="source-line-no">523</span><span id="line-523">  private static CharSequence getExtraArguments(@NonNull ICommand targetCommand) {</span>
-<span class="source-line-no">524</span><span id="line-524">    StringBuilder builder = new StringBuilder();</span>
-<span class="source-line-no">525</span><span id="line-525">    for (ExtraArgument argument : targetCommand.getExtraArguments()) {</span>
-<span class="source-line-no">526</span><span id="line-526">      builder.append(' ');</span>
-<span class="source-line-no">527</span><span id="line-527">      if (!argument.isRequired()) {</span>
-<span class="source-line-no">528</span><span id="line-528">        builder.append('[');</span>
-<span class="source-line-no">529</span><span id="line-529">      }</span>
-<span class="source-line-no">530</span><span id="line-530"></span>
-<span class="source-line-no">531</span><span id="line-531">      builder.append('&lt;')</span>
-<span class="source-line-no">532</span><span id="line-532">          .append(argument.getName())</span>
-<span class="source-line-no">533</span><span id="line-533">          .append('&gt;');</span>
-<span class="source-line-no">534</span><span id="line-534"></span>
-<span class="source-line-no">535</span><span id="line-535">      if (argument.getNumber() &gt; 1) {</span>
-<span class="source-line-no">536</span><span id="line-536">        builder.append("...");</span>
-<span class="source-line-no">537</span><span id="line-537">      }</span>
-<span class="source-line-no">538</span><span id="line-538"></span>
-<span class="source-line-no">539</span><span id="line-539">      if (!argument.isRequired()) {</span>
-<span class="source-line-no">540</span><span id="line-540">        builder.append(']');</span>
-<span class="source-line-no">541</span><span id="line-541">      }</span>
-<span class="source-line-no">542</span><span id="line-542">    }</span>
-<span class="source-line-no">543</span><span id="line-543">    return builder;</span>
-<span class="source-line-no">544</span><span id="line-544">  }</span>
-<span class="source-line-no">545</span><span id="line-545"></span>
-<span class="source-line-no">546</span><span id="line-546">  private static final int DEFAULT_TERMINAL_WIDTH = 80;</span>
-<span class="source-line-no">547</span><span id="line-547"></span>
-<span class="source-line-no">548</span><span id="line-548">  /**</span>
-<span class="source-line-no">549</span><span id="line-549">   * Get the terminal width from environment or use a default.</span>
-<span class="source-line-no">550</span><span id="line-550">   * &lt;p&gt;</span>
-<span class="source-line-no">551</span><span id="line-551">   * This method avoids native terminal detection which triggers Java 21+</span>
-<span class="source-line-no">552</span><span id="line-552">   * restricted method warnings. Instead, it uses the COLUMNS environment variable</span>
-<span class="source-line-no">553</span><span id="line-553">   * which is set by most shells.</span>
-<span class="source-line-no">554</span><span id="line-554">   *</span>
-<span class="source-line-no">555</span><span id="line-555">   * @return the terminal width in characters</span>
-<span class="source-line-no">556</span><span id="line-556">   */</span>
-<span class="source-line-no">557</span><span id="line-557">  private static int getTerminalWidth() {</span>
-<span class="source-line-no">558</span><span id="line-558">    String columns = System.getenv("COLUMNS");</span>
-<span class="source-line-no">559</span><span id="line-559">    if (columns != null) {</span>
-<span class="source-line-no">560</span><span id="line-560">      try {</span>
-<span class="source-line-no">561</span><span id="line-561">        int width = Integer.parseInt(columns);</span>
-<span class="source-line-no">562</span><span id="line-562">        if (width &gt; 0) {</span>
-<span class="source-line-no">563</span><span id="line-563">          return width;</span>
-<span class="source-line-no">564</span><span id="line-564">        }</span>
-<span class="source-line-no">565</span><span id="line-565">      } catch (NumberFormatException e) {</span>
-<span class="source-line-no">566</span><span id="line-566">        // Ignore and use default</span>
-<span class="source-line-no">567</span><span id="line-567">      }</span>
-<span class="source-line-no">568</span><span id="line-568">    }</span>
-<span class="source-line-no">569</span><span id="line-569">    return DEFAULT_TERMINAL_WIDTH;</span>
-<span class="source-line-no">570</span><span id="line-570">  }</span>
-<span class="source-line-no">571</span><span id="line-571"></span>
-<span class="source-line-no">572</span><span id="line-572">  /**</span>
-<span class="source-line-no">573</span><span id="line-573">   * Wrap text to fit within the specified width, with proper indentation for</span>
-<span class="source-line-no">574</span><span id="line-574">   * continuation lines.</span>
-<span class="source-line-no">575</span><span id="line-575">   *</span>
-<span class="source-line-no">576</span><span id="line-576">   * @param text</span>
-<span class="source-line-no">577</span><span id="line-577">   *          the text to wrap</span>
-<span class="source-line-no">578</span><span id="line-578">   * @param maxWidth</span>
-<span class="source-line-no">579</span><span id="line-579">   *          the maximum line width</span>
-<span class="source-line-no">580</span><span id="line-580">   * @param indent</span>
-<span class="source-line-no">581</span><span id="line-581">   *          the indentation string for continuation lines</span>
-<span class="source-line-no">582</span><span id="line-582">   * @return the wrapped text</span>
-<span class="source-line-no">583</span><span id="line-583">   * @throws IllegalArgumentException</span>
-<span class="source-line-no">584</span><span id="line-584">   *           if maxWidth is less than or equal to zero, or if the indent length</span>
-<span class="source-line-no">585</span><span id="line-585">   *           is greater than or equal to maxWidth</span>
-<span class="source-line-no">586</span><span id="line-586">   */</span>
-<span class="source-line-no">587</span><span id="line-587">  @NonNull</span>
-<span class="source-line-no">588</span><span id="line-588">  static String wrapText(@NonNull String text, int maxWidth, @NonNull String indent) {</span>
-<span class="source-line-no">589</span><span id="line-589">    if (maxWidth &lt;= 0) {</span>
-<span class="source-line-no">590</span><span id="line-590">      throw new IllegalArgumentException("maxWidth must be positive, got: " + maxWidth);</span>
-<span class="source-line-no">591</span><span id="line-591">    }</span>
-<span class="source-line-no">592</span><span id="line-592">    if (indent.length() &gt;= maxWidth) {</span>
-<span class="source-line-no">593</span><span id="line-593">      throw new IllegalArgumentException(</span>
-<span class="source-line-no">594</span><span id="line-594">          "indent length (" + indent.length() + ") must be less than maxWidth (" + maxWidth + ")");</span>
-<span class="source-line-no">595</span><span id="line-595">    }</span>
-<span class="source-line-no">596</span><span id="line-596">    if (text.length() &lt;= maxWidth) {</span>
-<span class="source-line-no">597</span><span id="line-597">      return text;</span>
-<span class="source-line-no">598</span><span id="line-598">    }</span>
-<span class="source-line-no">599</span><span id="line-599"></span>
-<span class="source-line-no">600</span><span id="line-600">    StringBuilder result = new StringBuilder(text.length() + 32);</span>
-<span class="source-line-no">601</span><span id="line-601">    int lineStart = 0;</span>
-<span class="source-line-no">602</span><span id="line-602">    boolean firstLine = true;</span>
-<span class="source-line-no">603</span><span id="line-603">    int effectiveWidth = maxWidth;</span>
+<span class="source-line-no">502</span><span id="line-502">    String retval = builder.toString();</span>
+<span class="source-line-no">503</span><span id="line-503">    assert retval != null;</span>
+<span class="source-line-no">504</span><span id="line-504">    return retval;</span>
+<span class="source-line-no">505</span><span id="line-505">  }</span>
+<span class="source-line-no">506</span><span id="line-506"></span>
+<span class="source-line-no">507</span><span id="line-507">  @NonNull</span>
+<span class="source-line-no">508</span><span id="line-508">  private static CharSequence getSubCommands(@NonNull ICommand targetCommand) {</span>
+<span class="source-line-no">509</span><span id="line-509">    Collection&lt;ICommand&gt; subCommands = targetCommand.getSubCommands();</span>
+<span class="source-line-no">510</span><span id="line-510"></span>
+<span class="source-line-no">511</span><span id="line-511">    StringBuilder builder = new StringBuilder();</span>
+<span class="source-line-no">512</span><span id="line-512">    if (!subCommands.isEmpty()) {</span>
+<span class="source-line-no">513</span><span id="line-513">      builder.append(' ');</span>
+<span class="source-line-no">514</span><span id="line-514">      if (!targetCommand.isSubCommandRequired()) {</span>
+<span class="source-line-no">515</span><span id="line-515">        builder.append('[');</span>
+<span class="source-line-no">516</span><span id="line-516">      }</span>
+<span class="source-line-no">517</span><span id="line-517"></span>
+<span class="source-line-no">518</span><span id="line-518">      builder.append("&lt;command&gt;");</span>
+<span class="source-line-no">519</span><span id="line-519"></span>
+<span class="source-line-no">520</span><span id="line-520">      if (!targetCommand.isSubCommandRequired()) {</span>
+<span class="source-line-no">521</span><span id="line-521">        builder.append(']');</span>
+<span class="source-line-no">522</span><span id="line-522">      }</span>
+<span class="source-line-no">523</span><span id="line-523">    }</span>
+<span class="source-line-no">524</span><span id="line-524">    return builder;</span>
+<span class="source-line-no">525</span><span id="line-525">  }</span>
+<span class="source-line-no">526</span><span id="line-526"></span>
+<span class="source-line-no">527</span><span id="line-527">  @NonNull</span>
+<span class="source-line-no">528</span><span id="line-528">  private static CharSequence getExtraArguments(@NonNull ICommand targetCommand) {</span>
+<span class="source-line-no">529</span><span id="line-529">    StringBuilder builder = new StringBuilder();</span>
+<span class="source-line-no">530</span><span id="line-530">    for (ExtraArgument argument : targetCommand.getExtraArguments()) {</span>
+<span class="source-line-no">531</span><span id="line-531">      builder.append(' ');</span>
+<span class="source-line-no">532</span><span id="line-532">      if (!argument.isRequired()) {</span>
+<span class="source-line-no">533</span><span id="line-533">        builder.append('[');</span>
+<span class="source-line-no">534</span><span id="line-534">      }</span>
+<span class="source-line-no">535</span><span id="line-535"></span>
+<span class="source-line-no">536</span><span id="line-536">      builder.append('&lt;')</span>
+<span class="source-line-no">537</span><span id="line-537">          .append(argument.getName())</span>
+<span class="source-line-no">538</span><span id="line-538">          .append('&gt;');</span>
+<span class="source-line-no">539</span><span id="line-539"></span>
+<span class="source-line-no">540</span><span id="line-540">      if (argument.getNumber() &gt; 1) {</span>
+<span class="source-line-no">541</span><span id="line-541">        builder.append("...");</span>
+<span class="source-line-no">542</span><span id="line-542">      }</span>
+<span class="source-line-no">543</span><span id="line-543"></span>
+<span class="source-line-no">544</span><span id="line-544">      if (!argument.isRequired()) {</span>
+<span class="source-line-no">545</span><span id="line-545">        builder.append(']');</span>
+<span class="source-line-no">546</span><span id="line-546">      }</span>
+<span class="source-line-no">547</span><span id="line-547">    }</span>
+<span class="source-line-no">548</span><span id="line-548">    return builder;</span>
+<span class="source-line-no">549</span><span id="line-549">  }</span>
+<span class="source-line-no">550</span><span id="line-550"></span>
+<span class="source-line-no">551</span><span id="line-551">  private static final int DEFAULT_TERMINAL_WIDTH = 80;</span>
+<span class="source-line-no">552</span><span id="line-552"></span>
+<span class="source-line-no">553</span><span id="line-553">  /**</span>
+<span class="source-line-no">554</span><span id="line-554">   * Get the terminal width from environment or use a default.</span>
+<span class="source-line-no">555</span><span id="line-555">   * &lt;p&gt;</span>
+<span class="source-line-no">556</span><span id="line-556">   * This method avoids native terminal detection which triggers Java 21+</span>
+<span class="source-line-no">557</span><span id="line-557">   * restricted method warnings. Instead, it uses the COLUMNS environment variable</span>
+<span class="source-line-no">558</span><span id="line-558">   * which is set by most shells.</span>
+<span class="source-line-no">559</span><span id="line-559">   *</span>
+<span class="source-line-no">560</span><span id="line-560">   * @return the terminal width in characters</span>
+<span class="source-line-no">561</span><span id="line-561">   */</span>
+<span class="source-line-no">562</span><span id="line-562">  private static int getTerminalWidth() {</span>
+<span class="source-line-no">563</span><span id="line-563">    String columns = System.getenv("COLUMNS");</span>
+<span class="source-line-no">564</span><span id="line-564">    if (columns != null) {</span>
+<span class="source-line-no">565</span><span id="line-565">      try {</span>
+<span class="source-line-no">566</span><span id="line-566">        int width = Integer.parseInt(columns);</span>
+<span class="source-line-no">567</span><span id="line-567">        if (width &gt; 0) {</span>
+<span class="source-line-no">568</span><span id="line-568">          return width;</span>
+<span class="source-line-no">569</span><span id="line-569">        }</span>
+<span class="source-line-no">570</span><span id="line-570">      } catch (NumberFormatException e) {</span>
+<span class="source-line-no">571</span><span id="line-571">        // Ignore and use default</span>
+<span class="source-line-no">572</span><span id="line-572">      }</span>
+<span class="source-line-no">573</span><span id="line-573">    }</span>
+<span class="source-line-no">574</span><span id="line-574">    return DEFAULT_TERMINAL_WIDTH;</span>
+<span class="source-line-no">575</span><span id="line-575">  }</span>
+<span class="source-line-no">576</span><span id="line-576"></span>
+<span class="source-line-no">577</span><span id="line-577">  /**</span>
+<span class="source-line-no">578</span><span id="line-578">   * Wrap text to fit within the specified width, with proper indentation for</span>
+<span class="source-line-no">579</span><span id="line-579">   * continuation lines.</span>
+<span class="source-line-no">580</span><span id="line-580">   *</span>
+<span class="source-line-no">581</span><span id="line-581">   * @param text</span>
+<span class="source-line-no">582</span><span id="line-582">   *          the text to wrap</span>
+<span class="source-line-no">583</span><span id="line-583">   * @param maxWidth</span>
+<span class="source-line-no">584</span><span id="line-584">   *          the maximum line width</span>
+<span class="source-line-no">585</span><span id="line-585">   * @param indent</span>
+<span class="source-line-no">586</span><span id="line-586">   *          the indentation string for continuation lines</span>
+<span class="source-line-no">587</span><span id="line-587">   * @return the wrapped text</span>
+<span class="source-line-no">588</span><span id="line-588">   * @throws IllegalArgumentException</span>
+<span class="source-line-no">589</span><span id="line-589">   *           if maxWidth is less than or equal to zero, or if the indent length</span>
+<span class="source-line-no">590</span><span id="line-590">   *           is greater than or equal to maxWidth</span>
+<span class="source-line-no">591</span><span id="line-591">   */</span>
+<span class="source-line-no">592</span><span id="line-592">  @NonNull</span>
+<span class="source-line-no">593</span><span id="line-593">  static String wrapText(@NonNull String text, int maxWidth, @NonNull String indent) {</span>
+<span class="source-line-no">594</span><span id="line-594">    if (maxWidth &lt;= 0) {</span>
+<span class="source-line-no">595</span><span id="line-595">      throw new IllegalArgumentException("maxWidth must be positive, got: " + maxWidth);</span>
+<span class="source-line-no">596</span><span id="line-596">    }</span>
+<span class="source-line-no">597</span><span id="line-597">    if (indent.length() &gt;= maxWidth) {</span>
+<span class="source-line-no">598</span><span id="line-598">      throw new IllegalArgumentException(</span>
+<span class="source-line-no">599</span><span id="line-599">          "indent length (" + indent.length() + ") must be less than maxWidth (" + maxWidth + ")");</span>
+<span class="source-line-no">600</span><span id="line-600">    }</span>
+<span class="source-line-no">601</span><span id="line-601">    if (text.length() &lt;= maxWidth) {</span>
+<span class="source-line-no">602</span><span id="line-602">      return text;</span>
+<span class="source-line-no">603</span><span id="line-603">    }</span>
 <span class="source-line-no">604</span><span id="line-604"></span>
-<span class="source-line-no">605</span><span id="line-605">    while (lineStart &lt; text.length()) {</span>
-<span class="source-line-no">606</span><span id="line-606">      if (!firstLine) {</span>
-<span class="source-line-no">607</span><span id="line-607">        result.append(System.lineSeparator()).append(indent);</span>
-<span class="source-line-no">608</span><span id="line-608">        effectiveWidth = maxWidth - indent.length();</span>
-<span class="source-line-no">609</span><span id="line-609">      }</span>
-<span class="source-line-no">610</span><span id="line-610"></span>
-<span class="source-line-no">611</span><span id="line-611">      int remaining = text.length() - lineStart;</span>
-<span class="source-line-no">612</span><span id="line-612">      if (remaining &lt;= effectiveWidth) {</span>
-<span class="source-line-no">613</span><span id="line-613">        result.append(text.substring(lineStart));</span>
-<span class="source-line-no">614</span><span id="line-614">        break;</span>
-<span class="source-line-no">615</span><span id="line-615">      }</span>
-<span class="source-line-no">616</span><span id="line-616"></span>
-<span class="source-line-no">617</span><span id="line-617">      // Find last space within the width limit</span>
-<span class="source-line-no">618</span><span id="line-618">      int lineEnd = lineStart + effectiveWidth;</span>
-<span class="source-line-no">619</span><span id="line-619">      int lastSpace = text.lastIndexOf(' ', lineEnd);</span>
-<span class="source-line-no">620</span><span id="line-620"></span>
-<span class="source-line-no">621</span><span id="line-621">      if (lastSpace &lt;= lineStart) {</span>
-<span class="source-line-no">622</span><span id="line-622">        // No space found, force break at width</span>
-<span class="source-line-no">623</span><span id="line-623">        result.append(text, lineStart, lineEnd);</span>
-<span class="source-line-no">624</span><span id="line-624">        lineStart = lineEnd; // Continue from break point (no space to skip)</span>
-<span class="source-line-no">625</span><span id="line-625">      } else {</span>
-<span class="source-line-no">626</span><span id="line-626">        result.append(text, lineStart, lastSpace);</span>
-<span class="source-line-no">627</span><span id="line-627">        lineStart = lastSpace + 1; // Skip the space</span>
-<span class="source-line-no">628</span><span id="line-628">      }</span>
-<span class="source-line-no">629</span><span id="line-629">      firstLine = false;</span>
-<span class="source-line-no">630</span><span id="line-630">    }</span>
-<span class="source-line-no">631</span><span id="line-631"></span>
-<span class="source-line-no">632</span><span id="line-632">    return ObjectUtils.notNull(result.toString());</span>
-<span class="source-line-no">633</span><span id="line-633">  }</span>
-<span class="source-line-no">634</span><span id="line-634"></span>
-<span class="source-line-no">635</span><span id="line-635">  /**</span>
-<span class="source-line-no">636</span><span id="line-636">   * Output the help text to the console.</span>
-<span class="source-line-no">637</span><span id="line-637">   *</span>
-<span class="source-line-no">638</span><span id="line-638">   * @throws UncheckedIOException</span>
-<span class="source-line-no">639</span><span id="line-639">   *           if an error occurs while writing help output</span>
-<span class="source-line-no">640</span><span id="line-640">   */</span>
-<span class="source-line-no">641</span><span id="line-641">  public void showHelp() {</span>
-<span class="source-line-no">642</span><span id="line-642">    PrintStream out = cliProcessor.getOutputStream();</span>
-<span class="source-line-no">643</span><span id="line-643">    // Get terminal width from environment variable COLUMNS, or default to 80</span>
-<span class="source-line-no">644</span><span id="line-644">    // This avoids native terminal detection which triggers Java 21+ warnings</span>
-<span class="source-line-no">645</span><span id="line-645">    int terminalWidth = getTerminalWidth();</span>
-<span class="source-line-no">646</span><span id="line-646"></span>
-<span class="source-line-no">647</span><span id="line-647">    try (PrintWriter writer = new PrintWriter(</span>
-<span class="source-line-no">648</span><span id="line-648">        AutoCloser.preventClose(out),</span>
-<span class="source-line-no">649</span><span id="line-649">        true,</span>
-<span class="source-line-no">650</span><span id="line-650">        StandardCharsets.UTF_8)) {</span>
-<span class="source-line-no">651</span><span id="line-651">      TextHelpAppendable appendable = new TextHelpAppendable(writer);</span>
-<span class="source-line-no">652</span><span id="line-652">      appendable.setMaxWidth(Math.max(terminalWidth, 50));</span>
-<span class="source-line-no">653</span><span id="line-653"></span>
-<span class="source-line-no">654</span><span id="line-654">      HelpFormatter formatter = HelpFormatter.builder()</span>
-<span class="source-line-no">655</span><span id="line-655">          .setHelpAppendable(appendable)</span>
-<span class="source-line-no">656</span><span id="line-656">          .setOptionFormatBuilder(OptionFormatter.builder().setOptArgSeparator("="))</span>
-<span class="source-line-no">657</span><span id="line-657">          .setShowSince(false)</span>
-<span class="source-line-no">658</span><span id="line-658">          .get();</span>
-<span class="source-line-no">659</span><span id="line-659"></span>
-<span class="source-line-no">660</span><span id="line-660">      try {</span>
-<span class="source-line-no">661</span><span id="line-661">        // Print main help (syntax, header, options) through the formatter</span>
-<span class="source-line-no">662</span><span id="line-662">        formatter.printHelp(</span>
-<span class="source-line-no">663</span><span id="line-663">            buildHelpCliSyntax(),</span>
-<span class="source-line-no">664</span><span id="line-664">            buildHelpHeader(),</span>
-<span class="source-line-no">665</span><span id="line-665">            toOptions(),</span>
-<span class="source-line-no">666</span><span id="line-666">            "", // Empty footer - we print it directly below</span>
-<span class="source-line-no">667</span><span id="line-667">            false);</span>
-<span class="source-line-no">668</span><span id="line-668">      } catch (IOException ex) {</span>
-<span class="source-line-no">669</span><span id="line-669">        throw new UncheckedIOException("Failed to write help output", ex);</span>
-<span class="source-line-no">670</span><span id="line-670">      }</span>
-<span class="source-line-no">671</span><span id="line-671"></span>
-<span class="source-line-no">672</span><span id="line-672">      // Print footer directly to bypass TextHelpAppendable's text wrapping,</span>
-<span class="source-line-no">673</span><span id="line-673">      // which doesn't account for ANSI escape sequence lengths</span>
-<span class="source-line-no">674</span><span id="line-674">      writer.print(buildHelpFooter(terminalWidth));</span>
-<span class="source-line-no">675</span><span id="line-675">      writer.flush();</span>
-<span class="source-line-no">676</span><span id="line-676">    }</span>
-<span class="source-line-no">677</span><span id="line-677">  }</span>
-<span class="source-line-no">678</span><span id="line-678">}</span>
+<span class="source-line-no">605</span><span id="line-605">    StringBuilder result = new StringBuilder(text.length() + 32);</span>
+<span class="source-line-no">606</span><span id="line-606">    int lineStart = 0;</span>
+<span class="source-line-no">607</span><span id="line-607">    boolean firstLine = true;</span>
+<span class="source-line-no">608</span><span id="line-608">    int effectiveWidth = maxWidth;</span>
+<span class="source-line-no">609</span><span id="line-609"></span>
+<span class="source-line-no">610</span><span id="line-610">    while (lineStart &lt; text.length()) {</span>
+<span class="source-line-no">611</span><span id="line-611">      if (!firstLine) {</span>
+<span class="source-line-no">612</span><span id="line-612">        result.append(System.lineSeparator()).append(indent);</span>
+<span class="source-line-no">613</span><span id="line-613">        effectiveWidth = maxWidth - indent.length();</span>
+<span class="source-line-no">614</span><span id="line-614">      }</span>
+<span class="source-line-no">615</span><span id="line-615"></span>
+<span class="source-line-no">616</span><span id="line-616">      int remaining = text.length() - lineStart;</span>
+<span class="source-line-no">617</span><span id="line-617">      if (remaining &lt;= effectiveWidth) {</span>
+<span class="source-line-no">618</span><span id="line-618">        result.append(text.substring(lineStart));</span>
+<span class="source-line-no">619</span><span id="line-619">        break;</span>
+<span class="source-line-no">620</span><span id="line-620">      }</span>
+<span class="source-line-no">621</span><span id="line-621"></span>
+<span class="source-line-no">622</span><span id="line-622">      // Find last space within the width limit</span>
+<span class="source-line-no">623</span><span id="line-623">      int lineEnd = lineStart + effectiveWidth;</span>
+<span class="source-line-no">624</span><span id="line-624">      int lastSpace = text.lastIndexOf(' ', lineEnd);</span>
+<span class="source-line-no">625</span><span id="line-625"></span>
+<span class="source-line-no">626</span><span id="line-626">      if (lastSpace &lt;= lineStart) {</span>
+<span class="source-line-no">627</span><span id="line-627">        // No space found, force break at width</span>
+<span class="source-line-no">628</span><span id="line-628">        result.append(text, lineStart, lineEnd);</span>
+<span class="source-line-no">629</span><span id="line-629">        lineStart = lineEnd; // Continue from break point (no space to skip)</span>
+<span class="source-line-no">630</span><span id="line-630">      } else {</span>
+<span class="source-line-no">631</span><span id="line-631">        result.append(text, lineStart, lastSpace);</span>
+<span class="source-line-no">632</span><span id="line-632">        lineStart = lastSpace + 1; // Skip the space</span>
+<span class="source-line-no">633</span><span id="line-633">      }</span>
+<span class="source-line-no">634</span><span id="line-634">      firstLine = false;</span>
+<span class="source-line-no">635</span><span id="line-635">    }</span>
+<span class="source-line-no">636</span><span id="line-636"></span>
+<span class="source-line-no">637</span><span id="line-637">    return ObjectUtils.notNull(result.toString());</span>
+<span class="source-line-no">638</span><span id="line-638">  }</span>
+<span class="source-line-no">639</span><span id="line-639"></span>
+<span class="source-line-no">640</span><span id="line-640">  /**</span>
+<span class="source-line-no">641</span><span id="line-641">   * Output the help text to the console.</span>
+<span class="source-line-no">642</span><span id="line-642">   *</span>
+<span class="source-line-no">643</span><span id="line-643">   * @throws UncheckedIOException</span>
+<span class="source-line-no">644</span><span id="line-644">   *           if an error occurs while writing help output</span>
+<span class="source-line-no">645</span><span id="line-645">   */</span>
+<span class="source-line-no">646</span><span id="line-646">  public void showHelp() {</span>
+<span class="source-line-no">647</span><span id="line-647">    PrintStream out = cliProcessor.getOutputStream();</span>
+<span class="source-line-no">648</span><span id="line-648">    // Get terminal width from environment variable COLUMNS, or default to 80</span>
+<span class="source-line-no">649</span><span id="line-649">    // This avoids native terminal detection which triggers Java 21+ warnings</span>
+<span class="source-line-no">650</span><span id="line-650">    int terminalWidth = getTerminalWidth();</span>
+<span class="source-line-no">651</span><span id="line-651"></span>
+<span class="source-line-no">652</span><span id="line-652">    try (PrintWriter writer = new PrintWriter(</span>
+<span class="source-line-no">653</span><span id="line-653">        AutoCloser.preventClose(out),</span>
+<span class="source-line-no">654</span><span id="line-654">        true,</span>
+<span class="source-line-no">655</span><span id="line-655">        StandardCharsets.UTF_8)) {</span>
+<span class="source-line-no">656</span><span id="line-656">      TextHelpAppendable appendable = new TextHelpAppendable(writer);</span>
+<span class="source-line-no">657</span><span id="line-657">      appendable.setMaxWidth(Math.max(terminalWidth, 50));</span>
+<span class="source-line-no">658</span><span id="line-658"></span>
+<span class="source-line-no">659</span><span id="line-659">      HelpFormatter formatter = HelpFormatter.builder()</span>
+<span class="source-line-no">660</span><span id="line-660">          .setHelpAppendable(appendable)</span>
+<span class="source-line-no">661</span><span id="line-661">          .setOptionFormatBuilder(OptionFormatter.builder().setOptArgSeparator("="))</span>
+<span class="source-line-no">662</span><span id="line-662">          .setShowSince(false)</span>
+<span class="source-line-no">663</span><span id="line-663">          .get();</span>
+<span class="source-line-no">664</span><span id="line-664"></span>
+<span class="source-line-no">665</span><span id="line-665">      try {</span>
+<span class="source-line-no">666</span><span id="line-666">        // Print main help (syntax, header, options) through the formatter</span>
+<span class="source-line-no">667</span><span id="line-667">        formatter.printHelp(</span>
+<span class="source-line-no">668</span><span id="line-668">            buildHelpCliSyntax(),</span>
+<span class="source-line-no">669</span><span id="line-669">            buildHelpHeader(),</span>
+<span class="source-line-no">670</span><span id="line-670">            toOptions(),</span>
+<span class="source-line-no">671</span><span id="line-671">            "", // Empty footer - we print it directly below</span>
+<span class="source-line-no">672</span><span id="line-672">            false);</span>
+<span class="source-line-no">673</span><span id="line-673">      } catch (IOException ex) {</span>
+<span class="source-line-no">674</span><span id="line-674">        throw new UncheckedIOException("Failed to write help output", ex);</span>
+<span class="source-line-no">675</span><span id="line-675">      }</span>
+<span class="source-line-no">676</span><span id="line-676"></span>
+<span class="source-line-no">677</span><span id="line-677">      // Print footer directly to bypass TextHelpAppendable's text wrapping,</span>
+<span class="source-line-no">678</span><span id="line-678">      // which doesn't account for ANSI escape sequence lengths</span>
+<span class="source-line-no">679</span><span id="line-679">      writer.print(buildHelpFooter(terminalWidth));</span>
+<span class="source-line-no">680</span><span id="line-680">      writer.flush();</span>
+<span class="source-line-no">681</span><span id="line-681">    }</span>
+<span class="source-line-no">682</span><span id="line-682">  }</span>
+<span class="source-line-no">683</span><span id="line-683">}</span>
 
 
 

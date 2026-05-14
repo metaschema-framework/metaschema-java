@@ -5,6 +5,7 @@ dev.metaschema.cli.commands.metapath
 dev.metaschema.cli.util
 module:dev.metaschema.cli.processor
 dev.metaschema.cli.processor
+dev.metaschema.cli.processor.ansi
 dev.metaschema.cli.processor.command
 dev.metaschema.cli.processor.command.impl
 dev.metaschema.cli.processor.completion
