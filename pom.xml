@@ -65,7 +65,7 @@
 		<dependency.plexus-build-api.version>1.2.0</dependency.plexus-build-api.version>
 		<dependency.stax2-api.version>4.3.0</dependency.stax2-api.version>
 		<dependency.thymeleaf.version>3.1.5.RELEASE</dependency.thymeleaf.version>
-		<dependency.woodstox.version>7.1.1</dependency.woodstox.version>
+		<dependency.woodstox.version>7.2.1</dependency.woodstox.version>
 		<dependency.xml-apis.version>2.0.2</dependency.xml-apis.version>
 
 		<plugin.antlr4test.version>1.22</plugin.antlr4test.version>
